@@ -12,11 +12,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Transliteration\PHPTransliteration;
 use Drupal\Tests\UnitTestCase;
 
-// @todo Remove once the constants are replaced with constants on classes.
-if (!defined('DRUPAL_NO_CACHE')) {
-  define('DRUPAL_NO_CACHE', -1);
-}
-
 /**
  * Tests the base block plugin.
  *

@@ -9,7 +9,6 @@ settings:
   label: Search
   module: search
   label_display: visible
-  cache: -1
 visibility:
   path:
     visibility: 0

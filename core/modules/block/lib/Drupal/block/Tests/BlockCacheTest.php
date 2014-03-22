@@ -61,10 +61,13 @@ class BlockCacheTest extends WebTestBase {
   }
 
   /**
-   * Test DRUPAL_CACHE_PER_ROLE.
+   * Test "cache_context.user.roles" cache context.
    */
   function testCachePerRole() {
-    $this->setCacheMode(DRUPAL_CACHE_PER_ROLE);
+    $this->setBlockCacheConfig(array(
+      'max_age' => 600,
+      'contexts' => array('cache_context.user.roles'),
+    ));
 
     // Enable our test block. Set some content for it to display.
     $current_content = $this->randomName();
@@ -108,10 +111,13 @@ class BlockCacheTest extends WebTestBase {
   }
 
   /**
-   * Test DRUPAL_CACHE_GLOBAL.
+   * Test a cacheable block without any cache context.
    */
   function testCacheGlobal() {
-    $this->setCacheMode(DRUPAL_CACHE_GLOBAL);
+    $this->setBlockCacheConfig(array(
+      'max_age' => 600,
+    ));
+
     $current_content = $this->randomName();
     \Drupal::state()->set('block_test.content', $current_content);
 
@@ -124,18 +130,21 @@ class BlockCacheTest extends WebTestBase {
 
     $this->drupalLogout();
     $this->drupalGet('user');
-    $this->assertText($old_content, 'Block content served from global cache.');
+    $this->assertText($old_content, 'Block content served from cache.');
   }
 
   /**
-   * Test DRUPAL_NO_CACHE.
+   * Test non-cacheable block.
    */
   function testNoCache() {
-    $this->setCacheMode(DRUPAL_NO_CACHE);
+    $this->setBlockCacheConfig(array(
+      'max_age' => 0,
+    ));
+
     $current_content = $this->randomName();
     \Drupal::state()->set('block_test.content', $current_content);
 
-    // If DRUPAL_NO_CACHE has no effect, the next request would be cached.
+    // If max_age = 0 has no effect, the next request would be cached.
     $this->drupalGet('');
     $this->assertText($current_content, 'Block content displays.');
 
@@ -143,14 +152,18 @@ class BlockCacheTest extends WebTestBase {
     $current_content = $this->randomName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalGet('');
-    $this->assertText($current_content, 'DRUPAL_NO_CACHE prevents blocks from being cached.');
+    $this->assertText($current_content, 'Maximum age of zero prevents blocks from being cached.');
   }
 
   /**
-   * Test DRUPAL_CACHE_PER_USER.
+   * Test "cache_context.user" cache context.
    */
   function testCachePerUser() {
-    $this->setCacheMode(DRUPAL_CACHE_PER_USER);
+    $this->setBlockCacheConfig(array(
+      'max_age' => 600,
+      'contexts' => array('cache_context.user'),
+    ));
+
     $current_content = $this->randomName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogin($this->normal_user);
@@ -175,10 +188,14 @@ class BlockCacheTest extends WebTestBase {
   }
 
   /**
-   * Test DRUPAL_CACHE_PER_PAGE.
+   * Test "cache_context.url" cache context.
    */
   function testCachePerPage() {
-    $this->setCacheMode(DRUPAL_CACHE_PER_PAGE);
+    $this->setBlockCacheConfig(array(
+      'max_age' => 600,
+      'contexts' => array('cache_context.url'),
+    ));
+
     $current_content = $this->randomName();
     \Drupal::state()->set('block_test.content', $current_content);
 
@@ -196,10 +213,11 @@ class BlockCacheTest extends WebTestBase {
   }
 
   /**
-   * Private helper method to set the test block's cache mode.
+   * Private helper method to set the test block's cache configuration.
    */
-  private function setCacheMode($cache_mode) {
-    $this->block->getPlugin()->setConfigurationValue('cache', $cache_mode);
+  private function setBlockCacheConfig($cache_config) {
+    $block = $this->block->getPlugin();
+    $block->setConfigurationValue('cache', $cache_config);
     $this->block->save();
   }
 

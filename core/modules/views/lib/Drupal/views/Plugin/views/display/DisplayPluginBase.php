@@ -2383,7 +2383,6 @@ abstract class DisplayPluginBase extends PluginBase {
 
       $blocks[$delta] = array(
         'info' => $desc,
-        'cache' => DRUPAL_NO_CACHE,
       );
     }
 

@@ -169,52 +169,16 @@ function block_page_build(&$page) {
 function block_get_blocks_by_region($region) {
   $build = array();
   if ($list = block_list($region)) {
-    $build = _block_get_renderable_region($list);
-  }
-  return $build;
-}
-
-/**
- * Gets an array of blocks suitable for drupal_render().
- *
- * @param $list
- *   A list of blocks such as that returned by block_list().
- *
- * @return
- *   A renderable array.
- */
-function _block_get_renderable_region($list = array()) {
-  $build = array();
-  // Block caching is not compatible with node_access modules. We also
-  // preserve the submission of forms in blocks, by fetching from cache
-  // only if the request method is 'GET' (or 'HEAD'). User 1 being out of
-  // the regular 'roles define permissions' schema, it brings too many
-  // chances of having unwanted output get in the cache and later be served
-  // to other users. We therefore exclude user 1 from block caching.
-  $not_cacheable = \Drupal::currentUser()->id() == 1 ||
-    count(\Drupal::moduleHandler()->getImplementations('node_grants')) ||
-    !\Drupal::request()->isMethodSafe();
-
-  foreach ($list as $key => $block) {
-    $settings = $block->get('settings');
-    if ($not_cacheable || in_array($settings['cache'], array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM))) {
-      // Non-cached blocks get built immediately.
+    foreach ($list as $key => $block) {
       if ($block->access()) {
         $build[$key] = entity_view($block, 'block');
       }
     }
-    else {
-      $build[$key] = array(
-        '#block' => $block,
-        '#weight' => $block->get('weight'),
-        '#pre_render' => array('_block_get_renderable_block'),
-        '#cache' => array(
-          'keys' => array($key, $settings['module']),
-          'granularity' => $settings['cache'],
-          'bin' => 'block',
-          'tags' => array('content' => TRUE),
-        ),
-      );
+    // If none of the blocks in this region are visible, then don't set anything
+    // else in the render array, because that would cause the region to show up.
+    if (!empty($build)) {
+      // block_list() already returned the blocks in sorted order.
+      $build['#sorted'] = TRUE;
     }
   }
   return $build;
@@ -342,9 +306,7 @@ function block_list($region) {
     $blocks[$region] = array();
   }
 
-  uasort($blocks[$region], function($first, $second) {
-    return $first->weight === $second->weight ? 0 : ($first->weight < $second->weight ? -1 : 1);
-  });
+  uasort($blocks[$region], 'Drupal\block\Entity\Block::sort');
 
   return $blocks[$region];
 }
@@ -362,26 +324,6 @@ function block_list($region) {
  */
 function block_load($entity_id) {
   return entity_load('block', $entity_id);
-}
-
-/**
- * Builds the content and label for a block.
- *
- * For cacheable blocks, this is called during #pre_render.
- *
- * @param $element
- *   A renderable array.
- *
- * @return
- *   A renderable array.
- */
-function _block_get_renderable_block($element) {
-  $block = $element['#block'];
-  // Don't bother to build blocks that aren't accessible.
-  if ($element['#access'] = $block->access()) {
-    $element += entity_view($block, 'block');
-  }
-  return $element;
 }
 
 /**
@@ -456,6 +398,11 @@ function template_preprocess_block(&$variables) {
   $variables['derivative_plugin_id'] = $variables['elements']['#derivative_plugin_id'];
   $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
   $variables['content'] = $variables['elements']['content'];
+  // A block's label is configuration: it is static. Allow dynamic labels to be
+  // set in the render array.
+  if (isset($variables['elements']['content']['#title']) && !empty($variables['configuration']['label_display'])) {
+    $variables['label'] = $variables['elements']['content']['#title'];
+  }
 
   $variables['attributes']['class'][] = 'block';
   $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['configuration']['module']);

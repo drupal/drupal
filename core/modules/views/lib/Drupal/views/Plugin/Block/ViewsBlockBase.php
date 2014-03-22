@@ -99,10 +99,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    $settings = array();
-    $settings['views_label'] = '';
-
-    return $settings;
+    return array('views_label' => '');
   }
 
   /**

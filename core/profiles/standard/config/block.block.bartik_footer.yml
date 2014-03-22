@@ -9,7 +9,6 @@ settings:
   label: 'Footer menu'
   module: system
   label_display: visible
-  cache: -1
 visibility:
   path:
     visibility: 0

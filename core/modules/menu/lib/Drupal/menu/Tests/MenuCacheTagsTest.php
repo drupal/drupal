@@ -58,7 +58,14 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $this->verifyPageCache($path, 'HIT', array('content:1', 'menu:llama'));
+    $expected_tags = array(
+      'content:1',
+      'block_view:1',
+      'block:' . $block->id(),
+      'block_plugin:system_menu_block__llama',
+      'menu:llama',
+    );
+    $this->verifyPageCache($path, 'HIT', $expected_tags);
 
 
     // Verify that after modifying the menu, there is a cache miss.
@@ -101,7 +108,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit.
-    $this->verifyPageCache($path, 'HIT', array('content:1', 'menu:llama'));
+    $this->verifyPageCache($path, 'HIT', $expected_tags);
 
 
     // Verify that after deleting the menu, there is a cache miss.

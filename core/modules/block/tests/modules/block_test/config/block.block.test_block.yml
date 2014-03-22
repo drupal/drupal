@@ -9,7 +9,6 @@ settings:
   label: 'Test HTML block'
   module: block_test
   label_display: 'hidden'
-  cache: 1
 visibility:
   path:
     visibility: 0

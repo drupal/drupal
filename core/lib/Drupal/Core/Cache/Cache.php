@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Core\Database\Query\SelectInterface;
+
 /**
  * Helper methods for cache.
  *
@@ -70,6 +72,28 @@ class Cache {
       $bins[$bin] = $container->get($service_id);
     }
     return $bins;
+  }
+
+  /**
+   * Generates a hash from a query object, to be used as part of the cache key.
+   *
+   * This smart caching strategy saves Drupal from querying and rendering to
+   * HTML when the underlying query is unchanged.
+   *
+   * Expensive queries should use the query builder to create the query and then
+   * call this function. Executing the query and formatting results should
+   * happen in a #pre_render callback.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   A select query object.
+   *
+   * @return string
+   *   A hash of the query arguments.
+   */
+  public static function keyFromQuery(SelectInterface $query) {
+    $query->preExecute();
+    $keys = array((string) $query, $query->getArguments());
+    return hash('sha256', serialize($keys));
   }
 
 }

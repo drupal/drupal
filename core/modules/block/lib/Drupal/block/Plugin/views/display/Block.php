@@ -46,7 +46,6 @@ class Block extends DisplayPluginBase {
 
     $options['block_description'] = array('default' => '', 'translatable' => TRUE);
     $options['block_category'] = array('default' => 'Lists (Views)', 'translatable' => TRUE);
-    $options['block_caching'] = array('default' => DRUPAL_NO_CACHE);
     $options['block_hide_empty'] = array('default' => FALSE);
 
     $options['allow'] = array(
@@ -131,45 +130,11 @@ class Block extends DisplayPluginBase {
       'value' => empty($filtered_allow) ? t('None') : t('Items per page'),
     );
 
-    $types = $this->blockCachingModes();
-    $options['block_caching'] = array(
-      'category' => 'other',
-      'title' => t('Block caching'),
-      'value' => $types[$this->getCacheType()],
-    );
-
     $options['block_hide_empty'] = array(
       'category' => 'other',
       'title' => t('Hide block if the view output is empty'),
       'value' => $this->getOption('block_hide_empty') ? t('Hide') : t('Show'),
     );
-  }
-
-  /**
-   * Provide a list of core's block caching modes.
-   */
-  protected function blockCachingModes() {
-    return array(
-      DRUPAL_NO_CACHE => t('Do not cache'),
-      DRUPAL_CACHE_GLOBAL => t('Cache once for everything (global)'),
-      DRUPAL_CACHE_PER_PAGE => t('Per page'),
-      DRUPAL_CACHE_PER_ROLE => t('Per role'),
-      DRUPAL_CACHE_PER_ROLE | DRUPAL_CACHE_PER_PAGE => t('Per role per page'),
-      DRUPAL_CACHE_PER_USER => t('Per user'),
-      DRUPAL_CACHE_PER_USER | DRUPAL_CACHE_PER_PAGE => t('Per user per page'),
-    );
-  }
-
-  /**
-   * Provide a single method to figure caching type, keeping a sensible default
-   * for when it's unset.
-   */
-  public function getCacheType() {
-    $cache_type = $this->getOption('block_caching');
-    if (empty($cache_type)) {
-      $cache_type = DRUPAL_NO_CACHE;
-    }
-    return $cache_type;
   }
 
   /**
@@ -194,16 +159,6 @@ class Block extends DisplayPluginBase {
           '#autocomplete_route_name' => 'block.category_autocomplete',
           '#description' => t('The category this block will appear under on the <a href="@href">blocks placement page</a>.', array('@href' => url('admin/structure/block'))),
           '#default_value' => $this->getOption('block_category'),
-        );
-        break;
-      case 'block_caching':
-        $form['#title'] .= t('Block caching type');
-
-        $form['block_caching'] = array(
-          '#type' => 'radios',
-          '#description' => t("This sets the default status for Drupal's built-in block caching method; this requires that caching be turned on in block administration, and be careful because you have little control over when this cache is flushed."),
-          '#options' => $this->blockCachingModes(),
-          '#default_value' => $this->getCacheType(),
         );
         break;
       case 'block_hide_empty':
@@ -251,7 +206,6 @@ class Block extends DisplayPluginBase {
     switch ($form_state['section']) {
       case 'block_description':
       case 'block_category':
-      case 'block_caching':
       case 'allow':
       case 'block_hide_empty':
         $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);

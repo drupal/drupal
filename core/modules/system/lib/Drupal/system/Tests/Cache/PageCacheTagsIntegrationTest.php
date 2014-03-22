@@ -64,13 +64,35 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
       'promote' => NODE_PROMOTED,
     ));
 
+    // Place a block, but only make it visible on full node page 2.
+    $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1', array(
+      'visibility' => array(
+        'path' => array(
+          'visibility' => BLOCK_VISIBILITY_LISTED,
+          'pages' => 'node/' . $node_2->id(),
+        ),
+      )
+    ));
+
     // Full node page 1.
     $this->verifyPageCacheTags('node/' . $node_1->id(), array(
       'content:1',
+      'block_view:1',
+      'block:bartik_content',
+      'block:bartik_tools',
+      'block:bartik_login',
+      'block:bartik_footer',
+      'block:bartik_powered',
+      'block_plugin:system_main_block',
+      'block_plugin:system_menu_block__tools',
+      'block_plugin:user_login_block',
+      'block_plugin:system_menu_block__footer',
+      'block_plugin:system_powered_by_block',
       'node_view:1',
       'node:' . $node_1->id(),
       'user:' . $author_1->id(),
       'filter_format:basic_html',
+      'menu:tools',
       'menu:footer',
       'menu:main',
     ));
@@ -78,10 +100,24 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     // Full node page 2.
     $this->verifyPageCacheTags('node/' . $node_2->id(), array(
       'content:1',
+      'block_view:1',
+      'block:bartik_content',
+      'block:bartik_tools',
+      'block:bartik_login',
+      'block:' . $block->id(),
+      'block:bartik_footer',
+      'block:bartik_powered',
+      'block_plugin:system_main_block',
+      'block_plugin:system_menu_block__tools',
+      'block_plugin:user_login_block',
+      'block_plugin:views_block__comments_recent-block_1',
+      'block_plugin:system_menu_block__footer',
+      'block_plugin:system_powered_by_block',
       'node_view:1',
       'node:' . $node_2->id(),
       'user:' . $author_2->id(),
       'filter_format:full_html',
+      'menu:tools',
       'menu:footer',
       'menu:main',
     ));

@@ -9,7 +9,6 @@ settings:
   label: 'Main page content'
   module: system
   label_display: '0'
-  cache: -1
 visibility:
   path:
     visibility: 0

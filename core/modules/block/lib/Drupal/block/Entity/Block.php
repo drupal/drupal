@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\block\BlockPluginBag;
 use Drupal\block\BlockInterface;
@@ -144,6 +145,32 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
       $properties[$name] = $this->get($name);
     }
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
+    if ($update) {
+      Cache::invalidateTags(array('block' => $this->id()));
+    }
+    // When placing a new block, invalidate all cache entries for this theme,
+    // since any page that uses this theme might be affected.
+    else {
+      // @todo Replace with theme cache tag: https://drupal.org/node/2185617
+      Cache::invalidateTags(array('content' => TRUE));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
+    Cache::invalidateTags(array('block' => array_keys($entities)));
   }
 
   /**

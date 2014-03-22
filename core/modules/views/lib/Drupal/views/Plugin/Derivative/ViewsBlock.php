@@ -102,7 +102,6 @@ class ViewsBlock implements ContainerDerivativeInterface {
           $this->derivatives[$delta] = array(
             'category' => $display->getOption('block_category'),
             'admin_label' => $desc,
-            'cache' => $display->getCacheType()
           );
           $this->derivatives[$delta] += $base_plugin_definition;
         }

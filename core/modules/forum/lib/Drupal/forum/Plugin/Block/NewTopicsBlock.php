@@ -21,17 +21,12 @@ class NewTopicsBlock extends ForumBlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
-    $query = db_select('forum_index', 'f')
+  protected function buildForumQuery() {
+    return db_select('forum_index', 'f')
       ->fields('f')
       ->addTag('node_access')
       ->addMetaData('base_table', 'forum_index')
       ->orderBy('f.created', 'DESC')
       ->range(0, $this->configuration['block_count']);
-
-    return array(
-      drupal_render_cache_by_query($query, 'forum_block_view'),
-    );
   }
-
 }

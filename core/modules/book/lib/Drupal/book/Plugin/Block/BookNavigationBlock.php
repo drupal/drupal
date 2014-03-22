@@ -65,7 +65,6 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public function defaultConfiguration() {
     return array(
-      'cache' => DRUPAL_CACHE_PER_PAGE | DRUPAL_CACHE_PER_ROLE,
       'block_mode' => "all pages",
     );
   }
@@ -101,6 +100,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public function build() {
     $current_bid = 0;
+
     if ($node = $this->request->get('node')) {
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
     }
@@ -145,15 +145,21 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
         $data = array_shift($tree);
         $below = \Drupal::service('book.manager')->bookTreeOutput($data['below']);
         if (!empty($below)) {
-          $book_title_link = array('#theme' => 'book_title_link', '#link' => $data['link']);
-          return array(
-            '#title' => drupal_render($book_title_link),
-            $below,
-          );
+          return $below;
         }
       }
     }
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRequiredCacheContexts() {
+    // The "Book navigation" block must be cached per URL and per role: the
+    // "active" menu link may differ per URL and different roles may have access
+    // to different menu links.
+    return array('cache_context.url', 'cache_context.user.roles');
   }
 
 }

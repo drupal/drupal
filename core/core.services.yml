@@ -4,6 +4,24 @@ services:
     arguments: ['@settings']
     calls:
       - [setContainer, ['@service_container']]
+  cache_contexts:
+    class: Drupal\Core\Cache\CacheContexts
+    arguments: ['@service_container', '%cache_contexts%' ]
+  cache_context.url:
+    class: Drupal\Core\Cache\UrlCacheContext
+    arguments: ['@request']
+    tags:
+      - { name: cache.context}
+  cache_context.language:
+    class: Drupal\Core\Cache\LanguageCacheContext
+    arguments: ['@language_manager']
+    tags:
+      - { name: cache.context}
+  cache_context.theme:
+    class: Drupal\Core\Cache\ThemeCacheContext
+    arguments: ['@request', '@theme.negotiator']
+    tags:
+      - { name: cache.context}
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
     arguments: ['@database']

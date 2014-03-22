@@ -15,9 +15,6 @@ use Drupal\block\Plugin\views\display\Block;
 if (!defined('BLOCK_LABEL_VISIBLE')) {
   define('BLOCK_LABEL_VISIBLE', 'visible');
 }
-if (!defined('DRUPAL_NO_CACHE')) {
-  define('DRUPAL_NO_CACHE', -1);
-}
 
 /**
  * Tests the views block plugin.

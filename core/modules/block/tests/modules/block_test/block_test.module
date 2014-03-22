@@ -5,6 +5,8 @@
  *   Provide test blocks.
  */
 
+use Drupal\block\BlockPluginInterface;
+
 /**
  * Implements hook_block_alter().
  */
@@ -12,4 +14,30 @@ function block_test_block_alter(&$block_info) {
   if (\Drupal::state()->get('block_test_info_alter') && isset($block_info['test_block_instantiation'])) {
     $block_info['test_block_instantiation']['category'] = t('Custom category');
   }
+}
+
+/**
+ * Implements hook_block_view_BASE_BLOCK_ID_alter().
+ */
+function block_test_block_view_test_cache_alter(array &$build, BlockPluginInterface $block) {
+  if (\Drupal::state()->get('block_test_view_alter_suffix') !== NULL) {
+    $build['#suffix'] = '<br>Goodbye!';
+  }
+  if (\Drupal::state()->get('block_test_view_alter_cache_key') !== NULL) {
+    $build['#cache']['keys'][] = \Drupal::state()->get('block_test_view_alter_cache_key');
+  }
+  if (\Drupal::state()->get('block_test_view_alter_cache_tag') !== NULL) {
+    $build['#cache']['tags'][\Drupal::state()->get('block_test_view_alter_cache_tag')] = TRUE;
+  }
+  if (\Drupal::state()->get('block_test_view_alter_append_pre_render_prefix') !== NULL) {
+    $build['#pre_render'][] = 'block_test_pre_render_alter_content';
+  }
+}
+
+/**
+ * #pre_render callback for a block to alter its content.
+ */
+function block_test_pre_render_alter_content($build) {
+  $build['#prefix'] = 'Hiya!<br>';
+  return $build;
 }

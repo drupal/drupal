@@ -16,16 +16,4 @@ namespace Drupal\block_test\Plugin\Block;
  * )
  */
 class TestXSSTitleBlock extends TestCacheBlock {
-
-  /**
-   * {@inheritdoc}
-   *
-   * Sets a different caching strategy for testing purposes.
-   */
-  public function defaultConfiguration() {
-    return array(
-      'cache' => DRUPAL_NO_CACHE,
-    );
-  }
-
 }

@@ -10,7 +10,10 @@ namespace Drupal\block;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -28,12 +31,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->configuration += $this->defaultConfiguration() + array(
-      'label' => '',
-      'module' => $plugin_definition['module'],
-      'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
-      'cache' => DRUPAL_NO_CACHE,
-    );
+    $this->setConfiguration($configuration);
   }
 
   /**
@@ -47,7 +45,29 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $this->configuration = $configuration;
+    $this->configuration = NestedArray::mergeDeep(
+      $this->baseConfigurationDefaults(),
+      $this->defaultConfiguration(),
+      $configuration
+    );
+  }
+
+  /**
+   * Returns generic default configuration for block plugins.
+   *
+   * @return array
+   *   An associative array with the default configuration.
+   */
+  protected function baseConfigurationDefaults() {
+    return array(
+      'label' => '',
+      'module' => $this->pluginDefinition['module'],
+      'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
+      'cache' => array(
+        'max_age' => 0,
+        'contexts' => array(),
+      ),
+    );
   }
 
   /**
@@ -108,10 +128,50 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
       '#default_value' => ($this->configuration['label_display'] === BlockInterface::BLOCK_LABEL_VISIBLE),
       '#return_value' => BlockInterface::BLOCK_LABEL_VISIBLE,
     );
+    // Identical options to the ones for page caching.
+    // @see \Drupal\system\Form\PerformanceForm::buildForm()
+    $period = array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400);
+    $period = array_map('format_interval', array_combine($period, $period));
+    $period[0] = '<' . t('no caching') . '>';
+    $period[\Drupal\Core\Cache\Cache::PERMANENT] = t('Forever');
     $form['cache'] = array(
-      '#type' => 'value',
-      '#value' => $this->configuration['cache'],
+      '#type' => 'details',
+      '#title' => t('Cache settings'),
     );
+    $form['cache']['max_age'] = array(
+      '#type' => 'select',
+      '#title' => t('Maximum age'),
+      '#description' => t('The maximum time this block may be cached.'),
+      '#default_value' => $this->configuration['cache']['max_age'],
+      '#options' => $period,
+    );
+    $contexts = \Drupal::service("cache_contexts")->getLabels();
+    // Blocks are always rendered in a "per theme" cache context. No need to
+    // show that option to the end user.
+    unset($contexts['cache_context.theme']);
+    $form['cache']['contexts'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Vary by context'),
+      '#description' => t('The contexts this cached block must be varied by.'),
+      '#default_value' => $this->configuration['cache']['contexts'],
+      '#options' => $contexts,
+      '#states' => array(
+        'disabled' => array(
+          ':input[name="settings[cache][max_age]"]' => array('value' => (string) 0),
+        ),
+      ),
+    );
+    if (count($this->getRequiredCacheContexts()) > 0) {
+      // Remove the required cache contexts from the list of contexts a user can
+      // choose to modify by: they must always be applied.
+      $context_labels = array();
+      foreach ($this->getRequiredCacheContexts() as $context) {
+        $context_labels[] = $form['cache']['contexts']['#options'][$context];
+        unset($form['cache']['contexts']['#options'][$context]);
+      }
+      $required_context_list = implode(', ', $context_labels);
+      $form['cache']['contexts']['#description'] .= ' ' . t('This block is <em>always</em> varied by the following contexts: %required-context-list.', array('%required-context-list' => $required_context_list));
+    }
 
     // Add plugin-specific settings for this block type.
     $form += $this->blockForm($form, $form_state);
@@ -134,6 +194,9 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * @see \Drupal\block\BlockBase::blockValidate()
    */
   public function validateConfigurationForm(array &$form, array &$form_state) {
+    // Transform the #type = checkboxes value to a numerically indexed array.
+    $form_state['values']['cache']['contexts'] = array_values(array_filter($form_state['values']['cache']['contexts']));
+
     $this->blockValidate($form, $form_state);
   }
 
@@ -156,6 +219,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
       $this->configuration['label'] = $form_state['values']['label'];
       $this->configuration['label_display'] = $form_state['values']['label_display'];
       $this->configuration['module'] = $form_state['values']['module'];
+      $this->configuration['cache'] = $form_state['values']['cache'];
       $this->blockSubmit($form, $form_state);
     }
   }
@@ -187,6 +251,61 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
     }
 
     return $transliterated;
+  }
+
+  /**
+   * Returns the cache contexts required for this block.
+   *
+   * @return array
+   *   The required cache contexts IDs.
+   */
+  protected function getRequiredCacheContexts() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheKeys() {
+    // Return the required cache contexts, merged with the user-configured cache
+    // contexts, if any.
+    return array_merge($this->getRequiredCacheContexts(), $this->configuration['cache']['contexts']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    // If a block plugin's output changes, then it must be able to invalidate a
+    // cache tag that affects all instances of this block: across themes and
+    // across regions.
+    $block_plugin_cache_tag = str_replace(':', '__', $this->getPluginID());
+    return array('block_plugin' => array($block_plugin_cache_tag));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheBin() {
+    return 'block';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    return (int)$this->configuration['cache']['max_age'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    // Similar to the page cache, a block is cacheable if it has a max age.
+    // Blocks that should never be cached can override this method to simply
+    // return FALSE.
+    $max_age = $this->getCacheMaxAge();
+    return $max_age === Cache::PERMANENT || $max_age > 0;
   }
 
 }

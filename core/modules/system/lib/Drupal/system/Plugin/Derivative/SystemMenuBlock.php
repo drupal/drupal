@@ -52,7 +52,6 @@ class SystemMenuBlock extends DerivativeBase implements ContainerDerivativeInter
     foreach ($this->menuStorage->loadMultiple() as $menu => $entity) {
       $this->derivatives[$menu] = $base_plugin_definition;
       $this->derivatives[$menu]['admin_label'] = $entity->label();
-      $this->derivatives[$menu]['cache'] = DRUPAL_NO_CACHE;
     }
     return $this->derivatives;
   }

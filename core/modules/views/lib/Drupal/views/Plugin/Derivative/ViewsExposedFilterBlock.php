@@ -93,7 +93,6 @@ class ViewsExposedFilterBlock implements ContainerDerivativeInterface {
             $desc = t('Exposed form: @view-@display_id', array('@view' => $view->id(), '@display_id' => $display->display['id']));
             $this->derivatives[$delta] = array(
               'admin_label' => $desc,
-              'cache' => DRUPAL_NO_CACHE,
             );
             $this->derivatives[$delta] += $base_plugin_definition;
           }

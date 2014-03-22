@@ -9,6 +9,7 @@ namespace Drupal\forum\Plugin\Block;
 
 use Drupal\block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a base class for Forum blocks.
@@ -18,9 +19,32 @@ abstract class ForumBlockBase extends BlockBase {
   /**
    * {@inheritdoc}
    */
+  public function build() {
+    $result = $this->buildForumQuery()->execute();
+    if ($node_title_list = node_title_list($result)) {
+      $elements['forum_list'] = $node_title_list;
+      $elements['forum_more'] = array(
+        '#theme' => 'more_link',
+        '#url' => 'forum',
+        '#title' => t('Read the latest forum topics.')
+      );
+    }
+    return $elements;
+  }
+
+  /**
+   * Builds the select query to use for this forum block.
+   *
+   * @return \Drupal\Core\Database\Query\Select
+   *   A Select object.
+   */
+  abstract protected function buildForumQuery();
+
+  /**
+   * {@inheritdoc}
+   */
   public function defaultConfiguration() {
     return array(
-      'cache' => DRUPAL_CACHE_CUSTOM,
       'properties' => array(
         'administrative' => TRUE,
       ),
@@ -54,6 +78,13 @@ abstract class ForumBlockBase extends BlockBase {
    */
   public function blockSubmit($form, &$form_state) {
     $this->configuration['block_count'] = $form_state['values']['block_count'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheKeys() {
+    return array_merge(parent::getCacheKeys(), Cache::keyFromQuery($this->buildForumQuery()));
   }
 
 }

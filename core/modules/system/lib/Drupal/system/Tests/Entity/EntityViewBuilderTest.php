@@ -144,7 +144,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Test a view mode in default conditions: render caching is enabled for
     // the entity type and the view mode.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('tags', 'keys', 'granularity', 'bin') , 'A view mode with render cache enabled has the correct output (cache tags, keys, granularity and bin).');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('tags', 'keys', 'bin') , 'A view mode with render cache enabled has the correct output (cache tags, keys and bin).');
 
     // Test that a view mode can opt out of render caching.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'test');

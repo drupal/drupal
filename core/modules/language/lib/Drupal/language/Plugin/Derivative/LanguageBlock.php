@@ -27,7 +27,6 @@ class LanguageBlock extends DerivativeBase {
       foreach ($configurable_types as $type) {
         $this->derivatives[$type] = $base_plugin_definition;
         $this->derivatives[$type]['admin_label'] = t('Language switcher (!type)', array('!type' => $info[$type]['name']));
-        $this->derivatives[$type]['cache'] = DRUPAL_NO_CACHE;
       }
       // If there is just one configurable type then change the title of the
       // block.

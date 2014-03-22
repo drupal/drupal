@@ -21,7 +21,7 @@ interface CacheBackendInterface {
   /**
    * Indicates that the item should never be removed unless explicitly deleted.
    */
-  const CACHE_PERMANENT = 0;
+  const CACHE_PERMANENT = -1;
 
   /**
    * Returns data from the persistent cache.

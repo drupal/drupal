@@ -7,6 +7,7 @@
 
 namespace Drupal\block;
 
+use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -20,7 +21,7 @@ use Drupal\Core\Session\AccountInterface;
  *   brif references to the important components that are not coupled to the
  *   interface.
  */
-interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface {
+interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableInterface {
 
   /**
    * Indicates whether the block should be shown.

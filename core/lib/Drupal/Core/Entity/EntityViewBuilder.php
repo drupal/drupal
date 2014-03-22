@@ -158,8 +158,14 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
     // type configuration.
     if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {
       $return['#cache'] += array(
-        'keys' => array('entity_view', $this->entityTypeId, $entity->id(), $view_mode),
-        'granularity' => DRUPAL_CACHE_PER_ROLE,
+        'keys' => array(
+          'entity_view',
+          $this->entityTypeId,
+          $entity->id(),
+          $view_mode,
+          'cache_context.theme',
+          'cache_context.user.roles',
+        ),
         'bin' => $this->cacheBin,
       );
 

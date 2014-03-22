@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -249,35 +250,106 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Test _block_rehash().
+   * Test that cache tags are properly set and bubbled up to the page cache.
+   *
+   * Verify that invalidation of these cache tags works:
+   * - "block:<block ID>"
+   * - "block_plugin:<block plugin ID>"
    */
-  function testBlockRehash() {
-    \Drupal::moduleHandler()->install(array('block_test'));
-    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block_test'), 'Test block module enabled.');
+  public function testBlockCacheTags() {
+    // The page cache only works for anonymous users.
+    $this->drupalLogout();
 
-    // Clear the block cache to load the block_test module's block definitions.
-    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
+    // Enable page caching.
+    $config = \Drupal::config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
 
-    // Add a test block.
-    $block = array();
-    $block['id'] = 'test_cache';
-    $block['theme'] = \Drupal::config('system.theme')->get('default');
-    $block['region'] = 'header';
-    $block = $this->drupalPlaceBlock('test_cache', array('region' => 'header'));
+    // Place the "Powered by Drupal" block.
+    $block = $this->drupalPlaceBlock('system_powered_by_block', array('id' => 'powered', 'cache' => array('max_age' => 315360000)));
 
-    // Our test block's caching should default to DRUPAL_CACHE_PER_ROLE.
-    $settings = $block->get('settings');
-    $this->assertEqual($settings['cache'], DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
+    // Prime the page cache.
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
 
-    // Disable caching for this block.
-    $block->getPlugin()->setConfigurationValue('cache', DRUPAL_NO_CACHE);
+    // Verify a cache hit, but also the presence of the correct cache tags in
+    // both the page and block caches.
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $cid_parts = array(url('<front>', array('absolute' => TRUE)), 'html');
+    $cid = sha1(implode(':', $cid_parts));
+    $cache_entry = \Drupal::cache('page')->get($cid);
+    $expected_cache_tags = array(
+      'content:1',
+      'block_view:1',
+      'block:powered',
+      'block_plugin:system_powered_by_block',
+    );
+    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $cache_entry = \Drupal::cache('block')->get('entity_view:block:powered:en:stark');
+    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+
+    // The "Powered by Drupal" block is modified; verify a cache miss.
+    $block->set('region', 'content');
     $block->save();
-    // Flushing all caches should call _block_rehash().
-    $this->resetAll();
-    // Verify that block is updated with the new caching mode.
-    $block = entity_load('block', $block->id());
-    $settings = $block->get('settings');
-    $this->assertEqual($settings['cache'], DRUPAL_NO_CACHE, "Test block's database entry updated to DRUPAL_NO_CACHE.");
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+
+    // Now we should have a cache hit again.
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+
+    // Place the "Powered by Drupal" block another time; verify a cache miss.
+    $block_2 = $this->drupalPlaceBlock('system_powered_by_block', array('id' => 'powered-2', 'cache' => array('max_age' => 315360000)));
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+
+    // Verify a cache hit, but also the presence of the correct cache tags.
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $cid_parts = array(url('<front>', array('absolute' => TRUE)), 'html');
+    $cid = sha1(implode(':', $cid_parts));
+    $cache_entry = \Drupal::cache('page')->get($cid);
+    $expected_cache_tags = array(
+      'content:1',
+      'block_view:1',
+      'block:powered-2',
+      'block:powered',
+      'block_plugin:system_powered_by_block',
+    );
+    $this->assertEqual($cache_entry->tags, $expected_cache_tags);
+    $expected_cache_tags = array(
+      'content:1',
+      'block_view:1',
+      'block:powered',
+      'block_plugin:system_powered_by_block',
+    );
+    $cache_entry = \Drupal::cache('block')->get('entity_view:block:powered:en:stark');
+    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $expected_cache_tags = array(
+      'content:1',
+      'block_view:1',
+      'block:powered-2',
+      'block_plugin:system_powered_by_block',
+    );
+    $cache_entry = \Drupal::cache('block')->get('entity_view:block:powered-2:en:stark');
+    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+
+    // The plugin providing the "Powered by Drupal" block is modified; verify a
+    // cache miss.
+    Cache::invalidateTags(array('block_plugin:system_powered_by_block'));
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+
+    // Now we should have a cache hit again.
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+
+    // Delete the "Powered by Drupal" blocks; verify a cache miss.
+    entity_delete_multiple('block', array('powered', 'powered-2'));
+    $this->drupalGet('<front>');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
   }
 
 }

@@ -73,8 +73,18 @@ block.block.*:
           type: string
           label: 'Display title'
         cache:
-          type: integer
-          label: 'Cache'
+          type: mapping
+          label: 'Cache settings'
+          mapping:
+            max_age:
+              type: integer
+              label: 'Maximum age'
+            contexts:
+              type: sequence
+              label: 'Vary by context'
+              sequence:
+                - type: string
+                  label: 'Context'
         status:
           type: boolean
           label: 'Status'

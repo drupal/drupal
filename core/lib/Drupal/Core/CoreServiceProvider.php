@@ -7,6 +7,7 @@
 
 namespace Drupal\Core;
 
+use Drupal\Core\Cache\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\Config\ConfigFactoryOverridePass;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -72,6 +73,7 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addCompilerPass(new RegisterPathProcessorsPass());
     $container->addCompilerPass(new RegisterRouteProcessorsPass());
     $container->addCompilerPass(new ListCacheBinsPass());
+    $container->addCompilerPass(new CacheContextsPass());
     // Add the compiler pass for appending string translators.
     $container->addCompilerPass(new RegisterStringTranslatorsPass());
     // Add the compiler pass that will process the tagged breadcrumb builder

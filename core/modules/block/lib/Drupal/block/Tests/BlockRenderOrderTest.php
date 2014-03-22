@@ -48,21 +48,24 @@ class BlockRenderOrderTest extends WebTestBase {
       'stark_powered' => array(
         'weight' => '-3',
         'id' => 'stark_powered',
+        'label' => 'Test block A',
       ),
       'stark_by' => array(
         'weight' => '3',
         'id' => 'stark_by',
+        'label' => 'Test block C',
       ),
       'stark_drupal' => array(
         'weight' => '3',
         'id' => 'stark_drupal',
+        'label' => 'Test block B',
       ),
     );
 
     // Place the test blocks.
     foreach ($test_blocks as $test_block) {
       $this->drupalPlaceBlock('system_powered_by_block', array(
-        'label' => 'Test Block',
+        'label' => $test_block['label'],
         'region' => $region,
         'weight' => $test_block['weight'],
         'id' => $test_block['id'],
@@ -81,6 +84,6 @@ class BlockRenderOrderTest extends WebTestBase {
       }
     }
     $this->assertTrue($position['stark_powered'] < $position['stark_by'], 'Blocks with different weight are rendered in the correct order.');
-    $this->assertTrue($position['stark_drupal'] < $position['stark_by'], 'Blocks with identical weight are rendered in reverse alphabetical order.');
+    $this->assertTrue($position['stark_drupal'] < $position['stark_by'], 'Blocks with identical weight are rendered in alphabetical order.');
   }
 }

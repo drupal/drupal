@@ -21,22 +21,15 @@ class TestCacheBlock extends BlockBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Sets a different caching strategy for testing purposes.
-   */
-  public function defaultConfiguration() {
-    return array(
-      'cache' => DRUPAL_CACHE_PER_ROLE,
-    );
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function build() {
-    return array(
-      '#children' => \Drupal::state()->get('block_test.content'),
-    );
+    $content = \Drupal::state()->get('block_test.content');
+
+    $build = array();
+    if (!empty($content)) {
+      $build['#markup'] = $content;
+    }
+    return $build;
   }
 
 }
