@@ -10,7 +10,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\Field;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
 
@@ -556,22 +555,10 @@ function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
     return array();
   }
 
-  // Find all configurable fields, because only they could have a
-  // text_processing setting.
-  $configurable_fields = array_keys(array_filter($field_definitions, function ($definition) {
-    return $definition->isConfigurable();
-  }));
-  if (empty($configurable_fields)) {
-    return array();
-  }
-
   // Only return fields that have text processing enabled.
-  return array_filter($configurable_fields, function ($field) use ($entity) {
-    $settings = Field::fieldInfo()
-      ->getInstance($entity->getEntityTypeId(), $entity->bundle(), $field)
-      ->getSettings();
-    return isset($settings['text_processing']) && $settings['text_processing'] === TRUE;
-  });
+  return array_keys(array_filter($field_definitions, function ($definition) {
+    return $definition->getSetting('text_processing') === TRUE;
+  }));
 }
 
 /**
