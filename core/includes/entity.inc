@@ -423,25 +423,6 @@ function entity_access_controller($entity_type) {
 }
 
 /**
- * Returns an entity list controller for a given entity type.
- *
- * @param string $entity_type
- *   The type of the entity.
- *
- * @return \Drupal\Core\Entity\EntityListControllerInterface
- *   An entity list controller.
- *
- * @see \Drupal\Core\Entity\EntityManagerInterface::getListController().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::entityManager()->getListController().
- */
-function entity_list_controller($entity_type) {
-  return \Drupal::entityManager()
-    ->getListController($entity_type);
-}
-
-/**
  * Returns the render array for an entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity

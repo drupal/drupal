@@ -120,7 +120,7 @@ class ConfigTranslationMapperList extends ControllerBase {
    * @return array
    *   A renderable array of operation links.
    *
-   * @see \Drupal\Core\Entity\EntityListController::buildOperations()
+   * @see \Drupal\Core\Entity\EntityList::buildOperations()
    */
   protected function buildOperations(ConfigMapperInterface $mapper) {
     // Retrieve and sort operations.

@@ -20,7 +20,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *   label = @Translation("Taxonomy vocabulary"),
  *   controllers = {
  *     "storage" = "Drupal\taxonomy\VocabularyStorageController",
- *     "list" = "Drupal\taxonomy\VocabularyListController",
+ *     "list_builder" = "Drupal\taxonomy\VocabularyListBuilder",
  *     "form" = {
  *       "default" = "Drupal\taxonomy\VocabularyFormController",
  *       "reset" = "Drupal\taxonomy\Form\VocabularyResetForm",

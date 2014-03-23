@@ -17,7 +17,7 @@ use Drupal\responsive_image\ResponsiveImageMappingInterface;
  *   id = "responsive_image_mapping",
  *   label = @Translation("Responsive image mapping"),
  *   controllers = {
- *     "list" = "Drupal\responsive_image\ResponsiveImageMappingListController",
+ *     "list_builder" = "Drupal\responsive_image\ResponsiveImageMappingListBuilder",
  *     "form" = {
  *       "edit" = "Drupal\responsive_image\ResponsiveImageMappingFormController",
  *       "add" = "Drupal\responsive_image\ResponsiveImageMappingFormController",

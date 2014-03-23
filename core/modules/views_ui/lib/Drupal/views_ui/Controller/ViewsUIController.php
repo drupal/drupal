@@ -154,7 +154,7 @@ class ViewsUIController extends ControllerBase {
 
     // If the request is via AJAX, return the rendered list as JSON.
     if ($request->request->get('js')) {
-      $list = $this->entityManager()->getListController('view')->render();
+      $list = $this->entityManager()->getListBuilder('view')->render();
       $response = new AjaxResponse();
       $response->addCommand(new ReplaceCommand('#views-entity-list', drupal_render($list)));
       return $response;

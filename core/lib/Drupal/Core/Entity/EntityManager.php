@@ -191,8 +191,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   /**
    * {@inheritdoc}
    */
-  public function getListController($entity_type) {
-    return $this->getController($entity_type, 'list', 'getListClass');
+  public function getListBuilder($entity_type) {
+    return $this->getController($entity_type, 'list_builder', 'getListBuilderClass');
   }
 
   /**

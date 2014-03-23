@@ -75,7 +75,7 @@ function views_ui_entity_type_build(array &$entity_types) {
     ->setFormClass('clone', 'Drupal\views_ui\ViewCloneFormController')
     ->setFormClass('delete', 'Drupal\views_ui\ViewDeleteFormController')
     ->setFormClass('break_lock', 'Drupal\views_ui\Form\BreakLockForm')
-    ->setListClass('Drupal\views_ui\ViewListController')
+    ->setListBuilderClass('Drupal\views_ui\ViewListBuilder')
     ->setLinkTemplate('edit-form', 'views_ui.edit')
     ->setLinkTemplate('edit-display-form', 'views_ui.edit_display')
     ->setLinkTemplate('preview-form', 'views_ui.preview')

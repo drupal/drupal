@@ -119,15 +119,15 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getViewBuilder($entity_type);
 
   /**
-   * Creates a new list controller instance.
+   * Creates a new entity list builder.
    *
    * @param string $entity_type
-   *   The entity type for this list controller.
+   *   The entity type for this list builder.
    *
-   * @return \Drupal\Core\Entity\EntityListControllerInterface
-   *   A list controller instance.
+   * @return \Drupal\Core\Entity\EntityListBuilderInterface
+   *   An entity list builder instance.
    */
-  public function getListController($entity_type);
+  public function getListBuilder($entity_type);
 
   /**
    * Creates a new form controller instance.

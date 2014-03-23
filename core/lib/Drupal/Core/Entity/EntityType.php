@@ -365,23 +365,23 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getListClass() {
-    return $this->getControllerClass('list');
+  public function getListBuilderClass() {
+    return $this->getControllerClass('list_builder');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setListClass($class) {
-    $this->controllers['list'] = $class;
+  public function setListBuilderClass($class) {
+    $this->controllers['list_builder'] = $class;
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasListClass() {
-    return $this->hasControllerClass('list');
+  public function hasListBuilderClass() {
+    return $this->hasControllerClass('list_builder');
   }
 
   /**

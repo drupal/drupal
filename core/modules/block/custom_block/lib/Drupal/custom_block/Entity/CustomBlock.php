@@ -22,7 +22,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   bundle_label = @Translation("Custom Block type"),
  *   controllers = {
  *     "access" = "Drupal\custom_block\CustomBlockAccessController",
- *     "list" = "Drupal\custom_block\CustomBlockListController",
+ *     "list_builder" = "Drupal\custom_block\CustomBlockListBuilder",
  *     "view_builder" = "Drupal\custom_block\CustomBlockViewBuilder",
  *     "form" = {
  *       "add" = "Drupal\custom_block\CustomBlockFormController",

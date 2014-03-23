@@ -32,7 +32,7 @@ use Drupal\entity\EntityFormModeInterface;
  *   label = @Translation("Form mode"),
  *   controllers = {
  *     "storage" = "Drupal\entity\EntityDisplayModeStorageController",
- *     "list" = "Drupal\entity\EntityFormModeListController",
+ *     "list_builder" = "Drupal\entity\EntityFormModeListBuilder",
  *     "form" = {
  *       "add" = "Drupal\entity\Form\EntityFormModeAddForm",
  *       "edit" = "Drupal\entity\Form\EntityDisplayModeEditForm",

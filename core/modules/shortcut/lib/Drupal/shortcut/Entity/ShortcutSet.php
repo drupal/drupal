@@ -20,7 +20,7 @@ use Drupal\shortcut\ShortcutSetInterface;
  *   controllers = {
  *     "storage" = "Drupal\shortcut\ShortcutSetStorageController",
  *     "access" = "Drupal\shortcut\ShortcutSetAccessController",
- *     "list" = "Drupal\shortcut\ShortcutSetListController",
+ *     "list_builder" = "Drupal\shortcut\ShortcutSetListBuilder",
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutSetFormController",
  *       "add" = "Drupal\shortcut\ShortcutSetFormController",

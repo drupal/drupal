@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests the listing of custom blocks.
  *
- * @see \Drupal\block\CustomBlockListController
+ * @see \Drupal\block\CustomBlockListBuilder
  */
 class CustomBlockListTest extends WebTestBase {
 

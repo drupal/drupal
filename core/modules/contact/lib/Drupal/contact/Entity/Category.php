@@ -19,7 +19,7 @@ use Drupal\contact\CategoryInterface;
  *   label = @Translation("Contact category"),
  *   controllers = {
  *     "access" = "Drupal\contact\CategoryAccessController",
- *     "list" = "Drupal\contact\CategoryListController",
+ *     "list_builder" = "Drupal\contact\CategoryListBuilder",
  *     "form" = {
  *       "add" = "Drupal\contact\CategoryFormController",
  *       "edit" = "Drupal\contact\CategoryFormController",

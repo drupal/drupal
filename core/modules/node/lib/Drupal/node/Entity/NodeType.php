@@ -26,7 +26,7 @@ use Drupal\node\NodeTypeInterface;
  *       "edit" = "Drupal\node\NodeTypeFormController",
  *       "delete" = "Drupal\node\Form\NodeTypeDeleteConfirm"
  *     },
- *     "list" = "Drupal\node\NodeTypeListController",
+ *     "list_builder" = "Drupal\node\NodeTypeListBuilder",
  *   },
  *   admin_permission = "administer content types",
  *   config_prefix = "type",

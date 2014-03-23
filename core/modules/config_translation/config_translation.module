@@ -78,15 +78,15 @@ function config_translation_entity_type_alter(array &$entity_types) {
   foreach ($entity_types as $entity_type_id => $entity_type) {
     if ($entity_type->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
       if ($entity_type_id == 'block') {
-        $class = 'Drupal\config_translation\Controller\ConfigTranslationBlockListController';
+        $class = 'Drupal\config_translation\Controller\ConfigTranslationBlockListBuilder';
       }
       elseif ($entity_type_id == 'field_instance_config') {
-        $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListController';
+        $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListBuilder';
         // Will be filled in dynamically, see \Drupal\field\Entity\FieldInstanceConfig::linkTemplates().
         $entity_type->setLinkTemplate('drupal:config-translation-overview', 'config_translation.item.overview.');
       }
       else {
-        $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListController';
+        $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListBuilder';
       }
       $entity_type->setControllerClass('config_translation_list', $class);
 

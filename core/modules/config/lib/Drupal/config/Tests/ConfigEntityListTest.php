@@ -32,10 +32,10 @@ class ConfigEntityListTest extends WebTestBase {
   }
 
   /**
-   * Tests entity list controller methods.
+   * Tests entity list builder methods.
    */
   function testList() {
-    $controller = \Drupal::entityManager()->getListController('config_test');
+    $controller = \Drupal::entityManager()->getListBuilder('config_test');
 
     // Test getStorageController() method.
     $this->assertTrue($controller->getStorageController() instanceof EntityStorageControllerInterface, 'EntityStorageController instance in storage.');
@@ -116,7 +116,7 @@ class ConfigEntityListTest extends WebTestBase {
     // Test that config entities that do not support status, do not have
     // enable/disable operations.
     $controller = $this->container->get('entity.manager')
-      ->getListController('config_test_no_status');
+      ->getListBuilder('config_test_no_status');
 
     $list = $controller->load();
     $entity = $list['default'];

@@ -31,7 +31,7 @@ use Drupal\user\UserInterface;
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
  *       "edit" = "Drupal\node\NodeFormController"
  *     },
- *     "list" = "Drupal\node\NodeListController",
+ *     "list_builder" = "Drupal\node\NodeListBuilder",
  *     "translation" = "Drupal\node\NodeTranslationController"
  *   },
  *   base_table = "node",

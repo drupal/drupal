@@ -25,7 +25,7 @@ class EntityViewController implements ContainerInjectionInterface {
   protected $entityManager;
 
   /**
-   * Creates an EntityListController object.
+   * Creates an EntityViewController object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.

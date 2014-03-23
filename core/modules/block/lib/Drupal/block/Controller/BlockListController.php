@@ -8,7 +8,6 @@
 namespace Drupal\block\Controller;
 
 use Drupal\Core\Entity\Controller\EntityListController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -29,7 +28,7 @@ class BlockListController extends EntityListController {
    */
   public function listing($theme = NULL, Request $request = NULL) {
     $theme = $theme ?: $this->config('system.theme')->get('default');
-    return $this->entityManager()->getListController('block')->render($theme, $request);
+    return $this->entityManager()->getListBuilder('block')->render($theme, $request);
   }
 
 }

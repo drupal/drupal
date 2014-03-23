@@ -22,7 +22,7 @@ use Drupal\user\UserInterface;
  *   id = "entity_test",
  *   label = @Translation("Test entity"),
  *   controllers = {
- *     "list" = "Drupal\entity_test\EntityTestListController",
+ *     "list_builder" = "Drupal\entity_test\EntityTestListBuilder",
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {

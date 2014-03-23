@@ -760,7 +760,7 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
  *
  * @param array $operations
  *   Operations array as returned by
- *   \Drupal\Core\Entity\EntityListControllerInterface::getOperations().
+ *   \Drupal\Core\Entity\EntityListBuilderInterface::getOperations().
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity on which the linked operations will be performed.
  */

@@ -194,7 +194,7 @@ interface EntityTypeInterface {
    *     entity forms when the forms are similar. The classes must implement
    *     \Drupal\Core\Entity\EntityFormControllerInterface.
    *   - list: The name of the class that provides listings of the entities. The
-   *     class must implement \Drupal\Core\Entity\EntityListControllerInterface.
+   *     class must implement \Drupal\Core\Entity\EntityListBuilderInterface.
    *   - render: The name of the class that is used to render the entities. The
    *     class must implement \Drupal\Core\Entity\EntityViewBuilderInterface.
    *   - access: The name of the class that is used for access checks. The class
@@ -263,7 +263,7 @@ interface EntityTypeInterface {
    * @return string
    *   The class for this entity type's list.
    */
-  public function getListClass();
+  public function getListBuilderClass();
 
   /**
    * Sets the list class.
@@ -273,7 +273,7 @@ interface EntityTypeInterface {
    *
    * @return static
    */
-  public function setListClass($class);
+  public function setListBuilderClass($class);
 
   /**
    * Indicates if this entity type has a list class.
@@ -281,7 +281,7 @@ interface EntityTypeInterface {
    * @return bool
    *   TRUE if there is a list for this entity type, FALSE otherwise.
    */
-  public function hasListClass();
+  public function hasListBuilderClass();
 
   /**
    * Returns the view builder class.

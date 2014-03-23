@@ -24,7 +24,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *       "edit" = "Drupal\custom_block\CustomBlockTypeFormController",
  *       "delete" = "Drupal\custom_block\Form\CustomBlockTypeDeleteForm"
  *     },
- *     "list" = "Drupal\custom_block\CustomBlockTypeListController"
+ *     "list_builder" = "Drupal\custom_block\CustomBlockTypeListBuilder"
  *   },
  *   admin_permission = "administer blocks",
  *   config_prefix = "type",

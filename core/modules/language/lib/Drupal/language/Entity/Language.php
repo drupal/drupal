@@ -19,7 +19,7 @@ use Drupal\language\LanguageInterface;
  *   id = "language_entity",
  *   label = @Translation("Language"),
  *   controllers = {
- *     "list" = "Drupal\language\LanguageListController",
+ *     "list_builder" = "Drupal\language\LanguageListBuilder",
  *     "access" = "Drupal\language\LanguageAccessController",
  *     "form" = {
  *       "add" = "Drupal\language\Form\LanguageAddForm",

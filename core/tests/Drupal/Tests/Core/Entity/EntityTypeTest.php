@@ -116,16 +116,16 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getListClass() method.
+   * Tests the getListBuilderClass() method.
    */
-  public function testGetListClass() {
+  public function testGetListBuilderClass() {
     $controller = $this->getTestControllerClass();
     $entity_type = $this->setUpEntityType(array(
       'controllers' => array(
-        'list' => $controller,
+        'list_builder' => $controller,
       ),
     ));
-    $this->assertSame($controller, $entity_type->getListClass());
+    $this->assertSame($controller, $entity_type->getListBuilderClass());
   }
 
   /**

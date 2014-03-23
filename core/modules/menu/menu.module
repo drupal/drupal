@@ -84,7 +84,7 @@ function menu_entity_type_build(array &$entity_types) {
     ->setFormClass('add', 'Drupal\menu\MenuFormController')
     ->setFormClass('edit', 'Drupal\menu\MenuFormController')
     ->setFormClass('delete', 'Drupal\menu\Form\MenuDeleteForm')
-    ->setListClass('Drupal\menu\MenuListController')
+    ->setListBuilderClass('Drupal\menu\MenuListBuilder')
     ->setLinkTemplate('add-form', 'menu.link_add')
     ->setLinkTemplate('delete-form', 'menu.delete_menu')
     ->setLinkTemplate('edit-form', 'menu.menu_edit');

@@ -24,7 +24,7 @@ use Drupal\search\SearchPageInterface;
  *   controllers = {
  *     "access" = "Drupal\search\SearchPageAccessController",
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
- *     "list" = "Drupal\search\SearchPageListController",
+ *     "list_builder" = "Drupal\search\SearchPageListBuilder",
  *     "form" = {
  *       "add" = "Drupal\search\Form\SearchPageAddForm",
  *       "edit" = "Drupal\search\Form\SearchPageEditForm",

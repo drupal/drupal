@@ -18,7 +18,7 @@ use Drupal\config_test\ConfigTestInterface;
  *   label = @Translation("Test configuration"),
  *   controllers = {
  *     "storage" = "Drupal\config_test\ConfigTestStorageController",
- *     "list" = "Drupal\config_test\ConfigTestListController",
+ *     "list_builder" = "Drupal\config_test\ConfigTestListBuilder",
  *     "form" = {
  *       "default" = "Drupal\config_test\ConfigTestFormController",
  *       "delete" = "Drupal\config_test\Form\ConfigTestDeleteForm"

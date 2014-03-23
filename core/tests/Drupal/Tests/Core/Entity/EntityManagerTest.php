@@ -276,19 +276,19 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getListController() method.
+   * Tests the getListBuilder() method.
    *
-   * @covers ::getListController()
+   * @covers ::getListBuilder()
    */
-  public function testGetListController() {
+  public function testGetListBuilder() {
     $class = $this->getTestControllerClass();
     $entity = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity->expects($this->once())
-      ->method('getListClass')
+      ->method('getListBuilderClass')
       ->will($this->returnValue($class));
     $this->setUpEntityManager(array('test_entity_type' => $entity));
 
-    $this->assertInstanceOf($class, $this->entityManager->getListController('test_entity_type'));
+    $this->assertInstanceOf($class, $this->entityManager->getListBuilder('test_entity_type'));
   }
 
   /**
