@@ -110,5 +110,26 @@ EXPECTED
       drupal_rewrite_settings($test['settings'], $filename);
       $this->assertEqual(file_get_contents(DRUPAL_ROOT . '/' . $filename), "<?php\n" . $test['expected'] . "\n");
     }
+
+    // Test that <?php gets added to the start of an empty settings file.
+    // Set the array of settings that will be written to the file.
+    $test = array(
+      'settings' => array(
+        'no_index' => (object) array(
+          'value' => TRUE,
+          'required' => TRUE,
+        ),
+      ),
+      'expected' => '$no_index = true;'
+    );
+    // Make an empty file.
+    $filename = settings()->get('file_public_path', conf_path() . '/files') . '/mock_settings.php';
+    file_put_contents(DRUPAL_ROOT . '/' . $filename, "");
+
+    // Write the setting to the file.
+    drupal_rewrite_settings($test['settings'], $filename);
+
+    // Check that the result is just the php opening tag and the settings.
+    $this->assertEqual(file_get_contents(DRUPAL_ROOT . '/' . $filename), "<?php\n" . $test['expected'] . "\n");
   }
 }

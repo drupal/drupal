@@ -211,6 +211,10 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
   }
   $contents = file_get_contents(DRUPAL_ROOT . '/' . $settings_file);
   if ($contents !== FALSE) {
+    // Initialize the contents for the settings.php file if it is empty.
+    if (trim($contents) === '') {
+      $contents = "<?php\n";
+    }
     // Step through each token in settings.php and replace any variables that
     // are in the passed-in array.
     $buffer = '';
