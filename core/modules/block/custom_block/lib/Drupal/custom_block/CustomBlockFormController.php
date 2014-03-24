@@ -141,7 +141,7 @@ class CustomBlockFormController extends ContentEntityFormController {
         'class' => array('custom-block-form-revision-information'),
       ),
       '#attached' => array(
-        'js' => array(drupal_get_path('module', 'custom_block') . '/custom_block.js'),
+        'library' => array('custom_block/drupal.custom_block'),
       ),
       '#weight' => 20,
       '#access' => $block->isNewRevision() || $account->hasPermission('administer blocks'),

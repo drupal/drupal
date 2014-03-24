@@ -1,0 +1,8 @@
+drupal.custom_block:
+  version: VERSION
+  js:
+    js/custom_block.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form
