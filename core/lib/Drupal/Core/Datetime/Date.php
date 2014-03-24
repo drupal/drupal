@@ -215,11 +215,10 @@ class Date {
    */
   protected function dateFormat($format, $langcode) {
     if (!isset($this->dateFormats[$format][$langcode])) {
-      // Enter a language specific context so the right date format is loaded.
-      $original_language = $this->configFactory->getLanguage();
-      $this->configFactory->setLanguage(new Language(array('id' => $langcode)));
+      $original_language = $this->languageManager->getConfigOverrideLanguage();
+      $this->languageManager->setConfigOverrideLanguage(new Language(array('id' => $langcode)));
       $this->dateFormats[$format][$langcode] = $this->dateFormatStorage->load($format);
-      $this->configFactory->setLanguage($original_language);
+      $this->languageManager->setConfigOverrideLanguage($original_language);
     }
     return $this->dateFormats[$format][$langcode];
   }

@@ -329,4 +329,24 @@ class LanguageManager extends DependencySerialization implements LanguageManager
     );
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * This function is a noop since the configuration can not be overridden by
+   * language unless the Language module is enabled. That replaces the default
+   * language manger with a configurable language manager.
+   *
+   * @see \Drupal\language\ConfigurableLanguageManager::setConfigOverrideLanguage()
+   */
+  public function setConfigOverrideLanguage(Language $language = NULL) {
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigOverrideLanguage() {
+    return $this->getCurrentLanguage();
+  }
+
 }

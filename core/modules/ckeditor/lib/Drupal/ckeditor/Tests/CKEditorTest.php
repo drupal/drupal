@@ -339,7 +339,7 @@ class CKEditorTest extends DrupalUnitTestBase {
    * Tests that CKEditor plugins participate in JS translation.
    */
   function testJSTranslation() {
-    $this->enableModules(array('locale'));
+    $this->enableModules(array('language', 'locale'));
     $this->installSchema('locale', 'locales_source');
     $this->installSchema('locale', 'locales_location');
     $editor = entity_load('editor', 'filtered_html');

@@ -31,8 +31,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
         ->addArgument(new Reference('language_manager'))
         ->addArgument(new Reference('language_negotiator'))
         ->addArgument(new Reference('string_translation'))
-        ->addArgument(new Reference('current_user'))
-        ->addArgument(new Reference('config.factory'));
+        ->addArgument(new Reference('current_user'));
 
       $container->register('path_processor_language', 'Drupal\language\HttpKernel\PathProcessorLanguage')
         ->addTag('path_processor_inbound', array('priority' => 300))
@@ -52,15 +51,19 @@ class LanguageServiceProvider extends ServiceProviderBase {
     $definition = $container->getDefinition('language_manager');
     $definition->setClass('Drupal\language\ConfigurableLanguageManager')
       ->addArgument(new Reference('config.factory'))
-      ->addArgument(new Reference('module_handler'));
+      ->addArgument(new Reference('module_handler'))
+      ->addArgument(new Reference('language.config_factory_override'));
     if ($default_language_values = $this->getDefaultLanguageValues()) {
       $container->setParameter('language.default_values', $default_language_values);
-      // Ensure that configuration can be localised if the site is monolingual
-      // but the Language module is enabled. This is the case for monolingual
-      // sites not in English.
-      $definition = $container->getDefinition('config.factory');
-      $definition->addMethodCall('setLanguageFromDefault', array(new Reference('language.default')));
     }
+
+    // For monolingual sites, we explicitly set the default language for the
+    // language config override service as there is no language negotiation.
+    if (!$this->isMultilingual()) {
+      $container->getDefinition('language.config_factory_override')
+        ->addMethodCall('setLanguageFromDefault', array(new Reference('language.default')));
+    }
+
   }
 
   /**

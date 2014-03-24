@@ -33,5 +33,12 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
     return $overrides;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheSuffix() {
+    return 'ConfigOverrider';
+  }
+
 }
 

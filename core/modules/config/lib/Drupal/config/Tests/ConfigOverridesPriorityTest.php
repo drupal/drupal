@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
 
-  public static $modules = array('system', 'config', 'config_override');
+  public static $modules = array('system', 'config', 'config_override', 'language');
 
   public static function getInfo() {
     return array(
@@ -59,10 +59,9 @@ class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
       'name' => 'French',
       'id' => 'fr',
     ));
-    $config_factory->setLanguage($language);
-    $language_config_name = $config_factory->getLanguageConfigName($language->id, 'system.site');
-    $config_factory
-      ->get($language_config_name)
+    \Drupal::languageManager()->setConfigOverrideLanguage($language);
+    \Drupal::languageManager()
+      ->getLanguageConfigOverride($language->id, 'system.site')
       ->set('name', $language_overridden_name)
       ->set('mail', $language_overridden_mail)
       ->save();

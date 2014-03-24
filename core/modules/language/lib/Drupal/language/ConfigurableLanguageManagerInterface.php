@@ -78,4 +78,17 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    */
   public function updateLockedLanguageWeights();
 
+  /**
+   * Gets a language config override object.
+   *
+   * @param string $langcode
+   *   The language code for the override.
+   * @param string $name
+   *   The language configuration object name.
+   *
+   * @return \Drupal\Core\Config\Config
+   *   The language config override object.
+   */
+  public function getLanguageConfigOverride($langcode, $name);
+
 }

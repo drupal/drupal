@@ -171,15 +171,16 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertEqual($property->getValue(), $image_style_label, 'Got the right translation for image style name after translation');
 
     // Quick test to ensure translation file exists.
-    $language_config_name = \Drupal::configFactory()->getLanguageConfigName('xx', 'image.style.medium');
-    $this->assertEqual(\Drupal::config($language_config_name)->get('label'), $image_style_label);
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('xx', 'image.style.medium');
+    $this->assertEqual($override->get('label'), $image_style_label);
 
     // Uninstall the module.
     $this->drupalPostForm('admin/modules/uninstall', array('uninstall[image]' => "image"), t('Uninstall'));
     $this->drupalPostForm(NULL, array(), t('Uninstall'));
 
     // Ensure that the translated configuration has been removed.
-    $this->assertFalse(\Drupal::config($language_config_name)->get('label'), 'Translated configuration for image module removed.');
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('xx', 'image.style.medium');
+    $this->assertTrue($override->isNew(), 'Translated configuration for image module removed.');
 
     // Translate default category using the UI so configuration is refreshed.
     $category_label = $this->randomName(20);

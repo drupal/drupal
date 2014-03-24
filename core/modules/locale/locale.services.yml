@@ -6,7 +6,7 @@ services:
     arguments: ['@entity.manager', '@config.factory', '@router.admin_context']
   locale.config.typed:
     class: Drupal\locale\LocaleConfigManager
-    arguments: ['@config.storage', '@config.storage.schema', '@config.storage.installer', '@locale.storage', '@cache.config', '@config.factory']
+    arguments: ['@config.storage', '@config.storage.schema', '@config.storage.installer', '@locale.storage', '@cache.config', '@config.factory', '@language_manager']
   locale.storage:
     class: Drupal\locale\StringDatabaseStorage
     arguments: ['@database']

@@ -168,4 +168,22 @@ interface LanguageManagerInterface {
    */
   function getLanguageSwitchLinks($type, $path);
 
+  /**
+   * Sets the configuration override language.
+   *
+   * @param \Drupal\Core\Language\Language $language
+   *   The language to override configuration with.
+   *
+   * @return $this
+   */
+  public function setConfigOverrideLanguage(Language $language = NULL);
+
+  /**
+   * Gets the current configuration override language.
+   *
+   * @return \Drupal\Core\Language\Language $language
+   *   The current configuration override language.
+   */
+  public function getConfigOverrideLanguage();
+
 }

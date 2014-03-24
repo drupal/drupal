@@ -21,7 +21,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'locale', 'field', 'image', 'config_test');
+  public static $modules = array('system', 'language', 'locale', 'field', 'image', 'config_test');
 
   public static function getInfo() {
     return array(

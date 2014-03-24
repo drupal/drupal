@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -33,6 +34,13 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
+
+  /**
+   * The language configuration override service.
+   *
+   * @var \Drupal\language\Config\LanguageConfigFactoryOverrideInterface
+   */
+  protected $configFactoryOverride;
 
   /**
    * The request object.
@@ -93,15 +101,22 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * Constructs a new ConfigurableLanguageManager object.
    *
+   * @param \Drupal\Core\Language\LanguageDefault $default_language
+   *   The default language service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration storage service.
+   *   The configuration factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\language\Config\LanguageConfigFactoryOverrideInterface $config_override
+   *   The language configuration override service.
+   * @param \Drupal\Core\Config\StorageInterface $config_storage
+   *   The configuration storage engine.
    */
-  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
+  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override) {
     $this->defaultLanguage = $default_language;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
+    $this->configFactoryOverride = $config_override;
   }
 
   /**
@@ -369,6 +384,28 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     }
 
     return $links;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfigOverrideLanguage(Language $language = NULL) {
+    $this->configFactoryOverride->setLanguage($language);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigOverrideLanguage() {
+    return $this->configFactoryOverride->getLanguage();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLanguageConfigOverride($langcode, $name) {
+    return $this->configFactoryOverride->getOverride($langcode, $name);
   }
 
 }

@@ -34,5 +34,12 @@ class ConfigOverriderLowPriority implements ConfigFactoryOverrideInterface {
     return $overrides;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheSuffix() {
+    return 'ConfigOverriderLowPriority';
+  }
+
 }
 

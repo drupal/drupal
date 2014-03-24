@@ -24,4 +24,12 @@ interface ConfigFactoryOverrideInterface {
    */
   public function loadOverrides($names);
 
+  /**
+   * The string to append to the configuration static cache name.
+   *
+   * @return string
+   *   A string to append to the configuration static cache name.
+   */
+  public function getCacheSuffix();
+
 }

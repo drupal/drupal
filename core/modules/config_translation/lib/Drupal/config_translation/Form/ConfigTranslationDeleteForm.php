@@ -9,10 +9,9 @@ namespace Drupal\config_translation\Form;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -23,11 +22,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ConfigTranslationDeleteForm extends ConfirmFormBase {
 
   /**
-   * The configuration storage.
+   * The language manager.
    *
-   * @var \Drupal\Core\Config\StorageInterface $config_storage
+   * @var \Drupal\language\ConfigurableLanguageManagerInterface
    */
-  protected $configStorage;
+  protected $languageManager;
 
   /**
    * The configuration mapper manager.
@@ -60,20 +59,17 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
   /**
    * Constructs a ConfigTranslationDeleteForm.
    *
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
-   *   The configuration storage.
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   *   The language override configuration storage.
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
    *   The configuration mapper manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
    */
-  public function __construct(StorageInterface $config_storage, ConfigMapperManagerInterface $config_mapper_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
-    $this->configStorage = $config_storage;
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager, ConfigMapperManagerInterface $config_mapper_manager, ModuleHandlerInterface $module_handler) {
+    $this->languageManager = $language_manager;
     $this->configMapperManager = $config_mapper_manager;
     $this->moduleHandler = $module_handler;
-    $this->configFactory = $config_factory;
   }
 
   /**
@@ -81,10 +77,9 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.storage'),
+      $container->get('language_manager'),
       $container->get('plugin.manager.config_translation.mapper'),
-      $container->get('module_handler'),
-      $container->get('config.factory')
+      $container->get('module_handler')
     );
   }
 
@@ -142,8 +137,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     foreach ($this->mapper->getConfigNames() as $name) {
-      $config_name = $this->configFactory->getLanguageConfigName($this->language->id, $name);
-      $this->configStorage->delete($config_name);
+      $this->languageManager->getLanguageConfigOverride($this->language->id, $name)->delete();
     }
 
     // Flush all persistent caches.

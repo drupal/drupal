@@ -7,8 +7,6 @@
 
 namespace Drupal\language\EventSubscriber;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
@@ -52,13 +50,6 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   protected $currentUser;
 
   /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a LanguageRequestSubscriber object.
    *
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
@@ -69,15 +60,12 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   The translation service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current active user.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation, AccountInterface $current_user, ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation, AccountInterface $current_user) {
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
     $this->translation = $translation;
     $this->currentUser = $current_user;
-    $this->configFactory = $config_factory;
   }
 
   /**
@@ -94,7 +82,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
       if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
         $this->languageManager->setNegotiator($this->negotiator);
         $this->languageManager->setRequest($request);
-        $this->configFactory->setLanguage($this->languageManager->getCurrentLanguage());
+        $this->languageManager->setConfigOverrideLanguage($this->languageManager->getCurrentLanguage());
       }
       // After the language manager has initialized, set the default langcode
       // for the string translations.

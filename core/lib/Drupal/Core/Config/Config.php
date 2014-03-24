@@ -8,12 +8,6 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
-use Drupal\Core\Config\Schema\SchemaIncompleteException;
-use Drupal\Core\TypedData\PrimitiveInterface;
-use Drupal\Core\TypedData\Type\FloatInterface;
-use Drupal\Core\TypedData\Type\IntegerInterface;
-use Drupal\Core\Language\Language;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -34,28 +28,14 @@ class Config extends StorableConfigBase {
   protected $eventDispatcher;
 
   /**
-   * The language object used to override configuration data.
-   *
-   * @var \Drupal\Core\Language\Language
-   */
-  protected $language;
-
-  /**
    * The current runtime data.
    *
-   * The configuration data from storage merged with language, module and
-   * settings overrides.
+   * The configuration data from storage merged with module and settings
+   * overrides.
    *
    * @var array
    */
   protected $overriddenData;
-
-  /**
-   * The current language overrides.
-   *
-   * @var array
-   */
-  protected $languageOverrides;
 
   /**
    * The current module overrides.
@@ -83,15 +63,12 @@ class Config extends StorableConfigBase {
    *   An event dispatcher instance to use for configuration events.
    * @param \Drupal\Core\Config\TypedConfigManager $typed_config
    *   The typed configuration manager service.
-   * @param \Drupal\Core\Language\Language $language
-   *   The language object used to override configuration data.
    */
-  public function __construct($name, StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManager $typed_config, Language $language = NULL) {
+  public function __construct($name, StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManager $typed_config) {
     $this->name = $name;
     $this->storage = $storage;
     $this->eventDispatcher = $event_dispatcher;
     $this->typedConfigManager = $typed_config;
-    $this->language = $language;
   }
 
   /**
@@ -100,7 +77,6 @@ class Config extends StorableConfigBase {
   public function initWithData(array $data) {
     parent::initWithData($data);
     $this->settingsOverrides = array();
-    $this->languageOverrides = array();
     $this->moduleOverrides = array();
     $this->setData($data);
     return $this;
@@ -170,36 +146,18 @@ class Config extends StorableConfigBase {
   }
 
   /**
-   * Sets language overrides for this configuration object.
-   *
-   * @param array $data
-   *   The overridden values of the configuration data.
-   *
-   * @return \Drupal\Core\Config\Config
-   *   The configuration object.
-   */
-  public function setLanguageOverride(array $data) {
-    $this->languageOverrides = $data;
-    $this->resetOverriddenData();
-    return $this;
-  }
-
-  /**
    * Sets the current data for this configuration object.
    *
-   * Configuration overrides operate at three distinct layers: language, modules
-   * and settings.php, with the last of these taking precedence. Overrides in
-   * settings.php take precedence over values provided by modules. Overrides
-   * provided by modules take precedence over language.
+   * Configuration overrides operate at two distinct layers: modules and
+   * settings.php. Overrides in settings.php take precedence over values
+   * provided by modules. Precedence or different module overrides is
+   * determined by the priority of the config.factory.override tagged services.
    *
    * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   protected function setOverriddenData() {
     $this->overriddenData = $this->data;
-    if (isset($this->languageOverrides) && is_array($this->languageOverrides)) {
-      $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->languageOverrides), TRUE);
-    }
     if (isset($this->moduleOverrides) && is_array($this->moduleOverrides)) {
       $this->overriddenData = NestedArray::mergeDeepArray(array($this->overriddenData, $this->moduleOverrides), TRUE);
     }
@@ -283,15 +241,6 @@ class Config extends StorableConfigBase {
   }
 
   /**
-   * Returns the language object for this Config object.
-   *
-   * @return \Drupal\Core\Language\Language
-   */
-  public function getLanguage() {
-    return $this->language;
-  }
-
-  /**
    * Gets the raw data without overrides.
    *
    * @return array
@@ -322,9 +271,6 @@ class Config extends StorableConfigBase {
     $original_data = $this->originalData;
     if ($apply_overrides) {
       // Apply overrides.
-      if (isset($this->languageOverrides) && is_array($this->languageOverrides)) {
-        $original_data = NestedArray::mergeDeepArray(array($original_data, $this->languageOverrides), TRUE);
-      }
       if (isset($this->moduleOverrides) && is_array($this->moduleOverrides)) {
         $original_data = NestedArray::mergeDeepArray(array($original_data, $this->moduleOverrides), TRUE);
       }
