@@ -197,6 +197,7 @@
         .toggle(this.model.get('isTrayToggleVisible'));
       $orientationToggle.find('button')
         .val(antiOrientation)
+        .attr('title', this.strings[antiOrientation])
         .text(this.strings[antiOrientation])
         .removeClass(iconClass)
         .addClass(iconAntiClass);
