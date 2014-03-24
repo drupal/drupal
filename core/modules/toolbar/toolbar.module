@@ -196,7 +196,7 @@ function toolbar_pre_render($element) {
   // Allow for altering of hook_toolbar().
   \Drupal::moduleHandler()->alter('toolbar', $items);
   // Sort the children.
-  uasort($items, 'element_sort');
+  uasort($items, array('\Drupal\Component\Utility\SortArray', 'sortByWeightProperty'));
 
   // Merge in the original toolbar values.
   $element = array_merge($element, $items);

@@ -4462,50 +4462,6 @@ function drupal_render_cid_create($elements) {
 }
 
 /**
- * Sorts a structured array by '#weight' property.
- *
- * Callback for uasort() within element_children().
- *
- * @param $a
- *   First item for comparison. The compared items should be associative arrays
- *   that optionally include a '#weight' key.
- * @param $b
- *   Second item for comparison.
- *
- * @return int
- *   The comparison result for uasort().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\SortArray::sortByWeightProperty().
- */
-function element_sort($a, $b) {
-  return SortArray::sortByWeightProperty($a, $b);
-}
-
-/**
- * Sorts a structured array by '#title' property.
- *
- * Callback for uasort() within:
- * - system_modules()
- * - theme_simpletest_test_table()
- *
- * @param $a
- *   First item for comparison. The compared items should be associative arrays
- *   that optionally include a '#title' key.
- * @param $b
- *   Second item for comparison.
- *
- * @return int
- *   The comparison result for uasort().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\SortArray::sortByTitleProperty().
- */
-function element_sort_by_title($a, $b) {
-  return SortArray::sortByTitleProperty($a, $b);
-}
-
-/**
  * Retrieves the default properties for the defined element type.
  *
  * @param $type
@@ -4544,27 +4500,6 @@ function element_info($type) {
  */
 function element_info_property($type, $property_name, $default = NULL) {
   return (($info = element_info($type)) && array_key_exists($property_name, $info)) ? $info[$property_name] : $default;
-}
-
-/**
- * Sorts a structured array by 'title' key (no # prefix).
- *
- * Callback for uasort() within system_admin_index().
- *
- * @param $a
- *   First item for comparison. The compared items should be associative arrays
- *   that optionally include a 'title' key.
- * @param $b
- *   Second item for comparison.
- *
- * @return int
- *   The comparison result for uasort().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\SortArray::sortByTitleElement().
- */
-function drupal_sort_title($a, $b) {
-  return SortArray::sortByTitleElement($a, $b);
 }
 
 /**

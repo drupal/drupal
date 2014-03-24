@@ -34,7 +34,7 @@ class AdminController extends ControllerBase {
       // Only display a section if there are any available tasks.
       if ($admin_tasks = system_get_module_admin_tasks($module, $info->info)) {
         // Sort links by title.
-        uasort($admin_tasks, 'drupal_sort_title');
+        uasort($admin_tasks, array('\Drupal\Component\Utility\SortArray', 'sortByTitleElement'));
         // Move 'Configure permissions' links to the bottom of each section.
         $permission_key = "user.admin.people.permissions.$module";
         if (isset($admin_tasks[$permission_key])) {
