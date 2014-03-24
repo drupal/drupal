@@ -123,7 +123,7 @@ EXPECTED
       'expected' => '$no_index = true;'
     );
     // Make an empty file.
-    $filename = settings()->get('file_public_path', conf_path() . '/files') . '/mock_settings.php';
+    $filename = Settings::get('file_public_path', conf_path() . '/files') . '/mock_settings.php';
     file_put_contents(DRUPAL_ROOT . '/' . $filename, "");
 
     // Write the setting to the file.
