@@ -1,7 +1,7 @@
 system.ajax:
   path: '/system/ajax'
   defaults:
-    _controller: '\Drupal\system\Controller\FormAjaxController::content'
+    _content: '\Drupal\system\Controller\FormAjaxController::content'
   options:
     _theme: ajax_base_page
   requirements:

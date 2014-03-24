@@ -429,27 +429,21 @@ services:
     tags:
       - { name: route_enhancer, priority: 1000 }
     arguments: ['@authentication']
-  route_enhancer.content_controller:
-    class: Drupal\Core\Routing\Enhancer\ContentControllerEnhancer
-    arguments: ['@content_negotiation']
-    tags:
-      - { name: route_enhancer, priority: 30 }
-  route_enhancer.ajax:
-    class: Drupal\Core\Routing\Enhancer\AjaxEnhancer
-    arguments: ['@content_negotiation']
-    tags:
-      - { name: route_enhancer, priority: 15 }
-      - { name: legacy_route_enhancer, priority: 15 }
   route_enhancer.entity:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     arguments: ['@controller_resolver', '@entity.manager', '@form_builder']
     tags:
       - { name: route_enhancer, priority: 20 }
-  route_enhancer.form:
-    class: Drupal\Core\Routing\Enhancer\FormEnhancer
+  route_content_controller_subscriber:
+    class: Drupal\Core\EventSubscriber\ContentControllerSubscriber
+    arguments: ['@content_negotiation']
+    tags:
+      - { name: event_subscriber }
+  route_content_form_controller_subscriber:
+    class: Drupal\Core\EventSubscriber\ContentFormControllerSubscriber
     arguments: ['@service_container', '@controller_resolver', '@form_builder']
     tags:
-      - { name: route_enhancer, priority: 10 }
+      - { name: event_subscriber }
   route_special_attributes_subscriber:
     class: Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
     tags:
