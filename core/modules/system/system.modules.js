@@ -17,7 +17,7 @@
       var $input = $('input.table-filter-text').once('table-filter-text');
       var $table = $($input.attr('data-table'));
       var $rowsAndDetails, $rows, $details;
-
+      var searching = false;
       function hidePackageDetails(index, element) {
         var $details = $(element);
         var $visibleRows = $details.find('table:not(.sticky-header)').find('tbody tr:visible');
@@ -36,13 +36,15 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
+          searching = true;
           $rows.each(showModuleRow);
 
           // Hide the package <details> if they don't have any visible rows.
           // Note that we first show() all <details> to be able to use ':visible'.
           $details.show().each(hidePackageDetails);
         }
-        else {
+        else if (searching) {
+          searching = false;
           $rowsAndDetails.show();
         }
       }
