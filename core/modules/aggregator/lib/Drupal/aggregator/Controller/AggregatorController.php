@@ -146,7 +146,7 @@ class AggregatorController extends ControllerBase {
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('Edit'),
-        'route_name' => 'aggregator.feed_edit',
+        'route_name' => 'aggregator.feed_configure',
         'route_parameters' => array('aggregator_feed' => $feed->fid),
       );
       $links['delete'] = array(
@@ -177,7 +177,7 @@ class AggregatorController extends ControllerBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => $this->t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => $this->urlGenerator()->generateFromPath('admin/config/services/aggregator/add/feed'))),
+      '#empty' => $this->t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => $this->urlGenerator()->generate('aggregator.feed_add'))),
     );
 
     return $build;

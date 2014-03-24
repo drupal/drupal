@@ -39,7 +39,7 @@ function aggregator_help($path, $arg) {
       $output = '<p>' . t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="http://cyber.law.harvard.edu/rss/">RSS</a>, <a href="http://www.w3.org/RDF/">RDF</a>, and <a href="http://www.atomenabled.org">Atom</a>.') . '</p>';
       $output .= '<p>' . t('Current feeds are listed below, and <a href="!addfeed">new feeds may be added</a>. At the <a href="!block">blocks administration page</a> you can enable for each feed the block <em>Aggregator feed</a> that contains the <em>latest items</em> .', array('!addfeed' => \Drupal::url('aggregator.feed_add'), '!block' => \Drupal::url('block.admin_display'))) . '</p>';
       return $output;
-    case 'admin/config/services/aggregator/add/feed':
+    case 'aggregator/sources/add':
       return '<p>' . t('Add a feed in RSS, RDF or Atom format. A feed may only have one entry.') . '</p>';
     case 'admin/config/services/aggregator/add/opml':
       return '<p>' . t('<abbr title="Outline Processor Markup Language">OPML</abbr> is an XML format used to exchange multiple feeds between aggregators. A single OPML document may contain a collection of many feeds. Drupal can parse such a file and import all feeds at once, saving you the effort of adding them manually. You may either upload a local file from your computer or enter a URL where Drupal can download it.') . '</p>';
@@ -107,6 +107,10 @@ function aggregator_menu_link_defaults() {
   $links['aggregator.sources'] = array(
     'link_title' => 'Sources',
     'route_name' => 'aggregator.sources',
+  );
+  $links['aggregator.feed_add'] = array(
+    'link_title' => 'Add feed',
+    'route_name' => 'aggregator.feed_add',
   );
 
   return $links;

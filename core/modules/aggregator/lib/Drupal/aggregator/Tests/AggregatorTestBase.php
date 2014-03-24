@@ -38,8 +38,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Creates an aggregator feed.
    *
-   * This method simulates the form submission on path
-   * admin/config/services/aggregator/add/feed.
+   * This method simulates the form submission on path aggregator/sources/add.
    *
    * @param $feed_url
    *   (optional) If given, feed will be created with this URL, otherwise
@@ -54,7 +53,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    */
   function createFeed($feed_url = NULL, array $edit = array()) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
-    $this->drupalPostForm('admin/config/services/aggregator/add/feed', $edit, t('Save'));
+    $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
 
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetchField();
@@ -69,7 +68,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *   Feed object representing the feed.
    */
   function deleteFeed(FeedInterface $feed) {
-    $this->drupalPostForm('admin/config/services/aggregator/delete/feed/' . $feed->id(), array(), t('Delete'));
+    $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/delete', array(), t('Delete'));
     $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->label())), 'Feed deleted successfully.');
   }
 

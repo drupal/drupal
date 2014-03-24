@@ -17,3 +17,7 @@ aggregator.feed_configure:
   base_route: aggregator.feed_view
   title: 'Configure'
   weight: 10
+aggregator.feed_delete:
+  route_name: aggregator.feed_delete
+  tab_root_id: aggregator.feed_view
+  title: Delete

@@ -33,11 +33,11 @@ class UpdateFeedTest extends AggregatorTestBase {
       if (isset($feed->{$same_field}->value)) {
         $edit[$same_field] = $feed->{$same_field}->value;
       }
-      $this->drupalPostForm('admin/config/services/aggregator/edit/feed/' . $feed->id(), $edit, t('Save'));
+      $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/configure', $edit, t('Save'));
       $this->assertRaw(t('The feed %name has been updated.', array('%name' => $edit['title'])), format_string('The feed %name has been updated.', array('%name' => $edit['title'])));
 
       // Check feed data.
-      $this->assertEqual($this->getUrl(), url('admin/config/services/aggregator', array('absolute' => TRUE)));
+      $this->assertEqual($this->getUrl(), url('aggregator/sources/' . $feed->id(), array('absolute' => TRUE)));
       $this->assertTrue($this->uniqueFeed($edit['title'], $edit['url']), 'The feed is unique.');
 
       // Check feed source.

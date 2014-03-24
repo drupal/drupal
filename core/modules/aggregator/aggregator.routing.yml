@@ -22,38 +22,6 @@ aggregator.feed_items_delete:
   requirements:
     _permission: 'administer news feeds'
 
-aggregator.feed_delete:
-  path: '/admin/config/services/aggregator/delete/feed/{aggregator_feed}'
-  defaults:
-    _entity_form: 'aggregator_feed.delete'
-    _title: 'Delete feed'
-  requirements:
-    _permission: 'administer news feeds'
-
-aggregator.feed_add:
-  path: '/admin/config/services/aggregator/add/feed'
-  defaults:
-    _content: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
-    _title: 'Add feed'
-  requirements:
-    _permission: 'administer news feeds'
-
-aggregator.feed_configure:
-  path: '/aggregator/sources/{aggregator_feed}/configure'
-  defaults:
-    _entity_form: 'aggregator_feed.default'
-    _title: 'Configure'
-  requirements:
-    _permission: 'administer news feeds'
-
-aggregator.feed_edit:
-  path: '/admin/config/services/aggregator/edit/feed/{aggregator_feed}'
-  defaults:
-    _entity_form: 'aggregator_feed.default'
-    _title: 'Edit feed'
-  requirements:
-    _permission: 'administer news feeds'
-
 aggregator.feed_refresh:
   path: '/admin/config/services/aggregator/update/{aggregator_feed}'
   defaults:
@@ -71,6 +39,16 @@ aggregator.opml_add:
   requirements:
     _permission: 'administer news feeds'
 
+aggregator.feed_add:
+  path: '/aggregator/sources/add'
+  defaults:
+    _content: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
+    _title: 'Add feed'
+  requirements:
+    _permission: 'administer news feeds'
+  options:
+    _admin_route: TRUE
+
 aggregator.feed_view:
   path: '/aggregator/sources/{aggregator_feed}'
   defaults:
@@ -78,6 +56,26 @@ aggregator.feed_view:
     _title_callback: '\Drupal\aggregator\Controller\AggregatorController::feedTitle'
   requirements:
     _permission: 'access news feeds'
+
+aggregator.feed_configure:
+  path: '/aggregator/sources/{aggregator_feed}/configure'
+  defaults:
+    _entity_form: 'aggregator_feed.default'
+    _title: 'Configure'
+  requirements:
+    _permission: 'administer news feeds'
+  options:
+    _admin_route: TRUE
+
+aggregator.feed_delete:
+  path: '/aggregator/sources/{aggregator_feed}/delete'
+  defaults:
+    _entity_form: 'aggregator_feed.delete'
+    _title: 'Delete feed'
+  requirements:
+    _permission: 'administer news feeds'
+  options:
+    _admin_route: TRUE
 
 aggregator.page_last:
   path: '/aggregator'
