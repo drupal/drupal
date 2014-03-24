@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Template\Attribute.
+ * Contains \Drupal\Core\Template\Attribute.
  */
 
 namespace Drupal\Core\Template;
-use Drupal\Component\Utility\String;
 
+use Drupal\Component\Utility\String;
 
 /**
  * A class that can be used for collecting then rendering HTML attributtes.

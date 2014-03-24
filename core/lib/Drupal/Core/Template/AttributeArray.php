@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Template\AttributeArray.
+ * Contains \Drupal\Core\Template\AttributeArray.
  */
 
 namespace Drupal\Core\Template;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Template\AttributeString.
+ * Contains \Drupal\Core\Template\AttributeString.
  */
 
 namespace Drupal\Core\Template;

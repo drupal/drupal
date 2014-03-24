@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Template\TwigEnvironment.
+ * Contains \Drupal\Core\Template\TwigEnvironment.
  */
 
 namespace Drupal\Core\Template;

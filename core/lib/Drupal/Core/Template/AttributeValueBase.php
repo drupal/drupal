@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Template\AttributeValueBase.
+ * Contains \Drupal\Core\Template\AttributeValueBase.
  */
 
 namespace Drupal\Core\Template;

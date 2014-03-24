@@ -122,12 +122,12 @@ function twig_render_var($arg) {
     return 0;
   }
 
-  // == is true also for empty arrays
+  // Return early for NULL and also true for empty arrays.
   if ($arg == NULL) {
     return NULL;
   }
 
-  // Keep Twig_Markup objects intact to prepare for later autoescaping support
+  // Keep Twig_Markup objects intact to prepare for later autoescaping support.
   if ($arg instanceOf Twig_Markup) {
     return $arg;
   }
