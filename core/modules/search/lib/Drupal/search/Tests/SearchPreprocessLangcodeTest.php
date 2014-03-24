@@ -43,7 +43,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
    */
   function testPreprocessLangcode() {
     // Create a node.
-    $node = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'en'));
+    $this->node = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'en'));
 
     // First update the index. This does the initial processing.
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
@@ -68,7 +68,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
    */
   function testPreprocessStemming() {
     // Create a node.
-    $node = $this->drupalCreateNode(array(
+    $this->node = $this->drupalCreateNode(array(
       'title' => 'we are testing',
       'body' => array(array()),
       'langcode' => 'en',

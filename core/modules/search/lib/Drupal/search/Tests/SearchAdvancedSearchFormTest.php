@@ -28,7 +28,6 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
     $this->drupalLogin($test_user);
 
     // Create initial node.
-    $node = $this->drupalCreateNode();
     $this->node = $this->drupalCreateNode();
 
     // First update the index. This does the initial processing.
