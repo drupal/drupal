@@ -16,7 +16,7 @@ use Drupal\user\UserAuth;
  * @group Drupal
  * @group User
  *
- * @coverDefaultClass \Drupal\user\UserAuth
+ * @coversDefaultClass \Drupal\user\UserAuth
  */
 class UserAuthTest extends UnitTestCase {
 
@@ -99,7 +99,7 @@ class UserAuthTest extends UnitTestCase {
   /**
    * Tests failing authentication with missing credential parameters.
    *
-   * @covers ::authenticate()
+   * @covers ::authenticate
    *
    * @dataProvider providerTestAuthenticateWithMissingCredentials
    */
@@ -127,7 +127,7 @@ class UserAuthTest extends UnitTestCase {
   /**
    * Tests the authenticate method with no account returned.
    *
-   * @covers ::authenticate()
+   * @covers ::authenticate
    */
   public function testAuthenticateWithNoAccountReturned() {
     $this->userStorage->expects($this->once())
@@ -141,7 +141,7 @@ class UserAuthTest extends UnitTestCase {
   /**
    * Tests the authenticate method with an incorrect password.
    *
-   * @covers ::authenticate()
+   * @covers ::authenticate
    */
   public function testAuthenticateWithIncorrectPassword() {
     $this->userStorage->expects($this->once())
@@ -160,7 +160,7 @@ class UserAuthTest extends UnitTestCase {
   /**
    * Tests the authenticate method with a correct password.
    *
-   * @covers ::authenticate()
+   * @covers ::authenticate
    */
   public function testAuthenticateWithCorrectPassword() {
     $this->testUser->expects($this->once())
@@ -183,7 +183,7 @@ class UserAuthTest extends UnitTestCase {
   /**
    * Tests the authenticate method with a correct password and new password hash.
    *
-   * @covers ::authenticate()
+   * @covers ::authenticate
    */
   public function testAuthenticateWithCorrectPasswordAndNewPasswordHash() {
     $this->testUser->expects($this->once())

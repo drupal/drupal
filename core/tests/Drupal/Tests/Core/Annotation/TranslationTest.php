@@ -13,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the Translation annotation.
  *
- * @covers \Drupal\Core\Annotation\Translation.
+ * @covers \Drupal\Core\Annotation\Translation
  */
 class TranslationTest extends UnitTestCase {
 
