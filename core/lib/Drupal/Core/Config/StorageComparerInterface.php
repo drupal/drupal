@@ -49,51 +49,6 @@ interface StorageComparerInterface {
   public function getChangelist($op = NULL);
 
   /**
-   * Adds changes to the changelist.
-   *
-   * @param string $op
-   *   The change operation performed. Either delete, create or update.
-   * @param array $changes
-   *   Array of changes to add the changelist.
-   *
-   * @return \Drupal\Core\Config\StorageComparerInterface
-   *   An object which implements the StorageComparerInterface.
-   */
-  public function addChangeList($op, array $changes);
-
-  /**
-   * Add differences between source and target configuration storage to changelist.
-   *
-   * @return \Drupal\Core\Config\StorageComparerInterface
-   *   An object which implements the StorageComparerInterface.
-   */
-  public function createChangelist();
-
-  /**
-   * Creates the delete changelist.
-   *
-   * @return \Drupal\Core\Config\StorageComparerInterface
-   *   An object which implements the StorageComparerInterface.
-   */
-  public function addChangelistDelete();
-
-  /**
-   * Creates the create changelist.
-   *
-   * @return \Drupal\Core\Config\StorageComparerInterface
-   *   An object which implements the StorageComparerInterface.
-   */
-  public function addChangelistCreate();
-
-  /**
-   * Creates the update changelist.
-   *
-   * @return \Drupal\Core\Config\StorageComparerInterface
-   *   An object which implements the StorageComparerInterface.
-   */
-  public function addChangelistUpdate();
-
-  /**
    * Recalculates the differences.
    *
    * @return \Drupal\Core\Config\StorageComparerInterface
