@@ -12,6 +12,9 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the ForumManager.
  *
+ * @group Forum
+ * @group Drupal
+ *
  * @see \Drupal\forum\ForumManager
  */
 class ForumManagerTest extends UnitTestCase {
