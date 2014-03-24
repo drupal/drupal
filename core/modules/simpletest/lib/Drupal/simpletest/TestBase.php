@@ -825,9 +825,6 @@ abstract class TestBase {
     if ($methods) {
       $test_methods = array_intersect($test_methods, $methods);
     }
-    if (defined("$class::SORT_METHODS")) {
-      sort($test_methods);
-    }
     foreach ($test_methods as $method) {
       // Insert a fail record. This will be deleted on completion to ensure
       // that testing completed.

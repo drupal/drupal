@@ -15,8 +15,6 @@ use Drupal\simpletest\WebTestBase;
  * Each testX method does a complete rebuild of a Drupal site, so values being
  * tested need to be stored in protected properties in order to survive until
  * the next rebuild.
- *
- * Each testX method is executed alphabetically, so naming is important.
  */
 class ConfigExportImportUITest extends WebTestBase {
 
