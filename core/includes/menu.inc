@@ -1783,8 +1783,8 @@ function _menu_set_expanded_menus() {
     ->groupBy('menu_name')
     ->execute();
 
-  // Flattern the resulting array.
-  foreach($result as $k=>$v) {
+  // Flatten the resulting array.
+  foreach($result as $k => $v) {
     $names[$k] = $v['menu_name'];
   }
 
