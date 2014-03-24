@@ -397,7 +397,8 @@ Text module
 - ?
 
 Toolbar module
-- ?
+- Jesse Renée Beach 'jessebeach' http://drupal.org/user/748566
+- Théodore Biadala 'nod_' http://drupal.org/user/598310
 
 Tour module
 - Nick Schuch 'nick_schuch' http://drupal.org/user/1412036
