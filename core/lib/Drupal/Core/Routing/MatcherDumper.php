@@ -26,7 +26,7 @@ class MatcherDumper implements MatcherDumperInterface {
   /**
    * The routes to be dumped.
    *
-   * @var Symfony\Component\Routing\RouteCollection
+   * @var \Symfony\Component\Routing\RouteCollection
    */
   protected $routes;
 

@@ -39,7 +39,7 @@ class CompiledRoute extends SymfonyCompiledRoute {
   /**
    * The Route object of which this object is the compiled version.
    *
-   * @var Symfony\Component\Routing\Route
+   * @var \Symfony\Component\Routing\Route
    */
   protected $route;
 

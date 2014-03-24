@@ -30,22 +30,22 @@ use Symfony\Component\Routing\Route;
 class AccessSubscriberTest extends UnitTestCase {
 
   /**
-   * @var Symfony\Component\HttpKernel\Event\GetResponseEvent|PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpKernel\Event\GetResponseEvent|PHPUnit_Framework_MockObject_MockObject
    */
   protected $event;
 
   /**
-   * @var Symfony\Component\HttpFoundation\Request|PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpFoundation\Request|PHPUnit_Framework_MockObject_MockObject
    */
   protected $request;
 
   /**
-   * @var Symfony\Component\HttpFoundation\ParameterBag|PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpFoundation\ParameterBag|PHPUnit_Framework_MockObject_MockObject
    */
   protected $parameterBag;
 
   /**
-   * @var Symfony\Component\Routing\Route|PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\Routing\Route|PHPUnit_Framework_MockObject_MockObject
    */
   protected $route;
 

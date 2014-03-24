@@ -332,7 +332,7 @@ class ViewExecutable extends DependencySerialization {
   /**
    * Stores the current response object.
    *
-   * @var Symfony\Component\HttpFoundation\Response
+   * @var \Symfony\Component\HttpFoundation\Response
    */
   protected $response = NULL;
 

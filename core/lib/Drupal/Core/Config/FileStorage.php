@@ -27,14 +27,14 @@ class FileStorage implements StorageInterface {
   /**
    * A shared YAML dumper instance.
    *
-   * @var Symfony\Component\Yaml\Dumper
+   * @var \Symfony\Component\Yaml\Dumper
    */
   protected $dumper;
 
   /**
    * A shared YAML parser instance.
    *
-   * @var Symfony\Component\Yaml\Parser
+   * @var \Symfony\Component\Yaml\Parser
    */
   protected $parser;
 
