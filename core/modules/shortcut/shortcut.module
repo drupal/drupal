@@ -65,11 +65,11 @@ function shortcut_permission() {
  * Implements hook_menu_link_defaults().
  */
 function shortcut_menu_link_defaults() {
-  $links['shortcut.admin.config.user-interface.shortcut'] = array(
+  $links['shortcut.set_admin'] = array(
     'link_title' => 'Shortcuts',
     'description' => 'Add and modify shortcut sets.',
     'route_name' => 'shortcut.set_admin',
-    'parent' => 'system.admin.config.user-interface',
+    'parent' => 'system.admin_config_ui',
   );
 
   return $links;

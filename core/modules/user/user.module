@@ -695,7 +695,7 @@ function theme_username($variables) {
  */
 function user_menu_link_defaults() {
   // Registration and login pages.
-  $links['user'] = array(
+  $links['user.page'] = array(
     'link_title' => 'My account',
     'weight' => -10,
     'route_name' => 'user.page',
@@ -710,7 +710,7 @@ function user_menu_link_defaults() {
   );
 
   // User listing pages.
-  $links['user.admin.people'] = array(
+  $links['user.admin_account'] = array(
     'link_title' => 'People',
     'route_name' => 'user.admin_account',
     'description' => 'Manage user accounts, roles, and permissions.',
@@ -719,18 +719,18 @@ function user_menu_link_defaults() {
   );
 
   // Administration pages.
-  $links['user.admin.config.people'] = array(
+  $links['user.admin_index'] = array(
    'link_title' => 'People',
    'route_name' => 'user.admin_index',
-   'parent' => 'system.admin.config',
+   'parent' => 'system.admin_config',
    'description' => 'Configure user accounts.',
    'position' => 'left',
    'weight' => -20,
   );
 
-  $links['user.admin.config.people.accounts'] = array(
+  $links['user.account_settings'] = array(
     'link_title' => 'Account settings',
-    'parent' => 'user.admin.config.people',
+    'parent' => 'user.admin_index',
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and fields.',
     'weight' => -10,
     'route_name' => 'user.account_settings',
@@ -747,7 +747,7 @@ function user_menu_link_presave(MenuLink $menu_link) {
   // for authenticated users. Authenticated users should see "My account", but
   // anonymous users should not see it at all. Therefore, invoke
   // user_menu_link_load() to conditionally hide the link.
-  if ($menu_link->machine_name == 'user' && $menu_link->module == 'system') {
+  if ($menu_link->machine_name == 'user.page' && $menu_link->module == 'system') {
     $menu_link->options['alter'] = TRUE;
   }
 }
@@ -768,7 +768,7 @@ function user_menu_breadcrumb_alter(&$active_trail, $item) {
  */
 function user_translated_menu_link_alter(MenuLink &$menu_link) {
   // Hide the "User account" link for anonymous users.
-  if ($menu_link->link_path == 'user' && $menu_link->module == 'system' && \Drupal::currentUser()->isAnonymous()) {
+  if ($menu_link->machine_name == 'user.page' && $menu_link->module == 'system' && \Drupal::currentUser()->isAnonymous()) {
     $menu_link->hidden = 1;
   }
 }

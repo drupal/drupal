@@ -98,15 +98,15 @@ function filter_element_info() {
  * Implements hook_menu_link_defaults().
  */
 function filter_menu_link_defaults() {
-  $links['filter.tips'] = array(
+  $links['filter.tips_all'] = array(
     'link_title' => 'Compose tips',
     'type' => MENU_SUGGESTED_ITEM,
     'route_name' => 'filter.tips_all',
   );
 
-  $links['filter.admin.formats'] = array(
+  $links['filter.admin_overview'] = array(
     'link_title' => 'Text formats',
-    'parent' => 'system.admin.config.content',
+    'parent' => 'system.admin_config_content',
     'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
     'route_name' => 'filter.admin_overview',
   );

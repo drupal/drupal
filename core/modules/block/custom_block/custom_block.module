@@ -38,24 +38,6 @@ function custom_block_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function custom_block_menu_link_defaults() {
-  $links['custom_block.add_page'] = array(
-    'link_title' => 'Add custom block',
-    'description' => 'Add custom block',
-    'route_name' => 'custom_block.add_page',
-  );
-  $items['custom_block.list'] = array(
-    'link_title' => 'Custom block library',
-    'parent' => 'block.admin.structure',
-    'description' => 'Manage custom blocks.',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_theme().
  */
 function custom_block_theme($existing, $type, $theme, $path) {

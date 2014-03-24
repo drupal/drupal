@@ -35,7 +35,7 @@ function tracker_help($path, $arg) {
  * Implements hook_menu_link_defaults().
  */
 function tracker_menu_link_defaults() {
-  $links['tracker'] = array(
+  $links['tracker.page'] = array(
     'link_title' => 'Recent content',
     'route_name' => 'tracker.page',
   );

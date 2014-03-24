@@ -55,9 +55,9 @@ function contact_permission() {
  * Implements hook_menu_link_defaults().
  */
 function contact_menu_link_defaults() {
-  $links['contact.admin.categories'] = array(
+  $links['contact.category_list'] = array(
     'link_title' => 'Contact form categories',
-    'parent' => 'system.admin.structure',
+    'parent' => 'system.admin_structure',
     'description' => 'Create a system contact form and set up categories for the form to use.',
     'route_name' => 'contact.category_list',
   );

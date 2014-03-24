@@ -99,18 +99,18 @@ function forum_theme() {
  * Implements hook_menu_link_defaults().
  */
 function forum_menu_link_defaults() {
-  $items['forum'] = array(
+  $links['forum.index'] = array(
     'link_title' => 'Forums',
     'route_name' => 'forum.index',
     'menu_name' => 'tools',
   );
-  $items['forum.admin.overview'] = array(
+  $links['forum.overview'] = array(
     'link_title' => 'Forums',
-    'parent' => 'system.admin.structure',
+    'parent' => 'system.admin_structure',
     'description' => 'Control forum hierarchy settings.',
     'route_name' => 'forum.overview',
   );
-  return $items;
+  return $links;
 }
 
 /**

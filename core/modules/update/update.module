@@ -150,11 +150,11 @@ function update_page_build() {
  * Implements hook_menu_link_defaults().
  */
 function update_menu_link_defaults() {
-  $links['update.admin.reports.updates'] = array(
+  $links['update.status'] = array(
     'link_title' => 'Available updates',
     'description' => 'Get a status report about available updates for your installed modules and themes.',
     'route_name' => 'update.status',
-    'parent' => 'system.admin.reports',
+    'parent' => 'system.admin_reports',
     'weight' => -50,
   );
 

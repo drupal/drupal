@@ -35,9 +35,9 @@ function config_translation_help($path) {
  * Implements hook_menu_link_defaults().
  */
 function config_translation_menu_link_defaults() {
-  $links['config_translation.admin.config-translation'] = array(
+  $links['config_translation.mapper_list'] = array(
     'link_title' => 'Configuration translation',
-    'parent' => 'system.admin.config.regional',
+    'parent' => 'system.admin_config_regional',
     'description' => 'Translate the configuration.',
     'route_name' => 'config_translation.mapper_list',
     'weight' => 30,

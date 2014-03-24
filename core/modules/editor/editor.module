@@ -44,8 +44,8 @@ function editor_help($path, $arg) {
  * of text editors.
  */
 function editor_menu_link_defaults_alter(array &$links) {
-  $links['filter.admin.formats']['link_title'] = 'Text formats and editors';
-  $links['filter.admin.formats']['description'] = 'Configure how user-contributed content is filtered and formatted, as well as the text editor user interface (WYSIWYGs or toolbars).';
+  $links['filter.admin_overview']['link_title'] = 'Text formats and editors';
+  $links['filter.admin_overview']['description'] = 'Configure how user-contributed content is filtered and formatted, as well as the text editor user interface (WYSIWYGs or toolbars).';
 }
 
 /**

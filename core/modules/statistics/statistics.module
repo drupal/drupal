@@ -82,11 +82,11 @@ function statistics_node_links_alter(array &$node_links, NodeInterface $entity, 
  * Implements hook_menu_link_defaults().
  */
 function statistics_menu_link_defaults() {
-  $links['statistics.admin.config.system.statistics'] = array(
+  $links['statistics.settings'] = array(
     'link_title' => 'Statistics',
     'description' => 'Control details about what and how your site logs content statistics.',
     'route_name' => 'statistics.settings',
-    'parent' => 'system.admin.config.system',
+    'parent' => 'system.admin_config_system',
     'weight' => -15,
   );
   return $links;

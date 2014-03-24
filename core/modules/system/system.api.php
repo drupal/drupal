@@ -415,8 +415,19 @@ function hook_page_build(&$page) {
  *
  * @return array
  *   An array of default menu links. Each link has a key that is the machine
- *   name, which must be unique. The corresponding array value is an
- *   associative array that may contain the following key-value pairs:
+ *   name, which must be unique. By default, use the route name as the
+ *   machine name. In cases where multiple links use the same route name, such
+ *   as two links to the same page in different menus, or two links using the
+ *   same route name but different route parameters, the suggested machine name
+ *   patten is the route name followed by a dot and a unique suffix. For
+ *   example, an additional logout link might have a machine name of
+ *   user.logout.navigation, and default links provided to edit the article and
+ *   page content types could use machine names node.type_edit.article and
+ *   node.type_edit.page. Since the machine name may be arbitrary, you should
+ *   never write code that assumes it is identical to the route name.
+ *
+ *   The value corresponding to each machine name key is an associative array
+ *   that may contain the following key-value pairs:
  *   - link_title: (required) The untranslated title of the menu item.
  *   - description: The untranslated description of the link.
  *   - route_name: (optional) The route name to be used to build the path.
@@ -448,7 +459,7 @@ function hook_page_build(&$page) {
  * @see hook_menu_link_defaults_alter()
  */
 function hook_menu_link_defaults() {
-  $links['user'] = array(
+  $links['user.page'] = array(
     'link_title' => 'My account',
     'weight' => -10,
     'route_name' => 'user.page',

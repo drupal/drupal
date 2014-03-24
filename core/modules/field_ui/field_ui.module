@@ -56,11 +56,11 @@ function field_ui_help($path, $arg) {
  * Implements hook_menu_link_defaults().
  */
 function field_ui_menu_link_defaults() {
-  $links['field_ui.admin.reports.fields'] = array(
+  $links['field_ui.list'] = array(
     'link_title' => 'Field list',
     'description' => 'Overview of fields on all entity types.',
     'route_name' => 'field_ui.list',
-    'parent' => 'system.admin.reports',
+    'parent' => 'system.admin_reports',
   );
 
   return $links;

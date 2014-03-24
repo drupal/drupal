@@ -39,32 +39,32 @@ function dblog_help($path, $arg) {
  * Implements hook_menu_link_defaults().
  */
 function dblog_menu_link_defaults() {
-  $links['dblog.admin.reports.dblog'] = array(
+  $links['dblog.overview'] = array(
     'link_title' => 'Recent log messages',
-    'parent' => 'system.admin.reports',
+    'parent' => 'system.admin_reports',
     'description' => 'View events that have recently been logged.',
     'route_name' => 'dblog.overview',
     'weight' => -1,
   );
-  $links['dblog.admin.reports.page-not-found'] = array(
+  $links['dblog.page_not_found'] = array(
     'link_title' => "Top 'page not found' errors",
     'route_name' => 'dblog.page_not_found',
-    'parent' => 'system.admin.reports',
+    'parent' => 'system.admin_reports',
     'description' => "View 'page not found' errors (404s).",
   );
-  $links['dblog.admin.reports.access-denied'] = array(
+  $links['dblog.access_denied'] = array(
     'link_title' => "Top 'access denied' errors",
     'route_name' => 'dblog.access_denied',
     'description' => "View 'access denied' errors (403s).",
-    'parent' => 'system.admin.reports',
+    'parent' => 'system.admin_reports',
   );
 
   if (\Drupal::moduleHandler()->moduleExists('search')) {
-    $links['dblog.admin.reports.search'] = array(
+    $links['dblog.search'] = array(
       'link_title' => 'Top search phrases',
       'route_name' => 'dblog.search',
       'description' => 'View most popular search phrases.',
-      'parent' => 'system.admin.reports',
+      'parent' => 'system.admin_reports',
     );
   }
 

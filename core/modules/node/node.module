@@ -926,7 +926,7 @@ function _node_revision_access(NodeInterface $node, $op = 'view', $account = NUL
  * Implements hook_menu_link_defaults().
  */
 function node_menu_link_defaults() {
-  $links['node.admin.content'] = array(
+  $links['node.content_overview'] = array(
     'link_title' => 'Content',
     'route_name' => 'node.content_overview',
     'parent' => 'system.admin',
@@ -934,13 +934,13 @@ function node_menu_link_defaults() {
     'weight' => -10,
   );
 
-  $links['node.admin.structure.types'] = array(
+  $links['node.overview_types'] = array(
     'link_title' => 'Content types',
-    'parent' => 'system.admin.structure',
+    'parent' => 'system.admin_structure',
     'description' => 'Manage content types, including default status, front page promotion, comment settings, etc.',
     'route_name' => 'node.overview_types',
   );
-  $links['node.add'] = array(
+  $links['node.add_page'] = array(
     'link_title' => 'Add content',
     'route_name' => 'node.add_page',
   );

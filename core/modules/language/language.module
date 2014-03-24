@@ -73,18 +73,18 @@ function language_help($path, $arg) {
  */
 function language_menu_link_defaults() {
   // Base language management and configuration.
-  $links['language.admin.language.admin_overview'] = array(
+  $links['language.admin_overview'] = array(
     'link_title' => 'Languages',
     'description' => 'Configure languages for content and the user interface.',
     'route_name' => 'language.admin_overview',
-    'parent' => 'system.admin.config.regional',
+    'parent' => 'system.admin_config_regional',
   );
   // Content language settings.
-  $links['language.admin.language.content_settings_page'] = array(
+  $links['language.content_settings_page'] = array(
     'link_title' => 'Content language',
     'description' => 'Configure language support for content.',
     'route_name' => 'language.content_settings_page',
-    'parent' => 'system.admin.config.regional',
+    'parent' => 'system.admin_config_regional',
     'weight' => 10,
   );
 

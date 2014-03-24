@@ -45,17 +45,17 @@ function views_ui_menu_link_defaults() {
   $links = array();
 
   // Top-level Views module pages (not tied to a particular View).
-  $links['views_ui.admin.structure.views'] = array(
+  $links['views_ui.list'] = array(
     'link_title' => 'Views',
-    'parent' => 'system.admin.structure',
+    'parent' => 'system.admin_structure',
     'description' => 'Manage customized lists of content.',
     'route_name' => 'views_ui.list',
   );
 
   // A page in the Reports section to show usage of plugins in all views.
-  $links['views_ui.admin.reports.views-plugins'] = array(
+  $links['views_ui.reports_plugins'] = array(
     'link_title' => 'Views plugins',
-    'parent' => 'system.admin.reports',
+    'parent' => 'system.admin_reports',
     'description' => 'Overview of plugins used in all views.',
     'route_name' => 'views_ui.reports_plugins',
   );

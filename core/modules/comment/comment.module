@@ -168,16 +168,16 @@ function comment_theme() {
  * Implements hook_menu_link_defaults().
  */
 function comment_menu_link_defaults() {
-  $links['comment.admin.content.comment'] = array(
+  $links['comment.admin'] = array(
     'link_title' => 'Comments',
     'route_name' => 'comment.admin',
-    'parent' => \Drupal::moduleHandler()->moduleExists('node') ? 'node.admin.content' : 'system.admin',
+    'parent' => \Drupal::moduleHandler()->moduleExists('node') ? 'node.content_overview' : 'system.admin',
     'description' => 'List and edit site comments and the comment approval queue.',
   );
-  $links['comment.admin.structure.comments'] = array(
+  $links['comment.bundle_list'] = array(
     'link_title' => 'Comment forms',
     'route_name' => 'comment.bundle_list',
-    'parent' => 'system.admin.structure',
+    'parent' => 'system.admin_structure',
     'description' => 'Manage fields and displays settings for comment forms.',
   );
 
@@ -187,10 +187,10 @@ function comment_menu_link_defaults() {
 /**
  * Implements hook_menu_link_defaults_alter()
  */
-function comment_menu_links_defaults_alter(&$links) {
-  if (isset($links['node.admin.content'])) {
+function comment_menu_link_defaults_alter(&$links) {
+  if (isset($links['node.content_overview'])) {
     // Add comments to the description for admin/content if any.
-    $links['node.admin.content']['description'] = 'Administer content and comments.';
+    $links['node.content_overview']['description'] = 'Administer content and comments.';
   }
 }
 

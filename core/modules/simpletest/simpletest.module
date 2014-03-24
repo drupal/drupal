@@ -38,11 +38,11 @@ function simpletest_help($path, $arg) {
  * Implements hook_menu_link_defaults().
  */
 function simpletest_menu_link_defaults() {
-  $links['simpletest.admin.config.development.testing'] = array(
+  $links['simpletest.test_form'] = array(
     'link_title' => 'Testing',
     'description' => 'Run tests against Drupal core and your modules. These tests help assure that your site code is working as designed.',
     'route_name' => 'simpletest.test_form',
-    'parent' => 'system.admin.config.development',
+    'parent' => 'system.admin_config_development',
     'weight' => -5,
   );
 

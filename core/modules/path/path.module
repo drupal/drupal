@@ -58,11 +58,11 @@ function path_permission() {
  * Implements hook_menu_link_defaults().
  */
 function path_menu_link_defaults() {
-  $links['path.admin.overview'] = array(
+  $links['path.admin_overview'] = array(
     'link_title' => 'URL aliases',
     'description' => "Change your site's URL paths by aliasing them.",
     'route_name' => 'path.admin_overview',
-    'parent' => 'system.admin.config.search',
+    'parent' => 'system.admin_config_search',
     'weight' => -5,
   );
 
