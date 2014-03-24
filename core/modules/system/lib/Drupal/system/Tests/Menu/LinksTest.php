@@ -155,9 +155,7 @@ class LinksTest extends WebTestBase {
     // links.
     $links = $this->createLinkHierarchy($module);
     // Don't do that at home.
-    db_delete('menu_links')
-      ->condition('mlid', $links['child-1']['mlid'])
-      ->execute();
+    entity_delete_multiple('menu_link', array($links['child-1']['mlid']));
 
     $expected_hierarchy = array(
       'parent' => FALSE,

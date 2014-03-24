@@ -1777,7 +1777,17 @@ function _menu_clear_page_cache() {
  * Updates a list of menus with expanded items.
  */
 function _menu_set_expanded_menus() {
-  $names = db_query("SELECT menu_name FROM {menu_links} WHERE expanded <> 0 GROUP BY menu_name")->fetchCol();
+  $names = array();
+  $result = Drupal::entityQueryAggregate('menu_link')
+    ->condition('expanded', 0, '<>')
+    ->groupBy('menu_name')
+    ->execute();
+
+  // Flattern the resulting array.
+  foreach($result as $k=>$v) {
+    $names[$k] = $v['menu_name'];
+  }
+
   \Drupal::state()->set('menu_expanded', $names);
 }
 

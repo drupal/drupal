@@ -105,8 +105,11 @@ class MenuDeleteForm extends EntityConfirmFormBase {
     }
 
     // Reset all the menu links defined by the system via hook_menu_link_defaults().
-    // @todo Convert this to an EFQ.
-    $result = $this->connection->query("SELECT mlid FROM {menu_links} WHERE menu_name = :menu AND module = 'system' ORDER BY depth ASC", array(':menu' => $this->entity->id()), array('fetch' => \PDO::FETCH_ASSOC))->fetchCol();
+    $result = \Drupal::entityQuery('menu_link')
+      ->condition('menu_name', $this->entity->id())
+      ->condition('module', 'system')
+      ->sort('depth', 'ASC')
+      ->execute();
     $menu_links = $this->storageController->loadMultiple($result);
     foreach ($menu_links as $link) {
       $link->reset();
