@@ -1224,9 +1224,11 @@ function template_preprocess_links(&$variables) {
 }
 
 /**
- * Returns HTML for an image.
+ * Prepares variables for image templates.
  *
- * @param $variables
+ * Default template: image.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - uri: Either the path of the image file (relative to base_path()) or a
  *     full URL.
@@ -1246,17 +1248,14 @@ function template_preprocess_links(&$variables) {
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
  */
-function theme_image($variables) {
-  $attributes = $variables['attributes'];
-  $attributes['src'] = file_create_url($variables['uri']);
+function template_preprocess_image(&$variables) {
+  $variables['attributes']['src'] = file_create_url($variables['uri']);
 
   foreach (array('width', 'height', 'alt', 'title') as $key) {
     if (isset($variables[$key])) {
-      $attributes[$key] = $variables[$key];
+      $variables['attributes'][$key] = $variables[$key];
     }
   }
-
-  return '<img' . new Attribute($attributes) . ' />';
 }
 
 /**
@@ -2429,6 +2428,7 @@ function drupal_common_theme() {
       // The title attribute is optional in all cases, so it is omitted by
       // default.
       'variables' => array('uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => array()),
+      'template' => 'image',
     ),
     'breadcrumb' => array(
       'variables' => array('breadcrumb' => NULL),
