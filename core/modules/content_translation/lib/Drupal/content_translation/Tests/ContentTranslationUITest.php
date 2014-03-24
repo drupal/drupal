@@ -71,7 +71,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $path = $langcode . '/' . $content_translation_path . '/add/' . $default_langcode . '/' . $langcode;
     $this->drupalPostForm($path, $this->getEditValues($values, $langcode), $this->getFormSubmitAction($entity));
     if ($this->testLanguageSelector) {
-      $this->assertNoFieldByXPath('//select[@id="edit-langcode"]', NULL, 'Language selector correclty disabled on translations.');
+      $this->assertNoFieldByXPath('//select[@id="edit-langcode"]', NULL, 'Language selector correctly disabled on translations.');
     }
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
 
