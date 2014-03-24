@@ -17,16 +17,14 @@ interface ConfigEntityInterface extends EntityInterface {
   /**
    * Enables the configuration entity.
    *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
-   *   The configuration entity.
+   * @return $this
    */
   public function enable();
 
   /**
    * Disables the configuration entity.
    *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
-   *   The configuration entity.
+   * @return $this
    */
   public function disable();
 
@@ -36,8 +34,7 @@ interface ConfigEntityInterface extends EntityInterface {
    * @param bool $status
    *   The status of the configuration entity.
    *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
-   *   The class instance that this method is called on.
+   * @return $this
    */
   public function setStatus($status);
 
@@ -46,6 +43,8 @@ interface ConfigEntityInterface extends EntityInterface {
    *
    * @param bool $status
    *   The status of the sync flag.
+   *
+   * @return $this
    */
   public function setSyncing($status);
 
@@ -110,6 +109,8 @@ interface ConfigEntityInterface extends EntityInterface {
    *   The name of the property that should be set.
    * @param mixed $value
    *   The value the property should be set to.
+   *
+   * @return $this
    */
   public function set($property_name, $value);
 

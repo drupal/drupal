@@ -170,7 +170,7 @@ function block_get_blocks_by_region($region) {
   $build = array();
   if ($list = block_list($region)) {
     foreach ($list as $key => $block) {
-      if ($block->access()) {
+      if ($block->access('view')) {
         $build[$key] = entity_view($block, 'block');
       }
     }

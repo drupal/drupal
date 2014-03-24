@@ -97,14 +97,4 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
     }
   }
 
-  /**
-   * Tests getOriginalId() and setOriginalId().
-   */
-  protected function testGetOriginalId() {
-    $entity = $this->storage->create(array());
-    $id = $this->randomName();
-    $this->assertIdentical(spl_object_hash($entity->setOriginalId($id)), spl_object_hash($entity));
-    $this->assertIdentical($entity->getOriginalId(), $id);
-  }
-
 }

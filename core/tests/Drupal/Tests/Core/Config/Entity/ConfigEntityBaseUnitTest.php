@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Config\Entity;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -63,6 +64,20 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   protected $provider;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $languageManager;
+
+  /**
+   * The entity ID.
+   *
+   * @var string
+   */
+  protected $id;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -77,7 +92,12 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $values = array();
+    $this->id = $this->randomName();
+    $values = array(
+      'id' => $this->id,
+      'langcode' => 'en',
+      'uuid' => '3bb9ee60-bea5-4622-b89b-a63319d10b3a',
+    );
     $this->entityTypeId = $this->randomName();
     $this->provider = $this->randomName();
     $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
@@ -93,9 +113,16 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
+    $this->languageManager = $this->getMock('\Drupal\Core\Language\LanguageManagerInterface');
+    $this->languageManager->expects($this->any())
+      ->method('getLanguage')
+      ->with('en')
+      ->will($this->returnValue(new Language(array('id' => 'en'))));
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
+    $container->set('language_manager', $this->languageManager);
     \Drupal::setContainer($container);
 
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', array($values, $this->entityTypeId));
@@ -236,6 +263,158 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->assertEmpty($this->entity->calculateDependencies());
   }
 
+  /**
+   * @covers ::setOriginalId
+   * @covers ::getOriginalId
+   */
+  public function testGetOriginalId() {
+    $new_id = $this->randomName();
+    $this->entity->set('id', $new_id);
+    $this->assertSame($this->id, $this->entity->getOriginalId());
+    $this->assertSame($this->entity, $this->entity->setOriginalId($new_id));
+    $this->assertSame($new_id, $this->entity->getOriginalId());
+  }
+
+  /**
+   * @covers ::isNew
+   */
+  public function testIsNew() {
+    $this->assertFalse($this->entity->isNew());
+    $this->assertSame($this->entity, $this->entity->enforceIsNew());
+    $this->assertTrue($this->entity->isNew());
+    $this->entity->enforceIsNew(FALSE);
+    $this->assertFalse($this->entity->isNew());
+  }
+
+  /**
+   * @covers ::set
+   * @covers ::get
+   */
+  public function testGet() {
+    $name = 'id';
+    $value = $this->randomName();
+    $this->assertSame($this->id, $this->entity->get($name));
+    $this->assertSame($this->entity, $this->entity->set($name, $value));
+    $this->assertSame($value, $this->entity->get($name));
+  }
+
+  /**
+   * @covers ::setStatus
+   * @covers ::status
+   */
+  public function testSetStatus() {
+    $this->assertTrue($this->entity->status());
+    $this->assertSame($this->entity, $this->entity->setStatus(FALSE));
+    $this->assertFalse($this->entity->status());
+    $this->entity->setStatus(TRUE);
+    $this->assertTrue($this->entity->status());
+  }
+
+  /**
+   * @covers ::enable
+   * @depends testSetStatus
+   */
+  public function testEnable() {
+    $this->entity->setStatus(FALSE);
+    $this->assertSame($this->entity, $this->entity->enable());
+    $this->assertTrue($this->entity->status());
+  }
+
+  /**
+   * @covers ::disable
+   * @depends testSetStatus
+   */
+  public function testDisable() {
+    $this->entity->setStatus(TRUE);
+    $this->assertSame($this->entity, $this->entity->disable());
+    $this->assertFalse($this->entity->status());
+  }
+
+  /**
+   * @covers ::setSyncing
+   * @covers ::isSyncing
+   */
+  public function testIsSyncing() {
+    $this->assertFalse($this->entity->isSyncing());
+    $this->assertSame($this->entity, $this->entity->setSyncing(TRUE));
+    $this->assertTrue($this->entity->isSyncing());
+    $this->entity->setSyncing(FALSE);
+    $this->assertFalse($this->entity->isSyncing());
+  }
+
+  /**
+   * @covers ::createDuplicate
+   */
+  public function testCreateDuplicate() {
+    $this->entityType->expects($this->at(0))
+      ->method('getKey')
+      ->with('id')
+      ->will($this->returnValue('id'));
+
+    $this->entityType->expects($this->at(1))
+      ->method('hasKey')
+      ->with('uuid')
+      ->will($this->returnValue(TRUE));
+
+    $this->entityType->expects($this->at(2))
+      ->method('getKey')
+      ->with('uuid')
+      ->will($this->returnValue('uuid'));
+
+    $new_uuid = '8607ef21-42bc-4913-978f-8c06207b0395';
+    $this->uuid->expects($this->once())
+      ->method('generate')
+      ->will($this->returnValue($new_uuid));
+
+    $duplicate = $this->entity->createDuplicate();
+    $this->assertInstanceOf('\Drupal\Core\Entity\Entity', $duplicate);
+    $this->assertNotSame($this->entity, $duplicate);
+    $this->assertNull($duplicate->id());
+    $this->assertNull($duplicate->getOriginalId());
+    $this->assertNotEquals($this->entity->uuid(), $duplicate->uuid());
+    $this->assertSame($new_uuid, $duplicate->uuid());
+  }
+
+  /**
+   * @covers ::sort
+   */
+  public function testSort() {
+    $this->entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue(array(
+        'entity_keys' => array(
+          'label' => 'label',
+        ),
+      )));
+    $entity_a = $this->entity;
+    $entity_a->label = 'foo';
+    $entity_b = clone $this->entity;
+    $entity_b->label = 'bar';
+    $list = array($entity_a, $entity_b);
+    // Suppress errors because of https://bugs.php.net/bug.php?id=50688.
+    @usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
+    $this->assertSame($entity_b, $list[0]);
+    $entity_a->weight = 0;
+    $entity_b->weight = 1;
+    // Suppress errors because of https://bugs.php.net/bug.php?id=50688.
+    @usort($list, array($entity_a, 'sort'));
+    $this->assertSame($entity_a, $list[0]);
+  }
+
+  /**
+   * @covers ::toArray
+   */
+  public function testToArray() {
+    $properties = $this->entity->toArray();
+    $this->assertInternalType('array', $properties);
+    $class_info = new \ReflectionClass($this->entity);
+    foreach ($class_info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+      $name = $property->getName();
+      $this->assertArrayHasKey($name, $properties);
+      $this->assertSame($this->entity->get($name), $properties[$name]);
+    }
+  }
 }
 
 class TestConfigurablePlugin extends PluginBase implements ConfigurablePluginInterface {
@@ -260,5 +439,4 @@ class TestConfigurablePlugin extends PluginBase implements ConfigurablePluginInt
   public function defaultConfiguration() {
     return array();
   }
-
 }

@@ -9,6 +9,7 @@ namespace Drupal\config_test\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\config_test\ConfigTestInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
  * Defines the ConfigTest configuration entity.
@@ -100,7 +101,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   /**
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
    */
-  public static function sort($a, $b) {
+  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     \Drupal::state()->set('config_entity_sort', TRUE);
     return parent::sort($a, $b);
   }
