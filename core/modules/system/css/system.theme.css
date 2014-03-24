@@ -547,11 +547,13 @@ ul.tabs {
   background-image: url(../../../misc/icons/73b355/check.svg);
   background-position: 12px 19px;  /* LTR */
   box-shadow: -8px 0 0 #77b259; /* LTR */
+  margin-left: 8px; /* LTR */
 }
 [dir="rtl"] .messages--status {
   background-position: 99.3% 19px;
   border-color: #c9e1bd transparent #c9e1bd #c9e1bd;
   box-shadow: 8px 0 0 #77b259;
+  margin-right: 8px;
 }
 .no-svg .messages--status {
   background-image: url(../../../misc/icons/73b355/check.png);
