@@ -306,13 +306,6 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
   /**
    * {@inheritdoc}
    */
-  public function isConfigurable() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDefaultValue(EntityInterface $entity) {
     return $this->getSetting('default_value');
   }

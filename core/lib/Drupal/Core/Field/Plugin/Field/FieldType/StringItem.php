@@ -21,7 +21,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   settings = {
  *     "max_length" = "255"
  *   },
- *   configurable = FALSE,
+ *   no_ui = TRUE,
  *   default_widget = "string",
  *   default_formatter = "string"
  * )

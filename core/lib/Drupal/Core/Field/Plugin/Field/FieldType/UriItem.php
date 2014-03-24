@@ -24,7 +24,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   settings = {
  *     "max_length" = "2048"
  *   },
- *   configurable = FALSE
+ *   no_ui = TRUE
  * )
  */
 class UriItem extends StringItem {

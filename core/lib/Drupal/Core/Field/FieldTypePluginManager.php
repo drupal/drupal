@@ -73,10 +73,10 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   /**
    * {@inheritdoc}
    */
-  public function getConfigurableDefinitions() {
+  public function getUiDefinitions() {
     $definitions = $this->getDefinitions();
     return array_filter($definitions, function ($definition) {
-      return $definition['configurable'];
+      return empty($definition['no_ui']) && !empty($definition['default_formatter']) && !empty($definition['default_widget']);
     });
   }
 

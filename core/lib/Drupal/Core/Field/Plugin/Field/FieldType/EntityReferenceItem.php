@@ -26,7 +26,7 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  *   id = "entity_reference",
  *   label = @Translation("Entity reference"),
  *   description = @Translation("An entity field containing an entity reference."),
- *   configurable = FALSE,
+ *   no_ui = TRUE,
  *   constraints = {"ValidReference" = {}}
  * )
  */
@@ -225,4 +225,5 @@ class EntityReferenceItem extends FieldItemBase {
   public function hasUnsavedEntity() {
     return $this->target_id === NULL && ($entity = $this->entity) && $entity->isNew();
   }
+
 }

@@ -169,7 +169,7 @@ class DisplayOverview extends DisplayOverviewBase {
    * {@inheritdoc}
    */
   protected function getDefaultPlugin($field_type) {
-    return $this->fieldTypes[$field_type]['default_formatter'];
+    return isset($this->fieldTypes[$field_type]['default_formatter']) ? $this->fieldTypes[$field_type]['default_formatter'] : NULL;
   }
 
   /**

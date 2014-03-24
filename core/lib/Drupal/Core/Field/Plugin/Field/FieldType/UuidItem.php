@@ -19,7 +19,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
  *   settings = {
  *     "max_length" = "128"
  *   },
- *   configurable = FALSE
+ *   no_ui = TRUE
  * )
  */
 class UuidItem extends StringItem {

@@ -75,8 +75,8 @@ class WidgetPluginManager extends DefaultPluginManager {
    *     - settings: (array) Settings specific to the widget. Each setting
    *       defaults to the default value specified in the widget definition.
    *
-   * @return \Drupal\Core\Field\WidgetInterface
-   *   A Widget object.
+   * @return \Drupal\Core\Field\WidgetInterface|null
+   *   A Widget object or NULL when plugin is not found.
    */
   public function getInstance(array $options) {
     // Fill in defaults for missing properties.
@@ -103,6 +103,9 @@ class WidgetPluginManager extends DefaultPluginManager {
     if (!isset($definition['class']) || !in_array($field_type, $definition['field_types'])) {
       // Grab the default widget for the field type.
       $field_type_definition = $this->fieldTypeManager->getDefinition($field_type);
+      if (empty($field_type_definition['default_widget'])) {
+        return NULL;
+      }
       $plugin_id = $field_type_definition['default_widget'];
     }
 

@@ -112,14 +112,6 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   public function isTranslatable();
 
   /**
-   * Returns whether the field is configurable via field.module.
-   *
-   * @return bool
-   *   TRUE if the field is configurable.
-   */
-  public function isConfigurable();
-
-  /**
    * Returns whether the display for the field can be configured.
    *
    * @param string $display_context

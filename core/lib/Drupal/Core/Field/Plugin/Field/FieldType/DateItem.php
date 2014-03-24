@@ -18,7 +18,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "date",
  *   label = @Translation("Date"),
  *   description = @Translation("An entity field containing a date value."),
- *   configurable = FALSE
+ *   no_ui = TRUE
  * )
  */
 class DateItem extends FieldItemBase {

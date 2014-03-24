@@ -489,7 +489,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Check that non-configurable fields are not available.
     $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
     foreach ($field_types as $field_type => $definition) {
-      if ($definition['configurable'] && empty($definition['no_ui'])) {
+      if (empty($definition['no_ui'])) {
         $this->assertTrue($this->xpath('//select[@id="edit-fields-add-new-field-type"]//option[@value=:field_type]', array(':field_type' => $field_type)), String::format('Configurable field type @field_type is available.', array('@field_type' => $field_type)));
       }
       else {

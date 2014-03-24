@@ -166,7 +166,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
           foreach ($entity->getTranslationLanguages() as $langcode => $language) {
             $translation = $entity->getTranslation($langcode);
             foreach ($translation as $field_name => $items) {
-              if ($items->getFieldDefinition()->isConfigurable() && !$items->isEmpty()) {
+              if ($items->getFieldDefinition() instanceof FieldInstanceConfigInterface && !$items->isEmpty()) {
                 foreach ($items as $delta => $item) {
                   // If the field item needs to prepare the cache data, call the
                   // corresponding method, otherwise use the values as cache

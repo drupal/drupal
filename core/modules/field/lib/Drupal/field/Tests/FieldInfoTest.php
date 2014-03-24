@@ -26,7 +26,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Test that field_test module's fields, widgets, and formatters show up.
 
     $field_test_info = $this->getExpectedFieldTypeDefinition();
-    $entity_type = \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
+    $entity_type = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
         $this->assertEqual($entity_type[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));

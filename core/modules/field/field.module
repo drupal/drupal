@@ -97,7 +97,7 @@ function field_help($path, $arg) {
       $items = array();
       $info = system_get_info('module');
       $field_widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
-      $field_types = \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
+      $field_types = \Drupal::service('plugin.manager.field.field_type')->getUiDefinitions();
       $providers = array();
       foreach (array_merge($field_types, $field_widgets) as $plugin) {
         $providers[] = $plugin['provider'];

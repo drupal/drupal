@@ -20,7 +20,7 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  *   id = "language",
  *   label = @Translation("Language"),
  *   description = @Translation("An entity field referencing a language."),
- *   configurable = FALSE,
+ *   no_ui = TRUE,
  *   constraints = {
  *     "ComplexData" = {
  *       "value" = {"Length" = {"max" = 12}}

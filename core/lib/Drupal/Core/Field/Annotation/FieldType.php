@@ -101,13 +101,6 @@ class FieldType extends DataType {
   public $default_formatter;
 
   /**
-   * A boolean stating that fields of this type are configurable.
-   *
-   * @var boolean
-   */
-  public $configurable = TRUE;
-
-  /**
    * A boolean stating that fields of this type cannot be created through the UI.
    *
    * @var boolean

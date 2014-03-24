@@ -18,7 +18,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "map",
  *   label = @Translation("Map"),
  *   description = @Translation("An entity field for storing a serialized array of values."),
- *   configurable = FALSE
+ *   no_ui = TRUE
  * )
  */
 class MapItem extends FieldItemBase {

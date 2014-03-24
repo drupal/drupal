@@ -624,13 +624,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * {@inheritdoc}
    */
-  public function isConfigurable() {
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isDisplayConfigurable($context) {
     return TRUE;
   }

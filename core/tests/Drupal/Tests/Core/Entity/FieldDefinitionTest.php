@@ -194,12 +194,4 @@ class FieldDefinitionTest extends UnitTestCase {
     $this->assertFalse($definition->isRequired());
   }
 
-  /**
-   * Tests configurable.
-   */
-  public function testFieldConfigurable() {
-    $definition = FieldDefinition::create($this->fieldType);
-    $this->assertFalse($definition->isConfigurable());
-  }
-
 }

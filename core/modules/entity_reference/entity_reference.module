@@ -40,7 +40,7 @@ function entity_reference_help($path, $arg) {
  */
 function entity_reference_field_info_alter(&$info) {
   // Make the entity reference field configurable.
-  $info['entity_reference']['configurable'] = TRUE;
+  $info['entity_reference']['no_ui'] = FALSE;
   $info['entity_reference']['class'] = '\Drupal\entity_reference\ConfigurableEntityReferenceItem';
   $info['entity_reference']['list_class'] = '\Drupal\entity_reference\Plugin\Field\FieldType\ConfigurableEntityReferenceFieldItemList';
   $info['entity_reference']['settings']['target_type'] = \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user';

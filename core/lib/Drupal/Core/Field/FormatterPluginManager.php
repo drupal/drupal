@@ -95,8 +95,8 @@ class FormatterPluginManager extends DefaultPluginManager {
    *     - settings: (array) Settings specific to the formatter. Each setting
    *       defaults to the default value specified in the formatter definition.
    *
-   * @return \Drupal\Core\Field\FormatterInterface
-   *   A formatter object.
+   * @return \Drupal\Core\Field\FormatterInterface|null
+   *   A formatter object or NULL when plugin is not found.
    */
   public function getInstance(array $options) {
     $configuration = $options['configuration'];
@@ -117,6 +117,9 @@ class FormatterPluginManager extends DefaultPluginManager {
     if (!isset($definition['class']) || !in_array($field_type, $definition['field_types'])) {
       // Grab the default widget for the field type.
       $field_type_definition = $this->fieldTypeManager->getDefinition($field_type);
+      if (empty($field_type_definition['default_formatter'])) {
+        return NULL;
+      }
       $plugin_id = $field_type_definition['default_formatter'];
     }
 
