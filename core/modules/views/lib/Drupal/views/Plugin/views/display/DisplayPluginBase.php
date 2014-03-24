@@ -1147,8 +1147,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
     if ($style_plugin_instance->usesRowPlugin()) {
       $row_plugin_instance = $this->getPlugin('row');
-      $row_summary = empty($row_plugin_instance->definition['title']) ? t('Missing style plugin') : $row_plugin_instance->summaryTitle();
-      $row_title = empty($row_plugin_instance->definition['title']) ? t('Missing style plugin') : $row_plugin_instance->pluginTitle();
+      $row_summary = empty($row_plugin_instance->definition['title']) ? t('Missing row plugin') : $row_plugin_instance->summaryTitle();
+      $row_title = empty($row_plugin_instance->definition['title']) ? t('Missing row plugin') : $row_plugin_instance->pluginTitle();
 
       $options['row'] = array(
         'category' => 'format',
