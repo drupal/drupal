@@ -349,11 +349,14 @@ class NodeFormController extends ContentEntityFormController {
     $node = parent::submit($form, $form_state);
 
     // Save as a new revision if requested to do so.
-    if (!empty($form_state['values']['revision'])) {
+    if (!empty($form_state['values']['revision']) && $form_state['values']['revision'] != FALSE) {
       $node->setNewRevision();
       // If a new revision is created, save the current user as revision author.
       $node->setRevisionCreationTime(REQUEST_TIME);
       $node->setRevisionAuthorId(\Drupal::currentUser()->id());
+    }
+    else {
+      $node->setNewRevision(FALSE);
     }
 
     $node->validated = TRUE;
