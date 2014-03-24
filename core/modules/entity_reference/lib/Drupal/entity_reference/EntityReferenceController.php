@@ -71,12 +71,15 @@ class EntityReferenceController extends ControllerBase {
    *   The matched labels as json.
    */
   public function handleAutocomplete(Request $request, $type, $field_name, $entity_type, $bundle_name, $entity_id) {
-    if (!$instance = field_info_instance($entity_type, $field_name, $bundle_name)) {
+    $definitions = $this->entityManager()->getFieldDefinitions($entity_type, $bundle_name);
+
+    if (!isset($definitions[$field_name])) {
       throw new AccessDeniedHttpException();
     }
 
+    $field_definition = $definitions[$field_name];
     $access_controller = $this->entityManager()->getAccessController($entity_type);
-    if ($instance->getType() != 'entity_reference' || !$access_controller->fieldAccess('edit', $instance)) {
+    if ($field_definition->getType() != 'entity_reference' || !$access_controller->fieldAccess('edit', $field_definition)) {
       throw new AccessDeniedHttpException();
     }
 
@@ -92,7 +95,7 @@ class EntityReferenceController extends ControllerBase {
       $prefix = count($items_typed) ? Tags::implode($items_typed) . ', ' : '';
     }
 
-    $matches = $this->entityReferenceAutocomplete->getMatches($instance->getField(), $instance, $entity_type, $entity_id, $prefix, $last_item);
+    $matches = $this->entityReferenceAutocomplete->getMatches($field_definition, $entity_type, $bundle_name, $entity_id, $prefix, $last_item);
 
     return new JsonResponse($matches);
   }

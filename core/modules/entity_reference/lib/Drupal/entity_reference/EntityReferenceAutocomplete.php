@@ -9,7 +9,9 @@ namespace Drupal\entity_reference;
 
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity_reference\Plugin\Type\SelectionPluginManager;
+use Drupal\field\FieldInstanceConfigInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -50,12 +52,12 @@ class EntityReferenceAutocomplete {
    * This function can be used by other modules that wish to pass a mocked
    * definition of the field on instance.
    *
-   * @param array $field
-   *   The field array definition.
-   * @param array $instance
-   *   The instance array definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
    * @param string $entity_type
    *   The entity type.
+   * @param string $bundle
+   *   The entity bundle.
    * @param string $entity_id
    *   (optional) The entity ID the entity reference field is attached to.
    *   Defaults to ''.
@@ -72,7 +74,7 @@ class EntityReferenceAutocomplete {
    *
    * @see \Drupal\entity_reference\EntityReferenceController
    */
-  public function getMatches($field, $instance, $entity_type, $entity_id = '', $prefix = '', $string = '') {
+  public function getMatches(FieldDefinitionInterface $field_definition, $entity_type, $bundle, $entity_id = '', $prefix = '', $string = '') {
     $matches = array();
     $entity = NULL;
 
@@ -82,11 +84,11 @@ class EntityReferenceAutocomplete {
         throw new AccessDeniedHttpException();
       }
     }
-    $handler = $this->selectionHandlerManager->getSelectionHandler($instance, $entity);
+    $handler = $this->selectionHandlerManager->getSelectionHandler($field_definition, $entity);
 
     if (isset($string)) {
       // Get an array of matching entities.
-      $widget = entity_get_form_display($instance->entity_type, $instance->bundle, 'default')->getComponent($instance->getName());
+      $widget = entity_get_form_display($entity_type, $bundle, 'default')->getComponent($field_definition->getName());
       $match_operator = !empty($widget['settings']['match_operator']) ? $widget['settings']['match_operator'] : 'CONTAINS';
       $entity_labels = $handler->getReferenceableEntities($string, $match_operator, 10);
 
