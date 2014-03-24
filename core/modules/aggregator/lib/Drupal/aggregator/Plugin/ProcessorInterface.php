@@ -46,14 +46,14 @@ interface ProcessorInterface {
   public function postProcess(FeedInterface $feed);
 
   /**
-   * Removes stored feed data.
+   * Deletes stored feed data.
    *
    * Called by aggregator if either a feed is deleted or a user clicks on
-   * "remove items".
+   * "delete items".
    *
    * @param \Drupal\aggregator\FeedInterface $feed
-   *   The $feed object whose items are being removed.
+   *   The $feed object whose items are being deleted.
    */
-  public function remove(FeedInterface $feed);
+  public function delete(FeedInterface $feed);
 
 }

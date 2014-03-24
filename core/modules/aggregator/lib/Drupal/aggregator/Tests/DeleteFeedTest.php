@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\RemoveFeedTest.
+ * Definition of Drupal\aggregator\Tests\DeleteFeedTest.
  */
 
 namespace Drupal\aggregator\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\aggregator\Tests;
 /**
  * Tests functionality for removing feeds in the Aggregator module.
  */
-class RemoveFeedTest extends AggregatorTestBase {
+class DeleteFeedTest extends AggregatorTestBase {
 
   /**
    * Modules to enable.
@@ -21,16 +21,16 @@ class RemoveFeedTest extends AggregatorTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'Remove feed functionality',
-      'description' => 'Remove feed test.',
+      'name' => 'Delete feed functionality',
+      'description' => 'Delete feed test.',
       'group' => 'Aggregator'
     );
   }
 
   /**
-   * Removes a feed and ensures that all of its services are removed.
+   * Deletes a feed and ensures that all of its services are deleted.
    */
-  function testRemoveFeed() {
+  function testDeleteFeed() {
     $feed1 = $this->createFeed();
     $feed2 = $this->createFeed();
 

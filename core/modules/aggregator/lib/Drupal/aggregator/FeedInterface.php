@@ -216,11 +216,11 @@ interface FeedInterface extends ContentEntityInterface {
   public function setLastModified($modified);
 
   /**
-   * Removes all items from a feed.
+   * Deletes all items from a feed.
    *
    * @return \Drupal\aggregator\FeedInterface
    *   The class instance that this method is called on.
    */
-  public function removeItems();
+  public function deleteItems();
 
 }

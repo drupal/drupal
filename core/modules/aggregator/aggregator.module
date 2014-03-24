@@ -146,7 +146,7 @@ function aggregator_cron() {
     }
   }
 
-  // Remove queued timestamp after 6 hours assuming the update has failed.
+  // Delete queued timestamp after 6 hours assuming the update has failed.
   db_update('aggregator_feed')
     ->fields(array('queued' => 0))
     ->condition('queued', REQUEST_TIME - (3600 * 6), '<')

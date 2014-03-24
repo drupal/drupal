@@ -29,7 +29,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $feed = $this->createFeed();
     if (!empty($feed)) {
       $this->updateFeedItems($feed, $this->getDefaultFeedItemCount());
-      $this->removeFeedItems($feed);
+      $this->deleteFeedItems($feed);
     }
 
     // Delete feed.

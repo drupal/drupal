@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\aggregator\Tests\RemoveFeedItemTest.
+ * Definition of Drupal\aggregator\Tests\DeleteFeedItemTest.
  */
 
 namespace Drupal\aggregator\Tests;
@@ -10,19 +10,19 @@ namespace Drupal\aggregator\Tests;
 /**
  * Tests functionality of removing a feed item in the Aggregator module.
  */
-class RemoveFeedItemTest extends AggregatorTestBase {
+class DeleteFeedItemTest extends AggregatorTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Remove feed item functionality',
-      'description' => 'Remove feed items from a feed.',
+      'name' => 'Delete feed item functionality',
+      'description' => 'Delete feed items from a feed.',
       'group' => 'Aggregator'
     );
   }
 
   /**
-   * Tests running "remove items" from 'admin/config/services/aggregator' page.
+   * Tests running "delete items" from 'admin/config/services/aggregator' page.
    */
-  function testRemoveFeedItem() {
+  function testDeleteFeedItem() {
     // Create a bunch of test feeds.
     $feed_urls = array();
     // No last-modified, no etag.
@@ -36,13 +36,13 @@ class RemoveFeedItemTest extends AggregatorTestBase {
 
     foreach ($feed_urls as $feed_url) {
       $feed = $this->createFeed($feed_url);
-      // Update and remove items two times in a row to make sure that removal
+      // Update and delete items two times in a row to make sure that removal
       // resets all 'modified' information (modified, etag, hash) and allows for
       // immediate update. There's 8 items in the feed, but one has an empty
       // title and is skipped.
-      $this->updateAndRemove($feed, 7);
-      $this->updateAndRemove($feed, 7);
-      $this->updateAndRemove($feed, 7);
+      $this->updateAndDelete($feed, 7);
+      $this->updateAndDelete($feed, 7);
+      $this->updateAndDelete($feed, 7);
       // Delete feed.
       $this->deleteFeed($feed);
     }

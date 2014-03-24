@@ -184,24 +184,24 @@ abstract class AggregatorTestBase extends WebTestBase {
    * @param \Drupal\aggregator\FeedInterface $feed
    *   Feed object representing the feed.
    */
-  function removeFeedItems(FeedInterface $feed) {
-    $this->drupalPostForm('admin/config/services/aggregator/remove/' . $feed->id(), array(), t('Remove items'));
-    $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->label())), 'Feed items removed.');
+  function deleteFeedItems(FeedInterface $feed) {
+    $this->drupalPostForm('admin/config/services/aggregator/delete/' . $feed->id(), array(), t('Delete items'));
+    $this->assertRaw(t('The news items from %title have been deleted.', array('%title' => $feed->label())), 'Feed items deleted.');
   }
 
   /**
-   * Adds and removes feed items and ensure that the count is zero.
+   * Adds and deletes feed items and ensure that the count is zero.
    *
    * @param \Drupal\aggregator\FeedInterface $feed
    *   Feed object representing the feed.
    * @param int $expected_count
    *   Expected number of feed items.
    */
-  function updateAndRemove(FeedInterface $feed, $expected_count) {
+  function updateAndDelete(FeedInterface $feed, $expected_count) {
     $this->updateFeedItems($feed, $expected_count);
     $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($count);
-    $this->removeFeedItems($feed);
+    $this->deleteFeedItems($feed);
     $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($count == 0);
   }

@@ -193,13 +193,13 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * {@inheritdoc}
    */
-  public function remove(FeedInterface $feed) {
+  public function delete(FeedInterface $feed) {
     $iids = Database::getConnection()->query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchCol();
     if ($iids) {
       entity_delete_multiple('aggregator_item', $iids);
     }
     // @todo This should be moved out to caller with a different message maybe.
-    drupal_set_message(t('The news items from %site have been removed.', array('%site' => $feed->label())));
+    drupal_set_message(t('The news items from %site have been deleted.', array('%site' => $feed->label())));
   }
 
   /**
@@ -211,7 +211,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     $aggregator_clear = $this->configuration['items']['expire'];
 
     if ($aggregator_clear != AGGREGATOR_CLEAR_NEVER) {
-      // Remove all items that are older than flush item timer.
+      // Delete all items that are older than flush item timer.
       $age = REQUEST_TIME - $aggregator_clear;
       $iids = Database::getConnection()->query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(
         ':fid' => $feed->id(),

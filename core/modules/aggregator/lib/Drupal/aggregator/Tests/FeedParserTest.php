@@ -23,7 +23,7 @@ class FeedParserTest extends AggregatorTestBase {
 
   function setUp() {
     parent::setUp();
-    // Do not remove old aggregator items during these tests, since our sample
+    // Do not delete old aggregator items during these tests, since our sample
     // feeds have hardcoded dates in them (which may be expired when this test
     // is run).
     $this->container->get('config.factory')->get('aggregator.settings')->set('items.expire', AGGREGATOR_CLEAR_NEVER)->save();

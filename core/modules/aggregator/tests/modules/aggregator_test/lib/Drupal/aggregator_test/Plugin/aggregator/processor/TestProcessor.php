@@ -108,7 +108,7 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
   /**
    * {@inheritdoc}
    */
-  public function remove(FeedInterface $feed) {
+  public function delete(FeedInterface $feed) {
     // Append a random number, just to change the feed description.
     $feed->description->value .= rand(0, 10);
   }

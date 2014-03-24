@@ -26,7 +26,7 @@ use Drupal\aggregator\FeedInterface;
  *     "form" = {
  *       "default" = "Drupal\aggregator\FeedFormController",
  *       "delete" = "Drupal\aggregator\Form\FeedDeleteForm",
- *       "remove_items" = "Drupal\aggregator\Form\FeedItemsRemoveForm",
+ *       "delete_items" = "Drupal\aggregator\Form\FeedItemsDeleteForm",
  *     }
  *   },
  *   links = {
@@ -62,10 +62,10 @@ class Feed extends ContentEntityBase implements FeedInterface {
   /**
    * {@inheritdoc}
    */
-  public function removeItems() {
+  public function deleteItems() {
     $manager = \Drupal::service('plugin.manager.aggregator.processor');
     foreach ($manager->getDefinitions() as $id => $definition) {
-      $manager->createInstance($id)->remove($this);
+      $manager->createInstance($id)->delete($this);
     }
     // Reset feed.
     $this->setLastCheckedTime(0);
@@ -93,10 +93,10 @@ class Feed extends ContentEntityBase implements FeedInterface {
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
     foreach ($entities as $entity) {
-      // Notify processors to remove stored items.
+      // Notify processors to delete stored items.
       $manager = \Drupal::service('plugin.manager.aggregator.processor');
       foreach ($manager->getDefinitions() as $id => $definition) {
-        $manager->createInstance($id)->remove($entity);
+        $manager->createInstance($id)->delete($entity);
       }
     }
   }

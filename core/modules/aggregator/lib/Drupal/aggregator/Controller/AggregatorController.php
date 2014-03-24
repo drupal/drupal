@@ -154,8 +154,8 @@ class AggregatorController extends ControllerBase {
         'route_name' => 'aggregator.feed_delete',
         'route_parameters' => array('aggregator_feed' => $feed->fid),
       );
-      $links['remove'] = array(
-        'title' => $this->t('Remove items'),
+      $links['delete_items'] = array(
+        'title' => $this->t('Delete items'),
         'route_name' => 'aggregator.feed_items_delete',
         'route_parameters' => array('aggregator_feed' => $feed->fid),
       );
