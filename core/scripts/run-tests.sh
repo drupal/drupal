@@ -376,7 +376,7 @@ function simpletest_script_bootstrap() {
   ini_set('display_errors', TRUE);
 
   // Ensure that required Settings exist.
-  if (!Settings::getSingleton()->getAll()) {
+  if (!Settings::getAll()) {
     new Settings(array(
       'hash_salt' => 'run-tests',
     ));

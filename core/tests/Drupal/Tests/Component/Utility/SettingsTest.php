@@ -56,26 +56,26 @@ class SettingsTest extends UnitTestCase {
    */
   public function testGet() {
     // Test stored settings.
-    $this->assertEquals($this->config['one'], $this->settings->get('one'), 'The correect setting was not returned.');
-    $this->assertEquals($this->config['two'], $this->settings->get('two'), 'The correct setting was not returned.');
+    $this->assertEquals($this->config['one'], Settings::get('one'), 'The correect setting was not returned.');
+    $this->assertEquals($this->config['two'], Settings::get('two'), 'The correct setting was not returned.');
 
     // Test setting that isn't stored with default.
-    $this->assertEquals('3', $this->settings->get('three', '3'), 'Default value for a setting not properly returned.');
-    $this->assertNull($this->settings->get('four'), 'Non-null value returned for a setting that should not exist.');
+    $this->assertEquals('3', Settings::get('three', '3'), 'Default value for a setting not properly returned.');
+    $this->assertNull(Settings::get('four'), 'Non-null value returned for a setting that should not exist.');
   }
 
   /**
    * Test Settings::getAll().
    */
   public function testGetAll() {
-    $this->assertEquals($this->config, $this->settings->getAll());
+    $this->assertEquals($this->config, Settings::getAll());
   }
 
   /**
-   * Tests Settings::getSingleton().
+   * Tests Settings::getInstance().
    */
   public function testGetSingleton() {
-    $singleton = $this->settings->getSingleton();
+    $singleton = $this->settings->getInstance();
     $this->assertEquals($singleton, $this->settings);
   }
 

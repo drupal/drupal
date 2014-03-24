@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Mail\Plugin\Mail;
 
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\Mail\MailInterface;
 
 /**
@@ -66,7 +67,7 @@ class PhpMail implements MailInterface {
     foreach ($message['headers'] as $name => $value) {
       $mimeheaders[] = $name . ': ' . mime_header_encode($value);
     }
-    $line_endings = settings()->get('mail_line_endings', PHP_EOL);
+    $line_endings = Settings::get('mail_line_endings', PHP_EOL);
     // Prepare mail commands.
     $mail_subject = mime_header_encode($message['subject']);
     // Note: e-mail uses CRLF for line-endings. PHP's API requires LF

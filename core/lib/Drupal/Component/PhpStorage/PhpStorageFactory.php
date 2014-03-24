@@ -34,7 +34,7 @@ class PhpStorageFactory {
    *   An instantiated storage controller for the specified name.
    */
   static function get($name) {
-    $overrides = Settings::getSingleton()->get('php_storage');
+    $overrides = Settings::get('php_storage');
     if (isset($overrides[$name])) {
       $configuration = $overrides[$name];
     }

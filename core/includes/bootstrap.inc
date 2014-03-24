@@ -622,20 +622,6 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 }
 
 /**
- * Returns a setting.
- *
- * Settings can be set in settings.php in the $settings array and requested
- * by this function. Settings should be used over configuration for read-only,
- * possibly low bootstrap configuration that is environment specific.
- *
- * @return \Drupal\Component\Utility\Settings
- *   The settings object.
- */
-function settings() {
-  return Settings::getSingleton();
-}
-
-/**
  * Gets the page cache cid for this request.
  *
  * @param \Symfony\Component\HttpFoundation\Request $request
@@ -946,7 +932,7 @@ function drupal_serve_page_from_cache(stdClass $cache, Response $response, Reque
   // fields that fully determines whether a cache is permitted to use the
   // response to reply to a subsequent request for a given URL without
   // revalidation.
-  if (!isset($boot_headers['vary']) && !settings()->get('omit_vary_cookie')) {
+  if (!isset($boot_headers['vary']) && !Settings::get('omit_vary_cookie')) {
     $response->setVary('Cookie', FALSE);
   }
 
@@ -1514,7 +1500,7 @@ function drupal_get_user_timezone() {
  *   A salt based on information in settings.php, not in the database.
  */
 function drupal_get_hash_salt() {
-  $hash_salt = settings()->get('hash_salt');
+  $hash_salt = Settings::get('hash_salt');
   // This should never happen, as it breaks user logins and many other services.
   // Therefore, explicitly notify the user (developer) by throwing an exception.
   if (empty($hash_salt)) {
@@ -1642,7 +1628,7 @@ function _drupal_bootstrap_page_cache() {
 
   require_once __DIR__ . '/database.inc';
   // Check for a cache mode force from settings.php.
-  if (settings()->get('page_cache_without_database')) {
+  if (Settings::get('page_cache_without_database')) {
     $cache_enabled = TRUE;
   }
   else {
@@ -2113,7 +2099,7 @@ function drupal_classloader($class_loader = NULL) {
     // findFile() method, but none of the others. The actual registry is still
     // in ClassLoader.
     if (!isset($class_loader)) {
-      $class_loader = settings()->get('class_loader', 'default');
+      $class_loader = Settings::get('class_loader', 'default');
     }
     if ($class_loader === 'apc') {
       require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';

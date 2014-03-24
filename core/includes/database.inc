@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 
@@ -933,7 +934,7 @@ function db_ignore_slave() {
     // Five minutes is long enough to allow the slave to break and resume
     // interrupted replication without causing problems on the Drupal site from
     // the old data.
-    $duration = settings()->get('maximum_replication_lag', 300);
+    $duration = Settings::get('maximum_replication_lag', 300);
     // Set session variable with amount of time to delay before using slave.
     $_SESSION['ignore_slave_server'] = REQUEST_TIME + $duration;
   }

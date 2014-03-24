@@ -317,7 +317,7 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
       // In case any $settings variables were written, import them into the
       // Settings singleton.
       if (!empty($settings_settings)) {
-        $old_settings = settings()->getAll();
+        $old_settings = Settings::getAll();
         new Settings($settings_settings + $old_settings);
       }
     }

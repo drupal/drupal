@@ -294,7 +294,7 @@ function install_begin_request(&$install_state) {
   require_once __DIR__ . '/file.inc';
   require_once __DIR__ . '/install.inc';
   require_once __DIR__ . '/schema.inc';
-  require_once __DIR__ . '/../../' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once __DIR__ . '/../../' . Settings::get('path_inc', 'core/includes/path.inc');
   require_once __DIR__ . '/database.inc';
   require_once __DIR__ . '/form.inc';
   require_once __DIR__ . '/batch.inc';
@@ -1777,7 +1777,7 @@ function install_load_profile(&$install_state) {
  */
 function install_bootstrap_full() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
+  require_once DRUPAL_ROOT . '/' . Settings::get('session_inc', 'core/includes/session.inc');
   drupal_session_initialize();
 }
 

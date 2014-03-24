@@ -14,6 +14,7 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -82,7 +83,7 @@ class TwigNodeTrans extends \Twig_Node {
     $compiler->raw(')');
 
     // Append translation debug markup, if necessary.
-    if (settings()->get('twig_debug', FALSE)) {
+    if (Settings::get('twig_debug', FALSE)) {
       $compiler->raw(" . '\n<!-- TRANSLATION: ");
       $compiler->subcompile($singular);
       if (!empty($plural)) {

@@ -20,7 +20,7 @@
  * @link authorize Authorized operation helper functions @endlink
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\Settings;
 
 // Change the directory to the Drupal root.
 chdir('..');
@@ -46,9 +46,9 @@ const MAINTENANCE_MODE = 'update';
  *   TRUE if the current user can run authorize.php, and FALSE if not.
  */
 function authorize_access_allowed() {
-  require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
+  require_once DRUPAL_ROOT . '/' . Settings::get('session_inc', 'core/includes/session.inc');
   drupal_session_initialize();
-  return settings()->get('allow_authorize_operations', TRUE) && user_access('administer software updates');
+  return Settings::get('allow_authorize_operations', TRUE) && user_access('administer software updates');
 }
 
 // *** Real work of the script begins here. ***

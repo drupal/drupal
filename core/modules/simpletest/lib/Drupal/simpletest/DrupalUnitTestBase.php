@@ -246,7 +246,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       // place.
       $container->register('settings', 'Drupal\Component\Utility\Settings')
         ->setFactoryClass('Drupal\Component\Utility\Settings')
-        ->setFactoryMethod('getSingleton');
+        ->setFactoryMethod('getInstance');
 
       $container
         ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')

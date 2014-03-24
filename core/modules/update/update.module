@@ -11,6 +11,8 @@
  * ability to install contributed modules and themes via an user interface.
  */
 
+use Drupal\Component\Utility\Settings;
+
 // These are internally used constants for this code, do not modify.
 
 /**
@@ -172,7 +174,7 @@ function update_menu_link_defaults() {
  * @see update_menu()
  */
 function update_manager_access() {
-  return settings()->get('allow_authorize_operations', TRUE) && user_access('administer software updates');
+  return Settings::get('allow_authorize_operations', TRUE) && user_access('administer software updates');
 }
 
 /**

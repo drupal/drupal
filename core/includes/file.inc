@@ -7,6 +7,7 @@
 
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Component\PhpStorage\FileStorage;
+use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
 use Drupal\Core\StreamWrapper\PublicStream;
 
@@ -1336,10 +1337,10 @@ function file_get_mimetype($uri, $mapping = NULL) {
 function drupal_chmod($uri, $mode = NULL) {
   if (!isset($mode)) {
     if (is_dir($uri)) {
-      $mode = settings()->get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
+      $mode = Settings::get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
     }
     else {
-      $mode = settings()->get('file_chmod_file', FILE_CHMOD_FILE);
+      $mode = Settings::get('file_chmod_file', FILE_CHMOD_FILE);
     }
   }
 
@@ -1513,7 +1514,7 @@ function drupal_basename($uri, $suffix = NULL) {
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
   if (!isset($mode)) {
-    $mode = settings()->get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
+    $mode = Settings::get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
   }
 
   // If the URI has a scheme, don't override the umask - schemes can handle this

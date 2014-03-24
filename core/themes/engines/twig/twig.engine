@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Component\Utility\Settings;
 
 /**
  * Implements hook_theme().
@@ -51,7 +52,7 @@ function twig_render_template($template_file, $variables) {
     'rendered_markup' => \Drupal::service('twig')->loadTemplate($template_file)->render($variables),
     'debug_suffix'    => '',
   );
-  if (settings()->get('twig_debug', FALSE)) {
+  if (Settings::get('twig_debug', FALSE)) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
     $output['debug_prefix'] .= "\n<!-- CALL: _theme('{$variables['theme_hook_original']}') -->";
     // If there are theme suggestions, reverse the array so more specific

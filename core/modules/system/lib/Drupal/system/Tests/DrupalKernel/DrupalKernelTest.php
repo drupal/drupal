@@ -7,9 +7,8 @@
 
 namespace Drupal\system\Tests\DrupalKernel;
 
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
-use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
-use Drupal\Component\PhpStorage\FileReadOnlyStorage;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -68,7 +67,7 @@ class DrupalKernelTest extends DrupalUnitTestBase {
 
     // Now use the read-only storage implementation, simulating a "production"
     // environment.
-    $php_storage = settings()->get('php_storage');
+    $php_storage = Settings::get('php_storage');
     $php_storage['service_container']['class'] = 'Drupal\Component\PhpStorage\FileReadOnlyStorage';
     $this->settingsSet('php_storage', $php_storage);
     $kernel = new DrupalKernel('testing', $classloader);

@@ -207,7 +207,7 @@ function drupal_get_profile() {
     }
   }
   else {
-    $profile = settings()->get('install_profile') ?: 'standard';
+    $profile = Settings::get('install_profile') ?: 'standard';
   }
 
   return $profile;
@@ -496,7 +496,7 @@ function _external_url_is_local($url) {
  *   TRUE if a proxy should be used for this host.
  */
 function _drupal_http_use_proxy($host) {
-  $proxy_exceptions = settings()->get('proxy_exceptions', array('localhost', '127.0.0.1'));
+  $proxy_exceptions = Settings::get('proxy_exceptions', array('localhost', '127.0.0.1'));
   return !in_array(strtolower($host), $proxy_exceptions, TRUE);
 }
 
@@ -3077,11 +3077,11 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  * Loads code for subsystems and modules, and registers stream wrappers.
  */
 function _drupal_bootstrap_code() {
-  require_once __DIR__ . '/../../' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once __DIR__ . '/../../' . Settings::get('path_inc', 'core/includes/path.inc');
   require_once __DIR__ . '/module.inc';
   require_once __DIR__ . '/theme.inc';
   require_once __DIR__ . '/pager.inc';
-  require_once __DIR__ . '/../../' . settings()->get('menu_inc', 'core/includes/menu.inc');
+  require_once __DIR__ . '/../../' . Settings::get('menu_inc', 'core/includes/menu.inc');
   require_once __DIR__ . '/tablesort.inc';
   require_once __DIR__ . '/file.inc';
   require_once __DIR__ . '/unicode.inc';

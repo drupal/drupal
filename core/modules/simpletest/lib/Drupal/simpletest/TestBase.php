@@ -1008,7 +1008,7 @@ abstract class TestBase {
 
     // Backup current in-memory configuration.
     $this->originalSite = conf_path();
-    $this->originalSettings = settings()->getAll();
+    $this->originalSettings = Settings::getAll();
     $this->originalConfig = $GLOBALS['config'];
     // @todo Remove all remnants of $GLOBALS['conf'].
     // @see https://drupal.org/node/2183323
@@ -1026,12 +1026,12 @@ abstract class TestBase {
     // Save further contextual information.
     // Use the original files directory to avoid nesting it within an existing
     // simpletest directory if a test is executed within a test.
-    $this->originalFileDirectory = settings()->get('file_public_path', conf_path() . '/files');
+    $this->originalFileDirectory = Settings::get('file_public_path', conf_path() . '/files');
     $this->originalProfile = drupal_get_profile();
     $this->originalUser = isset($user) ? clone $user : NULL;
 
     // Ensure that the current session is not changed by the new environment.
-    require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
+    require_once DRUPAL_ROOT . '/' . Settings::get('session_inc', 'core/includes/session.inc');
     drupal_save_session(FALSE);
 
     // Save and clean the shutdown callbacks array because it is static cached
@@ -1331,7 +1331,7 @@ abstract class TestBase {
    * @see \Drupal\Component\Utility\Settings::get()
    */
   protected function settingsSet($name, $value) {
-    $settings = settings()->getAll();
+    $settings = Settings::getAll();
     $settings[$name] = $value;
     new Settings($settings);
   }

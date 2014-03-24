@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Xss;
 
 /**
@@ -426,7 +427,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
       if (isset($casing)) {
         $chunk = $casing($chunk);
       }
-      $line_endings = settings()->get('mail_line_endings', PHP_EOL);
+      $line_endings = Settings::get('mail_line_endings', PHP_EOL);
       // Format it and apply the current indentation.
       $output .= drupal_wrap_mail($chunk, implode('', $indent)) . $line_endings;
       // Remove non-quotation markers from indentation.

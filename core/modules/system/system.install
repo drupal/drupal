@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Component\Utility\Settings;
 
 /**
  * Implements hook_requirements().
@@ -335,7 +336,7 @@ function system_requirements($phase) {
   // unless overrides are provided in settings.php.
   if ($phase == 'install') {
     $directories = array();
-    if ($file_public_path = settings()->get('file_public_path')) {
+    if ($file_public_path = Settings::get('file_public_path')) {
       $directories[] = $file_public_path;
     }
     else {
@@ -447,7 +448,7 @@ function system_requirements($phase) {
 
   // Verify the update.php access setting
   if ($phase == 'runtime') {
-    if (settings()->get('update_free_access')) {
+    if (Settings::get('update_free_access')) {
       $requirements['update access'] = array(
         'value' => t('Not protected'),
         'severity' => REQUIREMENT_ERROR,
@@ -530,7 +531,7 @@ function system_requirements($phase) {
     }
     $requirements['update status']['title'] = t('Update notifications');
 
-    if (settings()->get('rebuild_access')) {
+    if (Settings::get('rebuild_access')) {
       $requirements['rebuild access'] = array(
         'title' => t('Rebuild access'),
         'value' => t('Enabled'),

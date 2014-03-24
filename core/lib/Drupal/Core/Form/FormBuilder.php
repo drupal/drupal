@@ -9,6 +9,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
@@ -1287,7 +1288,7 @@ class FormBuilder implements FormBuilderInterface {
 
     // Special handling if we're on the top level form element.
     if (isset($element['#type']) && $element['#type'] == 'form') {
-      if (!empty($element['#https']) && settings()->get('mixed_mode_sessions', FALSE) &&
+      if (!empty($element['#https']) && Settings::get('mixed_mode_sessions', FALSE) &&
         !UrlHelper::isExternal($element['#action'])) {
         global $base_root;
 

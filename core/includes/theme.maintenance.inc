@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Settings;
 
 /**
  * Sets up the theming system for maintenance page.
@@ -24,7 +25,7 @@ function _drupal_maintenance_theme() {
     return;
   }
 
-  require_once DRUPAL_ROOT . '/' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once DRUPAL_ROOT . '/' . Settings::get('path_inc', 'core/includes/path.inc');
   require_once __DIR__ . '/theme.inc';
   require_once __DIR__ . '/common.inc';
   require_once __DIR__ . '/unicode.inc';
@@ -38,7 +39,7 @@ function _drupal_maintenance_theme() {
       $custom_theme = $GLOBALS['install_state']['theme'];
     }
     else {
-      $custom_theme = settings()->get('maintenance_theme', 'seven');
+      $custom_theme = Settings::get('maintenance_theme', 'seven');
     }
   }
   else {
@@ -52,7 +53,7 @@ function _drupal_maintenance_theme() {
     // Use the maintenance theme if specified, otherwise attempt to use the
     // default site theme.
     try {
-      $custom_theme = settings()->get('maintenance_theme', '');
+      $custom_theme = Settings::get('maintenance_theme', '');
       if (!$custom_theme) {
         $config = \Drupal::config('system.theme');
         $custom_theme = $config->get('default');

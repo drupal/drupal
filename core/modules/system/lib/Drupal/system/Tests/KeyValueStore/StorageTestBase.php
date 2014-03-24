@@ -54,7 +54,7 @@ abstract class StorageTestBase extends UnitTestBase {
     $this->container->set('service_container', $this->container);
     $this->container->register('settings', 'Drupal\Component\Utility\Settings')
       ->setFactoryClass('Drupal\Component\Utility\Settings')
-      ->setFactoryMethod('getSingleton');
+      ->setFactoryMethod('getInstance');
     $this->container
       ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
       ->addArgument(new Reference('service_container'))

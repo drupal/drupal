@@ -1100,8 +1100,8 @@ class DrupalDiffFormatter extends DiffFormatter {
   );
 
   function DrupalDiffFormatter() {
-    $this->leading_context_lines = Settings::getSingleton()->get('diff_context_lines_leading', 2);
-    $this->trailing_context_lines = Settings::getSingleton()->get('diff_context_lines_trailing', 2);
+    $this->leading_context_lines = Settings::get('diff_context_lines_leading', 2);
+    $this->trailing_context_lines = Settings::get('diff_context_lines_trailing', 2);
   }
 
   function _start_diff() {

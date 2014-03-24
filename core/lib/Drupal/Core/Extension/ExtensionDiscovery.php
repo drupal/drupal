@@ -131,7 +131,7 @@ class ExtensionDiscovery {
     // Therefore, add the site directory of the parent site to the search paths,
     // so that contained extensions are still discovered.
     // @see \Drupal\simpletest\WebTestBase::setUp()
-    if ($parent_site = Settings::getSingleton()->get('test_parent_site')) {
+    if ($parent_site = Settings::get('test_parent_site')) {
       $searchdirs[static::ORIGIN_PARENT_SITE] = $parent_site;
     }
 

@@ -17,6 +17,7 @@
  */
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Utility\Error;
 
@@ -175,7 +176,7 @@ function _drupal_session_write($sid, $value) {
 
     // For performance reasons, do not update the sessions table, unless
     // $_SESSION has changed or more than 180 has passed since the last update.
-    if ($is_changed || !$user->getLastAccessedTime() || REQUEST_TIME - $user->getLastAccessedTime() > settings()->get('session_write_interval', 180)) {
+    if ($is_changed || !$user->getLastAccessedTime() || REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
       // Either ssid or sid or both will be added from $key below.
       $fields = array(
         'uid' => $user->id(),
@@ -196,14 +197,14 @@ function _drupal_session_write($sid, $value) {
         // secure and insecure session cookies. If enabled and both cookies are
         // presented then use both keys. The session ID from the cookie is
         // hashed before being stored in the database as a security measure.
-        if (settings()->get('mixed_mode_sessions', FALSE)) {
+        if (Settings::get('mixed_mode_sessions', FALSE)) {
           $insecure_session_name = substr(session_name(), 1);
           if ($cookies->has($insecure_session_name)) {
             $key['sid'] = Crypt::hashBase64($cookies->get($insecure_session_name));
           }
         }
       }
-      elseif (settings()->get('mixed_mode_sessions', FALSE)) {
+      elseif (Settings::get('mixed_mode_sessions', FALSE)) {
         unset($key['ssid']);
       }
 
@@ -214,7 +215,7 @@ function _drupal_session_write($sid, $value) {
     }
 
     // Likewise, do not update access time more than once per 180 seconds.
-    if ($user->isAuthenticated() && REQUEST_TIME - $user->getLastAccessedTime() > settings()->get('session_write_interval', 180)) {
+    if ($user->isAuthenticated() && REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
       db_update('users')
         ->fields(array(
           'access' => REQUEST_TIME
@@ -247,7 +248,7 @@ function drupal_session_initialize() {
 
   $is_https = \Drupal::request()->isSecure();
   $cookies = \Drupal::request()->cookies;
-  if (($cookies->has(session_name()) && ($session_name = $cookies->get(session_name()))) || ($is_https && settings()->get('mixed_mode_sessions', FALSE) && ($cookies->has(substr(session_name(), 1))) && ($session_name = $cookies->get(substr(session_name(), 1))))) {
+  if (($cookies->has(session_name()) && ($session_name = $cookies->get(session_name()))) || ($is_https && Settings::get('mixed_mode_sessions', FALSE) && ($cookies->has(substr(session_name(), 1))) && ($session_name = $cookies->get(substr(session_name(), 1))))) {
     // If a session cookie exists, initialize the session. Otherwise the
     // session is only started on demand in drupal_session_commit(), making
     // anonymous users not use a session cookie unless something is stored in
@@ -268,7 +269,7 @@ function drupal_session_initialize() {
     // anonymous users than are generated in drupal_session_regenerate() when
     // a user becomes authenticated.
     session_id(Crypt::randomBytesBase64());
-    if ($is_https && settings()->get('mixed_mode_sessions', FALSE)) {
+    if ($is_https && Settings::get('mixed_mode_sessions', FALSE)) {
       $insecure_session_name = substr(session_name(), 1);
       $session_id = Crypt::randomBytesBase64();
       $cookies->set($insecure_session_name, $session_id);
@@ -323,7 +324,7 @@ function drupal_session_commit() {
     // started.
     if (!drupal_session_started()) {
       drupal_session_start();
-      if (\Drupal::request()->isSecure() && settings()->get('mixed_mode_sessions', FALSE)) {
+      if (\Drupal::request()->isSecure() && Settings::get('mixed_mode_sessions', FALSE)) {
         $insecure_session_name = substr(session_name(), 1);
         $params = session_get_cookie_params();
         $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
@@ -363,7 +364,7 @@ function drupal_session_regenerate() {
   $is_https = \Drupal::request()->isSecure();
   $cookies = \Drupal::request()->cookies;
 
-  if ($is_https && settings()->get('mixed_mode_sessions', FALSE)) {
+  if ($is_https && Settings::get('mixed_mode_sessions', FALSE)) {
     $insecure_session_name = substr(session_name(), 1);
     if (!isset($GLOBALS['lazy_session']) && $cookies->has($insecure_session_name)) {
       $old_insecure_session_id = $cookies->get($insecure_session_name);
@@ -392,7 +393,7 @@ function drupal_session_regenerate() {
       $fields['ssid'] = Crypt::hashBase64(session_id());
       // If the "secure pages" setting is enabled, use the newly-created
       // insecure session identifier as the regenerated sid.
-      if (settings()->get('mixed_mode_sessions', FALSE)) {
+      if (Settings::get('mixed_mode_sessions', FALSE)) {
         $fields['sid'] = Crypt::hashBase64($session_id);
       }
     }
@@ -453,7 +454,7 @@ function _drupal_session_destroy($sid) {
   if ($is_https) {
     _drupal_session_delete_cookie(substr(session_name(), 1), FALSE);
   }
-  elseif (settings()->get('mixed_mode_sessions', FALSE)) {
+  elseif (Settings::get('mixed_mode_sessions', FALSE)) {
     _drupal_session_delete_cookie('S' . session_name(), TRUE);
   }
 }
