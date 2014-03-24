@@ -1099,15 +1099,14 @@ function install_profile_info($profile, $langcode = 'en') {
     $profile_file = drupal_get_path('profile', $profile) . "/$profile.info.yml";
     $info = \Drupal::service('info_parser')->parse($profile_file);
     $info += $defaults;
-    $info['dependencies'] = array_unique(array_merge(
-      drupal_required_modules(),
-      $info['dependencies'],
-      ($langcode != 'en' && !empty($langcode) ? array('locale') : array()))
-    );
 
     // drupal_required_modules() includes the current profile as a dependency.
-    // Since a module can't depend on itself we remove that element of the array.
-    array_shift($info['dependencies']);
+    // Remove that dependency, since a module cannot depend on itself.
+    $required = array_diff(drupal_required_modules(), array($profile));
+
+    $locale = !empty($langcode) && $langcode != 'en' ? array('locale') : array();
+
+    $info['dependencies'] = array_unique(array_merge($required, $info['dependencies'], $locale));
 
     $cache[$profile] = $info;
   }
