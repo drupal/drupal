@@ -7,46 +7,55 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Render\Element;
 
 /**
- * Returns HTML for an individual form element.
+ * Prepares variables for individual form element templates.
+ *
+ * Default template: field-multiple-value-form.html.twig.
  *
  * Combines multiple values into a table with drag-n-drop reordering.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the form element.
- *
- * @ingroup themeable
- *
- * @todo Convert to a template.
  */
-function theme_field_multiple_value_form($variables) {
+function template_preprocess_field_multiple_value_form(&$variables) {
   $element = $variables['element'];
-  $output = '';
+  $variables['multiple'] = $element['#cardinality_multiple'];
 
-  if ($element['#cardinality_multiple']) {
-    $form_required_marker = array('#theme' => 'form_required_marker');
-    $required = !empty($element['#required']) ? drupal_render($form_required_marker) : '';
+  if ($variables['multiple']) {
     $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
-
     $header = array(
       array(
-        'data' => '<h4 class="label">' . t('!title !required', array('!title' => $element['#title'], '!required' => $required)) . "</h4>",
+        'data' => array(
+          '#prefix' => '<h4 class="label">',
+          'title' => array(
+            '#markup' => t($element['#title']),
+          ),
+          '#suffix' => '</h4>',
+        ),
         'colspan' => 2,
         'class' => array('field-label'),
       ),
       t('Order', array(), array('context' => 'Sort order')),
     );
+    if (!empty($element['#required'])) {
+      $header[0]['data']['required'] = array(
+        '#theme' => 'form_required_marker',
+        '#element' => $element,
+      );
+    }
     $rows = array();
 
     // Sort items according to '_weight' (needed when the form comes back after
-    // preview or failed validation)
+    // preview or failed validation).
     $items = array();
-    foreach (element_children($element) as $key) {
+    $variables['button'] = array();
+    foreach (Element::children($element) as $key) {
       if ($key === 'add_more') {
-        $add_more_button = &$element[$key];
+        $variables['button'] = &$element[$key];
       }
       else {
         $items[] = &$element[$key];
@@ -57,10 +66,15 @@ function theme_field_multiple_value_form($variables) {
     // Add the items as table rows.
     foreach ($items as $item) {
       $item['_weight']['#attributes']['class'] = array($order_class);
-      $delta_element = drupal_render($item['_weight']);
+
+      // Remove weight form element from item render array so it can be rendered
+      // in a separate table column.
+      $delta_element = $item['_weight'];
+      unset($item['_weight']);
+
       $cells = array(
         array('data' => '', 'class' => array('field-multiple-drag')),
-        drupal_render($item),
+        array('data' => $item),
         array('data' => $delta_element, 'class' => array('delta-order')),
       );
       $rows[] = array(
@@ -69,7 +83,7 @@ function theme_field_multiple_value_form($variables) {
       );
     }
 
-    $table = array(
+    $variables['table'] = array(
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
@@ -85,19 +99,15 @@ function theme_field_multiple_value_form($variables) {
         ),
       ),
     );
-    $output = '<div class="form-item">';
-    $output .= drupal_render($table);
-    $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
-    $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
-    $output .= '</div>';
+
+    $variables['description'] = $element['#description'];
   }
   else {
-    foreach (element_children($element) as $key) {
-      $output .= drupal_render($element[$key]);
+    $variables['elements'] = array();
+    foreach (Element::children($element) as $key) {
+      $variables['elements'][] = $element[$key];
     }
   }
-
-  return $output;
 }
 
 /**

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Template\RenderWrapper;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_preprocess_HOOK() for page templates.
@@ -145,27 +146,22 @@ function bartik_menu_tree__shortcut_default($variables) {
 }
 
 /**
- * Implements theme_field__field_type().
+ * Implements theme_preprocess_HOOK() for field templates.
+ *
+ * @see template_preprocess_field()
  */
-function bartik_field__taxonomy_term_reference($variables) {
-  $output = '';
-
-  // Render the label either as a visible list or make it visually hidden for accessibility.
-  $hidden_class = empty($variables['label_hidden']) ? '' : ' visually-hidden';
-  $output .= '<h3 class="field-label' . $hidden_class . '">' . $variables['label'] . ': </h3>';
-
-  // Render the items.
-  $output .= ($variables['element']['#label_display'] == 'inline') ? '<ul class="links inline">' : '<ul class="links">';
-  foreach ($variables['items'] as $delta => $item) {
-    $output .= '<li class="taxonomy-term-reference-' . $delta . '"' . $variables['item_attributes'][$delta] . '>' . drupal_render($item) . '</li>';
+function bartik_preprocess_field(&$variables) {
+  $element = $variables['element'];
+  if ($element['#field_type'] == 'taxonomy_term_reference') {
+    $label_attributes['class'] = array('field-label');
+    if ($variables['label_hidden']) {
+      $label_attributes['class'][] = 'visually-hidden';
+    }
+    if ($variables['element']['#label_display'] == 'inline') {
+      $label_attributes['class'][] = 'inline';
+    }
+    $variables['label_attributes'] = new Attribute($label_attributes);
   }
-  $output .= '</ul>';
-
-  // Render the top-level DIV.
-  $variables['attributes']['class'][] = 'clearfix';
-  $output = '<div ' . $variables['attributes'] . '>' . $output . '</div>';
-
-  return $output;
 }
 
 /**

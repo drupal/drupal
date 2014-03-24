@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Bartik theme override for taxonomy term fields.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - label_hidden: Whether the field label has been set to hidden.
+ * - label_attributes: HTML attributes for the label.
+ * - label: The label for the field.
+ * - content_attributes: HTML attributes for the content.
+ * - items: List of all the field items.
+ * - item_attributes: HTML attributes for each item.
+ *
+ * @see template_preprocess_field()
+ * @see bartik_preprocess_field()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="{{ attributes.class }} clearfix"{{ attributes }}>
+  <h3{{ label_attributes }}>{{ label }}: </h3>
+  <ul class="links">
+    {% for delta, item in items %}
+      <li class="taxonomy-term-reference-{{ delta }}"{{ item_attributes[delta] }}>{{ item }}</li>
+    {% endfor %}
+  </ul>
+</div>
