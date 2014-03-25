@@ -165,11 +165,15 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRoles() {
+  public function getRoles($exclude_locked_roles = FALSE) {
     $roles = array();
+
     foreach ($this->get('roles') as $role) {
-      $roles[] = $role->value;
+      if (!($exclude_locked_roles && in_array($role->value, array('anonymoud', 'authenticated')))) {
+        $roles[] = $role->value;
+      }
     }
+
     return $roles;
   }
 

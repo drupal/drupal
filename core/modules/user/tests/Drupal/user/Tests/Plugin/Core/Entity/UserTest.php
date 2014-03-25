@@ -31,15 +31,22 @@ class UserTest extends UserSessionTest {
   protected function createUserSession(array $rids = array()) {
     $user = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
-      ->setMethods(array('getRoles', 'id'))
+      ->setMethods(array('get', 'id'))
       ->getMock();
     $user->expects($this->any())
       ->method('id')
       // @todo Also test the uid = 1 handling.
       ->will($this->returnValue(0));
+    $roles = array();
+    foreach ($rids as $rid) {
+      $roles[] = (object) array(
+        'value' => $rid,
+      );
+    }
     $user->expects($this->any())
-      ->method('getRoles')
-      ->will($this->returnValue($rids));
+      ->method('get')
+      ->with('roles')
+      ->will($this->returnValue($roles));
     return $user;
   }
 

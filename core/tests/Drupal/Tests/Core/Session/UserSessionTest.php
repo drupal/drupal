@@ -116,6 +116,7 @@ class UserSessionTest extends UnitTestCase {
 
     $this->users['user_one'] = $this->createUserSession(array('role_one'));
     $this->users['user_two'] = $this->createUserSession(array('role_one', 'role_two'));
+    $this->users['user_three'] = $this->createUserSession(array('role_two', 'authenticated'));
     $this->users['user_last'] = $this->createUserSession();
   }
 
@@ -140,6 +141,17 @@ class UserSessionTest extends UnitTestCase {
     foreach ($sessions_without_access as $name) {
       $this->assertFalse($this->users[$name]->hasPermission($permission));
     }
+  }
+
+  /**
+   * Tests the method getRoles exclude or include locked roles based in param.
+   *
+   * @see \Drupal\Core\Session\UserSession::getRoles()
+   * @todo Move roles constants to a class/interface
+   */
+  public function testUserGetRoles() {
+    $this->assertEquals(array('role_two', 'authenticated'), $this->users['user_three']->getRoles());
+    $this->assertEquals(array('role_two'), $this->users['user_three']->getRoles(TRUE));
   }
 
 }

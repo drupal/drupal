@@ -26,10 +26,13 @@ interface AccountInterface {
   /**
    * Returns a list of roles.
    *
+   * @param bool $exclude_locked_roles
+   *   (optional) If TRUE, locked roles (anonymous/authenticated) are not returned.
+   *
    * @return array
    *   List of role IDs.
    */
-  public function getRoles();
+  public function getRoles($exclude_locked_roles = FALSE);
 
   /**
    * Checks whether a user has a certain permission.

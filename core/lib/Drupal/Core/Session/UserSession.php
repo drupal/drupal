@@ -115,8 +115,14 @@ class UserSession implements AccountInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRoles() {
-    return $this->roles;
+  public function getRoles($exclude_locked_roles = FALSE) {
+    $roles = $this->roles;
+
+    if ($exclude_locked_roles) {
+      $roles = array_diff($roles, array('anonymous', 'authenticated'));
+    }
+
+    return $roles;
   }
 
   /**
