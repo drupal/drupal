@@ -13,8 +13,9 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Provides a breadcrumb manager.
  *
- * Holds an array of path processor objects and uses them to sequentially process
- * a path, in order of processor priority.
+ * Can be assigned any number of other BreadcrumbBuilderInterface objects
+ * by calling the addBuilder() method, then uses the highest priority one
+ * to build breadcrumbs when build() is called.
  */
 class BreadcrumbManager implements BreadcrumbBuilderInterface {
 
