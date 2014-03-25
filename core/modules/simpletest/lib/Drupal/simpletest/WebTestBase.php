@@ -16,6 +16,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -728,7 +729,7 @@ abstract class WebTestBase extends TestBase {
       // @see WebTestBase::drupalUserIsLoggedIn()
       unset($this->loggedInUser->session_id);
       $this->loggedInUser = FALSE;
-      $this->container->set('current_user', drupal_anonymous_user());
+      $this->container->set('current_user', new AnonymousUserSession());
     }
   }
 

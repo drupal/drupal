@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Tests;
 
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\filter\Plugin\DataType\FilterFormat;
@@ -205,7 +206,7 @@ class FilterAPITest extends EntityUnitTestBase {
     ));
 
     // Test with anonymous user.
-    $user = drupal_anonymous_user();
+    $user = new AnonymousUserSession();
     $this->container->set('current_user', $user);
 
     $expected_available_options = array(

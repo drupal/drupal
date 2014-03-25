@@ -54,6 +54,13 @@ use Drupal\user\UserInterface;
 class User extends ContentEntityBase implements UserInterface {
 
   /**
+   * The hostname for this user.
+   *
+   * @var string
+   */
+  protected $hostname;
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -195,6 +202,17 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function getSessionId() {
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHostname() {
+    if (!isset($this->hostname) && \Drupal::hasRequest()) {
+      $this->hostname = \Drupal::request()->getClientIp();
+    }
+
+    return $this->hostname;
   }
 
   /**

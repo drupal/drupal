@@ -11,7 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
-use Drupal\Core\Session\UserSession;
+use Drupal\Core\Session\AnonymousUserSession;
 
 /**
  * The Drupal core Cron service.
@@ -81,7 +81,7 @@ class Cron implements CronInterface {
     // @todo This currently does not work, as it will not affect the current
     //   user being injected into services.
     $original_user = $GLOBALS['user'];
-    $GLOBALS['user'] = new UserSession();
+    $GLOBALS['user'] = new AnonymousUserSession();
 
     // Try to allocate enough time to run all the hook_cron implementations.
     drupal_set_time_limit(240);

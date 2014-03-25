@@ -155,4 +155,11 @@ interface AccountInterface {
    */
   public function getLastAccessedTime();
 
+  /**
+   * Returns the session hostname.
+   *
+   * @return string
+   */
+  public function getHostname();
+
 }

@@ -146,8 +146,8 @@ class MessageFormController extends ContentEntityFormController {
 
     $sender = clone user_load($user->id());
     if ($user->isAnonymous()) {
-      // At this point, $sender contains drupal_anonymous_user(), so we need to
-      // take over the submitted form values.
+      // At this point, $sender contains an anonymous user, so we need to take
+      // over the submitted form values.
       $sender->name = $message->getSenderName();
       $sender->mail = $message->getSenderMail();
       // Save the anonymous user information to a cookie for reuse.

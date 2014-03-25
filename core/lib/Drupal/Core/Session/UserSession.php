@@ -94,10 +94,17 @@ class UserSession implements AccountInterface {
   protected $timezone;
 
   /**
+   * The hostname for this user session.
+   *
+   * @var string
+   */
+  protected $hostname = '';
+
+  /**
    * Constructs a new user session.
    *
    * @param array $values
-   *   Array of initial values for the user sesion.
+   *   Array of initial values for the user session.
    */
   public function __construct(array $values = array()) {
     foreach ($values as $key => $value) {
@@ -234,6 +241,13 @@ class UserSession implements AccountInterface {
    */
   public function getLastAccessedTime() {
     return $this->timestamp;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHostname() {
+    return $this->hostname;
   }
 
 }

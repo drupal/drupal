@@ -22,6 +22,7 @@ use Drupal\Core\EventSubscriber\HtmlViewSubscriber;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AnonymousUserSession;
 
 /**
  * @file

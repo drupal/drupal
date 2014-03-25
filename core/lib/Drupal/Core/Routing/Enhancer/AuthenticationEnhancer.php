@@ -8,6 +8,7 @@
 namespace Drupal\Core\Routing\Enhancer;
 
 use Drupal\Core\Authentication\AuthenticationManagerInterface;
+use Drupal\Core\Session\AnonymousUserSession;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,7 @@ class AuthenticationEnhancer extends ContainerAware implements RouteEnhancerInte
       // If the request was authenticated with a non-permitted provider,
       // force the user back to anonymous.
       if (!in_array($auth_provider_triggered, $auth_providers)) {
-        $anonymous_user = drupal_anonymous_user();
+        $anonymous_user = new AnonymousUserSession();
 
         $this->container->set('current_user', $anonymous_user, 'request');
 

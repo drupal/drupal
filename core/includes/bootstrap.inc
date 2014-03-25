@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Session\UserSession;
+use Drupal\Core\Session\AnonymousUserSession;
 
 /**
  * @file
@@ -1323,23 +1323,13 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
  *
  * @return \Drupal\Core\Session\AccountInterface
  *   The user session object.
+ *
+ * @deprecated in Drupal 8.x-dev. Will be removed before Drupal 8.0 by
+ *   https://drupal.org/node/2185315. Use
+ *   \Drupal\Core\Session\AnonymousUserSession.
  */
 function drupal_anonymous_user() {
-  try {
-    $request = \Drupal::request();
-    $hostname = $request->getClientIP();
-  }
-  catch (DependencyInjectionRuntimeException $e) {
-    // We are not in a request context.
-    $hostname = '';
-  }
-
-  $values = array(
-    'uid' => 0,
-    'hostname' => $hostname,
-    'roles' => array(DRUPAL_ANONYMOUS_RID),
-  );
-  return new UserSession($values);
+  return new AnonymousUserSession();
 }
 
 /**
@@ -1641,7 +1631,7 @@ function _drupal_bootstrap_page_cache() {
   // to serve a cached page.
   if (!$request->cookies->has(session_name()) && $cache_enabled) {
     // Make sure there is a user object because its timestamp will be checked.
-    $user = drupal_anonymous_user();
+    $user = new AnonymousUserSession();
     // Get the page from the cache.
     $cache = drupal_page_get_cache($request);
     // If there is a cached page, display it.

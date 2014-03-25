@@ -19,6 +19,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\Session\UserSession;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Utility\Error;
 
 /**
@@ -264,7 +265,7 @@ function drupal_session_initialize() {
     // processes (like drupal_get_token()) needs to know the future
     // session ID in advance.
     $GLOBALS['lazy_session'] = TRUE;
-    $user = drupal_anonymous_user();
+    $user = new AnonymousUserSession();
     // Less random sessions (which are much faster to generate) are used for
     // anonymous users than are generated in drupal_session_regenerate() when
     // a user becomes authenticated.
@@ -447,7 +448,7 @@ function _drupal_session_destroy($sid) {
   // Reset $_SESSION and $user to prevent a new session from being started
   // in drupal_session_commit().
   $_SESSION = array();
-  $user = drupal_anonymous_user();
+  $user = new AnonymousUserSession();
 
   // Unset the session cookies.
   _drupal_session_delete_cookie(session_name());
