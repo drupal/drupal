@@ -24,6 +24,13 @@
   padding-left: 10px;
 }
 
+.update .not-supported {
+  float: left; /* LTR */
+}
+[dir="rtl"] .update .not-supported {
+  float: right;
+}
+
 .update .version-status .icon {
   padding-left: .5em; /* LTR */
 }
