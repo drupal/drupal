@@ -8,6 +8,7 @@
 namespace Drupal\Core\Theme;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a class which determines the active theme of the page.
@@ -37,11 +38,11 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
   protected $sortedNegotiators;
 
   /**
-   * The current request.
+   * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The access checker for themes.
@@ -56,18 +57,9 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
    * @param \Drupal\Core\Theme\ThemeAccessCheck $theme_access
    *   The access checker for themes.
    */
-  public function __construct(ThemeAccessCheck $theme_access) {
+  public function __construct(ThemeAccessCheck $theme_access, RequestStack $request_stack) {
     $this->themeAccess = $theme_access;
-  }
-
-  /**
-   * Sets the request object to use.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function setRequest(Request $request) {
-    $this->request = $request;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -111,10 +103,11 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
    *   The current active string.
    */
   public function getActiveTheme() {
-    if (!$this->request->attributes->has('_theme_active')) {
-      $this->determineActiveTheme($this->request);
+    $request = $this->requestStack->getCurrentRequest();
+    if (!$request->attributes->has('_theme_active')) {
+      $this->determineActiveTheme($request);
     }
-    return $this->request->attributes->get('_theme_active');
+    return $request->attributes->get('_theme_active');
   }
 
   /**

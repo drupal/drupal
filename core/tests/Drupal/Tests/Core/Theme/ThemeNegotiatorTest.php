@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Theme;
 use Drupal\Core\Theme\ThemeNegotiator;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the theme negotiator.
@@ -26,6 +27,13 @@ class ThemeNegotiatorTest extends UnitTestCase {
    * @var \Drupal\Core\Theme\ThemeAccessCheck|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $themeAccessCheck;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
 
   /**
    * The actual tested theme negotiator.
@@ -46,7 +54,8 @@ class ThemeNegotiatorTest extends UnitTestCase {
     $this->themeAccessCheck = $this->getMockBuilder('\Drupal\Core\Theme\ThemeAccessCheck')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->themeNegotiator = new ThemeNegotiator($this->themeAccessCheck);
+    $this->requestStack = new RequestStack();
+    $this->themeNegotiator = new ThemeNegotiator($this->themeAccessCheck, $this->requestStack);
   }
 
   /**

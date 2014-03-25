@@ -174,9 +174,7 @@ services:
       - [setUserAgent, ['Drupal (+http://drupal.org/)']]
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
-    arguments: ['@access_check.theme']
-    calls:
-      - [setRequest, ['@request']]
+    arguments: ['@access_check.theme', '@request_stack']
   theme.negotiator.default:
     class: Drupal\Core\Theme\DefaultNegotiator
     arguments: ['@config.factory']
