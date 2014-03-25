@@ -362,6 +362,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDescription(t('The title of this node, always treated as non-markup plain text.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
       ->setSettings(array(
         'default_value' => '',
         'max_length' => 255,
@@ -380,6 +381,7 @@ class Node extends ContentEntityBase implements NodeInterface {
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The user ID of the node author.'))
+      ->setRevisionable(TRUE)
       ->setSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
@@ -387,38 +389,46 @@ class Node extends ContentEntityBase implements NodeInterface {
 
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
-      ->setDescription(t('A boolean indicating whether the node is published.'));
+      ->setDescription(t('A boolean indicating whether the node is published.'))
+      ->setRevisionable(TRUE);
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the node was created.'));
+      ->setDescription(t('The time that the node was created.'))
+      ->setRevisionable(TRUE);
 
     $fields['changed'] = FieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the node was last edited.'));
+      ->setDescription(t('The time that the node was last edited.'))
+      ->setRevisionable(TRUE);
 
     $fields['promote'] = FieldDefinition::create('boolean')
       ->setLabel(t('Promote'))
-      ->setDescription(t('A boolean indicating whether the node should be displayed on the front page.'));
+      ->setDescription(t('A boolean indicating whether the node should be displayed on the front page.'))
+      ->setRevisionable(TRUE);
 
     $fields['sticky'] = FieldDefinition::create('boolean')
       ->setLabel(t('Sticky'))
-      ->setDescription(t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'));
+      ->setDescription(t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'))
+      ->setRevisionable(TRUE);
 
     $fields['revision_timestamp'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Revision timestamp'))
       ->setDescription(t('The time that the current revision was created.'))
-      ->setQueryable(FALSE);
+      ->setQueryable(FALSE)
+      ->setRevisionable(TRUE);
 
     $fields['revision_uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Revision user ID'))
       ->setDescription(t('The user ID of the author of the current revision.'))
       ->setSettings(array('target_type' => 'user'))
-      ->setQueryable(FALSE);
+      ->setQueryable(FALSE)
+      ->setRevisionable(TRUE);
 
     $fields['log'] = FieldDefinition::create('string')
       ->setLabel(t('Log'))
-      ->setDescription(t('The log entry explaining the changes in this revision.'));
+      ->setDescription(t('The log entry explaining the changes in this revision.'))
+      ->setRevisionable(TRUE);
 
     return $fields;
   }

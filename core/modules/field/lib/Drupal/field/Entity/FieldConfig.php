@@ -561,6 +561,14 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function isRevisionable() {
+    // All configurable fields are revisionable.
+    return TRUE;
+  }
+
+  /**
    * Sets whether the field is translatable.
    *
    * @param bool $translatable

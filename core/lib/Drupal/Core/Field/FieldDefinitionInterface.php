@@ -112,6 +112,14 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   public function isTranslatable();
 
   /**
+   * Returns whether the field is revisionable.
+   *
+   * @return bool
+   *   TRUE if the field is revisionable.
+   */
+  public function isRevisionable();
+
+  /**
    * Returns whether the display for the field can be configured.
    *
    * @param string $display_context

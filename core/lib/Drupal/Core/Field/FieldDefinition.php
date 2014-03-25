@@ -161,11 +161,32 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * @param bool $translatable
    *   Whether the field is translatable.
    *
-   * @return static
+   * @return $this
    *   The object itself for chaining.
    */
   public function setTranslatable($translatable) {
     $this->definition['translatable'] = $translatable;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRevisionable() {
+    return !empty($this->definition['revisionable']);
+  }
+
+  /**
+   * Sets whether the field is revisionable.
+   *
+   * @param bool $revisionable
+   *   Whether the field is revisionable.
+   *
+   * @return $this
+   *   The object itself for chaining.
+   */
+  public function setRevisionable($revisionable) {
+    $this->definition['revisionable'] = $revisionable;
     return $this;
   }
 

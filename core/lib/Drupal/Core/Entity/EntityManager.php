@@ -353,15 +353,17 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     // Invoke alter hook.
     $this->moduleHandler->alter('entity_base_field_info', $base_field_definitions, $entity_type);
 
-    // Ensure all basic fields are not defined as translatable.
-    $keys = array_intersect_key(array_filter($entity_type->getKeys()), array_flip(array('id', 'revision', 'uuid', 'bundle')));
-    $untranslatable_fields = array_flip(array('langcode') + $keys);
-    foreach ($base_field_definitions as $field_name => $definition) {
-      if (isset($untranslatable_fields[$field_name]) && $definition->isTranslatable()) {
-        throw new \LogicException(String::format('The @field field cannot be translatable.', array('@field' => $definition->getLabel())));
+    // Ensure defined entity keys are there and have proper revisionable and
+    // translatable values.
+    $keys = array_filter($entity_type->getKeys() + array('langcode' => 'langcode'));
+    foreach ($keys as $key => $field_name) {
+      if (isset($base_field_definitions[$field_name]) && in_array($key, array('id', 'revision', 'uuid', 'bundle')) && $base_field_definitions[$field_name]->isRevisionable()) {
+        throw new \LogicException(String::format('The @field field cannot be revisionable as it is used as @key entity key.', array('@field' => $base_field_definitions[$field_name]->getLabel(), '@key' => $key)));
+      }
+      if (isset($base_field_definitions[$field_name]) && in_array($key, array('id', 'revision', 'uuid', 'bundle', 'langcode')) && $base_field_definitions[$field_name]->isTranslatable()) {
+        throw new \LogicException(String::format('The @field field cannot be translatable as it is used as @key entity key.', array('@field' => $base_field_definitions[$field_name]->getLabel(), '@key' => $key)));
       }
     }
-
     return $base_field_definitions;
   }
 

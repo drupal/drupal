@@ -171,6 +171,18 @@ class FieldDefinitionTest extends UnitTestCase {
   }
 
   /**
+   * Tests field revisionable methods.
+   */
+  public function testFieldRevisionable() {
+    $definition = FieldDefinition::create($this->fieldType);
+    $this->assertFalse($definition->isRevisionable());
+    $definition->setRevisionable(TRUE);
+    $this->assertTrue($definition->isRevisionable());
+    $definition->setRevisionable(FALSE);
+    $this->assertFalse($definition->isRevisionable());
+  }
+
+  /**
    * Tests field cardinality.
    */
   public function testFieldCardinality() {

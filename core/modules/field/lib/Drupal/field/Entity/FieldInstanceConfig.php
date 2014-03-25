@@ -515,6 +515,13 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
+  public function isRevisionable() {
+    return $this->field->isRevisionable();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function linkTemplates() {
     $link_templates = parent::linkTemplates();
     if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
