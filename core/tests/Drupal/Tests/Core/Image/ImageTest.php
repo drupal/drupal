@@ -149,7 +149,7 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::setSource().
    */
   public function testSetSource() {
-    $source = __DIR__ . '/../../../../../misc/help.png';
+    $source = __DIR__ . '/../../../../../misc/grippie.png';
     $this->image->setSource($source);
     $this->assertEquals($this->image->getSource(), $source);
   }
