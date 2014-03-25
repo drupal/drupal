@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest\Tests;
 
+use Drupal\Core\Database\Driver\pgsql\Select;
 use Drupal\simpletest\WebTestBase;
 
 class SimpleTestTest extends WebTestBase {
@@ -298,7 +299,7 @@ class SimpleTestTest extends WebTestBase {
           $assertion['file'] = $this->asText($row->td[2]);
           $assertion['line'] = $this->asText($row->td[3]);
           $assertion['function'] = $this->asText($row->td[4]);
-          $ok_url = file_create_url('core/misc/watchdog-ok.png');
+          $ok_url = file_create_url('core/misc/icons/73b355/check.png');
           $assertion['status'] = ($row->td[5]->img['src'] == $ok_url) ? 'Pass' : 'Fail';
           $results['assertions'][] = $assertion;
         }
