@@ -5,7 +5,6 @@
  * Defines selection, check box and radio button widgets for text and numeric fields.
  */
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\field\FieldConfigInterface;
@@ -31,15 +30,6 @@ function options_help($path, $arg) {
       $output .= '</dl>';
       return $output;
   }
-}
-
-/**
-* Form element #value_callback: assembles the allowed values for 'boolean' fields.
-*/
-function options_field_settings_form_value_boolean_allowed_values($element, $input, $form_state) {
-  $on = NestedArray::getValue($form_state['input'], $element['#on_parents']);
-  $off = NestedArray::getValue($form_state['input'], $element['#off_parents']);
-  return array($off, $on);
 }
 
 /**

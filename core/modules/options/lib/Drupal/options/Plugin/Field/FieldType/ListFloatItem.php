@@ -15,7 +15,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *
  * @FieldType(
  *   id = "list_float",
- *   module = "options",
  *   label = @Translation("List (float)"),
  *   description = @Translation("This field stores float values from a list of allowed 'value => label' pairs, i.e. 'Fraction': 0 => 0, .25 => 1/4, .75 => 3/4, 1 => 1."),
  *   default_widget = "options_select",
@@ -31,25 +30,68 @@ class ListFloatItem extends ListItemBase {
   /**
    * {@inheritdoc}
    */
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('float')
+      ->setLabel(t('Float value'));
+
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function schema(FieldDefinitionInterface $field_definition) {
-    return parent::schema($field_definition) + array(
-     'columns' => array(
-       'value' => array(
-         'type' => 'float',
-         'not null' => FALSE,
-       ),
-     ),
+    return array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'float',
+          'not null' => FALSE,
+        ),
+      ),
+      'indexes' => array(
+        'value' => array('value'),
+      ),
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
-    $properties['value'] = DataDefinition::create('float')
-      ->setLabel(t('Float value'));
+  protected function allowedValuesDescription() {
+    $description = '<p>' . t('The possible values this field can contain. Enter one value per line, in the format key|label.');
+    $description .= '<br/>' . t('The key is the stored value, and must be numeric. The label will be used in displayed values and edit forms.');
+    $description .= '<br/>' . t('The label is optional: if a line contains a single number, it will be used as key and label.');
+    $description .= '<br/>' . t('Lists of labels are also accepted (one label per line), only if the field does not hold any values yet. Numeric keys will be automatically generated from the positions in the list.');
+    $description .= '</p>';
+    $description .= '<p>' . t('Allowed HTML tags in labels: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '</p>';
+    return $description;
+  }
 
-    return $properties;
+  /**
+   * {@inheritdoc}
+   */
+  protected static function extractAllowedValues($string, $has_data) {
+    $values = parent::extractAllowedValues($string, $has_data);
+    if ($values) {
+      $keys = array_keys($values);
+      $labels = array_values($values);
+      $keys = array_map(function ($key) {
+        // Float keys are represented as strings and need to be disambiguated
+        // ('.5' is '0.5').
+        return is_numeric($key) ? (string) (float) $key : $key;
+      }, $keys);
+
+      return array_combine($keys, $labels);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static function validateAllowedValue($option) {
+    if (!is_numeric($option)) {
+      return t('Allowed values list: each key must be a valid integer or decimal.');
+    }
   }
 
 }
