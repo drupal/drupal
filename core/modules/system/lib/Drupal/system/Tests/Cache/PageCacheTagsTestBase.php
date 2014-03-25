@@ -49,6 +49,8 @@ abstract class PageCacheTagsTestBase extends WebTestBase {
       $cid_parts = array(url($path, array('absolute' => TRUE)), 'html');
       $cid = sha1(implode(':', $cid_parts));
       $cache_entry = \Drupal::cache('page')->get($cid);
+      sort($cache_entry->tags);
+      sort($tags);
       $this->assertIdentical($cache_entry->tags, $tags);
     }
   }

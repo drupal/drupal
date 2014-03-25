@@ -55,7 +55,11 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     $page->setBodyBottom(drupal_render($page_array['page_bottom']));
     $page->setContent(drupal_render($page_array));
     // Collect cache tags for all the content in all the regions on the page.
-    $page->setCacheTags($page_array['#cache']['tags']);
+    $tags = $page_array['#cache']['tags'];
+    // Enforce the generic "content" cache tag on all pages.
+    // @todo Remove the "content" cache tag. @see https://drupal.org/node/2124957
+    $tags['content'] = TRUE;
+    $page->setCacheTags($tags);
     $page->setStatusCode($status_code);
 
     return $page;

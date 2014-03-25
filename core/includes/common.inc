@@ -18,6 +18,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\EventSubscriber\HtmlViewSubscriber;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
@@ -3169,7 +3170,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
         // because by the time it is read, the configuration might change.
         'page_compressed' => $page_compressed,
       ),
-      'tags' => array('content' => TRUE) + drupal_cache_tags_page_get($response),
+      'tags' => HtmlViewSubscriber::convertHeaderToCacheTags($response->headers->get('X-Drupal-Cache-Tags')),
       'expire' => Cache::PERMANENT,
       'created' => REQUEST_TIME,
     );
@@ -4415,23 +4416,6 @@ function drupal_render_collect_cache_tags($element, $tags = array()) {
   }
 
   return $tags;
-}
-
-/**
- * Return the cache tags that were stored during drupal_render_page().
- *
- * @param \Symfony\Component\HttpFoundation\Response $response
- *   The response object.
- * @return array
- *   An array of cache tags.
- *
- * @see \Drupal\Core\EventSubscriber\HtmlViewSubscriber::onHtmlPage()
- */
-function drupal_cache_tags_page_get(Response $response) {
-  if (($tags = $response->headers->get('cache_tags')) && $tags = unserialize($tags)) {
-    return $tags;
-  }
-  return array();
 }
 
 /**

@@ -132,14 +132,22 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
    *   The expected cache tags for the page cache entry of the given $path.
    */
   protected function verifyPageCacheTags($path, $expected_tags) {
+    sort($expected_tags);
     $this->drupalGet($path);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $actual_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
+    sort($actual_tags);
+    $this->assertIdentical($actual_tags, $expected_tags);
     $this->drupalGet($path);
+    $actual_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
+    sort($actual_tags);
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertIdentical($actual_tags, $expected_tags);
     $cid_parts = array(url($path, array('absolute' => TRUE)), 'html');
     $cid = sha1(implode(':', $cid_parts));
     $cache_entry = \Drupal::cache('page')->get($cid);
-    $this->assertIdentical($cache_entry->tags, $expected_tags);
+    sort($cache_entry->tags);
+    $this->assertEqual($cache_entry->tags, $expected_tags);
   }
 
 }
