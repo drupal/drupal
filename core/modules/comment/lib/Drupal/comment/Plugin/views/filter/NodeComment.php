@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\filter\InOperator;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("node_comment")
+ * @ViewsFilter("node_comment")
  */
 class NodeComment extends InOperator {
 

@@ -58,7 +58,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_relationship_handlers
  *
- * @PluginID("groupwise_max")
+ * @ViewsRelationship("groupwise_max")
  */
 class GroupwiseMax extends RelationshipPluginBase {
 

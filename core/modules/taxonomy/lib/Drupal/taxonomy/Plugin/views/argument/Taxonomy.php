@@ -15,7 +15,7 @@ use Drupal\Component\Utility\String;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("taxonomy")
+ * @ViewsArgument("taxonomy")
  */
 class Taxonomy extends Numeric {
 

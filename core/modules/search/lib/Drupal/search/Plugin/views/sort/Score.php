@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\sort\SortPluginBase;
  *
  * @ingroup views_sort_handlers
  *
- * @PluginID("search_score")
+ * @ViewsSort("search_score")
  */
 class Score extends SortPluginBase {
 

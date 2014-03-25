@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\sort;
 /**
  * Handle a random sort.
  *
- * @PluginID("random")
+ * @ViewsSort("random")
  */
 class Random extends SortPluginBase {
 

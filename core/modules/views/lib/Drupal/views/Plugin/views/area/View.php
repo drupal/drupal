@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("view")
+ * @ViewsArea("view")
  */
 class View extends AreaPluginBase {
 

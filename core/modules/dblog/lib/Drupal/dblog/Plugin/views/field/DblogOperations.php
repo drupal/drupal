@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("dblog_operations")
+ * @ViewsField("dblog_operations")
  */
 class DblogOperations extends FieldPluginBase {
 

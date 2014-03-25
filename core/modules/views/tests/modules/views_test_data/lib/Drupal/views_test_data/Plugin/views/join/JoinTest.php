@@ -12,7 +12,7 @@ use Drupal\views\Plugin\views\join\JoinPluginBase;
 /**
  * Defines a join test plugin.
  *
- * @PluginID("join_test")
+ * @ViewsJoin("join_test")
  */
 class JoinTest extends JoinPluginBase {
   /**

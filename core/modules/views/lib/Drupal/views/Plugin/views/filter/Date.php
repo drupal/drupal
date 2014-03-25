@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\filter;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("date")
+ * @ViewsFilter("date")
  */
 class Date extends Numeric {
 

@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("xss")
+ * @ViewsField("xss")
  */
 class Xss extends FieldPluginBase {
 

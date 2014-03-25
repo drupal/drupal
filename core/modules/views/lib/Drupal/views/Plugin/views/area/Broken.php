@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\BrokenHandlerTrait;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("broken")
+ * @ViewsArea("broken")
  */
 class Broken extends AreaPluginBase {
   use BrokenHandlerTrait;

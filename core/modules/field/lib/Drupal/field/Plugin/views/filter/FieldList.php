@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("field_list")
+ * @ViewsFilter("field_list")
  */
 class FieldList extends ManyToOne {
 

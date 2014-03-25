@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_link")
+ * @ViewsField("node_link")
  */
 class Link extends FieldPluginBase {
 

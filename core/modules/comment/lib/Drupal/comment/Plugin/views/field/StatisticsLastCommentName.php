@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_ces_last_comment_name")
+ * @ViewsField("comment_ces_last_comment_name")
  */
 class StatisticsLastCommentName extends FieldPluginBase {
 

@@ -13,7 +13,7 @@ namespace Drupal\views\Plugin\views\argument;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("numeric")
+ * @ViewsArgument("numeric")
  */
 class Numeric extends ArgumentPluginBase {
 

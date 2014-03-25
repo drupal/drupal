@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\argument;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("standard")
+ * @ViewsArgument("standard")
  */
 class Standard extends ArgumentPluginBase {
 

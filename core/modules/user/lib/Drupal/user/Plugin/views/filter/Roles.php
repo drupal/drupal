@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\ManyToOne;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("user_roles")
+ * @ViewsFilter("user_roles")
  */
 class Roles extends ManyToOne {
 

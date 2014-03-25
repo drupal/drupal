@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
  *
  * @see \Drupal\views\Tests\Handler\AreaTest
  *
- * @PluginID("test_example")
+ * @ViewsArea("test_example")
  */
 class TestExample extends AreaPluginBase {
 

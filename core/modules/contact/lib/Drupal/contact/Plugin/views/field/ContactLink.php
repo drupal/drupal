@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("contact_link")
+ * @ViewsField("contact_link")
  */
 class ContactLink extends Link {
 

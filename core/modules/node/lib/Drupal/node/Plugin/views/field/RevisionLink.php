@@ -18,7 +18,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_revision_link")
+ * @ViewsField("node_revision_link")
  */
 class RevisionLink extends Link {
 

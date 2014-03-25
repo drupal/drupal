@@ -16,7 +16,7 @@ use Drupal\Component\Utility\Json;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("contextual_links")
+ * @ViewsField("contextual_links")
  */
 class ContextualLinks extends FieldPluginBase {
 

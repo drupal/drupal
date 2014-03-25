@@ -12,7 +12,7 @@ use Drupal\views\Plugin\views\argument\Numeric;
 /**
  * Argument handler to accept a node id.
  *
- * @PluginID("node_nid")
+ * @ViewsArgument("node_nid")
  */
 class Nid extends Numeric {
 

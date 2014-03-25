@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_link_reply")
+ * @ViewsField("comment_link_reply")
  */
 class LinkReply extends Link {
 

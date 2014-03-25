@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_type")
+ * @ViewsField("node_type")
  */
 class Type extends Node {
 

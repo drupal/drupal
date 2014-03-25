@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\BrokenHandlerTrait;
  *
  * @ingroup views_sort_handlers
  *
- * @PluginID("broken")
+ * @ViewsSort("broken")
  */
 class Broken extends SortPluginBase {
   use BrokenHandlerTrait;

@@ -22,7 +22,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("markup")
+ * @ViewsField("markup")
  */
 class Markup extends FieldPluginBase {
 

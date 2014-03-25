@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("field_list")
+ * @ViewsArgument("field_list")
  */
 class FieldList extends Numeric {
 

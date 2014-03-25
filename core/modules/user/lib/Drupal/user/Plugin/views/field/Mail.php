@@ -14,7 +14,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("user_mail")
+ * @ViewsField("user_mail")
  */
 class Mail extends User {
 

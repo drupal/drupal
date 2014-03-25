@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Field handler to display entity label optionally linked to entity page.
  *
- * @PluginID("entity_label")
+ * @ViewsField("entity_label")
  */
 class EntityLabel extends FieldPluginBase {
 

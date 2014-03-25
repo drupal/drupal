@@ -14,7 +14,7 @@ use Drupal\user\Plugin\views\filter\Name;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("node_uid_revision")
+ * @ViewsFilter("node_uid_revision")
  */
 class UidRevision extends Name {
 

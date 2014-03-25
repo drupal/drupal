@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("history_user_timestamp")
+ * @ViewsFilter("history_user_timestamp")
  */
 class HistoryUserTimestamp extends FilterPluginBase {
 

@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\sort\SortPluginBase;
  *
  * @ingroup views_sort_handlers
  *
- * @PluginID("comment_thread")
+ * @ViewsSort("comment_thread")
  */
 class Thread extends SortPluginBase {
 

@@ -20,7 +20,7 @@ use Drupal\node\Plugin\views\field\Node;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("history_user_timestamp")
+ * @ViewsField("history_user_timestamp")
  */
 class HistoryUserTimestamp extends Node {
 

@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("taxonomy_index_tid_depth_modifier")
+ * @ViewsArgument("taxonomy_index_tid_depth_modifier")
  */
 class IndexTidDepthModifier extends ArgumentPluginBase {
 

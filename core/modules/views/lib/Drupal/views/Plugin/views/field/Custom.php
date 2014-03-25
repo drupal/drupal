@@ -14,7 +14,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("custom")
+ * @ViewsField("custom")
  */
 class Custom extends FieldPluginBase {
 

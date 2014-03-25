@@ -17,7 +17,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("user")
+ * @ViewsField("user")
  */
 class User extends FieldPluginBase {
 

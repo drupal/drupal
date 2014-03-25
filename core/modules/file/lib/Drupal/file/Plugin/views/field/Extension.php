@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("file_extension")
+ * @ViewsField("file_extension")
  */
 class Extension extends FieldPluginBase {
 

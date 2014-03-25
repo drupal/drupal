@@ -21,7 +21,7 @@ use Drupal\views\ManyToOneHelper;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("many_to_one")
+ * @ViewsFilter("many_to_one")
  */
 class ManyToOne extends InOperator {
 

@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a actions-based bulk operation form element.
  *
- * @PluginID("bulk_form")
+ * @ViewsField("bulk_form")
  */
 class BulkForm extends FieldPluginBase {
 

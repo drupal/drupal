@@ -16,7 +16,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_revision_link_delete")
+ * @ViewsField("node_revision_link_delete")
  */
 class RevisionLinkDelete extends RevisionLink {
 

@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("node_access")
+ * @ViewsFilter("node_access")
  */
 class Access extends FilterPluginBase {
 

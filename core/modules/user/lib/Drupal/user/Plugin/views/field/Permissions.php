@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("user_permissions")
+ * @ViewsField("user_permissions")
  */
 class Permissions extends PrerenderList {
 

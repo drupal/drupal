@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Argument handler to accept a node revision id.
  *
- * @PluginID("node_vid")
+ * @ViewsArgument("node_vid")
  */
 class Vid extends Numeric {
 

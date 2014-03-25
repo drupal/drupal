@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\argument;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("null")
+ * @ViewsArgument("null")
  */
 class Null extends ArgumentPluginBase {
 

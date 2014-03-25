@@ -24,7 +24,7 @@ use Drupal\views\ManyToOneHelper;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("many_to_one")
+ * @ViewsArgument("many_to_one")
  */
 class ManyToOne extends ArgumentPluginBase {
 

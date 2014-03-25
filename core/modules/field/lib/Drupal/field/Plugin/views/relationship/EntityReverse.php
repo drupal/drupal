@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_relationship_handlers
  *
- * @PluginID("entity_reverse")
+ * @ViewsRelationship("entity_reverse")
  */
 class EntityReverse extends RelationshipPluginBase  {
 

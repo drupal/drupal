@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("field")
+ * @ViewsField("field")
  */
 class Field extends FieldPluginBase {
 

@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\filter;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("groupby_numeric")
+ * @ViewsFilter("groupby_numeric")
  */
 class GroupByNumeric extends Numeric {
 

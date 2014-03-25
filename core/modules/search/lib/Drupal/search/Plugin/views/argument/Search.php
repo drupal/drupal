@@ -17,7 +17,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("search")
+ * @ViewsArgument("search")
  */
 class Search extends ArgumentPluginBase {
 

@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\join;
 /**
  * Default implementation of the join plugin.
  *
- * @PluginID("standard")
+ * @ViewsJoin("standard")
  */
 class Standard extends JoinPluginBase {
 

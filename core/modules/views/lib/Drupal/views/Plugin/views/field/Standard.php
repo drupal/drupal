@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\field;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("standard")
+ * @ViewsField("standard")
  */
 class Standard extends FieldPluginBase {
 

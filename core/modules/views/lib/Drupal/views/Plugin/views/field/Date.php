@@ -17,7 +17,7 @@ use Drupal\Core\Datetime\Date as DateService;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("date")
+ * @ViewsField("date")
  */
 class Date extends FieldPluginBase {
 

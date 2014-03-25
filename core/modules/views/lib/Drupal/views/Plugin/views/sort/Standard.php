@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\sort;
  *
  * @ingroup views_sort_handlers
  *
- * @PluginID("standard")
+ * @ViewsSort("standard")
  */
 class Standard extends SortPluginBase {
 

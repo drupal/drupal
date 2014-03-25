@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_link_delete")
+ * @ViewsField("comment_link_delete")
  */
 class LinkDelete extends Link {
 

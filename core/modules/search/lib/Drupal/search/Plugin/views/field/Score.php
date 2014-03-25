@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("search_score")
+ * @ViewsField("search_score")
  */
 class Score extends Numeric {
 

@@ -16,7 +16,7 @@ namespace Drupal\views\Plugin\views\join;
  *   same as \Drupal\views\Plugin\views\join\JoinPluginBase, except:
  *   - left_query: The subquery to use in the left side of the join clause.
  *
- * @PluginID("subquery")
+ * @ViewsJoin("subquery")
  */
 class Subquery extends JoinPluginBase {
 

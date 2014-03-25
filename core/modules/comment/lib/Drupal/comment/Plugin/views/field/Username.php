@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_username")
+ * @ViewsField("comment_username")
  */
 class Username extends FieldPluginBase {
 

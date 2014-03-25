@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_link")
+ * @ViewsField("comment_link")
  */
 class Link extends FieldPluginBase {
 

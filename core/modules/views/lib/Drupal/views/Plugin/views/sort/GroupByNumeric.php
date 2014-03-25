@@ -14,7 +14,7 @@ use Drupal\views\Views;
 /**
  * Handler for GROUP BY on simple numeric fields.
  *
- * @PluginID("groupby_numeric")
+ * @ViewsSort("groupby_numeric")
  */
 class GroupByNumeric extends SortPluginBase {
 

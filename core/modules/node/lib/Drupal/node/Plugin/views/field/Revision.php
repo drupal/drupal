@@ -17,7 +17,7 @@ use Drupal\node\Plugin\views\field\Node;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_revision")
+ * @ViewsField("node_revision")
  */
 class Revision extends Node {
 

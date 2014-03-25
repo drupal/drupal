@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_new_comments")
+ * @ViewsField("node_new_comments")
  */
 class NodeNewComments extends Numeric {
 

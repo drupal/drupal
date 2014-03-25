@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("user_link_cancel")
+ * @ViewsField("user_link_cancel")
  */
 class LinkCancel extends Link {
 

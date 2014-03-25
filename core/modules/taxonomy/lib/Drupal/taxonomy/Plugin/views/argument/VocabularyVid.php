@@ -15,7 +15,7 @@ use Drupal\Component\Utility\String;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("vocabulary_vid")
+ * @ViewsArgument("vocabulary_vid")
  */
 class VocabularyVid extends Numeric {
 

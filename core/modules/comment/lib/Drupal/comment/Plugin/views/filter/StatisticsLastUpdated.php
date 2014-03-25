@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\Date;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("comment_ces_last_updated")
+ * @ViewsFilter("comment_ces_last_updated")
  */
 class StatisticsLastUpdated extends Date {
 

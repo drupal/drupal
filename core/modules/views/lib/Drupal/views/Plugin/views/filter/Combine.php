@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\filter;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("combine")
+ * @ViewsFilter("combine")
  */
 class Combine extends String {
 

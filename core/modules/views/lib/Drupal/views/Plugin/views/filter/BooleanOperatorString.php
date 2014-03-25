@@ -18,7 +18,7 @@ namespace Drupal\views\Plugin\views\filter;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("boolean_string")
+ * @ViewsFilter("boolean_string")
  */
 class BooleanOperatorString extends BooleanOperator {
 

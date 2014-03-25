@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\BrokenHandlerTrait;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("broken")
+ * @ViewsField("broken")
  */
 class Broken extends FieldPluginBase {
   use BrokenHandlerTrait;

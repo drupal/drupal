@@ -15,7 +15,7 @@ use Drupal\Component\Utility\String;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("taxonomy_index_tid")
+ * @ViewsArgument("taxonomy_index_tid")
  */
 class IndexTid extends ManyToOne {
 

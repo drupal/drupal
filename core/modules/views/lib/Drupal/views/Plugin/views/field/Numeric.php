@@ -18,7 +18,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("numeric")
+ * @ViewsField("numeric")
  */
 class Numeric extends FieldPluginBase {
 

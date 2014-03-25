@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("file_fid")
+ * @ViewsArgument("file_fid")
  */
 class Fid extends Numeric implements ContainerFactoryPluginInterface {
 

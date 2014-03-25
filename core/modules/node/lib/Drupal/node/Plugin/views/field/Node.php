@@ -19,7 +19,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node")
+ * @ViewsField("node")
  */
 class Node extends FieldPluginBase {
 

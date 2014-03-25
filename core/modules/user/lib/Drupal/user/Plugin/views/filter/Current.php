@@ -16,7 +16,7 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("user_current")
+ * @ViewsFilter("user_current")
  */
 class Current extends BooleanOperator {
 

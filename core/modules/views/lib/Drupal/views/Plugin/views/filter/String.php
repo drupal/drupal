@@ -16,7 +16,7 @@ use Drupal\Core\Database\Database;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("string")
+ * @ViewsFilter("string")
  */
 class String extends FilterPluginBase {
 

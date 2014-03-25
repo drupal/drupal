@@ -14,7 +14,7 @@ use Drupal\user\UserInterface;
 /**
  * Defines a user operations bulk form element.
  *
- * @PluginID("user_bulk_form")
+ * @ViewsField("user_bulk_form")
  */
 class UserBulkForm extends BulkForm {
 

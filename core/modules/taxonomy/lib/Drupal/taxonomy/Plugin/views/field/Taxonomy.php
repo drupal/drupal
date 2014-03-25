@@ -21,7 +21,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("taxonomy")
+ * @ViewsField("taxonomy")
  */
 class Taxonomy extends FieldPluginBase {
 

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("aggregator_fid")
+ * @ViewsArgument("aggregator_fid")
  */
 class Fid extends Numeric {
 

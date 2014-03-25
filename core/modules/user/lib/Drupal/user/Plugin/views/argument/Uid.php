@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("user_uid")
+ * @ViewsArgument("user_uid")
  */
 class Uid extends Numeric {
 

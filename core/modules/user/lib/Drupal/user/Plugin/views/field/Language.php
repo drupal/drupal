@@ -14,7 +14,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("user_language")
+ * @ViewsField("user_language")
  */
 class Language extends User {
 

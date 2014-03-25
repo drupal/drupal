@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\filter;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("equality")
+ * @ViewsFilter("equality")
  */
 class Equality extends FilterPluginBase {
 

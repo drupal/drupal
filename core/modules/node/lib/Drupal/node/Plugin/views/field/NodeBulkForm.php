@@ -14,7 +14,7 @@ use Drupal\Core\Cache\Cache;
 /**
  * Defines a node operations bulk form element.
  *
- * @PluginID("node_bulk_form")
+ * @ViewsField("node_bulk_form")
  */
 class NodeBulkForm extends BulkForm {
 

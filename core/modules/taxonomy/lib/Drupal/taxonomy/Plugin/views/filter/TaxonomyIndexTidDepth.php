@@ -15,7 +15,7 @@ namespace Drupal\taxonomy\Plugin\views\filter;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("taxonomy_index_tid_depth")
+ * @ViewsFilter("taxonomy_index_tid_depth")
  */
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
 

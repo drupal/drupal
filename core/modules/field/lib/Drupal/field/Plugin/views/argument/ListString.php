@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\argument\String;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("field_list_string")
+ * @ViewsArgument("field_list_string")
  */
 class ListString extends String {
 

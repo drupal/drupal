@@ -13,7 +13,7 @@ use Drupal\user\Plugin\views\argument\Uid;
  * Filter handler to accept a user id to check for nodes that
  * user posted or created a revision on.
  *
- * @PluginID("node_uid_revision")
+ * @ViewsArgument("node_uid_revision")
  */
 class UidRevision extends Uid {
 

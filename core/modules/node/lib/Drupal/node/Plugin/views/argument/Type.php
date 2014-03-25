@@ -12,7 +12,7 @@ use Drupal\views\Plugin\views\argument\String;
 /**
  * Argument handler to accept a node type.
  *
- * @PluginID("node_type")
+ * @ViewsArgument("node_type")
  */
 class Type extends String {
 

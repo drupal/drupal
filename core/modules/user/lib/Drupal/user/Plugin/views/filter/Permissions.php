@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("user_permissions")
+ * @ViewsFilter("user_permissions")
  */
 class Permissions extends ManyToOne {
 

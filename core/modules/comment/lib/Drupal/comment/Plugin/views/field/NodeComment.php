@@ -16,7 +16,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_comment")
+ * @ViewsField("node_comment")
  */
 class NodeComment extends FieldPluginBase {
 

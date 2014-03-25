@@ -14,7 +14,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("file_size")
+ * @ViewsField("file_size")
  */
 class FileSize extends FieldPluginBase {
 

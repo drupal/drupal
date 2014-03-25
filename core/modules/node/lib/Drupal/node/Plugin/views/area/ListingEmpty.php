@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("node_listing_empty")
+ * @ViewsArea("node_listing_empty")
  */
 class ListingEmpty extends AreaPluginBase {
 

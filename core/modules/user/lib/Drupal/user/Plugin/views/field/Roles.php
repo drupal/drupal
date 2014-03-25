@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("user_roles")
+ * @ViewsField("user_roles")
  */
 class Roles extends PrerenderList {
 

@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("dblog_message")
+ * @ViewsField("dblog_message")
  */
 class DblogMessage extends FieldPluginBase {
 

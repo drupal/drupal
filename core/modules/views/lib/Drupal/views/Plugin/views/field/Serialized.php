@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("serialized")
+ * @ViewsField("serialized")
  */
 class Serialized extends FieldPluginBase {
 

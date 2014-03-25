@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\BrokenHandlerTrait;
  *
  * @ingroup views_relationship_handlers
  *
- * @PluginID("broken")
+ * @ViewsRelationship("broken")
  */
 class Broken extends RelationshipPluginBase {
   use BrokenHandlerTrait;

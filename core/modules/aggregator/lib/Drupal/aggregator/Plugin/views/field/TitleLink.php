@@ -18,7 +18,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("aggregator_title_link")
+ * @ViewsField("aggregator_title_link")
  */
 class TitleLink extends FieldPluginBase {
 

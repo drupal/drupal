@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\sort\SortPluginBase;
  *
  * @ingroup views_sort_handlers
  *
- * @PluginID("comment_ces_last_comment_name")
+ * @ViewsSort("comment_ces_last_comment_name")
  */
 class StatisticsLastCommentName extends SortPluginBase {
 

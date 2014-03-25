@@ -13,7 +13,7 @@ namespace Drupal\views\Plugin\views\sort;
  * This handler enables granularity, which is the ability to make dates
  * equivalent based upon nearness.
  *
- * @PluginID("date")
+ * @ViewsSort("date")
  */
 class Date extends SortPluginBase {
 

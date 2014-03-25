@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\argument;
 /**
  * Argument handler for a full date (CCYYMMDD)
  *
- * @PluginID("date_fulldate")
+ * @ViewsArgument("date_fulldate")
  */
 class FullDate extends Date {
 

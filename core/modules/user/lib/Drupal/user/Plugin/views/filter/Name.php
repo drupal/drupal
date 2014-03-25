@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\filter\InOperator;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("user_name")
+ * @ViewsFilter("user_name")
  */
 class Name extends InOperator {
 

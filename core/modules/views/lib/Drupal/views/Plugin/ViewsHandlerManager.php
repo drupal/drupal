@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\views\ViewsData;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Plugin type manager for all views handlers.
@@ -53,7 +54,8 @@ class ViewsHandlerManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct($handler_type, \Traversable $namespaces, ViewsData $views_data, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, 'Drupal\Component\Annotation\PluginID');
+    $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($handler_type);
+    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_definition_annotation_name);
 
     $this->setCacheBackend($cache_backend, $language_manager, "views:$handler_type");
 

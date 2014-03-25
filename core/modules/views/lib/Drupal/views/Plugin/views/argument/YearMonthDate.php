@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\argument;
 /**
  * Argument handler for a year plus month (CCYYMM)
  *
- * @PluginID("date_year_month")
+ * @ViewsArgument("date_year_month")
  */
 class YearMonthDate extends Date {
 

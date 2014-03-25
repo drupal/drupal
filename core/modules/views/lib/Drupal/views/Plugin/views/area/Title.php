@@ -14,7 +14,7 @@ use \Drupal\Core\Utility\Title as UtilityTitle;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("title")
+ * @ViewsArea("title")
  */
 class Title extends AreaPluginBase {
 

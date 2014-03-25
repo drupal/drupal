@@ -17,7 +17,7 @@ use Drupal\Component\Utility\Tags;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("taxonomy_index_tid")
+ * @ViewsFilter("taxonomy_index_tid")
  */
 class TaxonomyIndexTid extends ManyToOne {
 

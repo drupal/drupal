@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("aggregator_iid")
+ * @ViewsArgument("aggregator_iid")
  */
 class Iid extends Numeric {
 

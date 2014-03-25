@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\user\UserDataInterface
  *
- * @PluginID("user_data")
+ * @ViewsField("user_data")
  */
 class UserData extends FieldPluginBase {
 

@@ -16,7 +16,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_revision_link_revert")
+ * @ViewsField("node_revision_link_revert")
  */
 class RevisionLinkRevert extends RevisionLink {
 

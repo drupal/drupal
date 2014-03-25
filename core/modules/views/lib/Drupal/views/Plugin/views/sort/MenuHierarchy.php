@@ -18,7 +18,7 @@ use Drupal\views\Views;
  *
  * This is only really useful for the {menu_links} table.
  *
- * @PluginID("menu_hierarchy")
+ * @ViewsSort("menu_hierarchy")
  */
 class MenuHierarchy extends SortPluginBase {
 

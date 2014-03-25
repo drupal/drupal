@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("node_link_edit")
+ * @ViewsField("node_link_edit")
  */
 class LinkEdit extends Link {
 

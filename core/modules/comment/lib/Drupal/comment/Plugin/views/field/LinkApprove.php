@@ -16,7 +16,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_link_approve")
+ * @ViewsField("comment_link_approve")
  */
 class LinkApprove extends Link {
 

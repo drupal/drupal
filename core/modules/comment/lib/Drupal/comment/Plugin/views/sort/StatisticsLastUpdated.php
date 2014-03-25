@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\sort\Date;
  *
  * @ingroup views_sort_handlers
  *
- * @PluginID("comment_ces_last_updated")
+ * @ViewsSort("comment_ces_last_updated")
  */
 class StatisticsLastUpdated extends Date {
 

@@ -17,7 +17,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("term_link_edit")
+ * @ViewsField("term_link_edit")
  */
 class LinkEdit extends FieldPluginBase {
 

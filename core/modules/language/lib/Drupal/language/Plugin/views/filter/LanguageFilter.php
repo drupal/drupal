@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\InOperator;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("language")
+ * @ViewsFilter("language")
  */
 class LanguageFilter extends InOperator {
 

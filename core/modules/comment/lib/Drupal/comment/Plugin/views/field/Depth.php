@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_depth")
+ * @ViewsField("comment_depth")
  */
 class Depth extends FieldPluginBase {
 

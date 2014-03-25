@@ -15,7 +15,7 @@ use Drupal\Core\Database\Database;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("numeric")
+ * @ViewsFilter("numeric")
  */
 class Numeric extends FilterPluginBase {
 

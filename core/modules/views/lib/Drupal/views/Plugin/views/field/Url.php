@@ -14,7 +14,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("url")
+ * @ViewsField("url")
  */
 class Url extends FieldPluginBase {
 

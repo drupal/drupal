@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("http_status_code")
+ * @ViewsArea("http_status_code")
  */
 class HTTPStatusCode extends AreaPluginBase {
 

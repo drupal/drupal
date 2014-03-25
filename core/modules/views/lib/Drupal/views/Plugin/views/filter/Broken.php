@@ -16,7 +16,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("broken")
+ * @ViewsFilter("broken")
  */
 class Broken extends FilterPluginBase {
   use BrokenHandlerTrait;

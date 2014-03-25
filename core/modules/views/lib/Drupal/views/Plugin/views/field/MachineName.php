@@ -18,7 +18,7 @@ use Drupal\views\ResultRow;
  * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  *
- * @PluginID("machine_name")
+ * @ViewsField("machine_name")
  */
 class MachineName extends FieldPluginBase {
 

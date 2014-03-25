@@ -17,7 +17,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("search_keywords")
+ * @ViewsFilter("search_keywords")
  */
 class Search extends FilterPluginBase {
 

@@ -17,7 +17,7 @@ use Drupal\views\ManyToOneHelper;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("string")
+ * @ViewsArgument("string")
  */
 class String extends ArgumentPluginBase {
 

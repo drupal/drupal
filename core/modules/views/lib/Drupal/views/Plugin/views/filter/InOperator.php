@@ -20,7 +20,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("in_operator")
+ * @ViewsFilter("in_operator")
  */
 class InOperator extends FilterPluginBase {
 

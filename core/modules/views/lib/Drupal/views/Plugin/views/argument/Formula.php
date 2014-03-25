@@ -20,7 +20,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("formula")
+ * @ViewsArgument("formula")
  */
 class Formula extends ArgumentPluginBase {
 

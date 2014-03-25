@@ -14,7 +14,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("counter")
+ * @ViewsField("counter")
  */
 class Counter extends FieldPluginBase {
 

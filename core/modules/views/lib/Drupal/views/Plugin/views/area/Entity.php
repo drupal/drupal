@@ -15,7 +15,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("entity")
+ * @ViewsArea("entity")
  */
 class Entity extends TokenizeAreaPluginBase {
 

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("argument_comment_user_uid")
+ * @ViewsArgument("argument_comment_user_uid")
  */
 class UserUid extends ArgumentPluginBase {
 

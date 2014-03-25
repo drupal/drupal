@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("bundle")
+ * @ViewsFilter("bundle")
  */
 class Bundle extends InOperator {
 

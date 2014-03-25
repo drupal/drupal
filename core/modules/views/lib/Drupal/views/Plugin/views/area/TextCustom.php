@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\area;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("text_custom")
+ * @ViewsArea("text_custom")
  */
 class TextCustom extends TokenizeAreaPluginBase {
 

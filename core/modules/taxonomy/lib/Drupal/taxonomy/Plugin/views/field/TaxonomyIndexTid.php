@@ -17,7 +17,7 @@ use Drupal\Component\Utility\String;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("taxonomy_index_tid")
+ * @ViewsField("taxonomy_index_tid")
  */
 class TaxonomyIndexTid extends PrerenderList {
 

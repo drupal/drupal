@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("date")
+ * @ViewsArgument("date")
  */
 class Date extends Formula {
 

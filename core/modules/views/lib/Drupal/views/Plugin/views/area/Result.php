@@ -16,7 +16,7 @@ use Drupal\views\Plugin\views\style\DefaultSummary;
  *
  * @ingroup views_area_handlers
  *
- * @PluginID("result")
+ * @ViewsArea("result")
  */
 class Result extends AreaPluginBase {
 

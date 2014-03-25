@@ -17,7 +17,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_last_timestamp")
+ * @ViewsField("comment_last_timestamp")
  */
 class LastTimestamp extends Date {
 

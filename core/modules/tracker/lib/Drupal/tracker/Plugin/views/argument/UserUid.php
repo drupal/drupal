@@ -14,7 +14,7 @@ use Drupal\comment\Plugin\views\argument\UserUid as CommentUserUid;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("tracker_user_uid")
+ * @ViewsArgument("tracker_user_uid")
  */
 class UserUid extends CommentUserUid {
 

@@ -18,7 +18,7 @@ use Drupal\Component\Utility\String;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("taxonomy_index_tid_depth")
+ * @ViewsArgument("taxonomy_index_tid_depth")
  */
 class IndexTidDepth extends ArgumentPluginBase {
 

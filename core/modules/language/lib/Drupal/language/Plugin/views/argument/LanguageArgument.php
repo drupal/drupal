@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
  *
  * @ingroup views_argument_handlers
  *
- * @PluginID("language")
+ * @ViewsArgument("language")
  */
 class LanguageArgument extends ArgumentPluginBase {
 

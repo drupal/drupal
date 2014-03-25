@@ -16,7 +16,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("content_translation_link")
+ * @ViewsField("content_translation_link")
  */
 class TranslationLink extends FieldPluginBase {
 

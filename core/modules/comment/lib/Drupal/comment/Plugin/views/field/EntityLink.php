@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("comment_entity_link")
+ * @ViewsField("comment_entity_link")
  */
 class EntityLink extends FieldPluginBase {
 

@@ -12,7 +12,7 @@ use Drupal\views\ResultRow;
 /**
  * Field handler to add rendering file paths as file URLs instead of as internal file URIs.
  *
- * @PluginID("file_uri")
+ * @ViewsField("file_uri")
  */
 class Uri extends File {
 

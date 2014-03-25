@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("comment_user_uid")
+ * @ViewsFilter("comment_user_uid")
  */
 class UserUid extends FilterPluginBase {
 

@@ -27,7 +27,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("boolean")
+ * @ViewsField("boolean")
  */
 class Boolean extends FieldPluginBase {
 

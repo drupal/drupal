@@ -14,7 +14,7 @@ use Drupal\user\Plugin\views\filter\Name;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("tracker_user_uid")
+ * @ViewsFilter("tracker_user_uid")
  */
 class UserUid extends Name {
 

@@ -12,7 +12,7 @@ namespace Drupal\views\Plugin\views\relationship;
  *
  * @ingroup views_relationship_handlers
  *
- * @PluginID("standard")
+ * @ViewsRelationship("standard")
  */
 class Standard extends RelationshipPluginBase {
 

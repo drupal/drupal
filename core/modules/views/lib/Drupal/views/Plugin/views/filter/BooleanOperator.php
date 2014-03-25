@@ -26,7 +26,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("boolean")
+ * @ViewsFilter("boolean")
  */
 class BooleanOperator extends FilterPluginBase {
 

@@ -19,7 +19,7 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("user_link")
+ * @ViewsField("user_link")
  */
 class Link extends FieldPluginBase {
 

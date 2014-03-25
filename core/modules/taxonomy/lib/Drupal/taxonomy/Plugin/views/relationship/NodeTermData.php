@@ -16,7 +16,7 @@ use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
  *
  * @ingroup views_relationship_handlers
  *
- * @PluginID("node_term_data")
+ * @ViewsRelationship("node_term_data")
  */
 class NodeTermData extends RelationshipPluginBase  {
 

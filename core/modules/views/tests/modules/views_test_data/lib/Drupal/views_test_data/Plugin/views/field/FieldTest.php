@@ -11,7 +11,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * @PluginID("test_field")
+ * @ViewsField("test_field")
  */
 class FieldTest extends FieldPluginBase {
 
