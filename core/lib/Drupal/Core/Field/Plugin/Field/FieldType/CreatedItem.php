@@ -14,7 +14,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
  *   id = "created",
  *   label = @Translation("Created"),
  *   description = @Translation("An entity field containing a UNIX timestamp of when the entity has been created."),
- *   configurable = FALSE
+ *   no_ui = TRUE
  * )
  */
 class CreatedItem extends TimestampItem {

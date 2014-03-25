@@ -18,7 +18,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "timestamp",
  *   label = @Translation("Timestamp"),
  *   description = @Translation("An entity field containing a UNIX timestamp value."),
- *   configurable = FALSE
+ *   no_ui = TRUE
  * )
  */
 class TimestampItem extends FieldItemBase {

@@ -16,7 +16,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  *   id = "string_long",
  *   label = @Translation("Long string"),
  *   description = @Translation("An entity field containing a long string value."),
- *   no_ui = FALSE
+ *   no_ui = TRUE
  * )
  */
 class StringLongItem extends StringItem {

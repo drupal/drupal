@@ -14,7 +14,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
  *   id = "changed",
  *   label = @Translation("Last changed"),
  *   description = @Translation("An entity field containing a UNIX timestamp of when the entity has been last updated."),
- *   configurable = FALSE,
+ *   no_ui = TRUE,
  *   constraints = {
  *     "ComplexData" = {"value" = {"EntityChanged" = {}}}
  *   }
