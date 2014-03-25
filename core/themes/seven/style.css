@@ -814,6 +814,7 @@ select.form-select {
   -moz-box-sizing:    border-box;
   box-sizing:         border-box;
   padding: 2px;
+  max-width: 100%;
   border: 1px solid #ccc;
   border-top-color: #999;
   background: #fff;
@@ -821,7 +822,6 @@ select.form-select {
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
-  max-width: 100%;
 }
 input.form-text:focus,
 input.form-tel:focus,
@@ -866,28 +866,13 @@ select.form-select:focus {
   input.form-number,
   input.form-color,
   input.form-file,
-  textarea.form-textarea,
-  .form-select {
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      width: 100%;
+  textarea.form-textarea {
+    width: 100%;
+    font-size: 1.2em;
+    line-height: 1.2em;
   }
   input.form-number {
     width: auto;
-  }
-  input.form-autocomplete,
-  input.form-text,
-  input.form-tel,
-  input.form-email,
-  input.form-url,
-  input.form-search,
-  input.form-number,
-  input.form-color,
-  input.form-file,
-  textarea.form-textarea {
-    font-size: 1.2em;
-    line-height: 1.2em;
   }
   .form-actions input,
   .form-wrapper input[type="submit"] {
