@@ -317,6 +317,8 @@ function toolbar_pre_render_item($element) {
     $element['tray']['#wrapper_attributes']['class'][] = 'toolbar-tray';
   }
 
+  $element['tab']['#attributes']['class'][] = 'toolbar-item';
+
   return $element;
 }
 
@@ -333,12 +335,10 @@ function toolbar_toolbar() {
       '#type' => 'link',
       '#title' => t('Back to site'),
       '#href' => '<front>',
-      '#options' => array(
-        'attributes' => array(
-          'title' => t('Return to site content'),
-          'class' => array('toolbar-icon', 'toolbar-icon-escape-admin'),
-          'data-toolbar-escape-admin' => TRUE,
-        ),
+      '#attributes' => array(
+        'title' => t('Return to site content'),
+        'class' => array('toolbar-icon', 'toolbar-icon-escape-admin'),
+        'data-toolbar-escape-admin' => TRUE,
       ),
     ),
     '#wrapper_attributes' => array(
@@ -389,17 +389,15 @@ function toolbar_toolbar() {
       '#type' => 'link',
       '#title' => t('Manage'),
       '#href' => 'admin',
-      '#options' => array(
-        'attributes' => array(
-          'title' => t('Admin menu'),
-          'class' => array('toolbar-icon', 'toolbar-icon-menu'),
-          // A data attribute that indicates to the client to defer loading of
-          // the admin menu subtrees until this tab is activated. Admin menu
-          // subtrees will not render to the DOM if this attribute is removed.
-          // The value of the attribute is intentionally left blank. Only the
-          // presence of the attribute is necessary.
-          'data-drupal-subtrees' => '',
-        ),
+      '#attributes' => array(
+        'title' => t('Admin menu'),
+        'class' => array('toolbar-icon', 'toolbar-icon-menu'),
+        // A data attribute that indicates to the client to defer loading of
+        // the admin menu subtrees until this tab is activated. Admin menu
+        // subtrees will not render to the DOM if this attribute is removed.
+        // The value of the attribute is intentionally left blank. Only the
+        // presence of the attribute is necessary.
+        'data-drupal-subtrees' => '',
       ),
     ),
     'tray' => $menu,

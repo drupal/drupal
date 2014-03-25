@@ -10,19 +10,16 @@
 [dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
   float: left;
 }
-.toolbar .toolbar-bar .contextual-toolbar-tab button {
+.toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item {
   margin: 0;
-  padding-bottom: 1em;
-  padding-top: 1em;
   /* Hide tab text. */
   padding-left: 1.3333em; /* LTR */
   text-indent: -9999px;
-  line-height: 1em;
 }
-[dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab button {
+[dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item {
   padding-right: 1.3333em;
 }
-.toolbar .toolbar-bar .contextual-toolbar-tab button.active {
+.toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item.active {
   background-image:-moz-linear-gradient(rgb(78,159,234) 0%,rgb(69,132,221) 100%);
   background-image:-webkit-gradient(linear,color-stop(0, rgb(78,159,234)),color-stop(1, rgb(69,132,221)));
   background-image: -webkit-linear-gradient(top,  rgb(78,159,234) 0%, rgb(69,132,221) 100%);

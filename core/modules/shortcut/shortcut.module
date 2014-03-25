@@ -441,11 +441,9 @@ function shortcut_toolbar() {
         '#type' => 'link',
         '#title' => t('Shortcuts'),
         '#href' => 'admin/config/user-interface/shortcut',
-        '#options' => array(
-          'attributes' => array(
-            'title' => t('Shortcuts'),
-            'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),
-          ),
+        '#attributes' => array(
+          'title' => t('Shortcuts'),
+          'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),
         ),
       ),
       'tray' => array(
