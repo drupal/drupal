@@ -17,13 +17,6 @@ use Drupal\Core\Session\AccountInterface;
 abstract class Entity extends DependencySerialization implements EntityInterface {
 
   /**
-   * The language code of the entity's default language.
-   *
-   * @var string
-   */
-  public $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
-  /**
    * The entity type.
    *
    * @var string

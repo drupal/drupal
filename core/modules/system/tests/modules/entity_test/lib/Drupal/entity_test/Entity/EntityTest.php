@@ -49,54 +49,6 @@ use Drupal\user\UserInterface;
 class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
 
   /**
-   * The entity ID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $id;
-
-  /**
-   * The entity UUID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $uuid;
-
-  /**
-   * The bundle of the test entity.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $type;
-
-  /**
-   * The name of the test entity.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $name;
-
-  /**
-   * The associated user.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $user_id;
-
-  /**
-   * Initialize the object. Invoked upon construction and wake up.
-   */
-  protected function init() {
-    parent::init();
-    // We unset all defined properties, so magic getters apply.
-    unset($this->id);
-    unset($this->uuid);
-    unset($this->name);
-    unset($this->user_id);
-    unset($this->type);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
@@ -173,6 +125,28 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
   public function setOwner(UserInterface $account) {
     $this->set('user_id', $account->id());
     return $this;
+  }
+
+  /**
+   * Sets the name.
+   *
+   * @param string $name
+   *   Name of the entity.
+   *
+   * @return $this
+   */
+  public function setName($name) {
+    $this->set('name', $name);
+    return $this;
+  }
+
+  /**
+   * Returns the name.
+   *
+   * @return string
+   */
+  public function getName() {
+    return $this->get('name')->value;
   }
 
 }

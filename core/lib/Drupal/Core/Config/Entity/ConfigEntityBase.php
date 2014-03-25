@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines a base configuration entity class.
@@ -77,6 +78,13 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * @var array
    */
   protected $dependencies = array();
+
+  /**
+   * The language code of the entity's default language.
+   *
+   * @var string
+   */
+  public $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
   /**
    * Overrides Entity::__construct().

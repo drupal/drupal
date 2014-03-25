@@ -157,8 +157,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         }
       }
     }
-
-    $this->init();
   }
 
   /**
@@ -310,14 +308,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * Initialize the object. Invoked upon construction and wake up.
-   */
-  protected function init() {
-    // We unset all defined properties, so magic getters apply.
-    unset($this->langcode);
-  }
-
-  /**
    * Clear entity translation object cache to remove stale references.
    */
   protected function clearTranslationCache() {
@@ -341,15 +331,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $this->clearTranslationCache();
 
     return parent::__sleep();
-  }
-
-
-  /**
-   * Magic __wakeup() implementation.
-   */
-  public function __wakeup() {
-    parent::__wakeup();
-    $this->init();
   }
 
   /**
