@@ -32,22 +32,6 @@ class BanIpManager {
   }
 
   /**
-   * Returns whether an IP address is blocked.
-   *
-   * @param string $ip
-   *   The IP address to check.
-   *
-   * @return bool
-   *   TRUE if access is denied, FALSE if access is allowed.
-   */
-  public function isDenied($ip) {
-    $denied = $this->connection
-      ->query('SELECT 1 FROM {ban_ip} WHERE ip = :ip', array(':ip' => $ip))
-      ->fetchField();
-    return (bool) $denied;
-  }
-
-  /**
    * Returns if this IP address is banned.
    *
    * @param string $ip
