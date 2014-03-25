@@ -206,6 +206,20 @@ abstract class StorageTestBase extends UnitTestBase {
   }
 
   /**
+   * Tests the rename operation.
+   */
+  public function testRename() {
+    $stores = $this->createStorage();
+    $store = $stores[0];
+
+    $store->set('old', 'thing');
+    $this->assertIdentical($store->get('old'), 'thing');
+    $store->rename('old', 'new');
+    $this->assertIdentical($store->get('new'), 'thing');
+    $this->assertNull($store->get('old'));
+  }
+
+  /**
    * Creates storage objects for each collection defined for this class.
    *
    * Storing the storage objects in a class member variable causes a fatal

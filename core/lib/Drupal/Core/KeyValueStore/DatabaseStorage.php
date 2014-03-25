@@ -122,6 +122,17 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function rename($key, $new_key) {
+    $this->connection->update($this->table)
+      ->fields(array('name' => $new_key))
+      ->condition('collection', $this->collection)
+      ->condition('name', $key)
+      ->execute();
+  }
+
+  /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::deleteMultiple().
    */
   public function deleteMultiple(array $keys) {

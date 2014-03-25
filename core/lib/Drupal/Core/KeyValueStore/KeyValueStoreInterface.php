@@ -97,6 +97,16 @@ interface KeyValueStoreInterface {
   public function setMultiple(array $data);
 
   /**
+   * Renames a key.
+   *
+   * @param string $key
+   *   The key to rename.
+   * @param string $new_key
+   *   The new key name.
+   */
+  public function rename($key, $new_key);
+
+  /**
    * Deletes an item from the key/value store.
    *
    * @param string $key

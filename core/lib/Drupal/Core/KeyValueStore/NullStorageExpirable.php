@@ -77,6 +77,12 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   public function setMultiple(array $data) { }
 
   /**
+   * {@inheritdoc}
+   */
+  public function rename($key, $new_key) {
+  }
+
+  /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::delete().
    */
   public function delete($key) { }
