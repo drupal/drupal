@@ -1940,21 +1940,6 @@ function system_block_view_system_help_block_alter(array &$build, BlockPluginInt
 }
 
 /**
- * Run the automated cron if enabled.
- */
-function system_run_automated_cron() {
-  // If the site is not fully installed, suppress the automated cron run.
-  // Otherwise it could be triggered prematurely by Ajax requests during
-  // installation.
-  if (($threshold = \Drupal::config('system.cron')->get('threshold.autorun')) > 0 && \Drupal::state()->get('install_task') == 'done') {
-    $cron_last = \Drupal::state()->get('system.cron_last') ?: NULL;
-    if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
-      \Drupal::service('cron')->run();
-    }
-  }
-}
-
-/**
  * Returns HTML for a confirmation form.
  *
  * By default this does not alter the appearance of a form at all,

@@ -45,7 +45,6 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
     if ($this->moduleHandler instanceof CachedModuleHandlerInterface) {
       $this->moduleHandler->writeCache();
     }
-    system_run_automated_cron();
   }
 
   /**
