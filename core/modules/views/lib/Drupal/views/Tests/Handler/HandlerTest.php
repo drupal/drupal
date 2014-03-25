@@ -58,7 +58,7 @@ class HandlerTest extends ViewTestBase {
     // and arguments.
     $data['views_test_data']['access_callback'] = $data['views_test_data']['id'];
     $data['views_test_data']['access_callback_arguments'] = $data['views_test_data']['id'];
-    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
+    foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       if (isset($data['views_test_data']['access_callback'][$type]['id'])) {
         $data['views_test_data']['access_callback'][$type]['access callback'] = 'views_test_data_handler_test_access_callback';
 

@@ -52,7 +52,7 @@ class Rearrange extends ViewsFormBase {
     $display_id = $form_state['display_id'];
     $type = $form_state['type'];
 
-    $types = ViewExecutable::viewsHandlerTypes();
+    $types = ViewExecutable::getHandlerTypes();
     $executable = $view->getExecutable();
     $executable->setDisplay($display_id);
     $display = &$executable->displayHandlers->get($display_id);
@@ -135,7 +135,7 @@ class Rearrange extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $types = ViewExecutable::viewsHandlerTypes();
+    $types = ViewExecutable::getHandlerTypes();
     $display = &$form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id']);
 
     $old_fields = $display->getOption($types[$form_state['type']]['plural']);

@@ -32,7 +32,7 @@ class ViewsHandlerManager extends DefaultPluginManager {
    *
    * @var string
    *
-   * @see \Drupal\views\ViewExecutable::viewsHandlerTypes().
+   * @see \Drupal\views\ViewExecutable::getHandlerTypes().
    */
   protected $handlerType;
 

@@ -79,7 +79,7 @@ class ConfigHandlerGroup extends ViewsFormBase {
       }
       else {
         $handler->init($executable, $executable->display_handler, $item);
-        $types = ViewExecutable::viewsHandlerTypes();
+        $types = ViewExecutable::getHandlerTypes();
 
         $form['#title'] = $this->t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 

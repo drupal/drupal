@@ -911,7 +911,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $executable->setDisplay($display['id']);
     $executable->initStyle();
 
-    $types = $executable->viewsHandlerTypes();
+    $types = $executable->getHandlerTypes();
 
     $build = array(
       '#theme_wrappers' => array('views_ui_display_tab_bucket'),

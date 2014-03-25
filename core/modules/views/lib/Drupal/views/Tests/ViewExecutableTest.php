@@ -122,7 +122,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $view->initHandlers();
 
     // Check for all handler types.
-    $handler_types = array_keys(ViewExecutable::viewsHandlerTypes());
+    $handler_types = array_keys(ViewExecutable::getHandlerTypes());
     foreach ($handler_types as $type) {
       // The views_test integration doesn't have relationships.
       if ($type == 'relationship') {
@@ -392,10 +392,10 @@ class ViewExecutableTest extends ViewUnitTestBase {
   }
 
   /**
-   * Tests ViewExecutable::viewsHandlerTypes().
+   * Tests ViewExecutable::getHandlerTypes().
    */
-  public function testViewsHandlerTypes() {
-    $types = ViewExecutable::viewsHandlerTypes();
+  public function testGetHandlerTypes() {
+    $types = ViewExecutable::getHandlerTypes();
     foreach (array('field', 'filter', 'argument', 'sort', 'header', 'footer', 'empty') as $type) {
       $this->assertTrue(isset($types[$type]));
       // @todo The key on the display should be footers, headers and empties

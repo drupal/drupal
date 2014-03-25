@@ -75,7 +75,7 @@ class HandlerTest extends UITestBase {
    * Tests UI CRUD.
    */
   public function testUICRUD() {
-    $handler_types = ViewExecutable::viewsHandlerTypes();
+    $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       // Test adding handlers.
       $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/$type";
@@ -148,7 +148,7 @@ class HandlerTest extends UITestBase {
    * Tests broken handlers.
    */
   public function testBrokenHandlers() {
-    $handler_types = ViewExecutable::viewsHandlerTypes();
+    $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       $this->drupalGet('admin/structure/views/view/test_view_broken/edit');
 
@@ -182,7 +182,7 @@ class HandlerTest extends UITestBase {
    * Tests optional handlers.
    */
   public function testOptionalHandlers() {
-    $handler_types = ViewExecutable::viewsHandlerTypes();
+    $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       $this->drupalGet('admin/structure/views/view/test_view_optional/edit');
 

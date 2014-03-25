@@ -868,7 +868,7 @@ abstract class HandlerBase extends PluginBase {
     // Run it through the handler's submit function.
     $this->submitOptionsForm($form['options'], $form_state);
     $item = $this->options;
-    $types = ViewExecutable::viewsHandlerTypes();
+    $types = ViewExecutable::getHandlerTypes();
 
     // For footer/header $handler_type is area but $type is footer/header.
     // For all other handle types it's the same.

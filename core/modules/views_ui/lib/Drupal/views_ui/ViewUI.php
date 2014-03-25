@@ -475,7 +475,7 @@ class ViewUI implements ViewStorageInterface {
    */
   public function submitItemAdd($form, &$form_state) {
     $type = $form_state['type'];
-    $types = ViewExecutable::viewsHandlerTypes();
+    $types = ViewExecutable::getHandlerTypes();
     $section = $types[$type]['plural'];
 
     // Handle the override select.

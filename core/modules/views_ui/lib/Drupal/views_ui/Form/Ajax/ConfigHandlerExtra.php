@@ -73,7 +73,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
       }
       else {
         $handler->init($executable, $executable->display_handler, $item);
-        $types = ViewExecutable::viewsHandlerTypes();
+        $types = ViewExecutable::getHandlerTypes();
 
         $form['#title'] = $this->t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 

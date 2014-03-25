@@ -198,7 +198,7 @@ function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type
   $handlers = $view->display_handler->getHandlers($type);
   $links = array();
 
-  $types = ViewExecutable::viewsHandlerTypes();
+  $types = ViewExecutable::getHandlerTypes();
   if ($title) {
     $links[$type . '-title'] = array(
       'title' => $types[$type]['title'],

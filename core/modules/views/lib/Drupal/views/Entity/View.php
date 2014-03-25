@@ -282,7 +282,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     }
 
     $handler_types = array();
-    foreach (ViewExecutable::viewsHandlerTypes() as $type) {
+    foreach (ViewExecutable::getHandlerTypes() as $type) {
       $handler_types[] = $type['plural'];
     }
     foreach ($this->get('display') as $display) {

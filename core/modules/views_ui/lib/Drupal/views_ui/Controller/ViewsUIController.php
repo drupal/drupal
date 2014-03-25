@@ -63,7 +63,7 @@ class ViewsUIController extends ControllerBase {
     // Fetch all fieldapi fields which are used in views
     // Therefore search in all views, displays and handler-types.
     $fields = array();
-    $handler_types = ViewExecutable::viewsHandlerTypes();
+    $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($views as $view) {
       $executable = $view->getExecutable();
       $executable->initDisplay();

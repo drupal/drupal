@@ -64,7 +64,7 @@ class AddHandler extends ViewsFormBase {
     $executable->setDisplay($display_id);
     $display = &$executable->displayHandlers->get($display_id);
 
-    $types = ViewExecutable::viewsHandlerTypes();
+    $types = ViewExecutable::getHandlerTypes();
     $ltitle = $types[$type]['ltitle'];
     $section = $types[$type]['plural'];
 

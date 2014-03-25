@@ -881,7 +881,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function getHandlers($type) {
     if (!isset($this->handlers[$type])) {
       $this->handlers[$type] = array();
-      $types = ViewExecutable::viewsHandlerTypes();
+      $types = ViewExecutable::getHandlerTypes();
       $plural = $types[$type]['plural'];
 
       foreach ($this->getOption($plural) as $id => $info) {
@@ -2285,7 +2285,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     // Validate handlers
-    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
+    foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $handler) {
         $result = $handler->validate();
         if (!empty($result) && is_array($result)) {
@@ -2324,7 +2324,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *
    */
   public function isIdentifierUnique($id, $identifier) {
-    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
+    foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $key => $handler) {
         if ($handler->canExpose() && $handler->isExposed()) {
           if ($handler->isAGroup()) {
@@ -2448,7 +2448,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
     // Build a map of plural => singular for handler types.
     $type_map = array();
-    foreach (ViewExecutable::viewsHandlerTypes() as $type => $info) {
+    foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       $type_map[$info['plural']] = $type;
     }
 
@@ -2487,7 +2487,7 @@ abstract class DisplayPluginBase extends PluginBase {
    *   The name of the handler type option.
    */
   protected function mergeHandler($type) {
-    $types = ViewExecutable::viewsHandlerTypes();
+    $types = ViewExecutable::getHandlerTypes();
 
     $options = $this->getOption($types[$type]['plural']);
     foreach ($this->getHandlers($type) as $id => $handler) {
