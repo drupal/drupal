@@ -39,3 +39,7 @@ services:
     class: Drupal\serialization\EntityResolver\UuidResolver
     tags:
       - { name: entity_resolver}
+  serialization.entity_resolver.target_id:
+    class: Drupal\serialization\EntityResolver\TargetIdResolver
+    tags:
+      - { name: entity_resolver}

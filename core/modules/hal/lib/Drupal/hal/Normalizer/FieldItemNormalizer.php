@@ -99,28 +99,19 @@ class FieldItemNormalizer extends NormalizerBase {
    *   The translated field item instance.
    */
   protected function createTranslatedInstance(FieldItemInterface $field_item, $langcode) {
-    $parent = $field_item->getParent();
-    $ancestors = array();
+    $field_items = $field_item->getParent();
 
     // Remove the untranslated instance from the field's list of items.
-    $parent->offsetUnset($field_item->getName());
+    $field_items->offsetUnset($field_item->getName());
 
-    // Get the property path.
-    while (!method_exists($parent, 'getTranslation')) {
-      array_unshift($ancestors, $parent);
-      $parent = $parent->getParent();
-    }
+    // Get the entity in the requested language and the field's item list from
+    // that.
+    $entity_translation = $field_item->getEntity()->getTranslation($langcode);
+    $field_items_translation = $entity_translation->get($field_item->getFieldDefinition()->getName());
 
-    // Recreate the property path with translations.
-    $translation = $parent->getTranslation($langcode);
-    foreach ($ancestors as $ancestor) {
-      $ancestor_name =  $ancestor->getName();
-      $translation = $translation->get($ancestor_name);
-    }
-
-    // Create a new instance at the end of the property path and return it.
-    $count = $translation->isEmpty() ? 0 : $translation->count();
-    return $translation->get($count);
+    // Create a new instance and return it.
+    $count = $field_items_translation->isEmpty() ? 0 : $field_items_translation->count();
+    return $field_items_translation->get($count);
   }
 
 }

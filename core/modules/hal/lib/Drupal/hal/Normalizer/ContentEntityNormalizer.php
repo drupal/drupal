@@ -2,12 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\hal\Normalizer\EntityNormalizer.
+ * Contains \Drupal\hal\Normalizer\ContentEntityNormalizer.
  */
 
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\rest\LinkManager\LinkManagerInterface;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
@@ -15,14 +17,14 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 /**
  * Converts the Drupal entity object structure to a HAL array structure.
  */
-class EntityNormalizer extends NormalizerBase {
+class ContentEntityNormalizer extends NormalizerBase {
 
   /**
    * The interface or class that this Normalizer supports.
    *
    * @var string
    */
-  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\EntityInterface';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\ContentEntityInterface';
 
   /**
    * The hypermedia link manager.
@@ -32,20 +34,37 @@ class EntityNormalizer extends NormalizerBase {
   protected $linkManager;
 
   /**
-   * Constructs an EntityNormalizer object.
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+
+  /**
+   * Constructs an ContentEntityNormalizer object.
    *
    * @param \Drupal\rest\LinkManager\LinkManagerInterface $link_manager
    *   The hypermedia link manager.
    */
-  public function __construct(LinkManagerInterface $link_manager) {
+  public function __construct(LinkManagerInterface $link_manager, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler) {
     $this->linkManager = $link_manager;
+    $this->entityManager = $entity_manager;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
   public function normalize($entity, $format = NULL, array $context = array()) {
-    // Create the array of normalized properties, starting with the URI.
+    // Create the array of normalized fields, starting with the URI.
     /** @var $entity \Drupal\Core\Entity\ContentEntityInterface */
     $normalized = array(
       '_links' => array(
@@ -58,24 +77,24 @@ class EntityNormalizer extends NormalizerBase {
       ),
     );
 
-    // If the properties to use were specified, only output those properties.
-    // Otherwise, output all properties except internal ID.
+    // If the fields to use were specified, only output those field values.
+    // Otherwise, output all field values except internal ID.
     if (isset($context['included_fields'])) {
-      $properties = array();
-      foreach ($context['included_fields'] as $property_name) {
-        $properties[] = $entity->get($property_name);
+      $fields = array();
+      foreach ($context['included_fields'] as $field_name) {
+        $fields[] = $entity->get($field_name);
       }
     }
     else {
-      $properties = $entity->getProperties();
+      $fields = $entity->getProperties();
     }
-    foreach ($properties as $property) {
-      // In some cases, Entity API will return NULL array items. Ensure this is
-      // a real property and that it is not the internal id.
-      if (!is_object($property) || $property->getName() == 'id') {
+    // Ignore the entity ID and revision ID.
+    $exclude = array($entity->getEntityType()->getKey('id'), $entity->getEntityType()->getKey('revision'));
+    foreach ($fields as $field) {
+      if (in_array($field->getFieldDefinition()->getName(), $exclude)) {
         continue;
       }
-      $normalized_property = $this->serializer->normalize($property, $format, $context);
+      $normalized_property = $this->serializer->normalize($field, $format, $context);
       $normalized = NestedArray::mergeDeep($normalized, $normalized_property);
     }
 
@@ -113,14 +132,24 @@ class EntityNormalizer extends NormalizerBase {
       // Remove the langcode so it does not get iterated over below.
       unset($data['langcode']);
     }
-    elseif (\Drupal::moduleHandler()->moduleExists('language')) {
+    elseif ($this->moduleHandler->moduleExists('language')) {
       $langcode = language_get_default_langcode($typed_data_ids['entity_type'], $typed_data_ids['bundle']);
     }
     else {
       $langcode = Language::LANGCODE_NOT_SPECIFIED;
     }
 
-    $entity = entity_create($typed_data_ids['entity_type'], array('langcode' => $langcode, 'type' => $typed_data_ids['bundle']));
+    $entity_type = $this->entityManager->getDefinition($typed_data_ids['entity_type']);
+    $values = array('langcode' => $langcode);
+
+    if ($entity_type->hasKey('bundle')) {
+      $bundle_key = $entity_type->getKey('bundle');
+      $values[$bundle_key] = $typed_data_ids['bundle'];
+      // Unset the bundle key from data, if it's there.
+      unset($data[$bundle_key]);
+    }
+
+    $entity = $this->entityManager->getStorageController($typed_data_ids['entity_type'])->create($values);
 
     // Special handling for PATCH: destroy all possible default values that
     // might have been set on entity creation. We want an "empty" entity that

@@ -8,14 +8,14 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\rest\LinkManager\LinkManagerInterface;
 use Guzzle\Http\ClientInterface;
 
 /**
  * Converts the Drupal entity object structure to a HAL array structure.
  */
-class FileEntityNormalizer extends EntityNormalizer {
+class FileEntityNormalizer extends ContentEntityNormalizer {
 
   /**
    * The interface or class that this Normalizer supports.
@@ -23,13 +23,6 @@ class FileEntityNormalizer extends EntityNormalizer {
    * @var string
    */
   protected $supportedInterfaceOrClass = 'Drupal\file\FileInterface';
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
 
   /**
    * The HTTP client.
@@ -47,11 +40,12 @@ class FileEntityNormalizer extends EntityNormalizer {
    *   The HTTP Client.
    * @param \Drupal\rest\LinkManager\LinkManagerInterface $link_manager
    *   The hypermedia link manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ClientInterface $http_client, LinkManagerInterface $link_manager) {
-    parent::__construct($link_manager);
+  public function __construct(EntityManagerInterface $entity_manager, ClientInterface $http_client, LinkManagerInterface $link_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct($link_manager, $entity_manager, $module_handler);
 
-    $this->entityManager = $entity_manager;
     $this->httpClient = $http_client;
   }
 

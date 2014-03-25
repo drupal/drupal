@@ -10,13 +10,15 @@ namespace Drupal\hal\Tests;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Language\Language;
 use Drupal\hal\Encoder\JsonEncoder;
-use Drupal\hal\Normalizer\EntityNormalizer;
+use Drupal\hal\Normalizer\ContentEntityNormalizer;
 use Drupal\hal\Normalizer\EntityReferenceItemNormalizer;
 use Drupal\hal\Normalizer\FieldItemNormalizer;
 use Drupal\hal\Normalizer\FieldNormalizer;
 use Drupal\rest\LinkManager\LinkManager;
 use Drupal\rest\LinkManager\RelationLinkManager;
 use Drupal\rest\LinkManager\TypeLinkManager;
+use Drupal\serialization\EntityResolver\ChainEntityResolver;
+use Drupal\serialization\EntityResolver\TargetIdResolver;
 use Drupal\serialization\EntityResolver\UuidResolver;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\Serializer\Serializer;
@@ -120,12 +122,14 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       'bundle' => 'entity_test',
     ))->save();
 
-    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager(new MemoryBackend('cache')));
+    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager(new MemoryBackend('cache'), \Drupal::entityManager()));
+
+    $chain_resolver = new ChainEntityResolver(array(new UuidResolver(), new TargetIdResolver()));
 
     // Set up the mock serializer.
     $normalizers = array(
-      new EntityNormalizer($link_manager),
-      new EntityReferenceItemNormalizer($link_manager, new UuidResolver()),
+      new ContentEntityNormalizer($link_manager, \Drupal::entityManager(), \Drupal::moduleHandler()),
+      new EntityReferenceItemNormalizer($link_manager, $chain_resolver),
       new FieldItemNormalizer(),
       new FieldNormalizer(),
     );

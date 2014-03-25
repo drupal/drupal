@@ -9,6 +9,7 @@ namespace Drupal\rest\LinkManager;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 
 class RelationLinkManager implements RelationLinkManagerInterface{
 
@@ -18,13 +19,23 @@ class RelationLinkManager implements RelationLinkManagerInterface{
   protected $cache;
 
   /**
+   * Entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache of relation URIs and their associated Typed Data IDs.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    */
-  public function __construct(CacheBackendInterface $cache) {
+  public function __construct(CacheBackendInterface $cache, EntityManagerInterface $entity_manager) {
     $this->cache = $cache;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -75,20 +86,22 @@ class RelationLinkManager implements RelationLinkManagerInterface{
   protected function writeCache() {
     $data = array();
 
-    foreach (field_info_field_map() as $entity_type => $entity_type_map) {
-      foreach ($entity_type_map as $field_name => $field_info) {
-        foreach ($field_info['bundles'] as $bundle) {
-          $relation_uri = $this->getRelationUri($entity_type, $bundle, $field_name);
-          $data[$relation_uri] = array(
-            'entity_type' => $entity_type,
-            'bundle' => $bundle,
-            'field_name' => $field_name,
-          );
+    foreach ($this->entityManager->getDefinitions() as $entity_type) {
+      if ($entity_type->isFieldable()) {
+        foreach ($this->entityManager->getBundleInfo($entity_type->id()) as $bundle => $bundle_info) {
+          foreach ($this->entityManager->getFieldDefinitions($entity_type->id(), $bundle) as $field_definition) {
+            $relation_uri = $this->getRelationUri($entity_type->id(), $bundle, $field_definition->getName());
+            $data[$relation_uri] = array(
+              'entity_type' => $entity_type,
+              'bundle' => $bundle,
+              'field_name' => $field_definition->getName(),
+            );
+          }
         }
       }
     }
     // These URIs only change when field info changes, so cache it permanently
-    // and only clear it when field_info is cleared.
-    $this->cache->set('rest:links:relations', $data, Cache::PERMANENT, array('field_info' => TRUE));
+    // and only clear it when the fields cache is cleared.
+    $this->cache->set('rest:links:relations', $data, Cache::PERMANENT, array('entity_field_info' => TRUE));
   }
 }
