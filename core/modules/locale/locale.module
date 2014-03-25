@@ -13,6 +13,7 @@
 use Drupal\Component\Utility\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\language\Entity\Language as LanguageEntity;
 use Drupal\Component\Utility\Crypt;
 
 /**
@@ -240,48 +241,48 @@ function locale_stream_wrappers() {
 }
 
 /**
- * Implements hook_language_insert().
+ * Implements hook_ENTITY_TYPE_insert() for 'language_entity'.
  */
-function locale_language_insert($language) {
+function locale_language_entity_insert(LanguageEntity $language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface.
   \Drupal::cache('page')->deleteAll();
   // Force JavaScript translation file re-creation for the new language.
-  _locale_invalidate_js($language->id);
+  _locale_invalidate_js($language->id());
 }
 
 /**
- * Implements hook_language_update().
+ * Implements hook_ENTITY_TYPE_update() for 'language_entity'.
  */
-function locale_language_update($language) {
+function locale_language_entity_update(LanguageEntity $language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
   // Changing the language settings impacts the interface.
   \Drupal::cache('page')->deleteAll();
   // Force JavaScript translation file re-creation for the modified language.
-  _locale_invalidate_js($language->id);
+  _locale_invalidate_js($language->id());
 }
 
 /**
- * Implements hook_language_delete().
+ * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
  */
-function locale_language_delete($language) {
+function locale_language_entity_delete(LanguageEntity $language) {
   // Remove translations.
-  \Drupal::service('locale.storage')->deleteTranslations(array('language' => $language->id));
+  \Drupal::service('locale.storage')->deleteTranslations(array('language' => $language->id()));
 
   // Remove interface translation files.
   module_load_include('inc', 'locale', 'locale.bulk');
-  locale_translate_delete_translation_files(array(), array($language->id));
+  locale_translate_delete_translation_files(array(), array($language->id()));
 
   // Remove translated configuration objects.
-  \Drupal\locale\Locale::config()->deleteLanguageTranslations($language->id);
+  \Drupal\locale\Locale::config()->deleteLanguageTranslations($language->id());
 
   // Changing the language settings impacts the interface:
-  _locale_invalidate_js($language->id);
+  _locale_invalidate_js($language->id());
   \Drupal::cache('page')->deleteAll();
 
   // Clear locale translation caches.
-  locale_translation_status_delete_languages(array($language->id));
-  \Drupal::cache()->delete('locale:' . $language->id);
+  locale_translation_status_delete_languages(array($language->id()));
+  \Drupal::cache()->delete('locale:' . $language->id());
 }
 
 /**

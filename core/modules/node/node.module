@@ -21,6 +21,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\Entity\File;
+use Drupal\language\Entity\Language as LanguageEntity;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -1810,13 +1811,13 @@ function node_file_download_access($field, EntityInterface $entity, File $file) 
 }
 
 /**
- * Implements hook_language_delete().
+ * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
  */
-function node_language_delete($language) {
+function node_language_entity_delete(LanguageEntity $language) {
   // On nodes with this language, unset the language.
   db_update('node_revision')
     ->fields(array('langcode' => ''))
-    ->condition('langcode', $language->id)
+    ->condition('langcode', $language->id())
     ->execute();
 }
 

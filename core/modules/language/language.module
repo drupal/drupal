@@ -9,6 +9,7 @@ use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\language\Entity\Language as LanguageEntity;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
@@ -448,9 +449,6 @@ function language_save($language) {
   }
   $language->is_new = $language_entity->isNew();
 
-  // Let other modules modify $language before saved.
-  \Drupal::moduleHandler()->invokeAll('language_presave', array($language));
-
   // Assign language properties to language entity.
   $language_entity->label = isset($language->name) ? $language->name : '';
   $language_entity->direction = isset($language->direction) ? $language->direction : '0';
@@ -462,11 +460,9 @@ function language_save($language) {
   $language_entity->save();
   $t_args = array('%language' => $language->name, '%langcode' => $language->id);
   if ($language->is_new) {
-    \Drupal::moduleHandler()->invokeAll('language_insert', array($language));
     watchdog('language', 'The %language (%langcode) language has been created.', $t_args);
   }
   else {
-    \Drupal::moduleHandler()->invokeAll('language_update', array($language));
     watchdog('language', 'The %language (%langcode) language has been updated.', $t_args);
   }
 
@@ -509,8 +505,6 @@ function language_delete($langcode) {
   $languages = language_list(Language::STATE_ALL);
   if (isset($languages[$langcode]) && !$languages[$langcode]->locked) {
     $language = $languages[$langcode];
-
-    \Drupal::moduleHandler()->invokeAll('language_delete', array($language));
 
     // Remove the language.
     entity_delete_multiple('language_entity', array($language->id));
@@ -637,31 +631,31 @@ function language_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_language_insert().
+ * Implements hook_ENTITY_TYPE_insert() for 'language_entity'.
  */
-function language_language_insert($language) {
+function language_language_entity_insert(LanguageEntity $language) {
   if (!empty($language->locked)) {
     return;
   }
 
   // Add language to the list of language domains.
   $domains = language_negotiation_url_domains();
-  $domains[$language->id] = '';
+  $domains[$language->id()] = '';
   language_negotiation_url_domains_save($domains);
 }
 
 /**
- * Implements hook_language_delete().
+ * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
  */
-function language_language_delete($language) {
+function language_language_entity_delete(LanguageEntity $language) {
   // Remove language from language prefix list.
   $prefixes = language_negotiation_url_prefixes();
-  unset($prefixes[$language->id]);
+  unset($prefixes[$language->id()]);
   language_negotiation_url_prefixes_save($prefixes);
 
   // Remove language from language domain list.
   $domains = language_negotiation_url_domains();
-  unset($domains[$language->id]);
+  unset($domains[$language->id()]);
   language_negotiation_url_domains_save($domains);
 }
 

@@ -7,6 +7,7 @@
 
 use Drupal\block\BlockInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\language\Entity\Language;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -444,16 +445,16 @@ function block_menu_delete($menu) {
 }
 
 /**
- * Implements hook_language_delete().
+ * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
  *
  * Delete the potential block visibility settings of the deleted language.
  */
-function block_language_delete($language) {
+function block_language_entity_delete(Language $language) {
   // Remove the block visibility settings for the deleted language.
   foreach (entity_load_multiple('block') as $block) {
     $visibility = $block->get('visibility');
-    if (isset($visibility['language']['langcodes'][$language->id])) {
-      unset($visibility['language']['langcodes'][$language->id]);
+    if (isset($visibility['language']['langcodes'][$language->id()])) {
+      unset($visibility['language']['langcodes'][$language->id()]);
       $block->set('visibility', $visibility);
       $block->save();
     }
