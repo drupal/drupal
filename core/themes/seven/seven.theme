@@ -274,7 +274,32 @@ function seven_preprocess_install_page(&$variables) {
 
   // Normally we could attach libraries via hook_page_alter(), but when the
   // database is inactive it's not called so we add them here.
-  $libraries['#attached']['library'][] = 'seven/install-page';
+  $libraries = array(
+    '#attached' => array(
+      'library' => array(
+        'seven/maintenance-page',
+        'seven/install-page',
+      ),
+    ),
+  );
+  drupal_render($libraries);
+}
+
+/**
+ * Implements hook_preprocess_maintenance_page().
+ */
+function seven_preprocess_maintenance_page(&$variables) {
+  $variables['styles'] = new RenderWrapper('drupal_get_css');
+  $variables['scripts'] = new RenderWrapper('drupal_get_js');
+  // // Normally we could attach libraries via hook_page_alter(), but when the
+  // // database is inactive it's not called so we add them here.
+  $libraries = array(
+    '#attached' => array(
+      'library' => array(
+        'seven/maintenance-page',
+      ),
+    ),
+  );
   drupal_render($libraries);
 }
 

@@ -1,3 +1,13 @@
+maintenance-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      maintenance-page.css: {}
+  dependencies:
+    - system/maintenance
+
 install-page:
   version: VERSION
   js:
