@@ -82,10 +82,15 @@ class SimpletestTestForm extends FormBase {
       '#title' => $this->t('Collapse'),
       '#suffix' => '<a href="#" class="simpletest-collapse">(' . $this->t('Collapse') . ')</a>',
     );
-    $js = array(
-      'images' => array(
-        drupal_render($image_collapsed),
-        drupal_render($image_extended),
+    $form['tests']['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array(
+        'simpleTest' => array(
+          'images' => array(
+            drupal_render($image_collapsed),
+            drupal_render($image_extended),
+          ),
+        ),
       ),
     );
 
@@ -108,13 +113,13 @@ class SimpletestTestForm extends FormBase {
       $form['tests'][$group]['select'] = array(
         '#wrapper_attributes' => array(
           'id' => $group_class,
-          'class' => array('simpletest-select-all'),
+          'class' => array('simpletest-group-select-all'),
         ),
       );
       $form['tests'][$group]['title'] = array(
         // Expand/collapse image.
         '#prefix' => '<div class="simpletest-image" id="simpletest-test-group-' . $group_class . '"></div>',
-        '#markup' => '<label for="' . $group_class . '-select-all" class="simpletest-group-label">' . $group . '</label>',
+        '#markup' => '<label for="' . $group_class . '-group-select-all">' . $group . '</label>',
         '#wrapper_attributes' => array(
           'class' => array('simpletest-group-label'),
         ),
@@ -126,15 +131,6 @@ class SimpletestTestForm extends FormBase {
         ),
       );
 
-      // Add individual tests to group.
-      $current_js = array(
-        'testClass' => $group_class . '-test',
-        'testNames' => array(),
-        // imageDirection maps to the 'images' index in the $js array.
-        'imageDirection' => 0,
-        'clickActive' => FALSE,
-      );
-
       // Sort test classes within group alphabetically by name/label.
       uasort($tests, function ($a, $b) {
         return SortArray::sortByKeyString($a, $b, 'name');
@@ -142,10 +138,6 @@ class SimpletestTestForm extends FormBase {
 
       // Cycle through each test within the current group.
       foreach ($tests as $class => $info) {
-        $test_id = drupal_clean_id_identifier($class);
-        $test_checkbox_id = 'edit-tests-' . $test_id;
-        $current_js['testNames'][] = $test_checkbox_id;
-
         $form['tests'][$class] = array(
           '#attributes' => array('class' => array($group_class . '-test', 'js-hide')),
         );
@@ -168,15 +160,7 @@ class SimpletestTestForm extends FormBase {
           ),
         );
       }
-
-      $js['simpletest-test-group-' . $group_class] = $current_js;
     }
-
-    // Add JavaScript array of settings.
-    $form['tests']['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('simpleTest' => $js),
-    );
 
     // Action buttons.
     $form['actions'] = array('#type' => 'actions');
