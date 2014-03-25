@@ -71,16 +71,7 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
   public function setUp() {
     $this->entityTypeId = $this->randomName();
 
-    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
-    $this->entityType->expects($this->any())
-      ->method('getProvider')
-      ->will($this->returnValue('entity'));
-
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityManager->expects($this->any())
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->will($this->returnValue($this->entityType));
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
@@ -111,10 +102,40 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
       ->method('getField')
       ->with('test_entity_type', 'test_field')
       ->will($this->returnValue($field));
-    $values = array('field_name' => 'test_field', 'entity_type' => 'test_entity_type', $this->entityTypeId, 'bundle' => 'test_bundle');
+
+    // Mock the interfaces necessary to create a dependency on a bundle entity.
+    $bundle_entity = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $bundle_entity->expects($this->any())
+      ->method('getConfigDependencyName')
+      ->will($this->returnValue('test.test_entity_type.id'));
+
+    $storage_controller = $this->getMock('\Drupal\Core\Config\Entity\ConfigStorageControllerInterface');
+    $storage_controller
+      ->expects($this->any())
+      ->method('load')
+      ->with('test_bundle')
+      ->will($this->returnValue($bundle_entity));
+
+    $this->entityManager->expects($this->any())
+      ->method('getStorageController')
+      ->with('bundle_entity_type')
+      ->will($this->returnValue($storage_controller));
+
+    $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $target_entity_type->expects($this->any())
+      ->method('getBundleEntityType')
+      ->will($this->returnValue('bundle_entity_type'));
+
+    $this->entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_entity_type')
+      ->will($this->returnValue($target_entity_type));
+
+    $values = array('field_name' => 'test_field', 'entity_type' => 'test_entity_type', 'bundle' => 'test_bundle');
     $entity = new FieldInstanceConfig($values, $this->entityTypeId);
     $dependencies = $entity->calculateDependencies();
     $this->assertContains('field.field.test_entity_type.test_field', $dependencies['entity']);
+    $this->assertContains('test.test_entity_type.id', $dependencies['entity']);
   }
 
 }

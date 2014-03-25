@@ -53,6 +53,29 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
   public function setUp() {
     parent::setUp();
 
+    // Create the 'private' field, which allows the node to be marked as private
+    // (restricted access) in a given translation.
+    $field_private = entity_create('field_config', array(
+      'name' => 'field_private',
+      'entity_type' => 'node',
+      'type' => 'list_boolean',
+      'cardinality' => 1,
+      'translatable'  => TRUE,
+      'settings' => array(
+        'allowed_values' => array(0 => 'Not private', 1 => 'Private'),
+      ),
+    ));
+    $field_private->save();
+
+    entity_create('field_instance_config', array(
+      'field_name' => $field_private->name,
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'widget' => array(
+        'type' => 'options_buttons',
+      ),
+    ))->save();
+
     // After enabling a node access module, the access table has to be rebuild.
     node_access_rebuild();
 

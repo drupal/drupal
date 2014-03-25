@@ -13,3 +13,4 @@ langcode: und
 dependencies:
   entity:
     - field.field.node.field_tags
+    - node.type.article

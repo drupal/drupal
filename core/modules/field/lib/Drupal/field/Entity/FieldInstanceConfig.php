@@ -368,6 +368,13 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     parent::calculateDependencies();
     // Manage dependencies.
     $this->addDependency('entity', $this->field->getConfigDependencyName());
+    $bundle_entity_type_id = \Drupal::entityManager()->getDefinition($this->entity_type)->getBundleEntityType();
+    if ($bundle_entity_type_id != 'bundle') {
+      // If the target entity type uses entities to manage its bundles then
+      // depend on the bundle entity.
+      $bundle_entity = \Drupal::entityManager()->getStorageController($bundle_entity_type_id)->load($this->bundle);
+      $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
+    }
     return $this->dependencies;
   }
 

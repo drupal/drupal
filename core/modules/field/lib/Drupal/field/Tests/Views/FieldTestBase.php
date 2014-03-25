@@ -52,6 +52,12 @@ abstract class FieldTestBase extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
+    // Ensure the page node type exists.
+    entity_create('node_type', array(
+      'type' => 'page',
+      'name' => 'page',
+    ))->save();
+
     ViewTestData::createTestViews(get_class($this), array('field_test_views'));
   }
 
