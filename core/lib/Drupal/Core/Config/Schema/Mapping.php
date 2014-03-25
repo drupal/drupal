@@ -91,20 +91,10 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
   }
 
   /**
-   * Implements Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
+   * {@inheritdoc}
    */
-  public function getPropertyValues() {
+  public function toArray() {
     return $this->getValue();
-  }
-
-  /**
-   * Implements Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
-   */
-  public function setPropertyValues($values) {
-    foreach ($values as $name => $value) {
-      $this->value[$name] = $value;
-    }
-    return $this;
   }
 
   /**

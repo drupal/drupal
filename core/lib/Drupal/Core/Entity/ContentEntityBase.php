@@ -229,7 +229,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function getValue() {
     // @todo: This does not make much sense, so remove once TypedDataInterface
     // is removed. See https://drupal.org/node/2002138.
-    return $this->getPropertyValues();
+    return $this->toArray();
   }
 
   /**
@@ -238,7 +238,9 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function setValue($value, $notify = TRUE) {
     // @todo: This does not make much sense, so remove once TypedDataInterface
     // is removed. See https://drupal.org/node/2002138.
-    $this->setPropertyValues($value);
+    foreach ($value as $field_name => $field_value) {
+      $this->set($field_name, $field_value, $notify);
+    }
   }
 
   /**
@@ -477,21 +479,12 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
-  public function getPropertyValues() {
+  public function toArray() {
     $values = array();
     foreach ($this->getProperties() as $name => $property) {
       $values[$name] = $property->getValue();
     }
     return $values;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setPropertyValues($values) {
-    foreach ($values as $name => $value) {
-      $this->get($name)->setValue($value);
-    }
   }
 
   /**

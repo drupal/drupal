@@ -115,16 +115,6 @@ interface ConfigEntityInterface extends EntityInterface {
   public function set($property_name, $value);
 
   /**
-   * Retrieves the exportable properties of the entity.
-   *
-   * These are the values that get saved into config.
-   *
-   * @return array
-   *   An array of exportable properties and their values.
-   */
-  public function toArray();
-
-  /**
    * Calculates dependencies and stores them in the dependency property.
    *
    * @return array

@@ -448,4 +448,11 @@ abstract class Entity extends DependencySerialization implements EntityInterface
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function toArray() {
+    return array();
+  }
+
 }

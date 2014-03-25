@@ -162,23 +162,14 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
+   * {@inheritdoc}
    */
-  public function getPropertyValues() {
+  public function toArray() {
     $values = array();
     foreach ($this->getProperties() as $name => $property) {
       $values[$name] = $property->getValue();
     }
     return $values;
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
-   */
-  public function setPropertyValues($values) {
-    foreach ($values as $name => $value) {
-      $this->get($name)->setValue($value);
-    }
   }
 
   /**

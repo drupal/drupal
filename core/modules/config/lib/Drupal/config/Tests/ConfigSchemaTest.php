@@ -220,7 +220,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     // And test some ComplexDataInterface methods.
     $properties = $list->getProperties();
     $this->assertTrue(count($properties) == 3 && $properties['front'] == $list['front'], 'Got the right properties for site page.');
-    $values = $list->getPropertyValues();
+    $values = $list->toArray();
     $this->assertTrue(count($values) == 3 && $values['front'] == 'user', 'Got the right property values for site page.');
 
     // Now let's try something more complex, with nested objects.

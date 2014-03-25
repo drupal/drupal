@@ -319,4 +319,12 @@ interface EntityInterface extends AccessibleInterface {
    */
   public function setOriginalId($id);
 
+  /**
+   * Returns an array of all property values.
+   *
+   * @return array
+   *   An array of property values, keyed by property name.
+   */
+  public function toArray();
+
 }

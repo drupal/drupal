@@ -434,7 +434,7 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     // Test getting and setting properties.
     $this->assertEqual($typed_data->get('one')->getValue(), 'eins');
-    $this->assertEqual($typed_data->getPropertyValues(), $value);
+    $this->assertEqual($typed_data->toArray(), $value);
     $typed_data->set('one', 'uno');
     $this->assertEqual($typed_data->get('one')->getValue(), 'uno');
     // Make sure the update is reflected in the value of the map also.
@@ -448,11 +448,6 @@ class TypedDataTest extends DrupalUnitTestBase {
     $properties = $typed_data->getProperties();
     $this->assertEqual(array_keys($properties), array_keys($value));
     $this->assertIdentical($properties['one'], $typed_data->get('one'), 'Properties are identical.');
-
-    $typed_data->setPropertyValues(array('one' => 'eins'));
-    $this->assertEqual($typed_data->get('one')->getValue(), 'eins');
-    $this->assertEqual($typed_data->get('two')->getValue(), 'zwei');
-    $this->assertEqual($typed_data->get('three')->getValue(), 'drei');
 
     // Test setting a not defined property. It shouldn't show up in the
     // properties, but be kept in the values.

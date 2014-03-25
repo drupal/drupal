@@ -67,7 +67,7 @@ class EntityTest extends NormalizerTestBase {
     ));
     $node->save();
 
-    $original_values = $node->getPropertyValues();
+    $original_values = $node->toArray();
     unset($original_values['nid']);
     unset($original_values['vid']);
 
@@ -102,7 +102,7 @@ class EntityTest extends NormalizerTestBase {
     ));
     $term->save();
 
-    $original_values = $term->getPropertyValues();
+    $original_values = $term->toArray();
     unset($original_values['tid']);
 
     $normalized = $this->serializer->normalize($term, $this->format);

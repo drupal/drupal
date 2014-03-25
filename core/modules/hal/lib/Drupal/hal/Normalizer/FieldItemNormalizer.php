@@ -25,7 +25,7 @@ class FieldItemNormalizer extends NormalizerBase {
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
   public function normalize($field_item, $format = NULL, array $context = array()) {
-    $values = $field_item->getPropertyValues();
+    $values = $field_item->toArray();
     if (isset($context['langcode'])) {
       $values['lang'] = $context['langcode'];
     }

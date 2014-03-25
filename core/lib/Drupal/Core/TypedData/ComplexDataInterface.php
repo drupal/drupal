@@ -70,28 +70,15 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
   public function getProperties($include_computed = FALSE);
 
   /**
-   * Gets an array of property values.
+   * Returns an array of all property values.
    *
    * Gets an array of plain property values including all not-computed
    * properties.
    *
    * @return array
-   *   An array keyed by property name containing the property value.
+   *   An array of property values, keyed by property name.
    */
-  public function getPropertyValues();
-
-  /**
-   * Sets multiple property values.
-   *
-   * @param array
-   *   The array of property values to set, keyed by property name.
-   *
-   * @throws \InvalidArgumentException
-   *   If the value of a not existing property is to be set.
-   * @throws \Drupal\Core\TypedData\ReadOnlyException
-   *   If a read-only property is set.
-   */
-  public function setPropertyValues($values);
+  public function toArray();
 
   /**
    * Determines whether the data structure is empty.

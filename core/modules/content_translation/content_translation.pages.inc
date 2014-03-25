@@ -229,6 +229,6 @@ function content_translation_edit_page(EntityInterface $entity, Language $langua
 function content_translation_prepare_translation(EntityInterface $entity, Language $source, Language $target) {
   if ($entity instanceof ContentEntityInterface) {
     $source_translation = $entity->getTranslation($source->id);
-    $entity->addTranslation($target->id, $source_translation->getPropertyValues());
+    $entity->addTranslation($target->id, $source_translation->toArray());
   }
 }

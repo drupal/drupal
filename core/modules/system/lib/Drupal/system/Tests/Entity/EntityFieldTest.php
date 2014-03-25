@@ -276,14 +276,10 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Test get and set field values.
     $entity->name = 'foo';
-    $this->assertEqual($entity->name[0]->getPropertyValues(), array('value' => 'foo'), format_string('%entity_type: Field value has been retrieved via getPropertyValue()', array('%entity_type' => $entity_type)));
-    $entity->name[0]->setPropertyValues(array('value' => 'bar'));
-    $this->assertEqual($entity->name->value, 'bar', format_string('%entity_type: Field value has been set via setPropertyValue()', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->name[0]->toArray(), array('value' => 'foo'), format_string('%entity_type: Field value has been retrieved via toArray()', array('%entity_type' => $entity_type)));
 
-    $values = $entity->getPropertyValues();
-    $this->assertEqual($values['name'], array(0 => array('value' => 'bar')), format_string('%entity_type: Field value has been retrieved via getPropertyValue() from an entity.', array('%entity_type' => $entity_type)));
-    $entity->setPropertyValues(array('name' => 'foo'));
-    $this->assertEqual($entity->name->value, 'foo', format_string('%entity_type: Field value has been set via setPropertyValue() on an entity.', array('%entity_type' => $entity_type)));
+    $values = $entity->toArray();
+    $this->assertEqual($values['name'], array(0 => array('value' => 'foo')), format_string('%entity_type: Field value has been retrieved via toArray() from an entity.', array('%entity_type' => $entity_type)));
 
     // Make sure the user id can be set to zero.
     $user_item[0]['target_id'] = 0;
