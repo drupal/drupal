@@ -115,6 +115,13 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   protected $bundleInfo;
 
   /**
+   * Static cache of display modes information.
+   *
+   * @var array
+   */
+  protected $displayModeInfo = array();
+
+  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -155,6 +162,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     parent::clearCachedDefinitions();
 
     $this->bundleInfo = NULL;
+    $this->displayModeInfo = array();
   }
 
   /**
@@ -507,6 +515,125 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     }
 
     return $translation;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllViewModes() {
+    return $this->getAllDisplayModesByEntityType('view_mode');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getViewModes($entity_type_id) {
+    return $this->getDisplayModesByEntityType('view_mode', $entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllFormModes() {
+    return $this->getAllDisplayModesByEntityType('form_mode');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormModes($entity_type_id) {
+    return $this->getDisplayModesByEntityType('form_mode', $entity_type_id);
+  }
+
+  /**
+   * Returns the entity display mode info for all entity types.
+   *
+   * @param string $display_type
+   *   The display type to be retrieved. It can be "view_mode" or "form_mode".
+   *
+   * @return array
+   *   The display mode info for all entity types.
+   */
+  protected function getAllDisplayModesByEntityType($display_type) {
+    if (!isset($this->displayModeInfo[$display_type])) {
+      $key = 'entity_' . $display_type . '_info';
+      $langcode = $this->languageManager->getCurrentLanguage(Language::TYPE_INTERFACE)->id;
+      if ($cache = $this->cache->get("$key:$langcode")) {
+        $this->displayModeInfo[$display_type] = $cache->data;
+      }
+      else {
+        $this->displayModeInfo[$display_type] = array();
+        foreach ($this->getStorageController($display_type)->loadMultiple() as $display_mode) {
+          list($display_mode_entity_type, $display_mode_name) = explode('.', $display_mode->id(), 2);
+          $this->displayModeInfo[$display_type][$display_mode_entity_type][$display_mode_name] = (array) $display_mode;
+        }
+        $this->moduleHandler->alter($key, $this->displayModeInfo[$display_type]);
+        $this->cache->set("$key:$langcode", $this->displayModeInfo[$display_type], CacheBackendInterface::CACHE_PERMANENT, array('entity_types' => TRUE));
+      }
+    }
+
+    return $this->displayModeInfo[$display_type];
+  }
+
+  /**
+   * Returns the entity display mode info for a specific entity type.
+   *
+   * @param string $display_type
+   *   The display type to be retrieved. It can be "view_mode" or "form_mode".
+   * @param string $entity_type_id
+   *   The entity type whose display mode info should be returned.
+   *
+   * @return array
+   *   The display mode info for a specific entity type.
+   */
+  protected function getDisplayModesByEntityType($display_type, $entity_type_id) {
+    if (isset($this->displayModeInfo[$display_type][$entity_type_id])) {
+      return $this->displayModeInfo[$display_type][$entity_type_id];
+    }
+    else {
+      $display_modes = $this->getAllDisplayModesByEntityType($display_type);
+      if (isset($display_modes[$entity_type_id])) {
+        return $display_modes[$entity_type_id];
+      }
+    }
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getViewModeOptions($entity_type, $include_disabled = FALSE) {
+    return $this->getDisplayModeOptions('view_mode', $entity_type, $include_disabled);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormModeOptions($entity_type, $include_disabled = FALSE) {
+    return $this->getDisplayModeOptions('form_mode', $entity_type, $include_disabled);
+  }
+
+  /**
+   * Returns an array of display mode options.
+   *
+   * @param string $display_type
+   *   The display type to be retrieved. It can be "view_mode" or "form_mode".
+   * @param string $entity_type_id
+   *   The entity type whose display mode options should be returned.
+   * @param bool $include_disabled
+   *   Force to include disabled display modes. Defaults to FALSE.
+   *
+   * @return array
+   *   An array of display mode labels, keyed by the display mode ID.
+   */
+  protected function getDisplayModeOptions($display_type, $entity_type_id, $include_disabled = FALSE) {
+    $options = array('default' => t('Default'));
+    foreach ($this->getDisplayModesByEntityType($display_type, $entity_type_id) as $mode => $settings) {
+      if (!empty($settings['status']) || $include_disabled) {
+        $options[$mode] = $settings['label'];
+      }
+    }
+    return $options;
   }
 
 }

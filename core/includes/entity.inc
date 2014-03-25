@@ -14,7 +14,6 @@ use Drupal\Core\Language\Language;
  * Resets the cached information about entity types.
  */
 function entity_info_cache_clear() {
-  drupal_static_reset('entity_get_view_modes');
   // Clear all languages.
   \Drupal::entityManager()->clearCachedDefinitions();
   \Drupal::entityManager()->clearCachedFieldDefinitions();
@@ -83,77 +82,45 @@ function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = N
 /**
  * Returns the entity form mode info.
  *
- * @param string|null $entity_type
+ * @param string|null $entity_type_id
  *   The entity type whose form mode info should be returned, or NULL for all
  *   form mode info. Defaults to NULL.
  *
  * @return array
  *   The form mode info for a specific entity type, or all entity types.
+ *
+ * @deprecated Use \Drupal::entityManager()->getFormModes() or
+ *   \Drupal::entityManager()->getAllFormModes().
  */
-function entity_get_form_modes($entity_type = NULL) {
-  $form_modes = &drupal_static(__FUNCTION__);
-  if (!$form_modes) {
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
-    if ($cache = \Drupal::cache()->get("entity_form_mode_info:$langcode")) {
-      $form_modes = $cache->data;
-    }
-    else {
-      $form_modes = array();
-      foreach (entity_load_multiple('form_mode') as $form_mode) {
-        list($form_mode_entity_type, $form_mode_name) = explode('.', $form_mode->id(), 2);
-        $form_modes[$form_mode_entity_type][$form_mode_name] = (array) $form_mode;
-      }
-      \Drupal::moduleHandler()->alter('entity_form_mode_info', $form_modes);
-      \Drupal::cache()->set("entity_form_mode_info:$langcode", $form_modes, Cache::PERMANENT, array('entity_types' => TRUE));
-    }
+function entity_get_form_modes($entity_type_id = NULL) {
+  if (isset($entity_type_id)) {
+    return \Drupal::entityManager()->getFormModes($entity_type_id);
   }
-
-  if (empty($entity_type)) {
-    return $form_modes;
+  else {
+    return \Drupal::entityManager()->getAllFormModes();
   }
-  elseif (isset($form_modes[$entity_type])) {
-    return $form_modes[$entity_type];
-  }
-
-  return array();
 }
 
 /**
  * Returns the entity view mode info.
  *
- * @param string|null $entity_type
+ * @param string|null $entity_type_id
  *   The entity type whose view mode info should be returned, or NULL for all
  *   view mode info. Defaults to NULL.
  *
  * @return array
  *   The view mode info for a specific entity type, or all entity types.
+ *
+ * @deprecated Use \Drupal::entityManager()->getViewModes() or
+ *   \Drupal::entityManager()->getAllViewModes().
  */
-function entity_get_view_modes($entity_type = NULL) {
-  $view_modes = &drupal_static(__FUNCTION__);
-  if (!$view_modes) {
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
-    if ($cache = \Drupal::cache()->get("entity_view_mode_info:$langcode")) {
-      $view_modes = $cache->data;
-    }
-    else {
-      $view_modes = array();
-      foreach (entity_load_multiple('view_mode') as $view_mode) {
-        list($view_mode_entity_type, $view_mode_name) = explode('.', $view_mode->id(), 2);
-        $view_modes[$view_mode_entity_type][$view_mode_name] = (array) $view_mode;
-      }
-      \Drupal::moduleHandler()->alter('entity_view_mode_info', $view_modes);
-      \Drupal::cache()->set("entity_view_mode_info:$langcode", $view_modes, Cache::PERMANENT, array('entity_types' => TRUE));
-    }
+function entity_get_view_modes($entity_type_id = NULL) {
+  if (isset($entity_type_id)) {
+    return \Drupal::entityManager()->getViewModes($entity_type_id);
   }
-
-  if (empty($entity_type)) {
-    return $view_modes;
+  else {
+    return \Drupal::entityManager()->getAllViewModes();
   }
-  elseif (isset($view_modes[$entity_type])) {
-    return $view_modes[$entity_type];
-  }
-
-  return array();
 }
 
 /**

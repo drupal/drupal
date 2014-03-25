@@ -57,10 +57,9 @@ class Entity extends TokenizeAreaPluginBase {
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $options = $this->buildViewModeOptions();
     $form['view_mode'] = array(
       '#type' => 'select',
-      '#options' => $options,
+      '#options' => \Drupal::entityManager()->getViewModeOptions($this->entityType),
       '#title' => t('View mode'),
       '#default_value' => $this->options['view_mode'],
     );
@@ -77,22 +76,6 @@ class Entity extends TokenizeAreaPluginBase {
       '#description' => t('If enabled, access permissions for rendering the entity are not checked.'),
       '#default_value' => !empty($this->options['bypass_access']),
     );
-  }
-
-  /**
-   * Return the main options, which are shown in the summary title.
-   *
-   * @return array
-   *   All view modes of the entity type.
-   */
-  protected function buildViewModeOptions() {
-    $options = array('default' => t('Default'));
-    $view_modes = entity_get_view_modes($this->entityType);
-    foreach ($view_modes as $mode => $settings) {
-      $options[$mode] = $settings['label'];
-    }
-
-    return $options;
   }
 
   /**

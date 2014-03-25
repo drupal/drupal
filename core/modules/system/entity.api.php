@@ -144,7 +144,8 @@ function hook_entity_type_alter(array &$entity_types) {
  * @param array $view_modes
  *   An array of view modes, keyed first by entity type, then by view mode name.
  *
- * @see entity_get_view_modes()
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getAllViewModes()
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getViewModes()
  * @see hook_entity_view_mode_info()
  */
 function hook_entity_view_mode_info_alter(&$view_modes) {

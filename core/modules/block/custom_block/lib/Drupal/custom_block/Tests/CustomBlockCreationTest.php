@@ -80,7 +80,6 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
 
     // Test the available view mode options.
     $this->assertOption('edit-settings-custom-block-view-mode', 'default', 'The default view mode is available.');
-    $this->assertOption('edit-settings-custom-block-view-mode', 'full', 'The full view mode is available.');
 
     // Check that the block exists in the database.
     $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info']));

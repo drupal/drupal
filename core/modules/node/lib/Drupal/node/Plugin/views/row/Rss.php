@@ -62,7 +62,7 @@ class Rss extends RowPluginBase {
    * Return the main options, which are shown in the summary title.
    */
   public function buildOptionsForm_summary_options() {
-    $view_modes = entity_get_view_modes('node');
+    $view_modes = \Drupal::entityManager()->getViewModes('node');
     $options = array();
     foreach ($view_modes as $mode => $settings) {
       $options[$mode] = $settings['label'];

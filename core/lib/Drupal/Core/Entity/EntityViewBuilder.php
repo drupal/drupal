@@ -362,7 +362,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       // The 'default' is not an actual view mode.
       return TRUE;
     }
-    $view_modes_info = entity_get_view_modes($this->entityTypeId);
+    $view_modes_info = $this->entityManager->getViewModes($this->entityTypeId);
     return !empty($view_modes_info[$view_mode]['cache']);
   }
 

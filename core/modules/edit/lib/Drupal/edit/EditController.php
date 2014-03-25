@@ -265,7 +265,7 @@ class EditController extends ControllerBase {
    * @see hook_edit_render_field()
    */
   protected function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
-    $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->getEntityTypeId()));
+    $entity_view_mode_ids = array_keys($this->entityManager()->getViewModes($entity->getEntityTypeId()));
     if (in_array($view_mode_id, $entity_view_mode_ids)) {
       $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
       $output = $entity->get($field_name)->view($view_mode_id);

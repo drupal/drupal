@@ -429,7 +429,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
 
     // The teaser view mode is created by the Standard profile and therefore
     // might not exist.
-    $view_modes = entity_get_view_modes('node');
+    $view_modes = \Drupal::entityManager()->getViewModes('node');
     if (isset($view_modes['teaser'])) {
       entity_get_display('node', $type->type, 'teaser')
         ->setComponent('body', array(

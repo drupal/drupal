@@ -134,7 +134,7 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
 
         // One local task for each form mode.
         $weight = 0;
-        foreach (entity_get_form_modes($entity_type_id) as $form_mode => $form_mode_info) {
+        foreach ($this->entityManager->getFormModes($entity_type_id) as $form_mode => $form_mode_info) {
           $this->derivatives['field_form_display_' . $form_mode . '_' . $entity_type_id] = array(
             'title' => $form_mode_info['label'],
             'route_name' => "field_ui.form_display_overview_form_mode_$entity_type_id",
@@ -148,7 +148,7 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
 
         // One local task for each view mode.
         $weight = 0;
-        foreach (entity_get_view_modes($entity_type_id) as $view_mode => $form_mode_info) {
+        foreach ($this->entityManager->getViewModes($entity_type_id) as $view_mode => $form_mode_info) {
           $this->derivatives['field_display_' . $view_mode . '_' . $entity_type_id] = array(
             'title' => $form_mode_info['label'],
             'route_name' => "field_ui.display_overview_view_mode_$entity_type_id",
@@ -185,11 +185,11 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
         $local_tasks["field_ui.fields:field_form_display_default_$entity_type"]['base_route'] = $admin_form;
         $local_tasks["field_ui.fields:field_display_default_$entity_type"]['base_route'] = $admin_form;
 
-        foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
+        foreach ($this->entityManager->getFormModes($entity_type) as $form_mode => $form_mode_info) {
           $local_tasks['field_ui.fields:field_form_display_' . $form_mode . '_' . $entity_type]['base_route'] = $admin_form;
         }
 
-        foreach (entity_get_view_modes($entity_type) as $view_mode => $form_mode_info) {
+        foreach ($this->entityManager->getViewModes($entity_type) as $view_mode => $form_mode_info) {
           $local_tasks['field_ui.fields:field_display_' . $view_mode . '_' . $entity_type]['base_route'] = $admin_form;
         }
       }

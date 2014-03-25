@@ -74,7 +74,7 @@ class Rss extends RowPluginBase {
    * in views_plugin_row_comment|node_rss.inc
    */
   function options_form_summary_options() {
-    $view_modes = entity_get_view_modes('node');
+    $view_modes = \Drupal::entityManager()->getViewModes('node');
     $options = array();
     foreach ($view_modes as $mode => $settings) {
       $options[$mode] = $settings['label'];
