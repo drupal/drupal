@@ -672,6 +672,13 @@ th.select-all {
 }
 
 /**
+ * Captions.
+ */
+.caption {
+  margin-bottom: 1.2em;
+}
+
+/**
  * Status report table.
  */
 table.system-status-report tr {
