@@ -274,7 +274,8 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
    */
   public function resetCache(array $entities = NULL) {
     if (isset($entities)) {
-      $tags = array();
+      // Always invalidate the ENTITY_TYPE_list tag.
+      $tags = array($this->entityTypeId . '_list' => TRUE);
       foreach ($entities as $entity) {
         $id = $entity->id();
         $tags[$this->entityTypeId][$id] = $id;

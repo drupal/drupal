@@ -332,41 +332,19 @@ abstract class CachePluginBase extends PluginBase {
    *   An array fo cache tags based on the current view.
    */
   protected function getCacheTags() {
-    $tags = array();
     $id = $this->view->storage->id();
-
-    $tags['view'][$id] = $id;
+    $tags = array('view' => array($id => $id));
 
     $entity_information = $this->view->query->getEntityTableInfo();
 
     if (!empty($entity_information)) {
-      // Add an ENTITY_TYPE_view tag for each entity type used by this view.
-      foreach (array_keys($entity_information) as $type) {
-        $tags[$type . '_view'] = TRUE;
-      }
-
-      // Collect entity IDs if there are view results.
-      if (!empty($this->view->result)) {
-        foreach ($this->view->result as $result) {
-          $type = $result->_entity->getEntityTypeId();
-
-          $tags[$type][] = $result->_entity->id();
-          $tags[$type . '_view_' . $result->_entity->bundle()] = TRUE;
-
-          foreach ($result->_relationship_entities as $entity) {
-            $type = $entity->getEntityTypeId();
-
-            $tags[$type][] = $entity->id();
-            $tags[$type . '_view_' . $entity->bundle()] = TRUE;
-          }
-        }
+      // Add an ENTITY_TYPE_list tag for each entity type used by this view.
+      foreach (array_keys($entity_information) as $entity_type) {
+        $tags[$entity_type . '_list'] = TRUE;
       }
     }
 
-    // Filter out any duplicate values from generated tags.
-    return array_map(function($item) {
-      return is_array($item) ? array_unique($item) : $item;
-    }, $tags);
+    return $tags;
   }
 
 }

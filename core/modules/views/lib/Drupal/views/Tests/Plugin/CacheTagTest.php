@@ -144,37 +144,21 @@ class CacheTagTest extends PluginTestBase {
     $view->destroy();
     $view->render();
 
-    // Test that invalidating a tag for a different node type, does not
-    // invalidate the cache.
-    $cache_plugin = $view->display_handler->getPlugin('cache');
-    $this->assertTrue($cache_plugin->cacheGet('results'), 'Results cache found.');
-    $this->assertTrue($cache_plugin->cacheGet('output'), 'Output cache found.');
-
-    $this->nodeViewBuilder->resetCache(array($this->article));
-
-    $cache_plugin = $view->display_handler->getPlugin('cache');
-    $this->assertTrue($cache_plugin->cacheGet('results'), 'Results cache found after an article node is invalidated.');
-    $this->assertTrue($cache_plugin->cacheGet('output'), 'Output cache found after an article node is invalidated.');
-
-    $view->destroy();
-    $view->render();
-
-    // Test that saving a node for a different node type, does not invalidate
-    // the cache.
+    // Test saving a node not in this view invalidates the cache too.
     $cache_plugin = $view->display_handler->getPlugin('cache');
     $this->assertTrue($cache_plugin->cacheGet('results'), 'Results cache found.');
     $this->assertTrue($cache_plugin->cacheGet('output'), 'Output cache found.');
 
     $this->article->save();
 
-    $cache_plugin = $view->display_handler->getPlugin('cache');
-    $this->assertTrue($cache_plugin->cacheGet('results'), 'Results cache found after an article node is saved.');
-    $this->assertTrue($cache_plugin->cacheGet('output'), 'Output cache found after an article node is saved.');
+    $this->assertFalse($cache_plugin->cacheGet('results'), 'Results cache empty after an article node is saved.');
+    $this->assertFalse($cache_plugin->cacheGet('output'), 'Output cache empty after an article node is saved.');
 
     $view->destroy();
     $view->render();
 
-    // Test that invalidating a tag for a user, does not invalidate the cache.
+    // Test that invalidating a tag for a user, does not invalidate the cache,
+    // as the user entity type will not be contained in the views cache tags.
     $cache_plugin = $view->display_handler->getPlugin('cache');
     $this->assertTrue($cache_plugin->cacheGet('results'), 'Results cache found.');
     $this->assertTrue($cache_plugin->cacheGet('output'), 'Output cache found.');
