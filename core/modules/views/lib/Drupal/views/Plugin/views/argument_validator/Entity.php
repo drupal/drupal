@@ -32,9 +32,11 @@ class Entity extends ArgumentValidatorPluginBase {
   protected $entityManager;
 
   /**
-   * Boolean if this validator can handle multiple arguments.
+   * If this validator can handle multiple arguments.
+   *
+   * @var bool
    */
-  protected $multipleCapable;
+  protected $multipleCapable = TRUE;
 
   /**
    * Constructs an \Drupal\views\Plugin\views\argument_validator\Entity object.
@@ -50,8 +52,8 @@ class Entity extends ArgumentValidatorPluginBase {
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
     $this->entityManager = $entity_manager;
-    $this->multipleCapable = TRUE;
   }
 
   /**
@@ -91,39 +93,37 @@ class Entity extends ArgumentValidatorPluginBase {
     // The ID is converted back on submission.
     $sanitized_id = ArgumentPluginBase::encodeValidatorId($this->definition['id']);
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
-    $bundle_type = $entity_type->getKey('bundle');
 
     // If the entity has bundles, allow option to restrict to bundle(s).
-    if ($bundle_type) {
-      $bundles = entity_get_bundles($entity_type_id);
+    if ($entity_type->hasKey('bundle')) {
       $bundle_options = array();
-      foreach ($bundles as $bundle_id => $bundle_info) {
+      foreach ($this->entityManager->getBundleInfo($entity_type_id) as $bundle_id => $bundle_info) {
         $bundle_options[$bundle_id] = $bundle_info['label'];
       }
-      $bundles_title = $entity_type->getBundleLabel() ?: $this->t('Bundles');
-      if ($entity_type->isSubclassOf('Drupal\Core\Entity\ContentEntityInterface')) {
-        $fields = $this->entityManager->getBaseFieldDefinitions($entity_type_id);
-      }
-      $bundle_name = (empty($fields) || empty($fields[$bundle_type]['label'])) ? t('bundles') : $fields[$bundle_type]['label'];
+
       $form['bundles'] = array(
-        '#title' => $bundles_title,
+        '#title' => $entity_type->getBundleLabel() ?: $this->t('Bundles'),
         '#default_value' => $this->options['bundles'],
         '#type' => 'checkboxes',
         '#options' => $bundle_options,
-        '#description' => t('Restrict to one or more %bundle_name. If none selected all are allowed.', array('%bundle_name' => $bundle_name)),
+        '#description' => $this->t('If none are selected, all are allowed.'),
       );
     }
 
     // Offer the option to filter by access to the entity in the argument.
     $form['access'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Validate user has access to the %name', array('%name' => $entity_type->getLabel())),
+      '#title' => $this->t('Validate user has access to the %name', array('%name' => $entity_type->getLabel())),
       '#default_value' => $this->options['access'],
     );
     $form['operation'] = array(
       '#type' => 'radios',
-      '#title' => t('Access operation to check'),
-      '#options' => array('view' => t('View'), 'update' => t('Edit'), 'delete' => t('Delete')),
+      '#title' => $this->t('Access operation to check'),
+      '#options' => array(
+        'view' => $this->t('View'),
+        'update' => $this->t('Edit'),
+        'delete' => $this->t('Delete'),
+      ),
       '#default_value' => $this->options['operation'],
       '#states' => array(
         'visible' => array(
@@ -136,10 +136,10 @@ class Entity extends ArgumentValidatorPluginBase {
     if ($this->multipleCapable) {
       $form['multiple'] = array(
         '#type' => 'radios',
-        '#title' => t('Multiple arguments'),
+        '#title' => $this->t('Multiple arguments'),
         '#options' => array(
-          0 => t('Single ID', array('%type' => $entity_type->getLabel())),
-          1 => t('One or more IDs separated by , or +', array('%type' => $entity_type->getLabel())),
+          0 => $this->t('Single ID', array('%type' => $entity_type->getLabel())),
+          1 => $this->t('One or more IDs separated by , or +', array('%type' => $entity_type->getLabel())),
         ),
         '#default_value' => (string) $this->options['multiple'],
       );
@@ -160,7 +160,7 @@ class Entity extends ArgumentValidatorPluginBase {
   public function validateArgument($argument) {
     $entity_type = $this->definition['entity_type'];
 
-    if ($this->options['multiple']) {
+    if ($this->multipleCapable && $this->options['multiple']) {
       // At this point only interested in individual IDs no matter what type,
       // just splitting by the allowed delimiters.
       $ids = array_filter(preg_split('/[,+ ]/', $argument));
@@ -170,7 +170,6 @@ class Entity extends ArgumentValidatorPluginBase {
     }
     // No specified argument should be invalid.
     else {
-      $ids = array();
       return FALSE;
     }
 

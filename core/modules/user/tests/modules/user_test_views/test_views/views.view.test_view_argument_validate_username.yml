@@ -16,7 +16,7 @@ display:
           style_plugin: default_summary
           table: views
           validate:
-            type: entity:user
+            type: user_name
           plugin_id: 'null'
           provider: views
       cache:
@@ -34,5 +34,5 @@ display:
     id: default
     position: 0
 label: ''
-id: test_view_argument_validate_user
+id: test_view_argument_validate_username
 tag: ''
