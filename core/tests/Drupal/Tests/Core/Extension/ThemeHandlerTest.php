@@ -283,6 +283,7 @@ class ThemeHandlerTest extends UnitTestCase {
         'style.css' => DRUPAL_ROOT . '/core/themes/seven/style.css',
         'css/components/buttons.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.css',
         'css/components/buttons.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.theme.css',
+        'dialog.theme.css' => DRUPAL_ROOT . '/core/themes/seven/dialog.theme.css',
       ),
     ), $info->info['stylesheets']);
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/screenshot.png', $info->info['screenshot']);
