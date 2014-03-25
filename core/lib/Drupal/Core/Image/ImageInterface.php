@@ -119,7 +119,7 @@ interface ImageInterface {
   /**
    * Returns the image toolkit used for this image file.
    *
-   * @return string
+   * @return \Drupal\Core\ImageToolkit\ImageToolkitInterface
    *   The image toolkit.
    */
   public function getToolkit();
