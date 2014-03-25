@@ -1637,13 +1637,14 @@ ol.search-results {
 }
 
 /* -------------- Captions -------------- */
-
+.caption {
+  margin-bottom: 1.2em;
+}
 .caption > * {
   background: #F3F3F3;
   padding: 0.5ex;
   border: 1px solid #CCC;
 }
-
 .caption > figcaption {
   border: 1px solid #CCC;
   border-top: none;
