@@ -30,6 +30,12 @@ class InstallerTest extends InstallerTestBase {
     $this->assertResponse(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->root_user->getUsername());
+
+    // Verify that the confirmation message appears.
+    require_once DRUPAL_ROOT . '/core/includes/install.inc';
+    $this->assertRaw(t('Congratulations, you installed @drupal!', array(
+      '@drupal' => drupal_install_profile_distribution_name(),
+    )));
   }
 
 }

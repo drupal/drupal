@@ -47,19 +47,6 @@ class InstallerTranslationTest extends InstallerTestBase {
   }
 
   /**
-   * Overrides InstallerTest::setUpConfirm().
-   */
-  protected function setUpConfirm() {
-    // We don't know the translated link text of "Visit your new site", but
-    // luckily, there is only one link.
-    $elements = $this->xpath('//a');
-    $string = (string) current($elements);
-    $this->assertNotEqual($string, 'Visit your new site');
-    $this->translations['Visit your new site'] = $string;
-    parent::setUpConfirm();
-  }
-
-  /**
    * Verifies that installation succeeded.
    */
   public function testInstaller() {

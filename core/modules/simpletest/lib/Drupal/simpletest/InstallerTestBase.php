@@ -55,7 +55,6 @@ abstract class InstallerTestBase extends WebTestBase {
    */
   protected $translations = array(
     'Save and continue' => 'Save and continue',
-    'Visit your new site' => 'Visit your new site',
   );
 
   /**
@@ -108,9 +107,6 @@ abstract class InstallerTestBase extends WebTestBase {
 
     // Configure site.
     $this->setUpSite();
-
-    // Confirm installation.
-    $this->setUpConfirm();
 
     // Import new settings.php written by the installer.
     drupal_settings_initialize();
@@ -178,13 +174,6 @@ abstract class InstallerTestBase extends WebTestBase {
   protected function setUpSite() {
     $edit = $this->translatePostValues($this->parameters['forms']['install_configure_form']);
     $this->drupalPostForm(NULL, $edit, $this->translations['Save and continue']);
-  }
-
-  /**
-   * Installer step: Confirm installation.
-   */
-  protected function setUpConfirm() {
-    $this->clickLink($this->translations['Visit your new site']);
   }
 
   /**
