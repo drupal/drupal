@@ -901,6 +901,22 @@ function system_theme_suggestions_region(array $variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function system_theme_suggestions_field(array $variables) {
+  $suggestions = array();
+  $element = $variables['element'];
+
+  $suggestions[] = 'field__' . $element['#field_type'];
+  $suggestions[] = 'field__' . $element['#field_name'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#bundle'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'];
+
+  return $suggestions;
+}
+
+/**
  * Implements hook_stream_wrappers().
  */
 function system_stream_wrappers() {
