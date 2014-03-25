@@ -106,7 +106,7 @@ class FilterCaption extends FilterBase {
    */
   public function tips($long = FALSE) {
     if ($long) {
-      return t('
+      return $this->t('
         <p>You can add image captions and align images left, right or centered. Examples:</p>
         <ul>
           <li>Caption an image: <code>&lt;img src="" data-caption="This is a caption" /&gt;</code></li>
@@ -115,7 +115,7 @@ class FilterCaption extends FilterBase {
         </ul>');
     }
     else {
-      return t('You can caption (data-caption="Text") and align images (data-align="center"), but also video, blockquotes, and so on.');
+      return $this->t('You can caption (data-caption="Text") and align images (data-align="center"), but also video, blockquotes, and so on.');
     }
   }
 }

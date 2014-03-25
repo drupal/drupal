@@ -40,7 +40,7 @@ class FilterHtmlEscape extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    return t('No HTML tags allowed.');
+    return $this->t('No HTML tags allowed.');
   }
 
 }

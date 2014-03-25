@@ -29,11 +29,11 @@ class FilterUrl extends FilterBase {
   public function settingsForm(array $form, array &$form_state) {
     $form['filter_url_length'] = array(
       '#type' => 'number',
-      '#title' => t('Maximum link text length'),
+      '#title' => $this->t('Maximum link text length'),
       '#default_value' => $this->settings['filter_url_length'],
       '#min' => 1,
-      '#field_suffix' => t('characters'),
-      '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),
+      '#field_suffix' => $this->t('characters'),
+      '#description' => $this->t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),
     );
     return $form;
   }
@@ -49,7 +49,7 @@ class FilterUrl extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    return t('Web page addresses and e-mail addresses turn into links automatically.');
+    return $this->t('Web page addresses and e-mail addresses turn into links automatically.');
   }
 
 }

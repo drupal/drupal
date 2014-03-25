@@ -33,7 +33,7 @@ class FilterHtmlImageSecure extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    return t('Only images hosted on this site may be used in &lt;img&gt; tags.');
+    return $this->t('Only images hosted on this site may be used in &lt;img&gt; tags.');
   }
 
 }

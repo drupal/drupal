@@ -63,7 +63,7 @@ class FilterNull extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    return t('Missing filter. All text is removed');
+    return $this->t('Missing filter. All text is removed');
   }
 
 }
