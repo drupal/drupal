@@ -50,7 +50,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
         // If a plugin defined itself as a derivative, merge in possible
         // defaults from the derivative.
         if ($derivative_id && isset($plugin_definition)) {
-          $plugin_definition += $derivative_plugin_definition ?: array();
+          $plugin_definition = $this->mergeDerivativeDefinition($plugin_definition, $derivative_plugin_definition);
         }
         else {
           $plugin_definition = $derivative_plugin_definition;
@@ -90,7 +90,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
           // Use this definition as defaults if a plugin already defined
           // itself as this derivative.
           if ($derivative_id && isset($base_plugin_definitions[$plugin_id])) {
-            $derivative_definition = $base_plugin_definitions[$plugin_id] + ($derivative_definition ?: array());
+            $derivative_definition = $this->mergeDerivativeDefinition($base_plugin_definitions[$plugin_id], $derivative_definition);
           }
           $plugin_definitions[$plugin_id] = $derivative_definition;
         }
@@ -197,6 +197,26 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
       }
     }
     return $class;
+  }
+
+  /**
+   * Merges a base and derivative definition, taking into account empty values.
+   *
+   * @param array $base_plugin_definition
+   *   The base plugin definition.
+   * @param array $derivative_definition
+   *   The derivative plugin definition.
+   *
+   * @return array
+   *   The merged definition.
+   */
+  protected function mergeDerivativeDefinition($base_plugin_definition, $derivative_definition) {
+    // Use this definition as defaults if a plugin already defined itself as
+    // this derivative, but filter out empty values first.
+    $filtered_base = array_filter($base_plugin_definition);
+    $derivative_definition = $filtered_base + ($derivative_definition ?: array());
+    // Add back any empty keys that the derivative didn't have.
+    return $derivative_definition + $base_plugin_definition;
   }
 
   /**

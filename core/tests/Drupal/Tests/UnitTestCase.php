@@ -83,6 +83,18 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     return $this->randomGenerator;
   }
 
+  /**
+   * Asserts if two arrays are equal by sorting them first.
+   *
+   * @param array $expected
+   * @param array $actual
+   * @param string $message
+   */
+  protected function assertArrayEquals(array $expected, array $actual, $message = NULL) {
+    ksort($expected);
+    ksort($actual);
+    $this->assertEquals($expected, $actual, $message);
+  }
 
   /**
    * Returns a stub config factory that behaves according to the passed in array.
