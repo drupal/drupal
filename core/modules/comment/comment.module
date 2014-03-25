@@ -12,7 +12,6 @@
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -863,13 +862,9 @@ function comment_entity_load($entities, $entity_type) {
     // Do not query database when entity has no comment fields.
     return;
   }
-  // Load comment information from the database and update the entity's comment
-  // statistics properties, which are defined on each CommentItem field.
-  $result = db_select('comment_entity_statistics', 'ces')
-    ->fields('ces')
-    ->condition('ces.entity_id', array_keys($entities))
-    ->condition('ces.entity_type', $entity_type)
-    ->execute();
+  // Load comment information from the database and update the entity's
+  // comment statistics properties, which are defined on each CommentItem field.
+  $result = \Drupal::service('comment.statistics')->read($entities, $entity_type);
   foreach ($result as $record) {
     $parts = explode('__', $record->field_id, 2);
     list(, $field_name) = $parts;
@@ -895,54 +890,7 @@ function comment_entity_insert(EntityInterface $entity) {
   // maintenance of the {comment_entity_statistics} table.
   if (\Drupal::state()->get('comment.maintain_entity_statistics') &&
     $fields = \Drupal::service('comment.manager')->getFields($entity->getEntityTypeId())) {
-    $query = db_insert('comment_entity_statistics')
-     ->fields(array(
-      'entity_id',
-      'entity_type',
-      'field_id',
-      'cid',
-      'last_comment_timestamp',
-      'last_comment_name',
-      'last_comment_uid',
-      'comment_count',
-    ));
-    $execute_query = FALSE;
-    foreach ($fields as $field_name => $detail) {
-      // Skip fields that entity does not have.
-      if (!$entity->hasField($field_name)) {
-        continue;
-      }
-      // There is at least one comment field, the query needs to be executed.
-      $execute_query = TRUE;
-      // Get the user ID from the entity if it is set, or default to the
-      // currently logged in user.
-      if ($entity instanceof EntityOwnerInterface) {
-        $last_comment_uid = $entity->getOwnerId();
-      }
-      if (!isset($last_comment_uid)) {
-        // Default to current user when entity does not implement
-        // EntityOwnerInterface or author is not set.
-        $last_comment_uid = \Drupal::currentUser()->id();
-      }
-      // Default to REQUEST_TIME when entity does not have a changed property.
-      $last_comment_timestamp = REQUEST_TIME;
-      if ($entity instanceof EntityChangedInterface) {
-        $last_comment_timestamp = $entity->getChangedTime();
-      }
-      $query->values(array(
-        'entity_id' => $entity->id(),
-        'entity_type' => $entity->getEntityTypeId(),
-        'field_id' => $entity->getEntityTypeId() . '__' . $field_name,
-        'cid' => 0,
-        'last_comment_timestamp' => $last_comment_timestamp,
-        'last_comment_name' => NULL,
-        'last_comment_uid' => $last_comment_uid,
-        'comment_count' => 0,
-      ));
-    }
-    if ($execute_query) {
-      $query->execute();
-    }
+    \Drupal::service('comment.statistics')->create($entity, $fields);
   }
 }
 
@@ -964,10 +912,7 @@ function comment_entity_predelete(EntityInterface $entity) {
       ->execute()
       ->fetchCol();
     entity_delete_multiple('comment', $cids);
-    db_delete('comment_entity_statistics')
-      ->condition('entity_id', (int) $entity->id())
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->execute();
+    \Drupal::service('comment.statistics')->delete($entity);
   }
 }
 
@@ -1028,7 +973,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 function comment_cron() {
   // Store the maximum possible comments per thread (used for node search
   // ranking by reply count).
-  \Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1.0, db_query('SELECT MAX(comment_count) FROM {comment_entity_statistics}')->fetchField()));
+  \Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1, \Drupal::service('comment.statistics')->getMaximumCount('node')));
 }
 
 /**
@@ -1530,25 +1475,7 @@ function _comment_per_page() {
  * Implements hook_ranking().
  */
 function comment_ranking() {
-  return array(
-    'comments' => array(
-      'title' => t('Number of comments'),
-      'join' => array(
-        'type' => 'LEFT',
-        'table' => 'comment_entity_statistics',
-        'alias' => 'ces',
-        // Default to comment field as this is the most common use case for
-        // nodes.
-        'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_id = 'node__comment'",
-      ),
-      // Inverse law that maps the highest reply count on the site to 1 and 0
-      // to 0. Note that the CAST here is necessary for PostgreSQL, because the
-      // PostgreSQL PDO driver sometimes puts values in as strings instead of
-      // numbers in complex expressions like this.
-      'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * (CAST (:comment_scale AS DECIMAL(10, 4))))',
-      'arguments' => array(':comment_scale' => \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
-    ),
-  );
+  return \Drupal::service('comment.statistics')->getRankingInfo();
 }
 
 /**

@@ -9,6 +9,10 @@ services:
     class: Drupal\comment\CommentManager
     arguments: ['@field.info', '@entity.manager', '@current_user', '@config.factory', '@string_translation', '@url_generator']
 
+  comment.statistics:
+    class: Drupal\comment\CommentStatistics
+    arguments: ['@database', '@current_user', '@entity.manager', '@state']
+
   comment.route_enhancer:
       class: Drupal\comment\Routing\CommentBundleEnhancer
       arguments: ['@entity.manager']
