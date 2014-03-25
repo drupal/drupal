@@ -88,7 +88,7 @@ class EditFieldForm extends FormBase {
     }
 
     // Add the field form.
-    field_attach_form($form_state['entity'], $form, $form_state, $form_state['langcode'], array('field_name' =>  $form_state['field_name']));
+    $form_state['form_display']->buildForm($entity, $form, $form_state);
 
     // Add a dummy changed timestamp field to attach form errors to.
     if ($entity instanceof EntityChangedInterface) {
@@ -128,9 +128,15 @@ class EditFieldForm extends FormBase {
     $form_state['entity'] = $entity;
     $form_state['field_name'] = $field_name;
 
-    // @todo Allow the usage of different form modes by exposing a hook and the
-    //   UI for them.
-    $form_state['form_display'] = EntityFormDisplay::collectRenderDisplay($entity, 'default');
+    // Fetch the display used by the form. It is the display for the 'default'
+    // form mode, with only the current field visible.
+    $display = EntityFormDisplay::collectRenderDisplay($entity, 'default');
+    foreach ($display->getComponents() as $name => $optipns) {
+      if ($name != $field_name) {
+        $display->removeComponent($name);
+      }
+    }
+    $form_state['form_display'] = $display;
   }
 
   /**
@@ -138,7 +144,8 @@ class EditFieldForm extends FormBase {
    */
   public function validateForm(array &$form, array &$form_state) {
     $entity = $this->buildEntity($form, $form_state);
-    field_attach_form_validate($entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
+
+    $form_state['form_display']->validateFormValues($entity, $form, $form_state);
 
     // Do validation on the changed field as well and assign the error to the
     // dummy form element we added for this. We don't know the name of this
@@ -174,7 +181,7 @@ class EditFieldForm extends FormBase {
     $entity = clone $form_state['entity'];
     $field_name = $form_state['field_name'];
 
-    field_attach_extract_form_values($entity, $form, $form_state, array('field_name' => $field_name));
+    $form_state['form_display']->extractFormValues($entity, $form, $form_state);
 
     // @todo Refine automated log messages and abstract them to all entity
     //   types: http://drupal.org/node/1678002.

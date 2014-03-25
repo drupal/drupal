@@ -16,7 +16,6 @@ use Drupal\field\Field;
  * every page request.
  */
 require_once __DIR__ . '/field.info.inc';
-require_once __DIR__ . '/field.attach.inc';
 require_once __DIR__ . '/field.form.inc';
 require_once __DIR__ . '/field.purge.inc';
 require_once __DIR__ . '/field.deprecated.inc';

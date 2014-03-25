@@ -2,7 +2,7 @@ field_test.entity_nested_form:
   path: '/test-entity/nested/{entity_1}/{entity_2}'
   defaults:
     _title: 'Nested entity form'
-    _content: '\Drupal\field_test\Form\FieldTestForm::testEntityNestedForm'
+    _form: '\Drupal\field_test\Form\NestedEntityTestForm'
   options:
     parameters:
       entity_1:

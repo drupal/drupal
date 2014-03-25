@@ -11,6 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
 use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Base class for 'Field widget' plugin implementations.
@@ -61,7 +62,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $field_state = array(
         'items_count' => count($items),
         'array_parents' => array(),
-        'constraint_violations' => array(),
       );
       field_form_set_state($parents, $field_name, $form_state, $field_state);
     }
@@ -355,12 +355,12 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function flagErrors(FieldItemListInterface $items, array $form, array &$form_state) {
+  public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, array &$form_state) {
     $field_name = $this->fieldDefinition->getName();
 
     $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
 
-    if (!empty($field_state['constraint_violations'])) {
+    if ($violations->count()) {
       $form_builder = \Drupal::formBuilder();
 
       // Locate the correct element in the the form.
@@ -384,7 +384,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         $handles_multiple = $this->handlesMultipleValues();
 
         $violations_by_delta = array();
-        foreach ($field_state['constraint_violations'] as $violation) {
+        foreach ($violations as $violation) {
           // Separate violations by delta.
           $property_path = explode('.', $violation->getPropertyPath());
           $delta = array_shift($property_path);
@@ -396,6 +396,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           $violation->arrayPropertyPath = $property_path;
         }
 
+        /** @var \Symfony\Component\Validator\ConstraintViolationInterface[] $delta_violations */
         foreach ($violations_by_delta as $delta => $delta_violations) {
           // Pass violations to the main element:
           // - if this is a multiple-value widget,
@@ -416,9 +417,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
             }
           }
         }
-        // Reinitialize the errors list for the next submit.
-        $field_state['constraint_violations'] = array();
-        field_form_set_state($form['#parents'], $field_name, $form_state, $field_state);
       }
     }
   }

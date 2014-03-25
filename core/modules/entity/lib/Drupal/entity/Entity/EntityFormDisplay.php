@@ -7,6 +7,7 @@
 
 namespace Drupal\entity\Entity;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\entity\EntityDisplayBase;
 
@@ -49,7 +50,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * party code to alter the display options held in the display before they are
    * used to generate render arrays.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity for which the form is being built.
    * @param string $form_mode
    *   The form mode.
@@ -60,7 +61,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * @see entity_get_form_display()
    * @see hook_entity_form_display_alter()
    */
-  public static function collectRenderDisplay($entity, $form_mode) {
+  public static function collectRenderDisplay(ContentEntityInterface $entity, $form_mode) {
     $entity_type = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
 
@@ -142,6 +143,83 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Persist the widget object.
     $this->plugins[$field_name] = $widget;
     return $widget;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(ContentEntityInterface $entity, array &$form, array &$form_state) {
+    // Set #parents to 'top-level' by default.
+    $form += array('#parents' => array());
+
+    // Let each widget generate the form elements.
+    foreach ($entity as $name => $items) {
+      if ($widget = $this->getRenderer($name)) {
+        $items->filterEmptyItems();
+        $form[$name] = $widget->form($items, $form, $form_state);
+
+        // Assign the correct weight. This duplicates the reordering done in
+        // processForm(), but is needed for other forms calling this method
+        // directly.
+        $form[$name]['#weight'] = $this->getComponent($name)['weight'];
+      }
+    }
+
+    // Add a process callback so we can assign weights and hide extra fields.
+    $form['#process'][] = array($this, 'processForm');
+  }
+
+  /**
+   * Process callback: assigns weights and hides extra fields.
+   *
+   * @see \Drupal\entity\Entity\EntityFormDisplay::buildForm()
+   */
+  public function processForm($element, $form_state, $form) {
+    // Assign the weights configured in the form display.
+    foreach ($this->getComponents() as $name => $options) {
+      if (isset($element[$name])) {
+        $element[$name]['#weight'] = $options['weight'];
+      }
+    }
+
+    // Hide extra fields.
+    $extra_fields = field_info_extra_fields($this->targetEntityType, $this->bundle, 'form');
+    foreach ($extra_fields as $extra_field => $info) {
+      if (!$this->getComponent($extra_field)) {
+        $element[$extra_field]['#access'] = FALSE;
+      }
+    }
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function extractFormValues(ContentEntityInterface $entity, array &$form, array &$form_state) {
+    $extracted = array();
+    foreach ($entity as $name => $items) {
+      if ($widget = $this->getRenderer($name)) {
+        $widget->extractFormValues($items, $form, $form_state);
+        $extracted[$name] = $name;
+      }
+    }
+    return $extracted;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateFormValues(ContentEntityInterface $entity, array &$form, array &$form_state) {
+    foreach ($entity as $field_name => $items) {
+      // Only validate the fields that actually appear in the form, and let the
+      // widget assign the violations to the right form elements.
+      if ($widget = $this->getRenderer($field_name)) {
+        $violations = $items->validate();
+        if (count($violations)) {
+          $widget->flagErrors($items, $violations, $form, $form_state);
+        }
+      }
+    }
   }
 
   /**

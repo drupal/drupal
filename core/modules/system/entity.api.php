@@ -620,8 +620,6 @@ function hook_entity_display_build_alter(&$build, $context) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity that is about to be shown on the form.
- * @param $form_display
- *   The current form display.
  * @param $operation
  *   The current operation.
  * @param array $form_state
@@ -629,7 +627,7 @@ function hook_entity_display_build_alter(&$build, $context) {
  *
  * @see \Drupal\Core\Entity\EntityFormController::prepareEntity()
  */
-function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $form_display, $operation, array &$form_state) {
+function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
     $form_state['mymodule']['label_altered'] = TRUE;

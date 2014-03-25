@@ -76,7 +76,7 @@ class ArbitraryRebuildTest extends WebTestBase {
       'name' => 'foo',
       'mail' => 'bar@example.com',
     );
-    $this->drupalPostForm('user/register', $edit, t('Add another item'), array('query' => array('field' => TRUE)));
+    $this->drupalPostForm('user/register', $edit, t('Add another item'));
     $this->assertText('Test a multiple valued field', 'Form has been rebuilt.');
     $this->assertFieldByName('name', 'foo', 'Entered user name has been kept.');
     $this->assertFieldByName('mail', 'bar@example.com', 'Entered mail address has been kept.');

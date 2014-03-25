@@ -499,7 +499,7 @@ function book_node_predelete(EntityInterface $node) {
 /**
  * Implements hook_node_prepare_form().
  */
-function book_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
+function book_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
   // Get BookManager service
   $book_manager = \Drupal::service('book.manager');
 

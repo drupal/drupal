@@ -252,7 +252,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form_state) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, array &$form_state) {
     foreach ($form_state['values'] as $key => $value) {
       // Do not copy effects here, see self::updateEffectWeights().
       if ($key != 'effects') {

@@ -331,15 +331,9 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     $widget->extractFormValues($this, $element, $form_state);
     $violations = $this->validate();
 
+    // Assign reported errors to the correct form element.
     if (count($violations)) {
-      // Store reported errors in $form_state.
-      $field_name = $this->getFieldDefinition()->getName();
-      $field_state = field_form_get_state($element['#parents'], $field_name, $form_state);
-      $field_state['constraint_violations'] = $violations;
-      field_form_set_state($element['#parents'], $field_name, $form_state, $field_state);
-
-      // Assign reported errors to the correct form element.
-      $widget->flagErrors($this, $element, $form_state);
+      $widget->flagErrors($this, $violations, $element, $form_state);
     }
   }
 

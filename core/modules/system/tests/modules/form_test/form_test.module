@@ -1942,13 +1942,6 @@ function form_test_form_user_register_form_alter(&$form, &$form_state) {
     '#value' => t('Rebuild'),
     '#submit' => array('form_test_user_register_form_rebuild'),
   );
-  // If requested, add the test field by attaching the node page form.
-  if (\Drupal::request()->request->has('field')) {
-    $node = entity_create('node', array(
-      'type' => 'page',
-    ));
-    field_attach_form($node, $form, $form_state);
-  }
 }
 
 /**

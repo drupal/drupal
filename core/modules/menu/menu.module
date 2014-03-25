@@ -390,7 +390,7 @@ function menu_node_predelete(EntityInterface $node) {
 /**
  * Implements hook_node_prepare_form().
  */
-function menu_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
+function menu_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
     $node_type_config = \Drupal::config('menu.entity.node.' . $node->getType());

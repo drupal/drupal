@@ -11,15 +11,16 @@ use Drupal\field\FieldConfigUpdateForbiddenException;
 /**
  * Exposes "pseudo-field" components on fieldable entities.
  *
- * Field UI's "Manage fields" and "Manage display" pages let users re-order
- * fields, but also non-field components. For nodes, these include the title
- * and other elements exposed by modules through hook_form_alter().
+ * Field UI's "Manage display" and "Manage form display" pages let users
+ * re-order fields rendered through the regular widget/formatter pipeline, but
+ * also other components: entity fields that are rendered through custom code,
+ * or other arbitrary components added through hook_form_alter() or
+ * hook_entity_view().
  *
  * Fieldable entities or modules that want to have their components supported
  * should expose them using this hook. The user-defined settings (weight,
  * visible) are automatically applied on rendered forms and displayed entities
- * in a #pre_render callback added by field_attach_form() and
- * EntityViewBuilder::viewMultiple().
+ * by ContentEntityFormController::form() and EntityViewBuilder::viewMultiple().
  *
  * @see hook_field_extra_fields_alter()
  *
@@ -162,8 +163,8 @@ function hook_field_info_alter(&$info) {
  *
  * Widgets are @link forms_api_reference.html Form API @endlink
  * elements with additional processing capabilities. The methods of the
- * WidgetInterface object are typically called by the Field Attach API during
- * the creation of the field form structure with field_attach_form().
+ * WidgetInterface object are typically called by respective methods in the
+ * \Drupal\entity\Entity\EntityFormDisplay class.
  *
  * @see field
  * @see field_types
@@ -289,78 +290,6 @@ function hook_field_formatter_info_alter(array &$info) {
 
 /**
  * @} End of "defgroup field_formatter".
- */
-
-/**
- * @addtogroup field_attach
- * @{
- */
-
-/**
- * Act on field_attach_form().
- *
- * This hook is invoked after the field module has performed the operation.
- * Implementing modules should alter the $form or $form_state parameters.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity for which an edit form is being built.
- * @param $form
- *   The form structure field elements are attached to. This might be a full
- *   form structure, or a sub-element of a larger form. The $form['#parents']
- *   property can be used to identify the corresponding part of
- *   $form_state['values']. Hook implementations that need to act on the
- *   top-level properties of the global form (like #submit, #validate...) can
- *   add a #process callback to the array received in the $form parameter, and
- *   act on the $complete_form parameter in the process callback.
- * @param $form_state
- *   An associative array containing the current state of the form.
- * @param $langcode
- *   The language the field values are going to be entered in. If no language is
- *   provided the default site language will be used.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use the entity system instead, see https://drupal.org/developing/api/entity
- */
-function hook_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$form, &$form_state, $langcode) {
-  // Add a checkbox allowing a given field to be emptied.
-  // See hook_field_attach_extract_form_values() for the corresponding
-  // processing code.
-  $form['empty_field_foo'] = array(
-    '#type' => 'checkbox',
-    '#title' => t("Empty the 'field_foo' field"),
-  );
-}
-
-/**
- * Act on field_attach_extract_form_values().
- *
- * This hook is invoked after the field module has performed the operation.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity for which an edit form is being submitted. The incoming form
- *   values have been extracted as field values of the $entity object.
- * @param $form
- *   The form structure field elements are attached to. This might be a full
- *   form structure, or a sub-part of a larger form. The $form['#parents']
- *   property can be used to identify the corresponding part of
- *   $form_state['values'].
- * @param $form_state
- *   An associative array containing the current state of the form.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use the entity system instead, see https://drupal.org/developing/api/entity
- */
-function hook_field_attach_extract_form_values(\Drupal\Core\Entity\EntityInterface $entity, $form, &$form_state) {
-  // Sample case of an 'Empty the field' checkbox added on the form, allowing
-  // a given field to be emptied.
-  $values = NestedArray::getValue($form_state['values'], $form['#parents']);
-  if (!empty($values['empty_field_foo'])) {
-    unset($entity->field_foo);
-  }
-}
-
-/**
- * @} End of "addtogroup field_attach".
  */
 
 /**

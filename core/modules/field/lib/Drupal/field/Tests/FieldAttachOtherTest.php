@@ -262,22 +262,22 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test field_attach_form().
+   * Tests \Drupal\Core\Entity\Display\EntityFormDisplayInterface::buildForm().
    *
    * This could be much more thorough, but it does verify that the correct
    * widgets show up.
    */
-  function testFieldAttachForm() {
+  function testEntityFormDisplayBuildForm() {
     $this->createFieldWithInstance('_2');
 
     $entity_type = 'entity_test';
     $entity = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->instance->bundle));
 
-    // When generating form for all fields.
+    // Test generating widgets for all fields.
+    $display = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
     $form = array();
     $form_state = form_state_defaults();
-    $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
-    field_attach_form($entity, $form, $form_state);
+    $display->buildForm($entity, $form, $form_state);
 
     $this->assertEqual($form[$this->field_name]['widget']['#title'], $this->instance->getLabel(), "First field's form title is {$this->instance->getLabel()}");
     $this->assertEqual($form[$this->field_name_2]['widget']['#title'], $this->instance_2->getLabel(), "Second field's form title is {$this->instance_2->getLabel()}");
@@ -290,12 +290,16 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       $this->assertEqual($form[$this->field_name_2]['widget'][$delta]['value']['#type'], 'textfield', "Second field's form delta $delta widget is textfield");
     }
 
-    // When generating form for a single field (the second field).
-    $options = array('field_name' => $this->field_name_2);
+    // Test generating widgets for all fields.
+    $display = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
+    foreach ($display->getComponents() as $name => $options) {
+      if ($name != $this->field_name_2) {
+        $display->removeComponent($name);
+      }
+    }
     $form = array();
     $form_state = form_state_defaults();
-    $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
-    field_attach_form($entity, $form, $form_state, NULL, $options);
+    $display->buildForm($entity, $form, $form_state);
 
     $this->assertFalse(isset($form[$this->field_name]), 'The first field does not exist in the form');
     $this->assertEqual($form[$this->field_name_2]['widget']['#title'], $this->instance_2->getLabel(), "Second field's form title is {$this->instance_2->getLabel()}");
@@ -306,19 +310,19 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test field_attach_extract_form_values().
+   * Tests \Drupal\Core\Entity\Display\EntityFormDisplayInterface::extractFormValues().
    */
-  function testFieldAttachExtractFormValues() {
+  function testEntityFormDisplayExtractFormValues() {
     $this->createFieldWithInstance('_2');
 
     $entity_type = 'entity_test';
     $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->instance->bundle));
 
     // Build the form for all fields.
+    $display = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
     $form = array();
     $form_state = form_state_defaults();
-    $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance->bundle, 'default');
-    field_attach_form($entity_init, $form, $form_state);
+    $display->buildForm($entity_init, $form, $form_state);
 
     // Simulate incoming values.
     // First field.
@@ -356,9 +360,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $form_state['values'][$this->field_name] = $values;
     $form_state['values'][$this->field_name_2] = $values_2;
 
-    // Call field_attach_extract_form_values() for all fields.
+    // Extract values for all fields.
     $entity = clone($entity_init);
-    field_attach_extract_form_values($entity, $form, $form_state);
+    $display->extractFormValues($entity, $form, $form_state);
 
     asort($weights);
     asort($weights_2);
@@ -378,16 +382,20 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->assertIdentical($entity->{$this->field_name_2}->getValue(), $expected_values_2, 'Submit filters empty values');
 
     // Call field_attach_extract_form_values() for a single field (the second field).
-    $options = array('field_name' => $this->field_name_2);
+    foreach ($display->getComponents() as $name => $options) {
+      if ($name != $this->field_name_2) {
+        $display->removeComponent($name);
+      }
+    }
     $entity = clone($entity_init);
-    field_attach_extract_form_values($entity, $form, $form_state, $options);
+    $display->extractFormValues($entity, $form, $form_state);
     $expected_values_2 = array();
     foreach ($weights_2 as $key => $value) {
       if ($key != 1) {
         $expected_values_2[] = array('value' => $values_2[$key]['value']);
       }
     }
-    $this->assertTrue($entity->{$this->field_name}->isEmpty(), 'The first field does is empty in the entity object');
+    $this->assertTrue($entity->{$this->field_name}->isEmpty(), 'The first field is empty in the entity object');
     $this->assertIdentical($entity->{$this->field_name_2}->getValue(), $expected_values_2, 'Submit filters empty values');
   }
 

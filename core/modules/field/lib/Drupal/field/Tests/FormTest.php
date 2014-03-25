@@ -531,10 +531,10 @@ class FormTest extends FieldTestBase {
     // apart from #access.
     $entity = entity_create($entity_type, array('id' => 0, 'revision_id' => 0));
 
+    $display = entity_get_form_display($entity_type, $entity_type, 'default');
     $form = array();
     $form_state = form_state_defaults();
-    $form_state['form_display'] = entity_get_form_display($entity_type, $entity_type, 'default');
-    field_attach_form($entity, $form, $form_state);
+    $display->buildForm($entity, $form, $form_state);
 
     $this->assertEqual($form[$field_name_no_access]['widget'][0]['value']['#entity_type'], $entity_type, 'The correct entity type is set in the field structure.');
     $this->assertFalse($form[$field_name_no_access]['#access'], 'Field #access is FALSE for the field without edit access.');
