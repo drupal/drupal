@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Path\Path.
+ * Contains \Drupal\Core\Path\Path.
  */
 
 namespace Drupal\Core\Path;
@@ -12,9 +12,9 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 
 /**
- * Defines a class for CRUD operations on path aliases.
+ * Provides a class for CRUD operations on path aliases.
  */
-class Path {
+class Path implements PathInterface {
 
   /**
    * The database connection.
@@ -45,27 +45,7 @@ class Path {
   }
 
   /**
-   * Saves a path alias to the database.
-   *
-   * @param string $source
-   *   The internal system path.
-   *
-   * @param string $alias
-   *   The URL alias.
-   *
-   * @param string $langcode
-   *   The language code of the alias.
-   *
-   * @param int $pid
-   *   Unique path alias identifier.
-   *
-   * @return
-   *   FALSE if the path could not be saved or an associative array containing
-   *   the following keys:
-   *   - source: The internal system path.
-   *   - alias: The URL alias.
-   *   - pid: Unique path alias identifier.
-   *   - langcode: The language code of the alias.
+   * {@inheritdoc}
    */
   public function save($source, $alias, $langcode = Language::LANGCODE_NOT_SPECIFIED, $pid = NULL) {
 
@@ -100,18 +80,7 @@ class Path {
   }
 
   /**
-   * Fetches a specific URL alias from the database.
-   *
-   * @param $conditions
-   *   An array of query conditions.
-   *
-   * @return
-   *   FALSE if no alias was found or an associative array containing the
-   *   following keys:
-   *   - source: The internal system path.
-   *   - alias: The URL alias.
-   *   - pid: Unique path alias identifier.
-   *   - langcode: The language code of the alias.
+   * {@inheritdoc}
    */
   public function load($conditions) {
     $select = $this->connection->select('url_alias');
@@ -125,10 +94,7 @@ class Path {
   }
 
   /**
-   * Deletes a URL alias.
-   *
-   * @param array $conditions
-   *   An array of criteria.
+   * {@inheritdoc}
    */
   public function delete($conditions) {
     $path = $this->load($conditions);
@@ -143,15 +109,7 @@ class Path {
   }
 
   /**
-   * Preloads path alias information for a given list of source paths.
-   *
-   * @param $path
-   *   The path to investigate for corresponding aliases.
-   * @param $langcode
-   *   Language code to search the path with. If there's no path defined for
-   *   that language it will search paths without language.
-   * @return array
-   *   Source (keys) to alias (values) mapping.
+   * {@inheritdoc}
    */
   public function preloadPathAlias($preloaded, $langcode) {
     $args = array(
@@ -182,16 +140,7 @@ class Path {
   }
 
   /**
-   * Returns an alias of Drupal system URL.
-   *
-   * @param string $path
-   *   The path to investigate for corresponding path aliases.
-   * @param string $langcode
-   *   Language code to search the path with. If there's no path defined for
-   *   that language it will search paths without language.
-   *
-   * @return string|bool
-   *   A path alias, or FALSE if no path was found.
+   * {@inheritdoc}
    */
   public function lookupPathAlias($path, $langcode) {
     $args = array(
@@ -215,16 +164,7 @@ class Path {
   }
 
   /**
-   * Returns Drupal system URL of an alias.
-   *
-   * @param string $path
-   *   The path to investigate for corresponding system URLs.
-   * @param string $langcode
-   *   Language code to search the path with. If there's no path defined for
-   *   that language it will search paths without language.
-   *
-   * @return string|bool
-   *   A Drupal system path, or FALSE if no path was found.
+   * {@inheritdoc}
    */
   public function lookupPathSource($path, $langcode) {
     $args = array(

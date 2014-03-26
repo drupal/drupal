@@ -8,7 +8,7 @@
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\Path\Path;
+use Drupal\Core\Path\PathInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,7 +19,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * The path crud service.
    *
-   * @var Path $path
+   * @var PathInterface $path
    */
   protected $path;
 
@@ -31,12 +31,12 @@ class DeleteForm extends ConfirmFormBase {
   protected $pathAlias;
 
   /**
-   * Constructs a \Drupal\Core\Path\Path object.
+   * Constructs a \Drupal\path\Form\DeleteForm object.
    *
-   * @param \Drupal\Core\Path\Path $path
+   * @param \Drupal\Core\Path\PathInterface $path
    *   The path crud service.
    */
-  public function __construct(Path $path) {
+  public function __construct(PathInterface $path) {
     $this->path = $path;
   }
 

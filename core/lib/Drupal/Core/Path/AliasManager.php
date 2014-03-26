@@ -15,7 +15,7 @@ class AliasManager implements AliasManagerInterface {
   /**
    * The Path CRUD service.
    *
-   * @var \Drupal\Core\Path\Path
+   * @var \Drupal\Core\Path\PathInterface
    */
   protected $path;
 
@@ -74,14 +74,14 @@ class AliasManager implements AliasManagerInterface {
   /**
    * Constructs an AliasManager.
    *
-   * @param \Drupal\Core\Path\Path $path
+   * @param \Drupal\Core\Path\PathInterface $path
    *   The Path CRUD service.
    * @param \Drupal\Core\Path\AliasWhitelistInterface $whitelist
    *   The whitelist implementation to use.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(Path $path, AliasWhitelistInterface $whitelist, LanguageManager $language_manager) {
+  public function __construct(PathInterface $path, AliasWhitelistInterface $whitelist, LanguageManager $language_manager) {
     $this->path = $path;
     $this->languageManager = $language_manager;
     $this->whitelist = $whitelist;

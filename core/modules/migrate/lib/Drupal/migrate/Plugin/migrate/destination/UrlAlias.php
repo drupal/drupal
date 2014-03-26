@@ -7,9 +7,9 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Core\Path\PathInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
-use Drupal\Core\Path\Path;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 
@@ -23,7 +23,7 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
   /**
    * The path crud service.
    *
-   * @var Path $path
+   * @var \Drupal\Core\Path\PathInterface $path
    */
   protected $path;
 
@@ -38,10 +38,10 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
    *   The plugin implementation definition.
    * @param MigrationInterface $migration
    *   The migration.
-   * @param \Drupal\Core\Path\Path $path
+   * @param \Drupal\Core\Path\PathInterface $path
    *   The path crud service.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, Path $path) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, PathInterface $path) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->path = $path;
   }
