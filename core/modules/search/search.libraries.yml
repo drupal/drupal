@@ -1,0 +1,5 @@
+drupal.search.results:
+  version: VERSION
+  css:
+    theme:
+      css/search.theme.css: {}
