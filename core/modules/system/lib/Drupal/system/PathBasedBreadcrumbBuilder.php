@@ -11,13 +11,14 @@ use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Access\AccessManager;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
@@ -38,13 +39,6 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
    * @var \Drupal\Core\Access\AccessManager
    */
   protected $accessManager;
-
-  /**
-   * The menu storage controller.
-   *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface
-   */
-  protected $menuStorage;
 
   /**
    * The dynamic router service.
@@ -75,12 +69,17 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
   protected $titleResolver;
 
   /**
+   * The current user object.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs the PathBasedBreadcrumbBuilder.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current Request object.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager service.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The menu link access service.
    * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
@@ -91,15 +90,17 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
    *   The config factory service.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user object.
    */
-  public function __construct(Request $request, EntityManagerInterface $entity_manager, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver) {
+  public function __construct(Request $request, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user) {
     $this->request = $request;
     $this->accessManager = $access_manager;
-    $this->menuStorage = $entity_manager->getStorageController('menu');
     $this->router = $router;
     $this->pathProcessor = $path_processor;
     $this->config = $config_factory->get('system.site');
     $this->titleResolver = $title_resolver;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -132,25 +133,23 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
       // Copy the path elements for up-casting.
       $route_request = $this->getRequestForPath(implode('/', $path_elements), $exclude);
       if ($route_request) {
-        if (!$route_request->attributes->get('_legacy')) {
-          $route_name = $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME);
-          // Note that the parameters don't really matter here since we're
-          // passing in the request which already has the upcast attributes.
-          $parameters = array();
-          $access = $this->accessManager->checkNamedRoute($route_name, $parameters, \Drupal::currentUser(), $route_request);
-          if ($access) {
-            $title = $this->titleResolver->getTitle($route_request, $route_request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
-          }
+        $route_name = $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+        // Note that the parameters don't really matter here since we're
+        // passing in the request which already has the upcast attributes.
+        $parameters = array();
+        $access = $this->accessManager->checkNamedRoute($route_name, $parameters, $this->currentUser, $route_request);
+        if ($access) {
+          $title = $this->titleResolver->getTitle($route_request, $route_request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
         }
         if ($access) {
-          if (!$title) {
+          if (!isset($title)) {
             // Fallback to using the raw path component as the title if the
             // route is missing a _title or _title_callback attribute.
             $title = str_replace(array('-', '_'), ' ', Unicode::ucfirst(end($path_elements)));
           }
           // @todo Replace with a #type => link render element so that the alter
           // hook can work with the actual data.
-          $links[] = l($title, $route_request->attributes->get('_system_path'));
+          $links[] = $this->l($title, $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME), $route_request->attributes->get('_raw_variables')->all());
         }
       }
 
@@ -171,7 +170,7 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
    *   An array of paths or system paths to skip.
    *
    * @return \Symfony\Component\HttpFoundation\Request
-   *   A populated request object or NULL if the patch couldn't be matched.
+   *   A populated request object or NULL if the path couldn't be matched.
    */
   protected function getRequestForPath($path, array $exclude) {
     if (!empty($exclude[$path])) {
@@ -199,6 +198,9 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
       return NULL;
     }
     catch (ResourceNotFoundException $e) {
+      return NULL;
+    }
+    catch (MethodNotAllowedException $e) {
       return NULL;
     }
   }
