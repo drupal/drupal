@@ -151,6 +151,26 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
   /**
    * {@inheritdoc}
    */
+  public function getProvider() {
+    return $this->definition['provider'];
+  }
+
+  /**
+   * Sets the name of the provider of this field.
+   *
+   * @param string $provider
+   *   The provider name to set.
+   *
+   * @return $this
+   */
+  public function setProvider($provider) {
+    $this->definition['provider'] = $provider;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isTranslatable() {
     return !empty($this->definition['translatable']);
   }
@@ -465,6 +485,27 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    */
   public static function getReservedColumns() {
     return array('deleted');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCustomStorage() {
+    return !empty($this->definition['custom_storage']);
+  }
+
+  /**
+   * Sets the storage behavior for this field.
+   *
+   * @param bool $custom_storage
+   *   Pass FALSE if the storage controller takes care of storing the field,
+   *   TRUE otherwise.
+   *
+   * @return $this
+   */
+  public function setCustomStorage($custom_storage) {
+    $this->definition['custom_storage'] = $custom_storage;
+    return $this;
   }
 
 }

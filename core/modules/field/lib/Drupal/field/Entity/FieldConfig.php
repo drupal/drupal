@@ -479,6 +479,13 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasCustomStorage() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getColumns() {
     $schema = $this->getSchema();
     // A typical use case for the method is to iterate on the columns, while
@@ -577,6 +584,13 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   public function setTranslatable($translatable) {
     $this->translatable = $translatable;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProvider() {
+    return 'field';
   }
 
   /**

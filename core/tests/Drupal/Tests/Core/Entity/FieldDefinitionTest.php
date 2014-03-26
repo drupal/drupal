@@ -206,4 +206,26 @@ class FieldDefinitionTest extends UnitTestCase {
     $this->assertFalse($definition->isRequired());
   }
 
+  /**
+   * Tests provider.
+   */
+  public function testFieldProvider() {
+    $definition = FieldDefinition::create($this->fieldType);
+    $provider = $this->randomName();
+    $definition->setProvider($provider);
+    $this->assertEquals($provider, $definition->getProvider());
+  }
+
+  /**
+   * Tests custom storage.
+   */
+  public function testCustomStorage() {
+    $definition = FieldDefinition::create($this->fieldType);
+    $this->assertFalse($definition->hasCustomStorage());
+    $definition->setCustomStorage(TRUE);
+    $this->assertTrue($definition->hasCustomStorage());
+    $definition->setCustomStorage(FALSE);
+    $this->assertFalse($definition->hasCustomStorage());
+  }
+
 }

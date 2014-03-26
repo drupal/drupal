@@ -336,11 +336,33 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $entity_type = $this->getDefinition($entity_type_id);
     $class = $entity_type->getClass();
 
+    // Retrieve base field definitions and assign them the entity type provider.
     $base_field_definitions = $class::baseFieldDefinitions($entity_type);
+    $provider = $entity_type->getProvider();
+    foreach ($base_field_definitions as $definition) {
+      // @todo Remove this check one FieldDefinitionInterface exposes a proper
+      //   provider setter. See https://drupal.org/node/2225961.
+      if ($definition instanceof FieldDefinition) {
+        $definition->setProvider($provider);
+      }
+    }
 
-    // Invoke hook.
-    $result = $this->moduleHandler->invokeAll('entity_base_field_info', array($entity_type));
-    $base_field_definitions = NestedArray::mergeDeep($base_field_definitions, $result);
+    // Retrieve base field definitions from modules.
+    foreach ($this->moduleHandler->getImplementations('entity_base_field_info') as $module) {
+      $module_definitions = $this->moduleHandler->invoke($module, 'entity_base_field_info', array($entity_type));
+      if (!empty($module_definitions)) {
+        // Ensure the provider key actually matches the name of the provider
+        // defining the field.
+        foreach ($module_definitions as $field_name => $definition) {
+          // @todo Remove this check one FieldDefinitionInterface exposes a
+          //   proper provider setter. See https://drupal.org/node/2225961.
+          if ($definition instanceof FieldDefinition) {
+            $definition->setProvider($module);
+          }
+          $base_field_definitions[$field_name] = $definition;
+        }
+      }
+    }
 
     // Automatically set the field name for non-configurable fields.
     foreach ($base_field_definitions as $field_name => $base_field_definition) {
@@ -413,10 +435,31 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
 
     // Allow the entity class to override the base fields.
     $bundle_field_definitions = $class::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
+    $provider = $entity_type->getProvider();
+    foreach ($bundle_field_definitions as $definition) {
+      // @todo Remove this check one FieldDefinitionInterface exposes a proper
+      //   provider setter. See https://drupal.org/node/2225961.
+      if ($definition instanceof FieldDefinition) {
+        $definition->setProvider($provider);
+      }
+    }
 
-    // Invoke 'per bundle' hook.
-    $result = $this->moduleHandler->invokeAll('entity_bundle_field_info', array($entity_type, $bundle, $base_field_definitions));
-    $bundle_field_definitions = NestedArray::mergeDeep($bundle_field_definitions, $result);
+    // Retrieve base field definitions from modules.
+    foreach ($this->moduleHandler->getImplementations('entity_bundle_field_info') as $module) {
+      $module_definitions = $this->moduleHandler->invoke($module, 'entity_bundle_field_info', array($entity_type, $bundle, $base_field_definitions));
+      if (!empty($module_definitions)) {
+        // Ensure the provider key actually matches the name of the provider
+        // defining the field.
+        foreach ($module_definitions as $field_name => $definition) {
+          // @todo Remove this check one FieldDefinitionInterface exposes a
+          //   proper provider setter. See https://drupal.org/node/2225961.
+          if ($definition instanceof FieldDefinition) {
+            $definition->setProvider($module);
+          }
+          $bundle_field_definitions[$field_name] = $definition;
+        }
+      }
+    }
 
     // Automatically set the field name for non-configurable fields.
     foreach ($bundle_field_definitions as $field_name => $field_definition) {

@@ -104,6 +104,14 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   public function getSetting($setting_name);
 
   /**
+   * Returns the name of the provider of this field.
+   *
+   * @return string
+   *   The provider name; e.g., the module name.
+   */
+  public function getProvider();
+
+  /**
    * Returns whether the field is translatable.
    *
    * @return bool
@@ -335,5 +343,18 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
    * @see \Drupal\Core\Field\FieldDefinitionInterface::getSchema()
    */
   public function getColumns();
+
+  /**
+   * Returns the storage behavior for this field.
+   *
+   * Indicates whether the entity type's storage controller should take care of
+   * storing the field values or whether it is handled separately; e.g. by the
+   * module providing the field.
+   *
+   * @return bool
+   *   FALSE if the storage controller takes care of storing the field, TRUE
+   *   otherwise.
+   */
+  public function hasCustomStorage();
 
 }

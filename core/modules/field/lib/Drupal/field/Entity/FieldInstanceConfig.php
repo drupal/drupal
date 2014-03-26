@@ -516,6 +516,13 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
+  public function getProvider() {
+    return $this->field->getProvider();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isTranslatable() {
     return $this->field->translatable;
   }
@@ -778,6 +785,13 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    */
   public function getColumns() {
     return $this->field->getColumns();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCustomStorage() {
+    return $this->field->hasCustomStorage();
   }
 
 }

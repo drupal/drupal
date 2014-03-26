@@ -553,6 +553,41 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests that getFieldDefinitions() method sets the 'provider' definition key.
+   *
+   * @covers ::getFieldDefinitions()
+   */
+  public function testGetFieldDefinitionsProvider() {
+    $this->setUpEntityWithFieldDefinition(TRUE);
+
+    $module = 'entity_manager_test_module';
+
+    // @todo Mock FieldDefinitionInterface once it exposes a proper provider
+    //   setter. See https://drupal.org/node/2225961.
+    $field_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    // We expect two calls as the field definition will be returned from both
+    // base and bundle entity field info hook implementations.
+    $field_definition
+      ->expects($this->exactly(2))
+      ->method('setProvider')
+      ->with($this->matches($module));
+
+    $this->moduleHandler->expects($this->any())
+      ->method('getImplementations')
+      ->will($this->returnValue(array($module)));
+
+    $this->moduleHandler->expects($this->any())
+      ->method('invoke')
+      ->with($this->matches($module))
+      ->will($this->returnValue(array($field_definition)));
+
+    $this->entityManager->getFieldDefinitions('test_entity_type', 'test_bundle');
+  }
+
+  /**
    * Prepares an entity that defines a field definition.
    *
    * @param bool $custom_invoke_all
@@ -587,11 +622,12 @@ class EntityManagerTest extends UnitTestCase {
       ->method('bundleFieldDefinitions')
       ->will($this->returnValue(array()));
 
+    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->any())
       ->method('alter');
     if (!$custom_invoke_all) {
       $this->moduleHandler->expects($this->any())
-        ->method('invokeAll')
+        ->method('getImplementations')
         ->will($this->returnValue(array()));
     }
 
