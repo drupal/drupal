@@ -38,6 +38,28 @@ class NodeTranslationController extends ContentTranslationController {
       $form['content_translation']['name']['#access'] = FALSE;
       $form['content_translation']['created']['#access'] = FALSE;
     }
+
+    $form_controller = content_translation_form_controller($form_state);
+    $form_langcode = $form_controller->getFormLangcode($form_state);
+    $translations = $entity->getTranslationLanguages();
+    $status_translatable = NULL;
+    // Change the submit button labels if there was a status field they affect
+    // in which case their publishing / unpublishing may or may not apply
+    // to all translations.
+    if (!$entity->isNew() && (!isset($translations[$form_langcode]) || count($translations) > 1)) {
+      foreach ($entity->getFieldDefinitions() as $property_name => $definition) {
+        if ($property_name == 'status') {
+          $status_translatable = $definition->isTranslatable();
+        }
+      }
+      if (isset($status_translatable)) {
+        foreach (array('publish', 'unpublish', 'submit') as $button) {
+          if (isset($form['actions'][$button])) {
+            $form['actions'][$button]['#value'] .= ' ' . ($status_translatable ? $this->t('(this translation)') : $this->t('(all translations)'));
+          }
+        }
+      }
+    }
   }
 
   /**

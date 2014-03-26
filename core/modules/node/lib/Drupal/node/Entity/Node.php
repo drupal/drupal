@@ -380,38 +380,44 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['uid'] = FieldDefinition::create('entity_reference')
-      ->setLabel(t('User ID'))
-      ->setDescription(t('The user ID of the node author.'))
+      ->setLabel(t('Author'))
+      ->setDescription(t('The user that is the node author.'))
       ->setRevisionable(TRUE)
       ->setSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
-      ));
+      ))
+      ->setTranslatable(TRUE);
 
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the node is published.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the node was created.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     $fields['changed'] = FieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the node was last edited.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     $fields['promote'] = FieldDefinition::create('boolean')
       ->setLabel(t('Promote'))
       ->setDescription(t('A boolean indicating whether the node should be displayed on the front page.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     $fields['sticky'] = FieldDefinition::create('boolean')
       ->setLabel(t('Sticky'))
       ->setDescription(t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     $fields['revision_timestamp'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Revision timestamp'))
@@ -429,7 +435,8 @@ class Node extends ContentEntityBase implements NodeInterface {
     $fields['log'] = FieldDefinition::create('string')
       ->setLabel(t('Log'))
       ->setDescription(t('The log entry explaining the changes in this revision.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     return $fields;
   }

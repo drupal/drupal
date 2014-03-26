@@ -129,9 +129,12 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // This should find two results for the second and third node.
     $plugin->setSearch('English OR Hungarian', array(), array());
     $search_result = $plugin->execute();
-
-    $this->assertEqual($search_result[0]['title'], 'Third node this is the Hungarian title', 'The search finds the correct Hungarian title.');
-    $this->assertEqual($search_result[1]['title'], 'Second node this is the English title', 'The search finds the correct English title.');
+    $this->assertEqual(count($search_result), 2, 'Found two results.');
+    // Nodes are saved directly after each other and have the same created time
+    // so testing for the order is not possible.
+    $results = array($search_result[0]['title'], $search_result[1]['title']);
+    $this->assertTrue(in_array('Third node this is the Hungarian title', $results), 'The search finds the correct Hungarian title.');
+    $this->assertTrue(in_array('Second node this is the English title', $results), 'The search finds the correct English title.');
 
     // Now filter for Hungarian results only.
     $plugin->setSearch('English OR Hungarian', array('f' => array('language:hu')), array());

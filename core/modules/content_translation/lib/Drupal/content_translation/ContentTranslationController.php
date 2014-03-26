@@ -289,7 +289,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     // @todo Find a more reliable way to determine if a form element concerns a
     //   multilingual value.
     if (!isset($ignored_types)) {
-      $ignored_types = array_flip(array('actions', 'value', 'hidden', 'vertical_tabs', 'token'));
+      $ignored_types = array_flip(array('actions', 'value', 'hidden', 'vertical_tabs', 'token', 'details'));
     }
 
     foreach (element_children($element) as $key) {

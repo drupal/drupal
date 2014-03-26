@@ -90,20 +90,22 @@ class NodeTranslationUITest extends ContentTranslationUITest {
       "{$this->fieldName}[0][value]" => $values[$this->fieldName][0]['value'],
       'langcode' => $langcode,
     );
-    $this->drupalPostForm('node/add/article', $edit,t('Save and publish'));
+    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
     $this->drupalLogin($this->translator);
     $node = $this->drupalGetNodeByTitle($values['title']);
     return $node->id();
   }
 
   /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getFormSubmitAction().
+   * {@inheritdoc}
    */
-  protected function getFormSubmitAction(EntityInterface $entity) {
-    if ($entity->isPublished()) {
-      return t('Save and unpublish');
+  protected function getFormSubmitAction(EntityInterface $entity, $langcode) {
+    if ($entity->getTranslation($langcode)->isPublished()) {
+      return t('Save and keep published') . $this->getFormSubmitSuffix($entity, $langcode);
     }
-    return t('Save and keep unpublished');
+    else {
+      return t('Save and keep unpublished') . $this->getFormSubmitSuffix($entity, $langcode);
+    }
   }
 
   /**
@@ -115,25 +117,24 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $languages = language_list();
 
     $actions = array(
-      array(t('Save and publish'), t('Save and keep published')),
-      array(t('Save and unpublish'), t('Save and keep unpublished')),
+      t('Save and keep published'),
+      t('Save and unpublish'),
     );
 
-    foreach ($actions as $index => $status_actions) {
+    foreach ($actions as $index => $action) {
       // (Un)publish the node translations and check that the translation
       // statuses are (un)published accordingly.
       foreach ($this->langcodes as $langcode) {
-        if (!empty($status_actions)) {
-          $action = array_shift($status_actions);
-        }
-        $this->drupalPostForm($path, array(), $action, array('language' => $languages[$langcode]));
+        $this->drupalPostForm($path, array(), $action . $this->getFormSubmitSuffix($entity, $langcode), array('language' => $languages[$langcode]));
       }
       $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
       foreach ($this->langcodes as $langcode) {
-        // The node is created as unpulished thus we switch to the published
+        // The node is created as unpublished thus we switch to the published
         // status first.
         $status = !$index;
         $this->assertEqual($status, $entity->translation[$langcode]['status'], 'The translation has been correctly unpublished.');
+        $translation = $entity->getTranslation($langcode);
+        $this->assertEqual($status, $translation->isPublished(), 'The status of the translation has been correctly saved.');
       }
     }
   }
@@ -147,25 +148,34 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $languages = language_list();
     $values = array();
 
-    // Post different authoring information for each translation.
+    // Post different base field information for each translation.
     foreach ($this->langcodes as $langcode) {
       $user = $this->drupalCreateUser();
       $values[$langcode] = array(
         'uid' => $user->id(),
         'created' => REQUEST_TIME - mt_rand(0, 1000),
+        'sticky' => (bool) mt_rand(0, 1),
+        'promote' => (bool) mt_rand(0, 1),
       );
       $edit = array(
         'uid' => $user->getUsername(),
         'created[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'created[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
+        'sticky' => $values[$langcode]['sticky'],
+        'promote' => $values[$langcode]['promote'],
       );
-      $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity), array('language' => $languages[$langcode]));
+      $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $langcode), array('language' => $languages[$langcode]));
     }
 
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     foreach ($this->langcodes as $langcode) {
       $this->assertEqual($entity->translation[$langcode]['uid'], $values[$langcode]['uid'], 'Translation author correctly stored.');
       $this->assertEqual($entity->translation[$langcode]['created'], $values[$langcode]['created'], 'Translation date correctly stored.');
+      $translation = $entity->getTranslation($langcode);
+      $this->assertEqual($translation->getOwnerId(), $values[$langcode]['uid'], 'Author of translation correctly stored.');
+      $this->assertEqual($translation->getCreatedTime(), $values[$langcode]['created'], 'Date of Translation correctly stored.');
+      $this->assertEqual($translation->isSticky(), $values[$langcode]['sticky'], 'Sticky of Translation correctly stored.');
+      $this->assertEqual($translation->isPromoted(), $values[$langcode]['promote'], 'Promoted of Translation correctly stored.');
     }
   }
 
@@ -237,7 +247,9 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     foreach (array_diff($this->langcodes, array($default_langcode)) as $langcode) {
       $values[$langcode] = $this->getNewEntityValues($langcode);
       $translation = $node->addTranslation($langcode, $values[$langcode]);
+      // Publish and promote the translation to frontpage.
       $translation->setPromoted(TRUE);
+      $translation->setPublished(TRUE);
     }
     $node->save();
 
@@ -264,7 +276,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Tests that the given path dsiplays the correct translation values.
+   * Tests that the given path displays the correct translation values.
    *
    * @param string $path
    *   The path to be tested.
@@ -279,4 +291,16 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getFormSubmitSuffix(EntityInterface $entity, $langcode) {
+    if (!$entity->isNew() && $entity->isTranslatable()) {
+      $translations = $entity->getTranslationLanguages();
+      if ((count($translations) > 1 || !isset($translations[$langcode])) && ($field = $entity->getFieldDefinition('status'))) {
+        return ' ' . ($field->isTranslatable() ? t('(this translation)') : t('(all translations)'));
+      }
+    }
+    return '';
+  }
 }

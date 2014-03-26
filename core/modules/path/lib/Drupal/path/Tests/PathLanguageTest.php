@@ -79,6 +79,7 @@ class PathLanguageTest extends PathTestBase {
   function testAliasTranslation() {
     $english_node = $this->drupalCreateNode(array('type' => 'page', 'langcode' => 'en'));
     $english_alias = $this->randomName();
+    $translatable = !$english_node->isNew() && $english_node->isTranslatable() && count($english_node->getTranslationLanguages()) > 1 && ($field = $english_node->getFieldDefinition('status')) && $field->isTranslatable();
 
     // Edit the node to set language and path.
     $edit = array();
@@ -98,7 +99,7 @@ class PathLanguageTest extends PathTestBase {
     $edit['body[0][value]'] = $this->randomName();
     $french_alias = $this->randomName();
     $edit['path[alias]'] = $french_alias;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save') . ' ' . ($translatable ? t('(this translation)') : t('(all translations)')));
 
     // Clear the path lookup cache.
     $this->container->get('path.alias_manager')->cacheClear();
