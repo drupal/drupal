@@ -18,12 +18,12 @@ abstract class NumericItemBase extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function defaultInstanceSettings() {
-    $settings = parent::defaultInstanceSettings();
-    $settings['min'] = '';
-    $settings['max'] = '';
-    $settings['prefix'] = '';
-    $settings['suffix'] = '';
-    return $settings;
+    return array(
+      'min' => '',
+      'max' => '',
+      'prefix' => '',
+      'suffix' => '',
+    ) + parent::defaultInstanceSettings();
   }
 
   /**
