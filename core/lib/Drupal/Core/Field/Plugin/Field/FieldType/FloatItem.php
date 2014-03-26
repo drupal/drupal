@@ -17,12 +17,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "float",
  *   label = @Translation("Number (float)"),
  *   description = @Translation("This field stores a number in the database in a floating point format."),
- *   instance_settings = {
- *     "min" = "",
- *     "max" = "",
- *     "prefix" = "",
- *     "suffix" = ""
- *   },
  *   default_widget = "number",
  *   default_formatter = "number_decimal"
  * )

@@ -399,8 +399,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
         }
 
         // Check selected plugin settings to display edit link or not.
-        $plugin_definition = $plugin->getPluginDefinition();
-        if ($plugin_definition['settings']) {
+        if ($this->pluginManager->getDefaultSettings($display_options['type'])) {
           $field_row['settings_edit'] = $base_button + array(
             '#type' => 'image_button',
             '#name' => $field_name . '_settings_edit',

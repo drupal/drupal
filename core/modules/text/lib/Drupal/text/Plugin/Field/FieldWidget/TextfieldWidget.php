@@ -21,10 +21,6 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *     "text",
  *     "string"
  *   },
- *   settings = {
- *     "size" = "60",
- *     "placeholder" = ""
- *   }
  * )
  */
 class TextfieldWidget extends StringWidget {

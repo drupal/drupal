@@ -25,15 +25,21 @@ use Drupal\Core\Field\FieldItemListInterface;
  *     "text_long",
  *     "text_with_summary"
  *   },
- *   settings = {
- *     "trim_length" = "600"
- *   },
  *   edit = {
  *     "editor" = "form"
  *   }
  * )
  */
 class TextTrimmedFormatter extends FormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'trim_length' => '600',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

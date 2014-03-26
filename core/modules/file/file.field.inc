@@ -9,16 +9,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\field\FieldConfigInterface;
 
 /**
- * Implements hook_field_info_alter().
- *
- * Cannot annotate in FieldItem plugin the settings.uri_scheme meta data key
- * with a dynamic value. We need to alter the value here.
- */
-function file_field_info_alter(&$info) {
-  $info['file']['settings']['uri_scheme'] = file_default_scheme();
-}
-
-/**
  * Returns HTML for an individual file upload widget.
  *
  * @param $variables

@@ -18,14 +18,20 @@ use Drupal\Core\Field\WidgetBase;
  *   label = @Translation("Link"),
  *   field_types = {
  *     "link"
- *   },
- *   settings = {
- *     "placeholder_url" = "",
- *     "placeholder_title" = ""
  *   }
  * )
  */
 class LinkWidget extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'placeholder_url' => '',
+      'placeholder_title' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

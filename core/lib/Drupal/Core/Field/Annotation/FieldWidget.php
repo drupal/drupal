@@ -66,14 +66,6 @@ class FieldWidget extends Plugin {
   public $field_types = array();
 
   /**
-   * An array whose keys are the names of the settings available to the widget
-   * type, and whose values are the default values for those settings.
-   *
-   * @var array
-   */
-  public $settings = array();
-
-  /**
    * Does the field widget handles multiple values at once.
    *
    * @var bool

@@ -52,33 +52,6 @@ class FieldType extends DataType {
   public $description;
 
   /**
-   * An array of field-level settings available for the field type.
-   *
-   * Keys are the names of the settings, and values are the default values for
-   * those settings.
-   *
-   * @var array
-   */
-  public $settings;
-
-  /**
-   * An array of instance-level settings available for the field type.
-   *
-   * Keys are the names of the settings, and values are the default values for
-   * those settings.
-   *
-   * Instance-level settings can have different values on each field instance,
-   * and thus allow greater flexibility than field-level settings. It is
-   * recommended to put settings at the instance level whenever possible.
-   * Notable exceptions: settings acting on the storage schema, or settings that
-   * Views needs to use across field instances (for example, settings defining
-   * the list of allowed values for the field).
-   *
-   * @var array
-   */
-  public $instance_settings;
-
-  /**
    * The plugin_id of the default widget for this field type.
    *
    * This widget must be available whenever the field type is available (i.e.

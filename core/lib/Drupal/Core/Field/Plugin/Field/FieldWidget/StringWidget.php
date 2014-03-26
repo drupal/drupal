@@ -18,14 +18,20 @@ use Drupal\Core\Field\WidgetBase;
  *   label = @Translation("String field"),
  *   field_types = {
  *     "string"
- *   },
- *   settings = {
- *     "size" = "60",
- *     "placeholder" = ""
  *   }
  * )
  */
 class StringWidget extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'size' => 60,
+      'placeholder' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

@@ -21,13 +21,19 @@ use Drupal\field\Field;
  *   label = @Translation("File"),
  *   field_types = {
  *     "file"
- *   },
- *   settings = {
- *     "progress_indicator" = "throbber"
  *   }
  * )
  */
 class FileWidget extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'progress_indicator' => 'throbber',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

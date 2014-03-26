@@ -17,21 +17,21 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "decimal",
  *   label = @Translation("Number (decimal)"),
  *   description = @Translation("This field stores a number in the database in a fixed decimal format."),
- *   settings = {
- *     "precision" = "10",
- *     "scale" = "2"
- *   },
- *   instance_settings = {
- *     "min" = "",
- *     "max" = "",
- *     "prefix" = "",
- *     "suffix" = ""
- *   },
  *   default_widget = "number",
  *   default_formatter = "number_decimal"
  * )
  */
 class DecimalItem extends NumericItemBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'precision' => 10,
+      'scale' => 2,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

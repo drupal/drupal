@@ -21,13 +21,19 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *     "integer",
  *     "decimal",
  *     "float"
- *   },
- *   settings = {
- *     "placeholder" = ""
  *   }
  * )
  */
 class NumberWidget extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'placeholder' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

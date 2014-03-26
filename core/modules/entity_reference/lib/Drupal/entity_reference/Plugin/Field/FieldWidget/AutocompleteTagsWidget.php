@@ -19,16 +19,22 @@ use Drupal\Component\Utility\Tags;
  *   field_types = {
  *     "entity_reference"
  *   },
- *   settings = {
- *     "match_operator" = "CONTAINS",
- *     "size" = 60,
- *     "autocomplete_type" = "tags",
- *     "placeholder" = ""
- *   },
  *   multiple_values = TRUE
  * )
  */
 class AutocompleteTagsWidget extends AutocompleteWidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'match_operator' => 'CONTAINS',
+      'size' => '60',
+      'autocomplete_type' => 'tags',
+      'placeholder' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

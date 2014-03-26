@@ -19,22 +19,34 @@ use Drupal\Core\Session\AnonymousUserSession;
  *   id = "comment",
  *   label = @Translation("Comments"),
  *   description = @Translation("This field manages configuration and presentation of comments on an entity."),
- *   settings = {
- *     "description" = "",
- *   },
- *   instance_settings = {
- *     "default_mode" = COMMENT_MODE_THREADED,
- *     "per_page" = 50,
- *     "form_location" = COMMENT_FORM_BELOW,
- *     "anonymous" = COMMENT_ANONYMOUS_MAYNOT_CONTACT,
- *     "subject" = 1,
- *     "preview" = DRUPAL_OPTIONAL,
- *   },
  *   default_widget = "comment_default",
  *   default_formatter = "comment_default"
  * )
  */
 class CommentItem extends FieldItemBase implements CommentItemInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'description' => '',
+    ) + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultInstanceSettings() {
+    return array(
+      'default_mode' => COMMENT_MODE_THREADED,
+      'per_page' => 50,
+      'form_location' => COMMENT_FORM_BELOW,
+      'anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
+      'subject' => 1,
+      'preview' => DRUPAL_OPTIONAL,
+    ) + parent::defaultInstanceSettings();
+  }
 
   /**
    * {@inheritdoc}

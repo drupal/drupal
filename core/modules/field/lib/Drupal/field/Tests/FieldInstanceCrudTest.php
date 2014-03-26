@@ -75,8 +75,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     // the loaded ConfigEntity, to be sure we check that the defaults are
     // applied on write.
     $config = \Drupal::config('field.instance.' . $instance->id())->get();
-
-    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->field_definition['type']);
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     // Check that default values are set.
     $this->assertEqual($config['required'], FALSE, 'Required defaults to false.');
@@ -84,7 +83,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $this->assertIdentical($config['description'], '', 'Description defaults to empty string.');
 
     // Check that default settings are set.
-    $this->assertEqual($config['settings'], $field_type['instance_settings'] , 'Default instance settings have been written.');
+    $this->assertEqual($config['settings'], $field_type_manager->getDefaultInstanceSettings($this->field_definition['type']) , 'Default instance settings have been written.');
 
     // Guarantee that the field/bundle combination is unique.
     try {

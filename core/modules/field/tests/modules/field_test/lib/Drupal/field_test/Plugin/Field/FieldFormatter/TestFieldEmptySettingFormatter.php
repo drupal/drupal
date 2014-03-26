@@ -19,13 +19,19 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   field_types = {
  *     "test_field",
  *   },
- *   settings = {
- *     "field_empty_setting" = ""
- *   },
  *   weight = -1
  * )
  */
 class TestFieldEmptySettingFormatter extends FormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'field_empty_setting' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

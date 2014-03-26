@@ -23,13 +23,19 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("This field stores simple on/off or yes/no options."),
  *   default_widget = "options_buttons",
  *   default_formatter = "list_default",
- *   settings = {
- *     "allowed_values" = { },
- *     "allowed_values_function" = ""
- *   }
  * )
  */
 class ListBooleanItem extends FieldItemBase implements AllowedValuesInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'allowed_values' => array(),
+      'allowed_values_function' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

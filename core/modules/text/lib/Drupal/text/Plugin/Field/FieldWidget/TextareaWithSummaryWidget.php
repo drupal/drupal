@@ -19,15 +19,21 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   label = @Translation("Text area with a summary"),
  *   field_types = {
  *     "text_with_summary"
- *   },
- *   settings = {
- *     "rows" = "9",
- *     "summary_rows" = "3",
- *     "placeholder" = ""
  *   }
  * )
  */
 class TextareaWithSummaryWidget extends TextareaWidget {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'rows' => '9',
+      'summary_rows' => '3',
+      'placeholder' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

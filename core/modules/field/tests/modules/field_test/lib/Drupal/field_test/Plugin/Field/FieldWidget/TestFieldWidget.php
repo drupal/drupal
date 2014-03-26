@@ -21,13 +21,19 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *      "test_field",
  *      "hidden_test_field"
  *   },
- *   settings = {
- *     "test_widget_setting" = "dummy test string"
- *   },
  *   weight = -10
  * )
  */
 class TestFieldWidget extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'test_widget_setting' => 'dummy test string',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

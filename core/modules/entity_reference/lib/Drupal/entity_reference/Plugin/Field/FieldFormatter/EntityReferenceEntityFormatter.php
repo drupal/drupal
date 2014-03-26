@@ -19,14 +19,20 @@ use Drupal\entity_reference\RecursiveRenderingException;
  *   description = @Translation("Display the referenced entities rendered by entity_view()."),
  *   field_types = {
  *     "entity_reference"
- *   },
- *   settings = {
- *     "view_mode" = "default",
- *     "link" = FALSE
  *   }
  * )
  */
 class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'view_mode' => 'default',
+      'link' => FALSE,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

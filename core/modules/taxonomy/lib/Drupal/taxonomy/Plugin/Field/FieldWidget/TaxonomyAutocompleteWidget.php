@@ -19,15 +19,21 @@ use Drupal\Core\Field\WidgetBase;
  *   field_types = {
  *     "taxonomy_term_reference"
  *   },
- *   settings = {
- *     "size" = "60",
- *     "autocomplete_route_name" = "taxonomy.autocomplete",
- *     "placeholder" = ""
- *   },
  *   multiple_values = TRUE
  * )
  */
 class TaxonomyAutocompleteWidget extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'size' => '60',
+      'autocomplete_route_name' => 'taxonomy.autocomplete',
+      'placeholder' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

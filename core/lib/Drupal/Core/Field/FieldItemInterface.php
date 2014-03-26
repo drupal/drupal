@@ -213,6 +213,22 @@ interface FieldItemInterface extends ComplexDataInterface {
   public function deleteRevision();
 
   /**
+   * Defines the field-level settings for this plugin.
+   *
+   * @return array
+   *   A list of default settings, keyed by the setting name.
+   */
+  public static function defaultSettings();
+
+  /**
+   * Defines the instance-level settings for this plugin.
+   *
+   * @return array
+   *   A list of default settings, keyed by the setting name.
+   */
+  public static function defaultInstanceSettings();
+
+  /**
    * Returns a form for the field-level settings.
    *
    * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow administrators to

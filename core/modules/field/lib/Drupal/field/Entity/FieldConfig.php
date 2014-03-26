@@ -295,6 +295,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
    protected function preSaveNew(EntityStorageControllerInterface $storage_controller) {
     $entity_manager = \Drupal::entityManager();
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     // Assign the ID.
     $this->id = $this->id();
@@ -318,7 +319,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     }
 
     // Check that the field type is known.
-    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->type);
+    $field_type = $field_type_manager->getDefinition($this->type);
     if (!$field_type) {
       throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
     }
@@ -326,7 +327,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
 
     // Make sure all settings are present, so that a complete field
     // definition is passed to the various hooks and written to config.
-    $this->settings += $field_type['settings'];
+     $this->settings += $field_type_manager->getDefaultSettings($this->type);
 
     // Notify the entity storage controller.
     $entity_manager->getStorageController($this->entity_type)->onFieldCreate($this);
@@ -524,10 +525,11 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     //   some CPU and memory profiling to see if it's worth statically caching
     //   $field_type_info, or the default field and instance settings, within
     //   $this.
-    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->type);
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
-    $settings = $this->settings + $field_type_info['settings'] + $field_type_info['instance_settings'];
-    return $settings;
+    $settings = $field_type_manager->getDefaultSettings($this->type);
+    $instance_settings = $field_type_manager->getDefaultInstanceSettings($this->type);
+    return $this->settings + $settings + $instance_settings;
   }
 
   /**
@@ -535,18 +537,14 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function getSetting($setting_name) {
     // @todo See getSettings() about potentially statically caching this.
-    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->type);
-
-    // We assume here that consecutive array_key_exists() is more efficient than
-    // calling getSettings() when all we need is a single setting.
+    // We assume here that one call to array_key_exists() is more efficient
+    // than calling getSettings() when all we need is a single setting.
     if (array_key_exists($setting_name, $this->settings)) {
       return $this->settings[$setting_name];
     }
-    elseif (array_key_exists($setting_name, $field_type_info['settings'])) {
-      return $field_type_info['settings'][$setting_name];
-    }
-    elseif (array_key_exists($setting_name, $field_type_info['instance_settings'])) {
-      return $field_type_info['instance_settings'][$setting_name];
+    $settings = $this->getSettings();
+    if (array_key_exists($setting_name, $settings)) {
+      return $settings[$setting_name];
     }
     else {
       return NULL;

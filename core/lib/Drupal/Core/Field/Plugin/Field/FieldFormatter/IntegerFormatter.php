@@ -19,14 +19,20 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
  *   label = @Translation("Default"),
  *   field_types = {
  *     "integer"
- *   },
- *   settings = {
- *     "thousand_separator" = "",
- *     "prefix_suffix" = "TRUE"
  *   }
  * )
  */
 class IntegerFormatter extends NumericFormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'thousand_separator' => '',
+      'prefix_suffix' => TRUE,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

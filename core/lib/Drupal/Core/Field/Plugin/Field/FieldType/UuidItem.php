@@ -16,13 +16,19 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
  *   id = "uuid",
  *   label = @Translation("UUID"),
  *   description = @Translation("An entity field containing a UUID."),
- *   settings = {
- *     "max_length" = "128"
- *   },
  *   no_ui = TRUE
  * )
  */
 class UuidItem extends StringItem {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'max_length' => 128,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

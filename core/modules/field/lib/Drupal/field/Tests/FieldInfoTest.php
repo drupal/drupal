@@ -133,8 +133,8 @@ class FieldInfoTest extends FieldUnitTestBase {
     $field = field_info_field('entity_test', $field_definition['name']);
 
     // Check that all expected settings are in place.
-    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_definition['type']);
-    $this->assertEqual($field->settings, $field_type['settings'], 'All expected default field settings are present.');
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $this->assertEqual($field->settings, $field_type_manager->getDefaultSettings($field_definition['type']), 'All expected default field settings are present.');
   }
 
   /**
@@ -167,8 +167,8 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instance = field_info_instance($instance_definition['entity_type'], $instance_definition['field_name'], $instance_definition['bundle']);
 
     // Check that all expected instance settings are in place.
-    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_definition['type']);
-    $this->assertEqual($instance->settings, $field_type['instance_settings'] , 'All expected instance settings are present.');
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $this->assertEqual($instance->settings, $field_type_manager->getDefaultInstanceSettings($field_definition['type']) , 'All expected instance settings are present.');
   }
 
   /**
@@ -292,8 +292,8 @@ class FieldInfoTest extends FieldUnitTestBase {
     $info = $this->getExpectedFieldTypeDefinition();
     foreach ($info as $type => $data) {
       $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
-      $this->assertIdentical($field_type_manager->getDefaultSettings($type), $data['settings'], format_string("field settings service returns %type's field settings", array('%type' => $type)));
-      $this->assertIdentical($field_type_manager->getDefaultInstanceSettings($type), $data['instance_settings'], format_string("field instance settings service returns %type's field instance settings", array('%type' => $type)));
+      $this->assertIdentical($field_type_manager->getDefaultSettings($type), $data['class']::defaultSettings(), format_string("field settings service returns %type's field settings", array('%type' => $type)));
+      $this->assertIdentical($field_type_manager->getDefaultInstanceSettings($type), $data['class']::defaultInstanceSettings(), format_string("field instance settings service returns %type's field instance settings", array('%type' => $type)));
     }
   }
 
@@ -341,15 +341,6 @@ class FieldInfoTest extends FieldUnitTestBase {
       'test_field' => array(
         'label' => t('Test field'),
         'description' => t('Dummy field type used for tests.'),
-        'settings' => array(
-          'test_field_setting' => 'dummy test string',
-          'changeable' => 'a changeable field setting',
-          'unchangeable' => 'an unchangeable field setting',
-        ),
-        'instance_settings' => array(
-          'test_instance_setting' => 'dummy test string',
-          'test_cached_data' => FALSE,
-        ),
         'default_widget' => 'test_field_widget',
         'default_formatter' => 'field_test_default',
         'class' => 'Drupal\field_test\Plugin\Field\FieldType\TestItem',
@@ -357,10 +348,6 @@ class FieldInfoTest extends FieldUnitTestBase {
       'shape' => array(
         'label' => t('Shape'),
         'description' => t('Another dummy field type.'),
-        'settings' => array(
-          'foreign_key_name' => 'shape',
-        ),
-        'instance_settings' => array(),
         'default_widget' => 'test_field_widget',
         'default_formatter' => 'field_test_default',
         'class' => 'Drupal\field_test\Plugin\Field\FieldType\ShapeItem',
@@ -369,8 +356,6 @@ class FieldInfoTest extends FieldUnitTestBase {
         'no_ui' => TRUE,
         'label' => t('Hidden from UI test field'),
         'description' => t('Dummy hidden field type used for tests.'),
-        'settings' => array(),
-        'instance_settings' => array(),
         'default_widget' => 'test_field_widget',
         'default_formatter' => 'field_test_default',
         'class' => 'Drupal\field_test\Plugin\Field\FieldType\HiddenTestItem',

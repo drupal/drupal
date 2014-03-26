@@ -19,14 +19,20 @@ use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
  *   label = @Translation("Image"),
  *   field_types = {
  *     "image"
- *   },
- *   settings = {
- *     "progress_indicator" = "throbber",
- *     "preview_image_style" = "thumbnail",
  *   }
  * )
  */
 class ImageWidget extends FileWidget {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'progress_indicator' => 'throbber',
+      'preview_image_style' => 'thumbnail',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

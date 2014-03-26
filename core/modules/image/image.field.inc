@@ -8,13 +8,6 @@
 use Drupal\Component\Utility\NestedArray;
 
 /**
- * Implements hook_field_info_alter().
- */
-function image_field_info_alter(&$info) {
-  $info['image']['settings']['uri_scheme'] = file_default_scheme();
-}
-
-/**
  * Returns HTML for an image field widget.
  *
  * @param array $variables

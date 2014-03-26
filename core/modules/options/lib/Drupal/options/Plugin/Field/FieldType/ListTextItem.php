@@ -19,10 +19,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("This field stores text values from a list of allowed 'value => label' pairs, i.e. 'US States': IL => Illinois, IA => Iowa, IN => Indiana."),
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
- *   settings = {
- *     "allowed_values" = { },
- *     "allowed_values_function" = ""
- *   }
  * )
  */
 class ListTextItem extends ListItemBase {

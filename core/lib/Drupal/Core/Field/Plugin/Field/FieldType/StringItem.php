@@ -18,15 +18,21 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "string",
  *   label = @Translation("String"),
  *   description = @Translation("An entity field containing a string value."),
- *   settings = {
- *     "max_length" = "255"
- *   },
  *   no_ui = TRUE,
  *   default_widget = "string",
  *   default_formatter = "string"
  * )
  */
 class StringItem extends FieldItemBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'max_length' => 255,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

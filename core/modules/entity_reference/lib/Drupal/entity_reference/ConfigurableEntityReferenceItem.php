@@ -21,12 +21,32 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  * Replaces the Core 'entity_reference' entity field type implementation, this
  * supports configurable fields, auto-creation of referenced entities and more.
  *
- * Required settings (below the definition's 'settings' key) are:
+ * Required settings are:
  *  - target_type: The entity type to reference.
  *
  * @see entity_reference_field_info_alter().
  */
 class ConfigurableEntityReferenceItem extends EntityReferenceItem implements AllowedValuesInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    $settings = parent::defaultSettings();
+    // The target bundle is handled by the 'target_bundles' property in the
+    // 'handler_settings' instance setting.
+    unset($settings['target_bundle']);
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultInstanceSettings() {
+    return array(
+      'handler_settings' => array(),
+    ) + parent::defaultInstanceSettings();
+  }
 
   /**
    * {@inheritdoc}

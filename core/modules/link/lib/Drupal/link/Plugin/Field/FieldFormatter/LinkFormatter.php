@@ -21,17 +21,23 @@ use Drupal\Core\Field\FormatterBase;
  *   label = @Translation("Link"),
  *   field_types = {
  *     "link"
- *   },
- *   settings = {
- *     "trim_length" = "80",
- *     "url_only" = "",
- *     "url_plain" = "",
- *     "rel" = "",
- *     "target" = ""
  *   }
  * )
  */
 class LinkFormatter extends FormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'trim_length' => '80',
+      'url_only' => '',
+      'url_plain' => '',
+      'rel' => '',
+      'target' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

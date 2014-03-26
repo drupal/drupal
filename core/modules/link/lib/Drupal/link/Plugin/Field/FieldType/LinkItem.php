@@ -19,14 +19,20 @@ use Drupal\Core\TypedData\MapDataDefinition;
  *   id = "link",
  *   label = @Translation("Link"),
  *   description = @Translation("Stores a URL string, optional varchar link text, and optional blob of attributes to assemble a link."),
- *   instance_settings = {
- *     "title" = "1"
- *   },
  *   default_widget = "link_default",
  *   default_formatter = "link"
  * )
  */
 class LinkItem extends FieldItemBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultInstanceSettings() {
+    return array(
+      'title' => 1,
+    ) + parent::defaultInstanceSettings();
+  }
 
   /**
    * {@inheritdoc}

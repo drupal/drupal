@@ -43,9 +43,6 @@ function entity_reference_field_info_alter(&$info) {
   $info['entity_reference']['no_ui'] = FALSE;
   $info['entity_reference']['class'] = '\Drupal\entity_reference\ConfigurableEntityReferenceItem';
   $info['entity_reference']['list_class'] = '\Drupal\entity_reference\Plugin\Field\FieldType\ConfigurableEntityReferenceFieldItemList';
-  $info['entity_reference']['settings']['target_type'] = \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user';
-  $info['entity_reference']['instance_settings']['handler'] = 'default';
-  $info['entity_reference']['instance_settings']['handler_settings'] = array();
   $info['entity_reference']['default_widget'] = 'entity_reference_autocomplete';
   $info['entity_reference']['default_formatter'] = 'entity_reference_label';
   $info['entity_reference']['provider'] = 'entity_reference';

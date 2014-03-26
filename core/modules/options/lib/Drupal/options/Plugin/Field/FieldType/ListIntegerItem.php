@@ -19,10 +19,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("This field stores integer values from a list of allowed 'value => label' pairs, i.e. 'Lifetime in days': 1 => 1 day, 7 => 1 week, 31 => 1 month."),
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
- *   settings = {
- *     "allowed_values" = { },
- *     "allowed_values_function" = ""
- *   }
  * )
  */
 class ListIntegerItem extends ListItemBase {

@@ -19,13 +19,19 @@ use Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase;
  *   field_types = {
  *     "list_boolean"
  *   },
- *   settings = {
- *     "display_label" = FALSE,
- *   },
  *   multiple_values = TRUE
  * )
  */
 class OnOffWidget extends OptionsWidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'display_label' => FALSE,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

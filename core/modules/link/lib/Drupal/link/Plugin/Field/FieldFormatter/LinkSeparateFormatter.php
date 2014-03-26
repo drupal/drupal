@@ -22,15 +22,21 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   label = @Translation("Separate link text and URL"),
  *   field_types = {
  *     "link"
- *   },
- *   settings = {
- *     "trim_length" = "80",
- *     "rel" = "",
- *     "target" = ""
  *   }
  * )
  */
 class LinkSeparateFormatter extends LinkFormatter {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'trim_length' => '80',
+      'rel' => '',
+      'target' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

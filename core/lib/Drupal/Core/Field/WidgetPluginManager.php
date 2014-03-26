@@ -203,8 +203,13 @@ class WidgetPluginManager extends DefaultPluginManager {
    *   definition, or an empty array if type or settings are undefined.
    */
   public function getDefaultSettings($type) {
-    $info = $this->getDefinition($type);
-    return isset($info['settings']) ? $info['settings'] : array();
+    $plugin_definition = $this->getDefinition($type);
+    if (!empty($plugin_definition['class'])) {
+      $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
+      return $plugin_class::defaultSettings();
+    }
+
+    return array();
   }
 
 }

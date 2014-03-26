@@ -19,15 +19,21 @@ use Drupal\Core\Field\FieldItemBase;
  *   id = "datetime",
  *   label = @Translation("Date"),
  *   description = @Translation("Create and store date values."),
- *   settings = {
- *     "datetime_type" = "datetime"
- *   },
  *   default_widget = "datetime_default",
  *   default_formatter = "datetime_default",
  *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList"
  * )
  */
 class DateTimeItem extends FieldItemBase implements PrepareCacheInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'datetime_type' => 'datetime',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * Value for the 'datetime_type' setting: store only a date.

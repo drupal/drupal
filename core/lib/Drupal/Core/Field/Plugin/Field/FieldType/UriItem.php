@@ -21,13 +21,19 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "uri",
  *   label = @Translation("URI"),
  *   description = @Translation("An entity field containing a URI."),
- *   settings = {
- *     "max_length" = "2048"
- *   },
  *   no_ui = TRUE
  * )
  */
 class UriItem extends StringItem {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'max_length' => 2048,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

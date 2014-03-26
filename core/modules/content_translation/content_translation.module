@@ -740,21 +740,19 @@ function content_translation_form_field_ui_field_instance_edit_form_alter(array 
 }
 
 /**
- * Implements hook_field_info_alter().
- */
-function content_translation_field_info_alter(&$info) {
-  foreach ($info as &$field_type_info) {
-    // By default no column has to be synchronized.
-    $field_type_info['settings'] += array('translation_sync' => FALSE);
-    // Synchronization can be enabled per instance.
-    $field_type_info['instance_settings'] += array('translation_sync' => FALSE);
-  }
-}
-
-/**
  * Implements hook_entity_presave().
  */
 function content_translation_entity_presave(EntityInterface $entity) {
+  // By default no column has to be synchronized.
+  // @todo Replace with own storage in https://drupal.org/node/2224761
+  if ($entity->getEntityTypeId() === 'field_config') {
+    $entity->settings += array('translation_sync' => FALSE);
+  }
+  // Synchronization can be enabled per instance.
+  // @todo Replace with own storage in https://drupal.org/node/2224761
+  if ($entity->getEntityTypeId() === 'field_instance_config') {
+    $entity->settings += array('translation_sync' => FALSE);
+  }
   if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
     // @todo Avoid using request attributes once translation metadata become
     //   regular fields.

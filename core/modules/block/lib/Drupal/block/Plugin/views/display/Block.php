@@ -65,7 +65,7 @@ class Block extends DisplayPluginBase {
    *
    * @return array
    *   An array of block-specific settings to override the defaults provided in
-   *   \Drupal\views\Plugin\Block\ViewsBlock::settings().
+   *   \Drupal\views\Plugin\Block\ViewsBlock::defaultConfiguration().
    *
    * @see \Drupal\views\Plugin\Block\ViewsBlock::defaultConfiguration()
    */

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -16,14 +17,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * Plugin manager for 'field type' plugins.
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaults = array(
-    'settings' => array(),
-    'instance_settings' => array(),
-  );
 
   /**
    * Constructs the FieldTypePluginManager object
@@ -58,16 +51,24 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    * {@inheritdoc}
    */
   public function getDefaultSettings($type) {
-    $info = $this->getDefinition($type);
-    return isset($info['settings']) ? $info['settings'] : array();
+    $plugin_definition = $this->getDefinition($type);
+    if (!empty($plugin_definition['class'])) {
+      $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
+      return $plugin_class::defaultSettings();
+    }
+    return array();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultInstanceSettings($type) {
-    $info = $this->getDefinition($type);
-    return isset($info['instance_settings']) ? $info['instance_settings'] : array();
+    $plugin_definition = $this->getDefinition($type);
+    if (!empty($plugin_definition['class'])) {
+      $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);
+      return $plugin_class::defaultInstanceSettings();
+    }
+    return array();
   }
 
   /**

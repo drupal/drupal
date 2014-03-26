@@ -26,6 +26,20 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultInstanceSettings() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function mainPropertyName() {
     return 'value';
   }

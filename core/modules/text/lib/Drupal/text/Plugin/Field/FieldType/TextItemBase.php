@@ -20,6 +20,15 @@ abstract class TextItemBase extends FieldItemBase implements PrepareCacheInterfa
   /**
    * {@inheritdoc}
    */
+  public static function defaultInstanceSettings() {
+    $settings = parent::defaultInstanceSettings();
+    $settings['text_processing'] = 0;
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('Text value'));

@@ -18,15 +18,21 @@ use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
  *   label = @Translation("Responsive image"),
  *   field_types = {
  *     "image",
- *   },
- *   settings = {
- *     "responsive_image_mapping" = "",
- *     "fallback_image_style" = "",
- *     "image_link" = "",
  *   }
  * )
  */
 class ResponsiveImageFormatter extends ImageFormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'responsive_image_mapping' => '',
+      'fallback_image_style' => '',
+      'image_link' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

@@ -18,13 +18,19 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   label = @Translation("Telephone link"),
  *   field_types = {
  *     "telephone"
- *   },
- *   settings = {
- *     "title" = ""
  *   }
  * )
  */
 class TelephoneLinkFormatter extends FormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'title' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

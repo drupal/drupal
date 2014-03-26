@@ -19,13 +19,19 @@ use Drupal\Core\Field\FormatterBase;
  *   field_types = {
  *     "test_field",
  *   },
- *   settings = {
- *     "test_empty_string" = "**EMPTY FIELD**"
- *   },
  *   weight = -5
  * )
  */
 class TestFieldEmptyFormatter extends FormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'test_empty_string' => '**EMPTY FIELD**',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

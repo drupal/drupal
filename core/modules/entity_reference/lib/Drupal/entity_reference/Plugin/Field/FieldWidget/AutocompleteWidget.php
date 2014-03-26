@@ -23,16 +23,24 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   description = @Translation("An autocomplete text field."),
  *   field_types = {
  *     "entity_reference"
- *   },
- *   settings = {
- *     "match_operator" = "CONTAINS",
- *     "size" = 60,
- *     "autocomplete_type" = "single",
- *     "placeholder" = ""
  *   }
  * )
  */
 class AutocompleteWidget extends AutocompleteWidgetBase {
+
+  protected $usesOptions = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'match_operator' => 'CONTAINS',
+      'size' => '60',
+      'autocomplete_type' => 'tags',
+      'placeholder' => '',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

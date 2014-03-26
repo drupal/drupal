@@ -127,13 +127,6 @@ function hook_field_extra_fields_alter(&$info) {
  *   manager.
  */
 function hook_field_info_alter(&$info) {
-  // Add a setting to all field types.
-  foreach ($info as $field_type => $field_type_info) {
-    $info[$field_type]['settings'] += array(
-      'mymodule_additional_setting' => 'default value',
-    );
-  }
-
   // Change the default widget for fields of type 'foo'.
   if (isset($info['foo'])) {
     $info['foo']['default widget'] = 'mymodule_widget';
@@ -175,15 +168,10 @@ function hook_field_info_alter(&$info) {
  * Perform alterations on Field API widget types.
  *
  * @param array $info
- *   An array of informations on existing widget types, as collected by the
+ *   An array of information on existing widget types, as collected by the
  *   annotation discovery mechanism.
  */
 function hook_field_widget_info_alter(array &$info) {
-  // Add a setting to a widget type.
-  $info['text_textfield']['settings'] += array(
-    'mymodule_additional_setting' => 'default value',
-  );
-
   // Let a new field type re-use an existing widget.
   $info['options_select']['field_types'][] = 'my_field_type';
 }
@@ -275,15 +263,10 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
  * Perform alterations on Field API formatter types.
  *
  * @param array $info
- *   An array of informations on existing formatter types, as collected by the
+ *   An array of information on existing formatter types, as collected by the
  *   annotation discovery mechanism.
  */
 function hook_field_formatter_info_alter(array &$info) {
-  // Add a setting to a formatter type.
-  $info['text_default']['settings'] += array(
-    'mymodule_additional_setting' => 'default value',
-  );
-
   // Let a new field type re-use an existing formatter.
   $info['text_default']['field types'][] = 'my_field_type';
 }

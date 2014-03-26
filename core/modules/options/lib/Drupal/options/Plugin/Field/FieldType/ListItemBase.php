@@ -19,6 +19,16 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    return array(
+      'allowed_values' => array(),
+      'allowed_values_function' => '',
+    ) + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getPossibleValues(AccountInterface $account = NULL) {
     // Flatten options firstly, because Possible Options may contain group
     // arrays.

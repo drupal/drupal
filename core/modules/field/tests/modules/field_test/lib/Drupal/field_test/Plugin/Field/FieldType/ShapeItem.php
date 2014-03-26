@@ -18,14 +18,20 @@ use Drupal\Core\Field\FieldItemBase;
  *   id = "shape",
  *   label = @Translation("Shape"),
  *   description = @Translation("Another dummy field type."),
- *   settings = {
- *     "foreign_key_name" = "shape"
- *   },
  *   default_widget = "test_field_widget",
  *   default_formatter = "field_test_default"
  * )
  */
 class ShapeItem extends FieldItemBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'foreign_key_name' => 'shape',
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

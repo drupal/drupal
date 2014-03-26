@@ -16,17 +16,20 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  *   id = "text",
  *   label = @Translation("Text"),
  *   description = @Translation("This field stores varchar text in the database."),
- *   settings = {
- *     "max_length" = "255"
- *   },
- *   instance_settings = {
- *     "text_processing" = "0"
- *   },
  *   default_widget = "text_textfield",
  *   default_formatter = "text_default"
  * )
  */
 class TextItem extends TextItemBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return array(
+      'max_length' => 255,
+    ) + parent::defaultSettings();
+  }
 
   /**
    * {@inheritdoc}

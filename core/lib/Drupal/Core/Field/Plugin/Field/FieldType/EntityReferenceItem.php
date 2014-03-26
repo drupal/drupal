@@ -35,6 +35,25 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    return array(
+      'target_type' => \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user',
+      'target_bundle' => NULL,
+    ) + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultInstanceSettings() {
+    return array(
+      'handler' => 'default',
+    ) + parent::defaultInstanceSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
     $settings = $field_definition->getSettings();
     $target_type_info = \Drupal::entityManager()->getDefinition($settings['target_type']);
