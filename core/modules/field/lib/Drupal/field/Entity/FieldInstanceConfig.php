@@ -429,6 +429,13 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       }
     }
 
+    // If this is part of a configuration synchronization then the following
+    // configuration updates are not necessary.
+    $entity = reset($instances);
+    if ($entity->isSyncing()) {
+      return;
+    }
+
     // Delete fields that have no more instances.
     $fields_to_delete = array();
     foreach ($instances as $instance) {

@@ -8,8 +8,6 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\ConfigEvents;
-use Drupal\Core\Config\Entity\ConfigStorageControllerInterface;
 use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Entity\EntityStorageException;

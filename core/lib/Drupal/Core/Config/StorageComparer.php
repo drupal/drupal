@@ -170,10 +170,26 @@ class StorageComparer implements StorageComparerInterface {
    * should be updated before field instances.
    */
   protected function addChangelistUpdate() {
+    $recreates = array();
     foreach (array_intersect($this->sourceNames, $this->targetNames) as $name) {
       if ($this->sourceData[$name] !== $this->targetData[$name]) {
-        $this->addChangeList('update', array($name));
+        if (isset($this->sourceData[$name]['uuid']) && $this->sourceData[$name]['uuid'] != $this->targetData[$name]['uuid']) {
+          // The entity has the same file as an existing entity but the UUIDs do
+          // not match. This means that the entity has been recreated so config
+          // synchronisation should do the same.
+          $recreates[] = $name;
+        }
+        else {
+          $this->addChangeList('update', array($name));
+        }
       }
+    }
+
+    if (!empty($recreates)) {
+      // Recreates should become deletes and creates. Deletes should be ordered
+      // so that dependencies are deleted first.
+      $this->addChangeList('create', $recreates);
+      $this->addChangeList('delete', array_reverse($recreates));
     }
   }
 
