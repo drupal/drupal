@@ -8,7 +8,7 @@
 namespace Drupal\ban\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\ban\BanIpManager;
+use Drupal\ban\BanIpManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -27,10 +27,10 @@ class BanDelete extends ConfirmFormBase {
   /**
    * Constructs a new BanDelete object.
    *
-   * @param \Drupal\ban\BanIpManager $ip_manager
+   * @param \Drupal\ban\BanIpManagerInterface $ip_manager
    *   The IP manager.
    */
-  public function __construct(BanIpManager $ip_manager) {
+  public function __construct(BanIpManagerInterface $ip_manager) {
     $this->ipManager = $ip_manager;
   }
 

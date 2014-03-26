@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use Drupal\ban\BanIpManager;
+use Drupal\ban\BanIpManagerInterface;
 use Drupal\Component\Utility\String;
 
 /**
@@ -23,17 +23,17 @@ class BanSubscriber implements EventSubscriberInterface {
   /**
    * The manager used to check the IP against.
    *
-   * @var \Drupal\ban\BanIpManager
+   * @var \Drupal\ban\BanIpManagerInterface
    */
   protected $manager;
 
   /**
    * Construct the BanSubscriber.
    *
-   * @param \Drupal\ban\BanIpManager $manager
+   * @param \Drupal\ban\BanIpManagerInterface $manager
    *   The manager used to check the IP against.
    */
-  public function __construct(BanIpManager $manager) {
+  public function __construct(BanIpManagerInterface $manager) {
     $this->manager = $manager;
   }
 

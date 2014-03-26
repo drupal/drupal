@@ -12,7 +12,7 @@ use Drupal\Core\Database\Connection;
 /**
  * Ban IP manager.
  */
-class BanIpManager {
+class BanIpManager implements BanIpManagerInterface {
 
   /**
    * The database connection used to check the IP against.
@@ -32,33 +32,21 @@ class BanIpManager {
   }
 
   /**
-   * Returns if this IP address is banned.
-   *
-   * @param string $ip
-   *   The IP address to check.
-   *
-   * @return bool
-   *   TRUE if the IP address is banned, FALSE otherwise.
+   * {@inheritdoc}
    */
   public function isBanned($ip) {
     return (bool) $this->connection->query("SELECT * FROM {ban_ip} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
   }
 
   /**
-   * Finds all banned IP addresses.
-   *
-   * @return \Drupal\Core\Database\StatementInterface
-   *   The result of the database query.
+   * {@inheritdoc}
    */
   public function findAll() {
     return $this->connection->query('SELECT * FROM {ban_ip}');
   }
 
   /**
-   * Bans an IP address.
-   *
-   * @param string $ip
-   *   The IP address to ban.
+   * {@inheritdoc}
    */
   public function banIp($ip) {
     $this->connection->insert('ban_ip')
@@ -67,10 +55,7 @@ class BanIpManager {
   }
 
   /**
-   * Unbans an IP address.
-   *
-   * @param string $id
-   *   The IP address to unban.
+   * {@inheritdoc}
    */
   public function unbanIp($id) {
     $this->connection->delete('ban_ip')
@@ -79,16 +64,9 @@ class BanIpManager {
   }
 
   /**
-   * Finds a banned IP address by its ID.
-   *
-   * @param int $ban_id
-   *   The ID for a banned IP address.
-   *
-   * @return string|false
-   *   Either the banned IP address or FALSE if none exist with that ID.
+   * {@inheritdoc}
    */
   public function findById($ban_id) {
     return $this->connection->query("SELECT ip FROM {ban_ip} WHERE iid = :iid", array(':iid' => $ban_id))->fetchField();
   }
-
 }
