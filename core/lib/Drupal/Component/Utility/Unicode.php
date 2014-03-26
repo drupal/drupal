@@ -258,7 +258,7 @@ EOD;
   }
 
   /**
-   * Converts a UTF-8 string to uppercase.
+   * Uppercase a UTF-8 string.
    *
    * @param string $text
    *   The string to run the operation on.
@@ -280,7 +280,7 @@ EOD;
   }
 
   /**
-   * Converts a UTF-8 string to lowercase.
+   * Lowercase a UTF-8 string.
    *
    * @param string $text
    *   The string to run the operation on.
@@ -302,50 +302,16 @@ EOD;
   }
 
   /**
-   * Capitalizes the first character of a UTF-8 string.
+   * Capitalizes the first letter of a UTF-8 string.
    *
    * @param string $text
    *   The string to convert.
    *
    * @return string
-   *   The string with the first character as uppercase.
+   *   The string with the first letter as uppercase.
    */
   public static function ucfirst($text) {
     return static::strtoupper(static::substr($text, 0, 1)) . static::substr($text, 1);
-  }
-
-  /**
-   * Converts the first character of a UTF-8 string to lowercase.
-   *
-   * @param string $text
-   *   The string that will be converted.
-   *
-   * @return string
-   *   The string with the first character as lowercase.
-   *
-   * @ingroup php_wrappers
-   */
-  public static function lcfirst($text) {
-    // Note: no mbstring equivalent!
-    return static::strtolower(static::substr($text, 0, 1)) . static::substr($text, 1);
-  }
-
-  /**
-   * Capitalizes the first character of each word in a UTF-8 string.
-   *
-   * @param string $text
-   *   The text that will be converted.
-   *
-   * @return string
-   *   The input $text with each word capitalized.
-   *
-   * @ingroup php_wrappers
-   */
-  public static function ucwords($text) {
-    $regex = '/(^|[' . static::PREG_CLASS_WORD_BOUNDARY . '])([^' . static::PREG_CLASS_WORD_BOUNDARY . '])/u';
-    return preg_replace_callback($regex, function(array $matches) {
-      return $matches[1] . Unicode::strtoupper($matches[2]);
-    }, $text);
   }
 
   /**

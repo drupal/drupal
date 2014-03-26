@@ -109,16 +109,23 @@ function _drupal_maintenance_theme() {
  *   An associative array containing:
  *   - items: An associative array of maintenance tasks.
  *   - active: The key for the currently active maintenance task.
+ *   - variant: A variant name to be used for a CSS class.
  *
  * @ingroup themeable
  */
 function theme_task_list($variables) {
   $items = $variables['items'];
   $active = $variables['active'];
+  if (isset($variables['variant'])) {
+    $class = $variables['variant'] . '-task-list';
+  }
+  else {
+    $class = 'task-list';
+  }
 
   $done = isset($items[$active]) || $active == NULL;
   $output = '<h2 class="visually-hidden">Installation tasks</h2>';
-  $output .= '<ol class="task-list">';
+  $output .= '<ol class="' . $class . '">';
 
   foreach ($items as $k => $item) {
     if ($active == $k) {

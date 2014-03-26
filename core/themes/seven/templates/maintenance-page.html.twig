@@ -12,53 +12,47 @@
  */
 #}
 <!DOCTYPE html>
-<html{{ html_attributes }} class="maintenance-background">
-<head>
-  {{ head }}
-  <title>{{ head_title }}</title>
-  {{ styles }}
-  {{ scripts }}
-</head>
-<body{{ attributes }}>
-
-<div class="l-container">
+<html{{ html_attributes }}>
+  <head>
+    <title>{{ head_title }}</title>
+    {{ head }}
+    {{ styles }}
+    {{ scripts }}
+  </head>
+  <body{{ attributes }}>
 
   {{ page_top }}
 
-  <header role="banner">
-    {% if site_name or site_slogan %}
-      <div class="name-and-slogan">
-        {% if site_name %}
-          <h1>{{ site_name }}</h1>
-        {% endif %}
-        {% if site_slogan %}
-          <div class="site-slogan">{{ site_slogan }}</div>
-        {% endif %}
-      </div>{# /.name-and-slogan #}
-    {% endif %}
+  <header id="branding">
+    <div class="branding__inner">
+      {% if title %}<h1 class="page-title">{{ title }}</h1>{% endif %}
+    </div>
   </header>
 
-  {% if sidebar_first %}
-    <aside class="l-sidebar-first" role="complementary">
+  <div id="page">
+    <div id="sidebar-first" class="sidebar">
+      {% if logo %}
+        <img id="logo" src="{{ logo }}" alt="{{ site_name }}" />
+      {% endif %}
       {{ sidebar_first }}
-    </aside>{# /.l-sidebar-first #}
-  {% endif %}
+    </div>
 
-  <main role="main">
-    {% if title %}
-      <h1>{{ title }}</h1>
-    {% endif %}
-    {{ messages }}
-    {{ content }}
-  </main>
+    <main id="content" class="clearfix">
+      {% if messages %}
+        <div id="console">{{ messages }}</div>
+      {% endif %}
+      {% if help %}
+        <div id="help">
+          {{ help }}
+        </div>
+      {% endif %}
+      {{ content }}
+    </main>
+  </div>
 
-  {% if footer %}
-    <footer role="contentinfo">
-      {{ footer }}
-    </footer>
-  {% endif %}
+  <footer role="contentinfo">
+    {{ page_bottom }}
+  </footer>
 
-</div>{# /.l-container #}
-
-</body>
+  </body>
 </html>

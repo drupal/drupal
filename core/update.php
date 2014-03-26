@@ -211,7 +211,7 @@ function update_info_page() {
   $output .= "</ol>\n";
   $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";
   $form_action = check_url(drupal_current_script_url(array('op' => 'selection', 'token' => $token)));
-  $output .= '<form method="post" action="' . $form_action . '"><div class="form-actions form-wrapper" id="edit-actions"><input type="submit" value="Continue" class="button button--primary form-submit" /></div></form>';
+  $output .= '<form method="post" action="' . $form_action . '"><p><input type="submit" value="Continue" class="form-submit button button-primary" /></p></form>';
   $output .= "\n";
 
   $build = array(

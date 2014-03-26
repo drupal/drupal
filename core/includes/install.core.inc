@@ -910,6 +910,7 @@ function install_display_output($output, $install_state) {
       '#theme' => 'task_list',
       '#items' => install_tasks_to_display($install_state),
       '#active' => $active_task,
+      '#variant' => 'install',
     );
     drupal_add_region_content('sidebar_first', drupal_render($task_list));
   }
