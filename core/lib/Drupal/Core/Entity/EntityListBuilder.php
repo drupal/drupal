@@ -93,6 +93,25 @@ class EntityListBuilder extends EntityControllerBase implements EntityListBuilde
    * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
+    $operations = $this->getDefaultOperations($entity);
+    $operations += $this->moduleHandler()->invokeAll('entity_operation', array($entity));
+    $this->moduleHandler->alter('entity_operation', $operations, $entity);
+    uasort($operations, '\Drupal\Component\Utility\SortArray::sortByWeightElement');
+
+    return $operations;
+  }
+
+  /**
+   * Gets this list's default operations.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity the operations are for.
+   *
+   * @return array
+   *   The array structure is identical to the return value of
+   *   self::getOperations().
+   */
+  protected function getDefaultOperations(EntityInterface $entity) {
     $operations = array();
     if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
       $operations['edit'] = array(
@@ -151,14 +170,11 @@ class EntityListBuilder extends EntityControllerBase implements EntityListBuilde
    * @see \Drupal\Core\Entity\EntityListBuilder::buildRow()
    */
   public function buildOperations(EntityInterface $entity) {
-    // Retrieve and sort operations.
-    $operations = $this->getOperations($entity);
-    $this->moduleHandler()->alter('entity_operation', $operations, $entity);
-    uasort($operations, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
     $build = array(
       '#type' => 'operations',
-      '#links' => $operations,
+      '#links' => $this->getOperations($entity),
     );
+
     return $build;
   }
 

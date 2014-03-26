@@ -159,15 +159,18 @@ function config_translation_config_translation_info(&$info) {
 }
 
 /**
- * Implements hook_entity_operation_alter().
+ * Implements hook_entity_operation().
  */
-function config_translation_entity_operation_alter(array &$operations, EntityInterface $entity) {
+function config_translation_entity_operation(EntityInterface $entity) {
+  $operations = array();
   if (\Drupal::currentUser()->hasPermission('translate configuration')) {
     $operations['translate'] = array(
       'title' => t('Translate'),
       'weight' => 50,
     ) + $entity->urlInfo('drupal:config-translation-overview');
   }
+
+  return $operations;
 }
 
 /**

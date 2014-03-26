@@ -7,7 +7,9 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\entity_test\EntityTestListBuilder;
 use Drupal\Tests\UnitTestCase;
 
@@ -19,6 +21,41 @@ use Drupal\Tests\UnitTestCase;
  * @see \Drupal\entity_test\EntityTestListBuilder
  */
 class EntityListBuilderTest extends UnitTestCase {
+
+  /**
+   * The entity type used for testing.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityType;
+
+  /**
+   * The module handler used for testing.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $moduleHandler;
+
+  /**
+   * The translation manager used for testing.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $translationManager;
+
+  /**
+   * The role storage used for testing.
+   *
+   * @var \Drupal\user\RoleStorageControllerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $roleStorage;
+
+  /**
+   * The service container used for testing.
+   *
+   * @var \Drupal\Core\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
 
   /**
    * The entity used to construct the EntityListBuilder.
@@ -49,10 +86,59 @@ class EntityListBuilderTest extends UnitTestCase {
     parent::setUp();
 
     $this->role = $this->getMock('Drupal\user\RoleInterface');
-    $role_storage_controller = $this->getMock('Drupal\user\RoleStorageControllerInterface');
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $this->entityListBuilder = new TestEntityListBuilder($entity_type, $role_storage_controller, $module_handler);
+    $this->roleStorage = $this->getMock('\Drupal\user\RoleStorageControllerInterface');
+    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $this->translationManager = $this->getMock('\Drupal\Core\StringTranslation\TranslationInterface');
+    $this->entityListBuilder = new TestEntityListBuilder($this->entityType, $this->roleStorage, $this->moduleHandler);
+    $this->container = new ContainerBuilder();
+    \Drupal::setContainer($this->container);
+  }
+
+  /**
+   * @covers \Drupal\Core\Entity\EntityListBuilder::getOperations
+   */
+  public function testGetOperations() {
+    $operation_name = $this->randomName();
+    $operations = array(
+      $operation_name => array(
+        'title' => $this->randomName(),
+      ),
+    );
+    $this->moduleHandler->expects($this->once())
+      ->method('invokeAll')
+      ->with('entity_operation', array($this->role))
+      ->will($this->returnValue($operations));
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('entity_operation');
+
+    $this->container->set('module_handler', $this->moduleHandler);
+
+    $this->role->expects($this->any())
+      ->method('access')
+      ->will($this->returnValue(TRUE));
+    $this->role->expects($this->any())
+      ->method('hasLinkTemplate')
+      ->will($this->returnValue(TRUE));
+    $this->role->expects($this->any())
+      ->method('urlInfo')
+      ->will($this->returnValue(array()));
+
+    $list = new EntityListBuilder($this->entityType, $this->roleStorage, $this->moduleHandler);
+    $list->setTranslationManager($this->translationManager);
+
+    $operations = $list->getOperations($this->role);
+    $this->assertInternalType('array', $operations);
+    $this->assertArrayHasKey('edit', $operations);
+    $this->assertInternalType('array', $operations['edit']);
+    $this->assertArrayHasKey('title', $operations['edit']);
+    $this->assertArrayHasKey('delete', $operations);
+    $this->assertInternalType('array', $operations['delete']);
+    $this->assertArrayHasKey('title', $operations['delete']);
+    $this->assertArrayHasKey($operation_name, $operations);
+    $this->assertInternalType('array', $operations[$operation_name]);
+    $this->assertArrayHasKey('title', $operations[$operation_name]);
   }
 
   /**
