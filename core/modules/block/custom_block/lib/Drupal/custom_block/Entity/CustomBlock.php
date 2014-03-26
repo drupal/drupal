@@ -176,7 +176,8 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
 
     $fields['info'] = FieldDefinition::create('string')
       ->setLabel(t('Subject'))
-      ->setDescription(t('The custom block name.'));
+      ->setDescription(t('The custom block name.'))
+      ->setRevisionable(TRUE);
 
     $fields['type'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Block type'))
@@ -185,11 +186,13 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
 
     $fields['log'] = FieldDefinition::create('string')
       ->setLabel(t('Revision log message'))
-      ->setDescription(t('The revision log message.'));
+      ->setDescription(t('The revision log message.'))
+      ->setRevisionable(TRUE);
 
     $fields['changed'] = FieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the custom block was last edited.'));
+      ->setDescription(t('The time that the custom block was last edited.'))
+      ->setRevisionable(TRUE);
 
     return $fields;
   }

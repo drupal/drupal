@@ -60,6 +60,10 @@ class EntityTestRev extends EntityTest {
       ->setDescription(t('The version id of the test entity.'))
       ->setReadOnly(TRUE);
 
+    $fields['langcode']->setRevisionable(TRUE);
+    $fields['name']->setRevisionable(TRUE);
+    $fields['user_id']->setRevisionable(TRUE);
+
     return $fields;
   }
 
