@@ -125,7 +125,7 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
     $picture_mapping = new ResponsiveImageMapping(array(), $this->entityTypeId);
     // Set the breakpoint group after creating the entity to avoid the calls
     // in the constructor.
-    $picture_mapping->breakpointGroup = $this->breakpointGroupId;
+    $picture_mapping->setBreakpointGroup($this->breakpointGroupId);
     $this->breakpointGroup->expects($this->once())
       ->method('getConfigDependencyName')
       ->will($this->returnValue('breakpoint.breakpoint_group.' . $this->breakpointGroupId));

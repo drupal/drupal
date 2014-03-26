@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\responsive_image\ResponsiveImageMapping.
+ * Contains \Drupal\responsive_image\Entity\ResponsiveImageMapping.
  */
 
 namespace Drupal\responsive_image\Entity;
@@ -59,14 +59,14 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
    *
    * @var array
    */
-  public $mappings = array();
+  protected $mappings = array();
 
   /**
    * The responsive image breakpoint group.
    *
-   * @var BreakpointGroup
+   * @var Drupal\breakpoint\Entity\BreakpointGroup
    */
-  public $breakpointGroup = '';
+  protected $breakpointGroup = '';
 
   /**
    * Overrides Drupal\config\ConfigEntityBase::__construct().
@@ -97,8 +97,9 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
    */
   public function save() {
     // Only save the keys, but return the full objects.
-    if (isset($this->breakpointGroup) && is_object($this->breakpointGroup)) {
-      $this->breakpointGroup = $this->breakpointGroup->id();
+    $breakpoint_group = $this->getBreakpointGroup();
+    if ($breakpoint_group && is_object($breakpoint_group)) {
+      $this->setBreakpointGroup($breakpoint_group->id());
     }
 
     // Split the breakpoint ids into their different parts, as dots as
@@ -122,7 +123,7 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
     return entity_create('responsive_image_mapping', array(
       'id' => '',
       'label' => t('Clone of !label', array('!label' => check_plain($this->label()))),
-      'mappings' => $this->mappings,
+      'mappings' => $this->getMappings(),
     ));
   }
 
@@ -130,9 +131,9 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
    * Loads the breakpoint group.
    */
   protected function loadBreakpointGroup() {
-    if ($this->breakpointGroup) {
-      $breakpoint_group = entity_load('breakpoint_group', $this->breakpointGroup);
-      $this->breakpointGroup = $breakpoint_group;
+    if ($this->getBreakpointGroup()) {
+      $breakpoint_group = entity_load('breakpoint_group', $this->getBreakpointGroup());
+      $this->setBreakpointGroup($breakpoint_group);
     }
   }
 
@@ -140,33 +141,34 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
    * Loads all mappings and removes non-existing ones.
    */
   protected function loadAllMappings() {
-    $loaded_mappings = $this->mappings;
-    $this->mappings = array();
-    if ($this->breakpointGroup) {
-      foreach ($this->breakpointGroup->getBreakpoints() as $breakpoint_id => $breakpoint) {
+    $loaded_mappings = $this->getMappings();
+    $all_mappings = array();
+    if ($breakpoint_group = $this->getBreakpointGroup()) {
+      foreach ($breakpoint_group->getBreakpoints() as $breakpoint_id => $breakpoint) {
         // Get the components of the breakpoint ID to match the format of the
         // configuration file.
         list($source_type, $source, $name) = explode('.', $breakpoint_id);
 
         // Get the mapping for the default multiplier.
-        $this->mappings[$breakpoint_id]['1x'] = '';
+        $all_mappings[$breakpoint_id]['1x'] = '';
         if (isset($loaded_mappings[$source_type][$source][$name]['1x'])) {
-          $this->mappings[$breakpoint_id]['1x'] = $loaded_mappings[$source_type][$source][$name]['1x'];
+          $all_mappings[$breakpoint_id]['1x'] = $loaded_mappings[$source_type][$source][$name]['1x'];
         }
 
         // Get the mapping for the other multipliers.
         if (isset($breakpoint->multipliers) && !empty($breakpoint->multipliers)) {
           foreach ($breakpoint->multipliers as $multiplier => $status) {
             if ($status) {
-              $this->mappings[$breakpoint_id][$multiplier] = '';
+              $all_mappings[$breakpoint_id][$multiplier] = '';
               if (isset($loaded_mappings[$source_type][$source][$name][$multiplier])) {
-                $this->mappings[$breakpoint_id][$multiplier] = $loaded_mappings[$source_type][$source][$name][$multiplier];
+                $all_mappings[$breakpoint_id][$multiplier] = $loaded_mappings[$source_type][$source][$name][$multiplier];
               }
             }
           }
         }
       }
     }
+    $this->setMappings($all_mappings);
   }
 
   /**
@@ -174,7 +176,7 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
    */
   public function hasMappings() {
     $mapping_found = FALSE;
-    foreach ($this->mappings as $multipliers) {
+    foreach ($this->getMappings() as $multipliers) {
       $filtered_array = array_filter($multipliers);
       if (!empty($filtered_array)) {
         $mapping_found = TRUE;
@@ -182,5 +184,53 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
       }
     }
     return $mapping_found;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toArray() {
+    $names = array(
+      'id',
+      'uuid',
+      'label',
+      'mappings',
+      'breakpointGroup',
+    );
+    $properties = array();
+    foreach ($names as $name) {
+      $properties[$name] = $this->get($name);
+    }
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMappings(array $mappings) {
+    $this->set('mappings', $mappings);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMappings() {
+    return $this->get('mappings');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setBreakpointGroup($breakpoint_group) {
+    $this->set('breakpointGroup', $breakpoint_group);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBreakpointGroup() {
+    return $this->get('breakpointGroup');
   }
 }

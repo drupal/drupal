@@ -36,6 +36,7 @@ class ResponsiveImageMappingFormController extends EntityFormController {
       $form['#title'] = $this->t('<em>Edit responsive image mapping</em> @label', array('@label' => $this->entity->label()));
     }
 
+    /** @var \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping */
     $responsive_image_mapping = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
@@ -64,16 +65,16 @@ class ResponsiveImageMappingFormController extends EntityFormController {
     $form['breakpointGroup'] = array(
       '#type' => 'select',
       '#title' => $this->t('Breakpoint group'),
-      '#default_value' => !empty($responsive_image_mapping->breakpointGroup) ? $responsive_image_mapping->breakpointGroup->id() : '',
+      '#default_value' => ($responsive_image_mapping->getBreakpointGroup() != '') ? $responsive_image_mapping->getBreakpointGroup()->id() : '',
       '#options' => breakpoint_group_select_options(),
       '#required' => TRUE,
       '#description' => $description,
     );
 
     $image_styles = image_style_options(TRUE);
-    foreach ($responsive_image_mapping->mappings as $breakpoint_id => $mapping) {
+    foreach ($responsive_image_mapping->getMappings() as $breakpoint_id => $mapping) {
       foreach ($mapping as $multiplier => $image_style) {
-        $breakpoint = $responsive_image_mapping->breakpointGroup->getBreakpointById($breakpoint_id);
+        $breakpoint = $responsive_image_mapping->getBreakpointGroup()->getBreakpointById($breakpoint_id);
         $label = $multiplier . ' ' . $breakpoint->name . ' [' . $breakpoint->mediaQuery . ']';
         $form['mappings'][$breakpoint_id][$multiplier] = array(
           '#type' => 'select',
@@ -113,11 +114,12 @@ class ResponsiveImageMappingFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
+    /** @var \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping */
     $responsive_image_mapping = $this->entity;
 
     // Only validate on edit.
     if (isset($form_state['values']['mappings'])) {
-      $responsive_image_mapping->mappings = $form_state['values']['mappings'];
+      $responsive_image_mapping->setMappings($form_state['values']['mappings']);
 
       // Check if another breakpoint group is selected.
       if ($form_state['values']['breakpointGroup'] != $form_state['complete_form']['breakpointGroup']['#default_value']) {
@@ -135,6 +137,7 @@ class ResponsiveImageMappingFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
+    /** @var \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping */
     $responsive_image_mapping = $this->entity;
     $responsive_image_mapping->save();
 

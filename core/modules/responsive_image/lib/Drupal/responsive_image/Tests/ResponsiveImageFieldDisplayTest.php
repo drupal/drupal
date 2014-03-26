@@ -88,9 +88,11 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'breakpointGroup' => 'atestset',
     ));
     $responsive_image_mapping->save();
-    $responsive_image_mapping->mappings['custom.user.small']['1x'] = 'thumbnail';
-    $responsive_image_mapping->mappings['custom.user.medium']['1x'] = 'medium';
-    $responsive_image_mapping->mappings['custom.user.large']['1x'] = 'large';
+    $mappings = array();
+    $mappings['custom.user.small']['1x'] = 'thumbnail';
+    $mappings['custom.user.medium']['1x'] = 'medium';
+    $mappings['custom.user.large']['1x'] = 'large';
+    $responsive_image_mapping->setMappings($mappings);
     $responsive_image_mapping->save();
   }
 

@@ -129,16 +129,16 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
 
     $responsive_image_mapping = entity_load('responsive_image_mapping', $this->getSetting('responsive_image_mapping'));
     if ($responsive_image_mapping) {
-      foreach ($responsive_image_mapping->mappings as $breakpoint_name => $multipliers) {
+      foreach ($responsive_image_mapping->getMappings() as $breakpoint_name => $multipliers) {
         // Make sure there are multipliers.
         if (!empty($multipliers)) {
           // Make sure that the breakpoint exists and is enabled.
           // @todo add the following when breakpoint->status is added again:
           // $responsive_image_mapping->breakpointGroup->breakpoints[$breakpoint_name]->status
-          $breakpoint = $responsive_image_mapping->breakpointGroup->getBreakpointById($breakpoint_name);
-          if ($breakpoint) {
+          $breakpointGroup = $responsive_image_mapping->getBreakpointGroup()->getBreakpointById($breakpoint_name);
+          if ($breakpointGroup) {
             // Determine the enabled multipliers.
-            $multipliers = array_intersect_key($multipliers, $breakpoint->multipliers);
+            $multipliers = array_intersect_key($multipliers, $breakpointGroup->multipliers);
             foreach ($multipliers as $multiplier => $image_style) {
               // Make sure the multiplier still exists.
               if (!empty($image_style)) {
