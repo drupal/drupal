@@ -1,0 +1,184 @@
+/**
+ * @file
+ * Maintenance theming.
+ */
+.maintenance-background {
+  background-color: #e0e0d8;
+  background-image: -webkit-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
+  background-image: -moz-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
+  background-image: -o-radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
+  background-image: radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
+  background-repeat: repeat;
+  background-position: left top, 50% 50%;
+  min-height: 100%;
+}
+
+/* Maintenance theming */
+.install-page,
+.in-maintenance {
+  background: none;
+}
+.name-and-slogan h1 {
+  font-size: 2em;
+  line-height: 1.2em;
+  color: #0074bd;
+}
+
+/**
+ * Task list & step indicator
+ */
+@media all and (max-width: 48em) { /* 768px */
+  header[role="banner"] {
+    position: relative;
+  }
+  .step-indicator {
+    display: block;
+    font-size: 1.385em;
+    position: absolute;
+    top: 0.2em;
+    right: 0.5em;
+  }
+  [dir="rtl"] .step-indicator {
+    left: 2em;
+    right: auto;
+  }
+  .task-list {
+    display: none;
+  }
+}
+
+@media all and (min-width: 48em) { /* 768px */
+  .step-indicator {
+    display: none;
+  }
+  .task-list {
+    margin-left: 0; /* LTR */
+    list-style-type: none;
+    list-style-image: none;
+    padding-left: 0; /* LTR */
+    padding-bottom: 1em;
+  }
+  [dir="rtl"] .task-list {
+    margin-right: 0;
+    padding-right: 0;
+  }
+  .task-list li {
+    padding: 0.5em 1em 0.5em 3.85em; /* LTR */
+    color: #1a1a1a;
+  }
+  [dir="rtl"] .task-list li {
+    padding: 0.5em 1em 0.5em 1em;
+  }
+  .task-list .active {
+    background: #ebeae4;
+    position: relative;
+    font-weight: normal;
+  }
+  .task-list .active:after {
+    left: 100%; /* LTR */
+    border: solid transparent;
+    border-color: rgba(235, 234, 228, 0);
+    border-left-color: #ebeae4; /* LTR */
+    border-width: 1.35em;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    top: 50%;
+    margin-top: -1.32em;
+  }
+  [dir="rtl"] .task-list .active:after {
+    left: auto;
+    right: 100%;
+    border-left-color: transparent;
+    border-right-color: #ebeae4;
+  }
+  .task-list .done {
+    color: #adadad;
+  }
+}
+
+/**
+ * Layout
+ */
+.l-container {
+  background: #fff;
+  width: auto;
+  margin-left: 1.25em;
+  margin-right: 1.25em;
+}
+.l-container:after { /* no reason for a clearfix in the markup */
+  content: "";
+  display: table;
+  clear: both;
+}
+@media all and (max-width: 48em) { /* 768px */
+  .l-container {
+    margin: 1.25em;
+    padding: 10px 20px;
+  }
+  .name-and-slogan {
+    margin: 0 0 1.45em 0;
+  }
+}
+
+@media all and (min-width: 48em) { /* 768px */
+  html {
+    display: table;
+  }
+  .in-maintenance,
+  .install-page {
+    display: table-cell;
+    padding: 1em 0;
+    vertical-align: middle;
+  }
+  html, .install-page, .in-maintenance {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .l-container {
+    margin: 0 auto;
+    max-width: 770px;
+    width: 75%;
+    border-radius: 5px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 20px 0 40px 0;
+  }
+
+  /* Positioning sidebar & content */
+  main {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    clear: none;
+    float: left;
+    padding-left: 3.85em;
+    padding-right: 3.85em;
+    width: 65%;
+  }
+  [dir="rtl"] main {
+    float: right;
+  }
+  ul {
+    padding: 15px;
+    margin: 0.25em 0;
+  }
+  .l-sidebar-first {
+    float: left;
+    width: 35%;
+  }
+  [dir="rtl"] .l-sidebar-first {
+    float: right;
+  }
+
+  /* Margins for sitename */
+  h1.page-title,
+  .name-and-slogan h1 {
+    margin: 0.75em 0 0.75em 1.9em; /* LTR */
+  }
+  [dir="rtl"] .name-and-slogan h1 {
+    margin: 0.75em 1.9em 0.75em 0;
+  }
+}
