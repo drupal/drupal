@@ -298,30 +298,6 @@ function _field_filter_xss_display_allowed_tags() {
 }
 
 /**
- * Implements hook_page_build().
- */
-function field_page_build(&$page) {
-  $path = drupal_get_path('module', 'field');
-  $page['#attached']['css'][$path . '/css/field.module.css'] = array('every_page' => TRUE);
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK().
- */
-function field_theme_suggestions_field(array $variables) {
-  $suggestions = array();
-  $element = $variables['element'];
-
-  $suggestions[] = 'field__' . $element['#field_type'];
-  $suggestions[] = 'field__' . $element['#field_name'];
-  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#bundle'];
-  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'];
-  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'];
-
-  return $suggestions;
-}
-
-/**
  * @} End of "defgroup field".
  */
 
