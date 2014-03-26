@@ -5,17 +5,17 @@
  * Contains \Drupal\responsive_image\Tests\ResponsiveImageMappingEntityTest.
  */
 
-namespace Drupal\picture\Tests;
+namespace Drupal\responsive_image\Tests;
 
 use Drupal\responsive_image\Entity\ResponsiveImageMapping;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\picture\Entity\PictureMapping
+ * @coversDefaultClass \Drupal\responsive_image\Entity\ResponsiveImageMapping
  *
  * @group Drupal
- * @group Config
+ * @group Responsive_image
  */
 class ResponsiveImageMappingEntityTest extends UnitTestCase {
 
@@ -75,7 +75,7 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
     return array(
       'description' => '',
       'name' => '\Drupal\responsive_image\Entity\ResponsiveImageMapping unit test',
-      'group' => 'Picture',
+      'group' => 'Responsive Image',
     );
   }
 
@@ -122,15 +122,15 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    $picture_mapping = new ResponsiveImageMapping(array(), $this->entityTypeId);
+    $responsive_image_mapping = new ResponsiveImageMapping(array(), $this->entityTypeId);
     // Set the breakpoint group after creating the entity to avoid the calls
     // in the constructor.
-    $picture_mapping->setBreakpointGroup($this->breakpointGroupId);
+    $responsive_image_mapping->setBreakpointGroup($this->breakpointGroupId);
     $this->breakpointGroup->expects($this->once())
       ->method('getConfigDependencyName')
       ->will($this->returnValue('breakpoint.breakpoint_group.' . $this->breakpointGroupId));
 
-    $dependencies = $picture_mapping->calculateDependencies();
+    $dependencies = $responsive_image_mapping->calculateDependencies();
     $this->assertContains('breakpoint.breakpoint_group.' . $this->breakpointGroupId, $dependencies['entity']);
   }
 
