@@ -8,7 +8,7 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
-use Symfony\Component\Serializer\Exception\LogicException;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
  * Converts the Drupal field structure to HAL array structure.
@@ -62,10 +62,10 @@ class FieldNormalizer extends NormalizerBase {
    */
   public function denormalize($data, $class, $format = NULL, array $context = array()) {
     if (!isset($context['target_instance'])) {
-      throw new LogicException('$context[\'target_instance\'] must be set to denormalize with the FieldNormalizer');
+      throw new InvalidArgumentException('$context[\'target_instance\'] must be set to denormalize with the FieldNormalizer');
     }
     if ($context['target_instance']->getParent() == NULL) {
-      throw new LogicException('The field passed in via $context[\'target_instance\'] must have a parent set.');
+      throw new InvalidArgumentException('The field passed in via $context[\'target_instance\'] must have a parent set.');
     }
 
     $field = $context['target_instance'];

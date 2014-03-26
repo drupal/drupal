@@ -8,6 +8,7 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Core\Field\FieldItemInterface;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
  * Converts the Drupal field item object structure to HAL array structure.
@@ -45,10 +46,10 @@ class FieldItemNormalizer extends NormalizerBase {
    */
   public function denormalize($data, $class, $format = NULL, array $context = array()) {
     if (!isset($context['target_instance'])) {
-      throw new LogicException('$context[\'target_instance\'] must be set to denormalize with the FieldItemNormalizer');
+      throw new InvalidArgumentException('$context[\'target_instance\'] must be set to denormalize with the FieldItemNormalizer');
     }
     if ($context['target_instance']->getParent() == NULL) {
-      throw new LogicException('The field item passed in via $context[\'target_instance\'] must have a parent set.');
+      throw new InvalidArgumentException('The field item passed in via $context[\'target_instance\'] must have a parent set.');
     }
 
     $field_item = $context['target_instance'];
