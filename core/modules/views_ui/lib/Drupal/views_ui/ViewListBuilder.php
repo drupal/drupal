@@ -135,8 +135,8 @@ class ViewListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
 
     if ($entity->hasLinkTemplate('clone')) {
       $operations['clone'] = array(

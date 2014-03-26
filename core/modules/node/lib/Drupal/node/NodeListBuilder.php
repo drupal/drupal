@@ -124,8 +124,8 @@ class NodeListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
 
     $destination = drupal_get_destination();
     foreach ($operations as $key => $operation) {

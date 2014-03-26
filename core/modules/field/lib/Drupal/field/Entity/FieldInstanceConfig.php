@@ -23,7 +23,6 @@ use Drupal\field\FieldInstanceConfigInterface;
  *   id = "field_instance_config",
  *   label = @Translation("Field instance"),
  *   controllers = {
- *     "list_builder" = "\Drupal\Core\Config\Entity\ConfigEntityListBuilder",
  *     "storage" = "Drupal\field\FieldInstanceConfigStorageController"
  *   },
  *   config_prefix = "instance",

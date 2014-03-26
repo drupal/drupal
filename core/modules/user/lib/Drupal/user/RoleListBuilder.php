@@ -43,8 +43,8 @@ class RoleListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
 
     if ($entity->hasLinkTemplate('edit-permissions-form')) {
       $operations['permissions'] = array(

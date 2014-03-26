@@ -7,7 +7,6 @@
 
 namespace Drupal\field_ui;
 
-use Drupal\Core\Entity\EntityListBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
@@ -28,16 +27,26 @@ class FieldOverview extends OverviewBase {
   protected $fieldTypeManager;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new FieldOverview.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The field type manager
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke hooks on.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct($entity_manager);
     $this->fieldTypeManager = $field_type_manager;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -46,7 +55,8 @@ class FieldOverview extends OverviewBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('plugin.manager.field.field_type')
+      $container->get('plugin.manager.field.field_type'),
+      $container->get('module_handler')
     );
   }
 
@@ -154,9 +164,11 @@ class FieldOverview extends OverviewBase {
         'route_parameters' => $route_parameters,
         'attributes' => array('title' => $this->t('Delete instance.')),
       );
+      // Allow altering the operations on this entity listing.
+      $this->moduleHandler->alter('entity_operation', $links, $instance);
       $table[$name]['operations']['data'] = array(
         '#type' => 'operations',
-        '#links' => $this->entityManager->getListBuilder('field_instance_config')->getOperations($instance),
+        '#links' => $links,
       );
 
       if (!empty($field->locked)) {

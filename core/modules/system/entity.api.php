@@ -755,27 +755,6 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
 }
 
 /**
- * Declares entity operations.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity on which the linked operations will be performed.
- *
- * @return array
- *   An operations array as returned by
- *   \Drupal\Core\Entity\EntityListBuilderInterface::getOperations().
- */
-function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
-  $operations = array();
-  $operations['translate'] = array(
-    'title' => t('Translate'),
-    'route_name' => 'foo_module.entity.translate',
-    'weight' => 50,
-  );
-
-  return $operations;
-}
-
-/**
  * Alter entity operations.
  *
  * @param array $operations
@@ -785,11 +764,10 @@ function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
  *   The entity on which the linked operations will be performed.
  */
 function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
-  // Alter the title and weight.
-  $operations['translate']['title'] = t('Translate @entity_type', array(
-    '@entity_type' => $entity->getEntityTypeId(),
-  ));
-  $operations['translate']['weight'] = 99;
+  $operations['translate'] = array(
+    'title' => t('Translate'),
+    'weight' => 50,
+  ) + $entity->urlInfo('my-custom-link-template');
 }
 
 /**

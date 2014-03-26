@@ -101,8 +101,8 @@ class ActionListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = $entity->isConfigurable() ? parent::getDefaultOperations($entity) : array();
+  public function getOperations(EntityInterface $entity) {
+    $operations = $entity->isConfigurable() ? parent::getOperations($entity) : array();
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Configure');
     }

@@ -260,9 +260,9 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
+  public function getOperations(EntityInterface $entity) {
     /** @var $entity \Drupal\search\SearchPageInterface */
-    $operations = parent::getDefaultOperations($entity);
+    $operations = parent::getOperations($entity);
 
     // Prevent the default search from being disabled or deleted.
     if ($entity->isDefaultSearch()) {

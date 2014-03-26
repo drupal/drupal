@@ -36,8 +36,8 @@ class CustomBlockListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
     if (isset($operations['edit'])) {
       $operations['edit']['query']['destination'] = 'admin/structure/block/custom-blocks';
     }

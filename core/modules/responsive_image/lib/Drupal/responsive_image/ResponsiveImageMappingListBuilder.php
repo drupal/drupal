@@ -36,8 +36,8 @@ class ResponsiveImageMappingListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
     $operations['duplicate'] = array(
       'title' => t('Duplicate'),
       'weight' => 15,

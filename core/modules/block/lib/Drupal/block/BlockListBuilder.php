@@ -378,8 +378,8 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
 
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Configure');
