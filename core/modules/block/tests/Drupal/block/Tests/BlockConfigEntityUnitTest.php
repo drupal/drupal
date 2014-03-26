@@ -8,7 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Tests\Core\Plugin\TestConfigurablePlugin;
+use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 use Drupal\Tests\UnitTestCase;
 
 /**

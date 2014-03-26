@@ -7,8 +7,7 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 
 /**
  * Tests the default plugin bag with configurable plugins.
@@ -69,31 +68,6 @@ class ConfigurablePluginBagTest extends PluginBagTestBase {
     $this->assertSame($expected, $config);
     $plugin = $this->pluginInstances['apple'];
     $this->assertSame($expected['apple'], $plugin->getConfiguration());
-  }
-
-}
-
-class TestConfigurablePlugin extends PluginBase implements ConfigurablePluginInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfiguration() {
-    return $this->configuration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setConfiguration(array $configuration) {
-    $this->configuration = $configuration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    return array();
   }
 
 }
