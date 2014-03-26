@@ -9,6 +9,10 @@ namespace Drupal\system\Plugin\Block;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\block\BlockBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\menu_link\MenuTreeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 
 /**
  * Provides a generic Menu block.
@@ -20,14 +24,50 @@ use Drupal\block\BlockBase;
  *   derivative = "Drupal\system\Plugin\Derivative\SystemMenuBlock"
  * )
  */
-class SystemMenuBlock extends BlockBase {
+class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The menu tree.
+   *
+   * @var \Drupal\menu_link\MenuTreeInterface
+   */
+  protected $menuTree;
+
+  /**
+   * Constructs a new SystemMenuBlock.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\menu_link\MenuTreeInterface $menu_tree
+   *   The menu tree.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MenuTreeInterface $menu_tree) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->menuTree = $menu_tree;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('menu_link.tree')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public function build() {
     $menu = $this->getDerivativeId();
-    return menu_tree($menu);
+    return $this->menuTree->renderMenu($menu);
   }
 
   /**

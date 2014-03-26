@@ -304,8 +304,6 @@ function shortcut_valid_link($path) {
  *
  * @return \Drupal\shortcut\ShortcutInterface[]
  *   An array of shortcut links, in the format returned by the menu system.
- *
- * @see menu_tree()
  */
 function shortcut_renderable_links($shortcut_set = NULL) {
   $shortcut_links = array();

@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\menu_link\MenuLinkStorageControllerInterface;
+use Drupal\menu_link\MenuTreeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,6 +35,13 @@ class MenuFormController extends EntityFormController {
   protected $menuLinkStorage;
 
   /**
+   * The menu tree service.
+   *
+   * @var \Drupal\menu_link\MenuTreeInterface
+   */
+  protected $menuTree;
+
+  /**
    * The overview tree form.
    *
    * @var array
@@ -47,10 +55,13 @@ class MenuFormController extends EntityFormController {
    *   The factory for entity queries.
    * @param \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage
    *   The menu link storage controller.
+   * @param \Drupal\menu_link\MenuTreeInterface $menu_tree
+   *   The menu tree service.
    */
-  public function __construct(QueryFactory $entity_query_factory, MenuLinkStorageControllerInterface $menu_link_storage) {
+  public function __construct(QueryFactory $entity_query_factory, MenuLinkStorageControllerInterface $menu_link_storage, MenuTreeInterface $menu_tree) {
     $this->entityQueryFactory = $entity_query_factory;
     $this->menuLinkStorage = $menu_link_storage;
+    $this->menuTree = $menu_tree;
   }
 
   /**
@@ -59,7 +70,8 @@ class MenuFormController extends EntityFormController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
-      $container->get('entity.manager')->getStorageController('menu_link')
+      $container->get('entity.manager')->getStorageController('menu_link'),
+      $container->get('menu_link.tree')
     );
   }
 
@@ -256,13 +268,9 @@ class MenuFormController extends EntityFormController {
     }
 
     $delta = max(count($links), 50);
-    $tree = menu_tree_data($links);
-    $node_links = array();
-    menu_tree_collect_node_links($tree, $node_links);
-
     // We indicate that a menu administrator is running the menu access check.
     $this->getRequest()->attributes->set('_menu_admin', TRUE);
-    menu_tree_check_access($tree, $node_links);
+    $tree = $this->menuTree->buildTreeData($links);
     $this->getRequest()->attributes->set('_menu_admin', FALSE);
 
     $form = array_merge($form, $this->buildOverviewTreeForm($tree, $delta));

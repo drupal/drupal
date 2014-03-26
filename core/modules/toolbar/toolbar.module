@@ -358,6 +358,9 @@ function toolbar_toolbar() {
   // Add attributes to the links before rendering.
   toolbar_menu_navigation_links($tree);
 
+  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu_link.tree');
+
   $menu = array(
     '#heading' => t('Administration menu'),
     'toolbar_administration' => array(
@@ -365,7 +368,7 @@ function toolbar_toolbar() {
       '#attributes' => array(
         'class' => array('toolbar-menu-administration'),
       ),
-      'administration_menu' => menu_tree_output($tree),
+      'administration_menu' => $menu_tree->renderTree($tree),
     ),
   );
 
@@ -415,6 +418,8 @@ function toolbar_toolbar() {
  */
 function toolbar_get_menu_tree() {
   $tree = array();
+  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu_link.tree');
   $query = \Drupal::entityQuery('menu_link')
     ->condition('menu_name', 'admin')
     ->condition('module', 'system')
@@ -422,7 +427,7 @@ function toolbar_get_menu_tree() {
   $result = $query->execute();
   if (!empty($result)) {
     $admin_link = menu_link_load(reset($result));
-    $tree = menu_build_tree('admin', array(
+    $tree = $menu_tree->buildTree('admin', array(
       'expanded' => array($admin_link['mlid']),
       'min_depth' => $admin_link['depth'] + 1,
       'max_depth' => $admin_link['depth'] + 1,
@@ -465,6 +470,8 @@ function toolbar_menu_navigation_links(&$tree) {
  */
 function toolbar_get_rendered_subtrees() {
   $subtrees = array();
+  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu_link.tree');
   $tree = toolbar_get_menu_tree();
   foreach ($tree as $tree_item) {
     $item = $tree_item['link'];
@@ -476,9 +483,9 @@ function toolbar_get_rendered_subtrees() {
           $query->condition('p' . $i, $item['p' . $i]);
         }
         $parents = $query->execute();
-        $subtree = menu_build_tree($item['menu_name'], array('expanded' => $parents, 'min_depth' => $item['depth']+1));
+        $subtree = $menu_tree->buildTree($item['menu_name'], array('expanded' => $parents, 'min_depth' => $item['depth']+1));
         toolbar_menu_navigation_links($subtree);
-        $subtree = menu_tree_output($subtree);
+        $subtree = $menu_tree->renderTree($subtree);
         $subtree = drupal_render($subtree);
       }
       else {

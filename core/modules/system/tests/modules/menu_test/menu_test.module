@@ -223,8 +223,10 @@ function menu_test_callback() {
  */
 function menu_test_menu_trail_callback() {
   $menu_path = \Drupal::state()->get('menu_test.menu_tree_set_path') ?: array();
+  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu_link.tree');
   if (!empty($menu_path)) {
-    menu_tree_set_path($menu_path['menu_name'], $menu_path['path']);
+    $menu_tree->setPath($menu_path['menu_name'], $menu_path['path']);
   }
   return 'This is menu_test_menu_trail_callback().';
 }

@@ -263,10 +263,13 @@ function _menu_get_options($menus, $available_menus, $item) {
     $limit = _menu_parent_depth_limit($item);
   }
 
+  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu_link.tree');
+
   $options = array();
   foreach ($menus as $menu_name => $title) {
     if (isset($available_menus[$menu_name])) {
-      $tree = menu_tree_all_data($menu_name, NULL);
+      $tree = $menu_tree->buildAllData($menu_name, NULL);
       $options[$menu_name . ':0'] = '<' . $title . '>';
       _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid'], $limit);
     }
