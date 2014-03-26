@@ -46,12 +46,9 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
   /**
    * The cache bin used to store the render cache.
    *
-   * @todo Defaults to 'cache' for now, until http://drupal.org/node/1194136 is
-   * fixed.
-   *
    * @var string
    */
-  protected $cacheBin = 'cache';
+  protected $cacheBin = 'render';
 
   /**
    * The language manager.

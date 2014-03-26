@@ -69,7 +69,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     ));
     $this->block->save();
 
-    $this->container->get('cache.block')->deleteAll();
+    $this->container->get('cache.render')->deleteAll();
   }
 
   /**
@@ -173,19 +173,19 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $build = $this->getBlockRenderArray();
     $cid = drupal_render_cid_create($build);
     drupal_render($build);
-    $this->assertTrue($this->container->get('cache.block')->get($cid), 'The block render element has been cached.');
+    $this->assertTrue($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
 
     // Re-save the block and check that the cache entry has been deleted.
     $this->block->save();
-    $this->assertFalse($this->container->get('cache.block')->get($cid), 'The block render cache entry has been cleared when the block was saved.');
+    $this->assertFalse($this->container->get('cache.render')->get($cid), 'The block render cache entry has been cleared when the block was saved.');
 
     // Rebuild the render array (creating a new cache entry in the process) and
     // delete the block to check the cache entry is deleted.
     unset($build['#printed']);
     drupal_render($build);
-    $this->assertTrue($this->container->get('cache.block')->get($cid), 'The block render element has been cached.');
+    $this->assertTrue($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
     $this->block->delete();
-    $this->assertFalse($this->container->get('cache.block')->get($cid), 'The block render cache entry has been cleared when the block was deleted.');
+    $this->assertFalse($this->container->get('cache.render')->get($cid), 'The block render cache entry has been cleared when the block was deleted.');
 
     // Restore the previous request method.
     $this->container->get('request')->setMethod($request_method);
@@ -234,11 +234,11 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertIdentical($expected_keys, $build['#cache']['keys'], 'An altered cacheable block has the expected cache keys.');
     $cid = drupal_render_cid_create(array('#cache' => array('keys' => $expected_keys)));
     $this->assertIdentical(drupal_render($build), '');
-    $cache_entry = $this->container->get('cache.block')->get($cid);
+    $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
     $expected_flattened_tags = array('content:1', 'block_view:1', 'block:test_block', 'block_plugin:test_cache');
     $this->assertIdentical($cache_entry->tags, array_combine($expected_flattened_tags, $expected_flattened_tags)); //, 'The block render element has been cached with the expected cache tags.');
-    $this->container->get('cache.block')->delete($cid);
+    $this->container->get('cache.render')->delete($cid);
 
     // Advanced: cached block, but an alter hook adds an additional cache tag.
     $alter_add_tag = $this->randomName();
@@ -248,11 +248,11 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertIdentical($expected_tags, $build['#cache']['tags'], 'An altered cacheable block has the expected cache tags.');
     $cid = drupal_render_cid_create(array('#cache' => array('keys' => $expected_keys)));
     $this->assertIdentical(drupal_render($build), '');
-    $cache_entry = $this->container->get('cache.block')->get($cid);
+    $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
     $expected_flattened_tags = array('content:1', 'block_view:1', 'block:test_block', 'block_plugin:test_cache', $alter_add_tag . ':1');
     $this->assertIdentical($cache_entry->tags, array_combine($expected_flattened_tags, $expected_flattened_tags)); //, 'The block render element has been cached with the expected cache tags.');
-    $this->container->get('cache.block')->delete($cid);
+    $this->container->get('cache.render')->delete($cid);
 
     // Advanced: cached block, but an alter hook adds a #pre_render callback to
     // alter the eventual content.
@@ -286,7 +286,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $build = $this->getBlockRenderArray();
     $cid = drupal_render_cid_create($build);
     drupal_render($build);
-    $this->assertTrue($this->container->get('cache.block', $cid), 'The block render element has been cached.');
+    $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
 
     // Second: the "per URL" cache context.
     $this->setBlockCacheConfig(array(
@@ -297,7 +297,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $build = $this->getBlockRenderArray();
     $cid = drupal_render_cid_create($build);
     drupal_render($build);
-    $this->assertTrue($this->container->get('cache.block', $cid), 'The block render element has been cached.');
+    $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
     $this->assertNotEqual($cid, $old_cid, 'The cache ID has changed.');
 
     // Third: the same block configuration, but a different URL.
@@ -308,7 +308,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $build = $this->getBlockRenderArray();
     $cid = drupal_render_cid_create($build);
     drupal_render($build);
-    $this->assertTrue($this->container->get('cache.block', $cid), 'The block render element has been cached.');
+    $this->assertTrue($this->container->get('cache.render', $cid), 'The block render element has been cached.');
     $this->assertNotEqual($cid, $old_cid, 'The cache ID has changed.');
     $this->container->set('cache_context.url', $original_url_cache_context);
 

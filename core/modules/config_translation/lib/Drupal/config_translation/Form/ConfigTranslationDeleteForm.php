@@ -143,9 +143,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
     // Flush all persistent caches.
     $this->moduleHandler->invokeAll('cache_flush');
     foreach (Cache::getBins() as $service_id => $cache_backend) {
-      if ($service_id != 'cache.menu') {
-        $cache_backend->deleteAll();
-      }
+      $cache_backend->deleteAll();
     }
 
     drupal_set_message($this->t('@language translation of %label was deleted', array('%label' => $this->mapper->getTitle(), '@language' => $this->language->name)));

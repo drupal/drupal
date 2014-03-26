@@ -47,7 +47,7 @@ class DatabaseBackendTagTest extends DrupalUnitTestBase {
   public function testTagInvalidations() {
     // Create cache entry in multiple bins.
     $tags = array('test_tag' => array(1, 2, 3));
-    $bins = array('path', 'bootstrap', 'page');
+    $bins = array('data', 'bootstrap', 'render');
     foreach ($bins as $bin) {
       $bin = \Drupal::cache($bin);
       $bin->set('test', 'value', Cache::PERMANENT, $tags);
@@ -71,7 +71,7 @@ class DatabaseBackendTagTest extends DrupalUnitTestBase {
   public function testTagDeletetions() {
     // Create cache entry in multiple bins.
     $tags = array('test_tag' => array(1, 2, 3));
-    $bins = array('path', 'bootstrap', 'page');
+    $bins = array('data', 'bootstrap', 'render');
     foreach ($bins as $bin) {
       $bin = \Drupal::cache($bin);
       $bin->set('test', 'value', Cache::PERMANENT, $tags);

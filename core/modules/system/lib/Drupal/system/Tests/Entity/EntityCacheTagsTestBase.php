@@ -237,7 +237,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Also verify the existence of an entity render cache entry.
     $cid = 'entity_view:entity_test:' . $this->referencing_entity->id() . ':full:stark:r.anonymous';
-    $cache_entry = \Drupal::cache()->get($cid);
+    $cache_entry = \Drupal::cache('render')->get($cid);
     $this->assertIdentical($cache_entry->tags, $referencing_entity_cache_tags);
 
 
@@ -250,7 +250,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Also verify the existence of an entity render cache entry.
     $cid = 'entity_view:entity_test:' . $this->non_referencing_entity->id() . ':full:stark:r.anonymous';
-    $cache_entry = \Drupal::cache()->get($cid);
+    $cache_entry = \Drupal::cache('render')->get($cid);
     $this->assertIdentical($cache_entry->tags, $non_referencing_entity_cache_tags);
 
 

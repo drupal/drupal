@@ -245,8 +245,8 @@ function locale_stream_wrappers() {
  */
 function locale_language_entity_insert(LanguageEntity $language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
-  // Changing the language settings impacts the interface.
-  \Drupal::cache('page')->deleteAll();
+  // Changing the language settings impacts the interface: clear render cache.
+  \Drupal::cache('render')->deleteAll();
   // Force JavaScript translation file re-creation for the new language.
   _locale_invalidate_js($language->id());
 }
@@ -256,8 +256,8 @@ function locale_language_entity_insert(LanguageEntity $language) {
  */
 function locale_language_entity_update(LanguageEntity $language) {
   // @todo move these two cache clears out. See http://drupal.org/node/1293252
-  // Changing the language settings impacts the interface.
-  \Drupal::cache('page')->deleteAll();
+  // Changing the language settings impacts the interface: clear render cache.
+  \Drupal::cache('render')->deleteAll();
   // Force JavaScript translation file re-creation for the modified language.
   _locale_invalidate_js($language->id());
 }
@@ -278,7 +278,7 @@ function locale_language_entity_delete(LanguageEntity $language) {
 
   // Changing the language settings impacts the interface:
   _locale_invalidate_js($language->id());
-  \Drupal::cache('page')->deleteAll();
+  \Drupal::cache('render')->deleteAll();
 
   // Clear locale translation caches.
   locale_translation_status_delete_languages(array($language->id()));

@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  */
 abstract class CacheTestBase extends WebTestBase {
 
-  protected $default_bin = 'page';
+  protected $default_bin = 'render';
   protected $default_cid = 'test_temporary';
   protected $default_value = 'CacheTest';
 

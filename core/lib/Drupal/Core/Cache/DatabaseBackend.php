@@ -226,7 +226,7 @@ class DatabaseBackend implements CacheBackendInterface {
     catch (\Exception $e) {
       // Create the cache table, which will be empty. This fixes cases during
       // core install where a cache table is cleared before it is set
-      // with {cache_block} and {cache_menu}.
+      // with {cache_render} and {cache_data}.
       if (!$this->ensureBinExists()) {
         $this->catchException($e);
       }
@@ -269,7 +269,7 @@ class DatabaseBackend implements CacheBackendInterface {
     catch (\Exception $e) {
       // Create the cache table, which will be empty. This fixes cases during
       // core install where a cache table is cleared before it is set
-      // with {cache_block} and {cache_menu}.
+      // with {cache_render} and {cache_data}.
       if (!$this->ensureBinExists()) {
         $this->catchException($e);
       }

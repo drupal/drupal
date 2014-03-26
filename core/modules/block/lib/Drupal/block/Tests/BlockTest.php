@@ -279,7 +279,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $cid_parts = array(url('<front>', array('absolute' => TRUE)), 'html');
     $cid = sha1(implode(':', $cid_parts));
-    $cache_entry = \Drupal::cache('page')->get($cid);
+    $cache_entry = \Drupal::cache('render')->get($cid);
     $expected_cache_tags = array(
       'content:1',
       'block_view:1',
@@ -287,7 +287,7 @@ class BlockTest extends BlockTestBase {
       'block_plugin:system_powered_by_block',
     );
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
-    $cache_entry = \Drupal::cache('block')->get('entity_view:block:powered:en:stark');
+    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:en:stark');
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
 
     // The "Powered by Drupal" block is modified; verify a cache miss.
@@ -310,7 +310,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
     $cid_parts = array(url('<front>', array('absolute' => TRUE)), 'html');
     $cid = sha1(implode(':', $cid_parts));
-    $cache_entry = \Drupal::cache('page')->get($cid);
+    $cache_entry = \Drupal::cache('render')->get($cid);
     $expected_cache_tags = array(
       'content:1',
       'block_view:1',
@@ -325,7 +325,7 @@ class BlockTest extends BlockTestBase {
       'block:powered',
       'block_plugin:system_powered_by_block',
     );
-    $cache_entry = \Drupal::cache('block')->get('entity_view:block:powered:en:stark');
+    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:en:stark');
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
     $expected_cache_tags = array(
       'content:1',
@@ -333,7 +333,7 @@ class BlockTest extends BlockTestBase {
       'block:powered-2',
       'block_plugin:system_powered_by_block',
     );
-    $cache_entry = \Drupal::cache('block')->get('entity_view:block:powered-2:en:stark');
+    $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:en:stark');
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
 
     // The plugin providing the "Powered by Drupal" block is modified; verify a

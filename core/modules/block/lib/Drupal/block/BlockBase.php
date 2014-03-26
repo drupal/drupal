@@ -287,7 +287,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * {@inheritdoc}
    */
   public function getCacheBin() {
-    return 'block';
+    return 'render';
   }
 
   /**

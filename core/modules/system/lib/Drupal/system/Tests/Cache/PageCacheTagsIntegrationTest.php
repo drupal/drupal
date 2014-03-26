@@ -145,7 +145,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     $this->assertIdentical($actual_tags, $expected_tags);
     $cid_parts = array(url($path, array('absolute' => TRUE)), 'html');
     $cid = sha1(implode(':', $cid_parts));
-    $cache_entry = \Drupal::cache('page')->get($cid);
+    $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);
     $this->assertEqual($cache_entry->tags, $expected_tags);
   }

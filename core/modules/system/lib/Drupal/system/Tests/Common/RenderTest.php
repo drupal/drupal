@@ -496,7 +496,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // GET request: validate cached data.
     $element = array('#cache' => array('cid' => 'post_render_cache_test_GET'));
-    $cached_element = \Drupal::cache()->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     $expected_element = array(
       '#markup' => '<p>#cache enabled, GET</p>',
       '#attached' => $test_element['#attached'],
@@ -538,7 +538,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // POST request: Ensure no data was cached.
     $element = array('#cache' => array('cid' => 'post_render_cache_test_POST'));
-    $cached_element = \Drupal::cache()->get(drupal_render_cid_create($element));
+    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element));
     $this->assertFalse($cached_element, 'No data is cached because this is a POST request.');
 
     // Restore the previous request method.
@@ -603,7 +603,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // GET request: validate cached data.
     $element = array('#cache' => $element['#cache']);
-    $cached_element = \Drupal::cache()->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     $expected_element = array(
       '#attached' => array(
         'js' => array(
@@ -686,8 +686,8 @@ class RenderTest extends DrupalUnitTestBase {
     $element = $test_element;
     $element['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_parent');
     $element['child']['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_child');
-    $cached_parent_element = \Drupal::cache()->get(drupal_render_cid_create($element))->data;
-    $cached_child_element = \Drupal::cache()->get(drupal_render_cid_create($element['child']))->data;
+    $cached_parent_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
+    $cached_child_element = \Drupal::cache('render')->get(drupal_render_cid_create($element['child']))->data;
     $expected_parent_element = array(
       '#attached' => array(
         'js' => array(
@@ -816,7 +816,7 @@ class RenderTest extends DrupalUnitTestBase {
     $tokens = array_keys($element['#post_render_cache']['common_test_post_render_cache_placeholder']);
     $expected_token = $tokens[0];
     $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_GET'));
-    $cached_element = \Drupal::cache()->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     // Parse unique token out of the cached markup.
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
@@ -907,7 +907,7 @@ class RenderTest extends DrupalUnitTestBase {
     $parent_tokens = array_keys($element['#post_render_cache']['common_test_post_render_cache_placeholder']);
     $expected_token = $child_tokens[0];
     $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_child_GET'));
-    $cached_element = \Drupal::cache()->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     // Parse unique token out of the cached markup.
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
@@ -932,7 +932,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // GET request: validate cached data (for the parent/entire render array).
     $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_GET'));
-    $cached_element = \Drupal::cache()->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     // Parse unique token out of the cached markup.
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
@@ -959,7 +959,7 @@ class RenderTest extends DrupalUnitTestBase {
     // Check the cache of the child element again after the parent has been
     // rendered.
     $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_child_GET'));
-    $cached_element = \Drupal::cache()->get(drupal_render_cid_create($element))->data;
+    $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     // Verify that the child element contains the correct
     // render_cache_placeholder markup.
     $expected_token = $child_tokens[0];

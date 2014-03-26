@@ -654,7 +654,7 @@ function drupal_page_cache_get_cid(Request $request) {
  */
 function drupal_page_get_cache(Request $request) {
   if (drupal_page_is_cacheable()) {
-    return \Drupal::cache('page')->get(drupal_page_cache_get_cid($request));
+    return \Drupal::cache('render')->get(drupal_page_cache_get_cid($request));
   }
 }
 

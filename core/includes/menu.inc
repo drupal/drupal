@@ -444,8 +444,8 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
   $cid = 'links:' . $menu_name . ':all:' . $mlid . ':' . $language_interface->id . ':' . (int) $max_depth;
 
   if (!isset($tree[$cid])) {
-    // If the static variable doesn't have the data, check {cache_menu}.
-    $cache = \Drupal::cache('menu')->get($cid);
+    // If the static variable doesn't have the data, check {cache_data}.
+    $cache = \Drupal::cache('data')->get($cid);
     if ($cache && isset($cache->data)) {
       // If the cache entry exists, it contains the parameters for
       // menu_build_tree().
@@ -472,7 +472,7 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
       }
 
       // Cache the tree building parameters using the page-specific cid.
-      \Drupal::cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
+      \Drupal::cache('data')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
     }
 
     // Build the tree using the parameters; the resulting tree will be cached
@@ -579,8 +579,8 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
     }
 
     if (!isset($tree[$cid])) {
-      // If the static variable doesn't have the data, check {cache_menu}.
-      $cache = \Drupal::cache('menu')->get($cid);
+      // If the static variable doesn't have the data, check {cache_data}.
+      $cache = \Drupal::cache('data')->get($cid);
       if ($cache && isset($cache->data)) {
         // If the cache entry exists, it contains the parameters for
         // menu_build_tree().
@@ -648,7 +648,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
           $tree_parameters['active_trail'] = $active_trail;
         }
         // Cache the tree building parameters using the page-specific cid.
-        \Drupal::cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
+        \Drupal::cache('data')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
       }
 
       // Build the tree using the parameters; the resulting tree will be cached
@@ -714,9 +714,9 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
   }
   $tree_cid = 'links:' . $menu_name . ':tree-data:' . $language_interface->id . ':' . hash('sha256', serialize($parameters));
 
-  // If we do not have this tree in the static cache, check {cache_menu}.
+  // If we do not have this tree in the static cache, check {cache_data}.
   if (!isset($trees[$tree_cid])) {
-    $cache = \Drupal::cache('menu')->get($tree_cid);
+    $cache = \Drupal::cache('data')->get($tree_cid);
     if ($cache && isset($cache->data)) {
       $trees[$tree_cid] = $cache->data;
     }
@@ -759,7 +759,7 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
     menu_tree_collect_node_links($data['tree'], $data['node_links']);
 
     // Cache the data, if it is not already in the cache.
-    \Drupal::cache('menu')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
+    \Drupal::cache('data')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
     $trees[$tree_cid] = $data;
   }
 
@@ -1538,7 +1538,7 @@ function menu_get_active_trail() {
  * might have been made to the router items or menu links.
  */
 function menu_cache_clear_all() {
-  \Drupal::cache('menu')->deleteAll();
+  \Drupal::cache('data')->deleteAll();
   menu_reset_static_cache();
 }
 

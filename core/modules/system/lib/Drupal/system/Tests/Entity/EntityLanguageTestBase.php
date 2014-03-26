@@ -141,7 +141,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
       $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
       $this->assertEqual($field->isTranslatable(), $translatable, 'Field translatability changed.');
     }
-    \Drupal::cache('field')->deleteAll();
+    \Drupal::cache('entity')->deleteAll();
   }
 
 }

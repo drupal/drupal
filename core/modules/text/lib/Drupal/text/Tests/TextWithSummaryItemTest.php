@@ -126,7 +126,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     // Load the entity and check that the field cache contains the expected
     // data.
     $entity = entity_load($entity_type, $entity->id());
-    $cache = \Drupal::cache('field')->get("field:$entity_type:" . $entity->id());
+    $cache = \Drupal::cache('entity')->get("field:$entity_type:" . $entity->id());
     $this->assertEqual($cache->data, array(
       Language::LANGCODE_NOT_SPECIFIED => array(
         'summary_field' => array(
@@ -156,7 +156,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
         ),
       ),
     );
-    \Drupal::cache('field')->set("field:$entity_type:" . $entity->id(), $data);
+    \Drupal::cache('entity')->set("field:$entity_type:" . $entity->id(), $data);
     $entity = entity_load($entity_type, $entity->id(), TRUE);
     $this->assertEqual($entity->summary_field->processed, 'Cached processed value');
     $this->assertEqual($entity->summary_field->summary_processed, 'Cached summary processed value');

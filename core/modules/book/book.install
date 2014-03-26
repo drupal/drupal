@@ -10,7 +10,7 @@
  */
 function book_uninstall() {
   // Clear book data out of the cache.
-  \Drupal::cache('menu')->deleteAll();
+  \Drupal::cache('data')->deleteAll();
 }
 
 /**

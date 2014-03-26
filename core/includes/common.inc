@@ -3194,7 +3194,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
       if ($page_compressed) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
-      \Drupal::cache('page')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);
+      \Drupal::cache('render')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);
     }
     return $cache;
   }
@@ -4075,7 +4075,7 @@ function drupal_render_cache_get(array $elements) {
   if (!\Drupal::request()->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
-  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
+  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
 
   if (!empty($cid) && $cache = \Drupal::cache($bin)->get($cid)) {
     $cached_element = $cache->data;
@@ -4133,7 +4133,7 @@ function drupal_render_cache_set(&$markup, array $elements) {
     $data['#cache']['tags'] = $elements['#cache']['tags'];
   }
 
-  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
+  $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
   \Drupal::cache($bin)->set($cid, $data, $expire, $elements['#cache']['tags']);
 }
@@ -4657,9 +4657,7 @@ function drupal_flush_all_caches() {
   // sufficient, since new extensions cannot have any primed caches yet.
   $module_handler->invokeAll('cache_flush');
   foreach (Cache::getBins() as $service_id => $cache_backend) {
-    if ($service_id != 'cache.menu') {
-      $cache_backend->deleteAll();
-    }
+    $cache_backend->deleteAll();
   }
 
   // Flush asset file caches.

@@ -259,7 +259,7 @@ function field_modules_uninstalled($modules) {
  * Clears the field info and field data caches.
  */
 function field_cache_clear() {
-  \Drupal::cache('field')->deleteAll();
+  \Drupal::cache('entity')->deleteAll();
   field_info_cache_clear();
 }
 

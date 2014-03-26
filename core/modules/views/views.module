@@ -522,35 +522,30 @@ function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_create() for 'field_instance_config'.
- */
-function views_field_instance_config_create(FieldInstanceConfigInterface $field_instance) {
-  \Drupal::cache('views_info')->deleteAll();
-  \Drupal::cache('views_results')->deleteAll();
-}
-
-/**
  * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
  */
 function views_field_instance_config_update(FieldInstanceConfigInterface $field_instance) {
-  \Drupal::cache('views_info')->deleteAll();
-  \Drupal::cache('views_results')->deleteAll();
+  // @todo: Is this necessary? Use cache tags to only delete Views' cache data?
+  \Drupal::cache('data')->deleteAll();
+  \Drupal::cache('render')->deleteAll();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
  */
 function views_field_instance_config_delete(FieldInstanceConfigInterface $field_instance) {
-  \Drupal::cache('views_info')->deleteAll();
-  \Drupal::cache('views_results')->deleteAll();
+  // @todo: Is this necessary? Use cache tags to only delete Views' cache data?
+  \Drupal::cache('data')->deleteAll();
+  \Drupal::cache('render')->deleteAll();
 }
 
 /**
  * Invalidate the views cache, forcing a rebuild on the next grab of table data.
  */
 function views_invalidate_cache() {
-  // Clear the views cache.
-  \Drupal::cache('views_info')->deleteAll();
+  // Clear Views' info cache entries.
+  // @todo: Use cache tags?
+  \Drupal::cache('data')->deleteAll();
 
   // Clear the page and block cache.
   Cache::deleteTags(array('content' => TRUE));

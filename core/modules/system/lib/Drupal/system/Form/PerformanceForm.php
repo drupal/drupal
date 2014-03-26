@@ -18,23 +18,23 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PerformanceForm extends ConfigFormBase {
 
   /**
-   * The page cache object.
+   * The render cache object.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $pageCache;
+  protected $renderCache;
 
   /**
    * Constructs a PerformanceForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $page_cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $render_cache
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $page_cache) {
+  public function __construct(ConfigFactoryInterface $config_factory, CacheBackendInterface $render_cache) {
     parent::__construct($config_factory);
 
-    $this->pageCache = $page_cache;
+    $this->renderCache = $render_cache;
   }
 
   /**
@@ -43,7 +43,7 @@ class PerformanceForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('cache.page')
+      $container->get('cache.render')
     );
   }
 
@@ -148,8 +148,9 @@ class PerformanceForm extends ConfigFormBase {
     drupal_clear_css_cache();
     drupal_clear_js_cache();
     // This form allows page compression settings to be changed, which can
-    // invalidate the page cache, so it needs to be cleared on form submit.
-    $this->pageCache->deleteAll();
+    // invalidate cached pages in the render cache, so it needs to be cleared on
+    // form submit.
+    $this->renderCache->deleteAll();
 
     $this->configFactory->get('system.performance')
       ->set('cache.page.use_internal', $form_state['values']['cache'])

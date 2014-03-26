@@ -32,9 +32,18 @@ abstract class CachePluginBase extends PluginBase {
   var $storage = array();
 
   /**
-   * What table to store data in.
+   * Which cache bin to store the rendered output in.
+   *
+   * @var string
    */
-  var $table = 'views_results';
+  protected $outputBin = 'render';
+
+  /**
+   * Which cache bin to store query results in.
+   *
+   * @var string
+   */
+  protected $resultsBin = 'data';
 
   /**
    * Stores the cache ID used for the results cache.
@@ -125,12 +134,12 @@ abstract class CachePluginBase extends PluginBase {
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->getCurrentPage(),
         );
-        \Drupal::cache($this->table)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
+        \Drupal::cache($this->resultsBin)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
       case 'output':
         $this->storage['output'] = $this->view->display_handler->output;
         $this->gatherHeaders();
-        \Drupal::cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
+        \Drupal::cache($this->outputBin)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
     }
   }
@@ -149,7 +158,7 @@ abstract class CachePluginBase extends PluginBase {
       case 'results':
         // Values to set: $view->result, $view->total_rows, $view->execute_time,
         // $view->current_page.
-        if ($cache = \Drupal::cache($this->table)->get($this->generateResultsKey())) {
+        if ($cache = \Drupal::cache($this->resultsBin)->get($this->generateResultsKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->view->result = $cache->data['result'];
             $this->view->total_rows = $cache->data['total_rows'];
@@ -160,7 +169,7 @@ abstract class CachePluginBase extends PluginBase {
         }
         return FALSE;
       case 'output':
-        if ($cache = \Drupal::cache($this->table)->get($this->generateOutputKey())) {
+        if ($cache = \Drupal::cache($this->outputBin)->get($this->generateOutputKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
             $this->view->display_handler->output = $cache->data['output'];
