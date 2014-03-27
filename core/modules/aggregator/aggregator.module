@@ -37,7 +37,7 @@ function aggregator_help($path, $arg) {
     case 'admin/config/services/aggregator':
       // Don't use placeholders for possibility to change URLs for translators.
       $output = '<p>' . t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="http://cyber.law.harvard.edu/rss/">RSS</a>, <a href="http://www.w3.org/RDF/">RDF</a>, and <a href="http://www.atomenabled.org">Atom</a>.') . '</p>';
-      $output .= '<p>' . t('Current feeds are listed below, and <a href="!addfeed">new feeds may be added</a>. At the <a href="!block">blocks administration page</a> you can enable for each feed the block <em>Aggregator feed</a> that contains the <em>latest items</em> .', array('!addfeed' => \Drupal::url('aggregator.feed_add'), '!block' => \Drupal::url('block.admin_display'))) . '</p>';
+      $output .= '<p>' . t('Current feeds are listed below, and <a href="!addfeed">new feeds may be added</a>. At the <a href="!block">blocks administration page</a> you can enable for each feed the block <em>Aggregator feed</em> that contains the <em>latest items</em> .', array('!addfeed' => \Drupal::url('aggregator.feed_add'), '!block' => \Drupal::url('block.admin_display'))) . '</p>';
       return $output;
     case 'aggregator/sources/add':
       return '<p>' . t('Add a feed in RSS, RDF or Atom format. A feed may only have one entry.') . '</p>';
