@@ -267,12 +267,12 @@ function node_title_list($result, $title = NULL) {
 /**
  * Determines the type of marker to be displayed for a given node.
  *
- * @param $nid
+ * @param int $nid
  *   Node ID whose history supplies the "last viewed" timestamp.
- * @param $timestamp
+ * @param int $timestamp
  *   Time which is compared against node's "last viewed" timestamp.
  *
- * @return
+ * @return int
  *   One of the MARK constants.
  */
 function node_mark($nid, $timestamp) {
@@ -299,7 +299,7 @@ function node_mark($nid, $timestamp) {
  *
  * This list can include types that are queued for addition or deletion.
  *
- * @return array
+ * @return \Drupal\node\NodeTypeInterface[]
  *   An array of node type entities, keyed by ID.
  *
  * @see node_type_load()
@@ -313,7 +313,7 @@ function node_type_get_types() {
  *
  * This list can include types that are queued for addition or deletion.
  *
- * @return array
+ * @return string[]
  *   An array of node type labels, keyed by the node type name.
  */
 function node_type_get_names() {
