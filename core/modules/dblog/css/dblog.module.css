@@ -17,24 +17,6 @@
   padding: 3ex 0 0;
   vertical-align: top;
 }
-.dblog-user.odd .active {
-  background: #ddf;
-}
-.dblog-user.even .active {
-  background: #cce;
-}
-.dblog-error.odd .active {
-  background: #ffc9c9;
-}
-.dblog-error.even .active {
-  background: #eeb9b9;
-}
-.dblog-warning.odd .active {
-  background: #fffdca;
-}
-.dblog-warning.even .active {
-  background: #eeedbd;
-}
 .admin-dblog .icon,
 .admin-dblog .dblog-warning .icon,
 .admin-dblog .dblog-error .icon,
