@@ -30,11 +30,10 @@ class InstallerServiceProvider implements ServiceProviderInterface, ServiceModif
     $container->register('config.storage', 'Drupal\Core\Config\InstallStorage');
 
     // Replace services with in-memory implementations.
-    foreach (array('bootstrap', 'config', 'cache', 'menu', 'page', 'path') as $bin) {
-      $container
-        ->register("cache.$bin", 'Drupal\Core\Cache\MemoryBackend')
-        ->addArgument($bin);
-    }
+    $definition = $container->getDefinition('cache_factory');
+    $definition->setClass('Drupal\Core\Cache\MemoryBackendFactory');
+    $definition->setArguments(array());
+    $definition->setMethodCalls(array());
     $container
       ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
     $container
