@@ -121,8 +121,10 @@ class AggregatorController extends ControllerBase {
    *   If the query token is missing or invalid.
    */
   public function feedRefresh(FeedInterface $aggregator_feed) {
-    // @todo after https://drupal.org/node/1972246 find a new place for it.
-    aggregator_refresh($aggregator_feed);
+    $message = $aggregator_feed->refreshItems()
+      ? $this->t('There is new syndicated content from %site.', array('%site' => $aggregator_feed->label()))
+      : $this->t('There is no new syndicated content from %site.', array('%site' => $aggregator_feed->label()));
+    drupal_set_message($message);
     return $this->redirect('aggregator.admin_overview');
   }
 

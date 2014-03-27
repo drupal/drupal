@@ -218,9 +218,26 @@ interface FeedInterface extends ContentEntityInterface {
   /**
    * Deletes all items from a feed.
    *
+   * This will also reset the last checked and modified time of the feed and
+   * save it.
+   *
    * @return \Drupal\aggregator\FeedInterface
    *   The class instance that this method is called on.
+   *
+   * @see \Drupal\aggregator\ItemsImporterInterface::delete()
    */
   public function deleteItems();
+
+  /**
+   * Updates the feed items by triggering the import process.
+   *
+   * This will also update the last checked time of the feed and save it.
+   *
+   * @return bool
+   *   TRUE if there is new content for the feed FALSE otherwise.
+   *
+   * @see \Drupal\aggregator\ItemsImporterInterface::refresh()
+   */
+  public function refreshItems();
 
 }

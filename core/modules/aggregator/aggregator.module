@@ -6,7 +6,6 @@
  */
 
 use Drupal\aggregator\FeedInterface;
-use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
  * Denotes that a feed's items should never expire.
@@ -163,98 +162,14 @@ function aggregator_cron() {
 function aggregator_queue_info() {
   $queues['aggregator_feeds'] = array(
     'title' => t('Aggregator refresh'),
-    'worker callback' => 'aggregator_refresh',
+    'worker callback' => function (FeedInterface $feed) {
+      $feed->refreshItems();
+    },
     'cron' => array(
       'time' => 60,
     ),
   );
   return $queues;
-}
-
-/**
- * Checks a news feed for new items.
- *
- * @param \Drupal\aggregator\FeedInterface $feed
- *   An object describing the feed to be refreshed.
- */
-function aggregator_refresh(FeedInterface $feed) {
-  // Store feed URL to track changes.
-  $feed_url = $feed->getUrl();
-
-  $config = \Drupal::config('aggregator.settings');
-  // Fetch the feed.
-  $fetcher_manager = \Drupal::service('plugin.manager.aggregator.fetcher');
-  try {
-    $success = $fetcher_manager->createInstance($config->get('fetcher'))->fetch($feed);
-  }
-  catch (PluginException $e) {
-    $success = FALSE;
-    watchdog_exception('aggregator', $e);
-  }
-
-  // Retrieve processor manager now.
-  $processor_manager = \Drupal::service('plugin.manager.aggregator.processor');
-  // Store instances in an array so we dont have to instantiate new objects.
-  $processor_instances = array();
-  foreach ($config->get('processors') as $processor) {
-    try {
-      $processor_instances[$processor] = $processor_manager->createInstance($processor);
-    }
-    catch (PluginException $e) {
-      watchdog_exception('aggregator', $e);
-    }
-  }
-
-  // We store the hash of feed data in the database. When refreshing a
-  // feed we compare stored hash and new hash calculated from downloaded
-  // data. If both are equal we say that feed is not updated.
-  $hash = hash('sha256', $feed->source_string);
-
-  if ($success && ($feed->getHash() != $hash)) {
-    // Parse the feed.
-    $parser_manager = \Drupal::service('plugin.manager.aggregator.parser');
-    try {
-      if ($parser_manager->createInstance($config->get('parser'))->parse($feed)) {
-        if ($feed->getWebsiteUrl()) {
-          $feed->setWebsiteUrl($feed->getUrl());
-        }
-        $feed->setHash($hash);
-        // Update feed with parsed data.
-        $feed->save();
-
-        // Log if feed URL has changed.
-        if ($feed->getUrl() != $feed_url) {
-          watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->getUrl()));
-        }
-
-        watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->label()));
-        drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed->label())));
-
-        // If there are items on the feed, let enabled processors process them.
-        if (!empty($feed->items)) {
-          foreach ($processor_instances as $instance) {
-            $instance->process($feed);
-          }
-        }
-      }
-    }
-    catch (PluginException $e) {
-      watchdog_exception('aggregator', $e);
-    }
-  }
-  else {
-    drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed->label())));
-  }
-
-  // Regardless of successful or not, indicate that this feed has been checked.
-  $feed->setLastCheckedTime(REQUEST_TIME);
-  $feed->setQueuedTime(0);
-  $feed->save();
-
-  // Processing is done, call postProcess on enabled processors.
-  foreach ($processor_instances as $instance) {
-    $instance->postProcess($feed);
-  }
 }
 
 /**

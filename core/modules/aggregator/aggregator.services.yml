@@ -8,3 +8,6 @@ services:
   plugin.manager.aggregator.processor:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
     arguments: [processor, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+  aggregator.items.importer:
+    class: Drupal\aggregator\ItemsImporter
+    arguments: ['@config.factory', '@plugin.manager.aggregator.fetcher', '@plugin.manager.aggregator.parser', '@plugin.manager.aggregator.processor']

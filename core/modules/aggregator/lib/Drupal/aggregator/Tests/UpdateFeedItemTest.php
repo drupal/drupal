@@ -50,7 +50,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchField();
     $feed = aggregator_feed_load($fid);
 
-    aggregator_refresh($feed);
+    $feed->refreshItems();
     $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
 
     // Sleep for 3 second.
@@ -64,7 +64,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
         'modified' => 0,
       ))
       ->execute();
-    aggregator_refresh($feed);
+    $feed->refreshItems();
 
     $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($before === $after, format_string('Publish timestamp of feed item was not updated (!before === !after)', array('!before' => $before, '!after' => $after)));

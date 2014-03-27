@@ -63,10 +63,8 @@ class Feed extends ContentEntityBase implements FeedInterface {
    * {@inheritdoc}
    */
   public function deleteItems() {
-    $manager = \Drupal::service('plugin.manager.aggregator.processor');
-    foreach ($manager->getDefinitions() as $id => $definition) {
-      $manager->createInstance($id)->delete($this);
-    }
+    \Drupal::service('aggregator.items.importer')->delete($this);
+
     // Reset feed.
     $this->setLastCheckedTime(0);
     $this->setHash('');
@@ -75,6 +73,20 @@ class Feed extends ContentEntityBase implements FeedInterface {
     $this->save();
 
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function refreshItems() {
+    $success = \Drupal::service('aggregator.items.importer')->refresh($this);
+
+    // Regardless of successful or not, indicate that it has been checked.
+    $this->setLastCheckedTime(REQUEST_TIME);
+    $this->setQueuedTime(0);
+    $this->save();
+
+    return $success;
   }
 
   /**
@@ -94,10 +106,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
     foreach ($entities as $entity) {
       // Notify processors to delete stored items.
-      $manager = \Drupal::service('plugin.manager.aggregator.processor');
-      foreach ($manager->getDefinitions() as $id => $definition) {
-        $manager->createInstance($id)->delete($entity);
-      }
+      \Drupal::service('aggregator.items.importer')->delete($entity);
     }
   }
 
