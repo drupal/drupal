@@ -9,23 +9,25 @@
  * @mainpage
  * Welcome to the Drupal API Documentation!
  *
- * This documentation is generated from specially-formatted comments embedded in
- * the Drupal source code. Here are some topics to get you started.
+ * This site is an API reference for Drupal, generated from comments embedded
+ * in the source code. More in-depth documentation can be found at
+ * https://drupal.org/developing/api.
+ *
+ * Here are some topics to help you get started developing with Drupal.
  *
  * @section essentials Essential background concepts
  *
  * - @link architecture Drupal's architecture @endlink
- * - @link extending Extending Drupal @endlink
  * - @link oo_conventions Object-oriented conventions used in Drupal @endlink
- * - @link best_practices Best practices @endlink
+ * - @link extending Extending Drupal @endlink
+ * - @link best_practices Security and best practices @endlink
  *
- * @section interfacing Interfacing with the outside world
+ * @section interface User interface
  *
  * - @link menu Routing, page controllers, and menu entries @endlink
  * - @link form_api Forms @endlink
  * - @link block_api Blocks @endlink
  * - @link ajax Ajax @endlink
- * - @link third_party Integrating third-party applications @endlink
  *
  * @section store_retrieve Storing and retrieving data
  *
@@ -44,11 +46,12 @@
  * - @link theme_render Theme system and render API @endlink
  * - @link migration Migration @endlink
  *
- * @section advanced Advanced topics
+ * @section additional Additional topics
  *
  * - @link container Services and the Dependency Injection Container @endlink
  * - @link typed_data Typed Data @endlink
  * - @link testing Automated tests @endlink
+ * - @link third_party Integrating third-party applications @endlink
  *
  * @section more_info Further information
  *
