@@ -8,7 +8,7 @@ display:
     id: default
     display_title: Master
     display_plugin: default
-    position: 1
+    position: 0
     display_options:
       query:
         type: views_query
@@ -140,7 +140,7 @@ display:
     id: block_1
     display_title: Block
     display_plugin: block
-    position: 3
+    position: 1
     display_options:
       query:
         type: views_query

@@ -8,7 +8,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: 1
+    position: 0
     display_options:
       access:
         type: perm

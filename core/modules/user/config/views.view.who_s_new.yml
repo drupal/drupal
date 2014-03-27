@@ -4,20 +4,11 @@ core: 8.x
 description: 'Shows a list of the newest user accounts on the site.'
 status: true
 display:
-  block_1:
-    display_plugin: block
-    id: block_1
-    display_title: 'Who''s new'
-    position: 1
-    display_options:
-      display_description: 'A list of new users'
-      block_description: 'Who''s new'
-      block_category: User
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: 1
+    position: 0
     display_options:
       access:
         type: perm
@@ -166,6 +157,15 @@ display:
       empty: {  }
       relationships: {  }
       arguments: {  }
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: 'Who''s new'
+    position: 1
+    display_options:
+      display_description: 'A list of new users'
+      block_description: 'Who''s new'
+      block_category: User
 label: 'Who''s new'
 module: user
 id: who_s_new

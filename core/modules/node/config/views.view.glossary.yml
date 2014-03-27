@@ -8,7 +8,7 @@ display:
     id: default
     display_title: Master
     display_plugin: default
-    position: 1
+    position: 0
     display_options:
       query:
         type: views_query
@@ -306,7 +306,7 @@ display:
     id: page_1
     display_title: Page
     display_plugin: page
-    position: 2
+    position: 1
     display_options:
       query:
         type: views_query
@@ -320,7 +320,7 @@ display:
     id: attachment_1
     display_title: Attachment
     display_plugin: attachment
-    position: 3
+    position: 2
     display_options:
       query:
         type: views_query

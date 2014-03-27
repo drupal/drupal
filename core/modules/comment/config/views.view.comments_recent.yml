@@ -4,19 +4,11 @@ core: 8.x
 description: 'Recent comments.'
 status: true
 display:
-  block_1:
-    display_plugin: block
-    id: block_1
-    display_title: Block
-    position: 0
-    display_options:
-      block_description: 'Recent comments'
-      block_category: 'Lists (Views)'
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: 1
+    position: 0
     display_options:
       access:
         type: perm
@@ -229,6 +221,14 @@ display:
           content: 'No comments available.'
           tokenize: false
           plugin_id: text_custom
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: 1
+    display_options:
+      block_description: 'Recent comments'
+      block_category: 'Lists (Views)'
 label: 'Recent comments'
 module: views
 id: comments_recent

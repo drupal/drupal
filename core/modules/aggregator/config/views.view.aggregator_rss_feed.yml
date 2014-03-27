@@ -8,7 +8,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: 1
+    position: 0
     display_options:
       access:
         type: none
@@ -137,7 +137,7 @@ display:
     display_plugin: feed
     id: feed_items
     display_title: Feed
-    position: 2
+    position: 1
     display_options:
       path: aggregator/rss
       display_description: ''
