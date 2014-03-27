@@ -56,11 +56,11 @@ interface RevisionableInterface {
   /**
    * Acts on a revision before it gets saved.
    *
-   * @param EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param EntityStorageInterface $storage
+   *   The entity storage object.
    * @param \stdClass $record
    *   The revision object.
    */
-  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record);
+  public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record);
 
 }

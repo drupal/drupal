@@ -8,7 +8,6 @@
 namespace Drupal\comment\Tests\Views;
 
 use Drupal\comment\CommentInterface;
-use Drupal\entity\DatabaseStorageController;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;
 

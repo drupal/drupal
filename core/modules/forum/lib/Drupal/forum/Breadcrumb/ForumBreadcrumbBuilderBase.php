@@ -64,7 +64,7 @@ abstract class ForumBreadcrumbBuilderBase extends BreadcrumbBuilderBase {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
 
     $vocabulary = $this->entityManager
-      ->getStorageController('taxonomy_vocabulary')
+      ->getStorage('taxonomy_vocabulary')
       ->load($this->config->get('vocabulary'));
     $breadcrumb[] = $this->l($vocabulary->label(), 'forum.index');
 

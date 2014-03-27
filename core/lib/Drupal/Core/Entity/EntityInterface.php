@@ -201,10 +201,10 @@ interface EntityInterface extends AccessibleInterface {
    *
    * Used before the entity is saved and before invoking the presave hook.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage object.
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller);
+  public function preSave(EntityStorageInterface $storage);
 
   /**
    * Acts on a saved entity before the insert or update hook is invoked.
@@ -212,67 +212,67 @@ interface EntityInterface extends AccessibleInterface {
    * Used after the entity is saved, but before invoking the insert or update
    * hook.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage object.
    * @param bool $update
    *   TRUE if the entity has been updated, or FALSE if it has been inserted.
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE);
+  public function postSave(EntityStorageInterface $storage, $update = TRUE);
 
   /**
    * Changes the values of an entity before it is created.
    *
    * Load defaults for example.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage object.
    * @param array $values
    *   An array of values to set, keyed by property name. If the entity type has
    *   bundles the bundle key has to be specified.
    */
-  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values);
+  public static function preCreate(EntityStorageInterface $storage, array &$values);
 
   /**
    * Acts on an entity after it is created but before hooks are invoked.
    *
-   * @param EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param EntityStorageInterface $storage
+   *   The entity storage object.
    */
-  public function postCreate(EntityStorageControllerInterface $storage_controller);
+  public function postCreate(EntityStorageInterface $storage);
 
   /**
    * Acts on entities before they are deleted and before hooks are invoked.
    *
    * Used before the entities are deleted and before invoking the delete hook.
    *
-   * @param EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param EntityStorageInterface $storage
+   *   The entity storage object.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities);
+  public static function preDelete(EntityStorageInterface $storage, array $entities);
 
   /**
    * Acts on deleted entities before the delete hook is invoked.
    *
    * Used after the entities are deleted but before invoking the delete hook.
    *
-   * @param EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param EntityStorageInterface $storage
+   *   The entity storage object.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities);
+  public static function postDelete(EntityStorageInterface $storage, array $entities);
 
   /**
    * Acts on loaded entities.
    *
-   * @param EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
+   * @param EntityStorageInterface $storage
+   *   The entity storage object.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities);
+  public static function postLoad(EntityStorageInterface $storage, array &$entities);
 
   /**
    * Creates a duplicate of the entity.

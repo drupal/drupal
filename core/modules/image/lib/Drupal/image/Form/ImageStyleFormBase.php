@@ -8,7 +8,7 @@
 namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,19 +17,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ImageStyleFormBase extends EntityFormController {
 
   /**
-   * The image style entity storage controller.
+   * The image style entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $imageStyleStorage;
 
   /**
    * Constructs a base class for image style add and edit forms.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $image_style_storage
-   *   The image style entity storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
+   *   The image style entity storage.
    */
-  public function __construct(EntityStorageControllerInterface $image_style_storage) {
+  public function __construct(EntityStorageInterface $image_style_storage) {
     $this->imageStyleStorage = $image_style_storage;
   }
 
@@ -38,7 +38,7 @@ abstract class ImageStyleFormBase extends EntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('image_style')
+      $container->get('entity.manager')->getStorage('image_style')
     );
   }
 

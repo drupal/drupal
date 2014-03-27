@@ -814,7 +814,7 @@ function user_login_finalize(UserInterface $account) {
   // This is also used to invalidate one-time login links.
   $account->setLastLoginTime(REQUEST_TIME);
   \Drupal::entityManager()
-    ->getStorageController('user')
+    ->getStorage('user')
     ->updateLastLoginTimestamp($account);
 
   // Regenerate the session ID to prevent against session fixation attacks.

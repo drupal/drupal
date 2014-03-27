@@ -271,7 +271,7 @@ class BookTest extends WebTestBase {
       $edit['book[pid]'] = $parent;
       $this->drupalPostForm(NULL, $edit, t('Save'));
       // Make sure the parent was flagged as having children.
-      $parent_node = \Drupal::entityManager()->getStorageController('node')->loadUnchanged($parent);
+      $parent_node = \Drupal::entityManager()->getStorage('node')->loadUnchanged($parent);
       $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
     }
     else {
@@ -550,7 +550,7 @@ class BookTest extends WebTestBase {
     $edit = array();
     $edit['book[bid]'] = '1';
     $this->drupalPostForm('node/' . $empty_book->id() . '/outline', $edit, t('Add to book outline'));
-    $node = \Drupal::entityManager()->getStorageController('node')->load($empty_book->id());
+    $node = \Drupal::entityManager()->getStorage('node')->load($empty_book->id());
     // Test the book array.
     $this->assertEqual($node->book['nid'], $empty_book->id());
     $this->assertEqual($node->book['bid'], $empty_book->id());
@@ -571,7 +571,7 @@ class BookTest extends WebTestBase {
     $edit = array();
     $edit['book[bid]'] = $node->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $node = \Drupal::entityManager()->getStorageController('node')->load($node->id());
+    $node = \Drupal::entityManager()->getStorage('node')->load($node->id());
 
     // Test the book array.
     $this->assertEqual($node->book['nid'], $node->id());

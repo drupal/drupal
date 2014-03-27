@@ -23,7 +23,7 @@ use Drupal\migrate\Plugin\RequirementsInterface;
  *   label = @Translation("Migration"),
  *   module = "migrate",
  *   controllers = {
- *     "storage" = "Drupal\migrate\MigrationStorageController"
+ *     "storage" = "Drupal\migrate\MigrationStorage"
  *   },
  *   entity_keys = {
  *     "id" = "id",
@@ -316,7 +316,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
       }
 
       /** @var \Drupal\migrate\Entity\MigrationInterface[] $required_migrations */
-      $required_migrations = \Drupal::entityManager()->getStorageController('migration')->loadMultiple($this->requirements);
+      $required_migrations = \Drupal::entityManager()->getStorage('migration')->loadMultiple($this->requirements);
       // Check if the dependencies are in good shape.
       foreach ($required_migrations as $required_migration) {
         // If the dependent source migration has no IDs then no mappings can

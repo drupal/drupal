@@ -18,9 +18,9 @@ use Drupal\node\NodeInterface;
 class BookExport {
 
   /**
-   * The node storage controller.
+   * The node storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeStorage;
 
@@ -38,7 +38,7 @@ class BookExport {
    *   The entity manager.
    */
   public function __construct(EntityManagerInterface $entityManager) {
-    $this->nodeStorage = $entityManager->getStorageController('node');
+    $this->nodeStorage = $entityManager->getStorage('node');
     $this->viewBuilder = $entityManager->getViewBuilder('node');
   }
 

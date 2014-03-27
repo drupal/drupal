@@ -25,7 +25,7 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
   /**
    * The search page storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $storage;
 
@@ -39,7 +39,7 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    */
   public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
     $this->configFactory = $config_factory;
-    $this->storage = $entity_manager->getStorageController('search_page');
+    $this->storage = $entity_manager->getStorage('search_page');
   }
 
   /**

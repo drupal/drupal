@@ -67,8 +67,8 @@ class FeedFormController extends ContentEntityFormController {
   public function validate(array $form, array &$form_state) {
     $feed = $this->buildEntity($form, $form_state);
     // Check for duplicate titles.
-    $feed_storage_controller = $this->entityManager->getStorageController('aggregator_feed');
-    $result = $feed_storage_controller->getFeedDuplicates($feed);
+    $feed_storage = $this->entityManager->getStorage('aggregator_feed');
+    $result = $feed_storage->getFeedDuplicates($feed);
     foreach ($result as $item) {
       if (strcasecmp($item->label(), $feed->label()) == 0) {
         $this->setFormError('title', $form_state, $this->t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $feed->label())));

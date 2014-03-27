@@ -54,7 +54,7 @@ class TermFormController extends ContentEntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $term = $this->entity;
-    $vocab_storage = $this->entityManager->getStorageController('taxonomy_vocabulary');
+    $vocab_storage = $this->entityManager->getStorage('taxonomy_vocabulary');
     $vocabulary = $vocab_storage->load($term->bundle());
 
     $parent = array_keys(taxonomy_term_load_parents($term->id()));

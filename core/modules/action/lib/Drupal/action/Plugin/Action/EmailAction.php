@@ -32,11 +32,11 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   protected $token;
 
   /**
-   * The user storage controller.
+   * The user storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * Constructs a EmailAction object.
@@ -56,7 +56,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->token = $token;
-    $this->storageController = $entity_manager->getStorageController('user');
+    $this->storage = $entity_manager->getStorage('user');
   }
 
   /**
@@ -82,7 +82,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
     // If the recipient is a registered user with a language preference, use
     // the recipient's preferred language. Otherwise, use the system default
     // language.
-    $recipient_accounts = $this->storageController->loadByProperties(array('mail' => $recipient));
+    $recipient_accounts = $this->storage->loadByProperties(array('mail' => $recipient));
     $recipient_account = reset($recipient_accounts);
     if ($recipient_account) {
       $langcode = $recipient_account->getPreferredLangcode();

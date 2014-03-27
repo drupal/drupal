@@ -9,7 +9,7 @@ namespace Drupal\field\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\field\Field;
@@ -23,7 +23,7 @@ use Drupal\field\FieldInstanceConfigInterface;
  *   id = "field_instance_config",
  *   label = @Translation("Field instance"),
  *   controllers = {
- *     "storage" = "Drupal\field\FieldInstanceConfigStorageController"
+ *     "storage" = "Drupal\field\FieldInstanceConfigStorage"
  *   },
  *   config_prefix = "instance",
  *   entity_keys = {
@@ -329,15 +329,15 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures at the configuration storage level.
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
+  public function preSave(EntityStorageInterface $storage) {
     $entity_manager = \Drupal::entityManager();
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     if ($this->isNew()) {
       // Set the default instance settings.
       $this->settings += $field_type_manager->getDefaultInstanceSettings($this->field->type);
-      // Notify the entity storage controller.
-      $entity_manager->getStorageController($this->entity_type)->onInstanceCreate($this);
+      // Notify the entity storage.
+      $entity_manager->getStorage($this->entity_type)->onInstanceCreate($this);
     }
     else {
       // Some updates are always disallowed.
@@ -352,8 +352,8 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       }
       // Set the default instance settings.
       $this->settings += $field_type_manager->getDefaultInstanceSettings($this->field->type);
-      // Notify the entity storage controller.
-      $entity_manager->getStorageController($this->entity_type)->onInstanceUpdate($this);
+      // Notify the entity storage.
+      $entity_manager->getStorage($this->entity_type)->onInstanceUpdate($this);
     }
     if (!$this->isSyncing()) {
       // Ensure the correct dependencies are present.
@@ -372,7 +372,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     if ($bundle_entity_type_id != 'bundle') {
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
-      $bundle_entity = \Drupal::entityManager()->getStorageController($bundle_entity_type_id)->load($this->bundle);
+      $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
       $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
     }
     return $this->dependencies;
@@ -381,7 +381,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Clear the cache.
     field_cache_clear();
 
@@ -396,7 +396,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $instances) {
+  public static function preDelete(EntityStorageInterface $storage, array $instances) {
     $state = \Drupal::state();
 
     // Keep the instance definitions in the state storage so we can use them
@@ -415,16 +415,16 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $instances) {
-    $field_controller = \Drupal::entityManager()->getStorageController('field_config');
+  public static function postDelete(EntityStorageInterface $storage, array $instances) {
+    $field_storage = \Drupal::entityManager()->getStorage('field_config');
 
     // Clear the cache upfront, to refresh the results of getBundles().
     field_cache_clear();
 
-    // Notify the entity storage controller.
+    // Notify the entity storage.
     foreach ($instances as $instance) {
       if (!$instance->deleted) {
-        \Drupal::entityManager()->getStorageController($instance->entity_type)->onInstanceDelete($instance);
+        \Drupal::entityManager()->getStorage($instance->entity_type)->onInstanceDelete($instance);
       }
     }
 
@@ -445,7 +445,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       }
     }
     if ($fields_to_delete) {
-      $field_controller->delete($fields_to_delete);
+      $field_storage->delete($fields_to_delete);
     }
 
     // Cleanup entity displays.

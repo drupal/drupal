@@ -9,7 +9,7 @@ namespace Drupal\menu\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,11 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuDeleteForm extends EntityConfirmFormBase {
 
   /**
-   * The menu link storage controller.
+   * The menu link storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * The database connection.
@@ -34,13 +34,13 @@ class MenuDeleteForm extends EntityConfirmFormBase {
   /**
    * Constructs a new MenuDeleteForm.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The menu link storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The menu link storage.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(EntityStorageControllerInterface $storage_controller, Connection $connection) {
-    $this->storageController = $storage_controller;
+  public function __construct(EntityStorageInterface $storage, Connection $connection) {
+    $this->storage = $storage;
     $this->connection = $connection;
   }
 
@@ -49,7 +49,7 @@ class MenuDeleteForm extends EntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('menu_link'),
+      $container->get('entity.manager')->getStorage('menu_link'),
       $container->get('database')
     );
   }
@@ -78,7 +78,7 @@ class MenuDeleteForm extends EntityConfirmFormBase {
    */
   public function getDescription() {
     $caption = '';
-    $num_links = $this->storageController->countMenuLinks($this->entity->id());
+    $num_links = $this->storage->countMenuLinks($this->entity->id());
     if ($num_links) {
       $caption .= '<p>' . format_plural($num_links, '<strong>Warning:</strong> There is currently 1 menu link in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu links in %title. They will be deleted (system-defined links will be reset).', array('%title' => $this->entity->label())) . '</p>';
     }
@@ -110,13 +110,13 @@ class MenuDeleteForm extends EntityConfirmFormBase {
       ->condition('module', 'system')
       ->sort('depth', 'ASC')
       ->execute();
-    $menu_links = $this->storageController->loadMultiple($result);
+    $menu_links = $this->storage->loadMultiple($result);
     foreach ($menu_links as $link) {
       $link->reset();
     }
 
     // Delete all links to the overview page for this menu.
-    $menu_links = $this->storageController->loadByProperties(array('link_path' => 'admin/structure/menu/manage/' . $this->entity->id()));
+    $menu_links = $this->storage->loadByProperties(array('link_path' => 'admin/structure/menu/manage/' . $this->entity->id()));
     menu_link_delete_multiple(array_keys($menu_links));
 
     // Delete the custom menu and all its menu links.

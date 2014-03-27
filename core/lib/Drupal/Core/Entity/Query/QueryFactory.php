@@ -45,7 +45,7 @@ class QueryFactory extends ContainerAware {
    *   The query object that can query the given entity type.
    */
   public function get($entity_type_id, $conjunction = 'AND') {
-    $service_name = $this->entityManager->getStorageController($entity_type_id)->getQueryServicename();
+    $service_name = $this->entityManager->getStorage($entity_type_id)->getQueryServicename();
     return $this->container->get($service_name)->get($this->entityManager->getDefinition($entity_type_id), $conjunction);
   }
 
@@ -62,7 +62,7 @@ class QueryFactory extends ContainerAware {
    *   The aggregated query object that can query the given entity type.
    */
   public function getAggregate($entity_type_id, $conjunction = 'AND') {
-    $service_name = $this->entityManager->getStorageController($entity_type_id)->getQueryServicename();
+    $service_name = $this->entityManager->getStorage($entity_type_id)->getQueryServicename();
     return $this->container->get($service_name)->getAggregate($this->entityManager->getDefinition($entity_type_id), $conjunction);
   }
 

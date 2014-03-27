@@ -19,9 +19,9 @@ use Drupal\node\NodeInterface;
 class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
 
   /**
-   * The node storage controller.
+   * The node storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeStorage;
 
@@ -50,7 +50,7 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
    *   The current user account.
    */
   public function __construct(EntityManagerInterface $entity_manager, AccessManager $access_manager, AccountInterface $account) {
-    $this->nodeStorage = $entity_manager->getStorageController('node');
+    $this->nodeStorage = $entity_manager->getStorage('node');
     $this->accessManager = $access_manager;
     $this->account = $account;
   }

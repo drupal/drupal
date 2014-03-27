@@ -27,7 +27,7 @@ class NodeAccessController extends EntityAccessController implements NodeAccessC
   /**
    * The node grant storage.
    *
-   * @var \Drupal\node\NodeGrantStorageControllerInterface
+   * @var \Drupal\node\NodeGrantStorageInterface
    */
   protected $grantStorage;
 

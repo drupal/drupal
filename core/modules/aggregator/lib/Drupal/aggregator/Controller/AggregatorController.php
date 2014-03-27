@@ -25,7 +25,7 @@ class AggregatorController extends ControllerBase {
    *   A form array as expected by drupal_render().
    */
   public function feedAdd() {
-    $feed = $this->entityManager()->getStorageController('aggregator_feed')
+    $feed = $this->entityManager()->getStorage('aggregator_feed')
       ->create(array(
         'refresh' => 3600,
       ));
@@ -46,7 +46,7 @@ class AggregatorController extends ControllerBase {
     $feed_source = $entity_manager->getViewBuilder('aggregator_feed')
       ->view($aggregator_feed, 'default');
     // Load aggregator feed item for the particular feed id.
-    $items = $entity_manager->getStorageController('aggregator_item')->loadByFeed($aggregator_feed->id(), 20);
+    $items = $entity_manager->getStorage('aggregator_item')->loadByFeed($aggregator_feed->id(), 20);
     // Print the feed items.
     $build = $this->buildPageList($items, $feed_source);
     return $build;
@@ -106,7 +106,7 @@ class AggregatorController extends ControllerBase {
    */
   public function adminOverview() {
     $entity_manager = $this->entityManager();
-    $feeds = $entity_manager->getStorageController('aggregator_feed')
+    $feeds = $entity_manager->getStorage('aggregator_feed')
       ->loadMultiple();
 
     $header = array($this->t('Title'), $this->t('Items'), $this->t('Last update'), $this->t('Next update'), $this->t('Operations'));
@@ -114,7 +114,7 @@ class AggregatorController extends ControllerBase {
     foreach ($feeds as $feed) {
       $row = array();
       $row[] = l($feed->label(), "aggregator/sources/" . $feed->id());
-      $row[] = format_plural($entity_manager->getStorageController('aggregator_item')->getItemCount($feed), '1 item', '@count items');
+      $row[] = format_plural($entity_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
       $last_checked = $feed->getLastCheckedTime();
       $refresh_rate = $feed->getRefreshRate();
       $row[] = ($last_checked ? $this->t('@time ago', array('@time' => format_interval(REQUEST_TIME - $last_checked))) : $this->t('never'));
@@ -165,7 +165,7 @@ class AggregatorController extends ControllerBase {
    *   The rendered list of items for the feed.
    */
   public function pageLast() {
-    $items = $this->entityManager()->getStorageController('aggregator_item')->loadAll(20);
+    $items = $this->entityManager()->getStorage('aggregator_item')->loadAll(20);
     $build = $this->buildPageList($items);
     $build['#attached']['drupal_add_feed'][] = array('aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator'));
     return $build;
@@ -180,7 +180,7 @@ class AggregatorController extends ControllerBase {
   public function sources() {
     $entity_manager = $this->entityManager();
 
-    $feeds = $entity_manager->getStorageController('aggregator_feed')->loadMultiple();
+    $feeds = $entity_manager->getStorage('aggregator_feed')->loadMultiple();
 
     $build = array(
       '#type' => 'container',
@@ -194,7 +194,7 @@ class AggregatorController extends ControllerBase {
       $aggregator_summary_items = $this->config('aggregator.settings')
         ->get('source.list_max');
       if ($aggregator_summary_items) {
-        $items = $entity_manager->getStorageController('aggregator_item')
+        $items = $entity_manager->getStorage('aggregator_item')
           ->loadByFeed($feed->id(), 20);
         if ($items) {
           $summary_items = $entity_manager->getViewBuilder('aggregator_item')
@@ -224,7 +224,7 @@ class AggregatorController extends ControllerBase {
    */
   public function opmlPage() {
      $feeds = $this->entityManager()
-      ->getStorageController('aggregator_feed')
+      ->getStorage('aggregator_feed')
       ->loadMultiple();
 
     $feeds = $result->fetchAll();

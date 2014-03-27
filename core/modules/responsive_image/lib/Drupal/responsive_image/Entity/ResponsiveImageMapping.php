@@ -86,7 +86,7 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
       // @todo Implement toArray() so we do not have reload the
       //   entity since this property is changed in
       //   \Drupal\responsive_image\Entity\ResponsiveImageMapping::save().
-      $breakpoint_group = \Drupal::entityManager()->getStorageController('breakpoint_group')->load($this->breakpointGroup);
+      $breakpoint_group = \Drupal::entityManager()->getStorage('breakpoint_group')->load($this->breakpointGroup);
       $this->addDependency('entity', $breakpoint_group->getConfigDependencyName());
     }
     return $this->dependencies;

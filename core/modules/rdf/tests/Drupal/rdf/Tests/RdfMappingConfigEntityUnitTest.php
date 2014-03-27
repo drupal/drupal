@@ -142,14 +142,14 @@ class RdfMappingEntityUnitTest extends UnitTestCase {
                         ->with($this->entityTypeId)
                         ->will($this->returnValue($this->entityType));
 
-    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
       ->method('load')
       ->with($bundle_id)
       ->will($this->returnValue($bundle_entity));
 
     $this->entityManager->expects($this->once())
-                        ->method('getStorageController')
+                        ->method('getStorage')
                         ->with($bundle_entity_type_id)
                         ->will($this->returnValue($storage));
 

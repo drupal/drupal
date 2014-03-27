@@ -10,7 +10,7 @@ namespace Drupal\entity_test\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
@@ -51,10 +51,10 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
-    parent::preCreate($storage_controller, $values);
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+    parent::preCreate($storage, $values);
     if (empty($values['type'])) {
-      $values['type'] = $storage_controller->getEntityTypeId();
+      $values['type'] = $storage->getEntityTypeId();
     }
   }
 

@@ -31,7 +31,7 @@ class TaxonomyTermReferenceFieldItemList extends FieldItemList {
           ->condition('uuid', $uuids, 'IN')
           ->execute();
         $entities = \Drupal::entityManager()
-          ->getStorageController('taxonomy_term')
+          ->getStorage('taxonomy_term')
           ->loadMultiple($entity_ids);
 
         foreach ($entities as $id => $entity) {
@@ -66,7 +66,7 @@ class TaxonomyTermReferenceFieldItemList extends FieldItemList {
       $ids[] = $properties['target_id'];
     }
     $entities = \Drupal::entityManager()
-      ->getStorageController('taxonomy_term')
+      ->getStorage('taxonomy_term')
       ->loadMultiple($ids);
 
     foreach ($default_value as $delta => $properties) {

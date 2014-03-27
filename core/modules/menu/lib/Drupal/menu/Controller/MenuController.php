@@ -49,7 +49,7 @@ class MenuController extends ControllerBase {
    *   Returns the menu link submission form.
    */
   public function addLink(MenuInterface $menu) {
-    $menu_link = $this->entityManager()->getStorageController('menu_link')->create(array(
+    $menu_link = $this->entityManager()->getStorage('menu_link')->create(array(
       'mlid' => 0,
       'plid' => 0,
       'menu_name' => $menu->id(),

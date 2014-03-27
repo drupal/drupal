@@ -21,9 +21,9 @@ use Drupal\views\Plugin\views\argument_validator\Entity;
 class User extends Entity {
 
   /**
-   * The user storage controller.
+   * The user storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $userStorage;
 
@@ -33,7 +33,7 @@ class User extends Entity {
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_manager);
 
-    $this->userStorage = $entity_manager->getStorageController('user');
+    $this->userStorage = $entity_manager->getStorage('user');
   }
 
   /**

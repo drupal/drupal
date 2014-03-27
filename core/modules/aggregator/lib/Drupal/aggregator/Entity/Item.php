@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\aggregator\ItemInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
@@ -20,7 +20,7 @@ use Drupal\Core\Field\FieldDefinition;
  *   id = "aggregator_item",
  *   label = @Translation("Aggregator feed item"),
  *   controllers = {
- *     "storage" = "Drupal\aggregator\ItemStorageController",
+ *     "storage" = "Drupal\aggregator\ItemStorage",
  *     "view_builder" = "Drupal\aggregator\ItemViewBuilder"
  *   },
  *   base_table = "aggregator_item",

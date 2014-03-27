@@ -104,7 +104,7 @@ class EntityTestController extends ControllerBase {
   public function listReferencingEntities($entity_reference_field_name, $referenced_entity_type, $referenced_entity_id) {
     // Early return if the referenced entity does not exist (or is deleted).
     $referenced_entity = $this->entityManager()
-      ->getStorageController($referenced_entity_type)
+      ->getStorage($referenced_entity_type)
       ->load($referenced_entity_id);
     if ($referenced_entity === NULL) {
       return array();
@@ -114,7 +114,7 @@ class EntityTestController extends ControllerBase {
       ->get('entity_test')
       ->condition($entity_reference_field_name . '.target_id', $referenced_entity_id);
     $entities = $this->entityManager()
-      ->getStorageController('entity_test')
+      ->getStorage('entity_test')
       ->loadMultiple($query->execute());
     return $this->entityManager()
       ->getViewBuilder('entity_test')

@@ -131,7 +131,7 @@ class EntityLabel extends FieldPluginBase {
     }
 
     foreach ($entity_ids_per_type as $type => $ids) {
-      $this->loadedReferencers[$type] = $this->entityManager->getStorageController($type)->loadMultiple($ids);
+      $this->loadedReferencers[$type] = $this->entityManager->getStorage($type)->loadMultiple($ids);
     }
   }
 

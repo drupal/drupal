@@ -8,8 +8,8 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Entity\FieldableDatabaseStorageController;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\field\Entity\FieldConfig;
@@ -83,7 +83,7 @@ class Tables implements TablesInterface {
     for ($key = 0; $key <= $count; $key ++) {
       // If there is revision support and only the current revision is being
       // queried then use the revision id. Otherwise, the entity id will do.
-      if (($revision_key = $entity_type->getKey('revision')) && $age == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
+      if (($revision_key = $entity_type->getKey('revision')) && $age == EntityStorageInterface::FIELD_LOAD_CURRENT) {
         // This contains the relevant SQL field to be used when joining entity
         // tables.
         $entity_id_field = $revision_key;
@@ -142,7 +142,7 @@ class Tables implements TablesInterface {
               $values[$bundle_key] = reset($field_map[$entity_type_id][$field_name]['bundles']);
             }
             $entity = $entity_manager
-              ->getStorageController($entity_type_id)
+              ->getStorage($entity_type_id)
               ->create($values);
             $propertyDefinitions = $entity->$field_name->getFieldDefinition()->getPropertyDefinitions();
 
@@ -163,7 +163,7 @@ class Tables implements TablesInterface {
           $column = 'value';
         }
         $table = $this->ensureFieldTable($index_prefix, $field, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
-        $sql_column = FieldableDatabaseStorageController::_fieldColumnName($field, $column);
+        $sql_column = ContentEntityDatabaseStorage::_fieldColumnName($field, $column);
       }
       // This is an entity property (non-configurable field).
       else {
@@ -196,7 +196,7 @@ class Tables implements TablesInterface {
             $values[$bundle_key] = key($bundles);
           }
           $entity = $entity_manager
-            ->getStorageController($entity_type_id)
+            ->getStorage($entity_type_id)
             ->create($values);
           $propertyDefinitions = $entity->$specifier->getFieldDefinition()->getPropertyDefinitions();
           $relationship_specifier = $specifiers[$key + 1];
@@ -252,7 +252,7 @@ class Tables implements TablesInterface {
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field) {
     $field_name = $field->getName();
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
-      $table = $this->sqlQuery->getMetaData('age') == EntityStorageControllerInterface::FIELD_LOAD_CURRENT ? FieldableDatabaseStorageController::_fieldTableName($field) : FieldableDatabaseStorageController::_fieldRevisionTableName($field);
+      $table = $this->sqlQuery->getMetaData('age') == EntityStorageInterface::FIELD_LOAD_CURRENT ? ContentEntityDatabaseStorage::_fieldTableName($field) : ContentEntityDatabaseStorage::_fieldRevisionTableName($field);
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }

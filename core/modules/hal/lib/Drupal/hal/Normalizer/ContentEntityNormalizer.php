@@ -149,7 +149,7 @@ class ContentEntityNormalizer extends NormalizerBase {
       unset($data[$bundle_key]);
     }
 
-    $entity = $this->entityManager->getStorageController($typed_data_ids['entity_type'])->create($values);
+    $entity = $this->entityManager->getStorage($typed_data_ids['entity_type'])->create($values);
 
     // Special handling for PATCH: destroy all possible default values that
     // might have been set on entity creation. We want an "empty" entity that

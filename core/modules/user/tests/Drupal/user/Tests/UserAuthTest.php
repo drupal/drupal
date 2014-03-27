@@ -21,9 +21,9 @@ use Drupal\user\UserAuth;
 class UserAuthTest extends UnitTestCase {
 
   /**
-   * The mock user storage controller.
+   * The mock user storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $userStorage;
 
@@ -77,12 +77,12 @@ class UserAuthTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->userStorage = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
+    $this->userStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    // Getting the user storage controller should only happen once per test.
+    // Getting the user storage should only happen once per test.
     $entity_manager->expects($this->once())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with('user')
       ->will($this->returnValue($this->userStorage));
 

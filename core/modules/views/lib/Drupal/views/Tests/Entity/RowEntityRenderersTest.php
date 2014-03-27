@@ -79,7 +79,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
    */
   public function testRenderers() {
     $values = array();
-    $controller = \Drupal::entityManager()->getStorageController('node');
+    $controller = \Drupal::entityManager()->getStorage('node');
     $langcode_index = 0;
 
     for ($i = 0; $i < count($this->langcodes); $i++) {

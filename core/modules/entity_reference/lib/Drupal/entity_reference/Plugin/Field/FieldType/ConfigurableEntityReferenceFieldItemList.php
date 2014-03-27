@@ -38,7 +38,7 @@ class ConfigurableEntityReferenceFieldItemList extends FieldItemList {
           ->condition('uuid', $uuids, 'IN')
           ->execute();
         $entities = \Drupal::entityManager()
-          ->getStorageController($target_type)
+          ->getStorage($target_type)
           ->loadMultiple($entity_ids);
 
         foreach ($entities as $id => $entity) {
@@ -80,7 +80,7 @@ class ConfigurableEntityReferenceFieldItemList extends FieldItemList {
       $ids[] = $properties['target_id'];
     }
     $entities = \Drupal::entityManager()
-      ->getStorageController($this->getSetting('target_type'))
+      ->getStorage($this->getSetting('target_type'))
       ->loadMultiple($ids);
 
     foreach ($default_value as $delta => $properties) {

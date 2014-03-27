@@ -143,7 +143,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertBlockAppears($block_3);
     $this->assertBlockAppears($block_4);
 
-    $block_storage_controller = $this->container->get('entity.manager')->getStorageController('block');
+    $block_storage = $this->container->get('entity.manager')->getStorage('block');
 
     // Remove the block display, so both block entities from the first view
     // should both disappear.
@@ -152,10 +152,10 @@ class DisplayBlockTest extends ViewTestBase {
     $view->displayHandlers->remove('block_1');
     $view->storage->save();
 
-    $this->assertFalse($block_storage_controller->load($block_1->id()), 'The block for this display was removed.');
-    $this->assertFalse($block_storage_controller->load($block_2->id()), 'The block for this display was removed.');
-    $this->assertTrue($block_storage_controller->load($block_3->id()), 'A block from another view was unaffected.');
-    $this->assertTrue($block_storage_controller->load($block_4->id()), 'A block from another view was unaffected.');
+    $this->assertFalse($block_storage->load($block_1->id()), 'The block for this display was removed.');
+    $this->assertFalse($block_storage->load($block_2->id()), 'The block for this display was removed.');
+    $this->assertTrue($block_storage->load($block_3->id()), 'A block from another view was unaffected.');
+    $this->assertTrue($block_storage->load($block_4->id()), 'A block from another view was unaffected.');
     $this->drupalGet('test-page');
     $this->assertNoBlockAppears($block_1);
     $this->assertNoBlockAppears($block_2);
@@ -169,8 +169,8 @@ class DisplayBlockTest extends ViewTestBase {
     $view->displayHandlers->remove('block_1');
     $view->storage->save();
 
-    $this->assertFalse($block_storage_controller->load($block_3->id()), 'The block for this display was removed.');
-    $this->assertTrue($block_storage_controller->load($block_4->id()), 'A block from another display on the same view was unaffected.');
+    $this->assertFalse($block_storage->load($block_3->id()), 'The block for this display was removed.');
+    $this->assertTrue($block_storage->load($block_4->id()), 'A block from another display on the same view was unaffected.');
     $this->drupalGet('test-page');
     $this->assertNoBlockAppears($block_3);
     $this->assertBlockAppears($block_4);
@@ -190,7 +190,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertNoFieldById('edit-machine-name', 'views_block__test_view_block_1', 'The machine name is hidden on the views block form.');
     // Save the block.
     $this->drupalPostForm(NULL, array(), t('Save block'));
-    $storage = $this->container->get('entity.manager')->getStorageController('block');
+    $storage = $this->container->get('entity.manager')->getStorage('block');
     $block = $storage->load('views_block__test_view_block_block_1');
     // This will only return a result if our new block has been created with the
     // expected machine name.

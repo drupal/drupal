@@ -136,7 +136,7 @@ interface EntityTypeInterface {
   /**
    * Indicates if the persistent cache of field data should be used.
    *
-   * @todo Used by FieldableEntityStorageControllerBase only.
+   * @todo Used by ContentEntityStorageBase only.
    *
    * The persistent cache should usually only be disabled if a higher level
    * persistent cache is available for the entity type.
@@ -185,7 +185,7 @@ interface EntityTypeInterface {
    *   types (listed below) and the values are the names of the classes that
    *   implement that controller:
    *   - storage: The name of the class used to load the objects. The class must
-   *     implement \Drupal\Core\Entity\EntityStorageControllerInterface.
+   *     implement \Drupal\Core\Entity\EntityStorageInterface.
    *   - form: An associative array where the keys are the names of the
    *     different form operations (such as 'create', 'edit', or 'delete') and
    *     the values are the names of the controller classes for those
@@ -514,7 +514,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's base table.
    *
-   * @todo Used by DatabaseStorageController only.
+   * @todo Used by ContentEntityDatabaseStorage only.
    *
    * @return string|bool
    *   The name of the entity's base table, or FALSE if none exists.
@@ -544,7 +544,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's revision data table.
    *
-   * @todo Used by FieldableDatabaseStorageController only.
+   * @todo Used by ContentEntityDatabaseStorage only.
    *
    * @return string|bool
    *   The name of the entity type's revision data table.
@@ -554,7 +554,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's revision table.
    *
-   * @todo Used by FieldableDatabaseStorageController only.
+   * @todo Used by ContentEntityDatabaseStorage only.
    *
    * @return string|bool
    *   The name of the entity type's revision table.
@@ -564,7 +564,7 @@ interface EntityTypeInterface {
   /**
    * Returns the name of the entity's data table.
    *
-   * @todo Used by FieldableDatabaseStorageController only.
+   * @todo Used by ContentEntityDatabaseStorage only.
    *
    * @return string|bool
    *   The name of the entity type's data table.

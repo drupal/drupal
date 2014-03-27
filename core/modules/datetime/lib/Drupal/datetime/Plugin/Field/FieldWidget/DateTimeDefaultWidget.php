@@ -27,7 +27,7 @@ class DateTimeDefaultWidget extends WidgetBase {
   /**
    * The date format storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $dateStorage;
 
@@ -38,7 +38,7 @@ class DateTimeDefaultWidget extends WidgetBase {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
 
     // @todo Inject this once https://drupal.org/node/2035317 is in.
-    $this->dateStorage = \Drupal::entityManager()->getStorageController('date_format');
+    $this->dateStorage = \Drupal::entityManager()->getStorage('date_format');
   }
 
   /**

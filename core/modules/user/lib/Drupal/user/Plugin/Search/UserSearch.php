@@ -135,7 +135,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
       ->limit(15)
       ->execute()
       ->fetchCol();
-    $accounts = $this->entityManager->getStorageController('user')->loadMultiple($uids);
+    $accounts = $this->entityManager->getStorage('user')->loadMultiple($uids);
 
     foreach ($accounts as $account) {
       $result = array(

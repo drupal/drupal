@@ -17,7 +17,7 @@ use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\menu_link\Entity\MenuLink;
-use Drupal\menu_link\MenuLinkStorageController;
+use Drupal\menu_link\MenuLinkStorage;
 use Drupal\node\NodeInterface;
 
 /**

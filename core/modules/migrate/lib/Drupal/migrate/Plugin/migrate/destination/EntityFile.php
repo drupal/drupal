@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\field\FieldInfo;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
@@ -23,14 +23,14 @@ class EntityFile extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageControllerInterface $storage_controller, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
     $configuration += array(
       'source_base_path' => '',
       'source_path_property' => 'filepath',
       'destination_path_property' => 'uri',
       'move' => FALSE,
     );
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage_controller, $bundles, $plugin_manager, $field_info);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $plugin_manager, $field_info);
   }
 
   /**
@@ -42,7 +42,7 @@ class EntityFile extends EntityContentBase {
     $replace = FILE_EXISTS_REPLACE;
     if (!empty($this->configuration['rename'])) {
       $entity_id = $row->getDestinationProperty($this->getKey('id'));
-      if (!empty($entity_id) && ($entity = $this->storageController->load($entity_id))) {
+      if (!empty($entity_id) && ($entity = $this->storage->load($entity_id))) {
         $replace = FILE_EXISTS_RENAME;
       }
     }

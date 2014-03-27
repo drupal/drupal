@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Form;
 
-use Drupal\comment\CommentStorageControllerInterface;
+use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -21,7 +21,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   /**
    * The comment storage.
    *
-   * @var \Drupal\comment\CommentStorageControllerInterface
+   * @var \Drupal\comment\CommentStorageInterface
    */
   protected $commentStorage;
 
@@ -35,10 +35,10 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   /**
    * Creates an new ConfirmDeleteMultiple form.
    *
-   * @param \Drupal\comment\CommentStorageControllerInterface $comment_storage
+   * @param \Drupal\comment\CommentStorageInterface $comment_storage
    *   The comment storage.
    */
-  public function __construct(CommentStorageControllerInterface $comment_storage) {
+  public function __construct(CommentStorageInterface $comment_storage) {
     $this->commentStorage = $comment_storage;
   }
 
@@ -47,7 +47,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('comment')
+      $container->get('entity.manager')->getStorage('comment')
     );
   }
 

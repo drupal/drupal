@@ -146,10 +146,10 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $type = $this->createCustomBlockType('foo');
     $type = $this->createCustomBlockType('bar');
 
-    // Get the custom block storage controller.
-    $storage_controller = $this->container
+    // Get the custom block storage.
+    $storage = $this->container
       ->get('entity.manager')
-      ->getStorageController('custom_block');
+      ->getStorage('custom_block');
 
     // Enable all themes.
     theme_enable(array('bartik', 'seven'));
@@ -180,7 +180,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
         // Create a new block.
         $edit = array('info' => $this->randomName(8));
         $this->drupalPostForm(NULL, $edit, t('Save'));
-        $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
+        $blocks = $storage->loadByProperties(array('info' => $edit['info']));
         if (!empty($blocks)) {
           $block = reset($blocks);
           $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
@@ -201,7 +201,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->clickLink('foo');
     $edit = array('info' => $this->randomName(8));
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
+    $blocks = $storage->loadByProperties(array('info' => $edit['info']));
     if (!empty($blocks)) {
       $destination = 'admin/structure/block/custom-blocks';
       $this->assertUrl(url($destination, array('absolute' => TRUE)));

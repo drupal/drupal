@@ -28,11 +28,11 @@ class RouteSubscriberTest extends UnitTestCase {
   protected $entityManager;
 
   /**
-   * The mocked view storage controller.
+   * The mocked view storage.
    *
-   * @var \Drupal\views\ViewStorageController|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewStorage|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $viewStorageController;
+  protected $viewStorage;
 
   /**
    * The tested views route subscriber.
@@ -61,13 +61,13 @@ class RouteSubscriberTest extends UnitTestCase {
 
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $this->viewStorageController = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
+    $this->viewStorage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
     $this->entityManager->expects($this->any())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with('view')
-      ->will($this->returnValue($this->viewStorageController));
+      ->will($this->returnValue($this->viewStorage));
     $this->state = $this->getMock('\Drupal\Core\KeyValueStore\StateInterface');
     $this->routeSubscriber = new TestRouteSubscriber($this->entityManager, $this->state);
   }
@@ -152,7 +152,7 @@ class RouteSubscriberTest extends UnitTestCase {
     $view = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->viewStorageController->expects($this->any())
+    $this->viewStorage->expects($this->any())
       ->method('load')
       ->will($this->returnValue($view));
 

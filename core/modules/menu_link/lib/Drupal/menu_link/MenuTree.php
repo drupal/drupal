@@ -52,9 +52,9 @@ class MenuTree implements MenuTreeInterface {
   protected $requestStack;
 
   /**
-   * The menu link storage controller.
+   * The menu link storage.
    *
-   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
+   * @var \Drupal\menu_link\MenuLinkStorageInterface
    */
   protected $menuLinkStorage;
 
@@ -139,7 +139,7 @@ class MenuTree implements MenuTreeInterface {
     $this->cache = $cache_backend;
     $this->languageManager = $language_manager;
     $this->requestStack = $request_stack;
-    $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');
+    $this->menuLinkStorage = $entity_manager->getStorage('menu_link');
     $this->queryFactory = $entity_query_factory;
     $this->state = $state;
   }

@@ -8,7 +8,7 @@
 namespace Drupal\rdf\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\rdf\RdfMappingInterface;
 
 /**
@@ -167,7 +167,7 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
     if ($bundle_entity_type_id != 'bundle') {
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
-      $bundle_entity = \Drupal::entityManager()->getStorageController($bundle_entity_type_id)->load($this->bundle);
+      $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
       $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
     }
     return $this->dependencies;
@@ -176,8 +176,8 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::postSave($storage_controller, $update);
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
 
     if (\Drupal::entityManager()->hasController($this->targetEntityType, 'view_builder')) {
       \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();

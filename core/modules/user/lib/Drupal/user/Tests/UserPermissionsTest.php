@@ -8,7 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\user\RoleStorageController;
+use Drupal\user\RoleStorage;
 
 class UserPermissionsTest extends WebTestBase {
   protected $admin_user;
@@ -51,8 +51,8 @@ class UserPermissionsTest extends WebTestBase {
     $edit[$rid . '[administer users]'] = TRUE;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
-    $storage_controller = $this->container->get('entity.manager')->getStorageController('user_role');
-    $storage_controller->resetCache();
+    $storage = $this->container->get('entity.manager')->getStorage('user_role');
+    $storage->resetCache();
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
     $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
@@ -65,7 +65,7 @@ class UserPermissionsTest extends WebTestBase {
     $edit[$rid . '[access user profiles]'] = FALSE;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
-    $storage_controller->resetCache();
+    $storage->resetCache();
     $this->assertFalse($account->hasPermission('access user profiles'), 'User no longer has "access user profiles" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
     $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));

@@ -10,21 +10,21 @@ namespace Drupal\config\Tests\Storage;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Base class for testing storage controller operations.
+ * Base class for testing storage operations.
  *
- * All configuration storage controllers are expected to behave identically in
+ * All configuration storages are expected to behave identically in
  * terms of reading, writing, listing, deleting, as well as error handling.
  *
- * Therefore, storage controller tests use a uncommon test case class structure;
+ * Therefore, storage tests use a uncommon test case class structure;
  * the base class defines the test method(s) to execute, which are identical for
- * all storage controllers. The storage controller specific test case classes
+ * all storages. The storage specific test case classes
  * supply the necessary helper methods to interact with the raw/native storage
  * directly.
  */
 abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
 
   /**
-   * Tests storage controller CRUD operations.
+   * Tests storage CRUD operations.
    *
    * @todo Coverage: Trigger PDOExceptions / Database exceptions.
    * @todo Coverage: Trigger Yaml's ParseException and DumpException.
@@ -162,7 +162,7 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests storage controller writing and reading data preserving data type.
+   * Tests storage writing and reading data preserving data type.
    */
   function testDataTypes() {
     $name = 'config_test.types';

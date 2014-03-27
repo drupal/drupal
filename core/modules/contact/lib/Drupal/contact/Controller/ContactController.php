@@ -69,7 +69,7 @@ class ContactController extends ControllerBase {
     // Use the default category if no category has been passed.
     if (empty($contact_category)) {
       $contact_category = $this->entityManager()
-        ->getStorageController('contact_category')
+        ->getStorage('contact_category')
         ->load($this->config('contact.settings')->get('default_category'));
       // If there are no categories, do not display the form.
       if (empty($contact_category)) {
@@ -85,7 +85,7 @@ class ContactController extends ControllerBase {
     }
 
     $message = $this->entityManager()
-      ->getStorageController('contact_message')
+      ->getStorage('contact_message')
       ->create(array(
         'category' => $contact_category->id(),
       ));
@@ -110,7 +110,7 @@ class ContactController extends ControllerBase {
       $this->contactFloodControl();
     }
 
-    $message = $this->entityManager()->getStorageController('contact_message')->create(array(
+    $message = $this->entityManager()->getStorage('contact_message')->create(array(
       'category' => 'personal',
       'recipient' => $user->id(),
     ));

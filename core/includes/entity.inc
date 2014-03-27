@@ -69,11 +69,11 @@ function entity_get_bundles($entity_type = NULL) {
 function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = NULL) {
   entity_info_cache_clear();
 
-  // Notify the entity storage controller.
+  // Notify the entity storage.
   $method = 'onBundle' . ucfirst($hook);
-  $storage_controller = \Drupal::entityManager()->getStorageController($entity_type);
-  if (method_exists($storage_controller, $method)) {
-    $storage_controller->$method($bundle, $bundle_new);
+  $storage = \Drupal::entityManager()->getStorage($entity_type);
+  if (method_exists($storage, $method)) {
+    $storage->$method($bundle, $bundle_new);
   }
   // Invoke hook_entity_bundle_*() hooks.
   \Drupal::moduleHandler()->invokeAll('entity_bundle_' . $hook, array($entity_type, $bundle, $bundle_new));
@@ -137,12 +137,12 @@ function entity_get_view_modes($entity_type_id = NULL) {
  *   The entity object, or NULL if there is no entity with the given id.
  *
  * @see \Drupal\Core\Entity\EntityManagerInterface
- * @see \Drupal\Core\Entity\EntityStorageControllerInterface
- * @see \Drupal\Core\Entity\DatabaseStorageController
+ * @see \Drupal\Core\Entity\EntityStorageInterface
+ * @see \Drupal\Core\Entity\ContentEntityDatabaseStorage
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load($entity_type, $id, $reset = FALSE) {
-  $controller = \Drupal::entityManager()->getStorageController($entity_type);
+  $controller = \Drupal::entityManager()->getStorage($entity_type);
   if ($reset) {
     $controller->resetCache(array($id));
   }
@@ -162,12 +162,12 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  *   id.
  *
  * @see \Drupal\Core\Entity\EntityManagerInterface
- * @see \Drupal\Core\Entity\EntityStorageControllerInterface
- * @see \Drupal\Core\Entity\DatabaseStorageController
+ * @see \Drupal\Core\Entity\EntityStorageInterface
+ * @see \Drupal\Core\Entity\ContentEntityDatabaseStorage
  */
 function entity_revision_load($entity_type, $revision_id) {
   return \Drupal::entityManager()
-    ->getStorageController($entity_type)
+    ->getStorage($entity_type)
     ->loadRevision($revision_id);
 }
 
@@ -181,7 +181,7 @@ function entity_revision_load($entity_type, $revision_id) {
  */
 function entity_revision_delete($entity_type, $revision_id) {
   \Drupal::entityManager()
-    ->getStorageController($entity_type)
+    ->getStorage($entity_type)
     ->deleteRevision($revision_id);
 }
 
@@ -212,7 +212,7 @@ function entity_load_by_uuid($entity_type_id, $uuid, $reset = FALSE) {
     throw new EntityStorageException("Entity type $entity_type_id does not support UUIDs.");
   }
 
-  $controller = \Drupal::entityManager()->getStorageController($entity_type_id);
+  $controller = \Drupal::entityManager()->getStorage($entity_type_id);
   if ($reset) {
     $controller->resetCache();
   }
@@ -228,14 +228,15 @@ function entity_load_by_uuid($entity_type_id, $uuid, $reset = FALSE) {
  * database access if loaded again during the same page request.
  *
  * The actual loading is done through a class that has to implement the
- * Drupal\Core\Entity\EntityStorageControllerInterface interface. By default,
- * Drupal\Core\Entity\DatabaseStorageController is used. Entity types can
- * specify that a different class should be used by setting the
+ * Drupal\Core\Entity\EntityStorageInterface interface. By default,
+ * Drupal\Core\Entity\ContentEntityDatabaseStorage is used for content entities
+ * and Drupal\Core\Config\Entity\ConfigEntityStorage for config entities. Entity
+ * types can specify that a different class should be used by setting the
  * "controllers['storage']" key in the entity plugin annotation. These classes
- * can either implement the Drupal\Core\Entity\EntityStorageControllerInterface
+ * can either implement the Drupal\Core\Entity\EntityStorageInterface
  * interface, or, most commonly, extend the
- * Drupal\Core\Entity\DatabaseStorageController class.
- * See Drupal\node\Entity\Node and Drupal\node\NodeStorageController
+ * Drupal\Core\Entity\ContentEntityDatabaseStorage class.
+ * See Drupal\node\Entity\Node and Drupal\node\NodeStorage
  * for an example.
  *
  * @param string $entity_type
@@ -249,12 +250,12 @@ function entity_load_by_uuid($entity_type_id, $uuid, $reset = FALSE) {
  *   An array of entity objects indexed by their ids.
  *
  * @see \Drupal\Core\Entity\EntityManagerInterface
- * @see \Drupal\Core\Entity\EntityStorageControllerInterface
- * @see \Drupal\Core\Entity\DatabaseStorageController
+ * @see \Drupal\Core\Entity\EntityStorageInterface
+ * @see \Drupal\Core\Entity\ContentEntityDatabaseStorage
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
-  $controller = \Drupal::entityManager()->getStorageController($entity_type);
+  $controller = \Drupal::entityManager()->getStorage($entity_type);
   if ($reset) {
     $controller->resetCache($ids);
   }
@@ -275,7 +276,7 @@ function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
  */
 function entity_load_multiple_by_properties($entity_type, array $values) {
   return \Drupal::entityManager()
-    ->getStorageController($entity_type)
+    ->getStorage($entity_type)
     ->loadByProperties($values);
 }
 
@@ -297,7 +298,7 @@ function entity_load_multiple_by_properties($entity_type, array $values) {
  */
 function entity_load_unchanged($entity_type, $id) {
   return \Drupal::entityManager()
-    ->getStorageController($entity_type)
+    ->getStorage($entity_type)
     ->loadUnchanged($id);
 }
 
@@ -310,7 +311,7 @@ function entity_load_unchanged($entity_type, $id) {
  *   An array of entity IDs of the entities to delete.
  */
 function entity_delete_multiple($entity_type, array $ids) {
-  $controller = \Drupal::entityManager()->getStorageController($entity_type);
+  $controller = \Drupal::entityManager()->getStorage($entity_type);
   $entities = $controller->loadMultiple($ids);
   $controller->delete($entities);
 }
@@ -329,23 +330,23 @@ function entity_delete_multiple($entity_type, array $ids) {
  */
 function entity_create($entity_type, array $values = array()) {
   return \Drupal::entityManager()
-    ->getStorageController($entity_type)
+    ->getStorage($entity_type)
     ->create($values);
 }
 
 /**
  * Gets the entity controller class for an entity type.
  *
- * @return \Drupal\Core\Entity\EntityStorageControllerInterface
+ * @return \Drupal\Core\Entity\EntityStorageInterface
  *
- * @see \Drupal\Core\Entity\EntityManagerInterface::getStorageController().
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getStorage()
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::entityManager()->getStorageController().
+ *   Use \Drupal::entityManager()->getStorage().
  */
 function entity_get_controller($entity_type) {
   return \Drupal::entityManager()
-    ->getStorageController($entity_type);
+    ->getStorage($entity_type);
 }
 
 /**

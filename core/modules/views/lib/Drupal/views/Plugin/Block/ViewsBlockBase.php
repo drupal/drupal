@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\Block;
 use Drupal\block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\ViewExecutableFactory;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -58,17 +58,17 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *   The plugin implementation definition.
    * @param \Drupal\views\ViewExecutableFactory $executable_factory
    *   The view executable factory.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The views storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The views storage.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageControllerInterface $storage_controller, AccountInterface $user) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user) {
     $this->pluginId = $plugin_id;
     $delta = $this->getDerivativeId();
     list($name, $this->displayID) = explode('-', $delta, 2);
     // Load the view.
-    $view = $storage_controller->load($name);
+    $view = $storage->load($name);
     $this->view = $executable_factory->get($view);
     $this->displaySet = $this->view->setDisplay($this->displayID);
     $this->user = $user;
@@ -83,7 +83,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     return new static(
       $configuration, $plugin_id, $plugin_definition,
       $container->get('views.executable'),
-      $container->get('entity.manager')->getStorageController('view'),
+      $container->get('entity.manager')->getStorage('view'),
       $container->get('current_user')
     );
   }

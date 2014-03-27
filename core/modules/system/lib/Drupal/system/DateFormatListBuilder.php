@@ -11,7 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -34,12 +34,12 @@ class DateFormatListBuilder extends ConfigEntityListBuilder {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
-   *   The entity storage controller class.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage class.
    * @param \Drupal\Core\Datetime\Date $date_service
    *   The date service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, Date $date_service) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, Date $date_service) {
     parent::__construct($entity_type, $storage);
 
     $this->dateService = $date_service;
@@ -51,7 +51,7 @@ class DateFormatListBuilder extends ConfigEntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorageController($entity_type->id()),
+      $container->get('entity.manager')->getStorage($entity_type->id()),
       $container->get('date')
     );
   }

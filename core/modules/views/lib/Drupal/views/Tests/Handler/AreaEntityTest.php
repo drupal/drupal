@@ -84,7 +84,7 @@ class AreaEntityTest extends ViewTestBase {
     for ($i = 0; $i < 3; $i++) {
       $random_label = $this->randomName();
       $data = array('bundle' => 'entity_test', 'name' => $random_label);
-      $entity_test = $this->container->get('entity.manager')->getStorageController('entity_test')->create($data);
+      $entity_test = $this->container->get('entity.manager')->getStorage('entity_test')->create($data);
       $entity_test->save();
       $entities[] = $entity_test;
       \Drupal::state()->set('entity_test_entity_access.view.' . $entity_test->id(), $i != 2);
@@ -103,7 +103,7 @@ class AreaEntityTest extends ViewTestBase {
     $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
 
     // Mark entity_test test view_mode as customizable.
-    $view_mode = \Drupal::entityManager()->getStorageController('view_mode')->load('entity_test.test');
+    $view_mode = \Drupal::entityManager()->getStorage('view_mode')->load('entity_test.test');
     $view_mode->status = TRUE;
     $view_mode->save();
 

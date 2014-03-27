@@ -55,8 +55,8 @@ class NodeBulkFormTest extends UnitTestCase {
       ->will($this->returnValue('user'));
     $actions[] = $action;
 
-    $storage_controller = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
-    $storage_controller->expects($this->any())
+    $entity_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $entity_storage->expects($this->any())
       ->method('loadMultiple')
       ->will($this->returnValue($actions));
 
@@ -89,7 +89,7 @@ class NodeBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = array();
 
-    $node_bulk_form = new NodeBulkForm(array(), 'node_bulk_form', $definition, $storage_controller);
+    $node_bulk_form = new NodeBulkForm(array(), 'node_bulk_form', $definition, $entity_storage);
     $node_bulk_form->init($executable, $display, $options);
 
     $this->assertAttributeEquals(array_slice($actions, 0, -1, TRUE), 'actions', $node_bulk_form);

@@ -8,7 +8,7 @@
  * entity system.
  */
 
-use Drupal\Core\Config\Entity\ConfigStorageController;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
 
 /**
  * Implements hook_help().
@@ -83,7 +83,7 @@ function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) 
   if ($bundle_old !== $bundle_new) {
     $ids = \Drupal::configFactory()->listAll('entity.view_display.' . $entity_type_id . '.' . $bundle_old . '.');
     foreach ($ids as $id) {
-      $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
+      $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $display = entity_load('entity_view_display', $id);
       $new_id = $entity_type_id . '.' . $bundle_new . '.' . $display->mode;
       $display->id = $new_id;
@@ -97,7 +97,7 @@ function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) 
   if ($bundle_old !== $bundle_new) {
     $ids = \Drupal::configFactory()->listAll('entity.form_display.' . $entity_type_id . '.' . $bundle_old . '.');
     foreach ($ids as $id) {
-      $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
+      $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $form_display = entity_load('entity_form_display', $id);
       $new_id = $entity_type_id . '.' . $bundle_new . '.' . $form_display->mode;
       $form_display->id = $new_id;
@@ -115,7 +115,7 @@ function entity_entity_bundle_delete($entity_type_id, $bundle) {
   $entity_type = \Drupal::entityManager()->getDefinition('entity_view_display');
   $ids = \Drupal::configFactory()->listAll('entity.view_display.' . $entity_type_id . '.' . $bundle . '.');
   foreach ($ids as &$id) {
-    $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
+    $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
   }
   entity_delete_multiple('entity_view_display', $ids);
 
@@ -123,7 +123,7 @@ function entity_entity_bundle_delete($entity_type_id, $bundle) {
   $entity_type = \Drupal::entityManager()->getDefinition('entity_form_display');
   $ids = \Drupal::configFactory()->listAll('entity.form_display.' . $entity_type_id . '.' . $bundle . '.');
   foreach ($ids as &$id) {
-    $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
+    $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
   }
   entity_delete_multiple('entity_form_display', $ids);
 }

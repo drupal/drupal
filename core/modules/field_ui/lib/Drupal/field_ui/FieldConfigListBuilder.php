@@ -61,7 +61,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
    *   The 'field type' plugin manager.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
-    parent::__construct($entity_type, $entity_manager->getStorageController($entity_type->id()));
+    parent::__construct($entity_type, $entity_manager->getStorage($entity_type->id()));
 
     $this->entityManager = $entity_manager;
     $this->bundles = entity_get_bundles();

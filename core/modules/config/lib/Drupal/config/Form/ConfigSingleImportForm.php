@@ -181,7 +181,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     if ($form_state['values']['config_type'] !== 'system.simple') {
       $definition = $this->entityManager->getDefinition($form_state['values']['config_type']);
       $id_key = $definition->getKey('id');
-      $entity_storage = $this->entityManager->getStorageController($form_state['values']['config_type']);
+      $entity_storage = $this->entityManager->getStorage($form_state['values']['config_type']);
       // If an entity ID was not specified, set an error.
       if (!isset($data[$id_key])) {
         $this->setFormError('import', $form_state, $this->t('Missing ID key "@id_key" for this @entity_type import.', array('@id_key' => $id_key, '@entity_type' => $definition->getLabel())));
@@ -233,7 +233,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     else {
       try {
         $entity = $this->entityManager
-          ->getStorageController($this->data['config_type'])
+          ->getStorage($this->data['config_type'])
           ->create($this->data['import']);
         $entity->save();
         drupal_set_message($this->t('The @entity_type %label was imported.', array('@entity_type' => $entity->getEntityTypeId(), '%label' => $entity->label())));

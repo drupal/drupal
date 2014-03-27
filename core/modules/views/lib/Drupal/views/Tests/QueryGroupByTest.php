@@ -29,11 +29,11 @@ class QueryGroupByTest extends ViewUnitTestBase {
   public static $modules = array('entity', 'entity_test', 'system', 'field', 'user');
 
   /**
-   * The storage controller for the test entity type.
+   * The storage for the test entity type.
    *
-   * @var \Drupal\Core\Entity\FieldableDatabaseStorageController
+   * @var \Drupal\Core\Entity\ContentEntityDatabaseStorage
    */
-  public $storageController;
+  public $storage;
 
   public static function getInfo() {
     return array(
@@ -51,7 +51,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
 
     $this->installSchema('entity_test', array('entity_test'));
 
-    $this->storageController = $this->container->get('entity.manager')->getStorageController('entity_test');
+    $this->storage = $this->container->get('entity.manager')->getStorage('entity_test');
   }
 
 
@@ -111,17 +111,17 @@ class QueryGroupByTest extends ViewUnitTestBase {
       'name' => 'name1',
     );
 
-    $this->storageController->create($entity_1)->save();
-    $this->storageController->create($entity_1)->save();
-    $this->storageController->create($entity_1)->save();
-    $this->storageController->create($entity_1)->save();
+    $this->storage->create($entity_1)->save();
+    $this->storage->create($entity_1)->save();
+    $this->storage->create($entity_1)->save();
+    $this->storage->create($entity_1)->save();
 
     $entity_2 = array(
       'name' => 'name2',
     );
-    $this->storageController->create($entity_2)->save();
-    $this->storageController->create($entity_2)->save();
-    $this->storageController->create($entity_2)->save();
+    $this->storage->create($entity_2)->save();
+    $this->storage->create($entity_2)->save();
+    $this->storage->create($entity_2)->save();
   }
 
   /**
@@ -167,7 +167,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
     // Doesn't display SUM, COUNT, MAX... functions in SELECT statement
 
     for ($x = 0; $x < 10; $x++) {
-      $this->storageController->create(array('name' => 'name1'))->save();
+      $this->storage->create(array('name' => 'name1'))->save();
     }
 
     $view = Views::getView('test_group_by_in_filters');

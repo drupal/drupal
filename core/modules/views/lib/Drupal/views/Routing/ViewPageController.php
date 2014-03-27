@@ -9,7 +9,7 @@ namespace Drupal\views\Routing;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,11 +21,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ViewPageController implements ContainerInjectionInterface {
 
   /**
-   * The entity storage controller.
+   * The entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * The view executable factory.
@@ -37,13 +37,13 @@ class ViewPageController implements ContainerInjectionInterface {
   /**
    * Constructs a ViewPageController object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage.
    * @param \Drupal\views\ViewExecutableFactory $executable_factory
    *   The view executable factory
    */
-  public function __construct(EntityStorageControllerInterface $storage_controller, ViewExecutableFactory $executable_factory) {
-    $this->storageController = $storage_controller;
+  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory) {
+    $this->storage = $storage;
     $this->executableFactory = $executable_factory;
   }
 
@@ -52,7 +52,7 @@ class ViewPageController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('view'),
+      $container->get('entity.manager')->getStorage('view'),
       $container->get('views.executable')
     );
   }
@@ -64,7 +64,7 @@ class ViewPageController implements ContainerInjectionInterface {
     $view_id = $request->attributes->get('view_id');
     $display_id = $request->attributes->get('display_id');
 
-    $entity = $this->storageController->load($view_id);
+    $entity = $this->storage->load($view_id);
     if (empty($entity)) {
       throw new NotFoundHttpException(String::format('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
     }

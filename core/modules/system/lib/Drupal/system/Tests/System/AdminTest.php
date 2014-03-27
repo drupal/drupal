@@ -126,7 +126,7 @@ class AdminTest extends WebTestBase {
       ->condition('route_name', $routes)
       ->execute();
 
-    $menu_items = \Drupal::entityManager()->getStorageController('menu_link')->loadMultiple($menu_link_ids);
+    $menu_items = \Drupal::entityManager()->getStorage('menu_link')->loadMultiple($menu_link_ids);
     foreach ($menu_items as &$menu_item) {
       _menu_link_translate($menu_item);
     }

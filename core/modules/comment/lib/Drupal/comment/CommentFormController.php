@@ -87,7 +87,7 @@ class CommentFormController extends ContentEntityFormController {
   public function form(array $form, array &$form_state) {
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->entity;
-    $entity = $this->entityManager->getStorageController($comment->getCommentedEntityTypeId())->load($comment->getCommentedEntityId());
+    $entity = $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->load($comment->getCommentedEntityId());
     $field_name = $comment->getFieldName();
     $instance = $this->fieldInfo->getInstance($entity->getEntityTypeId(), $entity->bundle(), $field_name);
 
@@ -278,7 +278,7 @@ class CommentFormController extends ContentEntityFormController {
 
     if (!empty($form_state['values']['cid'])) {
       // Verify the name in case it is being changed from being anonymous.
-      $accounts = $this->entityManager->getStorageController('user')->loadByProperties(array('name' => $form_state['values']['name']));
+      $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state['values']['name']));
       $account = reset($accounts);
       $form_state['values']['uid'] = $account ? $account->id() : 0;
 
@@ -295,7 +295,7 @@ class CommentFormController extends ContentEntityFormController {
       // author of this comment was an anonymous user, verify that no registered
       // user with this name exists.
       if ($form_state['values']['name']) {
-        $accounts = $this->entityManager->getStorageController('user')->loadByProperties(array('name' => $form_state['values']['name']));
+        $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state['values']['name']));
         if (!empty($accounts)) {
           $this->setFormError('name', $form_state, $this->t('The name you used belongs to a registered user.'));
         }

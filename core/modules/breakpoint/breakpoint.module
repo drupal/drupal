@@ -7,7 +7,7 @@
 
 use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\breakpoint\Entity\BreakpointGroup;
-use Drupal\Core\Config\Entity\ConfigStorageController;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
 
 /**
  * Implements hook_help().

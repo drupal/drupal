@@ -105,7 +105,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
    */
   public function getFilterFormat() {
     if (!$this->filterFormat) {
-      $this->filterFormat = \Drupal::entityManager()->getStorageController('filter_format')->load($this->format);
+      $this->filterFormat = \Drupal::entityManager()->getStorage('filter_format')->load($this->format);
     }
     return $this->filterFormat;
   }

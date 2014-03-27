@@ -217,7 +217,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $this->assertFalse(\Drupal::cache('entity')->get($cid), 'Cached: no cache entry on insert');
     // Load, and check that a cache entry is present with the expected values.
-    $controller = $this->container->get('entity.manager')->getStorageController($entity->getEntityTypeId());
+    $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
     $controller->load($entity->id());
     $cache = \Drupal::cache('entity')->get($cid);

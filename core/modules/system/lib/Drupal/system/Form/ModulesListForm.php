@@ -229,7 +229,7 @@ class ModulesListForm extends FormBase {
         $result = $this->queryFactory->get('menu_link')
           ->condition('route_name', $module->info['configure'])
           ->execute();
-        $menu_items = $this->entityManager->getStorageController('menu_link')->loadMultiple($result);
+        $menu_items = $this->entityManager->getStorage('menu_link')->loadMultiple($result);
         $item = reset($menu_items);
         $row['links']['configure'] = array(
           '#type' => 'link',

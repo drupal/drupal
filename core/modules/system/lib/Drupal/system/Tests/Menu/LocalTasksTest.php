@@ -111,7 +111,7 @@ class LocalTasksTest extends WebTestBase {
 
     // Test that we we correctly apply the active class to tabs where one of the
     // request attributes is upcast to an entity object.
-    $entity = \Drupal::entityManager()->getStorageController('entity_test')->create(array('bundle' => 'test'));
+    $entity = \Drupal::entityManager()->getStorage('entity_test')->create(array('bundle' => 'test'));
     $entity->save();
 
     $this->drupalGet('menu-local-task-test-upcasting/1/sub1');

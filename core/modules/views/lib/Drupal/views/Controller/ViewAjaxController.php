@@ -10,7 +10,7 @@ namespace Drupal\views\Controller;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\Ajax\ScrollTopCommand;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
@@ -25,11 +25,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class ViewAjaxController implements ContainerInjectionInterface {
 
   /**
-   * The entity storage controller for views.
+   * The entity storage for views.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * The factory to load a view executable with.
@@ -41,13 +41,13 @@ class ViewAjaxController implements ContainerInjectionInterface {
   /**
    * Constructs a ViewAjaxController object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller for views.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage for views.
    * @param \Drupal\views\ViewExecutableFactory $executable_factory
    *   The factory to load a view executable with.
    */
-  public function __construct(EntityStorageControllerInterface $storage_controller, ViewExecutableFactory $executable_factory) {
-    $this->storageController = $storage_controller;
+  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory) {
+    $this->storage = $storage;
     $this->executableFactory = $executable_factory;
   }
 
@@ -56,7 +56,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('view'),
+      $container->get('entity.manager')->getStorage('view'),
       $container->get('views.executable')
     );
   }
@@ -95,7 +95,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       }
 
       // Load the view.
-      if (!$entity = $this->storageController->load($name)) {
+      if (!$entity = $this->storage->load($name)) {
         throw new NotFoundHttpException();
       }
       $view = $this->executableFactory->get($entity);

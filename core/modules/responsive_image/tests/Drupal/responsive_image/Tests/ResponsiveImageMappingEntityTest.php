@@ -62,11 +62,11 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
   protected $breakpointGroup;
 
   /**
-   * The breakpoint group storage controller used for testing.
+   * The breakpoint group storage used for testing.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $breakpointGroupStorageController;
+  protected $breakpointGroupStorage;
 
   /**
    * {@inheritdoc}
@@ -101,16 +101,16 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
     $this->breakpointGroupId = $this->randomName(9);
     $this->breakpointGroup = $this->getMock('Drupal\breakpoint\Entity\BreakpointGroup', array(), array(array('id' => $this->breakpointGroupId)));
 
-    $this->breakpointGroupStorageController = $this->getMock('\Drupal\Core\Config\Entity\ConfigStorageControllerInterface');
-    $this->breakpointGroupStorageController
+    $this->breakpointGroupStorage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+    $this->breakpointGroupStorage
       ->expects($this->any())
       ->method('load')
       ->with($this->breakpointGroupId)
       ->will($this->returnValue($this->breakpointGroup));
 
     $this->entityManager->expects($this->any())
-      ->method('getStorageController')
-      ->will($this->returnValue($this->breakpointGroupStorageController));
+      ->method('getStorage')
+      ->will($this->returnValue($this->breakpointGroupStorage));
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);

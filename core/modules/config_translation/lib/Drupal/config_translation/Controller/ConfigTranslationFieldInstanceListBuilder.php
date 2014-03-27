@@ -11,7 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Field;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,7 +56,7 @@ class ConfigTranslationFieldInstanceListBuilder extends ConfigTranslationEntityL
     $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_type,
-      $entity_manager->getStorageController($entity_type->id()),
+      $entity_manager->getStorage($entity_type->id()),
       $entity_manager
     );
   }
@@ -66,12 +66,12 @@ class ConfigTranslationFieldInstanceListBuilder extends ConfigTranslationEntityL
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
-   *   The entity storage controller class.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage class.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, EntityManagerInterface $entity_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityManagerInterface $entity_manager) {
     parent::__construct($entity_type, $storage);
     $this->entityManager = $entity_manager;
   }

@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Config\Entity\ConfigStorageController;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Plugin\views\display\DefaultDisplay;
@@ -16,10 +16,10 @@ use Drupal\views\Plugin\views\display\Feed;
 use Drupal\views\Views;
 
 /**
- * Tests the functionality of View and ConfigStorageController.
+ * Tests the functionality of View and ConfigEntityStorage.
  *
  * @see \Drupal\views\Entity\View
- * @see \Drupal\Core\Config\Entity\ConfigStorageController
+ * @see \Drupal\Core\Config\Entity\ConfigEntityStorage
  */
 class ViewStorageTest extends ViewUnitTestBase {
 
@@ -48,9 +48,9 @@ class ViewStorageTest extends ViewUnitTestBase {
   protected $entityType;
 
   /**
-   * The configuration entity storage controller.
+   * The configuration entity storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageController
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorage
    */
   protected $controller;
 
@@ -75,7 +75,7 @@ class ViewStorageTest extends ViewUnitTestBase {
   function testConfigurationEntityCRUD() {
     // Get the configuration entity type and controller.
     $this->entityType = \Drupal::entityManager()->getDefinition('view');
-    $this->controller = $this->container->get('entity.manager')->getStorageController('view');
+    $this->controller = $this->container->get('entity.manager')->getStorage('view');
 
     // Confirm that an info array has been returned.
     $this->assertTrue($this->entityType instanceof EntityTypeInterface, 'The View info array is loaded.');

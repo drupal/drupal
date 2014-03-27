@@ -10,7 +10,7 @@ namespace Drupal\node\Entity;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\node\NodeTypeInterface;
 
 /**
@@ -153,8 +153,8 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::postSave($storage_controller, $update);
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
 
     if (!$update) {
       // Clear the node type cache, so the new type appears.
@@ -194,11 +194,11 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    parent::postDelete($storage_controller, $entities);
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
 
     // Clear the node type cache to reflect the removal.
-    $storage_controller->resetCache(array_keys($entities));
+    $storage->resetCache(array_keys($entities));
     foreach ($entities as $entity) {
       entity_invoke_bundle_hook('delete', 'node', $entity->id());
     }
@@ -207,8 +207,8 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
-    parent::preCreate($storage_controller, $values);
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+    parent::preCreate($storage, $values);
 
     // Ensure default values are set.
     if (!isset($values['settings']['node'])) {

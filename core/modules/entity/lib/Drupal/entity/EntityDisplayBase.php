@@ -8,7 +8,7 @@
 namespace Drupal\entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\field\Field;
@@ -141,10 +141,10 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+  public function preSave(EntityStorageInterface $storage, $update = TRUE) {
     // Sort elements by weight before saving.
     uasort($this->content, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-    parent::preSave($storage_controller, $update);
+    parent::preSave($storage, $update);
   }
 
   /**
@@ -158,7 +158,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     if ($bundle_entity_type_id != 'bundle') {
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
-      $bundle_entity = \Drupal::entityManager()->getStorageController($bundle_entity_type_id)->load($this->bundle);
+      $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
       $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
     }
     // Create dependencies on both hidden and visible fields.
@@ -177,7 +177,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
     // Depend on configured modes.
     if ($this->mode != 'default') {
-      $mode_entity = \Drupal::entityManager()->getStorageController($this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
+      $mode_entity = \Drupal::entityManager()->getStorage($this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
       $this->addDependency('entity', $mode_entity->getConfigDependencyName());
     }
     return $this->dependencies;
@@ -186,7 +186,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Reset the render cache for the target entity type.
     if (\Drupal::entityManager()->hasController($this->targetEntityType, 'view_builder')) {
       \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();

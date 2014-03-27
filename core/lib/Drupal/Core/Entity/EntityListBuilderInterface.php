@@ -13,12 +13,12 @@ namespace Drupal\Core\Entity;
 interface EntityListBuilderInterface {
 
   /**
-   * Gets the entity storage controller.
+   * Gets the entity storage.
    *
-   * @return \Drupal\Core\Entity\EntityStorageControllerInterface
-   *   The storage controller used by this list builder.
+   * @return \Drupal\Core\Entity\EntityStorageInterface
+   *   The storage used by this list builder.
    */
-  public function getStorageController();
+  public function getStorage();
 
   /**
    * Loads entities of this type from storage for listing.

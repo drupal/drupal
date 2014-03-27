@@ -31,7 +31,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       'id' => strtolower($this->randomName()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $new_set = $this->container->get('entity.manager')->getStorageController('shortcut_set')->load($edit['id']);
+    $new_set = $this->container->get('entity.manager')->getStorage('shortcut_set')->load($edit['id']);
     $this->assertIdentical($new_set->id(), $edit['id'], 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->admin_user->id() . '/shortcuts');
     $this->assertText($new_set->label(), 'Generated shortcut set was listed as a choice on the user account page.');

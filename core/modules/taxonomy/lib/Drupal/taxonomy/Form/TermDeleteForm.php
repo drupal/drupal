@@ -59,10 +59,10 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    $storage_controller = $this->entityManager->getStorageController('taxonomy_vocabulary');
-    $vocabulary = $storage_controller->load($this->entity->bundle());
+    $storage = $this->entityManager->getStorage('taxonomy_vocabulary');
+    $vocabulary = $storage->load($this->entity->bundle());
 
-    // @todo Move to storage controller http://drupal.org/node/1988712
+    // @todo Move to storage http://drupal.org/node/1988712
     taxonomy_check_vocabulary_hierarchy($vocabulary, array('tid' => $this->entity->id()));
 
     drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->getName())));

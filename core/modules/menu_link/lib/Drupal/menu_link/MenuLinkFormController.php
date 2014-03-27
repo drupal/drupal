@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Routing\UrlGenerator;
-use Drupal\menu_link\MenuLinkStorageControllerInterface;
+use Drupal\menu_link\MenuLinkStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,11 +20,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkFormController extends EntityFormController {
 
   /**
-   * The menu link storage controller.
+   * The menu link storage.
    *
-   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
+   * @var \Drupal\menu_link\MenuLinkStorageInterface
    */
-  protected $menuLinkStorageController;
+  protected $menuLinkStorage;
 
   /**
    * The path alias manager.
@@ -43,15 +43,15 @@ class MenuLinkFormController extends EntityFormController {
   /**
    * Constructs a new MenuLinkFormController object.
    *
-   * @param \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage_controller
+   * @param \Drupal\menu_link\MenuLinkStorageInterface $menu_link_storage
    *   The menu link storage.
    * @param \Drupal\Core\Path\AliasManagerInterface $path_alias_manager
    *   The path alias manager.
    * @param \Drupal\Core\Routing\UrlGenerator $url_generator
    *   The URL generator.
    */
-  public function __construct(MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator) {
-    $this->menuLinkStorageController = $menu_link_storage_controller;
+  public function __construct(MenuLinkStorageInterface $menu_link_storage, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator) {
+    $this->menuLinkStorage = $menu_link_storage;
     $this->pathAliasManager = $path_alias_manager;
     $this->urlGenerator = $url_generator;
   }
@@ -61,7 +61,7 @@ class MenuLinkFormController extends EntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('menu_link'),
+      $container->get('entity.manager')->getStorage('menu_link'),
       $container->get('path.alias_manager.cached'),
       $container->get('url_generator')
     );
@@ -152,7 +152,7 @@ class MenuLinkFormController extends EntityFormController {
     );
 
     // Get number of items in menu so the weight selector is sized appropriately.
-    $delta = $this->menuLinkStorageController->countMenuLinks($menu_link->menu_name);
+    $delta = $this->menuLinkStorage->countMenuLinks($menu_link->menu_name);
     $form['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight'),

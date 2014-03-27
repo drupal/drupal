@@ -211,8 +211,8 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $instance->save();
     $instance_2 = entity_create('field_instance_config', $instance_definition_2);
     $instance_2->save();
-    $instance_controller = $this->container->get('entity.manager')->getStorageController('field_instance_config');
-    $instance_controller->delete(array($instance, $instance_2));
+    $instance_storage = $this->container->get('entity.manager')->getStorage('field_instance_config');
+    $instance_storage->delete(array($instance, $instance_2));
     $this->assertFalse(field_info_field('entity_test', $field->name));
   }
 

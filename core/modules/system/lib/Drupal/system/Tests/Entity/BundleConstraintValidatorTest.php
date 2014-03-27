@@ -60,14 +60,14 @@ class BundleConstraintValidatorTest extends DrupalUnitTestBase {
       ->addConstraint('Bundle', $bundle);
 
     // Test the validation.
-    $node = $this->container->get('entity.manager')->getStorageController('node')->create(array('type' => 'foo'));
+    $node = $this->container->get('entity.manager')->getStorage('node')->create(array('type' => 'foo'));
 
     $typed_data = $this->typedData->create($definition, $node);
     $violations = $typed_data->validate();
     $this->assertEqual($violations->count(), 0, 'Validation passed for correct value.');
 
     // Test the validation when an invalid value is passed.
-    $page_node = $this->container->get('entity.manager')->getStorageController('node')->create(array('type' => 'baz'));
+    $page_node = $this->container->get('entity.manager')->getStorage('node')->create(array('type' => 'baz'));
 
     $typed_data = $this->typedData->create($definition, $page_node);
     $violations = $typed_data->validate();

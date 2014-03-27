@@ -26,7 +26,7 @@ interface MenuLinkInterface extends EntityInterface {
   /**
    * Sets the route object for this link.
    *
-   * This should only be called by MenuLinkStorageController when loading
+   * This should only be called by MenuLinkStorage when loading
    * the link object. Calling it at other times could result in unpredictable
    * behavior.
    *

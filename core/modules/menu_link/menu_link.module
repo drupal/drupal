@@ -100,7 +100,7 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
   }
 
   $controller = \Drupal::entityManager()
-    ->getStorageController('menu_link');
+    ->getStorage('menu_link');
   if (!$force) {
     $entity_query = \Drupal::entityQuery('menu_link');
     $group = $entity_query->orConditionGroup()
@@ -155,7 +155,7 @@ function menu_link_save(MenuLink $menu_link) {
  */
 function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
   $menu_link_controller = \Drupal::entityManager()
-    ->getStorageController('menu_link');
+    ->getStorage('menu_link');
   switch ($op) {
     case 'insert':
       $menu_link = entity_create('menu_link', array(

@@ -10,7 +10,7 @@ namespace Drupal\Core\Config\Entity;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -256,8 +256,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
 
     // @todo When \Drupal\Core\Config\Entity\EntityWithPluginBagInterface moves
     //   to a trait, switch to class_uses() instead.
@@ -270,7 +270,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
 
     // Ensure this entity's UUID does not exist with a different ID, regardless
     // of whether it's new or updated.
-    $matching_entities = $storage_controller->getQuery()
+    $matching_entities = $storage->getQuery()
       ->condition('uuid', $this->uuid())
       ->execute();
     $matched_entity = reset($matching_entities);
@@ -279,7 +279,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     }
 
     if (!$this->isNew()) {
-      $original = $storage_controller->loadUnchanged($this->id());
+      $original = $storage->loadUnchanged($this->id());
       // Ensure that the UUID cannot be changed for an existing entity.
       if ($original && ($original->uuid() != $this->uuid())) {
         throw new ConfigDuplicateUUIDException(String::format('Attempt to save a configuration entity %id with UUID %uuid when this entity already exists with UUID %original_uuid', array('%id' => $this->id(), '%uuid' => $this->uuid(), '%original_uuid' => $original->uuid())));

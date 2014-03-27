@@ -49,10 +49,10 @@ class EntityListBuilderTest extends UnitTestCase {
     parent::setUp();
 
     $this->role = $this->getMock('Drupal\user\RoleInterface');
-    $role_storage_controller = $this->getMock('Drupal\user\RoleStorageControllerInterface');
+    $role_storage = $this->getMock('Drupal\user\RoleStorageInterface');
     $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $this->entityListBuilder = new TestEntityListBuilder($entity_type, $role_storage_controller, $module_handler);
+    $this->entityListBuilder = new TestEntityListBuilder($entity_type, $role_storage, $module_handler);
   }
 
   /**

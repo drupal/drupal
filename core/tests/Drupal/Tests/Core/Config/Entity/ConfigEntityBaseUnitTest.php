@@ -142,7 +142,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    */
   public function testPreSaveDuringSync() {
     $query = $this->getMock('\Drupal\Core\Entity\Query\QueryInterface');
-    $storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
 
     $query->expects($this->any())
       ->method('execute')

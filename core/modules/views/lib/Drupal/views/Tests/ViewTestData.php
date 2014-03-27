@@ -36,7 +36,7 @@ class ViewTestData {
       $class = get_parent_class($class);
     }
     if (!empty($views)) {
-      $storage_controller = \Drupal::entityManager()->getStorageController('view');
+      $storage = \Drupal::entityManager()->getStorage('view');
       $module_handler = \Drupal::moduleHandler();
       foreach ($modules as $module) {
         $config_dir = drupal_get_path('module', $module) . '/test_views';
@@ -48,7 +48,7 @@ class ViewTestData {
         foreach ($file_storage->listAll('views.view.') as $config_name) {
           $id = str_replace('views.view.', '', $config_name);
           if (in_array($id, $views)) {
-            $storage_controller
+            $storage
               ->create($file_storage->read($config_name))
               ->save();
           }
@@ -270,4 +270,3 @@ class ViewTestData {
   }
 
 }
-

@@ -8,7 +8,7 @@
 namespace Drupal\taxonomy\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
@@ -23,7 +23,7 @@ use Drupal\taxonomy\TermInterface;
  *   label = @Translation("Taxonomy term"),
  *   bundle_label = @Translation("Vocabulary"),
  *   controllers = {
- *     "storage" = "Drupal\taxonomy\TermStorageController",
+ *     "storage" = "Drupal\taxonomy\TermStorage",
  *     "view_builder" = "Drupal\taxonomy\TermViewBuilder",
  *     "access" = "Drupal\taxonomy\TermAccessController",
  *     "form" = {
@@ -64,8 +64,8 @@ class Term extends ContentEntityBase implements TermInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    parent::postDelete($storage_controller, $entities);
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
 
     // See if any of the term's children are about to be become orphans.
     $orphans = array();
@@ -83,7 +83,7 @@ class Term extends ContentEntityBase implements TermInterface {
 
     // Delete term hierarchy information after looking up orphans but before
     // deleting them so that their children/parent information is consistent.
-    $storage_controller->deleteTermHierarchy(array_keys($entities));
+    $storage->deleteTermHierarchy(array_keys($entities));
 
     if (!empty($orphans)) {
       entity_delete_multiple('taxonomy_term', $orphans);
@@ -93,14 +93,14 @@ class Term extends ContentEntityBase implements TermInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::postSave($storage_controller, $update);
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
 
     // Only change the parents if a value is set, keep the existing values if
     // not.
     if (isset($this->parent->value)) {
-      $storage_controller->deleteTermHierarchy(array($this->id()));
-      $storage_controller->updateTermHierarchy($this);
+      $storage->deleteTermHierarchy(array($this->id()));
+      $storage->updateTermHierarchy($this);
     }
   }
 

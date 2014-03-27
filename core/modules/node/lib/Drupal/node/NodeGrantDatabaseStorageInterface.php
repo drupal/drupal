@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\NodeGrantStorageControllerInterface.
+ * Contains \Drupal\node\NodeGrantStorageInterface.
  */
 
 namespace Drupal\node;

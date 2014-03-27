@@ -32,9 +32,9 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
   protected $block;
 
   /**
-   * The block storage controller.
+   * The block storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
   protected $controller;
 
@@ -57,7 +57,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
 
     $this->controller = $this->container
       ->get('entity.manager')
-      ->getStorageController('block');
+      ->getStorage('block');
 
     \Drupal::state()->set('block_test.content', 'Llamas &gt; unicorns!');
 

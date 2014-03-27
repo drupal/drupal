@@ -30,7 +30,7 @@ class Date {
   /**
    * The date format storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $dateFormatStorage;
 
@@ -83,7 +83,7 @@ class Date {
    *   The configuration factory.
    */
   public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory) {
-    $this->dateFormatStorage = $entity_manager->getStorageController('date_format');
+    $this->dateFormatStorage = $entity_manager->getStorage('date_format');
     $this->languageManager = $language_manager;
     $this->stringTranslation = $translation;
     $this->configFactory = $config_factory;

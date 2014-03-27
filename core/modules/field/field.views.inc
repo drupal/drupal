@@ -6,8 +6,8 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\FieldableDatabaseStorageController;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\field\FieldConfigInterface;
 
 /**
@@ -63,11 +63,11 @@ function field_views_data_alter(&$data) {
  *   The field definition.
  *
  * @return bool
- *   True if the entity type uses DatabaseStorageController.
+ *   True if the entity type uses ContentEntityDatabaseStorage.
  */
 function _field_views_is_sql_entity_type(FieldConfigInterface $field) {
   $entity_manager = \Drupal::entityManager();
-  if ($entity_manager->getDefinition($field->entity_type) && $entity_manager->getStorageController($field->entity_type) instanceof FieldableDatabaseStorageController) {
+  if ($entity_manager->getDefinition($field->entity_type) && $entity_manager->getStorage($field->entity_type) instanceof ContentEntityDatabaseStorage) {
     return TRUE;
   }
 }
@@ -139,20 +139,20 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
 
   // Description of the field tables.
   $field_tables = array(
-    EntityStorageControllerInterface::FIELD_LOAD_CURRENT => array(
-      'table' => FieldableDatabaseStorageController::_fieldTableName($field),
+    EntityStorageInterface::FIELD_LOAD_CURRENT => array(
+      'table' => ContentEntityDatabaseStorage::_fieldTableName($field),
       'alias' => "{$entity_type_id}__{$field_name}",
     ),
   );
   if ($supports_revisions) {
-    $field_tables[EntityStorageControllerInterface::FIELD_LOAD_REVISION] = array(
-      'table' => FieldableDatabaseStorageController::_fieldRevisionTableName($field),
+    $field_tables[EntityStorageInterface::FIELD_LOAD_REVISION] = array(
+      'table' => ContentEntityDatabaseStorage::_fieldRevisionTableName($field),
       'alias' => "{$entity_type_id}_revision__{$field_name}",
     );
   }
 
   // Build the relationships between the field table and the entity tables.
-  $table_alias = $field_tables[EntityStorageControllerInterface::FIELD_LOAD_CURRENT]['alias'];
+  $table_alias = $field_tables[EntityStorageInterface::FIELD_LOAD_CURRENT]['alias'];
   $data[$table_alias]['table']['join'][$entity_table] = array(
     'left_field' => $entity_type->getKey('id'),
     'field' => 'entity_id',
@@ -161,7 +161,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
     ),
   );
   if ($supports_revisions) {
-    $table_alias = $field_tables[EntityStorageControllerInterface::FIELD_LOAD_REVISION]['alias'];
+    $table_alias = $field_tables[EntityStorageInterface::FIELD_LOAD_REVISION]['alias'];
     $data[$table_alias]['table']['join'][$entity_revision_table] = array(
       'left_field' => $entity_type->getKey('revision'),
       'field' => 'revision_id',
@@ -177,7 +177,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
   // Build the list of additional fields to add to queries.
   $add_fields = array('delta', 'langcode', 'bundle');
   foreach (array_keys($field_columns) as $column) {
-    $add_fields[] = FieldableDatabaseStorageController::_fieldColumnName($field, $column);
+    $add_fields[] = ContentEntityDatabaseStorage::_fieldColumnName($field, $column);
   }
   // Determine the label to use for the field. We don't have a label available
   // at the field level, so we just go through all instances and take the one
@@ -189,7 +189,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
     $table = $table_info['table'];
     $table_alias = $table_info['alias'];
 
-    if ($type == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
+    if ($type == EntityStorageInterface::FIELD_LOAD_CURRENT) {
       $group = $group_name;
       $field_alias = $field_name;
     }
@@ -210,7 +210,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
     $aliases = array();
     $also_known = array();
     foreach ($all_labels as $label_name => $true) {
-      if ($type == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
+      if ($type == EntityStorageInterface::FIELD_LOAD_CURRENT) {
         if ($label != $label_name) {
           $aliases[] = array(
             'base' => $entity_table,
@@ -249,7 +249,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
       'entity_tables' => $entity_tables,
       // Default the element type to div, let the UI change it if necessary.
       'element type' => 'div',
-      'is revision' => $type == EntityStorageControllerInterface::FIELD_LOAD_REVISION,
+      'is revision' => $type == EntityStorageInterface::FIELD_LOAD_REVISION,
     );
   }
 
@@ -295,16 +295,16 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
       $table = $table_info['table'];
       $table_alias = $table_info['alias'];
 
-      if ($type == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
+      if ($type == EntityStorageInterface::FIELD_LOAD_CURRENT) {
         $group = $group_name;
       }
       else {
         $group = t('@group (historical data)', array('@group' => $group_name));
       }
-      $column_real_name = FieldableDatabaseStorageController::_fieldColumnName($field, $column);
+      $column_real_name = ContentEntityDatabaseStorage::_fieldColumnName($field, $column);
 
       // Load all the fields from the table by default.
-      $field_sql_schema = FieldableDatabaseStorageController::_fieldSqlSchema($field);
+      $field_sql_schema = ContentEntityDatabaseStorage::_fieldSqlSchema($field);
       $additional_fields = array_keys($field_sql_schema[$table]['fields']);
 
       $data[$table_alias][$column_real_name] = array(

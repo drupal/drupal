@@ -8,7 +8,7 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\shortcut\ShortcutSetStorageControllerInterface;
+use Drupal\shortcut\ShortcutSetStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 
@@ -25,18 +25,18 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
   protected $database;
 
   /**
-   * The shortcut storage controller.
+   * The shortcut storage.
    *
-   * @var \Drupal\shortcut\ShortcutSetStorageControllerInterface
+   * @var \Drupal\shortcut\ShortcutSetStorageInterface
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * Constructs a ShortcutSetDeleteForm object.
    */
-  public function __construct(Connection $database, ShortcutSetStorageControllerInterface $storage_controller) {
+  public function __construct(Connection $database, ShortcutSetStorageInterface $storage) {
     $this->database = $database;
-    $this->storageController = $storage_controller;
+    $this->storage = $storage;
   }
 
   /**
@@ -45,7 +45,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('database'),
-      $container->get('entity.manager')->getStorageController('shortcut_set')
+      $container->get('entity.manager')->getStorage('shortcut_set')
     );
   }
 
@@ -81,7 +81,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
   public function buildForm(array $form, array &$form_state) {
     // Find out how many users are directly assigned to this shortcut set, and
     // make a message.
-    $number = $this->storageController->countAssignedUsers($this->entity);
+    $number = $this->storage->countAssignedUsers($this->entity);
     $info = '';
     if ($number) {
       $info .= '<p>' . format_plural($number,

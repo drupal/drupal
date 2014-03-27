@@ -71,7 +71,7 @@ class HtmlEntityFormController extends FormController {
       $entity = $request->attributes->get($entity_type);
     }
     else {
-      $entity = $this->manager->getStorageController($entity_type)->create(array());
+      $entity = $this->manager->getStorage($entity_type)->create(array());
     }
 
     return $this->manager->getFormController($entity_type, $operation)->setEntity($entity);

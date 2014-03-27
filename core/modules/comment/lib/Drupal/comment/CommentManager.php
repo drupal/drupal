@@ -101,7 +101,7 @@ class CommentManager implements CommentManagerInterface {
    */
   public function getParentEntityUri(CommentInterface $comment) {
     return $this->entityManager
-      ->getStorageController($comment->getCommentedEntityTypeId())
+      ->getStorage($comment->getCommentedEntityTypeId())
       ->load($comment->getCommentedEntityId())
       ->urlInfo();
   }
@@ -143,7 +143,7 @@ class CommentManager implements CommentManagerInterface {
     // Make sure the field doesn't already exist.
     if (!$this->fieldInfo->getField($entity_type, $field_name)) {
       // Add a default comment field for existing node comments.
-      $field = $this->entityManager->getStorageController('field_config')->create(array(
+      $field = $this->entityManager->getStorage('field_config')->create(array(
         'entity_type' => $entity_type,
         'name' => $field_name,
         'type' => 'comment',
@@ -157,7 +157,7 @@ class CommentManager implements CommentManagerInterface {
     }
     // Make sure the instance doesn't already exist.
     if (!$this->fieldInfo->getInstance($entity_type, $bundle, $field_name)) {
-      $instance = $this->entityManager->getStorageController('field_instance_config')->create(array(
+      $instance = $this->entityManager->getStorage('field_instance_config')->create(array(
         'label' => 'Comment settings',
         'description' => '',
         'field_name' => $field_name,
@@ -201,9 +201,9 @@ class CommentManager implements CommentManagerInterface {
    */
   public function addBodyField($entity_type, $field_name) {
     // Create the field if needed.
-    $field = $this->entityManager->getStorageController('field_config')->load('comment.comment_body');
+    $field = $this->entityManager->getStorage('field_config')->load('comment.comment_body');
     if (!$field) {
-      $field = $this->entityManager->getStorageController('field_config')->create(array(
+      $field = $this->entityManager->getStorage('field_config')->create(array(
         'name' => 'comment_body',
         'type' => 'text_long',
         'entity_type' => 'comment',
@@ -213,11 +213,11 @@ class CommentManager implements CommentManagerInterface {
     // Create the instance if needed, field name defaults to 'comment'.
     $comment_bundle = $entity_type . '__' . $field_name;
     $field_instance = $this->entityManager
-      ->getStorageController('field_instance_config')
+      ->getStorage('field_instance_config')
       ->load("comment.$comment_bundle.comment_body");
     if (!$field_instance) {
       // Attaches the body field by default.
-      $field_instance = $this->entityManager->getStorageController('field_instance_config')->create(array(
+      $field_instance = $this->entityManager->getStorage('field_instance_config')->create(array(
         'field_name' => 'comment_body',
         'label' => 'Comment',
         'entity_type' => 'comment',
@@ -265,7 +265,7 @@ class CommentManager implements CommentManagerInterface {
         // We only output a link if we are certain that users will get the
         // permission to post comments by logging in.
         $this->authenticatedCanPostComments = $this->entityManager
-          ->getStorageController('user_role')
+          ->getStorage('user_role')
           ->load(DRUPAL_AUTHENTICATED_RID)
           ->hasPermission('post comments');
       }

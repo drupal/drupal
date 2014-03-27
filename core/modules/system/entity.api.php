@@ -134,8 +134,8 @@ function hook_entity_type_build(array &$entity_types) {
 function hook_entity_type_alter(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   // Set the controller class for nodes to an alternate implementation of the
-  // Drupal\Core\Entity\EntityStorageControllerInterface interface.
-  $entity_types['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorageController');
+  // Drupal\Core\Entity\EntityStorageInterface interface.
+  $entity_types['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorage');
 }
 
 /**

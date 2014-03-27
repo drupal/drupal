@@ -281,7 +281,7 @@ class ConfigImporter extends DependencySerialization {
   }
 
   /**
-   * Invokes import* methods on configuration entity storage controllers.
+   * Invokes import* methods on configuration entity storage.
    *
    * Allow modules to take over configuration change operations for higher-level
    * configuration data.
@@ -318,9 +318,9 @@ class ConfigImporter extends DependencySerialization {
       }
 
       $method = 'import' . ucfirst($op);
-      $entity_storage = $this->configManager->getEntityManager()->getStorageController($entity_type);
-      // Call to the configuration entity's storage controller to handle the
-      // configuration change.
+      $entity_storage = $this->configManager->getEntityManager()->getStorage($entity_type);
+      // Call to the configuration entity's storage to handle the configuration
+      // change.
       if (!($entity_storage instanceof ImportableEntityStorageInterface)) {
         throw new EntityStorageException(String::format('The entity storage "@storage" for the "@entity_type" entity type does not support imports', array('@storage' => get_class($entity_storage), '@entity_type' => $entity_type)));
       }

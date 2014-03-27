@@ -18,7 +18,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  *   id = "config_test",
  *   label = @Translation("Test configuration"),
  *   controllers = {
- *     "storage" = "Drupal\config_test\ConfigTestStorageController",
+ *     "storage" = "Drupal\config_test\ConfigTestStorage",
  *     "list_builder" = "Drupal\config_test\ConfigTestListBuilder",
  *     "form" = {
  *       "default" = "Drupal\config_test\ConfigTestFormController",

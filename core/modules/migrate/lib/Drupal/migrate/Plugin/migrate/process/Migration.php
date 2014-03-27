@@ -8,7 +8,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
@@ -35,16 +35,16 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
   protected $processPluginManager;
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $migrationStorageController;
+  protected $migrationStorage;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageControllerInterface $storage_controller, MigratePluginManager $process_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, MigratePluginManager $process_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->migrationStorageController = $storage_controller;
+    $this->migrationStorage = $storage;
     $this->migration = $migration;
     $this->processPluginManager = $process_plugin_manager;
   }
@@ -58,7 +58,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
       $plugin_id,
       $plugin_definition,
       $migration,
-      $container->get('entity.manager')->getStorageController('migration'),
+      $container->get('entity.manager')->getStorage('migration'),
       $container->get('plugin.manager.migrate.process')
     );
   }
@@ -78,7 +78,7 @@ class Migration extends ProcessPluginBase implements ContainerFactoryPluginInter
     }
     $self = FALSE;
     /** @var \Drupal\migrate\Entity\MigrationInterface[] $migrations */
-    $migrations = $this->migrationStorageController->loadMultiple($migration_ids);
+    $migrations = $this->migrationStorage->loadMultiple($migration_ids);
     $destination_ids = NULL;
     $source_id_values = array();
     foreach ($migrations as $migration_id => $migration) {

@@ -96,7 +96,7 @@ class BookManager implements BookManagerInterface {
       $query->addMetaData('base_table', 'book');
       $book_links = $query->execute();
 
-      $nodes = $this->entityManager->getStorageController('node')->loadMultiple($nids);
+      $nodes = $this->entityManager->getStorage('node')->loadMultiple($nids);
       // @todo: Sort by weight and translated title.
 
       // @todo: use route name for links, not system path.
@@ -399,7 +399,7 @@ class BookManager implements BookManagerInterface {
       }
     }
 
-    $nodes = $this->entityManager->getStorageController('node')->loadMultiple($nids);
+    $nodes = $this->entityManager->getStorage('node')->loadMultiple($nids);
 
     foreach ($tree as $data) {
       $nid = $data['link']['nid'];
@@ -534,7 +534,7 @@ class BookManager implements BookManagerInterface {
       $element['#theme'] = 'book_link__book_toc_' . $data['link']['bid'];
       $element['#attributes']['class'] = $class;
       $element['#title'] = $data['link']['title'];
-      $node = \Drupal::entityManager()->getStorageController('node')->load($data['link']['nid']);
+      $node = \Drupal::entityManager()->getStorage('node')->load($data['link']['nid']);
       $element['#href'] = $node->url();
       $element['#localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : array();
       $element['#below'] = $data['below'] ? $this->bookTreeOutput($data['below']) : $data['below'];
@@ -937,14 +937,14 @@ class BookManager implements BookManagerInterface {
     $node = NULL;
     // Access will already be set in the tree functions.
     if (!isset($link['access'])) {
-      $node = $this->entityManager->getStorageController('node')->load($link['nid']);
+      $node = $this->entityManager->getStorage('node')->load($link['nid']);
       $link['access'] = $node && $node->access('view');
     }
     // For performance, don't localize a link the user can't access.
     if ($link['access']) {
       // @todo - load the nodes en-mass rather than individually.
       if (!$node) {
-        $node = $this->entityManager->getStorageController('node')
+        $node = $this->entityManager->getStorage('node')
           ->load($link['nid']);
       }
       // The node label will be the value for the current user's language.

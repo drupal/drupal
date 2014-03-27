@@ -254,7 +254,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertTrue($view->rowPlugin instanceof Fields);
 
     // Test the newDisplay() method.
-    $view = $this->container->get('entity.manager')->getStorageController('view')->create(array('id' => 'test_executable_displays'));
+    $view = $this->container->get('entity.manager')->getStorage('view')->create(array('id' => 'test_executable_displays'));
     $executable = $view->getExecutable();
 
     $executable->newDisplay('page');

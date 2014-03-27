@@ -9,7 +9,7 @@ namespace Drupal\book\Form;
 
 use Drupal\book\BookManagerInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BookAdminEditForm extends FormBase {
 
   /**
-   * The node storage controller.
+   * The node storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeStorage;
 
@@ -36,12 +36,12 @@ class BookAdminEditForm extends FormBase {
   /**
    * Constructs a new BookAdminEditForm.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $node_storage
-   *   The custom block storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+   *   The custom block storage.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
    */
-  public function __construct(EntityStorageControllerInterface $node_storage, BookManagerInterface $book_manager) {
+  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager) {
     $this->nodeStorage = $node_storage;
     $this->bookManager = $book_manager;
   }
@@ -52,7 +52,7 @@ class BookAdminEditForm extends FormBase {
   public static function create(ContainerInterface $container) {
     $entity_manager = $container->get('entity.manager');
     return new static(
-      $entity_manager->getStorageController('node'),
+      $entity_manager->getStorage('node'),
       $container->get('book.manager')
     );
   }

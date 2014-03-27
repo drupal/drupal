@@ -10,8 +10,8 @@ namespace Drupal\forum\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\forum\ForumManagerInterface;
 use Drupal\taxonomy\TermInterface;
-use Drupal\taxonomy\TermStorageControllerInterface;
-use Drupal\taxonomy\VocabularyStorageControllerInterface;
+use Drupal\taxonomy\TermStorageInterface;
+use Drupal\taxonomy\VocabularyStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,33 +27,33 @@ class ForumController extends ControllerBase {
   protected $forumManager;
 
   /**
-   * Vocabulary storage controller.
+   * Vocabulary storage.
    *
-   * @var \Drupal\taxonomy\VocabularyStorageControllerInterface
+   * @var \Drupal\taxonomy\VocabularyStorageInterface
    */
-  protected $vocabularyStorageController;
+  protected $vocabularyStorage;
 
   /**
-   * Term storage controller.
+   * Term storage.
    *
-   * @var \Drupal\taxonomy\TermStorageControllerInterface
+   * @var \Drupal\taxonomy\TermStorageInterface
    */
-  protected $termStorageController;
+  protected $termStorage;
 
   /**
    * Constructs a ForumController object.
    *
    * @param \Drupal\forum\ForumManagerInterface $forum_manager
    *   The forum manager service.
-   * @param \Drupal\taxonomy\VocabularyStorageControllerInterface $vocabulary_storage_controller
-   *   Vocabulary storage controller.
-   * @param \Drupal\taxonomy\TermStorageControllerInterface $term_storage_controller
-   *   Term storage controller.
+   * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabulary_storage
+   *   Vocabulary storage.
+   * @param \Drupal\taxonomy\TermStorageInterface $term_storage
+   *   Term storage.
    */
-  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageControllerInterface $vocabulary_storage_controller, TermStorageControllerInterface $term_storage_controller) {
+  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage) {
     $this->forumManager = $forum_manager;
-    $this->vocabularyStorageController = $vocabulary_storage_controller;
-    $this->termStorageController = $term_storage_controller;
+    $this->vocabularyStorage = $vocabulary_storage;
+    $this->termStorage = $term_storage;
   }
 
   /**
@@ -62,8 +62,8 @@ class ForumController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('forum_manager'),
-      $container->get('entity.manager')->getStorageController('taxonomy_vocabulary'),
-      $container->get('entity.manager')->getStorageController('taxonomy_term')
+      $container->get('entity.manager')->getStorage('taxonomy_vocabulary'),
+      $container->get('entity.manager')->getStorage('taxonomy_term')
     );
   }
 
@@ -100,7 +100,7 @@ class ForumController extends ControllerBase {
    *   A render array.
    */
   public function forumIndex() {
-    $vocabulary = $this->vocabularyStorageController->load($this->config('forum.settings')->get('vocabulary'));
+    $vocabulary = $this->vocabularyStorage->load($this->config('forum.settings')->get('vocabulary'));
     $index = $this->forumManager->getIndex();
     $build = $this->build($index->forums, $index);
     if (empty($index->forums)) {
@@ -159,7 +159,7 @@ class ForumController extends ControllerBase {
    */
   public function addForum() {
     $vid = $this->config('forum.settings')->get('vocabulary');
-    $taxonomy_term = $this->termStorageController->create(array(
+    $taxonomy_term = $this->termStorage->create(array(
       'vid' => $vid,
       'forum_controller' => 0,
     ));
@@ -174,7 +174,7 @@ class ForumController extends ControllerBase {
    */
   public function addContainer() {
     $vid = $this->config('forum.settings')->get('vocabulary');
-    $taxonomy_term = $this->termStorageController->create(array(
+    $taxonomy_term = $this->termStorage->create(array(
       'vid' => $vid,
       'forum_container' => 1,
     ));

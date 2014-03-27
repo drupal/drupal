@@ -137,7 +137,7 @@ function aggregator_permission() {
 function aggregator_cron() {
   $queue = \Drupal::queue('aggregator_feeds');
 
-  $result = \Drupal::entityManager()->getStorageController('aggregator_feed')->getFeedIdsToRefresh();
+  $result = \Drupal::entityManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
   foreach ($result as $fid) {
     $feed = aggregator_feed_load($fid);
     if ($queue->createItem($feed)) {

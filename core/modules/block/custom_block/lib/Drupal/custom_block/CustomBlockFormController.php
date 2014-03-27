@@ -10,7 +10,7 @@ namespace Drupal\custom_block;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,7 +23,7 @@ class CustomBlockFormController extends ContentEntityFormController {
   /**
    * The custom block storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $customBlockStorage;
 
@@ -39,12 +39,12 @@ class CustomBlockFormController extends ContentEntityFormController {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $custom_block_storage
-   *   The custom block storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $custom_block_storage
+   *   The custom block storage.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, EntityStorageControllerInterface $custom_block_storage, LanguageManager $language_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, EntityStorageInterface $custom_block_storage, LanguageManager $language_manager) {
     parent::__construct($entity_manager);
     $this->customBlockStorage = $custom_block_storage;
     $this->languageManager = $language_manager;
@@ -57,7 +57,7 @@ class CustomBlockFormController extends ContentEntityFormController {
     $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_manager,
-      $entity_manager->getStorageController('custom_block'),
+      $entity_manager->getStorage('custom_block'),
       $container->get('language_manager')
     );
   }

@@ -31,18 +31,18 @@ class IntegrationTest extends ViewUnitTestBase {
   public static $testViews = array('test_aggregator_items');
 
   /**
-   * The entity storage controller for aggregator items.
+   * The entity storage for aggregator items.
    *
-   * @var \Drupal\aggregator\ItemStorageController
+   * @var \Drupal\aggregator\ItemStorage
    */
-  protected $itemStorageController;
+  protected $itemStorage;
 
   /**
-   * The entity storage controller for aggregator feeds.
+   * The entity storage for aggregator feeds.
    *
-   * @var \Drupal\aggregator\FeedStorageController
+   * @var \Drupal\aggregator\FeedStorage
    */
-  protected $feedStorageController;
+  protected $feedStorage;
 
   public static function getInfo() {
     return array(
@@ -59,8 +59,8 @@ class IntegrationTest extends ViewUnitTestBase {
 
     ViewTestData::createTestViews(get_class($this), array('aggregator_test_views'));
 
-    $this->itemStorageController = $this->container->get('entity.manager')->getStorageController('aggregator_item');
-    $this->feedStorageController = $this->container->get('entity.manager')->getStorageController('aggregator_feed');
+    $this->itemStorage = $this->container->get('entity.manager')->getStorage('aggregator_item');
+    $this->feedStorage = $this->container->get('entity.manager')->getStorage('aggregator_feed');
   }
 
   /**
@@ -79,7 +79,7 @@ class IntegrationTest extends ViewUnitTestBase {
       $values['link'] = 'http://drupal.org/node/' . mt_rand(1000, 10000);
       $values['guid'] = $this->randomString();
 
-      $aggregator_item = $this->itemStorageController->create($values);
+      $aggregator_item = $this->itemStorage->create($values);
       $aggregator_item->save();
       $items[$aggregator_item->id()] = $aggregator_item;
 

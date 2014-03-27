@@ -70,7 +70,7 @@ class EntityNormalizer extends NormalizerBase implements DenormalizerInterface {
       $data[$bundle_key] = $type;
     }
 
-    return $this->entityManager->getStorageController($context['entity_type'])->create($data);
+    return $this->entityManager->getStorage($context['entity_type'])->create($data);
   }
 
 }

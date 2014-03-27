@@ -11,7 +11,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\user\UserStorageControllerInterface;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,11 +21,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserPasswordForm extends FormBase {
 
   /**
-   * The user storage controller.
+   * The user storage.
    *
-   * @var \Drupal\user\UserStorageControllerInterface
+   * @var \Drupal\user\UserStorageInterface
    */
-  protected $userStorageController;
+  protected $userStorage;
 
   /**
    * The language manager.
@@ -37,13 +37,13 @@ class UserPasswordForm extends FormBase {
   /**
    * Constructs a UserPasswordForm object.
    *
-   * @param \Drupal\user\UserStorageControllerInterface $user_storage_controller
-   *   The user storage controller.
+   * @param \Drupal\user\UserStorageInterface $user_storage
+   *   The user storage.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(UserStorageControllerInterface $user_storage_controller, LanguageManager $language_manager) {
-    $this->userStorageController = $user_storage_controller;
+  public function __construct(UserStorageInterface $user_storage, LanguageManager $language_manager) {
+    $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
   }
 
@@ -52,7 +52,7 @@ class UserPasswordForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('user'),
+      $container->get('entity.manager')->getStorage('user'),
       $container->get('language_manager')
     );
   }
@@ -110,10 +110,10 @@ class UserPasswordForm extends FormBase {
   public function validateForm(array &$form, array &$form_state) {
     $name = trim($form_state['values']['name']);
     // Try to load by email.
-    $users = $this->userStorageController->loadByProperties(array('mail' => $name, 'status' => '1'));
+    $users = $this->userStorage->loadByProperties(array('mail' => $name, 'status' => '1'));
     if (empty($users)) {
       // No success, try to load by name.
-      $users = $this->userStorageController->loadByProperties(array('name' => $name, 'status' => '1'));
+      $users = $this->userStorage->loadByProperties(array('name' => $name, 'status' => '1'));
     }
     $account = reset($users);
     if ($account && $account->id()) {

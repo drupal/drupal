@@ -47,7 +47,7 @@ class BlockFormControllerTest extends UnitTestCase {
       ->method('execute')
       ->will($this->returnValue(array('test', 'other_test', 'other_test_1', 'other_test_2')));
 
-    $block_storage = $this->getMock('Drupal\Core\Config\Entity\ConfigStorageControllerInterface');
+    $block_storage = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
     $block_storage->expects($this->exactly(5))
       ->method('getQuery')
       ->will($this->returnValue($query));
@@ -55,7 +55,7 @@ class BlockFormControllerTest extends UnitTestCase {
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
     $entity_manager->expects($this->any())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->will($this->returnValue($block_storage));
 
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');

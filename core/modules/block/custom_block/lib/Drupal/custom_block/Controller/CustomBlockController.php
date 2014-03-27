@@ -9,7 +9,7 @@ namespace Drupal\custom_block\Controller;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\custom_block\CustomBlockTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,16 +17,16 @@ use Symfony\Component\HttpFoundation\Request;
 class CustomBlockController extends ControllerBase {
 
   /**
-   * The custom block storage controller.
+   * The custom block storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $customBlockStorage;
 
   /**
-   * The custom block type storage controller.
+   * The custom block type storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $customBlockTypeStorage;
 
@@ -36,20 +36,20 @@ class CustomBlockController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     $entity_manager = $container->get('entity.manager');
     return new static(
-      $entity_manager->getStorageController('custom_block'),
-      $entity_manager->getStorageController('custom_block_type')
+      $entity_manager->getStorage('custom_block'),
+      $entity_manager->getStorage('custom_block_type')
     );
   }
 
   /**
    * Constructs a CustomBlock object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $custom_block_storage
-   *   The custom block storage controller.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $custom_block_type_storage
-   *   The custom block type storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $custom_block_storage
+   *   The custom block storage.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $custom_block_type_storage
+   *   The custom block type storage.
    */
-  public function __construct(EntityStorageControllerInterface $custom_block_storage, EntityStorageControllerInterface $custom_block_type_storage) {
+  public function __construct(EntityStorageInterface $custom_block_storage, EntityStorageInterface $custom_block_type_storage) {
     $this->customBlockStorage = $custom_block_storage;
     $this->customBlockTypeStorage = $custom_block_type_storage;
   }

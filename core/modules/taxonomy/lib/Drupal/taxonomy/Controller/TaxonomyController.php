@@ -28,7 +28,7 @@ class TaxonomyController extends ControllerBase {
    *   The taxonomy term add form.
    */
   public function addForm(VocabularyInterface $taxonomy_vocabulary) {
-    $term = $this->entityManager()->getStorageController('taxonomy_term')->create(array('vid' => $taxonomy_vocabulary->id()));
+    $term = $this->entityManager()->getStorage('taxonomy_term')->create(array('vid' => $taxonomy_vocabulary->id()));
     if ($this->moduleHandler()->moduleExists('language')) {
       $term->langcode = language_get_default_langcode('taxonomy_term', $taxonomy_vocabulary->id());
     }

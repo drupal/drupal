@@ -231,7 +231,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       ->limit(10)
       ->execute();
 
-    $node_storage = $this->entityManager->getStorageController('node');
+    $node_storage = $this->entityManager->getStorage('node');
     $node_render = $this->entityManager->getViewBuilder('node');
 
     foreach ($find as $item) {
@@ -254,7 +254,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       );
       $results[] = array(
         'link' => $node->url('canonical', array('absolute' => TRUE, 'language' => $language)),
-        'type' => check_plain($this->entityManager->getStorageController('node_type')->load($node->bundle())->label()),
+        'type' => check_plain($this->entityManager->getStorage('node_type')->load($node->bundle())->label()),
         'title' => $node->label(),
         'user' => drupal_render($username),
         'date' => $node->getChangedTime(),
@@ -306,7 +306,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // The indexing throttle should be aware of the number of language variants
     // of a node.
     $counter = 0;
-    $node_storage = $this->entityManager->getStorageController('node');
+    $node_storage = $this->entityManager->getStorage('node');
     foreach ($node_storage->loadMultiple($nids) as $node) {
       // Determine when the maximum number of indexable items is reached.
       $counter += count($node->getTranslationLanguages());

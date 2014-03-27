@@ -45,11 +45,11 @@ class ViewsBlockTest extends UnitTestCase {
   protected $view;
 
   /**
-   * The view storage controller.
+   * The view storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * The mocked user account.
@@ -98,11 +98,11 @@ class ViewsBlockTest extends UnitTestCase {
       ->with($this->view)
       ->will($this->returnValue($this->executable));
 
-    $this->storageController = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
+    $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->storageController->expects($this->any())
+    $this->storage->expects($this->any())
       ->method('load')
       ->with('test_view')
       ->will($this->returnValue($this->view));
@@ -126,7 +126,7 @@ class ViewsBlockTest extends UnitTestCase {
     $config = array();
     $definition = array();
     $definition['module'] = 'views';
-    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storageController, $this->account);
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
 
     $this->assertEquals($build, $plugin->build());
   }
@@ -147,7 +147,7 @@ class ViewsBlockTest extends UnitTestCase {
     $config = array();
     $definition = array();
     $definition['module'] = 'views';
-    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storageController, $this->account);
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
 
     $this->assertEquals(array(), $plugin->build());
   }

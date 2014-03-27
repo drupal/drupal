@@ -13,7 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\field\FieldInfo;
-use Drupal\taxonomy\TermStorageControllerInterface;
+use Drupal\taxonomy\TermStorageInterface;
 use Drupal\taxonomy\VocabularyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,9 +40,9 @@ class TermAutocompleteController implements ContainerInjectionInterface {
   protected $fieldInfo;
 
   /**
-   * Term storage controller.
+   * Term storage.
    *
-   * @var \Drupal\taxonomy\TermStorageControllerInterface
+   * @var \Drupal\taxonomy\TermStorageInterface
    */
   protected $termStorage;
 
@@ -53,10 +53,10 @@ class TermAutocompleteController implements ContainerInjectionInterface {
    *   The entity query service.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
-   * @param \Drupal\taxonomy\TermStorageControllerInterface $term_storage
-   *   The term storage controller.
+   * @param \Drupal\taxonomy\TermStorageInterface $term_storage
+   *   The term storage.
    */
-  public function __construct(QueryInterface $term_entity_query, FieldInfo $field_info, TermStorageControllerInterface $term_storage) {
+  public function __construct(QueryInterface $term_entity_query, FieldInfo $field_info, TermStorageInterface $term_storage) {
     $this->termEntityQuery = $term_entity_query;
     $this->fieldInfo = $field_info;
     $this->termStorage = $term_storage;
@@ -69,7 +69,7 @@ class TermAutocompleteController implements ContainerInjectionInterface {
     return new static(
       $container->get('entity.query')->get('taxonomy_term'),
       $container->get('field.info'),
-      $container->get('entity.manager')->getStorageController('taxonomy_term')
+      $container->get('entity.manager')->getStorage('taxonomy_term')
     );
   }
 

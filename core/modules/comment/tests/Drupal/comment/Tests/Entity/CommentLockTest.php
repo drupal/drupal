@@ -78,9 +78,9 @@ class CommentLockTest extends UnitTestCase {
       ->method('get')
       ->with('status')
       ->will($this->returnValue((object) array('value' => NULL)));
-    $storage_controller = $this->getMock('Drupal\comment\CommentStorageControllerInterface');
-    $comment->preSave($storage_controller);
-    $comment->postSave($storage_controller);
+    $storage = $this->getMock('Drupal\comment\CommentStorageInterface');
+    $comment->preSave($storage);
+    $comment->postSave($storage);
   }
 
 }

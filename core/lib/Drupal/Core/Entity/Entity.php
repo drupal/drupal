@@ -295,7 +295,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public function save() {
-    return $this->entityManager()->getStorageController($this->entityTypeId)->save($this);
+    return $this->entityManager()->getStorage($this->entityTypeId)->save($this);
   }
 
   /**
@@ -303,7 +303,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    */
   public function delete() {
     if (!$this->isNew()) {
-      $this->entityManager()->getStorageController($this->entityTypeId)->delete(array($this->id() => $this));
+      $this->entityManager()->getStorage($this->entityTypeId)->delete(array($this->id() => $this));
     }
   }
 
@@ -332,13 +332,13 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
+  public function preSave(EntityStorageInterface $storage) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     $this->onSaveOrDelete();
     if ($update) {
       $this->onUpdateBundleEntity();
@@ -348,25 +348,25 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postCreate(EntityStorageControllerInterface $storage_controller) {
+  public function postCreate(EntityStorageInterface $storage) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
     foreach ($entities as $entity) {
       $entity->onSaveOrDelete();
     }
@@ -375,7 +375,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
+  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
   }
 
   /**

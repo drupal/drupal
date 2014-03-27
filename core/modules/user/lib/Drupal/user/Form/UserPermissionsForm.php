@@ -11,7 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
-use Drupal\user\RoleStorageControllerInterface;
+use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,7 +29,7 @@ class UserPermissionsForm extends FormBase {
   /**
    * The role storage.
    *
-   * @var \Drupal\user\RoleStorageControllerInterface
+   * @var \Drupal\user\RoleStorageInterface
    */
   protected $roleStorage;
 
@@ -38,10 +38,10 @@ class UserPermissionsForm extends FormBase {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\user\RoleStorageControllerInterface $role_storage
+   * @param \Drupal\user\RoleStorageInterface $role_storage
    *   The role storage.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, RoleStorageControllerInterface $role_storage) {
+  public function __construct(ModuleHandlerInterface $module_handler, RoleStorageInterface $role_storage) {
     $this->moduleHandler = $module_handler;
     $this->roleStorage = $role_storage;
   }
@@ -52,7 +52,7 @@ class UserPermissionsForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('entity.manager')->getStorageController('user_role')
+      $container->get('entity.manager')->getStorage('user_role')
     );
   }
 

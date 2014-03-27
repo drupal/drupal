@@ -8,7 +8,7 @@
 namespace Drupal\action;
 
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,20 +25,20 @@ abstract class ActionFormControllerBase extends EntityFormController {
   protected $plugin;
 
   /**
-   * The action storage controller.
+   * The action storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * Constructs a new action form.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The action storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The action storage.
    */
-  public function __construct(EntityStorageControllerInterface $storage_controller) {
-    $this->storageController = $storage_controller;
+  public function __construct(EntityStorageInterface $storage) {
+    $this->storage = $storage;
   }
 
   /**
@@ -46,7 +46,7 @@ abstract class ActionFormControllerBase extends EntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('action')
+      $container->get('entity.manager')->getStorage('action')
     );
   }
 
@@ -106,7 +106,7 @@ abstract class ActionFormControllerBase extends EntityFormController {
    *   TRUE if the action exists, FALSE otherwise.
    */
   public function exists($id) {
-    $action = $this->storageController->load($id);
+    $action = $this->storage->load($id);
     return !empty($action);
   }
 

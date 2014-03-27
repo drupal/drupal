@@ -110,7 +110,7 @@ class EditController extends ControllerBase {
       if (!$entity_type || !$this->entityManager()->getDefinition($entity_type)) {
         throw new NotFoundHttpException();
       }
-      $entity = $this->entityManager()->getStorageController($entity_type)->load($entity_id);
+      $entity = $this->entityManager()->getStorage($entity_type)->load($entity_id);
       if (!$entity) {
         throw new NotFoundHttpException();
       }

@@ -31,11 +31,11 @@ class CacheTagTest extends PluginTestBase {
   public static $modules = array('node');
 
   /**
-   * The node storage controller.
+   * The node storage.
    *
-   * @var \Drupal\node\NodeStorageController
+   * @var \Drupal\node\NodeStorage
    */
-  protected $nodeStorageController;
+  protected $nodeStorage;
 
   /**
    * The node view builder.
@@ -86,7 +86,7 @@ class CacheTagTest extends PluginTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
-    $this->nodeStorageController = $this->container->get('entity.manager')->getStorageController('node');
+    $this->nodeStorage = $this->container->get('entity.manager')->getStorage('node');
     $this->nodeViewBuilder = $this->container->get('entity.manager')->getViewBuilder('node');
     $this->userViewBuilder = $this->container->get('entity.manager')->getViewBuilder('user');
 

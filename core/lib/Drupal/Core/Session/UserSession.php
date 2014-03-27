@@ -141,7 +141,7 @@ class UserSession implements AccountInterface {
       return TRUE;
     }
 
-    $roles = \Drupal::entityManager()->getStorageController('user_role')->loadMultiple($this->getRoles());
+    $roles = \Drupal::entityManager()->getStorage('user_role')->loadMultiple($this->getRoles());
 
     foreach ($roles as $role) {
       if ($role->hasPermission($permission)) {

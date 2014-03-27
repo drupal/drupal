@@ -34,7 +34,7 @@ class NodeController extends ControllerBase {
     $content = array();
 
     // Only use node types the user has access to.
-    foreach ($this->entityManager()->getStorageController('node_type')->loadMultiple() as $type) {
+    foreach ($this->entityManager()->getStorage('node_type')->loadMultiple() as $type) {
       if ($this->entityManager()->getAccessController('node')->createAccess($type->type)) {
         $content[$type->type] = $type;
       }
@@ -65,7 +65,7 @@ class NodeController extends ControllerBase {
     $account = $this->currentUser();
     $langcode = $this->moduleHandler()->invoke('language', 'get_default_langcode', array('node', $node_type->type));
 
-    $node = $this->entityManager()->getStorageController('node')->create(array(
+    $node = $this->entityManager()->getStorage('node')->create(array(
       'uid' => $account->id(),
       'name' => $account->getUsername() ?: '',
       'type' => $node_type->type,
@@ -87,7 +87,7 @@ class NodeController extends ControllerBase {
    *   An array suitable for drupal_render().
    */
   public function revisionShow($node_revision) {
-    $node = $this->entityManager()->getStorageController('node')->loadRevision($node_revision);
+    $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
     $page = $this->buildPage($node);
     unset($page['nodes'][$node->id()]['#cache']);
 
@@ -104,7 +104,7 @@ class NodeController extends ControllerBase {
    *   The page title.
    */
   public function revisionPageTitle($node_revision) {
-    $node = $this->entityManager()->getStorageController('node')->loadRevision($node_revision);
+    $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
     return $this->t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime())));
   }
 

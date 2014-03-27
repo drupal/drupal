@@ -40,11 +40,11 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $viewsDisplayPairs;
 
   /**
-   * The view storage controller.
+   * The view storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $viewStorageController;
+  protected $viewStorage;
 
   /**
    * The state key value store.
@@ -69,7 +69,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    *   The state key value store.
    */
   public function __construct(EntityManagerInterface $entity_manager, StateInterface $state) {
-    $this->viewStorageController = $entity_manager->getStorageController('view');
+    $this->viewStorage = $entity_manager->getStorage('view');
     $this->state = $state;
   }
 
@@ -136,7 +136,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     $collection = new RouteCollection();
     foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
       list($view_id, $display_id) = explode('.', $pair);
-      $view = $this->viewStorageController->load($view_id);
+      $view = $this->viewStorage->load($view_id);
       // @todo This should have an executable factory injected.
       if (($view = $view->getExecutable()) && $view instanceof ViewExecutable) {
         if ($view->setDisplay($display_id) && $display = $view->displayHandlers->get($display_id)) {
@@ -158,7 +158,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected function alterRoutes(RouteCollection $collection, $provider) {
     foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
       list($view_id, $display_id) = explode('.', $pair);
-      $view = $this->viewStorageController->load($view_id);
+      $view = $this->viewStorage->load($view_id);
       // @todo This should have an executable factory injected.
       if (($view = $view->getExecutable()) && $view instanceof ViewExecutable) {
         if ($view->setDisplay($display_id) && $display = $view->displayHandlers->get($display_id)) {

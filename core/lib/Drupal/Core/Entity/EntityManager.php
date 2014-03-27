@@ -192,7 +192,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   /**
    * {@inheritdoc}
    */
-  public function getStorageController($entity_type) {
+  public function getStorage($entity_type) {
     return $this->getController($entity_type, 'storage', 'getStorageClass');
   }
 
@@ -608,7 +608,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
       }
       else {
         $this->displayModeInfo[$display_type] = array();
-        foreach ($this->getStorageController($display_type)->loadMultiple() as $display_mode) {
+        foreach ($this->getStorage($display_type)->loadMultiple() as $display_mode) {
           list($display_mode_entity_type, $display_mode_name) = explode('.', $display_mode->id(), 2);
           $this->displayModeInfo[$display_type][$display_mode_entity_type][$display_mode_name] = (array) $display_mode;
         }

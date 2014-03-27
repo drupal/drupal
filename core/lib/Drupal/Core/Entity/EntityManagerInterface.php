@@ -84,15 +84,15 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getAdminRouteInfo($entity_type_id, $bundle);
 
   /**
-   * Creates a new storage controller instance.
+   * Creates a new storage instance.
    *
    * @param string $entity_type
-   *   The entity type for this storage controller.
+   *   The entity type for this storage.
    *
-   * @return \Drupal\Core\Entity\EntityStorageControllerInterface
-   *   A storage controller instance.
+   * @return \Drupal\Core\Entity\EntityStorageInterface
+   *   A storage instance.
    */
-  public function getStorageController($entity_type);
+  public function getStorage($entity_type);
 
   /**
    * Get the bundle info of all entity types.

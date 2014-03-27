@@ -40,7 +40,7 @@ class MessageEntityTest extends DrupalUnitTestBase {
    * Test some of the methods.
    */
   public function testMessageMethods() {
-    $message_storage = $this->container->get('entity.manager')->getStorageController('contact_message');
+    $message_storage = $this->container->get('entity.manager')->getStorage('contact_message');
     $message = $message_storage->create(array('category' => 'feedback'));
 
     // Check for empty values first.

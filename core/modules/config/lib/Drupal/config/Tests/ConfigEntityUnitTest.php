@@ -23,9 +23,9 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
   public static $modules = array('config_test');
 
   /**
-   * The config_test entity storage controller.
+   * The config_test entity storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
   protected $storage;
 
@@ -42,13 +42,13 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->storage = $this->container->get('entity.manager')->getStorageController('config_test');
+    $this->storage = $this->container->get('entity.manager')->getStorage('config_test');
   }
 
   /**
-   * Tests storage controller methods.
+   * Tests storage methods.
    */
-  public function testStorageControllerMethods() {
+  public function testStorageMethods() {
     $entity_type = \Drupal::entityManager()->getDefinition('config_test');
 
     $expected = $entity_type->getConfigPrefix() . '.';

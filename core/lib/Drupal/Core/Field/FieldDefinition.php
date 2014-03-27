@@ -498,7 +498,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * Sets the storage behavior for this field.
    *
    * @param bool $custom_storage
-   *   Pass FALSE if the storage controller takes care of storing the field,
+   *   Pass FALSE if the storage takes care of storing the field,
    *   TRUE otherwise.
    *
    * @return $this

@@ -9,7 +9,7 @@ namespace Drupal\edit\Form;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
@@ -39,7 +39,7 @@ class EditFieldForm extends FormBase {
   /**
    * The node type storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeTypeStorage;
 
@@ -50,10 +50,10 @@ class EditFieldForm extends FormBase {
    *   The tempstore factory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $node_type_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
    *   The node type storage.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, ModuleHandlerInterface $module_handler, EntityStorageControllerInterface $node_type_storage) {
+  public function __construct(TempStoreFactory $temp_store_factory, ModuleHandlerInterface $module_handler, EntityStorageInterface $node_type_storage) {
     $this->moduleHandler = $module_handler;
     $this->nodeTypeStorage = $node_type_storage;
     $this->tempStoreFactory = $temp_store_factory;
@@ -66,7 +66,7 @@ class EditFieldForm extends FormBase {
     return new static(
       $container->get('user.tempstore'),
       $container->get('module_handler'),
-      $container->get('entity.manager')->getStorageController('node_type')
+      $container->get('entity.manager')->getStorage('node_type')
     );
   }
 

@@ -8,7 +8,7 @@
 namespace Drupal\shortcut\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\shortcut\ShortcutSetInterface;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\shortcut\ShortcutSetInterface;
  *   id = "shortcut_set",
  *   label = @Translation("Shortcut set"),
  *   controllers = {
- *     "storage" = "Drupal\shortcut\ShortcutSetStorageController",
+ *     "storage" = "Drupal\shortcut\ShortcutSetStorage",
  *     "access" = "Drupal\shortcut\ShortcutSetAccessController",
  *     "list_builder" = "Drupal\shortcut\ShortcutSetListBuilder",
  *     "form" = {
@@ -60,8 +60,8 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
   /**
    * {@inheritdoc}
    */
-  public function postCreate(EntityStorageControllerInterface $storage_controller) {
-    parent::postCreate($storage_controller);
+  public function postCreate(EntityStorageInterface $storage) {
+    parent::postCreate($storage);
 
     // Generate menu-compatible set name.
     if (!$this->getOriginalId()) {
@@ -79,18 +79,18 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    parent::preDelete($storage_controller, $entities);
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
 
     foreach ($entities as $entity) {
-      $storage_controller->deleteAssignedShortcutSets($entity);
+      $storage->deleteAssignedShortcutSets($entity);
 
       // Next, delete the shortcuts for this set.
       $shortcut_ids = \Drupal::entityQuery('shortcut')
         ->condition('shortcut_set', $entity->id(), '=')
         ->execute();
 
-      $controller = \Drupal::entityManager()->getStorageController('shortcut');
+      $controller = \Drupal::entityManager()->getStorage('shortcut');
       $entities = $controller->loadMultiple($shortcut_ids);
       $controller->delete($entities);
     }
@@ -113,7 +113,7 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
    * {@inheritdoc}
    */
   public function getShortcuts() {
-    return \Drupal::entityManager()->getStorageController('shortcut')->loadByProperties(array('shortcut_set' => $this->id()));
+    return \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $this->id()));
   }
 
 }

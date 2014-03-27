@@ -260,11 +260,11 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getStorageController() method.
+   * Tests the getStorage() method.
    *
-   * @covers ::getStorageController()
+   * @covers ::getStorage()
    */
-  public function testGetStorageController() {
+  public function testGetStorage() {
     $class = $this->getTestControllerClass();
     $entity = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity->expects($this->once())
@@ -272,7 +272,7 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue($class));
     $this->setUpEntityManager(array('test_entity_type' => $entity));
 
-    $this->assertInstanceOf($class, $this->entityManager->getStorageController('test_entity_type'));
+    $this->assertInstanceOf($class, $this->entityManager->getStorage('test_entity_type'));
   }
 
   /**

@@ -30,7 +30,7 @@ class ViewListBuilderTest extends UnitTestCase {
    * @see \Drupal\views_ui\ViewListBuilder::getDisplaysList()
    */
   public function testBuildRowEntityList() {
-    $storage_controller = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
+    $storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
     $display_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
@@ -124,7 +124,7 @@ class ViewListBuilderTest extends UnitTestCase {
     // Setup a view list builder with a mocked buildOperations method,
     // because t() is called on there.
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $view_list_builder = new TestViewListBuilder($entity_type, $storage_controller, $display_manager);
+    $view_list_builder = new TestViewListBuilder($entity_type, $storage, $display_manager);
     $view_list_builder->setTranslationManager($this->getStringTranslationStub());
 
     $view = new View($values, 'view');

@@ -38,7 +38,7 @@ class EntityConverter implements ParamConverterInterface {
    */
   public function convert($value, $definition, $name, array $defaults, Request $request) {
     $entity_type = substr($definition['type'], strlen('entity:'));
-    if ($storage = $this->entityManager->getStorageController($entity_type)) {
+    if ($storage = $this->entityManager->getStorage($entity_type)) {
       return $storage->load($value);
     }
   }

@@ -11,7 +11,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 
 /**
- * Defines the Database storage controller.
+ * Defines the Database storage.
  */
 class DatabaseStorage implements StorageInterface {
 

@@ -159,7 +159,7 @@ function shortcut_set_load($id) {
  */
 function shortcut_set_assign_user($shortcut_set, $account) {
   \Drupal::entityManager()
-    ->getStorageController('shortcut_set')
+    ->getStorage('shortcut_set')
     ->assignUser($shortcut_set, $account);
 }
 
@@ -178,7 +178,7 @@ function shortcut_set_assign_user($shortcut_set, $account) {
  */
 function shortcut_set_unassign_user($account) {
   return (bool) \Drupal::entityManager()
-    ->getStorageController('shortcut_set')
+    ->getStorage('shortcut_set')
     ->unassignUser($account);
 }
 
@@ -207,7 +207,7 @@ function shortcut_current_displayed_set($account = NULL) {
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
   $shortcut_set_name = \Drupal::entityManager()
-    ->getStorageController('shortcut_set')
+    ->getStorage('shortcut_set')
     ->getAssignedToUser($account);
   if ($shortcut_set_name) {
     $shortcut_set = shortcut_set_load($shortcut_set_name);
@@ -312,7 +312,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
     $shortcut_set = shortcut_current_displayed_set();
   }
 
-  $shortcuts = \Drupal::entityManager()->getStorageController('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
+  $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
   foreach ($shortcuts as $shortcut) {
     $links[] = array(
       'title' => $shortcut->label(),
@@ -375,7 +375,7 @@ function shortcut_preprocess_page(&$variables) {
     $shortcut_set = shortcut_current_displayed_set();
 
     // Check if $link is already a shortcut and set $link_mode accordingly.
-    $shortcuts = \Drupal::entityManager()->getStorageController('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
+    $shortcuts = \Drupal::entityManager()->getStorage('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
     foreach ($shortcuts as $shortcut) {
       if ($shortcut->getRouteName() == $url->getRouteName() && $shortcut->getRouteParams() == $url->getRouteParameters()) {
         $shortcut_id = $shortcut->id();

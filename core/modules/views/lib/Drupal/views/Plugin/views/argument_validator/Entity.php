@@ -173,7 +173,7 @@ class Entity extends ArgumentValidatorPluginBase {
       return FALSE;
     }
 
-    $entities = $this->entityManager->getStorageController($entity_type)->loadMultiple($ids);
+    $entities = $this->entityManager->getStorage($entity_type)->loadMultiple($ids);
     // Validate each id => entity. If any fails break out and return false.
     foreach ($ids as $id) {
       // There is no entity for this ID.

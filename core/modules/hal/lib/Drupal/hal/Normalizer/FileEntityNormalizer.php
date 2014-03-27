@@ -71,7 +71,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
     $path = 'temporary://' . drupal_basename($data['uri'][0]['value']);
     $data['uri'] = file_unmanaged_save_data($file_data, $path);
 
-    return $this->entityManager->getStorageController('file')->create($data);
+    return $this->entityManager->getStorage('file')->create($data);
   }
 
 }

@@ -8,7 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Password\PasswordInterface;
 
 /**
@@ -19,7 +19,7 @@ class UserAuth implements UserAuthInterface {
   /**
    * The user storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $storage;
 
@@ -33,13 +33,13 @@ class UserAuth implements UserAuthInterface {
   /**
    * Constructs a UserAuth object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The user storage.
    * @param \Drupal\Core\Password\PasswordInterface $password_checker
    *   The password service.
    */
   public function __construct(EntityManagerInterface $entity_manager, PasswordInterface $password_checker) {
-    $this->storage = $entity_manager->getStorageController('user');
+    $this->storage = $entity_manager->getStorage('user');
     $this->passwordChecker = $password_checker;
   }
 

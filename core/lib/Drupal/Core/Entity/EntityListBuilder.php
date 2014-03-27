@@ -18,9 +18,9 @@ use Drupal\Component\Utility\String;
 class EntityListBuilder extends EntityControllerBase implements EntityListBuilderInterface, EntityControllerInterface {
 
   /**
-   * The entity storage controller class.
+   * The entity storage class.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $storage;
 
@@ -44,7 +44,7 @@ class EntityListBuilder extends EntityControllerBase implements EntityListBuilde
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorageController($entity_type->id())
+      $container->get('entity.manager')->getStorage($entity_type->id())
     );
   }
 
@@ -53,10 +53,10 @@ class EntityListBuilder extends EntityControllerBase implements EntityListBuilde
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
-   *   The entity storage controller class.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage class.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage) {
     $this->entityTypeId = $entity_type->id();
     $this->storage = $storage;
     $this->entityType = $entity_type;
@@ -65,7 +65,7 @@ class EntityListBuilder extends EntityControllerBase implements EntityListBuilde
   /**
    * {@inheritdoc}
    */
-  public function getStorageController() {
+  public function getStorage() {
     return $this->storage;
   }
 

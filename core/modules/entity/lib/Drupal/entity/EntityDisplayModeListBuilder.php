@@ -9,7 +9,7 @@ namespace Drupal\entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,12 +32,12 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
-   *   The entity storage controller class.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage class.
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
    *   List of all entity types.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, array $entity_types) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, array $entity_types) {
     parent::__construct($entity_type, $storage);
 
     $this->entityTypes = $entity_types;
@@ -50,7 +50,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
     $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_type,
-      $entity_manager->getStorageController($entity_type->id()),
+      $entity_manager->getStorage($entity_type->id()),
       $entity_manager->getDefinitions()
     );
   }

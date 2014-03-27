@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ShortcutAccessController extends EntityAccessController implements EntityControllerInterface {
 
   /**
-   * The shortcut_set storage controller.
+   * The shortcut_set storage.
    *
-   * @var \Drupal\shortcut\ShortcutSetStorageController
+   * @var \Drupal\shortcut\ShortcutSetStorage
    */
   protected $shortcutSetStorage;
 
@@ -31,10 +31,10 @@ class ShortcutAccessController extends EntityAccessController implements EntityC
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\shortcut\ShortcutSetStorageController $shortcut_set_storage
-   *   The shortcut_set storage controller.
+   * @param \Drupal\shortcut\ShortcutSetStorage $shortcut_set_storage
+   *   The shortcut_set storage.
    */
-  public function __construct(EntityTypeInterface $entity_type, ShortcutSetStorageController $shortcut_set_storage) {
+  public function __construct(EntityTypeInterface $entity_type, ShortcutSetStorage $shortcut_set_storage) {
     parent::__construct($entity_type);
     $this->shortcutSetStorage = $shortcut_set_storage;
   }
@@ -45,7 +45,7 @@ class ShortcutAccessController extends EntityAccessController implements EntityC
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorageController('shortcut_set')
+      $container->get('entity.manager')->getStorage('shortcut_set')
     );
   }
 

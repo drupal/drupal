@@ -17,7 +17,7 @@ use Drupal\field\FieldException;
  * entities as well as deleting entire fields or field instances in a single
  * operation.
  *
- * When a single entity is deleted, the Entity storage controller performs the
+ * When a single entity is deleted, the Entity storage performs the
  * following operations:
  * - Invoking the FieldItemListInterface delete() method for each field on the
  *   entity. A file field type might use this method to delete uploaded files
@@ -103,7 +103,7 @@ function field_purge_batch($batch_size) {
         $ids->revision_id = $revision_id;
         $ids->entity_id = $entity_id;
         $entity = _field_create_entity_from_ids($ids);
-        \Drupal::entityManager()->getStorageController($entity_type)->onFieldItemsPurge($entity, $instance);
+        \Drupal::entityManager()->getStorage($entity_type)->onFieldItemsPurge($entity, $instance);
       }
     }
     else {
@@ -174,7 +174,7 @@ function field_purge_field($field) {
   $state->set('field.field.deleted', $deleted_fields);
 
   // Notify the storage layer.
-  \Drupal::entityManager()->getStorageController($field->entity_type)->onFieldPurge($field);
+  \Drupal::entityManager()->getStorage($field->entity_type)->onFieldPurge($field);
 
   // Clear the cache.
   field_info_cache_clear();

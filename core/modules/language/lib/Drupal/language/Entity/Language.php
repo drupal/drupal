@@ -8,7 +8,7 @@
 namespace Drupal\language\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\LanguageInterface;
 
@@ -80,8 +80,8 @@ class Language extends ConfigEntityBase implements LanguageInterface {
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
     // Languages are picked from a predefined list which is given in English.
     // For the uncommon case of custom languages the label should be given in
     // English.
@@ -93,7 +93,7 @@ class Language extends ConfigEntityBase implements LanguageInterface {
    *
    * @throws \RuntimeException
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
     $default_language = \Drupal::service('language.default')->get();
     foreach ($entities as $entity) {
       if ($entity->id() == $default_language->id && !$entity->isUninstalling()) {

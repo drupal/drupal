@@ -7,8 +7,8 @@
 
 namespace Drupal\aggregator\Plugin\Block;
 
-use Drupal\aggregator\FeedStorageControllerInterface;
-use Drupal\aggregator\ItemStorageControllerInterface;
+use Drupal\aggregator\FeedStorageInterface;
+use Drupal\aggregator\ItemStorageInterface;
 use Drupal\block\BlockBase;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -27,16 +27,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity storage controller for feeds.
+   * The entity storage for feeds.
    *
-   * @var \Drupal\aggregator\FeedStorageControllerInterface
+   * @var \Drupal\aggregator\FeedStorageInterface
    */
   protected $feedStorage;
 
   /**
-   * The entity storage controller for items.
+   * The entity storage for items.
    *
-   * @var \Drupal\aggregator\ItemStorageControllerInterface
+   * @var \Drupal\aggregator\ItemStorageInterface
    */
   protected $itemStorage;
 
@@ -56,14 +56,14 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\aggregator\FeedStorageControllerInterface $feed_storage
-   *   The entity storage controller for feeds.
-   * @param \Drupal\aggregator\ItemStorageControllerInterface $item_storage
-   *   The entity storage controller for feed items.
+   * @param \Drupal\aggregator\FeedStorageInterface $feed_storage
+   *   The entity storage for feeds.
+   * @param \Drupal\aggregator\ItemStorageInterface $item_storage
+   *   The entity storage for feed items.
    * @param \Drupal\Core\Entity\Query\QueryInterface $item_query
    *   The entity query object for feed items.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, FeedStorageControllerInterface $feed_storage, ItemStorageControllerInterface $item_storage, QueryInterface $item_query) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, FeedStorageInterface $feed_storage, ItemStorageInterface $item_storage, QueryInterface $item_query) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->feedStorage = $feed_storage;
     $this->itemStorage = $item_storage;
@@ -79,8 +79,8 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorageController('aggregator_feed'),
-      $container->get('entity.manager')->getStorageController('aggregator_item'),
+      $container->get('entity.manager')->getStorage('aggregator_feed'),
+      $container->get('entity.manager')->getStorage('aggregator_item'),
       $container->get('entity.query')->get('aggregator_item')
     );
   }

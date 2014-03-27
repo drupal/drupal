@@ -127,7 +127,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $this->assertIdentical($loaded_order, $expected_order);
 
     // Test loading vocabularies by their properties.
-    $controller = $this->container->get('entity.manager')->getStorageController('taxonomy_vocabulary');
+    $controller = $this->container->get('entity.manager')->getStorage('taxonomy_vocabulary');
     // Fetch vocabulary 1 by name.
     $vocabulary = current($controller->loadByProperties(array('name' => $vocabulary1->name)));
     $this->assertEqual($vocabulary->id(), $vocabulary1->id(), 'Vocabulary loaded successfully by name.');

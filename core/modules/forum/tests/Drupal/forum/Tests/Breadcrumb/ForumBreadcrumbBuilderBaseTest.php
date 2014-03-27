@@ -94,8 +94,8 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
       ->method('label')
       ->will($this->returnValue('Fora_is_the_plural_of_forum'));
 
-    $vocab_storage_controller = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
-    $vocab_storage_controller->expects($this->any())
+    $vocab_storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $vocab_storage->expects($this->any())
       ->method('load')
       ->will($this->returnValueMap(array(
         array('forums', $vocab_item),
@@ -105,9 +105,9 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $entity_manager->expects($this->any())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->will($this->returnValueMap(array(
-        array('taxonomy_vocabulary', $vocab_storage_controller),
+        array('taxonomy_vocabulary', $vocab_storage),
       )));
 
     $config_factory = $this->getConfigFactoryStub(

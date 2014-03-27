@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Query;
 
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
@@ -159,15 +159,15 @@ interface QueryInterface extends AlterableInterface {
    * @TODO: Once revision tables have been cleaned up, revisit this.
    *
    * @param $age
-   *   - EntityStorageControllerInterface::FIELD_LOAD_CURRENT (default): Query
+   *   - EntityStorageInterface::FIELD_LOAD_CURRENT (default): Query
    *     the most recent revisions only,
-   *   - EntityStorageControllerInterface::FIELD_LOAD_REVISION: Query all
+   *   - EntityStorageInterface::FIELD_LOAD_REVISION: Query all
    *     revisions.
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
-  public function age($age = EntityStorageControllerInterface::FIELD_LOAD_CURRENT);
+  public function age($age = EntityStorageInterface::FIELD_LOAD_CURRENT);
 
   /**
    * Execute the query.

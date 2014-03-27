@@ -17,7 +17,7 @@ class ContentEntityType extends EntityType {
    */
   public function getControllerClasses() {
     return parent::getControllerClasses() + array(
-      'storage' => 'Drupal\Core\Entity\FieldableDatabaseStorageController',
+      'storage' => 'Drupal\Core\Entity\ContentEntityDatabaseStorage',
     );
   }
 

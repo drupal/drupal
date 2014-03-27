@@ -82,7 +82,7 @@ class CustomBlockListTest extends WebTestBase {
     // Edit the entity using the operations link.
     $blocks = $this->container
       ->get('entity.manager')
-      ->getStorageController('custom_block')
+      ->getStorage('custom_block')
       ->loadByProperties(array('info' => $label));
     $block = reset($blocks);
     if (!empty($block)) {

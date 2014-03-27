@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Query;
 
 use Drupal\Core\Database\Query\PagerSelectExtender;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
@@ -110,12 +110,12 @@ abstract class QueryBase implements QueryInterface {
   /**
    * Flag indicating whether to query the current revision or all revisions.
    *
-   * Can be either EntityStorageControllerInterface::FIELD_LOAD_CURRENT or
-   * EntityStorageControllerInterface::FIELD_LOAD_REVISION.
+   * Can be either EntityStorageInterface::FIELD_LOAD_CURRENT or
+   * EntityStorageInterface::FIELD_LOAD_REVISION.
    *
    * @var string
    */
-  protected $age = EntityStorageControllerInterface::FIELD_LOAD_CURRENT;
+  protected $age = EntityStorageInterface::FIELD_LOAD_CURRENT;
 
   /**
    * The query pager data.
@@ -259,7 +259,7 @@ abstract class QueryBase implements QueryInterface {
   /**
    * Implements \Drupal\Core\Entity\Query\QueryInterface::age().
    */
-  public function age($age = EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
+  public function age($age = EntityStorageInterface::FIELD_LOAD_CURRENT) {
     $this->age = $age;
     return $this;
   }

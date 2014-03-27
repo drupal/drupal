@@ -11,7 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Symfony\Component\DependencyInjection\Container;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\aggregator\FeedInterface;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\aggregator\FeedInterface;
  *   id = "aggregator_feed",
  *   label = @Translation("Aggregator feed"),
  *   controllers = {
- *     "storage" = "Drupal\aggregator\FeedStorageController",
+ *     "storage" = "Drupal\aggregator\FeedStorage",
  *     "view_builder" = "Drupal\aggregator\FeedViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\aggregator\FeedFormController",
@@ -92,7 +92,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
     $values += array(
       'link' => '',
       'description' => '',
@@ -103,7 +103,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
     foreach ($entities as $entity) {
       // Notify processors to delete stored items.
       \Drupal::service('aggregator.items.importer')->delete($entity);
@@ -113,7 +113,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
     if (\Drupal::moduleHandler()->moduleExists('block')) {
       // Make sure there are no active blocks for these feeds.
       $ids = \Drupal::entityQuery('block')
@@ -121,7 +121,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
         ->condition('settings.feed', array_keys($entities))
         ->execute();
       if ($ids) {
-        $block_storage = \Drupal::entityManager()->getStorageController('block');
+        $block_storage = \Drupal::entityManager()->getStorage('block');
         $block_storage->delete($block_storage->loadMultiple($ids));
       }
     }

@@ -76,7 +76,7 @@ class ForumFormController extends TermFormController {
    */
   public function save(array $form, array &$form_state) {
     $term = $this->entity;
-    $term_storage = $this->entityManager->getStorageController('taxonomy_term');
+    $term_storage = $this->entityManager->getStorage('taxonomy_term');
     $status = $term_storage->save($term);
 
     switch ($status) {

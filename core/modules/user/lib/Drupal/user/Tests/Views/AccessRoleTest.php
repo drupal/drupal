@@ -39,7 +39,7 @@ class AccessRoleTest extends AccessTestBase {
    */
   function testAccessRole() {
     /** @var \Drupal\views\ViewStorageInterface $view */
-    $view = \Drupal::entityManager()->getStorageController('view')->load('test_access_role');
+    $view = \Drupal::entityManager()->getStorage('view')->load('test_access_role');
     $display = &$view->getDisplay('default');
     $display['display_options']['access']['options']['role'] = array(
       $this->normalRole => $this->normalRole,

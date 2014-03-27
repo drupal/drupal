@@ -26,7 +26,7 @@ class ConfigEntityType extends EntityType {
    */
   public function getControllerClasses() {
     return parent::getControllerClasses() + array(
-      'storage' => 'Drupal\Core\Config\Entity\ConfigStorageController',
+      'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',
     );
   }
 

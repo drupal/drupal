@@ -17,11 +17,11 @@ use Drupal\views\Views;
 class FrontPageTest extends ViewTestBase {
 
   /**
-   * The entity storage controller for nodes.
+   * The entity storage for nodes.
    *
-   * @var \Drupal\node\NodeStorageController
+   * @var \Drupal\node\NodeStorage
    */
-  protected $nodeStorageController;
+  protected $nodeStorage;
 
   /**
    * Modules to enable.
@@ -41,7 +41,7 @@ class FrontPageTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->nodeStorageController = $this->container->get('entity.manager')->getStorageController('node');
+    $this->nodeStorage = $this->container->get('entity.manager')->getStorage('node');
   }
 
   /**
@@ -76,14 +76,14 @@ class FrontPageTest extends ViewTestBase {
       // Test the sticky order.
       if ($i == 5) {
         $values['sticky'] = TRUE;
-        $node = $this->nodeStorageController->create($values);
+        $node = $this->nodeStorage->create($values);
         $node->save();
         // Put the sticky on at the front.
         array_unshift($expected, array('nid' => $node->id()));
       }
       else {
         $values['sticky'] = FALSE;
-        $node = $this->nodeStorageController->create($values);
+        $node = $this->nodeStorage->create($values);
         $node->save();
         array_push($expected, array('nid' => $node->id()));
       }
@@ -98,14 +98,14 @@ class FrontPageTest extends ViewTestBase {
     $values['title'] = $this->randomName();
     $values['status'] = TRUE;
     $values['promote'] = FALSE;
-    $node = $this->nodeStorageController->create($values);
+    $node = $this->nodeStorage->create($values);
     $node->save();
     $not_expected_nids[] = $node->id();
 
     $values['promote'] = TRUE;
     $values['status'] = FALSE;
     $values['title'] = $this->randomName();
-    $node = $this->nodeStorageController->create($values);
+    $node = $this->nodeStorage->create($values);
     $node->save();
     $not_expected_nids[] = $node->id();
 
@@ -113,7 +113,7 @@ class FrontPageTest extends ViewTestBase {
     $values['sticky'] = TRUE;
     $values['status'] = FALSE;
     $values['title'] = $this->randomName();
-    $node = $this->nodeStorageController->create($values);
+    $node = $this->nodeStorage->create($values);
     $node->save();
     $not_expected_nids[] = $node->id();
 

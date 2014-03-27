@@ -209,7 +209,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file exists in the database.
    */
   function assertFileEntryExists($file, $message = NULL) {
-    $this->container->get('entity.manager')->getStorageController('file')->resetCache();
+    $this->container->get('entity.manager')->getStorage('file')->resetCache();
     $db_file = file_load($file->id());
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
     $this->assertEqual($db_file->getFileUri(), $file->getFileUri(), $message);
@@ -227,7 +227,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file does not exist in the database.
    */
   function assertFileEntryNotExists($file, $message) {
-    $this->container->get('entity.manager')->getStorageController('file')->resetCache();
+    $this->container->get('entity.manager')->getStorage('file')->resetCache();
     $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
     $this->assertFalse(file_load($file->id()), $message);
   }

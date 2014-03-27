@@ -43,9 +43,9 @@ class RolesRidTest extends UnitTestCase {
       'label' => 'test <strong>rid 2</strong>',
     ), 'user_role');
 
-    // Creates a stub entity storage controller;
-    $role_storage_controller = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityStorageControllerInterface');
-    $role_storage_controller->expects($this->any())
+    // Creates a stub entity storage;
+    $role_storage = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityStorageInterface');
+    $role_storage->expects($this->any())
       ->method('loadMultiple')
       ->will($this->returnValueMap(array(
         array(array(), array()),
@@ -67,9 +67,9 @@ class RolesRidTest extends UnitTestCase {
 
     $entity_manager
       ->expects($this->once())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with($this->equalTo('user_role'))
-      ->will($this->returnValue($role_storage_controller));
+      ->will($this->returnValue($role_storage));
 
     // @todo \Drupal\Core\Entity\Entity::entityType() uses a global call to
     //   entity_get_info(), which in turn wraps \Drupal::entityManager(). Set

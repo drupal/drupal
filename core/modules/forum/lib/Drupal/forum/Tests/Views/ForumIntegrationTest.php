@@ -51,10 +51,10 @@ class ForumIntegrationTest extends ViewTestBase {
   public function testForumIntegration() {
     // Create a forum.
     $entity_manager = $this->container->get('entity.manager');
-    $term = $entity_manager->getStorageController('taxonomy_term')->create(array('vid' => 'forums'));
+    $term = $entity_manager->getStorage('taxonomy_term')->create(array('vid' => 'forums'));
     $term->save();
 
-    $comment_storage_controller = $entity_manager->getStorageController('comment');
+    $comment_storage = $entity_manager->getStorage('comment');
 
     // Create some nodes which are part of this forum with some comments.
     $nodes = array();
@@ -69,7 +69,7 @@ class ForumIntegrationTest extends ViewTestBase {
     $comments = array();
     foreach ($nodes as $index => $node) {
       for ($i = 0; $i <= $index; $i++) {
-        $comment = $comment_storage_controller->create(array('entity_type' => 'node', 'entity_id' => $node->id(), 'field_name' => 'comment_forum'));
+        $comment = $comment_storage->create(array('entity_type' => 'node', 'entity_id' => $node->id(), 'field_name' => 'comment_forum'));
         $comment->save();
         $comments[$comment->get('entity_id')->target_id][$comment->id()] = $comment;
       }

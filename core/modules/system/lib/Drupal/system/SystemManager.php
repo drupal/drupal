@@ -36,7 +36,7 @@ class SystemManager {
   /**
    * The menu link storage.
    *
-   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
+   * @var \Drupal\menu_link\MenuLinkStorageInterface
    */
   protected $menuLinkStorage;
 
@@ -82,7 +82,7 @@ class SystemManager {
   public function __construct(ModuleHandlerInterface $module_handler, Connection $database, EntityManagerInterface $entity_manager) {
     $this->moduleHandler = $module_handler;
     $this->database = $database;
-    $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');
+    $this->menuLinkStorage = $entity_manager->getStorage('menu_link');
   }
 
   /**

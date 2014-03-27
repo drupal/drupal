@@ -48,7 +48,7 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
    */
   public function testDependencyMangement() {
     $config_manager = \Drupal::service('config.manager');
-    $storage = $this->container->get('entity.manager')->getStorageController('config_test');
+    $storage = $this->container->get('entity.manager')->getStorage('config_test');
     // Test dependencies between modules.
     $entity1 = $storage->create(
       array(
@@ -118,7 +118,7 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
 
     // Create a configuration entity of a different type with the same ID as one
     // of the entities already created.
-    $alt_storage = $this->container->get('entity.manager')->getStorageController('config_query_test');
+    $alt_storage = $this->container->get('entity.manager')->getStorage('config_query_test');
     $alt_storage->create(array('id' => 'entity1', 'test_dependencies' => array('entity' => array($entity1->getConfigDependencyName()))))->save();
     $alt_storage->create(array('id' => 'entity2', 'test_dependencies' => array('module' => array('views'))))->save();
 

@@ -8,7 +8,7 @@
 namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\CommentStorageControllerInterface;
+use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\Date;
@@ -32,7 +32,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * The comment storage.
    *
-   * @var \Drupal\comment\CommentStorageControllerInterface
+   * @var \Drupal\comment\CommentStorageInterface
    */
   protected $commentStorage;
 
@@ -55,14 +55,14 @@ class CommentAdminOverview extends FormBase {
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager service.
-   * @param \Drupal\comment\CommentStorageControllerInterface $comment_storage
+   * @param \Drupal\comment\CommentStorageInterface $comment_storage
    *   The comment storage.
    * @param \Drupal\Core\Datetime\Date $date
    *   The date service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(EntityManager $entity_manager, CommentStorageControllerInterface $comment_storage, Date $date, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityManager $entity_manager, CommentStorageInterface $comment_storage, Date $date, ModuleHandlerInterface $module_handler) {
     $this->entityManager = $entity_manager;
     $this->commentStorage = $comment_storage;
     $this->date = $date;
@@ -75,7 +75,7 @@ class CommentAdminOverview extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('entity.manager')->getStorageController('comment'),
+      $container->get('entity.manager')->getStorage('comment'),
       $container->get('date'),
       $container->get('module_handler')
     );
@@ -176,7 +176,7 @@ class CommentAdminOverview extends FormBase {
     }
 
     foreach ($commented_entity_ids as $entity_type => $ids) {
-      $commented_entities[$entity_type] = $this->entityManager->getStorageController($entity_type)->loadMultiple($ids);
+      $commented_entities[$entity_type] = $this->entityManager->getStorage($entity_type)->loadMultiple($ids);
     }
 
     foreach ($comments as $comment) {

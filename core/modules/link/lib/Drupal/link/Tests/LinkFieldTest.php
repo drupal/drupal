@@ -513,7 +513,7 @@ class LinkFieldTest extends WebTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
-      $this->container->get('entity.manager')->getStorageController('entity_test')->resetCache(array($id));
+      $this->container->get('entity.manager')->getStorage('entity_test')->resetCache(array($id));
     }
     $entity = entity_load('entity_test', $id);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), $view_mode);

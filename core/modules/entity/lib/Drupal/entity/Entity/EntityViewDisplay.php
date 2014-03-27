@@ -20,7 +20,7 @@ use Drupal\entity\EntityDisplayBase;
  *   id = "entity_view_display",
  *   label = @Translation("Entity view display"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigEntityStorage"
  *   },
  *   config_prefix = "view_display",
  *   entity_keys = {
@@ -106,7 +106,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     }
 
     // Load the selected displays.
-    $storage = \Drupal::entityManager()->getStorageController('entity_view_display');
+    $storage = \Drupal::entityManager()->getStorage('entity_view_display');
     $displays = $storage->loadMultiple($load_ids);
 
     $displays_by_bundle = array();

@@ -52,7 +52,7 @@ class MenuRouterRebuildTest extends WebTestBase {
     \Drupal::service('router.builder')->rebuild();
 
     // Check that the language context was not used for building the menu item.
-    $menu_items = \Drupal::entityManager()->getStorageController('menu_link')->loadByProperties(array('route_name' => 'menu_test.context'));
+    $menu_items = \Drupal::entityManager()->getStorage('menu_link')->loadByProperties(array('route_name' => 'menu_test.context'));
     $menu_item = reset($menu_items);
     $this->assertTrue($menu_item['link_title'] == 'English', 'Config context overrides are ignored when rebuilding menu router items.');
   }

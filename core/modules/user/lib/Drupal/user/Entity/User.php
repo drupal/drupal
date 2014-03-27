@@ -8,7 +8,7 @@
 namespace Drupal\user\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
@@ -22,7 +22,7 @@ use Drupal\user\UserInterface;
  *   id = "user",
  *   label = @Translation("User"),
  *   controllers = {
- *     "storage" = "Drupal\user\UserStorageController",
+ *     "storage" = "Drupal\user\UserStorage",
  *     "access" = "Drupal\user\UserAccessController",
  *     "list_builder" = "Drupal\user\UserListBuilder",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
@@ -77,8 +77,8 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
-    parent::preCreate($storage_controller, $values);
+  static function preCreate(EntityStorageInterface $storage, array &$values) {
+    parent::preCreate($storage, $values);
 
     // Users always have the authenticated user role.
     $values['roles'][] = DRUPAL_AUTHENTICATED_RID;
@@ -87,8 +87,8 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
 
     // Update the user password if it has changed.
     if ($this->isNew() || ($this->pass->value && $this->pass->value != $this->original->pass->value)) {
@@ -119,8 +119,8 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::postSave($storage_controller, $update);
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
 
     if ($update) {
       // If the password has been changed, delete all open sessions for the
@@ -134,8 +134,8 @@ class User extends ContentEntityBase implements UserInterface {
 
       // Update user roles if changed.
       if ($this->getRoles() != $this->original->getRoles()) {
-        $storage_controller->deleteUserRoles(array($this->id()));
-        $storage_controller->saveRoles($this);
+        $storage->deleteUserRoles(array($this->id()));
+        $storage->saveRoles($this);
       }
 
       // If the user was blocked, delete the user's sessions to force a logout.
@@ -153,7 +153,7 @@ class User extends ContentEntityBase implements UserInterface {
     else {
       // Save user roles.
       if (count($this->getRoles()) > 1) {
-        $storage_controller->saveRoles($this);
+        $storage->saveRoles($this);
       }
     }
   }
@@ -161,12 +161,12 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    parent::postDelete($storage_controller, $entities);
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
 
     $uids = array_keys($entities);
     \Drupal::service('user.data')->delete(NULL, $uids);
-    $storage_controller->deleteUserRoles($uids);
+    $storage->deleteUserRoles($uids);
   }
 
   /**
@@ -247,7 +247,7 @@ class User extends ContentEntityBase implements UserInterface {
       return TRUE;
     }
 
-    $roles = \Drupal::entityManager()->getStorageController('user_role')->loadMultiple($this->getRoles());
+    $roles = \Drupal::entityManager()->getStorage('user_role')->loadMultiple($this->getRoles());
 
     foreach ($roles as $role) {
       if ($role->hasPermission($permission)) {

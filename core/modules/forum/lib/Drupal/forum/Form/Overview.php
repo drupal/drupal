@@ -62,7 +62,7 @@ class Overview extends OverviewTerms {
   public function buildForm(array $form, array &$form_state) {
     $forum_config = $this->config('forum.settings');
     $vid = $forum_config->get('vocabulary');
-    $vocabulary = $this->entityManager->getStorageController('taxonomy_vocabulary')->load($vid);
+    $vocabulary = $this->entityManager->getStorage('taxonomy_vocabulary')->load($vid);
     if (!$vocabulary) {
       throw new NotFoundHttpException();
     }

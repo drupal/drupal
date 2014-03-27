@@ -26,7 +26,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * The mocked view entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $viewStorage;
 
@@ -53,7 +53,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   }
 
   protected function setUp() {
-    $this->viewStorage = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
+    $this->viewStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
     $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
       ->disableOriginalConstructor()
       ->getMock();

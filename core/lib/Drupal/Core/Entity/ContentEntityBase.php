@@ -211,7 +211,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
-  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+  public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
   }
 
   /**
@@ -695,7 +695,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $entity_type = $this->getEntityType();
     $default_values = array($entity_type->getKey('bundle') => $this->bundle, 'langcode' => $langcode);
     $entity = $this->entityManager()
-      ->getStorageController($this->getEntityTypeId())
+      ->getStorage($this->getEntityTypeId())
       ->create($default_values);
 
     foreach ($entity as $name => $field) {

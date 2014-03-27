@@ -10,7 +10,7 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests \Drupal\user\UserStorageController::save() behavior.
+ * Tests \Drupal\user\UserStorage::save() behavior.
  */
 class UserSaveTest extends WebTestBase {
 

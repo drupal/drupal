@@ -25,7 +25,7 @@ class CommentNameConstraintValidator extends ConstraintValidator {
       // taken by a registered user.
       if ($field_item->getEntity()->getOwnerId() === 0) {
         // @todo Properly inject dependency https://drupal.org/node/2197029
-        $users = \Drupal::entityManager()->getStorageController('user')->loadByProperties(array('name' => $author_name));
+        $users = \Drupal::entityManager()->getStorage('user')->loadByProperties(array('name' => $author_name));
         if (!empty($users)) {
           $this->context->addViolation($constraint->message, array('%name' => $author_name));
         }

@@ -1734,15 +1734,15 @@ function system_get_module_admin_tasks($module, $info) {
   if (\Drupal::moduleHandler()->implementsHook($module, 'permission')) {
     /** @var \Drupal\Core\Access\AccessManager $access_manager */
     $access_manager = \Drupal::service('access_manager');
-    /** @var \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage_controller */
-    $menu_link_storage_controller = \Drupal::entityManager()
-      ->getStorageController('menu_link');
+    /** @var \Drupal\menu_link\MenuLinkStorageInterface $menu_link_storage */
+    $menu_link_storage = \Drupal::entityManager()
+      ->getStorage('menu_link');
     if ($access_manager->checkNamedRoute('user.admin_permissions', array(), \Drupal::currentUser())) {
       $path = \Drupal::urlGenerator()
         ->getPathFromRoute('user.admin_permissions');
       $options = array();
       $options['fragment'] = 'module-' . $module;
-      $menu_link = $menu_link_storage_controller->create(array(
+      $menu_link = $menu_link_storage->create(array(
         'route_name' => 'user.admin_permissions',
         'link_path' => $path,
         'title' => t('Configure @module permissions', array('@module' => $info['name'])),

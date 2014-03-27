@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -249,7 +249,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     $this->assertResult();
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'merhaba')
-      ->age(EntityStorageControllerInterface::FIELD_LOAD_REVISION)
+      ->age(EntityStorageInterface::FIELD_LOAD_REVISION)
       ->sort('revision_id')
       ->execute();
     // Bit 2 needs to be set.
@@ -279,7 +279,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     $this->assertIdentical($results, array_slice($assert, 4, 8, TRUE));
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
-      ->age(EntityStorageControllerInterface::FIELD_LOAD_REVISION)
+      ->age(EntityStorageInterface::FIELD_LOAD_REVISION)
       ->sort('id')
       ->execute();
     // Now we get everything.

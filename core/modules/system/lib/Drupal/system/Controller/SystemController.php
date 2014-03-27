@@ -108,7 +108,7 @@ class SystemController extends ControllerBase {
       ->condition('link_path', 'admin/config')
       ->condition('module', 'system');
     $result = $query->execute();
-    $menu_link_storage = $this->entityManager()->getStorageController('menu_link');
+    $menu_link_storage = $this->entityManager()->getStorage('menu_link');
     if ($system_link = $menu_link_storage->loadMultiple($result)) {
       $system_link = reset($system_link);
       $query = $this->queryFactory->get('menu_link')

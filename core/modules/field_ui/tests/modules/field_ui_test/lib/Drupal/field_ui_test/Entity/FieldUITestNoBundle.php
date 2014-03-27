@@ -16,7 +16,7 @@ use Drupal\Core\Entity\Entity;
  *   id = "field_ui_test_no_bundle",
  *   label = @Translation("Test Field UI entity, no bundle"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Entity\DatabaseStorageController"
+ *     "storage" = "Drupal\Core\Entity\EntityDatabaseStorage"
  *   },
  *   fieldable = TRUE
  * )

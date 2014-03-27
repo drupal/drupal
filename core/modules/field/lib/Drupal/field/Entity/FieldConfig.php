@@ -10,7 +10,7 @@ namespace Drupal\field\Entity;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\field\FieldException;
@@ -23,7 +23,7 @@ use Drupal\field\FieldConfigInterface;
  *   id = "field_config",
  *   label = @Translation("Field"),
  *   controllers = {
- *     "storage" = "Drupal\field\FieldConfigStorageController"
+ *     "storage" = "Drupal\field\FieldConfigStorage"
  *   },
  *   config_prefix = "field",
  *   entity_keys = {
@@ -269,15 +269,15 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures at the configuration storage level.
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
+  public function preSave(EntityStorageInterface $storage) {
     // Clear the derived data about the field.
     unset($this->schema);
 
     if ($this->isNew()) {
-      $this->preSaveNew($storage_controller);
+      $this->preSaveNew($storage);
     }
     else {
-      $this->preSaveUpdated($storage_controller);
+      $this->preSaveUpdated($storage);
     }
     if (!$this->isSyncing()) {
       // Ensure the correct dependencies are present.
@@ -288,12 +288,12 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * Prepares saving a new field definition.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage.
    *
    * @throws \Drupal\field\FieldException If the field definition is invalid.
    */
-   protected function preSaveNew(EntityStorageControllerInterface $storage_controller) {
+   protected function preSaveNew(EntityStorageInterface $storage) {
     $entity_manager = \Drupal::entityManager();
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
@@ -329,8 +329,8 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     // definition is passed to the various hooks and written to config.
      $this->settings += $field_type_manager->getDefaultSettings($this->type);
 
-    // Notify the entity storage controller.
-    $entity_manager->getStorageController($this->entity_type)->onFieldCreate($this);
+    // Notify the entity storage.
+    $entity_manager->getStorage($this->entity_type)->onFieldCreate($this);
   }
 
   /**
@@ -346,10 +346,10 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * Prepares saving an updated field definition.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage.
    */
-  protected function preSaveUpdated(EntityStorageControllerInterface $storage_controller) {
+  protected function preSaveUpdated(EntityStorageInterface $storage) {
     $module_handler = \Drupal::moduleHandler();
     $entity_manager = \Drupal::entityManager();
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
@@ -370,16 +370,16 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     // invokes hook_field_config_update_forbid().
     $module_handler->invokeAll('field_config_update_forbid', array($this, $this->original));
 
-    // Notify the storage controller. The controller can reject the definition
+    // Notify the storage. The controller can reject the definition
     // update as invalid by raising an exception, which stops execution before
     // the definition is written to config.
-    $entity_manager->getStorageController($this->entity_type)->onFieldUpdate($this);
+    $entity_manager->getStorage($this->entity_type)->onFieldUpdate($this);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Clear the cache.
     field_cache_clear();
 
@@ -396,9 +396,9 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $fields) {
+  public static function preDelete(EntityStorageInterface $storage, array $fields) {
     $state = \Drupal::state();
-    $instance_controller = \Drupal::entityManager()->getStorageController('field_instance_config');
+    $instance_storage = \Drupal::entityManager()->getStorage('field_instance_config');
 
     // Delete instances first. Note: when deleting a field through
     // FieldInstanceConfig::postDelete(), the instances have been deleted already, so
@@ -412,12 +412,12 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
       }
     }
     if ($instance_ids) {
-      $instances = $instance_controller->loadMultiple($instance_ids);
+      $instances = $instance_storage->loadMultiple($instance_ids);
       // Tag the objects to preserve recursive deletion of the field.
       foreach ($instances as $instance) {
         $instance->noFieldDelete = TRUE;
       }
-      $instance_controller->delete($instances);
+      $instance_storage->delete($instances);
     }
 
     // Keep the field definitions in the state storage so we can use them later
@@ -438,11 +438,11 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $fields) {
+  public static function postDelete(EntityStorageInterface $storage, array $fields) {
     // Notify the storage.
     foreach ($fields as $field) {
       if (!$field->deleted) {
-        \Drupal::entityManager()->getStorageController($field->entity_type)->onFieldDelete($field);
+        \Drupal::entityManager()->getStorage($field->entity_type)->onFieldDelete($field);
       }
     }
 

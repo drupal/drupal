@@ -91,7 +91,7 @@ class UserSessionTest extends UnitTestCase {
         array('last example permission', FALSE),
       )));
 
-    $role_storage = $this->getMockBuilder('Drupal\user\RoleStorageController')
+    $role_storage = $this->getMockBuilder('Drupal\user\RoleStorage')
       ->disableOriginalConstructor()
       ->setMethods(array('loadMultiple'))
       ->getMock();
@@ -107,7 +107,7 @@ class UserSessionTest extends UnitTestCase {
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->any())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with($this->equalTo('user_role'))
       ->will($this->returnValue($role_storage));
     $container = new ContainerBuilder();

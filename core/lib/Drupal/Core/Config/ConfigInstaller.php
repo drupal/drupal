@@ -127,7 +127,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if ($entity_type = $this->configManager->getEntityTypeIdByName($name)) {
           $entity_storage = $this->configManager
             ->getEntityManager()
-            ->getStorageController($entity_type);
+            ->getStorage($entity_type);
           // It is possible that secondary writes can occur during configuration
           // creation. Updates of such configuration are allowed.
           if ($this->activeStorage->exists($name)) {

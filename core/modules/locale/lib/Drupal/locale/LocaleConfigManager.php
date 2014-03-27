@@ -21,7 +21,7 @@ use Drupal\language\ConfigurableLanguageManagerInterface;
 class LocaleConfigManager extends TypedConfigManager {
 
   /**
-   * A storage controller instance for reading default configuration data.
+   * A storage instance for reading default configuration data.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
@@ -57,11 +57,11 @@ class LocaleConfigManager extends TypedConfigManager {
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $configStorage
-   *   The storage controller object to use for reading configuration data.
+   *   The storage object to use for reading configuration data.
    * @param \Drupal\Core\Config\StorageInterface $schemaStorage
-   *   The storage controller object to use for reading schema data.
+   *   The storage object to use for reading schema data.
    * @param \Drupal\Core\Config\StorageInterface $installStorage
-   *   The storage controller object to use for reading default configuration
+   *   The storage object to use for reading default configuration
    *   data.
    * @param \Drupal\locale\StringStorageInterface $localeStorage
    *   The locale storage to use for reading string translations.

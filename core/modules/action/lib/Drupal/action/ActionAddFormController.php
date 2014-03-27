@@ -9,7 +9,7 @@ namespace Drupal\action;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Action\ActionManager;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,13 +27,13 @@ class ActionAddFormController extends ActionFormControllerBase {
   /**
    * Constructs a new ActionAddFormController.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
-   *   The action storage controller.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The action storage.
    * @param \Drupal\Core\Action\ActionManager $action_manager
    *   The action plugin manager.
    */
-  public function __construct(EntityStorageControllerInterface $storage_controller, ActionManager $action_manager) {
-    parent::__construct($storage_controller);
+  public function __construct(EntityStorageInterface $storage, ActionManager $action_manager) {
+    parent::__construct($storage);
 
     $this->actionManager = $action_manager;
   }
@@ -43,7 +43,7 @@ class ActionAddFormController extends ActionFormControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('action'),
+      $container->get('entity.manager')->getStorage('action'),
       $container->get('plugin.manager.action')
     );
   }

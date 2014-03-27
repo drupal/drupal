@@ -24,11 +24,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Permissions extends PrerenderList {
 
   /**
-   * The role storage controller.
+   * The role storage.
    *
-   * @var \Drupal\user\RoleStorageControllerInterface
+   * @var \Drupal\user\RoleStorageInterface
    */
-  protected $roleStorageController;
+  protected $roleStorage;
 
   /**
    * The module handler.
@@ -54,7 +54,7 @@ class Permissions extends PrerenderList {
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->roleStorageController = $entity_manager->getStorageController('user_role');
+    $this->roleStorage = $entity_manager->getStorage('user_role');
     $this->moduleHandler = $module_handler;
   }
 
@@ -96,7 +96,7 @@ class Permissions extends PrerenderList {
     }
 
     if ($rids) {
-      $roles = $this->roleStorageController->loadMultiple(array_keys($rids));
+      $roles = $this->roleStorage->loadMultiple(array_keys($rids));
       foreach ($rids as $rid => $role_uids) {
         foreach ($roles[$rid]->getPermissions() as $permission) {
           foreach ($role_uids as $uid) {

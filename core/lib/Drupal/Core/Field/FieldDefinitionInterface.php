@@ -347,13 +347,12 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   /**
    * Returns the storage behavior for this field.
    *
-   * Indicates whether the entity type's storage controller should take care of
-   * storing the field values or whether it is handled separately; e.g. by the
+   * Indicates whether the entity type's storage should take care of storing the
+   * field values or whether it is handled separately; e.g. by the
    * module providing the field.
    *
    * @return bool
-   *   FALSE if the storage controller takes care of storing the field, TRUE
-   *   otherwise.
+   *   FALSE if the storage takes care of storing the field, TRUE otherwise.
    */
   public function hasCustomStorage();
 

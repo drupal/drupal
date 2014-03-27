@@ -111,7 +111,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    */
   function getShortcutInformation(ShortcutSetInterface $set, $key) {
     $info = array();
-    \Drupal::entityManager()->getStorageController('shortcut')->resetCache();
+    \Drupal::entityManager()->getStorage('shortcut')->resetCache();
     foreach ($set->getShortcuts() as $shortcut) {
       $info[] = $shortcut->{$key}->value;
     }

@@ -73,7 +73,7 @@ class BreakLockForm extends EntityConfirmFormBase {
    */
   public function getDescription() {
     $locked = $this->tempStore->getMetadata($this->entity->id());
-    $account = $this->entityManager->getStorageController('user')->load($locked->owner);
+    $account = $this->entityManager->getStorage('user')->load($locked->owner);
     $username = array(
       '#theme' => 'username',
       '#account' => $account,

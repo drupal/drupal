@@ -51,7 +51,7 @@ class FormModeAccessCheck implements AccessInterface {
       if (!$form_mode || $form_mode == 'default') {
         $visibility = TRUE;
       }
-      elseif ($entity_display = $this->entityManager->getStorageController('entity_form_display')->load($entity_type_id . '.' . $bundle . '.' . $form_mode)) {
+      elseif ($entity_display = $this->entityManager->getStorage('entity_form_display')->load($entity_type_id . '.' . $bundle . '.' . $form_mode)) {
         $visibility = $entity_display->status();
       }
 

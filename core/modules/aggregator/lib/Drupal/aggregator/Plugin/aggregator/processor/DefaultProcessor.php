@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Plugin\aggregator\processor;
 
-use Drupal\aggregator\ItemStorageControllerInterface;
+use Drupal\aggregator\ItemStorageInterface;
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\FeedInterface;
@@ -45,9 +45,9 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   protected $itemQuery;
 
   /**
-   * The entity storage controller for items.
+   * The entity storage for items.
    *
-   * @var \Drupal\aggregator\ItemStorageControllerInterface
+   * @var \Drupal\aggregator\ItemStorageInterface
    */
   protected $itemStorage;
 
@@ -64,10 +64,10 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    *   The configuration factory object.
    * @param \Drupal\Core\Entity\Query\QueryInterface $item_query
    *   The entity query object for feed items.
-   * @param \Drupal\aggregator\ItemStorageControllerInterface $item_storage
-   *   The entity storage controller for feed items.
+   * @param \Drupal\aggregator\ItemStorageInterface $item_storage
+   *   The entity storage for feed items.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactoryInterface $config, QueryInterface $item_query, ItemStorageControllerInterface $item_storage) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactoryInterface $config, QueryInterface $item_query, ItemStorageInterface $item_storage) {
     $this->configFactory = $config;
     $this->itemStorage = $item_storage;
     $this->itemQuery = $item_query;
@@ -86,7 +86,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('entity.query')->get('aggregator_item'),
-      $container->get('entity.manager')->getStorageController('aggregator_item')
+      $container->get('entity.manager')->getStorage('aggregator_item')
     );
   }
 

@@ -28,7 +28,7 @@ class BlockAddController extends ControllerBase {
    */
   public function blockAddConfigureForm($plugin_id, $theme) {
     // Create a block entity.
-    $entity = $this->entityManager()->getStorageController('block')->create(array('plugin' => $plugin_id, 'theme' => $theme));
+    $entity = $this->entityManager()->getStorage('block')->create(array('plugin' => $plugin_id, 'theme' => $theme));
 
     return $this->entityFormBuilder()->getForm($entity);
   }

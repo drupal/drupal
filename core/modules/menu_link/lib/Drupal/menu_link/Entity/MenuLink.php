@@ -9,7 +9,7 @@ namespace Drupal\menu_link\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Url;
 use Drupal\menu_link\MenuLinkInterface;
 use Symfony\Component\Routing\Route;
@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Route;
  *   id = "menu_link",
  *   label = @Translation("Menu link"),
  *   controllers = {
- *     "storage" = "Drupal\menu_link\MenuLinkStorageController",
+ *     "storage" = "Drupal\menu_link\MenuLinkStorage",
  *     "access" = "Drupal\menu_link\MenuLinkAccessController",
  *     "form" = {
  *       "default" = "Drupal\menu_link\MenuLinkFormController"
@@ -306,7 +306,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+  public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
   }
 
   /**
@@ -366,9 +366,9 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     $all_links = menu_link_get_defaults();
     $original = $all_links[$this->machine_name];
     $original['machine_name'] = $this->machine_name;
-    /** @var \Drupal\menu_link\MenuLinkStorageControllerInterface $storage_controller */
-    $storage_controller = \Drupal::entityManager()->getStorageController($this->entityTypeId);
-    $new_link = $storage_controller->createFromDefaultLink($original);
+    /** @var \Drupal\menu_link\MenuLinkStorageInterface $storage */
+    $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
+    $new_link = $storage->createFromDefaultLink($original);
     // Merge existing menu link's ID and 'has_children' property.
     foreach (array('mlid', 'has_children') as $key) {
       $new_link->{$key} = $this->{$key};
@@ -408,21 +408,21 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    parent::preDelete($storage_controller, $entities);
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
 
     // Nothing to do if we don't want to reparent children.
-    if ($storage_controller->getPreventReparenting()) {
+    if ($storage->getPreventReparenting()) {
       return;
     }
 
     foreach ($entities as $entity) {
       // Children get re-attached to the item's parent.
       if ($entity->has_children) {
-        $children = $storage_controller->loadByProperties(array('plid' => $entity->plid));
+        $children = $storage->loadByProperties(array('plid' => $entity->plid));
         foreach ($children as $child) {
           $child->plid = $entity->plid;
-          $storage_controller->save($child);
+          $storage->save($child);
         }
       }
     }
@@ -431,14 +431,14 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    parent::postDelete($storage_controller, $entities);
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
 
     $affected_menus = array();
     // Update the has_children status of the parent.
     foreach ($entities as $entity) {
-      if (!$storage_controller->getPreventReparenting()) {
-        $storage_controller->updateParentalStatus($entity);
+      if (!$storage->getPreventReparenting()) {
+        $storage->updateParentalStatus($entity);
       }
 
       // Store all menu names for which we need to clear the cache.
@@ -456,15 +456,15 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
 
     // This is the easiest way to handle the unique internal path '<front>',
     // since a path marked as external does not need to match a route.
     $this->external = (url_is_external($this->link_path) || $this->link_path == '<front>') ? 1 : 0;
 
     // Try to find a parent link. If found, assign it and derive its menu.
-    $parent = $this->findParent($storage_controller);
+    $parent = $this->findParent($storage);
     if ($parent) {
       $this->plid = $parent->id();
       $this->menu_name = $parent->menu_name;
@@ -487,7 +487,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     // and fill parents based on the parent link.
     else {
       if ($this->has_children && $this->original) {
-        $limit = MENU_MAX_DEPTH - $storage_controller->findChildrenRelativeDepth($this->original) - 1;
+        $limit = MENU_MAX_DEPTH - $storage->findChildrenRelativeDepth($this->original) - 1;
       }
       else {
         $limit = MENU_MAX_DEPTH - 1;
@@ -501,7 +501,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
 
     // Need to check both plid and menu_name, since plid can be 0 in any menu.
     if (isset($this->original) && ($this->plid != $this->original->plid || $this->menu_name != $this->original->menu_name)) {
-      $storage_controller->moveChildren($this);
+      $storage->moveChildren($this);
     }
 
     // Find the route_name.
@@ -518,11 +518,11 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::postSave($storage_controller, $update);
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
 
     // Check the has_children status of the parent.
-    $storage_controller->updateParentalStatus($this);
+    $storage->updateParentalStatus($this);
 
     Cache::invalidateTags(array('menu' => $this->menu_name));
     if (isset($this->original) && $this->menu_name != $this->original->menu_name) {
@@ -538,8 +538,8 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
-    parent::postLoad($storage_controller, $entities);
+  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
+    parent::postLoad($storage, $entities);
 
     $routes = array();
     foreach ($entities as $menu_link) {
@@ -589,7 +589,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  protected function findParent(EntityStorageControllerInterface $storage_controller) {
+  protected function findParent(EntityStorageInterface $storage) {
     $parent = FALSE;
 
     // This item is explicitely top-level, skip the rest of the parenting.
@@ -612,7 +612,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     }
 
     foreach ($candidates as $mlid) {
-      $parent = $storage_controller->load($mlid);
+      $parent = $storage->load($mlid);
       if ($parent) {
         break;
       }

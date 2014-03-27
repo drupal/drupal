@@ -29,11 +29,11 @@ class BlockFormController extends EntityFormController {
   protected $entity;
 
   /**
-   * The block storage controller.
+   * The block storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * The language manager.
@@ -60,7 +60,7 @@ class BlockFormController extends EntityFormController {
    *   The config factory.
    */
   public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
-    $this->storageController = $entity_manager->getStorageController('block');
+    $this->storage = $entity_manager->getStorage('block');
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
   }
@@ -361,7 +361,7 @@ class BlockFormController extends EntityFormController {
     $suggestion = $block->getPlugin()->getMachineNameSuggestion();
 
     // Get all the blocks which starts with the suggested machine name.
-    $query = $this->storageController->getQuery();
+    $query = $this->storage->getQuery();
     $query->condition('id', $suggestion, 'CONTAINS');
     $block_ids = $query->execute();
 

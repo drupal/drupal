@@ -85,7 +85,7 @@ class Views {
    *   A view executable instance, from the loaded entity.
    */
   public static function getView($id) {
-    $view = \Drupal::service('entity.manager')->getStorageController('view')->load($id);
+    $view = \Drupal::service('entity.manager')->getStorage('view')->load($id);
     if ($view) {
       return static::executableFactory()->get($view);
     }
@@ -184,7 +184,7 @@ class Views {
       ->execute();
 
     $result = array();
-    foreach (\Drupal::entityManager()->getStorageController('view')->loadMultiple($entity_ids) as $view) {
+    foreach (\Drupal::entityManager()->getStorage('view')->loadMultiple($entity_ids) as $view) {
       // Check each display to see if it meets the criteria and is enabled.
       $executable = $view->getExecutable();
       $executable->initDisplay();
@@ -205,7 +205,7 @@ class Views {
    *   An array of loaded view entities.
    */
   public static function getAllViews() {
-    return \Drupal::entityManager()->getStorageController('view')->loadMultiple();
+    return \Drupal::entityManager()->getStorage('view')->loadMultiple();
   }
 
   /**
@@ -219,7 +219,7 @@ class Views {
       ->condition('status', TRUE)
       ->execute();
 
-    return \Drupal::entityManager()->getStorageController('view')->loadMultiple($query);
+    return \Drupal::entityManager()->getStorage('view')->loadMultiple($query);
   }
 
   /**
@@ -233,7 +233,7 @@ class Views {
       ->condition('status', FALSE)
       ->execute();
 
-    return \Drupal::entityManager()->getStorageController('view')->loadMultiple($query);
+    return \Drupal::entityManager()->getStorage('view')->loadMultiple($query);
   }
 
   /**

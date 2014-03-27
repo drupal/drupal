@@ -210,7 +210,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   public function testPreSaveRevision() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $record = new \stdClass();
     $this->entity->preSaveRevision($storage, $record);
   }

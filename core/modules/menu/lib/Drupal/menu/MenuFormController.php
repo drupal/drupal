@@ -11,7 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\Language;
-use Drupal\menu_link\MenuLinkStorageControllerInterface;
+use Drupal\menu_link\MenuLinkStorageInterface;
 use Drupal\menu_link\MenuTreeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -28,9 +28,9 @@ class MenuFormController extends EntityFormController {
   protected $entityQueryFactory;
 
   /**
-   * The menu link storage controller.
+   * The menu link storage.
    *
-   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
+   * @var \Drupal\menu_link\MenuLinkStorageInterface
    */
   protected $menuLinkStorage;
 
@@ -53,12 +53,12 @@ class MenuFormController extends EntityFormController {
    *
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The factory for entity queries.
-   * @param \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage
-   *   The menu link storage controller.
+   * @param \Drupal\menu_link\MenuLinkStorageInterface $menu_link_storage
+   *   The menu link storage.
    * @param \Drupal\menu_link\MenuTreeInterface $menu_tree
    *   The menu tree service.
    */
-  public function __construct(QueryFactory $entity_query_factory, MenuLinkStorageControllerInterface $menu_link_storage, MenuTreeInterface $menu_tree) {
+  public function __construct(QueryFactory $entity_query_factory, MenuLinkStorageInterface $menu_link_storage, MenuTreeInterface $menu_tree) {
     $this->entityQueryFactory = $entity_query_factory;
     $this->menuLinkStorage = $menu_link_storage;
     $this->menuTree = $menu_tree;
@@ -70,7 +70,7 @@ class MenuFormController extends EntityFormController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
-      $container->get('entity.manager')->getStorageController('menu_link'),
+      $container->get('entity.manager')->getStorage('menu_link'),
       $container->get('menu_link.tree')
     );
   }

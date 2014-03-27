@@ -211,7 +211,7 @@ const MENU_SITE_ONLINE = 5;
 /**
  * The maximum depth of a menu links tree - matches the number of p columns.
  *
- * @todo Move this constant to MenuLinkStorageController along with all the tree
+ * @todo Move this constant to MenuLinkStorage along with all the tree
  * functionality.
  */
 const MENU_MAX_DEPTH = 9;
@@ -964,7 +964,7 @@ function menu_cache_clear_all() {
  */
 function menu_reset_static_cache() {
   \Drupal::entityManager()
-    ->getStorageController('menu_link')->resetCache();
+    ->getStorage('menu_link')->resetCache();
   drupal_static_reset('_menu_build_tree');
   drupal_static_reset('menu_tree');
   drupal_static_reset('menu_tree_all_data');
@@ -1028,9 +1028,9 @@ function menu_link_rebuild_defaults() {
     // when possible.
     return;
   }
-  /** @var \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage */
+  /** @var \Drupal\menu_link\MenuLinkStorageInterface $menu_link_storage */
   $menu_link_storage = \Drupal::entityManager()
-    ->getStorageController('menu_link');
+    ->getStorage('menu_link');
   $links = array();
   $children = array();
   $top_links = array();

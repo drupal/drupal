@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,17 +27,17 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
   /**
    * The node storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeStorage;
 
   /**
    * Constructs a new NodeRevisionRevertForm.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $node_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   The node storage.
    */
-  public function __construct(EntityStorageControllerInterface $node_storage) {
+  public function __construct(EntityStorageInterface $node_storage) {
     $this->nodeStorage = $node_storage;
   }
 
@@ -46,7 +46,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('node')
+      $container->get('entity.manager')->getStorage('node')
     );
   }
 

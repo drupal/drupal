@@ -171,7 +171,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
       'bundle' => $entity_type,
       'name' => $this->randomName(),
     );
-    return $this->container->get('entity.manager')->getStorageController($entity_type)->create($data);
+    return $this->container->get('entity.manager')->getStorage($entity_type)->create($data);
   }
 
 }

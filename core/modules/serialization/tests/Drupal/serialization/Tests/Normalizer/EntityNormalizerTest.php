@@ -142,16 +142,16 @@ class EntityNormalizerTest extends UnitTestCase {
       'test_type' => 'test_bundle',
     );
 
-    $storage_controller = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
-    $storage_controller->expects($this->once())
+    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $storage->expects($this->once())
       ->method('create')
       ->with($expected_test_data)
       ->will($this->returnValue($this->getMock('Drupal\Core\Entity\EntityInterface')));
 
     $this->entityManager->expects($this->once())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with('test')
-      ->will($this->returnValue($storage_controller));
+      ->will($this->returnValue($storage));
 
     $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, array('entity_type' => 'test')));
   }
@@ -180,16 +180,16 @@ class EntityNormalizerTest extends UnitTestCase {
       ->with('test')
       ->will($this->returnValue($entity_type));
 
-    $storage_controller = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
-    $storage_controller->expects($this->once())
+    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $storage->expects($this->once())
       ->method('create')
       ->with($test_data)
       ->will($this->returnValue($this->getMock('Drupal\Core\Entity\EntityInterface')));
 
     $this->entityManager->expects($this->once())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with('test')
-      ->will($this->returnValue($storage_controller));
+      ->will($this->returnValue($storage));
 
     $this->assertNotNull($this->entityNormalizer->denormalize($test_data, 'Drupal\Core\Entity\ContentEntityBase', NULL, array('entity_type' => 'test')));
   }

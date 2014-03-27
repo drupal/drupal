@@ -9,7 +9,7 @@ namespace Drupal\image;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,12 +33,12 @@ class ImageStyleListBuilder extends ConfigEntityListBuilder {
    *
    * @param EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $image_style_storage
-   *   The image style entity storage controller class.
+   * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
+   *   The image style entity storage class.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $image_style_storage, UrlGeneratorInterface $url_generator) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $image_style_storage, UrlGeneratorInterface $url_generator) {
     parent::__construct($entity_type, $image_style_storage);
     $this->urlGenerator = $url_generator;
   }
@@ -49,7 +49,7 @@ class ImageStyleListBuilder extends ConfigEntityListBuilder {
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorageController($entity_type->id()),
+      $container->get('entity.manager')->getStorage($entity_type->id()),
       $container->get('url_generator'),
       $container->get('string_translation')
     );

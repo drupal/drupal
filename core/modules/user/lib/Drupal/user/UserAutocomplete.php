@@ -89,7 +89,7 @@ class UserAutocomplete {
         ->range(0, 10)
         ->execute();
 
-      $controller = $this->entityManager->getStorageController('user');
+      $controller = $this->entityManager->getStorage('user');
       foreach ($controller->loadMultiple($uids) as $account) {
         $matches[] = array('value' => $account->getUsername(), 'label' => String::checkPlain($account->getUsername()));
       }

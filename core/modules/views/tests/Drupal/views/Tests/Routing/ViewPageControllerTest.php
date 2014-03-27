@@ -31,11 +31,11 @@ class ViewPageControllerTest extends UnitTestCase {
   public $pageController;
 
   /**
-   * The mocked view storage controller.
+   * The mocked view storage.
    *
-   * @var \Drupal\views\ViewStorageController|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewStorage|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $storageController;
+  protected $storage;
 
   /**
    * The mocked view executable factory.
@@ -53,14 +53,14 @@ class ViewPageControllerTest extends UnitTestCase {
   }
 
   protected function setUp() {
-    $this->storageController = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
+    $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();
     $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->pageController = new ViewPageController($this->storageController, $this->executableFactory);
+    $this->pageController = new ViewPageController($this->storage, $this->executableFactory);
   }
 
   /**
@@ -69,7 +69,7 @@ class ViewPageControllerTest extends UnitTestCase {
   public function testPageController() {
     $view = $this->getMock('Drupal\views\ViewStorageInterface');
 
-    $this->storageController->expects($this->once())
+    $this->storage->expects($this->once())
       ->method('load')
       ->with('test_page_view')
       ->will($this->returnValue($view));
@@ -107,7 +107,7 @@ class ViewPageControllerTest extends UnitTestCase {
   public function testHandleWithArgumentsWithoutOverridden() {
     $view = $this->getMock('Drupal\views\ViewStorageInterface');
 
-    $this->storageController->expects($this->once())
+    $this->storage->expects($this->once())
       ->method('load')
       ->with('test_page_view')
       ->will($this->returnValue($view));
@@ -153,7 +153,7 @@ class ViewPageControllerTest extends UnitTestCase {
   public function testHandleWithArgumentsOnOveriddenRoute() {
     $view = $this->getMock('Drupal\views\ViewStorageInterface');
 
-    $this->storageController->expects($this->once())
+    $this->storage->expects($this->once())
       ->method('load')
       ->with('test_page_view')
       ->will($this->returnValue($view));
@@ -203,7 +203,7 @@ class ViewPageControllerTest extends UnitTestCase {
   public function testHandleWithArgumentsOnOveriddenRouteWithUpcasting() {
     $view = $this->getMock('Drupal\views\ViewStorageInterface');
 
-    $this->storageController->expects($this->once())
+    $this->storage->expects($this->once())
       ->method('load')
       ->with('test_page_view')
       ->will($this->returnValue($view));

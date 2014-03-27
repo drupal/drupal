@@ -233,12 +233,12 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::save
    */
   public function testSave() {
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
       ->method('save')
       ->with($this->entity);
     $this->entityManager->expects($this->once())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
     $this->entity->save();
@@ -249,12 +249,12 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testDelete() {
     $this->entity->id = $this->randomName();
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     // Testing the argument of the delete() method consumes too much memory.
     $storage->expects($this->once())
       ->method('delete');
     $this->entityManager->expects($this->once())
-      ->method('getStorageController')
+      ->method('getStorage')
       ->with($this->entityTypeId)
       ->will($this->returnValue($storage));
     $this->entity->delete();
@@ -272,7 +272,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testPreSave() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $this->entity->preSave($storage);
   }
 
@@ -281,7 +281,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testPostSave() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $this->entity->postSave($storage);
   }
 
@@ -290,7 +290,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testPreCreate() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $values = array();
     $this->entity->preCreate($storage, $values);
   }
@@ -300,7 +300,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testPostCreate() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $this->entity->postCreate($storage);
   }
 
@@ -309,7 +309,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testPreDelete() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $this->entity->preDelete($storage, array($this->entity));
   }
 
@@ -317,7 +317,7 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postDelete
    */
   public function testPostDelete() {
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
 
     $entity = $this->getMockBuilder('\Drupal\Core\Entity\Entity')
       ->setMethods(array('onSaveOrDelete'))
@@ -334,7 +334,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testPostLoad() {
     // This method is internal, so check for errors on calling it only.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageControllerInterface');
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
     $entities = array($this->entity);
     $this->entity->postLoad($storage, $entities);
   }
