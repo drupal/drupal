@@ -142,8 +142,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           comment_prepare_thread($comments);
           $build = $this->viewBuilder->viewMultiple($comments);
           $build['pager']['#theme'] = 'pager';
-          if (!empty($this->settings['pager_id'])) {
-            $build['pager']['#element'] = $this->settings['pager_id'];
+          if ($this->getSetting('pager_id')) {
+            $build['pager']['#element'] = $this->getSetting('pager_id');
           }
           $output['comments'] = $build;
         }
@@ -213,7 +213,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       '#type' => 'select',
       '#title' => $this->t('Pager ID'),
       '#options' => range(0, 10),
-      '#default_value' => empty($this->settings['pager_id']) ? 0 : $this->settings['pager_id'],
+      '#default_value' => $this->getSetting('pager_id'),
       '#description' => $this->t("Unless you're experiencing problems with pagers related to this field, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
     );
     return $element;
@@ -224,9 +224,9 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    */
   public function settingsSummary() {
     // Only show a summary if we're using a non-standard pager id.
-    if (!empty($this->settings['pager_id'])) {
+    if ($this->getSetting('pager_id')) {
       return array($this->t('Pager ID: @id', array(
-        '@id' => $this->settings['pager_id'],
+        '@id' => $this->getSetting('pager_id'),
       )));
     }
     return array();

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentPagerTest.
+ * Contains \Drupal\comment\Tests\CommentPagerTest.
  */
 
 namespace Drupal\comment\Tests;
@@ -273,7 +273,6 @@ class CommentPagerTest extends CommentTestBase {
    * Confirms comment paging works correctly with two pagers.
    */
   function testTwoPagers() {
-    $this->drupalLogin($this->admin_user);
     // Add another field to article content-type.
     $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_2');
     // Set default to display comment list with unique pager id.
@@ -287,6 +286,24 @@ class CommentPagerTest extends CommentTestBase {
         )
       ))
       ->save();
+
+    // Make sure pager appears in formatter summary and settings form.
+    $account = $this->drupalCreateUser(array('administer node display'));
+    $this->drupalLogin($account);
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->assertNoText(t('Pager ID: @id', array('@id' => 0)), 'No summary for standard pager');
+    $this->assertText(t('Pager ID: @id', array('@id' => 1)));
+    $this->drupalPostAjaxForm(NULL, array(), 'comment_settings_edit');
+    // Change default pager to 2.
+    $this->drupalPostForm(NULL, array('fields[comment][settings_edit_form][settings][pager_id]' => 2), t('Save'));
+    $this->assertText(t('Pager ID: @id', array('@id' => 2)));
+    // Revert the changes back.
+    $this->drupalPostAjaxForm(NULL, array(), 'comment_settings_edit');
+    $this->drupalPostForm(NULL, array('fields[comment][settings_edit_form][settings][pager_id]' => 0), t('Save'));
+    $this->assertNoText(t('Pager ID: @id', array('@id' => 0)), 'No summary for standard pager');
+
+    $this->drupalLogin($this->admin_user);
+
     // Add a new node with both comment fields open.
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
     // Set comment options.
@@ -333,4 +350,5 @@ class CommentPagerTest extends CommentTestBase {
     $this->assertRaw('Comment 2 on field comment');
     $this->assertRaw('Comment 2 on field comment_2');
   }
+
 }
