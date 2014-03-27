@@ -55,7 +55,7 @@ class NodeTranslationController extends ContentTranslationController {
       if (isset($status_translatable)) {
         foreach (array('publish', 'unpublish', 'submit') as $button) {
           if (isset($form['actions'][$button])) {
-            $form['actions'][$button]['#value'] .= ' ' . ($status_translatable ? $this->t('(this translation)') : $this->t('(all translations)'));
+            $form['actions'][$button]['#value'] .= ' ' . ($status_translatable ? t('(this translation)') : t('(all translations)'));
           }
         }
       }
