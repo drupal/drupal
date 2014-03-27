@@ -198,7 +198,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       'display_plugin' => $plugin_id,
       'id' => $id,
       'display_title' => $title,
-      'position' => count($this->display),
+      'position' => $id === 'default' ? 0 : count($this->display),
       'provider' => $plugin['provider'],
       'display_options' => array(),
     );

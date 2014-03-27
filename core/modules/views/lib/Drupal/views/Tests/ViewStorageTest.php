@@ -240,6 +240,17 @@ class ViewStorageTest extends ViewUnitTestBase {
     $display = $view->get('display');
     $this->assertEqual($display[$id]['display_title'], 'Page 3');
 
+    // Ensure the 'default' display always has position zero, regardless of when
+    // it was created relative to other displays.
+    $displays = $view->get('display');
+    $displays['default']['deleted'] = TRUE;
+    $view->set('display', $displays);
+    $view->set('id', $this->randomName());
+    $view->save();
+    $view->addDisplay('default', $random_title);
+    $displays = $view->get('display');
+    $this->assertEqual($displays['default']['position'], 0, 'Default displays are always in position zero');
+
     // Tests Drupal\views\Entity\View::generateDisplayId().
     // @todo Sadly this method is not public so it cannot be tested.
     // $view = $this->controller->create(array());
