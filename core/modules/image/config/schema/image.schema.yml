@@ -90,43 +90,6 @@ field.image.settings:
     default_image:
       type: field_default_image
       label: 'Default value'
-    column_groups:
-      type: mapping
-      label: 'Column groups'
-      mapping:
-        file:
-          type: mapping
-          label: 'File settings'
-          mapping:
-            label:
-              type: label
-              label: 'Label'
-            columns:
-              type: sequence
-              label: 'Columns'
-              sequence:
-                - type: string
-                  label: 'Column'
-        alt:
-          type: mapping
-          label: 'Alternative text'
-          mapping:
-            label:
-              type: label
-              label: 'Label'
-            translatable:
-              type: boolean
-              label: 'Translatable'
-        title:
-          type: mapping
-          label: 'Title text'
-          mapping:
-            label:
-              type: label
-              label: 'Label'
-            translatable:
-              type: boolean
-              label: 'Translatable'
 
 field.image.instance_settings:
   type: mapping

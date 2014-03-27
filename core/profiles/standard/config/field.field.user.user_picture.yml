@@ -12,19 +12,6 @@ settings:
     title: ''
     width: null
     height: null
-  column_groups:
-    file:
-      label: File
-      columns:
-        - target_id
-        - width
-        - height
-    alt:
-      label: Alt
-      translatable: true
-    title:
-      label: Title
-      translatable: true
 module: image
 locked: false
 cardinality: 1

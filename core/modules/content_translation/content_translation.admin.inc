@@ -23,7 +23,8 @@ use Drupal\field\FieldInstanceConfigInterface;
 function content_translation_field_sync_widget(FieldDefinitionInterface $field) {
   $element = array();
 
-  $column_groups = $field->getSetting('column_groups');
+  $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getType());
+  $column_groups = $definition['column_groups'];
   if (!empty($column_groups) && count($column_groups) > 1) {
     $options = array();
     $default = array();

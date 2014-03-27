@@ -167,6 +167,27 @@ function content_translation_entity_base_field_info_alter(&$fields, EntityTypeIn
 }
 
 /**
+ * Implements hook_field_info_alter().
+ *
+ * Content translation extends the @FieldType annotation with following key:
+ * - column_groups: contains information about the field type properties
+ *   which columns should be synchronized across different translations and
+ *   which are translatable. This is useful for instance to translate the
+ *   "alt" and "title" textual elements of an image field, while keeping the
+ *   same image on every translation.
+ *
+ *   @see Drupal\image\Plugin\Field\FieldType\imageItem.
+ */
+function content_translation_field_info_alter(&$info) {
+  foreach ($info as $key => $settings) {
+    // Supply the column_groups key if it's not there.
+    if (empty($settings['column_groups'])) {
+      $info[$key]['column_groups'] = array();
+    }
+  }
+}
+
+/**
  * Implements hook_entity_operation_alter().
  */
 function content_translation_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {

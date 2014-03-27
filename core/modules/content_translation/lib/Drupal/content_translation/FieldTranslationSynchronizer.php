@@ -38,6 +38,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    */
   public function synchronizeFields(ContentEntityInterface $entity, $sync_langcode, $original_langcode = NULL) {
     $translations = $entity->getTranslationLanguages();
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     // If we have no information about what to sync to, if we are creating a new
     // entity, if we have no translations for the current entity and we are not
@@ -55,6 +56,8 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
 
     foreach ($entity as $field_name => $items) {
       $field_definition = $items->getFieldDefinition();
+      $field_type_definition = $field_type_manager->getDefinition($field_definition->getType());
+      $column_groups = $field_type_definition['column_groups'];
 
       // Sync if the field is translatable, not empty, and the synchronization
       // setting is enabled.
@@ -65,7 +68,6 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
         if (!empty($groups)) {
           $columns = array();
           foreach ($groups as $group) {
-            $column_groups = $field_definition->getSetting('column_groups');
             $info = $column_groups[$group];
             // A missing 'columns' key indicates we have a single-column group.
             $columns = array_merge($columns, isset($info['columns']) ? $info['columns'] : array($group));

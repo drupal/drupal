@@ -20,6 +20,22 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *   description = @Translation("This field stores the ID of an image file as an integer value."),
  *   default_widget = "image_image",
  *   default_formatter = "image",
+ *   column_groups = {
+ *     "file" = {
+ *       "label" = @Translation("File"),
+ *       "columns" = {
+ *         "target_id", "width", "height"
+ *       }
+ *     },
+ *     "alt" = {
+ *       "label" = @Translation("Alt"),
+ *       "translatable" = TRUE
+ *     },
+ *     "title" = {
+ *       "label" = @Translation("Title"),
+ *       "translatable" = TRUE
+ *     },
+ *   },
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList"
  * )
  */
@@ -36,20 +52,6 @@ class ImageItem extends FileItem {
         'title' => '',
         'width' => NULL,
         'height' => NULL,
-      ),
-      'column_groups' => array(
-        'file' => array(
-          'label' => t('File'),
-          'columns' => array('target_id', 'width', 'height'),
-        ),
-        'alt' => array(
-          'label' => t('Alt'),
-          'translatable' => TRUE,
-        ),
-        'title' => array(
-          'label' => t('Title'),
-          'translatable' => TRUE,
-        ),
       ),
     ) + parent::defaultSettings();
   }
