@@ -1017,10 +1017,6 @@ abstract class TestBase {
     $this->originalContainer = clone \Drupal::getContainer();
     $this->originalLanguage = $language_interface;
     $this->originalConfigDirectories = $GLOBALS['config_directories'];
-    if (isset($GLOBALS['theme_key'])) {
-      $this->originalThemeKey = $GLOBALS['theme_key'];
-    }
-    $this->originalTheme = isset($GLOBALS['theme']) ? $GLOBALS['theme'] : NULL;
 
     // Save further contextual information.
     // Use the original files directory to avoid nesting it within an existing
@@ -1099,6 +1095,10 @@ abstract class TestBase {
     unset($GLOBALS['conf']);
     unset($GLOBALS['theme_key']);
     unset($GLOBALS['theme']);
+    unset($GLOBALS['theme_info']);
+    unset($GLOBALS['base_theme_info']);
+    unset($GLOBALS['theme_engine']);
+    unset($GLOBALS['theme_path']);
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1220,16 +1220,18 @@ abstract class TestBase {
     $connection_info = Database::getConnectionInfo('default');
     $databases['default']['default'] = $connection_info['default'];
 
-    // Restore original globals.
-    if (isset($this->originalThemeKey)) {
-      $GLOBALS['theme_key'] = $this->originalThemeKey;
-    }
-    $GLOBALS['theme'] = $this->originalTheme;
-
     // Reset all static variables.
     // All destructors of statically cached objects have been invoked above;
     // this second reset is guaranteed to reset everything to nothing.
     drupal_static_reset();
+
+    // Reset global theme variables.
+    unset($GLOBALS['theme_key']);
+    unset($GLOBALS['theme']);
+    unset($GLOBALS['theme_info']);
+    unset($GLOBALS['base_theme_info']);
+    unset($GLOBALS['theme_engine']);
+    unset($GLOBALS['theme_path']);
 
     // Restore original in-memory configuration.
     $GLOBALS['config'] = $this->originalConfig;

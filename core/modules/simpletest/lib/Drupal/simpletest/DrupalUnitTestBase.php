@@ -55,7 +55,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
 
   private $moduleFiles;
   private $themeFiles;
-  private $themeData;
 
   /**
    * The configuration directories for this test run.
@@ -96,7 +95,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     if (!isset($this->moduleFiles)) {
       $this->moduleFiles = \Drupal::state()->get('system.module.files') ?: array();
       $this->themeFiles = \Drupal::state()->get('system.theme.files') ?: array();
-      $this->themeData = \Drupal::state()->get('system.theme.data') ?: array();
     }
   }
 
@@ -139,7 +137,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
 
     \Drupal::state()->set('system.module.files', $this->moduleFiles);
     \Drupal::state()->set('system.theme.files', $this->themeFiles);
-    \Drupal::state()->set('system.theme.data', $this->themeData);
 
     // Bootstrap the kernel.
     // No need to dump it; this test runs in-memory.
