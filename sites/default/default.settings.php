@@ -289,6 +289,9 @@ $settings['update_free_access'] = FALSE;
  * - Twig templates are automatically recompiled whenever the source code
  *   changes (see twig_auto_reload below).
  *
+ * Note: changes to this setting will only take effect once the cache is
+ * cleared.
+ *
  * For more information about debugging Twig templates, see
  * http://drupal.org/node/1906392.
  *
@@ -303,6 +306,9 @@ $settings['update_free_access'] = FALSE;
  * you don't provide a value for twig_auto_reload, it will be determined based
  * on the value of twig_debug.
  *
+ * Note: changes to this setting will only take effect once the cache is
+ * cleared.
+ *
  * Not recommended in production environments (Default: NULL).
  */
 # $settings['twig_auto_reload'] = TRUE;
@@ -314,6 +320,9 @@ $settings['update_free_access'] = FALSE;
  * increase performance. Disabling the Twig cache will recompile the templates
  * from source each time they are used. In most cases the twig_auto_reload
  * setting above should be enabled rather than disabling the Twig cache.
+ *
+ * Note: changes to this setting will only take effect once the cache is
+ * cleared.
  *
  * Not recommended in production environments (Default: TRUE).
  */
