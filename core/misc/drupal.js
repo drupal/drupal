@@ -364,7 +364,7 @@ if (window.jQuery) {
     args = args || {};
     args['@count'] = count;
 
-    var pluralDelimiter = Drupal.locale.pluralDelimiter;
+    var pluralDelimiter = drupalSettings.locale.pluralDelimiter;
 
     // Determine the index of the plural form.
     var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] === 1) ? 0 : 1);

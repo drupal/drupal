@@ -2073,7 +2073,12 @@ function _drupal_add_js($data = NULL, $options = NULL) {
             ksort($current_query);
             $path['currentQuery'] = (object) $current_query;
           }
-          $javascript['settings']['data'][] = array('path' => $path);
+          $javascript['settings']['data'][] = array(
+            'path' => $path,
+            'locale' => array(
+              'pluralDelimiter' => LOCALE_PLURAL_DELIMITER,
+            ),
+          );
         }
         // All JavaScript settings are placed in the header of the page with
         // the library weight so that inline scripts appear afterwards.

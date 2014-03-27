@@ -1296,9 +1296,7 @@ function _locale_rebuild_js($langcode = NULL) {
   $data_hash = NULL;
   $data = $status = '';
   if (!empty($translations)) {
-    $data = array(
-      'pluralDelimiter: ' . Json::encode(LOCALE_PLURAL_DELIMITER),
-    );
+    $data = array();
 
     $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
     if (!empty($locale_plurals[$language->id]['formula'])) {
