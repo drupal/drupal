@@ -10,6 +10,7 @@ namespace Drupal\Tests\Core\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\TitleResolver;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -88,6 +89,36 @@ class TitleResolverTest extends UnitTestCase {
       ->will($this->returnValue('translated title with context'));
 
     $this->assertEquals('translated title with context', $this->titleResolver->getTitle($request, $route));
+  }
+
+  /**
+   * Tests a static title with a parameter.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   *
+   * @dataProvider providerTestStaticTitleWithParameter
+   */
+  public function testStaticTitleWithParameter($title, $expected_title) {
+    $raw_variables = new ParameterBag(array('test' => 'value', 'test2' => 'value2'));
+    $request = new Request();
+    $request->attributes->set('_raw_variables', $raw_variables);
+
+    $route = new Route('/test-route', array('_title' => $title));
+
+    $this->translationManager->expects($this->once())
+      ->method('translate')
+      ->with($title, $this->logicalOr($this->arrayHasKey('@test'), $this->arrayHasKey('%test'), $this->arrayHasKey('!test')), array())
+      ->will($this->returnValue('static title value'));
+
+    $this->assertEquals($expected_title, $this->titleResolver->getTitle($request, $route));
+  }
+
+  public function providerTestStaticTitleWithParameter() {
+    return array(
+      array('static title @test', 'static title value'),
+      array('static title !test', 'static title value'),
+      array('static title %test', 'static title value'),
+    );
   }
 
   /**

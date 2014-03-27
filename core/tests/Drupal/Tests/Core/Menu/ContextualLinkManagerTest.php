@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the contextual links manager.
@@ -122,6 +123,11 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
+
+    $request_stack = new RequestStack();
+    $property = new \ReflectionProperty('Drupal\Core\Menu\ContextualLinkManager', 'requestStack');
+    $property->setAccessible(TRUE);
+    $property->setValue($this->contextualLinkManager, $request_stack);
 
     $method = new \ReflectionMethod('Drupal\Core\Menu\ContextualLinkManager', 'alterInfo');
     $method->setAccessible(TRUE);

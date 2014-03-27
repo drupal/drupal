@@ -9,6 +9,8 @@ namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\ContextualLinkDefault;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the contextual link default class.
@@ -105,6 +107,22 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
     $this->setupContextualLinkDefault();
     $this->assertEquals('Example translated with context', $this->contextualLinkDefault->getTitle());
+  }
+
+  /**
+   * Tests the getTitle method with title arguments.
+   */
+  public function testGetTitleWithTitleArguments() {
+    $this->pluginDefinition['title'] = 'Example @test';
+    $this->pluginDefinition['title_arguments'] = array('@test' => 'value');
+    $this->stringTranslation->expects($this->once())
+      ->method('translate')
+      ->with($this->pluginDefinition['title'], $this->arrayHasKey('@test'), array())
+      ->will($this->returnValue('Example value'));
+
+    $this->setupContextualLinkDefault();
+    $request = new Request();
+    $this->assertEquals('Example value', $this->contextualLinkDefault->getTitle($request));
   }
 
   /**

@@ -61,8 +61,20 @@ class TitleResolver implements TitleResolverInterface {
       if ($context = $route->getDefault('_title_context')) {
         $options['context'] = $context;
       }
+      $args = array();
+      if (($raw_parameters = $request->attributes->get('_raw_variables'))) {
+        foreach ($raw_parameters->all() as $key => $value) {
+          $args['@' . $key] = $value;
+          $args['!' . $key] = $value;
+          $args['%' . $key] = $value;
+        }
+      }
+      if ($title_arguments = $route->getDefault('_title_arguments')) {
+        $args = array_merge($args, (array) $title_arguments);
+      }
+
       // Fall back to a static string from the route.
-      $route_title = $this->translationManager->translate($title, array(), $options);
+      $route_title = $this->translationManager->translate($title, $args, $options);
     }
     return $route_title;
   }

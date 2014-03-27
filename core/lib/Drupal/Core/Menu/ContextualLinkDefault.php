@@ -8,6 +8,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Plugin\PluginBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a common base implementation of a contextual link.
@@ -16,13 +17,21 @@ class ContextualLinkDefault extends PluginBase implements ContextualLinkInterfac
 
   /**
    * {@inheritdoc}
+   *
+   * @todo: It might be helpful at some point to move this getTitle logic into
+   *   a trait.
    */
-  public function getTitle() {
+  public function getTitle(Request $request = NULL) {
     $options = array();
     if (!empty($this->pluginDefinition['title_context'])) {
       $options['context'] = $this->pluginDefinition['title_context'];
     }
-    return $this->t($this->pluginDefinition['title'], array(), $options);
+    $args = array();
+    if (isset($this->pluginDefinition['title_arguments']) && $title_arguments = $this->pluginDefinition['title_arguments']) {
+      $args = (array) $title_arguments;
+    }
+
+    return $this->t($this->pluginDefinition['title'], $args, $options);
   }
 
   /**

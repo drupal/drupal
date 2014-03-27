@@ -9,6 +9,8 @@ namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the local action default class.
@@ -115,6 +117,22 @@ class LocalActionDefaultTest extends UnitTestCase {
 
     $this->setupLocalActionDefault();
     $this->assertEquals('Example translated with context', $this->localActionDefault->getTitle());
+  }
+
+  /**
+   * Tests the getTitle method with title arguments.
+   */
+  public function testGetTitleWithTitleArguments() {
+    $this->pluginDefinition['title'] = 'Example @test';
+    $this->pluginDefinition['title_arguments'] = array('@test' => 'value');
+    $this->stringTranslation->expects($this->once())
+      ->method('translate')
+      ->with($this->pluginDefinition['title'], $this->arrayHasKey('@test'), array())
+      ->will($this->returnValue('Example value'));
+
+    $this->setupLocalActionDefault();
+    $request = new Request();
+    $this->assertEquals('Example value', $this->localActionDefault->getTitle($request));
   }
 
 }

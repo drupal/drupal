@@ -289,6 +289,22 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getTitle method with title arguments.
+   */
+  public function testGetTitleWithTitleArguments() {
+    $this->pluginDefinition['title'] = 'Example @test';
+    $this->pluginDefinition['title_arguments'] = array('@test' => 'value');
+    $this->stringTranslation->expects($this->once())
+      ->method('translate')
+      ->with($this->pluginDefinition['title'], $this->arrayHasKey('@test'), array())
+      ->will($this->returnValue('Example value'));
+
+    $this->setupLocalTaskDefault();
+    $request = new Request();
+    $this->assertEquals('Example value', $this->localTaskBase->getTitle($request));
+  }
+
+  /**
    * Tests the getOption method.
    *
    * @see \Drupal\Core\Menu\LocalTaskDefault::getOption()

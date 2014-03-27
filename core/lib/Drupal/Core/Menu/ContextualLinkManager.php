@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines a contextual link plugin manager to deal with contextual links.
@@ -70,6 +71,13 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
   protected $account;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * A static cache of all the contextual link plugins by group name.
    *
    * @var array
@@ -91,8 +99,10 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(ControllerResolverInterface $controller_resolver, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account, RequestStack $request_stack) {
     $this->discovery = new YamlDiscovery('contextual_links', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
@@ -101,6 +111,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->moduleHandler = $module_handler;
+    $this->requestStack = $request_stack;
     $this->alterInfo('contextual_links_plugins');
     $this->setCacheBackend($cache_backend, $language_manager, 'contextual_links_plugins');
   }
@@ -150,6 +161,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
    */
   public function getContextualLinksArrayByGroup($group_name, array $route_parameters, array $metadata = array()) {
     $links = array();
+    $request = $this->requestStack->getCurrentRequest();
     foreach ($this->getContextualLinkPluginsByGroup($group_name) as $plugin_id => $plugin_definition) {
       /** @var $plugin \Drupal\Core\Menu\ContextualLinkInterface */
       $plugin = $this->createInstance($plugin_id);
@@ -163,7 +175,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
       $links[$plugin_id] = array(
         'route_name' => $route_name,
         'route_parameters' => $route_parameters,
-        'title' => $plugin->getTitle(),
+        'title' => $plugin->getTitle($request),
         'weight' => $plugin->getWeight(),
         'localized_options' => $plugin->getOptions(),
         'metadata' => $metadata,

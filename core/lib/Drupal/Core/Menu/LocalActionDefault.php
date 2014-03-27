@@ -65,13 +65,17 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function getTitle() {
+  public function getTitle(Request $request = NULL) {
     // Subclasses may pull in the request or specific attributes as parameters.
     $options = array();
     if (!empty($this->pluginDefinition['title_context'])) {
       $options['context'] = $this->pluginDefinition['title_context'];
     }
-    return $this->t($this->pluginDefinition['title'], array(), $options);
+    $args = array();
+    if (isset($this->pluginDefinition['title_arguments']) && $title_arguments = $this->pluginDefinition['title_arguments']) {
+      $args = (array) $title_arguments;
+    }
+    return $this->t($this->pluginDefinition['title'], $args, $options);
   }
 
   /**
