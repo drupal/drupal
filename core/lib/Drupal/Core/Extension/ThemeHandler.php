@@ -159,12 +159,12 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function disable(array $theme_list) {
-    // Don't disable the default theme.
-    if ($pos = array_search($this->configFactory->get('system.theme')->get('default'), $theme_list) !== FALSE) {
-      unset($theme_list[$pos]);
-      if (empty($theme_list)) {
-        return;
-      }
+    // Don't disable the default or admin themes.
+    $default_theme = \Drupal::config('system.theme')->get('default');
+    $admin_theme = \Drupal::config('system.theme')->get('admin');
+    $theme_list = array_diff($theme_list, array($default_theme, $admin_theme));
+    if (empty($theme_list)) {
+      return;
     }
 
     $this->clearCssCache();

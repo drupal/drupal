@@ -279,4 +279,29 @@ class ThemeTest extends WebTestBase {
     $this->assertText('theme test page bottom markup', 'Modules are able to set the page bottom region.');
   }
 
+  /**
+   * Test that themes can be disabled programmatically but admin theme and default theme can not.
+   */
+  function testDisableTheme() {
+    // Enable Bartik, Seven and Stark.
+    \Drupal::service('theme_handler')->enable(array('bartik', 'seven', 'stark'));
+
+    // Set Bartik as the default theme and Seven as the admin theme.
+    \Drupal::config('system.theme')
+      ->set('default', 'bartik')
+      ->set('admin', 'seven')
+      ->save();
+
+    $theme_list = array_keys(\Drupal::service('theme_handler')->listInfo());
+    // Attempt to disable all themes. theme_disable() ensures that the default
+    // theme and the admin theme will not be disabled.
+    \Drupal::service('theme_handler')->disable($theme_list);
+
+    $theme_list = \Drupal::service('theme_handler')->listInfo();
+
+    // Ensure Bartik and Seven are still enabled and Stark is disabled.
+    $this->assertTrue($theme_list['bartik']->status == 1, 'Default theme is enabled.');
+    $this->assertTrue($theme_list['seven']->status == 1, 'Admin theme is enabled.');
+    $this->assertTrue($theme_list['stark']->status == 0, 'Stark is disabled.');
+  }
 }
