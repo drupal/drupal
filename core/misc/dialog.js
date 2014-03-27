@@ -11,9 +11,6 @@
   drupalSettings.dialog = {
     autoOpen: true,
     dialogClass: '',
-    // Drupal-specific extensions: see dialog.jquery-ui.js.
-    buttonClass: 'button',
-    buttonPrimaryClass: 'button--primary',
     // When using this API directly (when generating dialogs on the client side),
     // you may want to override this method and do
     // @code
@@ -27,7 +24,7 @@
 
   Drupal.dialog = function (element, options) {
 
-    function openDialog (settings) {
+    function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
@@ -36,7 +33,7 @@
       $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
     }
 
-    function closeDialog (value) {
+    function closeDialog(value) {
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       $element.dialog('close');
       dialog.returnValue = value;

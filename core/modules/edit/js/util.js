@@ -50,8 +50,7 @@
           text: Drupal.t('OK'),
           click: function () {
             networkErrorModal.close();
-          },
-          primary: true
+          }
         }
       ],
       create: function () {

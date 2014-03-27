@@ -10,7 +10,6 @@ stylesheets:
     - style.css
     - css/components/buttons.css
     - css/components/buttons.theme.css
-    - dialog.theme.css
 stylesheets-override:
   - vertical-tabs.css
   - jquery.ui.theme.css
