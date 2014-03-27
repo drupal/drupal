@@ -5,7 +5,6 @@
  * Preprocessors and theme functions of Aggregator module.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\String;
 
 /**
@@ -65,7 +64,7 @@ function theme_aggregator_page_opml($variables) {
   $output .= "</head>\n";
   $output .= "<body>\n";
   foreach ($feeds as $feed) {
-    $output .= '<outline text="' . String::checkPlain($feed->title) . '" xmlUrl="' . check_url($feed->url) . "\" />\n";
+    $output .= '<outline text="' . String::checkPlain($feed->label()) . '" xmlUrl="' . check_url($feed->getUrl()) . "\" />\n";
   }
   $output .= "</body>\n";
   $output .= "</opml>\n";
@@ -85,7 +84,7 @@ function theme_aggregator_page_opml($variables) {
  *   - summary_items: An array of feed items.
  */
 function template_preprocess_aggregator_summary_items(&$variables) {
-  $variables['title'] = String::checkPlain($variables['source'] instanceof EntityInterface ? $variables['source']->label() : $variables['source']->title);
+  $variables['title'] = String::checkPlain($variables['source']->label());
   $summary_items = array();
   foreach (element_children($variables['summary_items']) as $key) {
     $summary_items[] = $variables['summary_items'][$key];
@@ -94,7 +93,7 @@ function template_preprocess_aggregator_summary_items(&$variables) {
     '#theme' => 'item_list',
     '#items' => $summary_items,
   );
-  $variables['source_url'] = $variables['source'] instanceof EntityInterface ? $variables['source']->url->value : $variables['source']->url;
+  $variables['source_url'] = $variables['source']->getUrl();
 }
 
 /**
@@ -186,6 +185,7 @@ function template_preprocess_aggregator_feed_source(&$variables) {
  */
 function template_preprocess_aggregator_block_item(&$variables) {
   // Display the external link to the item.
-  $variables['url'] = check_url($variables['item']->link);
-  $variables['title'] = String::checkPlain($variables['item']->title);
+  $item = $variables['item'];
+  $variables['url'] = check_url($item->getLink());
+  $variables['title'] = String::checkPlain($item->label());
 }

@@ -7,11 +7,13 @@
 
 namespace Drupal\aggregator\Plugin\aggregator\processor;
 
+use Drupal\aggregator\ItemStorageControllerInterface;
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,6 +38,20 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   protected $configFactory;
 
   /**
+   * The entity query object for feed items.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryInterface
+   */
+  protected $itemQuery;
+
+  /**
+   * The entity storage controller for items.
+   *
+   * @var \Drupal\aggregator\ItemStorageControllerInterface
+   */
+  protected $itemStorage;
+
+  /**
    * Constructs a DefaultProcessor object.
    *
    * @param array $configuration
@@ -46,9 +62,15 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The configuration factory object.
+   * @param \Drupal\Core\Entity\Query\QueryInterface $item_query
+   *   The entity query object for feed items.
+   * @param \Drupal\aggregator\ItemStorageControllerInterface $item_storage
+   *   The entity storage controller for feed items.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactoryInterface $config) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactoryInterface $config, QueryInterface $item_query, ItemStorageControllerInterface $item_storage) {
     $this->configFactory = $config;
+    $this->itemStorage = $item_storage;
+    $this->itemQuery = $item_query;
     // @todo Refactor aggregator plugins to ConfigEntity so merging
     //   the configuration here is not needed.
     parent::__construct($configuration + $this->getConfiguration(), $plugin_id, $plugin_definition);
@@ -62,7 +84,9 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('entity.query')->get('aggregator_item'),
+      $container->get('entity.manager')->getStorageController('aggregator_item')
     );
   }
 
@@ -194,9 +218,8 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    * {@inheritdoc}
    */
   public function delete(FeedInterface $feed) {
-    $iids = Database::getConnection()->query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchCol();
-    if ($iids) {
-      entity_delete_multiple('aggregator_item', $iids);
+    if ($items = $this->itemStorage->loadByFeed($feed->id())) {
+      $this->itemStorage->delete($items);
     }
     // @todo This should be moved out to caller with a different message maybe.
     drupal_set_message(t('The news items from %site have been deleted.', array('%site' => $feed->label())));
@@ -213,13 +236,13 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     if ($aggregator_clear != AGGREGATOR_CLEAR_NEVER) {
       // Delete all items that are older than flush item timer.
       $age = REQUEST_TIME - $aggregator_clear;
-      $iids = Database::getConnection()->query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(
-        ':fid' => $feed->id(),
-        ':timestamp' => $age,
-      ))
-      ->fetchCol();
-      if ($iids) {
-        entity_delete_multiple('aggregator_item', $iids);
+      $result = $this->itemQuery
+        ->condition('fid', $feed->id())
+        ->condition('timestamp', $age, '<')
+        ->execute();
+      if ($result) {
+        $entities = $this->itemStorage->loadMultiple($result);
+        $this->itemStorage->delete($entities);
       }
     }
   }

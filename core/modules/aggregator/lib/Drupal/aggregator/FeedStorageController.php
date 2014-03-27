@@ -22,14 +22,28 @@ class FeedStorageController extends FieldableDatabaseStorageController implement
    * {@inheritdoc}
    */
   public function getFeedDuplicates(FeedInterface $feed) {
+    $query = \Drupal::entityQuery('aggregator_feed');
+
+    $or_condition = $query->orConditionGroup()
+      ->condition('title', $feed->label())
+      ->condition('url', $feed->getUrl());
+    $query->condition($or_condition);
+
     if ($feed->id()) {
-      $query = $this->database->query("SELECT title, url FROM {aggregator_feed} WHERE (title = :title OR url = :url) AND fid <> :fid", array(':title' => $feed->label(), ':url' => $feed->url->value, ':fid' => $feed->id()));
-    }
-    else {
-      $query = $this->database->query("SELECT title, url FROM {aggregator_feed} WHERE title = :title OR url = :url", array(':title' => $feed->label(), ':url' => $feed->url->value));
+      $query->condition('fid', $feed->id(), '<>');
     }
 
-    return $query->fetchAll();
+    return $this->loadMultiple($query->execute());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFeedIdsToRefresh() {
+    return $this->database->query('SELECT fid FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
+      ':time' => REQUEST_TIME,
+      ':never' => AGGREGATOR_CLEAR_NEVER
+    ))->fetchCol();
   }
 
 }

@@ -135,12 +135,10 @@ function aggregator_permission() {
  * Queues news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
-  $result = db_query('SELECT fid FROM {aggregator_feed} WHERE queued = 0 AND checked + refresh < :time AND refresh <> :never', array(
-    ':time' => REQUEST_TIME,
-    ':never' => AGGREGATOR_CLEAR_NEVER
-  ));
   $queue = \Drupal::queue('aggregator_feeds');
-  foreach ($result->fetchCol() as $fid) {
+
+  $result = \Drupal::entityManager()->getStorageController('aggregator_feed')->getFeedIdsToRefresh();
+  foreach ($result as $fid) {
     $feed = aggregator_feed_load($fid);
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
@@ -150,10 +148,17 @@ function aggregator_cron() {
   }
 
   // Delete queued timestamp after 6 hours assuming the update has failed.
-  db_update('aggregator_feed')
-    ->fields(array('queued' => 0))
+  $result = \Drupal::entityQuery('aggregator_feed')
     ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
     ->execute();
+
+  if ($result) {
+    $feeds = entity_load_multiple('aggregator_feed', $result);
+    foreach ($feeds as $feed) {
+      $feed->setQueuedTime(0);
+      $feed->save();
+    }
+  }
 }
 
 /**

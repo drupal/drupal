@@ -10,43 +10,13 @@ namespace Drupal\aggregator\Controller;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\aggregator\FeedInterface;
-use Drupal\aggregator\ItemInterface;
-use Drupal\Core\Database\Connection;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Returns responses for aggregator module routes.
  */
 class AggregatorController extends ControllerBase {
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection;
-   */
-  protected $database;
-
-  /**
-   * Constructs a \Drupal\aggregator\Controller\AggregatorController object.
-   *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
-   */
-  public function __construct(Connection $database) {
-    $this->database = $database;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('database')
-    );
-  }
 
   /**
    * Presents the aggregator feed creation form.
@@ -76,7 +46,7 @@ class AggregatorController extends ControllerBase {
     $feed_source = $entity_manager->getViewBuilder('aggregator_feed')
       ->view($aggregator_feed, 'default');
     // Load aggregator feed item for the particular feed id.
-    $items = $entity_manager->getStorageController('aggregator_item')->loadByFeed($aggregator_feed->id());
+    $items = $entity_manager->getStorageController('aggregator_item')->loadByFeed($aggregator_feed->id(), 20);
     // Print the feed items.
     $build = $this->buildPageList($items, $feed_source);
     return $build;
@@ -135,36 +105,39 @@ class AggregatorController extends ControllerBase {
    *   A render array as expected by drupal_render().
    */
   public function adminOverview() {
-    $result = $this->database->query('SELECT f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.hash, f.etag, f.modified, f.image, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.hash, f.etag, f.modified, f.image ORDER BY f.title');
+    $entity_manager = $this->entityManager();
+    $feeds = $entity_manager->getStorageController('aggregator_feed')
+      ->loadMultiple();
 
     $header = array($this->t('Title'), $this->t('Items'), $this->t('Last update'), $this->t('Next update'), $this->t('Operations'));
     $rows = array();
-    foreach ($result as $feed) {
+    foreach ($feeds as $feed) {
       $row = array();
-      $row[] = l($feed->title, "aggregator/sources/$feed->fid");
-      $row[] = format_plural($feed->items, '1 item', '@count items');
-      $row[] = ($feed->checked ? $this->t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked))) : $this->t('never'));
-      $row[] = ($feed->checked && $feed->refresh ? $this->t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : $this->t('never'));
-      $links = array();
+      $row[] = l($feed->label(), "aggregator/sources/" . $feed->id());
+      $row[] = format_plural($entity_manager->getStorageController('aggregator_item')->getItemCount($feed), '1 item', '@count items');
+      $last_checked = $feed->getLastCheckedTime();
+      $refresh_rate = $feed->getRefreshRate();
+      $row[] = ($last_checked ? $this->t('@time ago', array('@time' => format_interval(REQUEST_TIME - $last_checked))) : $this->t('never'));
+      $row[] = ($last_checked && $refresh_rate ? $this->t('%time left', array('%time' => format_interval($last_checked + $refresh_rate - REQUEST_TIME))) : $this->t('never'));
       $links['edit'] = array(
         'title' => $this->t('Edit'),
         'route_name' => 'aggregator.feed_configure',
-        'route_parameters' => array('aggregator_feed' => $feed->fid),
+        'route_parameters' => array('aggregator_feed' => $feed->id()),
       );
       $links['delete'] = array(
         'title' => $this->t('Delete'),
         'route_name' => 'aggregator.feed_delete',
-        'route_parameters' => array('aggregator_feed' => $feed->fid),
+        'route_parameters' => array('aggregator_feed' => $feed->id()),
       );
       $links['delete_items'] = array(
         'title' => $this->t('Delete items'),
         'route_name' => 'aggregator.feed_items_delete',
-        'route_parameters' => array('aggregator_feed' => $feed->fid),
+        'route_parameters' => array('aggregator_feed' => $feed->id()),
       );
       $links['update'] = array(
         'title' => $this->t('Update items'),
         'route_name' => 'aggregator.feed_refresh',
-        'route_parameters' => array('aggregator_feed' => $feed->fid),
+        'route_parameters' => array('aggregator_feed' => $feed->id()),
       );
       $row[] = array(
         'data' => array(
@@ -192,7 +165,7 @@ class AggregatorController extends ControllerBase {
    *   The rendered list of items for the feed.
    */
   public function pageLast() {
-    $items = $this->entityManager()->getStorageController('aggregator_item')->loadAll();
+    $items = $this->entityManager()->getStorageController('aggregator_item')->loadAll(20);
     $build = $this->buildPageList($items);
     $build['#attached']['drupal_add_feed'][] = array('aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator'));
     return $build;
@@ -222,7 +195,7 @@ class AggregatorController extends ControllerBase {
         ->get('source.list_max');
       if ($aggregator_summary_items) {
         $items = $entity_manager->getStorageController('aggregator_item')
-          ->loadByFeed($feed->id());
+          ->loadByFeed($feed->id(), 20);
         if ($items) {
           $summary_items = $entity_manager->getViewBuilder('aggregator_item')
             ->viewMultiple($items, 'summary');
@@ -250,7 +223,9 @@ class AggregatorController extends ControllerBase {
    *   The response containing the OPML.
    */
   public function opmlPage() {
-    $result = $this->database->query('SELECT * FROM {aggregator_feed} ORDER BY title');
+     $feeds = $this->entityManager()
+      ->getStorageController('aggregator_feed')
+      ->loadMultiple();
 
     $feeds = $result->fetchAll();
     $aggregator_page_opml = array(
