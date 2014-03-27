@@ -11,11 +11,9 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Lock\LockBackendAbstract;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
-use Drupal\locale\StringStorageInterface;
-use Drupal\locale\LocaleLookup;
 
 /**
  * String translator using the locale module.
@@ -70,6 +68,13 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
   protected $translateEnglish;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a translator using a string storage.
    *
    * @param \Drupal\locale\StringStorageInterface $storage
@@ -80,12 +85,15 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    *   The lock backend.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactoryInterface $config_factory) {
+  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
     $this->storage = $storage;
     $this->cache = $cache;
     $this->lock = $lock;
     $this->configFactory = $config_factory;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -99,7 +107,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
     // Strings are cached by langcode, context and roles, using instances of the
     // LocaleLookup class to handle string lookup and caching.
     if (!isset($this->translations[$langcode][$context])) {
-      $this->translations[$langcode][$context] = new LocaleLookup($langcode, $context, $this->storage, $this->cache, $this->lock);
+      $this->translations[$langcode][$context] = new LocaleLookup($langcode, $context, $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager);
     }
     $translation = $this->translations[$langcode][$context]->get($string);
     return $translation === TRUE ? FALSE : $translation;

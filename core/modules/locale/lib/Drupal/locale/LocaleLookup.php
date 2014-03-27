@@ -2,14 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\locale\Locale\Lookup.
+ * Contains \Drupal\locale\LocaleLookup.
  */
 
 namespace Drupal\locale;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
@@ -53,6 +54,20 @@ class LocaleLookup extends CacheCollector {
   protected $lock;
 
   /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a LocaleLookup object.
    *
    * @param string $langcode
@@ -65,11 +80,17 @@ class LocaleLookup extends CacheCollector {
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct($langcode, $context, StringStorageInterface $string_storage, CacheBackendInterface $cache, LockBackendInterface $lock) {
+  public function __construct($langcode, $context, StringStorageInterface $string_storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
     $this->langcode = $langcode;
     $this->context = (string) $context;
     $this->stringStorage = $string_storage;
+    $this->configFactory = $config_factory;
+    $this->languageManager = $language_manager;
 
     // Add the current user's role IDs to the cache key, this ensures that, for
     // example, strings for admin menu items and settings forms are not cached
@@ -99,18 +120,46 @@ class LocaleLookup extends CacheCollector {
         'source' => $offset,
         'context' => $this->context,
         'version' => \Drupal::VERSION
-      ))->addLocation('path', request_uri())->save();
+      ))->addLocation('path', $this->requestUri())->save();
       $value = TRUE;
     }
+
+    // If there is no translation available for the current language then use
+    // language fallback to try other translations.
+    if ($value === TRUE) {
+      $fallbacks = $this->languageManager->getFallbackCandidates($this->langcode, array('operation' => 'locale_lookup', 'data' => $offset));
+      if (!empty($fallbacks)) {
+        foreach($fallbacks as $langcode) {
+          $translation = $this->stringStorage->findTranslation(array(
+            'language' => $langcode,
+            'source' => $offset,
+            'context' => $this->context,
+          ));
+
+          if ($translation && !empty($translation->translation)) {
+            $value = $translation->translation;
+            break;
+          }
+        }
+      }
+    }
+
     $this->storage[$offset] = $value;
     // Disabling the usage of string caching allows a module to watch for
     // the exact list of strings used on a page. From a performance
     // perspective that is a really bad idea, so we have no user
     // interface for this. Be careful when turning this option off!
-    if (\Drupal::config('locale.settings')->get('cache_strings')) {
+    if ($this->configFactory->get('locale.settings')->get('cache_strings')) {
       $this->persist($offset);
     }
     return $value;
+  }
+
+  /**
+   * Wraps request_uri().
+   */
+  protected function requestUri($omit_query_string = FALSE) {
+    return request_uri($omit_query_string);
   }
 
 }

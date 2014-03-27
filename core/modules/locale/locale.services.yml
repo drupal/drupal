@@ -12,7 +12,7 @@ services:
     arguments: ['@database']
   string_translator.locale.lookup:
     class: Drupal\locale\LocaleTranslation
-    arguments: ['@locale.storage', '@cache.cache', '@lock', '@config.factory']
+    arguments: ['@locale.storage', '@cache.cache', '@lock', '@config.factory', '@language_manager']
     tags:
       - { name: string_translator }
       - { name: needs_destruction }
