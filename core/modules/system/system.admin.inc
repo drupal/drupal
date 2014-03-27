@@ -452,7 +452,13 @@ function template_preprocess_system_themes_page(&$variables) {
         );
       }
       else {
-        $current_theme['screenshot'] = array();
+        $current_theme['screenshot'] = array(
+          '#theme' => 'image',
+          '#uri' => drupal_get_path('module', 'system') . '/images/no_screenshot.png',
+          '#alt' => t('No screenshot'),
+          '#title' => t('No screenshot'),
+          '#attributes' => new Attribute(array('class' => array('no-screenshot'))),
+        );
       }
 
       // Localize the theme description.
