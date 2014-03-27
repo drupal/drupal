@@ -8,9 +8,9 @@
 namespace Drupal\Core\Routing\Enhancer;
 
 use Drupal\Core\Authentication\AuthenticationManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -22,7 +22,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  * all authentication mechanisms. Instead, we check if the used provider is
  * valid for the matched route and if not, force the user to anonymous.
  */
-class AuthenticationEnhancer extends ContainerAware implements RouteEnhancerInterface {
+class AuthenticationEnhancer implements RouteEnhancerInterface {
 
   /**
    * The authentication manager.
@@ -32,13 +32,23 @@ class AuthenticationEnhancer extends ContainerAware implements RouteEnhancerInte
   protected $manager;
 
   /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a AuthenticationEnhancer object.
    *
-   * @param AuthenticationManagerInterface $manager
+   * @param \Drupal\Core\Authentication\AuthenticationManagerInterface $manager
    *   The authentication manager.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user service.
    */
-  function __construct(AuthenticationManagerInterface $manager) {
+  function __construct(AuthenticationManagerInterface $manager, AccountProxyInterface $current_user) {
     $this->manager = $manager;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -55,7 +65,7 @@ class AuthenticationEnhancer extends ContainerAware implements RouteEnhancerInte
       if (!in_array($auth_provider_triggered, $auth_providers)) {
         $anonymous_user = new AnonymousUserSession();
 
-        $this->container->set('current_user', $anonymous_user, 'request');
+        $this->currentUser->setAccount($anonymous_user);
 
         // The global $user object is included for backward compatibility only
         // and should be considered deprecated.

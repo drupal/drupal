@@ -102,7 +102,7 @@ services:
     arguments: ['@config.storage', '@config.storage.schema', '@cache.config']
   cron:
     class: Drupal\Core\Cron
-    arguments: ['@module_handler', '@lock', '@queue', '@state']
+    arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user']
   database:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database
@@ -408,11 +408,9 @@ services:
       - { name: event_subscriber }
   route_enhancer.authentication:
     class: Drupal\Core\Routing\Enhancer\AuthenticationEnhancer
-    calls:
-      - [setContainer, ['@service_container']]
     tags:
       - { name: route_enhancer, priority: 1000 }
-    arguments: ['@authentication']
+    arguments: ['@authentication', '@current_user']
   route_enhancer.entity:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     arguments: ['@controller_resolver', '@entity.manager', '@form_builder']
@@ -716,11 +714,10 @@ services:
       - { name: event_subscriber }
     arguments: ['@authentication']
   current_user:
-    class: Drupal\Core\Session\AccountInterface
-    factory_method: authenticate
-    factory_service: authentication
-    arguments: ['@request']
-    synchronized: true
+    class: Drupal\Core\Session\AccountProxy
+    arguments: ['@authentication']
+    calls:
+      - [setRequest, ['@?request=']]
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
     arguments: [ '@state' ]

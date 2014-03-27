@@ -190,7 +190,7 @@ class Drupal {
   /**
    * Gets the current active user.
    *
-   * @return \Drupal\Core\Session\AccountInterface
+   * @return \Drupal\Core\Session\AccountProxyInterface
    */
   public static function currentUser() {
     return static::$container->get('current_user');

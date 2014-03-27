@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 
 /**
@@ -47,6 +48,13 @@ class Cron implements CronInterface {
   protected $state;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -57,12 +65,15 @@ class Cron implements CronInterface {
    *   The queue service.
    * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *    The current user.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountProxyInterface $current_user) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;
     $this->state = $state;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -78,10 +89,8 @@ class Cron implements CronInterface {
 
     // Force the current user to anonymous to ensure consistent permissions on
     // cron runs.
-    // @todo This currently does not work, as it will not affect the current
-    //   user being injected into services.
-    $original_user = $GLOBALS['user'];
-    $GLOBALS['user'] = new AnonymousUserSession();
+    $original_user = $this->currentUser->getAccount();
+    $this->currentUser->setAccount(new AnonymousUserSession());
 
     // Try to allocate enough time to run all the hook_cron implementations.
     drupal_set_time_limit(240);
@@ -147,9 +156,7 @@ class Cron implements CronInterface {
     }
 
     // Restore the user.
-    // @todo This currently does not work, as it will not affect the current
-    //   user being injected into services.
-    $GLOBALS['user'] = $original_user;
+    $this->currentUser->setAccount($original_user);
     drupal_save_session($original_session_saving);
 
     return $return;

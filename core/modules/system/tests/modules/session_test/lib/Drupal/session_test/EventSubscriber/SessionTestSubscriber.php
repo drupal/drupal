@@ -30,6 +30,11 @@ class SessionTestSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onKernelRequestSessionTest(GetResponseEvent $event) {
+    // Trigger the authentication in the test to ensure that $_SESSION has the
+    // needed data.
+    // @todo: On the longrun the session will be lazy initialized, so we no
+    // longer have to force it here.
+    \Drupal::currentUser()->getAccount();
     $this->emptySession = intval(empty($_SESSION));
   }
 

@@ -207,7 +207,7 @@ class FilterAPITest extends EntityUnitTestBase {
 
     // Test with anonymous user.
     $user = new AnonymousUserSession();
-    $this->container->set('current_user', $user);
+    \Drupal::currentUser()->setAccount($user);
 
     $expected_available_options = array(
       'filtered_html' => 'Filtered HTML',
@@ -246,7 +246,7 @@ class FilterAPITest extends EntityUnitTestBase {
     $this->assertFilterFormatViolation($violations, 'filtered_html');
 
     // Set user with access to 'filtered_html' format.
-    $this->container->set('current_user', $filtered_html_user);
+    \Drupal::currentUser()->setAccount($filtered_html_user);
     $violations = $data->validate();
     $this->assertEqual(count($violations), 0, "No validation violation for accessible format 'filtered_html' found.");
 

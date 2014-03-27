@@ -46,7 +46,7 @@ class FormCacheTest extends DrupalUnitTestBase {
    * Tests the form cache with a logged-in user.
    */
   function testCacheToken() {
-    $this->container->set('current_user', new UserSession(array('uid' => 1)));
+    \Drupal::currentUser()->setAccount(new UserSession(array('uid' => 1)));
     form_set_cache($this->form_build_id, $this->form, $this->form_state);
 
     $cached_form_state = form_state_defaults();

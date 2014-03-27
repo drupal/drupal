@@ -10,7 +10,6 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -37,18 +36,6 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    */
   public function __construct(AuthenticationProviderInterface $authentication_provider) {
     $this->authenticationProvider = $authentication_provider;
-  }
-
-  /**
-   * Authenticates user on request.
-   *
-   * @see \Drupal\Core\Authentication\AuthenticationProviderInterface::authenticate()
-   */
-  public function onKernelRequestAuthenticate(GetResponseEvent $event) {
-    if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
-      $request = $event->getRequest();
-      $this->authenticationProvider->authenticate($request);
-    }
   }
 
   /**
@@ -83,9 +70,6 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * Cookie provider to send all relevant session data to the user.
    */
   public static function getSubscribedEvents() {
-    // Priority must be higher than LanguageRequestSubscriber as LanguageManager
-    // access current user in case language module enabled.
-    $events[KernelEvents::REQUEST][] = array('onKernelRequestAuthenticate', 300);
     $events[KernelEvents::RESPONSE][] = array('onRespond', 0);
     $events[KernelEvents::EXCEPTION][] = array('onException', 0);
     return $events;

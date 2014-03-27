@@ -37,7 +37,7 @@ abstract class FileManagedUnitTestBase extends DrupalUnitTestBase {
     $user = entity_create('user', array('uid' => 1, 'name' => $this->randomName()));
     $user->enforceIsNew();
     $user->save();
-    $this->container->set('current_user', $user);
+    \Drupal::currentUser()->setAccount($user);
   }
 
   /**

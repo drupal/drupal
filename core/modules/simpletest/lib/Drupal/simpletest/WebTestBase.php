@@ -681,7 +681,7 @@ abstract class WebTestBase extends TestBase {
     $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->getUsername())), 'User login');
     if ($pass) {
       $this->loggedInUser = $account;
-      $this->container->set('current_user', $account);
+      $this->container->get('current_user')->setAccount($account);
       // @todo Temporary workaround for not being able to use synchronized
       //   services in non dumped container.
       $this->container->get('access_subscriber')->setCurrentUser($account);
@@ -729,7 +729,7 @@ abstract class WebTestBase extends TestBase {
       // @see WebTestBase::drupalUserIsLoggedIn()
       unset($this->loggedInUser->session_id);
       $this->loggedInUser = FALSE;
-      $this->container->set('current_user', new AnonymousUserSession());
+      $this->container->get('current_user')->setAccount(new AnonymousUserSession());
     }
   }
 

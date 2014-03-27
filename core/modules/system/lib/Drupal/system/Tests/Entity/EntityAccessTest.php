@@ -49,8 +49,7 @@ class EntityAccessTest extends EntityLanguageTestBase  {
    */
   function testEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
-    global $user;
-    $user = $this->createUser(array('uid' => 2), array('view test entity'));
+    \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2), array('view test entity')));
     $entity = entity_create('entity_test', array(
       'name' => 'test',
     ));
@@ -78,8 +77,7 @@ class EntityAccessTest extends EntityLanguageTestBase  {
    */
   function testEntityAccessDefaultController() {
     // The implementation requires that the global user id can be loaded.
-    global $user;
-    $user = $this->createUser(array('uid' => 2));
+    \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2)));
 
     // Check that the default access controller is used for entities that don't
     // have a specific access controller defined.
@@ -101,8 +99,7 @@ class EntityAccessTest extends EntityLanguageTestBase  {
   function testEntityTranslationAccess() {
 
     // Set up a non-admin user that is allowed to view test entity translations.
-    global $user;
-    $user = $this->createUser(array('uid' => 2), array('view test entity translations'));
+    \Drupal::currentUser()->setAccount($this->createUser(array('uid' => 2), array('view test entity translations')));
 
     // Create two test languages.
     foreach (array('foo', 'bar') as $langcode) {

@@ -120,7 +120,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     // Test as a non-admin.
     $normal_user = $this->drupalCreateUser(array('access content'));
-    $this->container->set('current_user', $normal_user);
+    \Drupal::currentUser()->setAccount($normal_user);
     $referenceable_tests = array(
       array(
         'arguments' => array(
@@ -172,7 +172,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     // Test as an admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'bypass node access'));
-    $this->container->set('current_user', $admin_user);
+    \Drupal::currentUser()->setAccount($admin_user);
     $referenceable_tests = array(
       array(
         'arguments' => array(
@@ -266,7 +266,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     }
 
     // Test as a non-admin.
-    $this->container->set('current_user', $users['non_admin']);
+    \Drupal::currentUser()->setAccount($users['non_admin']);
     $referenceable_tests = array(
       array(
         'arguments' => array(
@@ -305,7 +305,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     );
     $this->assertReferenceable($instance, $referenceable_tests, 'User handler');
 
-    $this->container->set('current_user', $users['admin']);
+    \Drupal::currentUser()->setAccount($users['admin']);
     $referenceable_tests = array(
       array(
         'arguments' => array(
@@ -447,7 +447,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     // Test as a non-admin.
     $normal_user = $this->drupalCreateUser(array('access content', 'access comments'));
-    $this->container->set('current_user', $normal_user);
+    \Drupal::currentUser()->setAccount($normal_user);
     $referenceable_tests = array(
       array(
         'arguments' => array(
@@ -486,7 +486,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     // Test as a comment admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments'));
-    $this->container->set('current_user', $admin_user);
+    \Drupal::currentUser()->setAccount($admin_user);
     $referenceable_tests = array(
       array(
         'arguments' => array(
@@ -504,7 +504,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     // Test as a node and comment admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments', 'bypass node access'));
-    $this->container->set('current_user', $admin_user);
+    \Drupal::currentUser()->setAccount($admin_user);
     $referenceable_tests = array(
       array(
         'arguments' => array(

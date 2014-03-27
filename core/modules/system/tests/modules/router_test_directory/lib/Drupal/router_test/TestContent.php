@@ -58,9 +58,9 @@ class TestContent extends ControllerBase {
   }
 
   public function testAccount(UserInterface $user) {
-    $current_user = $this->currentUser();
-    \Drupal::getContainer()->set('current_user', $user);
-    return $current_user->getUsername() . ':' . $user->getUsername();
+    $current_user_name = $this->currentUser()->getUsername();
+    $this->currentUser()->setAccount($user);
+    return $current_user_name . ':' . $user->getUsername();
   }
 
   /**

@@ -269,7 +269,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
    */
   protected function prepareUser(AccountInterface $account = NULL) {
     if (!$account) {
-      $account = $GLOBALS['user'];
+      $account = \Drupal::currentUser();
     }
     return $account;
   }

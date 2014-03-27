@@ -18,6 +18,8 @@ use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Request;
@@ -1087,7 +1089,7 @@ abstract class TestBase {
 
     // Run all tests as a anonymous user by default, web tests will replace that
     // during the test set up.
-    $this->container->set('current_user', drupal_anonymous_user());
+    $this->container->set('current_user', new AnonymousUserSession());
 
     \Drupal::setContainer($this->container);
 
@@ -1146,7 +1148,7 @@ abstract class TestBase {
     $this->container = \Drupal::getContainer();
     // The current user is set in TestBase::prepareEnvironment().
     $this->container->set('request', $request);
-    $this->container->set('current_user', \Drupal::currentUser());
+    $this->container->get('current_user')->setAccount(\Drupal::currentUser());
   }
 
   /**

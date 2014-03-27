@@ -133,7 +133,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
     $user = entity_create('user', array('uid' => 2, 'name' => $this->randomName()));
     $user->enforceIsNew();
     $user->save();
-    $this->container->set('current_user', $user);
+    \Drupal::currentUser()->setAccount($user);
 
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
     $file = entity_create('file', array('filesize' => 1000));

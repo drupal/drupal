@@ -10,7 +10,7 @@ namespace Drupal\Core\Authentication;
 /**
  * Defines an interface for authentication managers.
  */
-interface AuthenticationManagerInterface {
+interface AuthenticationManagerInterface extends AuthenticationProviderInterface {
 
   /**
    * Returns the service id of the default authentication provider.
@@ -19,4 +19,5 @@ interface AuthenticationManagerInterface {
    *   The service id of the default authentication provider.
    */
   public function defaultProviderId();
+
 }

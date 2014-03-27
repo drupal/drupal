@@ -243,7 +243,7 @@ class FunctionsTest extends WebTestBase {
     $this->assertThemeOutput('links', $variables, $expected);
 
     // Verify the data- attributes for setting the "active" class on links.
-    $this->container->set('current_user', new UserSession(array('uid' => 1)));
+    \Drupal::currentUser()->setAccount(new UserSession(array('uid' => 1)));
     $variables['set_active_class'] = TRUE;
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
