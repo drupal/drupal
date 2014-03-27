@@ -352,11 +352,10 @@ class TypedDataTest extends DrupalUnitTestBase {
     $clone->setValue(array());
     $this->assertTrue($clone->isEmpty());
 
-    // Make sure the difference between NULL (not set) and an empty array is
-    // kept.
+    // Make sure that resetting the value using NULL results in an empty array.
     $clone->setValue(array());
     $typed_data->setValue(NULL);
-    $this->assertNull($typed_data->getValue());
+    $this->assertIdentical($typed_data->getValue(), array());
     $this->assertIdentical($clone->getValue(), array());
 
     // Test dealing with NULL items.

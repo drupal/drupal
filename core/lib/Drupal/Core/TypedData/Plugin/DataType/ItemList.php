@@ -56,7 +56,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    */
   public function setValue($values, $notify = TRUE) {
     if (!isset($values) || $values === array()) {
-      $this->list = $values;
+      $this->list = array();
     }
     else {
       if (!is_array($values)) {
