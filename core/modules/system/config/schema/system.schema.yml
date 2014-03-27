@@ -470,5 +470,5 @@ system.theme.disabled:
   type: sequence
   label: 'Disabled themes'
   sequence:
-    - type: string
-      label: 'Theme'
+    - type: integer
+      label: 'Weight'
