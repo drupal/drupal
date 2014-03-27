@@ -1067,8 +1067,6 @@ function template_preprocess_fieldset(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #attributes, #children, #open,
  *     #description, #id, #title, #value, #optional.
- *
- * @ingroup themeable
  */
 function template_preprocess_details(&$variables) {
   $element = $variables['element'];
@@ -2291,8 +2289,6 @@ function form_process_autocomplete($element, &$form_state) {
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *
- * @ingroup themeable
  */
 function template_preprocess_input(&$variables) {
   $element = $variables['element'];
@@ -2849,8 +2845,6 @@ function form_process_file($element) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #title_display, #description, #id, #required,
  *     #children, #type, #name.
- *
- * @ingroup themeable
  */
 function template_preprocess_form_element(&$variables) {
   $element = &$variables['element'];

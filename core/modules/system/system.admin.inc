@@ -93,8 +93,6 @@ function _system_is_incompatible(&$incompatible, $files, Extension $file) {
  *     of the array represents an administrative menu item, and must at least
  *     contain the keys 'title', 'link_path', and 'localized_options', which are
  *     passed to l(). A 'description' key may also be provided.
- *
- * @ingroup themeable
  */
 function template_preprocess_admin_block_content(&$variables) {
   if (!empty($variables['content'])) {
@@ -126,8 +124,6 @@ function template_preprocess_admin_block_content(&$variables) {
  *     'title', a 'description', a formatted 'content' and a 'position' which
  *     will control which container it will be in. This is usually 'left' or
  *     'right'.
- *
- * @ingroup themeable
  */
 function template_preprocess_admin_page(&$variables) {
   $variables['system_compact_link'] = array(
@@ -228,8 +224,6 @@ function theme_system_admin_index($variables) {
  *       - REQUIREMENT_OK: The requirement is satisfied.
  *       - REQUIREMENT_WARNING: The requirement failed with a warning.
  *       - REQUIREMENT_ERROR: The requirement failed with an error.
- *
- * @ingroup themeable
  */
 function template_preprocess_status_report(&$variables) {
   $severities = array(
@@ -426,8 +420,6 @@ function theme_system_modules_uninstall($variables) {
  *   An associative array containing:
  *   - theme_groups: An associative array containing groups of themes.
  *   - theme_group_titles: An associative array containing titles of themes.
- *
- * @ingroup themeable
  */
 function template_preprocess_system_themes_page(&$variables) {
   $groups = array();
