@@ -172,6 +172,9 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Use the responsive image formatter with a responsive image mapping.
     $display_options['settings']['responsive_image_mapping'] = 'mapping_one';
+    $display_options['settings']['image_link'] = '';
+    // Also set the fallback image style.
+    $display_options['settings']['fallback_image_style'] = 'large';
     $display->setComponent($field_name, $display_options)
       ->save();
 
@@ -185,22 +188,13 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertRaw('media="(min-width: 600px)"');
 
     // Test the fallback image style.
-    $display_options['settings']['image_link'] = '';
-    $display_options['settings']['fallback_image_style'] = 'large';
-    $display->setComponent($field_name, $display_options)
-      ->save();
-
     $large_style = entity_load('image_style', 'large');
-    $this->drupalGet($large_style->buildUrl($image_uri));
-    $image_style = array(
-      '#theme' => 'image_style',
-      '#uri' => $image_uri,
-      '#width' => 480,
-      '#height' => 240,
-      '#style_name' => 'large',
+    $fallback_image = array(
+      '#theme' => 'responsive_image_source',
+      '#src' => $large_style->buildUrl($image_uri),
+      '#dimensions' => array('width' => 480, 'height' => 240),
     );
-    $default_output = '<noscript>' . drupal_render($image_style) . '</noscript>';
-    $this->drupalGet('node/' . $nid);
+    $default_output = drupal_render($fallback_image);
     $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
 
     if ($scheme == 'private') {
