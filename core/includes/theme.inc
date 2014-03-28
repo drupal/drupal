@@ -2396,13 +2396,10 @@ function template_preprocess_region(&$variables) {
 function template_preprocess_field(&$variables, $hook) {
   $element = $variables['element'];
 
-  // There's some overhead in calling check_plain() so only call it if the label
-  // variable is being displayed. Otherwise, set it to NULL to avoid PHP
-  // warnings if a theme implementation accesses the variable even when it's
-  // supposed to be hidden. If a theme implementation needs to print a hidden
-  // label, it needs to supply a preprocess function that sets it to the
-  // sanitized element title or whatever else is wanted in its place.
   $variables['label_hidden'] = ($element['#label_display'] == 'hidden');
+  // Always set the field label - allow themes to decide whether to display it.
+  // In addition the label should be rendered but hidden to support screen
+  // readers.
   $variables['label'] = String::checkPlain($element['#title']);
 
   // We want other preprocess functions and the theme implementation to have
@@ -2458,7 +2455,7 @@ function template_preprocess_field(&$variables, $hook) {
   // element in order have them rendered on the desired HTML element (e.g., on
   // the <a> element of a field item being rendered as a link). Other field
   // formatters leave them within $element['#items'][$delta]['_attributes'] to
-  // be rendered on the item wrappers provided by theme_field().
+  // be rendered on the item wrappers provided by field.html.twig.
   foreach ($variables['items'] as $delta => $item) {
     $variables['item_attributes'][$delta] = !empty($element['#items'][$delta]->_attributes) ? new Attribute($element['#items'][$delta]->_attributes) : clone($default_attributes);
   }
@@ -2563,179 +2560,6 @@ function template_preprocess_field_multiple_value_form(&$variables) {
       $variables['elements'][] = $element[$key];
     }
   }
-}
-
-/**
- * Returns HTML for a field.
- *
- * This is the default theme implementation to display the value of a field.
- * Theme developers who are comfortable with overriding theme functions may do
- * so in order to customize this markup. This function can be overridden with
- * varying levels of specificity. For example, for a field named 'body'
- * displayed on the 'article' content type, any of the following functions will
- * override this default implementation. The first of these functions that
- * exists is used:
- * - THEMENAME_field__body__article()
- * - THEMENAME_field__article()
- * - THEMENAME_field__body()
- * - THEMENAME_field()
- *
- * Theme developers who prefer to customize templates instead of overriding
- * functions may copy the "field.html.twig" from the "modules/field/theme"
- * folder of the Drupal installation to somewhere within the theme's folder and
- * customize it, just like customizing other Drupal templates such as
- * page.html.twig or node.html.twig. However, it takes longer for the server to
- * process templates than to call a function, so for websites with many fields
- * displayed on a page, this can result in a noticeable slowdown of the website.
- * For these websites, developers are discouraged from placing a field.html.twig
- * file into the theme's folder, but may customize templates for specific
- * fields. For example, for a field named 'body' displayed on the 'article'
- * content type, any of the following templates will override this default
- * implementation. The first of these templates that exists is used:
- * - field--body--article.html.twig
- * - field--article.html.twig
- * - field--body.html.twig
- * - field.html.twig
- * So, if the body field on the article content type needs customization, a
- * field--body--article.html.twig file can be added within the theme's folder.
- * Because it's a template, it will result in slightly more time needed to
- * display that field, but it will not impact other fields, and therefore, is
- * unlikely to cause a noticeable change in website performance. A very rough
- * guideline is that if a page is being displayed with more than 100 fields and
- * they are all themed with a template instead of a function, it can add up to
- * 5% to the time it takes to display that page. This is a guideline only and
- * the exact performance impact depends on the server configuration and the
- * details of the website.
- *
- * @param array $variables
- *   An associative array containing:
- *   - label_hidden: A boolean indicating whether to show or hide the field
- *     label.
- *   - title_attributes: A string containing the attributes for the title.
- *   - label: The label for the field.
- *   - content_attributes: A string containing the attributes for the content's
- *     div.
- *   - items: An array of field items.
- *   - item_attributes: An array of attributes for each item.
- *   - classes: A string containing the classes for the wrapping div.
- *   - attributes: A string containing the attributes for the wrapping div.
- *
- * @see template_preprocess_field()
- * @see field.html.twig
- *
- * @ingroup themeable
- */
-function theme_field($variables) {
-  $output = '';
-
-  // Render the label, if it's not hidden.
-  if (!$variables['label_hidden']) {
-    $output .= '<div class="field-label"' . $variables['title_attributes'] . '>' . $variables['label'] . '</div>';
-  }
-
-  // Render the items.
-  $output .= '<div class="field-items"' . $variables['content_attributes'] . '>';
-  foreach ($variables['items'] as $delta => $item) {
-    $output .= '<div class="field-item"' . $variables['item_attributes'][$delta] . '>' . drupal_render($item, TRUE) . '</div>';
-  }
-  $output .= '</div>';
-
-  // Render the top-level DIV.
-  $output = '<div' . $variables['attributes'] . '>' . $output . '</div>';
-
-  return $output;
-}
-
-/**
- * Returns HTML for an individual form element.
- *
- * Combines multiple values into a table with drag-n-drop reordering.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: A render element representing the form element.
- *
- * @ingroup themeable
- *
- * @todo Convert to a template.
- */
-function theme_field_multiple_value_form($variables) {
-  $element = $variables['element'];
-  $output = '';
-
-  if ($element['#cardinality_multiple']) {
-    $form_required_marker = array('#theme' => 'form_required_marker');
-    $required = !empty($element['#required']) ? drupal_render($form_required_marker) : '';
-    $table_id = drupal_html_id($element['#field_name'] . '_values');
-    $order_class = $element['#field_name'] . '-delta-order';
-
-    $header = array(
-      array(
-        'data' => '<h4 class="label">' . t('!title !required', array('!title' => $element['#title'], '!required' => $required)) . "</h4>",
-        'colspan' => 2,
-        'class' => array('field-label'),
-      ),
-      t('Order', array(), array('context' => 'Sort order')),
-    );
-    $rows = array();
-
-    // Sort items according to '_weight' (needed when the form comes back after
-    // preview or failed validation)
-    $items = array();
-    foreach (Element::children($element) as $key) {
-      if ($key === 'add_more') {
-        $add_more_button = &$element[$key];
-      }
-      else {
-        $items[] = &$element[$key];
-      }
-    }
-    usort($items, '_field_sort_items_value_helper');
-
-    // Add the items as table rows.
-    foreach ($items as $item) {
-      $item['_weight']['#attributes']['class'] = array($order_class);
-      $delta_element = drupal_render($item['_weight']);
-      $cells = array(
-        array('data' => '', 'class' => array('field-multiple-drag')),
-        drupal_render($item),
-        array('data' => $delta_element, 'class' => array('delta-order')),
-      );
-      $rows[] = array(
-        'data' => $cells,
-        'class' => array('draggable'),
-      );
-    }
-
-    $table = array(
-      '#type' => 'table',
-      '#header' => $header,
-      '#rows' => $rows,
-      '#attributes' => array(
-        'id' => $table_id,
-        'class' => array('field-multiple-table'),
-      ),
-      '#tabledrag' => array(
-        array(
-          'action' => 'order',
-          'relationship' => 'sibling',
-          'group' => $order_class,
-        ),
-      ),
-    );
-    $output = '<div class="form-item">';
-    $output .= drupal_render($table);
-    $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
-    $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
-    $output .= '</div>';
-  }
-  else {
-    foreach (Element::children($element) as $key) {
-      $output .= drupal_render($element[$key]);
-    }
-  }
-
-  return $output;
 }
 
 /**

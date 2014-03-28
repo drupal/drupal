@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 
 /**
- * Callback for usort() within theme_field_multiple_value_form().
+ * Callback for usort() within field-multiple-value-form.html.twig.
  *
  * Sorts using ['_weight']['#value']
  */
