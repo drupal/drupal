@@ -3,241 +3,12 @@
 /**
  * @file
  * User session handling functions.
- *
- * The user-level session storage handlers:
- * - _drupal_session_open()
- * - _drupal_session_close()
- * - _drupal_session_read()
- * - _drupal_session_write()
- * - _drupal_session_destroy()
- * - _drupal_session_garbage_collection()
- * are assigned by session_set_save_handler() in bootstrap.inc and are called
- * automatically by PHP. These functions should not be called directly. Session
- * data should instead be accessed via the $_SESSION superglobal.
  */
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Settings;
-use Drupal\Core\Session\UserSession;
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\Utility\Error;
-
-/**
- * Session handler assigned by session_set_save_handler().
- *
- * This function is used to handle any initialization, such as file paths or
- * database connections, that is needed before accessing session data. Drupal
- * does not need to initialize anything in this function.
- *
- * This function should not be called directly.
- *
- * @return
- *   This function will always return TRUE.
- */
-function _drupal_session_open() {
-  return TRUE;
-}
-
-/**
- * Session handler assigned by session_set_save_handler().
- *
- * This function is used to close the current session. Because Drupal stores
- * session data in the database immediately on write, this function does
- * not need to do anything.
- *
- * This function should not be called directly.
- *
- * @return
- *   This function will always return TRUE.
- */
-function _drupal_session_close() {
-  return TRUE;
-}
-
-/**
- * Reads an entire session from the database (internal use only).
- *
- * Also initializes the $user object for the user associated with the session.
- * This function is registered with session_set_save_handler() to support
- * database-backed sessions. It is called on every page load when PHP sets
- * up the $_SESSION superglobal.
- *
- * This function is an internal function and must not be called directly.
- * Doing so may result in logging out the current user, corrupting session data
- * or other unexpected behavior. Session data must always be accessed via the
- * $_SESSION superglobal.
- *
- * @param $sid
- *   The session ID of the session to retrieve.
- *
- * @return
- *   The user's session, or an empty string if no session exists.
- */
-function _drupal_session_read($sid) {
-  global $user;
-
-  // Write and Close handlers are called after destructing objects
-  // since PHP 5.0.5.
-  // Thus destructors can use sessions but session handler can't use objects.
-  // So we are moving session closure before destructing objects.
-  drupal_register_shutdown_function('session_write_close');
-
-  // Handle the case of first time visitors and clients that don't store
-  // cookies (eg. web crawlers).
-  $insecure_session_name = substr(session_name(), 1);
-  $cookies = \Drupal::request()->cookies;
-  if (!$cookies->has(session_name()) && !$cookies->has($insecure_session_name)) {
-    $user = new UserSession();
-    return '';
-  }
-
-  // Otherwise, if the session is still active, we have a record of the
-  // client's session in the database. If it's HTTPS then we are either have
-  // a HTTPS session or we are about to log in so we check the sessions table
-  // for an anonymous session with the non-HTTPS-only cookie. The session ID
-  // that is in the user's cookie is hashed before being stored in the database
-  // as a security measure. Thus, we have to hash it to match the database.
-  if (\Drupal::request()->isSecure()) {
-    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => Crypt::hashBase64($sid)))->fetchAssoc();
-    if (!$values) {
-      if ($cookies->has($insecure_session_name)) {
-        $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
-        ':sid' => Crypt::hashBase64($cookies->get($insecure_session_name))))
-        ->fetchAssoc();
-      }
-    }
-  }
-  else {
-    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => Crypt::hashBase64($sid)))->fetchAssoc();
-  }
-
-  // We found the client's session record and they are an authenticated,
-  // active user.
-  if ($values && $values['uid'] > 0 && $values['status'] == 1) {
-    // Add roles element to $user.
-    $rids = db_query("SELECT ur.rid FROM {users_roles} ur WHERE ur.uid = :uid", array(':uid' => $values['uid']))->fetchCol();
-    $values['roles'] = array_merge(array(DRUPAL_AUTHENTICATED_RID), $rids);
-    $user = new UserSession($values);
-  }
-  elseif ($values) {
-    // The user is anonymous or blocked. Only preserve two fields from the
-    // {sessions} table.
-    $user = new UserSession(array(
-      'session' => $values['session'],
-      'access' => $values['access'],
-    ));
-  }
-  else {
-    // The session has expired.
-    $user = new UserSession();
-  }
-
-  // Store the session that was read for comparison in _drupal_session_write().
-  $last_read = &drupal_static('drupal_session_last_read');
-  $last_read = array(
-    'sid' => $sid,
-    'value' => $user->session,
-  );
-
-  return $user->session;
-}
-
-/**
- * Writes an entire session to the database (internal use only).
- *
- * This function is registered with session_set_save_handler() to support
- * database-backed sessions.
- *
- * This function is an internal function and must not be called directly.
- * Doing so may result in corrupted session data or other unexpected behavior.
- * Session data must always be accessed via the $_SESSION superglobal.
- *
- * @param $sid
- *   The session ID of the session to write to.
- * @param $value
- *   Session data to write as a serialized string.
- *
- * @return
- *   Always returns TRUE.
- */
-function _drupal_session_write($sid, $value) {
-  global $user;
-
-  // The exception handler is not active at this point, so we need to do it
-  // manually.
-  try {
-    if (!drupal_save_session()) {
-      // We don't have anything to do if we are not allowed to save the session.
-      return;
-    }
-
-    // Check whether $_SESSION has been changed in this request.
-    $last_read = &drupal_static('drupal_session_last_read');
-    $is_changed = !isset($last_read) || $last_read['sid'] != $sid || $last_read['value'] !== $value;
-
-    // For performance reasons, do not update the sessions table, unless
-    // $_SESSION has changed or more than 180 has passed since the last update.
-    if ($is_changed || !$user->getLastAccessedTime() || REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
-      // Either ssid or sid or both will be added from $key below.
-      $fields = array(
-        'uid' => $user->id(),
-        'hostname' => \Drupal::request()->getClientIP(),
-        'session' => $value,
-        'timestamp' => REQUEST_TIME,
-      );
-
-      // Use the session ID as 'sid' and an empty string as 'ssid' by default.
-      // _drupal_session_read() does not allow empty strings so that's a safe
-      // default.
-      $key = array('sid' => Crypt::hashBase64($sid), 'ssid' => '');
-      // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
-      if (\Drupal::request()->isSecure()) {
-        $key['ssid'] = Crypt::hashBase64($sid);
-        $cookies = \Drupal::request()->cookies;
-        // The "secure pages" setting allows a site to simultaneously use both
-        // secure and insecure session cookies. If enabled and both cookies are
-        // presented then use both keys. The session ID from the cookie is
-        // hashed before being stored in the database as a security measure.
-        if (Settings::get('mixed_mode_sessions', FALSE)) {
-          $insecure_session_name = substr(session_name(), 1);
-          if ($cookies->has($insecure_session_name)) {
-            $key['sid'] = Crypt::hashBase64($cookies->get($insecure_session_name));
-          }
-        }
-      }
-      elseif (Settings::get('mixed_mode_sessions', FALSE)) {
-        unset($key['ssid']);
-      }
-
-      db_merge('sessions')
-        ->keys($key)
-        ->fields($fields)
-        ->execute();
-    }
-
-    // Likewise, do not update access time more than once per 180 seconds.
-    if ($user->isAuthenticated() && REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
-      db_update('users')
-        ->fields(array(
-          'access' => REQUEST_TIME
-        ))
-        ->condition('uid', $user->id())
-        ->execute();
-    }
-
-    return TRUE;
-  }
-  catch (Exception $exception) {
-    require_once __DIR__ . '/errors.inc';
-    // If we are displaying errors, then do so with no possibility of a further
-    // uncaught exception being thrown.
-    if (error_displayable()) {
-      print '<h1>Uncaught exception thrown in session handler.</h1>';
-      print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
-    }
-    return FALSE;
-  }
-}
+use Drupal\Core\Session\SessionHandler;
 
 /**
  * Initializes the session handler, starting a session if needed.
@@ -245,7 +16,10 @@ function _drupal_session_write($sid, $value) {
 function drupal_session_initialize() {
   global $user;
 
-  session_set_save_handler('_drupal_session_open', '_drupal_session_close', '_drupal_session_read', '_drupal_session_write', '_drupal_session_destroy', '_drupal_session_garbage_collection');
+  // Register the default session handler.
+  // @todo: Extract session storage from session handler into a service.
+  $handler = new SessionHandler(\Drupal::request(), \Drupal::database());
+  session_set_save_handler($handler, TRUE);
 
   $is_https = \Drupal::request()->isSecure();
   $cookies = \Drupal::request()->cookies;
@@ -346,7 +120,7 @@ function drupal_session_started($set = NULL) {
   if (isset($set)) {
     $session_started = $set;
   }
-  return $session_started && session_id();
+  return $session_started && session_status() === \PHP_SESSION_ACTIVE;
 }
 
 /**
@@ -424,63 +198,6 @@ function drupal_session_regenerate() {
 }
 
 /**
- * Session handler assigned by session_set_save_handler().
- *
- * Cleans up a specific session.
- *
- * @param $sid
- *   Session ID.
- */
-function _drupal_session_destroy($sid) {
-  global $user;
-
-  // Nothing to do if we are not allowed to change the session.
-  if (!drupal_save_session()) {
-    return;
-  }
-
-  $is_https = \Drupal::request()->isSecure();
-  // Delete session data.
-  db_delete('sessions')
-    ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($sid))
-    ->execute();
-
-  // Reset $_SESSION and $user to prevent a new session from being started
-  // in drupal_session_commit().
-  $_SESSION = array();
-  $user = new AnonymousUserSession();
-
-  // Unset the session cookies.
-  _drupal_session_delete_cookie(session_name());
-  if ($is_https) {
-    _drupal_session_delete_cookie(substr(session_name(), 1), FALSE);
-  }
-  elseif (Settings::get('mixed_mode_sessions', FALSE)) {
-    _drupal_session_delete_cookie('S' . session_name(), TRUE);
-  }
-}
-
-/**
- * Deletes the session cookie.
- *
- * @param $name
- *   Name of session cookie to delete.
- * @param boolean $secure
- *   Force the secure value of the cookie.
- */
-function _drupal_session_delete_cookie($name, $secure = NULL) {
-  $cookies = \Drupal::request()->cookies;
-  if ($cookies->has($name) || (!\Drupal::request()->isSecure() && $secure === TRUE)) {
-    $params = session_get_cookie_params();
-    if ($secure !== NULL) {
-      $params['secure'] = $secure;
-    }
-    setcookie($name, '', REQUEST_TIME - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    $cookies->remove($name);
-  }
-}
-
-/**
  * Ends a specific user's session(s).
  *
  * @param $uid
@@ -495,27 +212,6 @@ function drupal_session_destroy_uid($uid) {
   db_delete('sessions')
     ->condition('uid', $uid)
     ->execute();
-}
-
-/**
- * Session handler assigned by session_set_save_handler().
- *
- * Cleans up stalled sessions.
- *
- * @param $lifetime
- *   The value of session.gc_maxlifetime, passed by PHP.
- *   Sessions not updated for more than $lifetime seconds will be removed.
- */
-function _drupal_session_garbage_collection($lifetime) {
-  // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
-  // value. For example, if you want user sessions to stay in your database
-  // for three weeks before deleting them, you need to set gc_maxlifetime
-  // to '1814400'. At that value, only after a user doesn't log in after
-  // three weeks (1814400 seconds) will his/her session be removed.
-  db_delete('sessions')
-    ->condition('timestamp', REQUEST_TIME - $lifetime, '<')
-    ->execute();
-  return TRUE;
 }
 
 /**
