@@ -200,7 +200,6 @@
  *
  * Example:
  * @code
- * $cache = \Drupal::cache();
  * $cid = 'mymodule_example:' . \Drupal::languageManager()->getCurrentLanguage()->id();
  *
  * $data = NULL;
@@ -212,6 +211,12 @@
  *   \Drupal::cache()->set($cid, $data);
  * }
  * @endcode
+ *
+ * Note the use of $data and $cache->data in the above example. Calls to
+ * \Drupal::cache()->get() return a record that contains the information stored
+ * by \Drupal::cache()->set() in the data property as well as additional meta
+ * information about the cached data. In order to make use of the cached data
+ * you can access it via $cache->data.
  *
  * @section bins Cache bins
  *
@@ -300,9 +305,9 @@
  *
  * @section configuration Configuration
  *
- * Each cache bin can be configured separately; for instance, each bin can use a
- * different cache backend, such as APC or Memcache. The default backend stores
- * the cached data in the Drupal database.
+ * By default cached data is stored in the database. This can be configured
+ * though so that all cached data, or that of an individual cache bin, uses a
+ * different cache backend, such as APC or Memcache, for storage.
  *
  * In a settings.php file, you can override the class used for a particular
  * cache bin. For example, if your implementation of
