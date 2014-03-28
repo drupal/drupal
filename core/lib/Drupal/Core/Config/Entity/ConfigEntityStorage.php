@@ -131,7 +131,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       // Remove any invalid ids from the array.
       $passed_ids = array_intersect_key($passed_ids, $entities);
       foreach ($entities as $entity) {
-        $passed_ids[$entity->{$this->idKey}] = $entity;
+        $passed_ids[$entity->id()] = $entity;
       }
       $entities = $passed_ids;
     }
@@ -308,11 +308,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
 
     if (!$config->isNew() && !isset($entity->original)) {
       $entity->original = $this->loadUnchanged($id);
-    }
-
-    // Build an ID if none is set.
-    if (!isset($entity->{$this->idKey})) {
-      $entity->{$this->idKey} = $entity->id();
     }
 
     $entity->preSave($this);

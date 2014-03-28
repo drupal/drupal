@@ -283,7 +283,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * {@inheritdoc}
    */
   public function id() {
-    return $this->entity_type . '.' . $this->bundle . '.' . $this->field->name;
+    return $this->entity_type . '.' . $this->bundle . '.' . $this->field_name;
   }
 
   /**
@@ -291,7 +291,6 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    */
   public function toArray() {
     $names = array(
-      'id',
       'uuid',
       'status',
       'langcode',
@@ -307,7 +306,9 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       'settings',
       'dependencies',
     );
-    $properties = array();
+    $properties = array(
+      'id' => $this->id(),
+    );
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }

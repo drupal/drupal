@@ -138,14 +138,15 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
    */
   public function toArray() {
     $names = array(
-      'id',
       'uuid',
       'targetEntityType',
       'bundle',
       'types',
       'fieldMappings',
     );
-    $properties = array();
+    $properties = array(
+      'id' => $this->id(),
+    );
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }

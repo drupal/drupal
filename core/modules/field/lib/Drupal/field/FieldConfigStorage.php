@@ -135,7 +135,7 @@ class FieldConfigStorage extends ConfigEntityStorage {
 
       // When returning deleted fields, key the results by UUID since they can
       // include several fields with the same ID.
-      $key = $include_deleted ? $field->uuid : $field->id;
+      $key = $include_deleted ? $field->uuid() : $field->id();
       $matching_fields[$key] = $field;
     }
 

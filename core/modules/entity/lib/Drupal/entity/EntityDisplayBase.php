@@ -198,7 +198,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   public function toArray() {
     $names = array(
-      'id',
       'uuid',
       'targetEntityType',
       'bundle',
@@ -208,7 +207,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       'status',
       'dependencies'
     );
-    $properties = array();
+    $properties = array(
+      'id' => $this->id(),
+    );
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }

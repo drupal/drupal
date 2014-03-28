@@ -239,7 +239,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function toArray() {
     $names = array(
-      'id',
       'uuid',
       'status',
       'langcode',
@@ -254,7 +253,9 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
       'indexes',
       'dependencies',
     );
-    $properties = array();
+    $properties = array(
+      'id' => $this->id(),
+    );
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }

@@ -86,7 +86,7 @@ function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) 
       $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $display = entity_load('entity_view_display', $id);
       $new_id = $entity_type_id . '.' . $bundle_new . '.' . $display->mode;
-      $display->id = $new_id;
+      $display->set('id', $new_id);
       $display->bundle = $bundle_new;
       $display->save();
     }
@@ -100,7 +100,7 @@ function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) 
       $id = ConfigEntityStorage::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $form_display = entity_load('entity_form_display', $id);
       $new_id = $entity_type_id . '.' . $bundle_new . '.' . $form_display->mode;
-      $form_display->id = $new_id;
+      $form_display->set('id', $new_id);
       $form_display->bundle = $bundle_new;
       $form_display->save();
     }
