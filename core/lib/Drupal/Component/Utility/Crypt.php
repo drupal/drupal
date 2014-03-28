@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Utility class for cryptographically-secure string handling routines.
+ *
+ * @ingroup utility
  */
 class Crypt {
 

@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers to use timers throughout a request.
+ *
+ * @ingroup utility
  */
 class Timer {
 

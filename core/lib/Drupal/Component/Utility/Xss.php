@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helper to filter for cross-site scripting.
+ *
+ * @ingroup utility
  */
 class Xss {
 

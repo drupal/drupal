@@ -8,6 +8,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helper methods for manipulating numbers.
+ *
+ * @ingroup utility
  */
 class Number {
 

@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Defines a utility class for creating random data.
+ *
+ * @ingroup utility
  */
 class Random {
 

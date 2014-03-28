@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers to perform diffs on multi dimensional arrays.
+ *
+ * @ingroup utility
  */
 class DiffArray {
 

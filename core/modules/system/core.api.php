@@ -38,10 +38,11 @@
  * - @link views_overview Views @endlink
  * - @link database Database abstraction layer @endlink
  *
- * @section utility Other essential APIs
+ * @section other_essentials Other essential APIs
  *
  * - @link i18n Internationalization @endlink
  * - @link cache Caching @endlink
+ * - @link utility Utility classes and functions @endlink
  * - @link user_api User accounts, permissions, and roles @endlink
  * - @link theme_render Theme system and render API @endlink
  * - @link migration Migration @endlink
@@ -474,5 +475,27 @@
  * - Usability: https://drupal.org/ui-standards
  * - Internationalization: @link i18n Internationalization topic @endlink
  * - Automated testing: @link testing Automated tests topic @endlink
+ * @}
+ */
+
+/**
+ * @defgroup utility Utility classes and functions
+ * @{
+ * Overview of utility classes and functions for developers.
+ *
+ * Drupal provides developers with a variety of utility functions that make it
+ * easier and more efficient to perform tasks that are either really common,
+ * tedious, or difficult. Utility functions help to reduce code duplication and
+ * should be used in place of one-off code whenever possible.
+ *
+ * @see common.inc
+ * @see file
+ * @see format
+ * @see mail.inc
+ * @see php_wrappers
+ * @see sanitization
+ * @see session.inc
+ * @see transliteration
+ * @see validation
  * @}
  */

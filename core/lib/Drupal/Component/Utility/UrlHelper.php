@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Helper class URL based methods.
+ *
+ * @ingroup utility
  */
 class UrlHelper {
 

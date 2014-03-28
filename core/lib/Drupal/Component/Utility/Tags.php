@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Defines a class that can explode and implode tags.
+ *
+ * @ingroup utility
  */
 class Tags {
 

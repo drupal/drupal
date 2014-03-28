@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides Unicode-related conversions and operations.
+ *
+ * @ingroup utility
  */
 class Unicode {
 

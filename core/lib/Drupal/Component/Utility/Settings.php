@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Read only settings that are initialized with the class.
+ *
+ * @ingroup utility
  */
 final class Settings {
 

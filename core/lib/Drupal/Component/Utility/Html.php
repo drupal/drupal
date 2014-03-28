@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides DOMDocument helpers for parsing and serializing HTML strings.
+ *
+ * @ingroup utility
  */
 class Html {
 

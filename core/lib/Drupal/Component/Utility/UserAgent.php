@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides user agent related utility functions.
+ *
+ * @ingroup utility
  */
 class UserAgent {
 

@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers to perform operations on nested arrays and array keys of variable depth.
+ *
+ * @ingroup utility
  */
 class NestedArray {
 

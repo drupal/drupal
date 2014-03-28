@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers to operate on strings.
+ *
+ * @ingroup utility
  */
 class String {
 

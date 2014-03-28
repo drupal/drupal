@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers for dealing with variables.
+ *
+ * @ingroup utility
  */
 class Variable {
 

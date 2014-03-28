@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides generic array sorting helper methods.
+ *
+ * @ingroup utility
  */
 class SortArray {
 

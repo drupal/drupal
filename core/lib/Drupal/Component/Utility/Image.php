@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers to operate on images.
+ *
+ * @ingroup utility
  */
 class Image {
 
