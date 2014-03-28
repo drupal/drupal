@@ -52,26 +52,6 @@ function contact_permission() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function contact_menu_link_defaults() {
-  $links['contact.category_list'] = array(
-    'link_title' => 'Contact form categories',
-    'parent' => 'system.admin_structure',
-    'description' => 'Create a system contact form and set up categories for the form to use.',
-    'route_name' => 'contact.category_list',
-  );
-
-  $links['contact.site_page'] = array(
-    'link_title' => 'Contact',
-    'route_name' => 'contact.site_page',
-    'menu_name' => 'footer',
-    'type' => MENU_SUGGESTED_ITEM,
-  );
-  return $links;
-}
-
-/**
  * Implements hook_entity_type_alter().
  */
 function contact_entity_type_alter(array &$entity_types) {

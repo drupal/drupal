@@ -1,0 +1,9 @@
+filter.tips_all:
+  title: 'Compose tips'
+  hidden: 1
+  route_name: filter.tips_all
+filter.admin_overview:
+  title: 'Text formats'
+  parent: system.admin_config_content
+  description: 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.'
+  route_name: filter.admin_overview

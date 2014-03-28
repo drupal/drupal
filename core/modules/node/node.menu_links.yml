@@ -1,0 +1,14 @@
+node.content_overview:
+  title: Content
+  route_name: node.content_overview
+  parent: system.admin
+  description: 'Find and manage content.'
+  weight: -10
+node.overview_types:
+  title: 'Content types'
+  parent: system.admin_structure
+  description: 'Manage content types, including default status, front page promotion, comment settings, etc.'
+  route_name: node.overview_types
+node.add_page:
+  title: 'Add content'
+  route_name: node.add_page

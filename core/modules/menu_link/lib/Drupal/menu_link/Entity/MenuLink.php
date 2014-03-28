@@ -64,7 +64,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   public $mlid;
 
   /**
-   * An optional machine name if defined via hook_menu_link_defaults().
+   * An optional machine name if defined via the menu_link.static service.
    *
    * @var string
    */
@@ -358,17 +358,32 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    */
   public function reset() {
     // To reset the link to its original values, we need to retrieve its
-    // definition from hook_menu_link_defaults(). Otherwise, for example, the
-    // link's menu would not be reset, because properties like the original
+    // definition from the menu_link.static service. Otherwise, for example,
+    // the link's menu would not be reset, because properties like the original
     // 'menu_name' are not stored anywhere else. Since resetting a link happens
     // rarely and this is a one-time operation, retrieving the full set of
     // default menu links does little harm.
-    $all_links = menu_link_get_defaults();
+    $all_links = \Drupal::service('menu_link.static')->getLinks();
     $original = $all_links[$this->machine_name];
     $original['machine_name'] = $this->machine_name;
     /** @var \Drupal\menu_link\MenuLinkStorageInterface $storage */
     $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
     $new_link = $storage->createFromDefaultLink($original);
+    // Allow the menu to be determined by the parent
+    if (!empty($new_link['parent']) && !empty($all_links[$new_link['parent']])) {
+      // Walk up the tree to find the menu name.
+      $parent = $all_links[$new_link['parent']];
+      $existing_parent = db_select('menu_links')
+        ->fields('menu_links')
+        ->condition('machine_name', $parent['machine_name'])
+        ->execute()->fetchAssoc();
+      if ($existing_parent) {
+        /** @var \Drupal\Core\Entity\EntityInterface $existing_parent */
+        $existing_parent = $storage->create($existing_parent);
+        $new_link->menu_name = $existing_parent->menu_name;
+        $new_link->plid = $existing_parent->id();
+      }
+    }
     // Merge existing menu link's ID and 'has_children' property.
     foreach (array('mlid', 'has_children') as $key) {
       $new_link->{$key} = $this->{$key};
@@ -592,7 +607,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   protected function findParent(EntityStorageInterface $storage) {
     $parent = FALSE;
 
-    // This item is explicitely top-level, skip the rest of the parenting.
+    // This item is explicitly top-level, skip the rest of the parenting.
     if (isset($this->plid) && empty($this->plid)) {
       return $parent;
     }

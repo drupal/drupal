@@ -1,0 +1,10 @@
+contact.category_list:
+  title: 'Contact form categories'
+  parent: system.admin_structure
+  description: 'Create a system contact form and set up categories for the form to use.'
+  route_name: contact.category_list
+contact.site_page:
+  title: Contact
+  route_name: contact.site_page
+  menu_name: footer
+  hidden: 1

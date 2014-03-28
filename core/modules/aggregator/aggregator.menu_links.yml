@@ -1,0 +1,16 @@
+aggregator.admin_overview:
+  title: 'Feed aggregator'
+  description: 'Configure which content your site aggregates from other sites, how often it polls them, and how they''re categorized.'
+  route_name: aggregator.admin_overview
+  parent: system.admin_config_services
+  weight: 10
+aggregator.page_last:
+  title: 'Feed aggregator'
+  weight: 5
+  route_name: aggregator.page_last
+aggregator.sources:
+  title: Sources
+  route_name: aggregator.sources
+aggregator.feed_add:
+  title: 'Add feed'
+  route_name: aggregator.feed_add

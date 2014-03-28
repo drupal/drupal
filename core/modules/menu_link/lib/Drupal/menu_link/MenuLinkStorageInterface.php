@@ -97,10 +97,10 @@ interface MenuLinkStorageInterface extends EntityStorageInterface {
    * Builds a menu link entity from a default item.
    *
    * This function should only be called for link data from
-   * hook_menu_link_defaults().
+   * the menu_link.static service.
    *
    * @param array $item
-   *   An item returned from menu_links_get_defaults().
+   *   An item returned from the menu_link.static service.
    *
    * @return \Drupal\menu_link\MenuLinkInterface
    *   A menu link entity.

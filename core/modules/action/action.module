@@ -45,20 +45,6 @@ function action_permission() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function action_menu_link_defaults() {
-  $links['action.admin'] = array(
-    'link_title' => 'Actions',
-    'description' => 'Manage the actions defined for your site.',
-    'route_name' => 'action.admin',
-    'parent' => 'system.admin_config_system',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_entity_type_build().
  */
 function action_entity_type_build(array &$entity_types) {

@@ -312,7 +312,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
           'machine_name' => $menu_link_id,
         );
-        $links[$menu_link_id]['link_title'] = $menu['title'];
+        $links[$menu_link_id]['title'] = $menu['title'];
         $links[$menu_link_id]['description'] = $menu['description'];
 
         if (isset($menu['weight'])) {

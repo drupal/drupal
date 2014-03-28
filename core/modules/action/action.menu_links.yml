@@ -1,0 +1,5 @@
+action.admin:
+  title: Actions
+  description: 'Manage the actions defined for your site.'
+  route_name: action.admin
+  parent: system.admin_config_system

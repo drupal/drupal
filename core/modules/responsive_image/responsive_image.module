@@ -69,21 +69,6 @@ function responsive_image_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function responsive_image_menu_link_defaults() {
-  $links['responsive_image.mapping_page'] = array(
-    'link_title' => 'Responsive image mappings',
-    'description' => 'Manage responsive image mappings',
-    'weight' => 10,
-    'route_name' => 'responsive_image.mapping_page',
-    'parent' => 'system.admin_config_media',
-  );
-
-  return $links;
-}
-
-/**
  * Load one responsive image by its identifier.
  *
  * @param int $id

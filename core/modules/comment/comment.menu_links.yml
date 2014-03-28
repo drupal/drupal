@@ -1,0 +1,10 @@
+comment.admin:
+  title: Comments
+  route_name: comment.admin
+  parent: system.admin
+  description: 'List and edit site comments and the comment approval queue.'
+comment.bundle_list:
+  title: 'Comment forms'
+  route_name: comment.bundle_list
+  parent: system.admin_structure
+  description: 'Manage fields and displays settings for comment forms.'

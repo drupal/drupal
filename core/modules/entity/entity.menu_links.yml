@@ -1,0 +1,15 @@
+entity.display_mode:
+  title: 'Display modes'
+  description: 'Configure what displays are available for your content and forms.'
+  route_name: entity.display_mode
+  parent: system.admin_structure
+entity.view_mode_list:
+  title: 'View modes'
+  description: 'Manage custom view modes.'
+  route_name: entity.view_mode_list
+  parent: entity.display_mode
+entity.form_mode_list:
+  title: 'Form modes'
+  description: 'Manage custom form modes.'
+  route_name: entity.form_mode_list
+  parent: entity.display_mode

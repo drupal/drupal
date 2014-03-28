@@ -781,8 +781,8 @@ class MenuTest extends MenuWebTestBase {
     // Retrieve menu link id of the Log out menu link, which will always be on
     // the front page.
     $query = \Drupal::entityQuery('menu_link')
-      ->condition('module', 'system')
-      ->condition('link_path', 'user/logout');
+      ->condition('module', 'user')
+      ->condition('machine_name', 'user.logout');
     $result = $query->execute();
     if (!empty($result)) {
       $mlid = reset($result);

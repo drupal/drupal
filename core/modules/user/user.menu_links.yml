@@ -1,0 +1,29 @@
+user.page:
+  title: 'My account'
+  weight: -10
+  route_name: user.page
+  menu_name: account
+user.logout:
+  title: 'Log out'
+  route_name: user.logout
+  weight: 10
+  menu_name: account
+user.admin_account:
+  title: People
+  route_name: user.admin_account
+  description: 'Manage user accounts, roles, and permissions.'
+  parent: system.admin
+  weight: 4
+user.admin_index:
+  title: People
+  route_name: user.admin_index
+  parent: system.admin_config
+  description: 'Configure user accounts.'
+  position: left
+  weight: -20
+user.account_settings:
+  title: 'Account settings'
+  parent: user.admin_index
+  description: 'Configure default behavior of users, including registration requirements, e-mails, and fields.'
+  weight: -10
+  route_name: user.account_settings

@@ -94,20 +94,6 @@ function block_permission() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function block_menu_link_defaults() {
-  $links['block.admin_display'] = array(
-    'link_title' => 'Block layout',
-    'parent' => 'system.admin_structure',
-    'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
-    'route_name' => 'block.admin_display',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_page_build().
  *
  * Renders blocks into their regions.

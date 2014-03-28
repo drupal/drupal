@@ -64,19 +64,6 @@ function menu_permission() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function menu_menu_link_defaults() {
-  $links['menu.overview_page'] = array(
-    'link_title' => 'Menus',
-    'description' => 'Add new menus to your site, edit existing menus, and rename and reorganize menu links.',
-    'route_name' => 'menu.overview_page',
-    'parent' => 'system.admin_structure',
-  );
-  return $links;
-}
-
-/**
  * Implements hook_entity_type_build().
  */
 function menu_entity_type_build(array &$entity_types) {

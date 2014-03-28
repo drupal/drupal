@@ -55,21 +55,6 @@ function path_permission() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function path_menu_link_defaults() {
-  $links['path.admin_overview'] = array(
-    'link_title' => 'URL aliases',
-    'description' => "Change your site's URL paths by aliasing them.",
-    'route_name' => 'path.admin_overview',
-    'parent' => 'system.admin_config_search',
-    'weight' => -5,
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  *
  * @see path_form_element_validate()

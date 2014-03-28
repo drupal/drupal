@@ -152,15 +152,23 @@ class MenuLinkStorage extends EntityDatabaseStorage implements MenuLinkStorageIn
    * {@inheritdoc}
    */
   public function loadModuleAdminTasks() {
-    $query = $this->buildQuery(NULL);
-    $query
-      ->condition('base.link_path', 'admin/%', 'LIKE')
-      ->condition('base.hidden', 0, '>=')
-      ->condition('base.module', 'system')
-      ->condition('base.route_name', 'system.admin', '<>');
-    $ids = $query->execute()->fetchCol(1);
+    // @todo - this code will move out of the menu link entity, so we are doing
+    //   a straight SQL query for expediency.
+    $result = $this->database->select('menu_links');
+    $result->condition('machine_name', 'system.admin');
+    $result->addField('menu_links', 'mlid');
+    $plid = $result->execute()->fetchField();
 
-    return $this->loadMultiple($ids);
+    $query = $this->database->select('menu_links', 'base', array('fetch' => \PDO::FETCH_ASSOC));
+    $query->fields('base');
+    $query
+      ->condition('base.hidden', 0, '>=')
+      ->condition('base.module', '', '>')
+      ->condition('base.machine_name', '', '>')
+      ->condition('base.p1', $plid);
+    $entities = $query->execute()->fetchAll();
+
+    return $entities;
   }
 
   /**
@@ -304,16 +312,9 @@ class MenuLinkStorage extends EntityDatabaseStorage implements MenuLinkStorageIn
   public function createFromDefaultLink(array $item) {
     // Suggested items are disabled by default.
     $item += array(
-      'type' => MENU_NORMAL_ITEM,
       'hidden' => 0,
       'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
     );
-    if ($item['type'] == MENU_SUGGESTED_ITEM) {
-      $item['hidden'] = 1;
-    }
-    // Note, we set this as 'system', so that we can be sure to distinguish all
-    // the menu links generated automatically from hook_menu_link_defaults().
-    $item['module'] = 'system';
     return $this->create($item);
   }
 

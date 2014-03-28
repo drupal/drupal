@@ -1,0 +1,6 @@
+simpletest.test_form:
+  title: Testing
+  description: 'Run tests against Drupal core and your modules. These tests help assure that your site code is working as designed.'
+  route_name: simpletest.test_form
+  parent: system.admin_config_development
+  weight: -5

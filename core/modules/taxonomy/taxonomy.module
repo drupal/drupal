@@ -232,20 +232,6 @@ function taxonomy_theme() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function taxonomy_menu_link_defaults() {
-  $links['taxonomy.vocabulary_list'] = array(
-    'link_title' => 'Taxonomy',
-    'parent' => 'system.admin_structure',
-    'description' => 'Manage tagging, categorization, and classification of your content.',
-    'route_name' => 'taxonomy.vocabulary_list',
-  );
-
-  return $links;
-}
-
-/**
  * Checks and updates the hierarchy flag of a vocabulary.
  *
  * Checks the current parents of all terms in a vocabulary and updates the

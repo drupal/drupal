@@ -1,0 +1,149 @@
+system.admin:
+  title: Administration
+  route_name: system.admin
+  weight: 9
+  menu_name: admin
+system.admin_structure:
+  route_name: system.admin_structure
+  parent: system.admin
+  description: 'Administer blocks, content types, menus, etc.'
+  title: Structure
+  weight: -8
+system.themes_page:
+  route_name: system.themes_page
+  title: Appearance
+  description: 'Select and configure your themes.'
+  parent: system.admin
+  weight: -6
+system.modules_list:
+  title: Extend
+  description: 'Add and enable modules to extend site functionality.'
+  parent: system.admin
+  route_name: system.modules_list
+  weight: -2
+system.admin_config:
+  title: Configuration
+  parent: system.admin
+  description: 'Administer settings.'
+  route_name: system.admin_config
+  weight: 0
+system.admin_config_media:
+  route_name: system.admin_config_media
+  parent: system.admin_config
+  title: Media
+  weight: -10
+system.file_system_settings:
+  title: 'File system'
+  description: 'Tell Drupal where to store uploaded files and how they are accessed.'
+  parent: system.admin_config_media
+  route_name: system.file_system_settings
+system.image_toolkit_settings:
+  title: 'Image toolkit'
+  parent: system.admin_config_media
+  route_name: system.image_toolkit_settings
+  description: 'Choose which image toolkit to use if you have installed optional toolkits.'
+  weight: 20
+system.admin_config_services:
+  title: 'Web services'
+  parent: system.admin_config
+  route_name: system.admin_config_services
+system.rss_feeds_settings:
+  title: 'RSS publishing'
+  parent: system.admin_config_services
+  description: 'Configure the site description, the number of items per feed and whether feeds should be titles/teasers/full-text.'
+  route_name: system.rss_feeds_settings
+system.admin_config_development:
+  route_name: system.admin_config_development
+  parent: system.admin_config
+  title: Development
+  description: 'Development tools.'
+  weight: -10
+system.site_maintenance_mode:
+  title: 'Maintenance mode'
+  parent: system.admin_config_development
+  description: 'Take the site offline for maintenance or bring it back online.'
+  route_name: system.site_maintenance_mode
+  weight: -10
+system.performance_settings:
+  title: Performance
+  parent: system.admin_config_development
+  description: 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.'
+  route_name: system.performance_settings
+  weight: -20
+system.logging_settings:
+  title: 'Logging and errors'
+  parent: system.admin_config_development
+  description: 'Settings for logging and alerts modules. Various modules can route Drupal''s system events to different destinations, such as syslog, database, email, etc.'
+  route_name: system.logging_settings
+  weight: -15
+system.admin_config_regional:
+  route_name: system.admin_config_regional
+  title: 'Regional and language'
+  parent: system.admin_config
+  description: 'Regional settings, localization and translation.'
+  weight: -5
+system.regional_settings:
+  title: 'Regional settings'
+  parent: system.admin_config_regional
+  description: 'Settings for the site''s default time zone and country.'
+  route_name: system.regional_settings
+  weight: -20
+system.date_format_list:
+  title: 'Date and time formats'
+  parent: system.admin_config_regional
+  description: 'Configure display format strings for date and time.'
+  route_name: system.date_format_list
+  weight: -9
+system.admin_config_search:
+  title: 'Search and metadata'
+  route_name: system.admin_config_search
+  parent: system.admin_config
+  description: 'Local site search, metadata and SEO.'
+  weight: -10
+system.admin_config_system:
+  title: System
+  route_name: system.admin_config_system
+  parent: system.admin_config
+  description: 'General system related configuration.'
+  weight: -20
+system.site_information_settings:
+  title: 'Site information'
+  parent: system.admin_config_system
+  description: 'Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.'
+  route_name: system.site_information_settings
+  weight: -20
+system.cron_settings:
+  title: Cron
+  parent: system.admin_config_system
+  description: 'Manage automatic site maintenance tasks.'
+  route_name: system.cron_settings
+  weight: 20
+system.admin_config_ui:
+  title: 'User interface'
+  route_name: system.admin_config_ui
+  parent: system.admin_config
+  description: 'Tools that enhance the user interface.'
+  weight: -15
+system.admin_config_workflow:
+  title: Workflow
+  route_name: system.admin_config_workflow
+  parent: system.admin_config
+  description: 'Content workflow, editorial workflow tools.'
+  weight: 5
+system.admin_config_content:
+  title: 'Content authoring'
+  route_name: system.admin_config_content
+  parent: system.admin_config
+  description: 'Settings related to formatting and authoring content.'
+  weight: -15
+system.admin_reports:
+  title: Reports
+  route_name: system.admin_reports
+  parent: system.admin
+  description: 'View reports, updates, and errors.'
+  weight: 5
+system.status:
+  title: 'Status report'
+  parent: system.admin_reports
+  description: 'Get a status report about your site''s operation and any detected problems.'
+  route_name: system.status

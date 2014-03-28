@@ -1,0 +1,5 @@
+shortcut.set_admin:
+  title: Shortcuts
+  description: 'Add and modify shortcut sets.'
+  route_name: shortcut.set_admin
+  parent: system.admin_config_ui

@@ -89,8 +89,8 @@ class BreadcrumbTest extends MenuTestBase {
     $this->assertBreadcrumb('admin/structure/menu/manage/tools', $trail);
 
     $mlid_node_add = \Drupal::entityQuery('menu_link')
-      ->condition('link_path', 'node/add')
-      ->condition('module', 'system')
+      ->condition('machine_name', 'node.add_page')
+      ->condition('module', 'node')
       ->execute();
     $mlid_node_add = reset($mlid_node_add);
     $trail += array(

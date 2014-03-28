@@ -56,7 +56,7 @@ function standard_install() {
   $menu_link->save();
 
   // Enable the Contact link in the footer menu.
-  menu_link_maintain('system', 'enable', 'contact');
+  menu_link_maintain('contact', 'enable', 'contact');
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
 

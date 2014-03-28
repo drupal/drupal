@@ -70,29 +70,6 @@ function language_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function language_menu_link_defaults() {
-  // Base language management and configuration.
-  $links['language.admin_overview'] = array(
-    'link_title' => 'Languages',
-    'description' => 'Configure languages for content and the user interface.',
-    'route_name' => 'language.admin_overview',
-    'parent' => 'system.admin_config_regional',
-  );
-  // Content language settings.
-  $links['language.content_settings_page'] = array(
-    'link_title' => 'Content language',
-    'description' => 'Configure language support for content.',
-    'route_name' => 'language.content_settings_page',
-    'parent' => 'system.admin_config_regional',
-    'weight' => 10,
-  );
-
-  return $links;
-}
-
-/**
  * Editing or deleting locked languages should not be possible.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.

@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Menu;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests menu router and hook_menu_link_defaults() functionality.
+ * Tests menu router and default menu link functionality.
  */
 class MenuRouterTest extends WebTestBase {
 
@@ -45,7 +45,7 @@ class MenuRouterTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Menu router',
-      'description' => 'Tests menu router and hook_menu_link_defaults() functionality.',
+      'description' => 'Tests menu router and default menu links functionality.',
       'group' => 'Menu',
     );
   }
@@ -165,7 +165,7 @@ class MenuRouterTest extends WebTestBase {
   }
 
   /**
-   * Tests for menu_name parameter for hook_menu_link_defaults().
+   * Tests for menu_name parameter for default menu links.
    */
   protected function doTestMenuName() {
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));

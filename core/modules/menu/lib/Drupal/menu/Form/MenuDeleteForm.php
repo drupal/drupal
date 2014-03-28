@@ -104,10 +104,11 @@ class MenuDeleteForm extends EntityConfirmFormBase {
       return;
     }
 
-    // Reset all the menu links defined by the system via hook_menu_link_defaults().
+    // Reset all the menu links defined by the menu_link.static service.
     $result = \Drupal::entityQuery('menu_link')
       ->condition('menu_name', $this->entity->id())
-      ->condition('module', 'system')
+      ->condition('module', '', '>')
+      ->condition('machine_name', '', '>')
       ->sort('depth', 'ASC')
       ->execute();
     $menu_links = $this->storage->loadMultiple($result);

@@ -9,7 +9,6 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
-use Drupal\menu_link\MenuLinkInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -37,9 +36,9 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *   the stuff in the routing.yml file means.
  *
  * @section Defining menu links
- * Once you have a route defined, you can use hook_menu_link_defaults() to
+ * Once you have a route defined, you can use module.menu_links.yml to
  * define links for your module's paths in the main Navigation menu or other
- * menus. See the hook_menu_link_defaults() documentation for more details.
+ * menus.
  *
  * @todo The rest of this topic has not been reviewed or updated for Drupal 8.x
  *   and is not correct!
@@ -100,86 +99,6 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  * menu_links table holds the visible menu links. By default these are
  * derived from the same hook_menu definitions, however you are free to
  * add more with menu_link_save().
- */
-
-/**
- * @defgroup menu_flags Menu flags
- * @{
- * Flags for use in the "type" attribute of menu items.
- */
-
-/**
- * Internal menu flag -- menu item is the root of the menu tree.
- */
-const MENU_IS_ROOT = 0x0001;
-
-/**
- * Internal menu flag -- menu item is visible in the menu tree.
- */
-const MENU_VISIBLE_IN_TREE = 0x0002;
-
-/**
- * Internal menu flag -- menu item links back to its parent.
- */
-const MENU_LINKS_TO_PARENT = 0x0008;
-
-/**
- * Internal menu flag -- menu item can be modified by administrator.
- */
-const MENU_MODIFIED_BY_ADMIN = 0x0020;
-
-/**
- * Internal menu flag -- menu item was created by administrator.
- */
-const MENU_CREATED_BY_ADMIN = 0x0040;
-
-/**
- * Internal menu flag -- menu item is a local task.
- */
-const MENU_IS_LOCAL_TASK = 0x0080;
-
-/**
- * @} End of "defgroup menu_flags".
- */
-
-/**
- * @defgroup menu_item_types Menu item types
- * @{
- * Definitions for various menu item types.
- *
- * Menu item definitions provide one of these constants, which are shortcuts for
- * combinations of @link menu_flags Menu flags @endlink.
- */
-
-/**
- * Menu type -- A "normal" menu item that's shown in menus.
- *
- * Normal menu items show up in the menu tree and can be moved/hidden by
- * the administrator. Use this for most menu items. It is the default value if
- * no menu item type is specified.
- */
-define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE);
-
-/**
- * Menu type -- A hidden, internal callback, typically used for API calls.
- *
- * Callbacks simply register a path so that the correct function is fired
- * when the URL is accessed. They do not appear in menus.
- */
-const MENU_CALLBACK = 0x0000;
-
-/**
- * Menu type -- A normal menu item, hidden until enabled by an administrator.
- *
- * Modules may "suggest" menu items that the administrator may enable. They act
- * just as callbacks do until enabled, at which time they act like normal items.
- * Note for the value: 0x0010 was a flag which is no longer used, but this way
- * the values of MENU_CALLBACK and MENU_SUGGESTED_ITEM are separate.
- */
-define('MENU_SUGGESTED_ITEM', 0x0010);
-
-/**
- * @} End of "defgroup menu_item_types".
  */
 
 /**
@@ -998,24 +917,7 @@ function _menu_link_save_recursive($controller, $machine_name, &$children, &$lin
 }
 
 /**
- * Gets all default menu link definitions.
- *
- * @return array
- *   An array of default menu links.
- */
-function menu_link_get_defaults() {
-  $module_handler = \Drupal::moduleHandler();
-  $all_links = $module_handler->invokeAll('menu_link_defaults');
-  // Fill in the machine name from the array key.
-  foreach ($all_links as $machine_name => &$link) {
-    $link['machine_name'] = $machine_name;
-  }
-  $module_handler->alter('menu_link_defaults', $all_links);
-  return $all_links;
-}
-
-/**
- * Builds menu links for the items returned from hook_menu_link_defaults().
+ * Builds menu links for the items returned from the menu_link.static service.
  */
 function menu_link_rebuild_defaults() {
   // Ensure that all configuration used to build the menu items are loaded
@@ -1034,7 +936,7 @@ function menu_link_rebuild_defaults() {
   $links = array();
   $children = array();
   $top_links = array();
-  $all_links = menu_link_get_defaults();
+  $all_links = \Drupal::service('menu_link.static')->getLinks();
   if ($all_links) {
     foreach ($all_links as $machine_name => $link) {
       // For performance reasons, do a straight query now and convert to a menu
@@ -1043,7 +945,6 @@ function menu_link_rebuild_defaults() {
       $existing_item = db_select('menu_links')
         ->fields('menu_links')
         ->condition('machine_name', $machine_name)
-        ->condition('module', 'system')
         ->execute()->fetchObject();
       if ($existing_item) {
         $existing_item->options = unserialize($existing_item->options);
@@ -1060,7 +961,7 @@ function menu_link_rebuild_defaults() {
         $existing_item = $menu_link_storage->create(get_object_vars($existing_item));
 
         if (!$existing_item->customized) {
-          // A change in hook_menu_link_defaults() may move the link to a
+          // A change in the default menu links may move the link to a
           // different menu or parent.
           if (!empty($link['menu_name']) && ($link['menu_name'] != $existing_item->menu_name)) {
             $menu_link->plid = NULL;
@@ -1108,7 +1009,7 @@ function menu_link_rebuild_defaults() {
     }
   }
 
-  // Find any item whose entry in hook_menu_link_defaults() no longer exists.
+  // Find any item whose default menu link no longer exists.
   if ($all_links) {
     $query = \Drupal::entityQuery('menu_link')
       ->condition('machine_name', array_keys($all_links), 'NOT IN')

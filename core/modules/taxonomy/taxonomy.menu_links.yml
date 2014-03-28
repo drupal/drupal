@@ -1,0 +1,5 @@
+taxonomy.vocabulary_list:
+  title: Taxonomy
+  parent: system.admin_structure
+  description: 'Manage tagging, categorization, and classification of your content.'
+  route_name: taxonomy.vocabulary_list

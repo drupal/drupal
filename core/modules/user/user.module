@@ -691,55 +691,6 @@ function theme_username($variables) {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function user_menu_link_defaults() {
-  // Registration and login pages.
-  $links['user.page'] = array(
-    'link_title' => 'My account',
-    'weight' => -10,
-    'route_name' => 'user.page',
-    'menu_name' => 'account',
-  );
-
-  $links['user.logout'] = array(
-    'link_title' => 'Log out',
-    'route_name' => 'user.logout',
-    'weight' => 10,
-    'menu_name' => 'account',
-  );
-
-  // User listing pages.
-  $links['user.admin_account'] = array(
-    'link_title' => 'People',
-    'route_name' => 'user.admin_account',
-    'description' => 'Manage user accounts, roles, and permissions.',
-    'parent' => 'system.admin',
-    'weight' => 4,
-  );
-
-  // Administration pages.
-  $links['user.admin_index'] = array(
-   'link_title' => 'People',
-   'route_name' => 'user.admin_index',
-   'parent' => 'system.admin_config',
-   'description' => 'Configure user accounts.',
-   'position' => 'left',
-   'weight' => -20,
-  );
-
-  $links['user.account_settings'] = array(
-    'link_title' => 'Account settings',
-    'parent' => 'user.admin_index',
-    'description' => 'Configure default behavior of users, including registration requirements, e-mails, and fields.',
-    'weight' => -10,
-    'route_name' => 'user.account_settings',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_menu_link_presave().
  */
 function user_menu_link_presave(MenuLink $menu_link) {
@@ -747,7 +698,7 @@ function user_menu_link_presave(MenuLink $menu_link) {
   // for authenticated users. Authenticated users should see "My account", but
   // anonymous users should not see it at all. Therefore, invoke
   // user_menu_link_load() to conditionally hide the link.
-  if ($menu_link->machine_name == 'user.page' && $menu_link->module == 'system') {
+  if ($menu_link->machine_name == 'user.page') {
     $menu_link->options['alter'] = TRUE;
   }
 }
@@ -758,7 +709,7 @@ function user_menu_link_presave(MenuLink $menu_link) {
 function user_menu_breadcrumb_alter(&$active_trail, $item) {
   // Remove "My account" from the breadcrumb when $item is descendant-or-self
   // of system path user/%.
-  if (isset($active_trail[1]['module']) && $active_trail[1]['module'] == 'system' && $active_trail[1]['link_path'] == 'user' && strpos($item['path'], 'user/%') === 0) {
+  if (isset($active_trail[1]['module']) && $active_trail[1]['machine_name'] == 'user.page' && strpos($item['path'], 'user/%') === 0) {
     array_splice($active_trail, 1, 1);
   }
 }
@@ -768,7 +719,7 @@ function user_menu_breadcrumb_alter(&$active_trail, $item) {
  */
 function user_translated_menu_link_alter(MenuLink &$menu_link) {
   // Hide the "User account" link for anonymous users.
-  if ($menu_link->machine_name == 'user.page' && $menu_link->module == 'system' && \Drupal::currentUser()->isAnonymous()) {
+  if ($menu_link->machine_name == 'user.page' && \Drupal::currentUser()->isAnonymous()) {
     $menu_link->hidden = 1;
   }
 }

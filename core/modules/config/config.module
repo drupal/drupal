@@ -56,17 +56,3 @@ function config_file_download($uri) {
     );
   }
 }
-
-/**
- * Implements hook_menu_link_defaults().
- */
-function config_menu_link_defaults() {
-  $links['config.sync'] = array(
-    'link_title' => 'Configuration management',
-    'description' => 'Import, export, or synchronize your site configuration.',
-    'route_name' => 'config.sync',
-    'parent' => 'system.admin_config_development',
-  );
-
-  return $links;
-}

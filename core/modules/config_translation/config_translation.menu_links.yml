@@ -1,0 +1,6 @@
+config_translation.mapper_list:
+  title: 'Configuration translation'
+  parent: system.admin_config_regional
+  description: 'Translate the configuration.'
+  route_name: config_translation.mapper_list
+  weight: 30

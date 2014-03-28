@@ -148,26 +148,6 @@ function book_node_links_alter(array &$node_links, NodeInterface $node, array &$
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function book_menu_link_defaults() {
-  $links['book.admin'] = array(
-    'link_title' => 'Books',
-    'description' => "Manage your site's book outlines.",
-    'parent' => 'system.admin_structure',
-    'route_name' => 'book.admin',
-  );
-  $links['book.render'] = array(
-    'link_title' => 'Books',
-    'route_name' => 'book.render',
-    // @todo what to do about MENU_SUGGESTED_ITEM, maybe specify no menu_name?
-    'type' => MENU_SUGGESTED_ITEM,
-  );
-
-  return $links;
-}
-
-/**
  * Returns an array of all books.
  *
  * @todo Remove in favor of BookManager Service. http://drupal.org/node/1963894

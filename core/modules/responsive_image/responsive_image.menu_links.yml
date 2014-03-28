@@ -1,0 +1,6 @@
+responsive_image.mapping_page:
+  title: 'Responsive image mappings'
+  description: 'Manage responsive image mappings'
+  weight: 10
+  route_name: responsive_image.mapping_page
+  parent: system.admin_config_media

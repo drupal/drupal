@@ -1,0 +1,6 @@
+path.admin_overview:
+  title: 'URL aliases'
+  description: 'Change your site''s URL paths by aliasing them.'
+  route_name: path.admin_overview
+  parent: system.admin_config_search
+  weight: -5

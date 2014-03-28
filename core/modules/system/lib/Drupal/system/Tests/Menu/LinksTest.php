@@ -182,7 +182,9 @@ class LinksTest extends WebTestBase {
   }
 
   /**
-   * Tests automatic reparenting of menu links derived from hook_menu_link_defaults.
+   * Tests automatic reparenting.
+   *
+   * Runs tests on menu links defined by the menu_link.static service.
    */
   function testMenuLinkRouterReparenting() {
     // Run all the standard parenting tests on menu links derived from

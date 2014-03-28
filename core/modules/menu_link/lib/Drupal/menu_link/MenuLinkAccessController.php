@@ -27,7 +27,7 @@ class MenuLinkAccessController extends EntityAccessController {
       switch ($operation) {
         case 'reset':
           // Reset allowed for items defined via hook_menu() and customized.
-          return $entity->module == 'system' && $entity->customized;
+          return !empty($entity->machine_name) && $entity->customized;
 
         case 'delete':
           // Only items created by the menu module can be deleted.

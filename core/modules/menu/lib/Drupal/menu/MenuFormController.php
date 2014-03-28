@@ -302,7 +302,7 @@ class MenuFormController extends EntityFormController {
         if ($item['hidden']) {
           $form[$mlid]['title']['#markup'] .= ' (' . t('disabled') . ')';
         }
-        elseif ($item['link_path'] == 'user' && $item['module'] == 'system') {
+        elseif ($item['link_path'] == 'user' && $item['module'] == 'user') {
           $form[$mlid]['title']['#markup'] .= ' (' . t('logged in users only') . ')';
         }
 

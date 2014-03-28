@@ -1,0 +1,5 @@
+field_ui.list:
+  title: 'Field list'
+  description: 'Overview of fields on all entity types.'
+  route_name: field_ui.list
+  parent: system.admin_reports

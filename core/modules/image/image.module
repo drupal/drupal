@@ -84,20 +84,6 @@ function image_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function image_menu_link_defaults() {
-  $links['image.style_list'] = array(
-    'link_title' => 'Image styles',
-    'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
-    'parent' => 'system.admin_config_media',
-    'route_name' => 'image.style_list',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_theme().
  */
 function image_theme() {

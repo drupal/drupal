@@ -165,32 +165,15 @@ function comment_theme() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function comment_menu_link_defaults() {
-  $links['comment.admin'] = array(
-    'link_title' => 'Comments',
-    'route_name' => 'comment.admin',
-    'parent' => \Drupal::moduleHandler()->moduleExists('node') ? 'node.content_overview' : 'system.admin',
-    'description' => 'List and edit site comments and the comment approval queue.',
-  );
-  $links['comment.bundle_list'] = array(
-    'link_title' => 'Comment forms',
-    'route_name' => 'comment.bundle_list',
-    'parent' => 'system.admin_structure',
-    'description' => 'Manage fields and displays settings for comment forms.',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_menu_link_defaults_alter()
  */
 function comment_menu_link_defaults_alter(&$links) {
   if (isset($links['node.content_overview'])) {
     // Add comments to the description for admin/content if any.
     $links['node.content_overview']['description'] = 'Administer content and comments.';
+  }
+  if (\Drupal::moduleHandler()->moduleExists('node')) {
+    $links['comment.admin']['parent'] = 'node.content_overview';
   }
 }
 
