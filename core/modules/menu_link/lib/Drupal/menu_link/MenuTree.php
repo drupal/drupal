@@ -424,7 +424,7 @@ class MenuTree implements MenuTreeInterface {
    *
    * This function may be used build the data for a menu tree only, for example
    * to further massage the data manually before further processing happens.
-   * menu_tree_check_access() needs to be invoked afterwards.
+   * MenuTree::checkAccess() needs to be invoked afterwards.
    *
    * @param string $menu_name
    *   The name of the menu.
