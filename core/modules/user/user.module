@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use \Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -156,12 +157,9 @@ function user_entity_bundle_info() {
  * Entity URI callback.
  */
 function user_uri($user) {
-  return array(
-    'route_name' => 'user.view',
-    'route_parameters' => array(
-      'user' => $user->id(),
-    ),
-  );
+  return new Url('user.view', array(
+    'user' => $user->id(),
+  ));
 }
 
 /**

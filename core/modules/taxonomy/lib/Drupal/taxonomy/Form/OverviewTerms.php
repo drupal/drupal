@@ -200,7 +200,6 @@ class OverviewTerms extends FormBase {
     );
     foreach ($current_page as $key => $term) {
       /** @var $term \Drupal\Core\Entity\EntityInterface */
-      $uri = $term->urlInfo();
       $form['terms'][$key]['#term'] = $term;
       $indentation = array();
       if (isset($term->depth) && $term->depth > 0) {
@@ -213,9 +212,7 @@ class OverviewTerms extends FormBase {
         '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
         '#type' => 'link',
         '#title' => $term->getName(),
-        '#route_name' => $uri['route_name'],
-        '#route_parameters' => $uri['route_parameters'],
-      );
+      ) + $term->urlInfo()->toRenderArray();
       if ($taxonomy_vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
         $parent_fields = TRUE;
         $form['terms'][$key]['term']['tid'] = array(
@@ -258,17 +255,17 @@ class OverviewTerms extends FormBase {
         'edit' => array(
           'title' => $this->t('edit'),
           'query' => $destination,
-        ) + $term->urlInfo('edit-form'),
+        ) + $term->urlInfo('edit-form')->toArray(),
         'delete' => array(
           'title' => $this->t('delete'),
           'query' => $destination,
-        ) + $term->urlInfo('delete-form'),
+        ) + $term->urlInfo('delete-form')->toArray(),
       );
       if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($term)) {
         $operations['translate'] = array(
           'title' => $this->t('translate'),
           'query' => $destination,
-        ) + $term->urlInfo('drupal:content-translation-overview');
+        ) + $term->urlInfo('drupal:content-translation-overview')->toArray();
       }
       $form['terms'][$key]['operations'] = array(
         '#type' => 'operations',

@@ -53,7 +53,7 @@ class MenuListBuilder extends ConfigEntityListBuilder {
       $operations['add'] = array(
         'title' => t('Add link'),
         'weight' => 20,
-      ) + $entity->urlInfo('add-form');
+      ) + $entity->urlInfo('add-form')->toArray();
     }
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = t('Delete menu');

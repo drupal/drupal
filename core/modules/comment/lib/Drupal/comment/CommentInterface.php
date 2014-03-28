@@ -254,10 +254,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   /**
    * Returns the permalink URL for this comment.
    *
-   * @return array
-   *   An array containing the 'path' and 'options' keys used to build the URI
-   *   of the comment, and matching the signature of
-   *   UrlGenerator::generateFromPath().
+   * @return \Drupal\Core\Url
    */
   public function permalink();
 

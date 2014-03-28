@@ -8,8 +8,11 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines a base entity class.
@@ -29,13 +32,6 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * @var bool
    */
   protected $enforceIsNew;
-
-  /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
 
   /**
    * Constructs an Entity object.
@@ -153,8 +149,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
 
     if (isset($link_templates[$rel])) {
       // If there is a template for the given relationship type, generate the path.
-      $uri['route_name'] = $link_templates[$rel];
-      $uri['route_parameters'] = $this->urlRouteParameters($rel);
+      $uri = new Url($link_templates[$rel], $this->urlRouteParameters($rel));
     }
     else {
       $bundle = $this->bundle();
@@ -174,14 +169,18 @@ abstract class Entity extends DependencySerialization implements EntityInterface
         $uri = call_user_func($uri_callback, $this);
       }
       else {
-        return array();
+        throw new UndefinedLinkTemplateException(String::format('No link template "@rel" found for the "@entity_type" entity type', array(
+          '@rel' => $rel,
+          '@entity_type' => $this->getEntityTypeId(),
+        )));
       }
     }
 
     // Pass the entity data to url() so that alter functions do not need to
     // look up this entity again.
-    $uri['options']['entity_type'] = $this->getEntityTypeId();
-    $uri['options']['entity'] = $this;
+    $uri
+      ->setOption('entity_type', $this->getEntityTypeId())
+      ->setOption('entity', $this);
 
     return $uri;
   }
@@ -190,8 +189,8 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public function getSystemPath($rel = 'canonical') {
-    if ($uri = $this->urlInfo($rel)) {
-      return $this->urlGenerator()->getPathFromRoute($uri['route_name'], $uri['route_parameters']);
+    if ($this->hasLinkTemplate($rel) && $uri = $this->urlInfo($rel)) {
+      return $uri->getInternalPath();
     }
     return '';
   }
@@ -220,12 +219,14 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   public function url($rel = 'canonical', $options = array()) {
     // While self::urlInfo() will throw an exception if the entity is new,
     // the expected result for a URL is always a string.
-    if ($this->isNew() || !$uri = $this->urlInfo($rel)) {
+    if ($this->isNew() || !$this->hasLinkTemplate($rel)) {
       return '';
     }
 
-    $options += $uri['options'];
-    return $this->urlGenerator()->generateFromRoute($uri['route_name'], $uri['route_parameters'], $options);
+    $uri = $this->urlInfo($rel);
+    $options += $uri->getOptions();
+    $uri->setOptions($options);
+    return $uri->toString();
   }
 
   /**
@@ -417,19 +418,6 @@ abstract class Entity extends DependencySerialization implements EntityInterface
     if ($bundle_of !== FALSE && $entity_manager->hasController($bundle_of, 'view_builder')) {
       $entity_manager->getViewBuilder($bundle_of)->resetCache();
     }
-  }
-
-  /**
-   * Wraps the URL generator.
-   *
-   * @return \Drupal\Core\Routing\UrlGeneratorInterface
-   *   The URL generator.
-   */
-  protected function urlGenerator() {
-    if (!$this->urlGenerator) {
-      $this->urlGenerator = \Drupal::urlGenerator();
-    }
-    return $this->urlGenerator;
   }
 
   /**

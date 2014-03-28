@@ -768,7 +768,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
   $operations['translate'] = array(
     'title' => t('Translate'),
     'weight' => 50,
-  ) + $entity->urlInfo('my-custom-link-template');
+  ) + $entity->urlInfo('my-custom-link-template')->toArray();
 }
 
 /**

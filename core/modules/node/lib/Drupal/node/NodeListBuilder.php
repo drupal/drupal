@@ -98,14 +98,14 @@ class NodeListBuilder extends EntityListBuilder {
     );
     $langcode = $entity->language()->id;
     $uri = $entity->urlInfo();
+    $options = $uri->getOptions();
+    $options += ($langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$langcode]) ? array('language' => $languages[$langcode]) : array());
+    $uri->setOptions($options);
     $row['title']['data'] = array(
       '#type' => 'link',
       '#title' => $entity->label(),
-      '#route_name' => $uri['route_name'],
-      '#route_parameters' => $uri['route_parameters'],
-      '#options' => $uri['options'] + ($langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$langcode]) ? array('language' => $languages[$langcode]) : array()),
       '#suffix' => ' ' . drupal_render($mark),
-    );
+    ) + $uri->toRenderArray();
     $row['type'] = String::checkPlain(node_get_type_label($entity));
     $row['author']['data'] = array(
       '#theme' => 'username',

@@ -86,7 +86,6 @@ abstract class ImageEffectFormBase extends FormBase {
       '#value' => $request->query->has('weight') ? (int) $request->query->get('weight') : $this->imageEffect->getWeight(),
     );
 
-    $image_style_uri = $this->imageStyle->urlInfo('edit-form');
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
@@ -95,9 +94,7 @@ abstract class ImageEffectFormBase extends FormBase {
     $form['actions']['cancel'] = array(
       '#type' => 'link',
       '#title' => $this->t('Cancel'),
-      '#route_name' => $image_style_uri['route_name'],
-      '#route_parameters' => $image_style_uri['route_parameters'],
-    );
+    ) + $this->imageStyle->urlInfo('edit-form')->toRenderArray();
     return $form;
   }
 

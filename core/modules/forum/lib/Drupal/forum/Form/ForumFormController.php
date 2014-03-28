@@ -106,7 +106,9 @@ class ForumFormController extends TermFormController {
 
     $query = $this->getRequest()->query;
     if ($query->has('destination')) {
-      $form_state['redirect_route']['options']['query']['destination'] = $query->get('destination');
+      $redirect_query = $form_state['redirect_route']->getOption('query') ?: array();
+      $redirect_query['destination'] = $query->get('destination');
+      $form_state['redirect_route']->setOption('query', $redirect_query);
       $query->remove('destination');
     }
   }

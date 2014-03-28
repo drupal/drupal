@@ -10,7 +10,7 @@ namespace Drupal\Tests\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -31,6 +31,11 @@ class EntityUrlTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $urlGenerator;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -48,9 +53,11 @@ class EntityUrlTest extends UnitTestCase {
     parent::setUp();
 
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
+    $container->set('url_generator', $this->urlGenerator);
     \Drupal::setContainer($container);
   }
 
@@ -64,7 +71,65 @@ class EntityUrlTest extends UnitTestCase {
   public function testUrlInfo($entity_class, $link_template, $expected) {
     /** @var $entity \Drupal\Core\Entity\EntityInterface */
     $entity = new $entity_class(array('id' => 'test_entity_id'), 'test_entity_type');
+    $uri = $this->getTestUrlInfo($entity, $link_template);
 
+    $this->assertSame($expected, $uri->getRouteName());
+    $this->assertSame($entity, $uri->getOption('entity'));
+  }
+
+  /**
+   * Provides test data for testUrlInfo().
+   */
+  public function providerTestUrlInfo() {
+    return array(
+      array('Drupal\Tests\Core\Entity\TestEntity', 'edit-form', 'test_entity_type.edit'),
+      array('Drupal\Tests\Core\Entity\TestConfigEntity', 'edit-form', 'test_entity_type.edit'),
+      // Test that overriding the default $rel parameter works.
+      array('Drupal\Tests\Core\Entity\TestConfigEntity', FALSE, 'test_entity_type.edit'),
+    );
+  }
+
+  /**
+   * Tests the urlInfo() method with an invalid link template.
+   *
+   * @covers ::urlInfo()
+   *
+   * @expectedException \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
+   * @expectedExceptionMessage No link template "canonical" found for the "test_entity_type" entity type
+   *
+   * @dataProvider providerTestUrlInfoForInvalidLinkTemplate
+   */
+  public function testUrlInfoForInvalidLinkTemplate($entity_class, $link_template) {
+    /** @var $entity \Drupal\Core\Entity\EntityInterface */
+    $entity = new $entity_class(array('id' => 'test_entity_id'), 'test_entity_type');
+    $uri = $this->getTestUrlInfo($entity, $link_template);
+
+    $this->assertEmpty($uri);
+  }
+
+  /**
+   * Provides test data for testUrlInfoForInvalidLinkTemplate().
+   */
+  public function providerTestUrlInfoForInvalidLinkTemplate() {
+    return array(
+      array('Drupal\Tests\Core\Entity\TestEntity', 'canonical'),
+      array('Drupal\Tests\Core\Entity\TestEntity', FALSE),
+      array('Drupal\Tests\Core\Entity\TestConfigEntity', 'canonical'),
+    );
+  }
+
+  /**
+   * Creates a \Drupal\Core\Url object based on the entity and link template.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The test entity.
+   * @param string $link_template
+   *   The link template.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL for this entity's link template.
+   */
+  protected function getTestUrlInfo(EntityInterface $entity, $link_template) {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity_type->expects($this->once())
       ->method('getLinkTemplates')
@@ -86,28 +151,7 @@ class EntityUrlTest extends UnitTestCase {
       $uri = $entity->urlInfo();
     }
 
-    if ($expected) {
-      $this->assertSame($expected, $uri['route_name']);
-      $this->assertSame($entity, $uri['options']['entity']);
-    }
-    else {
-      $this->assertEmpty($uri);
-    }
-  }
-
-  /**
-   * Provides test data for testUrlInfo().
-   */
-  public function providerTestUrlInfo() {
-    return array(
-      array('Drupal\Tests\Core\Entity\TestEntity', 'canonical', FALSE),
-      array('Drupal\Tests\Core\Entity\TestEntity', 'edit-form', 'test_entity_type.edit'),
-      array('Drupal\Tests\Core\Entity\TestEntity', FALSE, FALSE),
-      array('Drupal\Tests\Core\Entity\TestConfigEntity', 'canonical', FALSE),
-      array('Drupal\Tests\Core\Entity\TestConfigEntity', 'edit-form', 'test_entity_type.edit'),
-      // Test that overriding the default $rel parameter works.
-      array('Drupal\Tests\Core\Entity\TestConfigEntity', FALSE, 'test_entity_type.edit'),
-    );
+    return $uri;
   }
 
   /**
@@ -131,14 +175,14 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testUrl() {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->expects($this->exactly(3))
+    $entity_type->expects($this->exactly(5))
       ->method('getLinkTemplates')
       ->will($this->returnValue(array(
         'canonical' => 'test_entity_type.view',
       )));
 
     $this->entityManager
-      ->expects($this->exactly(4))
+      ->expects($this->exactly(5))
       ->method('getDefinition')
       ->with('test_entity_type')
       ->will($this->returnValue($entity_type));
@@ -150,9 +194,7 @@ class EntityUrlTest extends UnitTestCase {
     $this->assertSame('', $no_link_entity->url('banana'));
 
     $valid_entity = new TestEntity(array('id' => 'test_entity_id'), 'test_entity_type');
-    $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $valid_entity->setUrlGenerator($url_generator);
-    $url_generator->expects($this->exactly(2))
+    $this->urlGenerator->expects($this->exactly(2))
       ->method('generateFromRoute')
       ->will($this->returnValueMap(array(
         array(
@@ -180,7 +222,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testUrlForAdminForm() {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->expects($this->once())
+    $entity_type->expects($this->exactly(2))
       ->method('getLinkTemplates')
       ->will($this->returnValue(array(
         'admin-form' => 'test_entity_type.admin_form',
@@ -190,13 +232,12 @@ class EntityUrlTest extends UnitTestCase {
       ->will($this->returnValue('test_entity_type_bundle'));
 
     $this->entityManager
-      ->expects($this->exactly(3))
+      ->expects($this->exactly(4))
       ->method('getDefinition')
       ->with('test_entity_type')
       ->will($this->returnValue($entity_type));
 
-    $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $url_generator->expects($this->once())
+    $this->urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('test_entity_type.admin_form', array(
         'test_entity_type_bundle' => 'test_entity_bundle',
@@ -205,7 +246,6 @@ class EntityUrlTest extends UnitTestCase {
       ->will($this->returnValue('entity/test_entity_type/test_entity_bundle/test_entity_id'));
 
     $entity = new TestEntityWithBundle(array('id' => 'test_entity_id', 'bundle' => 'test_entity_bundle'), 'test_entity_type');
-    $entity->setUrlGenerator($url_generator);
 
     $this->assertSame('entity/test_entity_type/test_entity_bundle/test_entity_id', $entity->url('admin-form'));
   }
@@ -217,7 +257,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testGetSystemPath() {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->expects($this->exactly(2))
+    $entity_type->expects($this->exactly(3))
       ->method('getLinkTemplates')
       ->will($this->returnValue(array(
         'canonical' => 'test_entity_type.view',
@@ -232,14 +272,12 @@ class EntityUrlTest extends UnitTestCase {
     $no_link_entity = new TestEntity(array('id' => 'test_entity_id'), 'test_entity_type');
     $this->assertSame('', $no_link_entity->getSystemPath('banana'));
 
-    $url_generator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $url_generator->expects($this->once())
+    $this->urlGenerator->expects($this->once())
       ->method('getPathFromRoute')
       ->with('test_entity_type.view', array('test_entity_type' => 'test_entity_id'))
       ->will($this->returnValue('entity/test_entity_type/test_entity_id'));
 
     $valid_entity = new TestEntity(array('id' => 'test_entity_id'), 'test_entity_type');
-    $valid_entity->setUrlGenerator($url_generator);
 
     $this->assertSame('entity/test_entity_type/test_entity_id', $valid_entity->getSystemPath());
   }
@@ -293,18 +331,6 @@ class TestConfigEntity extends ConfigEntityBase {
 }
 
 class TestEntity extends Entity {
-
-  /**
-   * Sets the URL generator.
-   *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *
-   * @return $this
-   */
-  public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
-    $this->urlGenerator = $url_generator;
-    return $this;
-  }
 
 }
 

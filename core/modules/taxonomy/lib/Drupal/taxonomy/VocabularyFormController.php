@@ -136,8 +136,7 @@ class VocabularyFormController extends EntityFormController {
     $vocabulary->name = trim($vocabulary->name);
 
     $status = $vocabulary->save();
-    $uri = $vocabulary->urlInfo();
-    $edit_link = \Drupal::l($this->t('edit'), $uri['route_name'], $uri['route_parameters'], $uri['options']);
+    $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('edit'), $this->entity->urlInfo());
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));

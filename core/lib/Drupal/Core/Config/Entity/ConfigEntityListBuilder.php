@@ -38,13 +38,13 @@ class ConfigEntityListBuilder extends EntityListBuilder {
         $operations['enable'] = array(
           'title' => t('Enable'),
           'weight' => -10,
-        ) + $entity->urlInfo('enable');
+        ) + $entity->urlInfo('enable')->toArray();
       }
       elseif ($entity->hasLinkTemplate('disable')) {
         $operations['disable'] = array(
           'title' => t('Disable'),
           'weight' => 40,
-        ) + $entity->urlInfo('disable');
+        ) + $entity->urlInfo('disable')->toArray();
       }
     }
 

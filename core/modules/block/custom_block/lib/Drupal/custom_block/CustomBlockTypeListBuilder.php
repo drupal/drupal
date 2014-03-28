@@ -43,8 +43,7 @@ class CustomBlockTypeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $uri = $entity->urlInfo();
-    $row['type'] = \Drupal::l($entity->label(), $uri['route_name'], $uri['route_parameters'], $uri['options']);
+    $row['type'] = \Drupal::linkGenerator()->generateFromUrl($entity->label(), $entity->urlInfo());
     $row['description'] = filter_xss_admin($entity->description);
     return $row + parent::buildRow($entity);
   }

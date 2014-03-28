@@ -21,8 +21,7 @@ interface CommentManagerInterface {
    * @param \Drupal\comment\CommentInterface $comment
    *   The comment entity.
    *
-   * @return array
-   *   An array returned by \Drupal\Core\Entity\EntityInterface::uri().
+   * @return \Drupal\Core\Url
    */
   public function getParentEntityUri(CommentInterface $comment);
 

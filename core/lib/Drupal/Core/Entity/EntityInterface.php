@@ -120,10 +120,7 @@ interface EntityInterface extends AccessibleInterface {
    * @param string $rel
    *   The link relationship type, for example: canonical or edit-form.
    *
-   * @return mixed[]
-   *   An array containing 'route_name', 'route_parameters' and 'options' keys
-   *   used to build the URI of the entity and matching the signature of
-   *   \Drupal::url().
+   * @return \Drupal\Core\Url
    */
   public function urlInfo($rel = 'canonical');
 

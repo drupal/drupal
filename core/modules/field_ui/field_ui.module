@@ -183,19 +183,19 @@ function field_ui_entity_operation_alter(array &$operations, EntityInterface $en
       $operations['manage-fields'] = array(
         'title' => t('Manage fields'),
         'weight' => 15,
-      ) + $entity->urlInfo('field_ui-fields');
+      ) + $entity->urlInfo('field_ui-fields')->toArray();
     }
     if (user_access('administer '. $bundle_of . ' form display')) {
       $operations['manage-form-display'] = array(
         'title' => t('Manage form display'),
         'weight' => 20,
-      ) + $entity->urlInfo('field_ui-form-display');
+      ) + $entity->urlInfo('field_ui-form-display')->toArray();
     }
     if (user_access('administer '. $bundle_of . ' display')) {
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'weight' => 25,
-      ) + $entity->urlInfo('field_ui-display');
+      ) + $entity->urlInfo('field_ui-display')->toArray();
     }
   }
 }

@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
@@ -126,12 +127,9 @@ function taxonomy_entity_bundle_info() {
  * Entity URI callback.
  */
 function taxonomy_term_uri($term) {
-  return array(
-    'route_name' => 'taxonomy.term_page',
-    'route_parameters' => array(
-      'taxonomy_term' => $term->id(),
-    ),
-  );
+  return new Url('taxonomy.term_page', array(
+    'taxonomy_term' => $term->id(),
+  ));
 }
 
 /**

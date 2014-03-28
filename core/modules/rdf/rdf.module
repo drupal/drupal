@@ -351,7 +351,7 @@ function rdf_preprocess_user(&$variables) {
   }
   // If we are on the user account page, add the relationship between the
   // sioc:UserAccount and the foaf:Person who holds the account.
-  if (\Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME) == $uri['route_name']) {
+  if (\Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME) == $uri->getRouteName()) {
     // Adds the markup for username as language neutral literal, see
     // rdf_preprocess_username().
     $name_mapping = $mapping->getPreparedFieldMapping('name');

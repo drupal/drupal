@@ -5,6 +5,7 @@
  * Enables users to create menu links.
  */
 
+use Drupal\Core\Url;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -26,10 +27,7 @@ function menu_link_help($path, $arg) {
  *   A menu link entity.
  */
 function menu_link_uri(MenuLink $menu_link) {
-  return array(
-    'route_name' => $menu_link->route_name,
-    'route_parameters' => $menu_link->route_parameters,
-  );
+  return new Url($menu_link->route_name, $menu_link->route_parameters);
 }
 
 /**

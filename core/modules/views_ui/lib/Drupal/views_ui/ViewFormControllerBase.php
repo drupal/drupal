@@ -121,7 +121,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
         '#link' => array(
           'title' => $this->getDisplayLabel($view, $id),
           'localized_options' => array(),
-        ) + $view->urlInfo('edit-display-form'),
+        ) + $view->urlInfo('edit-display-form')->toArray(),
       );
       $tabs[$id]['#link']['route_parameters']['display_id'] = $id;
       if (!empty($display['deleted'])) {

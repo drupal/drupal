@@ -9,6 +9,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -230,12 +231,9 @@ function node_entity_form_display_alter(EntityFormDisplayInterface $form_display
  *   An array with 'path' as the key and the path to the node as its value.
  */
 function node_uri(NodeInterface $node) {
-  return array(
-    'route_name' => 'node.view',
-    'route_parameters' => array(
-      'node' => $node->id(),
-    ),
-  );
+  return new Url('node.view', array(
+    'node' => $node->id(),
+  ));
 }
 
 /**

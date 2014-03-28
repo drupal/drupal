@@ -410,7 +410,8 @@ class CommentFormController extends ContentEntityFormController {
         $query['page'] = $page;
       }
       // Redirect to the newly posted comment.
-      $uri['options'] += array('query' => $query, 'fragment' => 'comment-' . $comment->id());
+      $uri->setOption('query', $query);
+      $uri->setOption('fragment', 'comment-' . $comment->id());
     }
     else {
       watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->getSubject()), WATCHDOG_WARNING);

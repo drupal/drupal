@@ -78,7 +78,7 @@ class ImageStyleListBuilder extends ConfigEntityListBuilder {
     $flush = array(
       'title' => t('Flush'),
       'weight' => 200,
-    ) + $entity->urlInfo('flush-form');
+    ) + $entity->urlInfo('flush-form')->toArray();
 
     return parent::getOperations($entity) + array('flush' => $flush);
   }

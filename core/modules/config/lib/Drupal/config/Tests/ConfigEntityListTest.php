@@ -54,15 +54,15 @@ class ConfigEntityListTest extends WebTestBase {
       'edit' => array (
         'title' => t('Edit'),
         'weight' => 10,
-      ) + $entity->urlInfo(),
+      ) + $entity->urlInfo()->toArray(),
       'disable' => array(
         'title' => t('Disable'),
         'weight' => 40,
-      ) + $entity->urlInfo('disable'),
+      ) + $entity->urlInfo('disable')->toArray(),
       'delete' => array (
         'title' => t('Delete'),
         'weight' => 100,
-      ) + $entity->urlInfo('delete-form'),
+      ) + $entity->urlInfo('delete-form')->toArray(),
     );
 
     $actual_operations = $controller->getOperations($entity);
@@ -126,11 +126,11 @@ class ConfigEntityListTest extends WebTestBase {
       'edit' => array(
         'title' => t('Edit'),
         'weight' => 10,
-      ) + $entity->urlInfo(),
+      ) + $entity->urlInfo()->toArray(),
       'delete' => array(
         'title' => t('Delete'),
         'weight' => 100,
-      ) + $entity->urlInfo('delete-form'),
+      ) + $entity->urlInfo('delete-form')->toArray(),
     );
 
     $actual_operations = $controller->getOperations($entity);

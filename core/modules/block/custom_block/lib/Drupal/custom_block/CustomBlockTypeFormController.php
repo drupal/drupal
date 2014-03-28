@@ -89,8 +89,7 @@ class CustomBlockTypeFormController extends EntityFormController {
     $block_type = $this->entity;
     $status = $block_type->save();
 
-    $uri = $block_type->urlInfo();
-    $edit_link = \Drupal::l($this->t('Edit'), $uri['route_name'], $uri['route_parameters'], $uri['options']);
+    $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Custom block type %label has been updated.', array('%label' => $block_type->label())));
       watchdog('custom_block', 'Custom block type %label has been updated.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, $edit_link);

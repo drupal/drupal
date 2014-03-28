@@ -91,8 +91,8 @@ class ViewPreviewFormController extends ViewFormControllerBase {
       );
     }
     $uri = $view->urlInfo('preview-form');
-    $uri['route_parameters']['display_id'] = $this->displayID;
-    $form['#action'] = \Drupal::url($uri['route_name'], $uri['route_parameters'], $uri['options']);
+    $uri->setRouteParameter('display_id', $this->displayID);
+    $form['#action'] = $uri->toString();
 
     return $form;
   }

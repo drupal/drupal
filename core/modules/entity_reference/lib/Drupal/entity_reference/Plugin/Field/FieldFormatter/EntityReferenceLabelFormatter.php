@@ -74,10 +74,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
           $elements[$delta] = array(
             '#type' => 'link',
             '#title' => $label,
-            '#route_name' => $uri['route_name'],
-            '#route_parameters' => $uri['route_parameters'],
-            '#options' => $uri['options'],
-          );
+          ) + $uri->toRenderArray();
         }
         else {
           $elements[$delta] = array('#markup' => check_plain($label));

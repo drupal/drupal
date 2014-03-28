@@ -14,6 +14,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Url;
 use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\FileInterface;
@@ -111,12 +112,12 @@ function comment_entity_bundle_info() {
  * Entity URI callback.
  */
 function comment_uri(CommentInterface $comment) {
-  return array(
-    'route_name' => 'comment.permalink',
-    'route_parameters' => array(
+  return new Url(
+    'comment.permalink',
+    array(
       'comment' => $comment->id(),
     ),
-    'options' => array('fragment' => 'comment-' . $comment->id()),
+    array('fragment' => 'comment-' . $comment->id())
   );
 }
 
@@ -442,7 +443,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
               'attributes' => array('title' => t('Jump to the first comment of this posting.')),
               'fragment' => 'comments',
               'html' => TRUE,
-            ) + $node->urlInfo();
+            ) + $node->urlInfo()->toArray();
             if (\Drupal::moduleHandler()->moduleExists('history')) {
               $links['comment-new-comments'] = array(
                 'title' => '',
@@ -476,7 +477,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
               );
             }
             else {
-              $links['comment-add'] += $node->urlInfo();
+              $links['comment-add'] += $node->urlInfo()->toArray();
             }
           }
           else {
@@ -510,7 +511,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
                 );
               }
               else {
-                $links['comment-add'] += $node->urlInfo();
+                $links['comment-add'] += $node->urlInfo()->toArray();
               }
             }
           }
@@ -1354,11 +1355,12 @@ function template_preprocess_comment(&$variables) {
   }
   else {
     $uri = $comment->urlInfo();
-    $uri['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
-    $variables['title'] = \Drupal::l($comment->getSubject(), $uri['route_name'], $uri['route_parameters'], $uri['options']);
+    $attributes = $uri->getOption('attributes') ?: array();
+    $attributes += array('class' => array('permalink'), 'rel' => 'bookmark');
+    $uri->setOption('attributes', $attributes);
+    $variables['title'] = \Drupal::linkGenerator()->generateFromUrl($comment->getSubject(), $uri);
 
-    $permalink_uri = $comment->permalink();
-    $variables['permalink'] = \Drupal::l(t('Permalink'), $permalink_uri['route_name'], $permalink_uri['route_parameters'], $permalink_uri['options']);
+    $variables['permalink'] = \Drupal::linkGenerator()->generateFromUrl(t('Permalink'), $comment->permalink());
   }
 
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
@@ -1382,9 +1384,11 @@ function template_preprocess_comment(&$variables) {
       $variables['parent_changed'] = format_date($comment_parent->getChangedTime());
     }
     $permalink_uri_parent = $comment_parent->permalink();
-    $permalink_uri_parent['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
-    $variables['parent_title'] = \Drupal::l($comment_parent->getSubject(), $permalink_uri_parent['route_name'], $permalink_uri_parent['route_parameters'], $permalink_uri_parent['options']);
-    $variables['parent_permalink'] = \Drupal::l(t('Parent permalink'), $permalink_uri_parent['route_name'], $permalink_uri_parent['route_parameters'], $permalink_uri_parent['options']);
+    $attributes = $permalink_uri_parent->getOption('attributes') ?: array();
+    $attributes += array('class' => array('permalink'), 'rel' => 'bookmark');
+    $permalink_uri_parent->setOption('attributes', $attributes);
+    $variables['parent_title'] = \Drupal::linkGenerator()->generateFromUrl($comment_parent->getSubject(), $permalink_uri_parent);
+    $variables['parent_permalink'] = \Drupal::linkGenerator()->generateFromUrl(t('Parent permalink'), $permalink_uri_parent);
     $variables['parent'] = t('In reply to !parent_title by !parent_username',
         array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
   }

@@ -166,7 +166,7 @@ function config_translation_entity_operation_alter(array &$operations, EntityInt
     $operations['translate'] = array(
       'title' => t('Translate'),
       'weight' => 50,
-    ) + $entity->urlInfo('drupal:config-translation-overview');
+    ) + $entity->urlInfo('drupal:config-translation-overview')->toArray();
   }
 }
 

@@ -129,7 +129,6 @@ class NodeController extends ControllerBase {
     $build = $this->buildPage($node);
 
     foreach ($node->uriRelationships() as $rel) {
-      $uri = $node->urlInfo($rel);
       // Set the node path as the canonical URL to prevent duplicate content.
       $build['#attached']['drupal_add_html_head_link'][] = array(
         array(
