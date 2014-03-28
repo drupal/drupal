@@ -8,7 +8,6 @@
  * API pattern.
  */
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\Cache;
@@ -23,6 +22,8 @@ use Drupal\Core\Template\Attribute;
 use Drupal\file\Entity\File;
 use Drupal\language\Entity\Language as LanguageEntity;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\block\Entity\Block;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Denotes that the node is not published.
@@ -1075,7 +1076,11 @@ function node_form_block_form_alter(&$form, &$form_state) {
  * Checks the content type specific visibility settings and removes the block
  * if the visibility conditions are not met.
  */
-function node_block_access($block) {
+function node_block_access(Block $block, $operation, AccountInterface $account, $langcode) {
+  // Only affect access when viewing the block.
+  if ($operation != 'view') {
+    return;
+  }
   $visibility = $block->get('visibility');
   if (!empty($visibility)) {
     if (!empty($visibility['node_type']['types'])) {
