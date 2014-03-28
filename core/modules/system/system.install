@@ -812,7 +812,8 @@ function system_schema() {
       ),
       'route' => array(
         'description' => 'A serialized Route object',
-        'type' => 'text',
+        'type' => 'blob',
+        'size' => 'big',
       ),
       'number_parts' => array(
         'description' => 'Number of parts in this router path.',

@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Routing;
 
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\KeyValueStore\State;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -39,6 +41,13 @@ class RouteProviderTest extends UnitTestBase {
    */
   protected $routeBuilder;
 
+  /**
+   * The state.
+   *
+   * @var \Drupal\Core\KeyValueStore\StateInterface
+   */
+  protected $state;
+
   public static function getInfo() {
     return array(
       'name' => 'Route Provider tests',
@@ -47,11 +56,10 @@ class RouteProviderTest extends UnitTestBase {
     );
   }
 
-  function __construct($test_id = NULL) {
-    parent::__construct($test_id);
-
+  public function setUp() {
     $this->fixtures = new RoutingFixtures();
     $this->routeBuilder = new NullRouteBuilder();
+    $this->state = new State(new KeyValueMemoryFactory());
   }
 
   public function tearDown() {
@@ -66,7 +74,7 @@ class RouteProviderTest extends UnitTestBase {
   public function testCandidateOutlines() {
 
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder);
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $parts = array('node', '5', 'edit');
 
@@ -74,7 +82,7 @@ class RouteProviderTest extends UnitTestBase {
 
     $candidates = array_flip($candidates);
 
-    $this->assertTrue(count($candidates) == 8, 'Correct number of candidates found');
+    $this->assertTrue(count($candidates) == 7, 'Correct number of candidates found');
     $this->assertTrue(array_key_exists('/node/5/edit', $candidates), 'First candidate found.');
     $this->assertTrue(array_key_exists('/node/5/%', $candidates), 'Second candidate found.');
     $this->assertTrue(array_key_exists('/node/%/edit', $candidates), 'Third candidate found.');
@@ -82,7 +90,6 @@ class RouteProviderTest extends UnitTestBase {
     $this->assertTrue(array_key_exists('/node/5', $candidates), 'Fifth candidate found.');
     $this->assertTrue(array_key_exists('/node/%', $candidates), 'Sixth candidate found.');
     $this->assertTrue(array_key_exists('/node', $candidates), 'Seventh candidate found.');
-    $this->assertTrue(array_key_exists('/', $candidates), 'Eighth candidate found.');
   }
 
   /**
@@ -90,11 +97,11 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testExactPathMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($this->fixtures->sampleRouteCollection());
     $dumper->dump();
 
@@ -114,11 +121,11 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($this->fixtures->complexRouteCollection());
     $dumper->dump();
 
@@ -143,11 +150,11 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchTrailingSlash() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($this->fixtures->complexRouteCollection());
     $dumper->dump();
 
@@ -172,7 +179,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaults() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -181,7 +188,7 @@ class RouteProviderTest extends UnitTestBase {
       'value' => 'poink',
     )));
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($collection);
     $dumper->dump();
 
@@ -210,7 +217,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaultsCollision() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -220,7 +227,7 @@ class RouteProviderTest extends UnitTestBase {
     )));
     $collection->add('narf', new Route('/some/path/here'));
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($collection);
     $dumper->dump();
 
@@ -249,7 +256,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaultsCollision2() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -260,7 +267,7 @@ class RouteProviderTest extends UnitTestBase {
     $collection->add('narf', new Route('/some/path/here'));
     $collection->add('eep', new Route('/something/completely/different'));
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($collection);
     $dumper->dump();
 
@@ -288,14 +295,14 @@ class RouteProviderTest extends UnitTestBase {
    */
   public function testOutlinePathMatchZero() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
     $collection = new RouteCollection();
     $collection->add('poink', new Route('/some/path/{value}'));
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($collection);
     $dumper->dump();
 
@@ -323,11 +330,11 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathNoMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($this->fixtures->complexRouteCollection());
     $dumper->dump();
 
@@ -335,16 +342,12 @@ class RouteProviderTest extends UnitTestBase {
 
     $request = Request::create($path, 'GET');
 
-    try {
-      $routes = $provider->getRoutesByPattern($path);
-      $this->assertFalse(count($routes), 'No path found with this pattern.');
 
-      $provider->getRouteCollectionForRequest($request);
-      $this->fail(t('No exception was thrown.'));
-    }
-    catch (\Exception $e) {
-      $this->assertTrue($e instanceof ResourceNotFoundException, 'The correct exception was thrown.');
-    }
+    $routes = $provider->getRoutesByPattern($path);
+    $this->assertFalse(count($routes), 'No path found with this pattern.');
+
+    $collection = $provider->getRouteCollectionForRequest($request);
+    $this->assertTrue(count($collection) == 0, 'Empty route collection found with this pattern.');
   }
 
   /**
@@ -352,11 +355,11 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testSystemPathMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($this->fixtures->sampleRouteCollection());
     $dumper->dump();
 
@@ -377,11 +380,11 @@ class RouteProviderTest extends UnitTestBase {
    */
   protected function testRouteByName() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($this->fixtures->sampleRouteCollection());
     $dumper->dump();
 
@@ -412,21 +415,57 @@ class RouteProviderTest extends UnitTestBase {
    */
   public function testGetRoutesByPatternWithLongPatterns() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, $this->state, 'test_routes');
 
     $this->fixtures->createTables($connection);
+    // This pattern has only 3 parts, so we will get candidates, but no routes,
+    // even though we have not dumped the routes yet.
+    $shortest = '/test/1/test2';
+    $result = $provider->getRoutesByPattern($shortest);
+    $this->assertEqual($result->count(), 0);
+    $candidates = $provider->getCandidateOutlines(explode('/', trim($shortest, '/')));
+    $this->assertEqual(count($candidates), 7);
+    // A longer patten is not found and returns no candidates
+    $path_to_test = '/test/1/test2/2/test3/3/4/5/6/test4';
+    $result = $provider->getRoutesByPattern($path_to_test);
+    $this->assertEqual($result->count(), 0);
+    $candidates = $provider->getCandidateOutlines(explode('/', trim($path_to_test, '/')));
+    $this->assertEqual(count($candidates), 0);
 
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    // Add a matching route and dump it.
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $collection = new RouteCollection();
     $collection->add('long_pattern', new Route('/test/{v1}/test2/{v2}/test3/{v3}/{v4}/{v5}/{v6}/test4'));
     $dumper->addRoutes($collection);
     $dumper->dump();
 
-    $result = $provider->getRoutesByPattern('/test/1/test2/2/test3/3/4/5/6/test4');
+    $result = $provider->getRoutesByPattern($path_to_test);
     $this->assertEqual($result->count(), 1);
     // We can't compare the values of the routes directly, nor use
     // spl_object_hash() because they are separate instances.
     $this->assertEqual(serialize($result->get('long_pattern')), serialize($collection->get('long_pattern')), 'The right route was found.');
+    // We now have a single candidate outline.
+    $candidates = $provider->getCandidateOutlines(explode('/', trim($path_to_test, '/')));
+    $this->assertEqual(count($candidates), 1);
+    // Longer and shorter patterns are not found. Both are longer than 3, so
+    // we should not have any candidates either. The fact that we do not
+    // get any candidates for a longer path is a security feature.
+    $longer = '/test/1/test2/2/test3/3/4/5/6/test4/trailing/more/parts';
+    $result = $provider->getRoutesByPattern($longer);
+    $this->assertEqual($result->count(), 0);
+    $candidates = $provider->getCandidateOutlines(explode('/', trim($longer, '/')));
+    $this->assertEqual(count($candidates), 1);
+    $shorter = '/test/1/test2/2/test3';
+    $result = $provider->getRoutesByPattern($shorter);
+    $this->assertEqual($result->count(), 0);
+    $candidates = $provider->getCandidateOutlines(explode('/', trim($shorter, '/')));
+    $this->assertEqual(count($candidates), 0);
+    // This pattern has only 3 parts, so we will get candidates, but no routes.
+    // This result is unchanged by running the dumper.
+    $result = $provider->getRoutesByPattern($shortest);
+    $this->assertEqual($result->count(), 0);
+    $candidates = $provider->getCandidateOutlines(explode('/', trim($shortest, '/')));
+    $this->assertEqual(count($candidates), 7);
   }
 
 }

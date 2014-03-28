@@ -8,6 +8,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\KeyValueStore\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -43,6 +44,13 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
   protected $routeBuilder;
 
   /**
+   * The state.
+   *
+   * @var \Drupal\Core\KeyValueStore\StateInterface
+   */
+  protected $state;
+
+  /**
    * A cache of already-loaded routes, keyed by route name.
    *
    * @var array
@@ -56,12 +64,15 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
    *   A database connection object.
    * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
    *   The route builder.
+   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   *   The state.
    * @param string $table
    *   The table in the database to use for matching.
    */
-  public function __construct(Connection $connection, RouteBuilderInterface $route_builder, $table = 'router') {
+  public function __construct(Connection $connection, RouteBuilderInterface $route_builder, StateInterface $state, $table = 'router') {
     $this->connection = $connection;
     $this->routeBuilder = $route_builder;
+    $this->state = $state;
     $this->tableName = $table;
   }
 
@@ -113,10 +124,6 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
     // Try rebuilding the router if it is necessary.
     if (!$collection->count() && $this->routeBuilder->rebuildIfNeeded()) {
       $collection = $this->getRoutesByPath($path);
-    }
-
-    if (!$collection->count()) {
-      throw new ResourceNotFoundException(String::format("The route for '@path' could not be found", array('@path' => $path)));
     }
 
     return $collection;
@@ -202,7 +209,24 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
 
     // The highest possible mask is a 1 bit for every part of the path. We will
     // check every value down from there to generate a possible outline.
-    $masks = range($end, 0);
+    if ($number_parts == 1) {
+      $masks = array(1);
+    }
+    elseif ($number_parts <= 3) {
+      // Optimization - don't query the state system for short paths. This also
+      // insulates against the state entry for masks going missing for common
+      // user-facing paths since we generate all values without checking state.
+      $masks = range($end, 1);
+    }
+    elseif ($number_parts <= 0) {
+      // No path can match, short-circuit the process.
+      $masks = array();
+    }
+    else {
+      // Get the actual patterns that exist out of state.
+      $masks = (array) $this->state->get('routing.menu_masks.' . $this->tableName, array());
+    }
+
 
     // Only examine patterns that actually exist as router items (the masks).
     foreach ($masks as $i) {
@@ -260,14 +284,18 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
       return $value !== NULL && $value !== '';
     }));
 
+    $collection = new RouteCollection();
+
     $ancestors = $this->getCandidateOutlines($parts);
+    if (empty($ancestors)) {
+      return $collection;
+    }
 
     $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN (:patterns) ORDER BY fit DESC, name ASC", array(
       ':patterns' => $ancestors,
     ))
       ->fetchAllKeyed();
 
-    $collection = new RouteCollection();
     foreach ($routes as $name => $route) {
       $route = unserialize($route);
       if (preg_match($route->compile()->getRegex(), $path, $matches)) {

@@ -2,11 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Routing\UrlMatcherDumperTest.
+ * Contains \Drupal\system\Tests\Routing\MatcherDumperTest.
  */
 
 namespace Drupal\system\Tests\Routing;
 
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\KeyValueStore\State;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -27,6 +29,13 @@ class MatcherDumperTest extends UnitTestBase {
    */
   protected $fixtures;
 
+  /**
+   * The state.
+   *
+   * @var \Drupal\Core\KeyValueStore\StateInterface
+   */
+  protected $state;
+
   public static function getInfo() {
     return array(
       'name' => 'Dumper tests',
@@ -39,6 +48,7 @@ class MatcherDumperTest extends UnitTestBase {
     parent::__construct($test_id);
 
     $this->fixtures = new RoutingFixtures();
+    $this->state = new State(new KeyValueMemoryFactory());
   }
 
   function setUp() {
@@ -50,7 +60,7 @@ class MatcherDumperTest extends UnitTestBase {
    */
   function testCreate() {
     $connection = Database::getConnection();
-    $dumper= new MatcherDumper($connection);
+    $dumper= new MatcherDumper($connection, $this->state);
 
     $class_name = 'Drupal\Core\Routing\MatcherDumper';
     $this->assertTrue($dumper instanceof $class_name, 'Dumper created successfully');
@@ -61,7 +71,7 @@ class MatcherDumperTest extends UnitTestBase {
    */
   function testAddRoutes() {
     $connection = Database::getConnection();
-    $dumper= new MatcherDumper($connection);
+    $dumper= new MatcherDumper($connection, $this->state);
 
     $route = new Route('test');
     $collection = new RouteCollection();
@@ -82,7 +92,7 @@ class MatcherDumperTest extends UnitTestBase {
    */
   function testAddAdditionalRoutes() {
     $connection = Database::getConnection();
-    $dumper= new MatcherDumper($connection);
+    $dumper= new MatcherDumper($connection, $this->state);
 
     $route = new Route('test');
     $collection = new RouteCollection();
@@ -118,7 +128,7 @@ class MatcherDumperTest extends UnitTestBase {
    */
   public function testDump() {
     $connection = Database::getConnection();
-    $dumper= new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
 
     $route = new Route('/test/{my}/path');
     $route->setOption('compiler_class', 'Drupal\Core\Routing\RouteCompiler');
@@ -143,11 +153,40 @@ class MatcherDumperTest extends UnitTestBase {
   }
 
   /**
+   * Tests the determination of the masks generation.
+   */
+  public function testMenuMasksGeneration() {
+    $connection = Database::getConnection();
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
+
+    $collection = new RouteCollection();
+    $collection->add('test_route_1', new Route('/test-length-3/{my}/path'));
+    $collection->add('test_route_2', new Route('/test-length-3/hello/path'));
+    $collection->add('test_route_3', new Route('/test-length-5/{my}/path/marvin/magrathea'));
+    $collection->add('test_route_4', new Route('/test-length-7/{my}/path/marvin/magrathea/earth/ursa-minor'));
+
+    $dumper->addRoutes($collection);
+
+    $this->fixtures->createTables($connection);
+
+    $dumper->dump(array('provider' => 'test'));
+    // Using binary for readability, we expect a 0 at any wildcard slug. They
+    // should be ordered from longest to shortest.
+    $expected = array(
+      bindec('1011111'),
+      bindec('10111'),
+      bindec('111'),
+      bindec('101'),
+    );
+    $this->assertEqual($this->state->get('routing.menu_masks.test_routes'), $expected);
+  }
+
+  /**
    * Tests that changing the provider of a route updates the dumped value.
    */
   public function testDumpRouteProviderRename() {
     $connection = Database::getConnection();
-    $dumper = new MatcherDumper($connection, 'test_routes');
+    $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $this->fixtures->createTables($connection);
 
     $route = new Route('/test');

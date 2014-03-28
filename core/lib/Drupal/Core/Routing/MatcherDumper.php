@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\KeyValueStore\StateInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 use Drupal\Core\Database\Connection;
@@ -31,6 +32,13 @@ class MatcherDumper implements MatcherDumperInterface {
   protected $routes;
 
   /**
+   * The state.
+   *
+   * @var \Drupal\Core\KeyValueStore\StateInterface
+   */
+  protected $state;
+
+  /**
    * The name of the SQL table to which to dump the routes.
    *
    * @var string
@@ -43,11 +51,14 @@ class MatcherDumper implements MatcherDumperInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection which will be used to store the route
    *   information.
+   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   *   The state.
    * @param string $table
    *   (optional) The table to store the route info in. Defaults to 'router'.
    */
-  public function __construct(Connection $connection, $table = 'router') {
+  public function __construct(Connection $connection, StateInterface $state, $table = 'router') {
     $this->connection = $connection;
+    $this->state = $state;
 
     $this->tableName = $table;
   }
@@ -79,6 +90,7 @@ class MatcherDumper implements MatcherDumperInterface {
     $options += array(
       'provider' => '',
     );
+
     // If there are no new routes, just delete any previously existing of this
     // provider.
     if (empty($this->routes) || !count($this->routes)) {
@@ -88,6 +100,8 @@ class MatcherDumper implements MatcherDumperInterface {
     }
     // Convert all of the routes into database records.
     else {
+      // Accumulate the menu masks on top of any we found before.
+      $masks = array_flip($this->state->get('routing.menu_masks.' . $this->tableName, array()));
       $insert = $this->connection->insert($this->tableName)->fields(array(
         'name',
         'provider',
@@ -101,6 +115,11 @@ class MatcherDumper implements MatcherDumperInterface {
       foreach ($this->routes as $name => $route) {
         $route->setOption('compiler_class', '\Drupal\Core\Routing\RouteCompiler');
         $compiled = $route->compile();
+        // The fit value is a binary number which has 1 at every fixed path
+        // position and 0 where there is a wildcard. We keep track of all such
+        // patterns that exist so that we can minimize the the number of path
+        // patterns we need to check in the RouteProvider.
+        $masks[$compiled->getFit()] = 1;
         $names[] = $name;
         $values = array(
           'name' => $name,
@@ -136,6 +155,10 @@ class MatcherDumper implements MatcherDumperInterface {
         watchdog_exception('Routing', $e);
         throw $e;
       }
+      // Sort the masks so they are in order of descending fit.
+      $masks = array_keys($masks);
+      rsort($masks);
+      $this->state->set('routing.menu_masks.' . $this->tableName, $masks);
     }
     // The dumper is reused for multiple providers, so reset the queued routes.
     $this->routes = NULL;
