@@ -14,7 +14,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\user\UserAutocomplete;
 
 /**
- * Controller routines for taxonomy user routes.
+ * Controller routines for user routes.
  */
 class UserAutocompleteController implements ContainerInjectionInterface {
 
