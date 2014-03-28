@@ -205,9 +205,9 @@ function user_picture_enabled() {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  */
-function user_field_extra_fields() {
+function user_entity_extra_field_info() {
   $fields['user']['user']['form']['account'] = array(
     'label' => t('User name and password'),
     'description' => t('User module account form elements.'),

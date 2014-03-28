@@ -683,9 +683,9 @@ function content_translation_entity_update(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  */
-function content_translation_field_extra_fields() {
+function content_translation_entity_extra_field_info() {
   $extra = array();
 
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {

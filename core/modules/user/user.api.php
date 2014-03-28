@@ -324,7 +324,7 @@ function hook_user_logout($account) {
 function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
-  // user entity type in hook_field_extra_fields().
+  // user entity type in hook_entity_extra_field_info().
   if ($display->getComponent('mymodule_addition')) {
     $account->content['mymodule_addition'] = array(
       '#markup' => mymodule_addition($account),

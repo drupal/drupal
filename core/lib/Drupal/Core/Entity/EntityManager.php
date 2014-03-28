@@ -43,6 +43,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityManager extends PluginManagerBase implements EntityManagerInterface {
 
   /**
+   * Extra fields by bundle.
+   *
+   * @var array
+   */
+  protected $extraFields = array();
+
+  /**
    * The injection container that should be passed into the controller factory.
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -163,6 +170,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
 
     $this->bundleInfo = NULL;
     $this->displayModeInfo = array();
+    $this->extraFields = array();
   }
 
   /**
@@ -515,6 +523,42 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     }
 
     return $this->bundleInfo;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExtraFields($entity_type_id, $bundle) {
+    // Read from the "static" cache.
+    if (isset($this->extraFields[$entity_type_id][$bundle])) {
+      return $this->extraFields[$entity_type_id][$bundle];
+    }
+
+    // Read from the persistent cache. Since hook_entity_extra_field_info() and
+    // hook_entity_extra_field_info_alter() might contain t() calls, we cache
+    // per language.
+    $cache_id = 'entity_bundle_extra_fields:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->id;
+    $cached = $this->cache->get($cache_id);
+    if ($cached) {
+      $this->extraFields[$entity_type_id][$bundle] = $cached->data;
+      return $this->extraFields[$entity_type_id][$bundle];
+    }
+
+    $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
+    $this->moduleHandler->alter('entity_extra_field_info', $extra);
+    $info = isset($extra[$entity_type_id][$bundle]) ? $extra[$entity_type_id][$bundle] : array();
+    $info += array(
+      'form' => array(),
+      'display' => array(),
+    );
+
+    // Store in the 'static' and persistent caches.
+    $this->extraFields[$entity_type_id][$bundle] = $info;
+    $this->cache->set($cache_id, $info, Cache::PERMANENT, array(
+      'entity_field_info' => TRUE,
+    ));
+
+    return $this->extraFields[$entity_type_id][$bundle];
   }
 
   /**

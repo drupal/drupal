@@ -99,7 +99,7 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
 function hook_comment_view(\Drupal\comment\Entity\Comment $comment, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
-  // node type in hook_field_extra_fields().
+  // node type in hook_entity_extra_field_info().
   if ($display->getComponent('mymodule_addition')) {
     $comment->content['mymodule_addition'] = array(
       '#markup' => mymodule_addition($comment),

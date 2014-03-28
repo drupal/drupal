@@ -135,9 +135,9 @@ function taxonomy_term_uri($term) {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  */
-function taxonomy_field_extra_fields() {
+function taxonomy_entity_extra_field_info() {
   $return = array();
   foreach (entity_get_bundles('taxonomy_term') as $bundle => $bundle_info) {
     $return['taxonomy_term'][$bundle] = array(

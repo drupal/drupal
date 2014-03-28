@@ -187,6 +187,35 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getBundleInfo($entity_type);
 
   /**
+   * Retrieves the "extra fields" for a bundle.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $bundle
+   *   The bundle name.
+   *
+   * @return array
+   *   A nested array of 'pseudo-field' elements. Each list is nested within the
+   *   following keys: entity type, bundle name, context (either 'form' or
+   *   'display'). The keys are the name of the elements as appearing in the
+   *   renderable array (either the entity form or the displayed entity). The
+   *   value is an associative array:
+   *   - label: The human readable name of the element. Make sure you sanitize
+   *     this appropriately.
+   *   - description: A short description of the element contents.
+   *   - weight: The default weight of the element.
+   *   - visible: (optional) The default visibility of the element. Defaults to
+   *     TRUE.
+   *   - edit: (optional) String containing markup (normally a link) used as the
+   *     element's 'edit' operation in the administration interface. Only for
+   *     'form' context.
+   *   - delete: (optional) String containing markup (normally a link) used as the
+   *     element's 'delete' operation in the administration interface. Only for
+   *     'form' context.
+   */
+  public function getExtraFields($entity_type_id, $bundle);
+
+  /**
    * Returns the entity translation to be used in the given context.
    *
    * This will check whether a translation for the desired language is available

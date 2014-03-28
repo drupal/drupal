@@ -262,7 +262,7 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
 function hook_taxonomy_term_view(\Drupal\taxonomy\Entity\Term $term, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
-  // vocabulary in hook_field_extra_fields().
+  // vocabulary in hook_entity_extra_field_info().
   if ($display->getComponent('mymodule_addition')) {
     $term->content['mymodule_addition'] = array(
       '#markup' => mymodule_addition($term),

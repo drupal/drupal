@@ -445,9 +445,9 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  */
-function node_field_extra_fields() {
+function node_entity_extra_field_info() {
   $extra = array();
   $module_language_enabled = \Drupal::moduleHandler()->moduleExists('language');
   $description = t('Node module element');

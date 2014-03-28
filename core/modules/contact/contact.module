@@ -92,9 +92,9 @@ function contact_entity_bundle_info() {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  */
-function contact_field_extra_fields() {
+function contact_entity_extra_field_info() {
   $fields = array();
   foreach (array_keys(entity_get_bundles('contact_message')) as $bundle) {
     $fields['contact_message'][$bundle]['form']['name'] = array(

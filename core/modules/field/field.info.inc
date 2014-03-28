@@ -117,9 +117,12 @@ function field_info_fields() {
  *
  * @return
  *   The array of pseudo-field elements in the bundle.
+ *
+ * @deprecated in Drupal 8.x-dev. Use
+ *   \Drupal::entityManager()->getExtraFields() instead.
  */
 function field_info_extra_fields($entity_type, $bundle, $context) {
-  $info = Field::fieldInfo()->getBundleExtraFields($entity_type, $bundle);
+  $info = \Drupal::entityManager()->getExtraFields($entity_type, $bundle);
 
   return isset($info[$context]) ? $info[$context] : array();
 }

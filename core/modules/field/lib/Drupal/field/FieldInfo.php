@@ -125,13 +125,6 @@ class FieldInfo {
   protected $emptyBundles = array();
 
   /**
-   * Extra fields by bundle.
-   *
-   * @var array
-   */
-  protected $bundleExtraFields = array();
-
-  /**
    * Constructs this FieldInfo object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
@@ -167,8 +160,6 @@ class FieldInfo {
     $this->bundleInstances = array();
     $this->loadedAllInstances = FALSE;
     $this->emptyBundles = array();
-
-    $this->bundleExtraFields = array();
 
     Cache::deleteTags(array('field_info' => TRUE));
   }
@@ -519,47 +510,6 @@ class FieldInfo {
     if (isset($info[$field_name])) {
       return $info[$field_name];
     }
-  }
-
-  /**
-   * Retrieves the "extra fields" for a bundle.
-   *
-   * @param string $entity_type
-   *   The entity type.
-   * @param string $bundle
-   *   The bundle name.
-   *
-   * @return array
-   *   The array of extra fields.
-   */
-  public function getBundleExtraFields($entity_type, $bundle) {
-    // Read from the "static" cache.
-    if (isset($this->bundleExtraFields[$entity_type][$bundle])) {
-      return $this->bundleExtraFields[$entity_type][$bundle];
-    }
-
-    // Read from the persistent cache. Since hook_field_extra_fields() and
-    // hook_field_extra_fields_alter() might contain t() calls, we cache per
-    // language.
-    $langcode = $this->languageManager->getCurrentLanguage()->id;
-    if ($cached = $this->cacheBackend->get("field_info:bundle_extra:$langcode:$entity_type:$bundle")) {
-      $this->bundleExtraFields[$entity_type][$bundle] = $cached->data;
-      return $this->bundleExtraFields[$entity_type][$bundle];
-    }
-
-    // Cache miss: read from hook_field_extra_fields(). Note: given the current
-    // shape of the hook, we have no other way than collecting extra fields on
-    // all bundles.
-    $extra = $this->moduleHandler->invokeAll('field_extra_fields');
-    $this->moduleHandler->alter('field_extra_fields', $extra);
-    $info = isset($extra[$entity_type][$bundle]) ? $extra[$entity_type][$bundle] : array();
-    $info += array('form' => array(), 'display' => array());
-
-    // Store in the 'static' and persistent caches.
-    $this->bundleExtraFields[$entity_type][$bundle] = $info;
-    $this->cacheBackend->set("field_info:bundle_extra:$langcode:$entity_type:$bundle", $info, Cache::PERMANENT, array('field_info' => TRUE));
-
-    return $this->bundleExtraFields[$entity_type][$bundle];
   }
 
   /**

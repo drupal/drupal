@@ -194,9 +194,9 @@ function field_test_field_formatter_settings_summary_alter(&$summary, $context) 
 }
 
 /**
- * Implements hook_field_extra_fields_alter().
+ * Implements hook_entity_extra_field_info_alter().
  */
-function field_test_field_extra_fields_alter(&$info) {
+function field_test_entity_extra_field_info_alter(&$info) {
   // Remove all extra fields from the 'no_fields' content type;
   unset($info['node']['no_fields']);
 }

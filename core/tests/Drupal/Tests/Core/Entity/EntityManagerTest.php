@@ -817,6 +817,58 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getExtraFields
+   */
+  function testgetExtraFields() {
+    $this->setUpEntityManager();
+
+    $entity_type_id = $this->randomName();
+    $bundle = $this->randomName();
+    $language_code = 'en';
+    $hook_bundle_extra_fields = array(
+      $entity_type_id => array(
+        $bundle => array(
+          'form' => array(
+            'foo_extra_field' => array(
+              'label' => 'Foo',
+            ),
+          ),
+        ),
+      ),
+    );
+    $processed_hook_bundle_extra_fields = $hook_bundle_extra_fields;
+    $processed_hook_bundle_extra_fields[$entity_type_id][$bundle] += array(
+      'display' => array(),
+    );
+    $cache_id = 'entity_bundle_extra_fields:' . $entity_type_id . ':' . $bundle . ':' . $language_code;
+
+    $language = new Language();
+    $language->id = $language_code;
+
+    $this->languageManager->expects($this->once())
+      ->method('getCurrentLanguage')
+      ->will($this->returnValue($language));
+
+    $this->cache->expects($this->once())
+      ->method('get')
+      ->with($cache_id);
+
+    $this->moduleHandler->expects($this->once())
+      ->method('invokeAll')
+      ->with('entity_extra_field_info')
+      ->will($this->returnValue($hook_bundle_extra_fields));
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('entity_extra_field_info', $hook_bundle_extra_fields);
+
+    $this->cache->expects($this->once())
+      ->method('set')
+      ->with($cache_id, $processed_hook_bundle_extra_fields[$entity_type_id][$bundle]);
+
+    $this->assertSame($processed_hook_bundle_extra_fields[$entity_type_id][$bundle], $this->entityManager->getExtraFields($entity_type_id, $bundle));
+  }
+
+  /**
    * Gets a mock controller class name.
    *
    * @return string

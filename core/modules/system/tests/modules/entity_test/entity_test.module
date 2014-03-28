@@ -196,9 +196,9 @@ function entity_test_entity_form_mode_info_alter(&$form_modes) {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  */
-function entity_test_field_extra_fields() {
+function entity_test_entity_extra_field_info() {
   $extra['entity_test']['bundle_with_extra_fields'] = array(
     'display' => array(
       // Note: those extra fields do not currently display anything, they are

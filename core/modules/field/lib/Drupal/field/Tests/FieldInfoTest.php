@@ -363,39 +363,4 @@ class FieldInfoTest extends FieldUnitTestBase {
     );
   }
 
-  /**
-   * Tests that the extra fields can be translated.
-   */
-  function testFieldInfoExtraFieldsTranslation() {
-    $this->enableModules(array('language', 'locale'));
-    $this->installSchema('locale', array('locales_source', 'locales_target', 'locales_location'));
-    foreach (array('en', 'hu') as $id) {
-      $language = new Language(array(
-        'id' => $id,
-      ));
-      language_save($language);
-    }
-    $locale_storage = $this->container->get('locale.storage');
-
-    // Create test source string.
-    $en_string = $locale_storage->createString(array(
-      'source' => 'User name and password',
-      'context' => '',
-    ))->save();
-
-    // Create translation for new string and save it.
-    $translated_string = $this->randomString();
-    $locale_storage->createTranslation(array(
-      'lid' => $en_string->lid,
-      'language' => 'hu',
-      'translation' => $translated_string,
-    ))->save();
-
-    // Check that the label is translated.
-    \Drupal::translation()->setDefaultLangcode('hu');
-    $field_info = \Drupal::service('field.info');
-    $user_fields = $field_info->getBundleExtraFields('user', 'user');
-    $this->assertEqual($user_fields['form']['account']['label'], $translated_string);
-  }
-
 }
