@@ -49,22 +49,12 @@ class AccountProxy implements AccountProxyInterface {
    *
    * @param \Drupal\Core\Authentication\AuthenticationManagerInterface $authentication_manager
    *   The authentication manager.
-   */
-  public function __construct(AuthenticationManagerInterface $authentication_manager) {
-    $this->authenticationManager = $authentication_manager;
-  }
-
-  /**
-   * Sets the current request.
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
+   *   The request object used for authenticating.
    */
-  public function setRequest(Request $request) {
+  public function __construct(AuthenticationManagerInterface $authentication_manager, Request $request) {
+    $this->authenticationManager = $authentication_manager;
     $this->request = $request;
-    // Reset the current user to ensure that new calls will return the correct
-    // user based on the request.
-    $this->account = NULL;
   }
 
   /**

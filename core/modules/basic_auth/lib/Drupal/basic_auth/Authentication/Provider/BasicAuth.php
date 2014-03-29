@@ -9,8 +9,9 @@ namespace Drupal\basic_auth\Authentication\Provider;
 
 use \Drupal\Component\Utility\String;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Flood\FloodInterface;
 use Drupal\user\UserAuthInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -37,14 +38,36 @@ class BasicAuth implements AuthenticationProviderInterface {
   protected $userAuth;
 
   /**
+   * The flood service.
+   *
+   * @var \Drupal\Core\Flood\FloodInterface
+   */
+  protected $flood;
+
+  /**
+   * The user storage.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    * Constructs a HTTP basic authentication provider object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\user\UserAuthInterface $user_auth
+   *   The user authentication service.
+   * @param \Drupal\Core\Flood\FloodInterface $flood
+   *   The flood service.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, UserAuthInterface $user_auth) {
+  public function __construct(ConfigFactoryInterface $config_factory, UserAuthInterface $user_auth, FloodInterface $flood, EntityManagerInterface $entity_manager) {
     $this->configFactory = $config_factory;
     $this->userAuth = $user_auth;
+    $this->flood = $flood;
+    $this->userStorage = $entity_manager->getStorage('user');
   }
 
   /**
@@ -60,12 +83,48 @@ class BasicAuth implements AuthenticationProviderInterface {
    * {@inheritdoc}
    */
   public function authenticate(Request $request) {
+    $flood_config = $this->configFactory->get('user.flood');
     $username = $request->headers->get('PHP_AUTH_USER');
     $password = $request->headers->get('PHP_AUTH_PW');
-    $uid = $this->userAuth->authenticate($username, $password);
-    if ($uid) {
-      return user_load($uid);
+    // Flood protection: this is very similar to the user login form code.
+    // @see \Drupal\user\Form\UserLoginForm::validateAuthentication()
+    // Do not allow any login from the current user's IP if the limit has been
+    // reached. Default is 50 failed attempts allowed in one hour. This is
+    // independent of the per-user limit to catch attempts from one IP to log
+    // in to many different user accounts.  We have a reasonably high limit
+    // since there may be only one apparent IP for all users at an institution.
+    if ($this->flood->isAllowed('basic_auth.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
+      $accounts = $this->userStorage->loadByProperties(array('name' => $username, 'status' => 1));
+      $account = reset($accounts);
+      if ($account) {
+        if ($flood_config->get('uid_only')) {
+          // Register flood events based on the uid only, so they apply for any
+          // IP address. This is the most secure option.
+          $identifier = $account->id();
+        }
+        else {
+          // The default identifier is a combination of uid and IP address. This
+          // is less secure but more resistant to denial-of-service attacks that
+          // could lock out all users with public user names.
+          $identifier = $account->id() . '-' . $request->getClientIP();
+        }
+        // Don't allow login if the limit for this user has been reached.
+        // Default is to allow 5 failed attempts every 6 hours.
+        if ($this->flood->isAllowed('basic_auth.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
+          $uid = $this->userAuth->authenticate($username, $password);
+          if ($uid) {
+            $this->flood->clear('basic_auth.failed_login_user', $identifier);
+            return $this->userStorage->load($uid);
+          }
+          else {
+            // Register a per-user failed login event.
+            $this->flood->register('basic_auth.failed_login_user', $flood_config->get('user_window'), $identifier);
+          }
+        }
+      }
     }
+    // Always register an IP-based failed login event.
+    $this->flood->register('basic_auth.failed_login_ip', $flood_config->get('ip_window'));
     return NULL;
   }
 
@@ -92,4 +151,5 @@ class BasicAuth implements AuthenticationProviderInterface {
     }
     return FALSE;
   }
+
 }

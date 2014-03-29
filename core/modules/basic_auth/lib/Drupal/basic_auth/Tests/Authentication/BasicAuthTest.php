@@ -7,9 +7,7 @@
 
 namespace Drupal\basic_auth\Tests\Authentication;
 
-use Drupal\Core\Authentication\Provider\BasicAuth;
 use Drupal\simpletest\WebTestBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Test for http basic authentication.
@@ -62,6 +60,67 @@ class BasicAuthTest extends WebTestBase {
   }
 
   /**
+   * Test the global login flood control.
+   */
+  function testGlobalLoginFloodControl() {
+    \Drupal::config('user.flood')
+      ->set('ip_limit', 2)
+      // Set a high per-user limit out so that it is not relevant in the test.
+      ->set('user_limit', 4000)
+      ->save();
+
+    $user = $this->drupalCreateUser(array());
+    $incorrect_user = clone $user;
+    $incorrect_user->pass_raw .= 'incorrect';
+
+    // Try 2 failed logins.
+    for ($i = 0; $i < 2; $i++) {
+      $this->basicAuthGet('router_test/test11', $incorrect_user->getUsername(), $incorrect_user->pass_raw);
+    }
+
+    // IP limit has reached to its limit. Even valid user credentials will fail.
+    $this->basicAuthGet('router_test/test11', $user->getUsername(), $user->pass_raw);
+    $this->assertResponse('403', 'Access is blocked because of IP based flood prevention.');
+  }
+
+  /**
+   * Test the per-user login flood control.
+   */
+  function testPerUserLoginFloodControl() {
+    \Drupal::config('user.flood')
+      // Set a high global limit out so that it is not relevant in the test.
+      ->set('ip_limit', 4000)
+      ->set('user_limit', 2)
+      ->save();
+
+    $user = $this->drupalCreateUser(array());
+    $incorrect_user = clone $user;
+    $incorrect_user->pass_raw .= 'incorrect';
+    $user2 = $this->drupalCreateUser(array());
+
+    // Try a failed login.
+    $this->basicAuthGet('router_test/test11', $incorrect_user->getUsername(), $incorrect_user->pass_raw);
+
+    // A successful login will reset the per-user flood control count.
+    $this->basicAuthGet('router_test/test11', $user->getUsername(), $user->pass_raw);
+    $this->assertResponse('200', 'Per user flood prevention gets reset on a successful login.');
+
+    // Try 2 failed logins for a user. They will trigger flood control.
+    for ($i = 0; $i < 2; $i++) {
+      $this->basicAuthGet('router_test/test11', $incorrect_user->getUsername(), $incorrect_user->pass_raw);
+    }
+
+    // Now the user account is blocked.
+    $this->basicAuthGet('router_test/test11', $user->getUsername(), $user->pass_raw);
+    $this->assertResponse('403', 'The user account is blocked due to per user flood prevention.');
+
+    // Try one successful attempt for a different user, it should not trigger
+    // any flood control.
+    $this->basicAuthGet('router_test/test11', $user2->getUsername(), $user2->pass_raw);
+    $this->assertResponse('200', 'Per user flood prevention does not block access for other users.');
+  }
+
+  /**
    * Does HTTP basic auth request.
    *
    * We do not use \Drupal\simpletest\WebTestBase::drupalGet because we need to
@@ -93,4 +152,5 @@ class BasicAuthTest extends WebTestBase {
 
     return $out;
   }
+
 }

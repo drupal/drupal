@@ -715,9 +715,7 @@ services:
     arguments: ['@authentication']
   current_user:
     class: Drupal\Core\Session\AccountProxy
-    arguments: ['@authentication']
-    calls:
-      - [setRequest, ['@?request=']]
+    arguments: ['@authentication', '@request']
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
     arguments: [ '@state' ]
