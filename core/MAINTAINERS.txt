@@ -464,3 +464,15 @@ Multi-lingual
 
 Web services
 - Larry Garfield 'Crell' http://drupal.org/user/26398
+
+Core mentoring leads
+---------------------
+
+The Drupal Core mentoring leads inspire, enable, and encourage new core
+contributors. They also work on the core tools, process, and community to make
+it easier for new contributors to get involved. The mentoring leads are:
+
+- Jess Myrbo 'xjm' http://drupal.org/user/65776
+- Cathy Theys 'YesCT' https://drupal.org/user/258568
+- Scott Reeves 'Cottser' http://drupal.org/user/1167326
+- Andrea Soper 'ZenDoodles' https://drupal.org/user/226976
