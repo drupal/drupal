@@ -17,7 +17,7 @@ class TermFieldTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('entity_test', 'field_ui');
 
   protected $instance;
   protected $vocabulary;
@@ -37,6 +37,7 @@ class TermFieldTest extends TaxonomyTestBase {
       'view test entity',
       'administer entity_test content',
       'administer taxonomy',
+      'administer entity_test fields',
     ));
     $this->drupalLogin($web_user);
     $this->vocabulary = $this->createVocabulary();
@@ -126,6 +127,20 @@ class TermFieldTest extends TaxonomyTestBase {
     $this->vocabulary->delete();
     $this->drupalGet('entity_test/add');
     $this->assertNoFieldByName($this->field_name, '', 'Widget is not displayed.');
+  }
+
+  /**
+   * No php error message on the field setting page for autocomplete widget.
+   */
+  function testTaxonomyTermFieldInstanceSettingsAutocompleteWidget() {
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($this->field_name, array(
+        'type' => 'taxonomy_autocomplete',
+        'weight' => 1,
+      ))
+      ->save();
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $this->field_name);
+    $this->assertNoErrorsLogged();
   }
 
   /**
