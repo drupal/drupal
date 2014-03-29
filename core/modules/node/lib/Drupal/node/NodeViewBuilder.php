@@ -95,7 +95,7 @@ class NodeViewBuilder extends EntityViewBuilder {
     );
 
     if (!$context['in_preview']) {
-      $entity = entity_load('node', $context['node_entity_id']);
+      $entity = entity_load('node', $context['node_entity_id'])->getTranslation($context['langcode']);
       $links['node'] = self::buildLinks($entity, $context['view_mode']);
 
       // Allow other modules to alter the node links.
@@ -132,6 +132,7 @@ class NodeViewBuilder extends EntityViewBuilder {
           '@title' => $node_title_stripped,
         )),
         'href' => 'node/' . $entity->id(),
+        'language' => $entity->language(),
         'html' => TRUE,
         'attributes' => array(
           'rel' => 'tag',

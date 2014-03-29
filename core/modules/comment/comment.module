@@ -448,6 +448,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
+              'language' => $node->language(),
               'attributes' => array('title' => t('Add a new comment to this page.')),
               'fragment' => 'comment-form',
             );

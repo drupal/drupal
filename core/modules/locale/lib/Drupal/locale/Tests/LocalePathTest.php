@@ -117,14 +117,14 @@ class LocalePathTest extends WebTestBase {
     $this->container->get('path.crud')->delete($edit);
 
     // Create language nodes to check priority of aliases.
-    $first_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
-    $second_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1));
+    $first_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1, 'langcode' => 'en'));
+    $second_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1, 'langcode' => Language::LANGCODE_NOT_SPECIFIED));
 
     // Assign a custom path alias to the first node with the English language.
     $edit = array(
       'source'   => 'node/' . $first_node->id(),
       'alias'    => $custom_path,
-      'langcode' => 'en',
+      'langcode' => $first_node->language()->id,
     );
     $this->container->get('path.crud')->save($edit['source'], $edit['alias'], $edit['langcode']);
 
@@ -132,7 +132,7 @@ class LocalePathTest extends WebTestBase {
     $edit = array(
       'source'   => 'node/' . $second_node->id(),
       'alias'    => $custom_path,
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => $second_node->language()->id,
     );
     $this->container->get('path.crud')->save($edit['source'], $edit['alias'], $edit['langcode']);
 

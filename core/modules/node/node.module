@@ -644,7 +644,9 @@ function template_preprocess_node(&$variables) {
   );
   $variables['name'] = drupal_render($username);
 
-  $variables['node_url'] = $node->url();
+  $variables['node_url'] = $node->url('canonical', array(
+    'language' => $node->language(),
+  ));
   $variables['label'] = $variables['elements']['title'];
   unset($variables['elements']['title']);
   $variables['page'] = $variables['view_mode'] == 'full' && node_is_page($node);
