@@ -156,6 +156,15 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       '#rows' => 24,
       '#required' => TRUE,
     );
+    $form['advanced'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Advanced'),
+    );
+    $form['advanced']['custom_entity_id'] = array(
+      '#title' => $this->t('Custom Entity ID'),
+      '#type' => 'textfield',
+      '#description' => $this->t('Specify a custom entity ID. This will override the entity ID in the configuration above.'),
+    );
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
@@ -181,6 +190,13 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     if ($form_state['values']['config_type'] !== 'system.simple') {
       $definition = $this->entityManager->getDefinition($form_state['values']['config_type']);
       $id_key = $definition->getKey('id');
+
+      // If a custom entity ID is specified, override the value in the
+      // configuration data being imported.
+      if (!empty($form_state['values']['custom_entity_id'])) {
+        $data[$id_key] = $form_state['values']['custom_entity_id'];
+      }
+
       $entity_storage = $this->entityManager->getStorage($form_state['values']['config_type']);
       // If an entity ID was not specified, set an error.
       if (!isset($data[$id_key])) {

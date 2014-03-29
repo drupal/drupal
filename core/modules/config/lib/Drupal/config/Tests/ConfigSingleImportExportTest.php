@@ -73,6 +73,14 @@ EOD;
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
     $this->assertText(t('An entity with this machine name already exists but the UUID does not match.'));
 
+    // Attempt an import with a custom ID.
+    $edit['custom_entity_id'] = 'custom_id';
+    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
+    $this->assertRaw(t('Are you sure you want to create new %name @type?', array('%name' => 'custom_id', '@type' => 'test configuration')));
+    $this->drupalPostForm(NULL, array(), t('Confirm'));
+    $entity = $storage->load('custom_id');
+    $this->assertRaw(t('The @entity_type %label was imported.', array('@entity_type' => 'config_test', '%label' => $entity->label())));
+
     // Perform an import with a unique ID and UUID.
     $import = <<<EOD
 id: second
