@@ -32,14 +32,24 @@ class BookExport {
   protected $viewBuilder;
 
   /**
+   * The book manager.
+   *
+   * @var \Drupal\book\BookManagerInterface
+   */
+  protected $bookManager;
+
+  /**
    * Constructs a BookExport object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
    *   The entity manager.
+   * @param \Drupal\book\BookManagerInterface $book_manager
+   *   The book manager.
    */
-  public function __construct(EntityManagerInterface $entityManager) {
+  public function __construct(EntityManagerInterface $entityManager, BookManagerInterface $book_manager) {
     $this->nodeStorage = $entityManager->getStorage('node');
     $this->viewBuilder = $entityManager->getViewBuilder('node');
+    $this->bookManager = $book_manager;
   }
 
   /**
@@ -67,7 +77,7 @@ class BookExport {
       throw new \Exception();
     }
 
-    $tree = \Drupal::service('book.manager')->bookMenuSubtreeData($node->book);
+    $tree = $this->bookManager->bookSubtreeData($node->book);
     $contents = $this->exportTraverse($tree, array($this, 'bookNodeExport'));
     return array(
       '#theme' => 'book_export_html',

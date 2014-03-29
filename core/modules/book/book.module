@@ -148,21 +148,6 @@ function book_node_links_alter(array &$node_links, NodeInterface $node, array &$
 }
 
 /**
- * Returns an array of all books.
- *
- * @todo Remove in favor of BookManager Service. http://drupal.org/node/1963894
- *
- * This list may be used for generating a list of all the books, or for building
- * the options for a form select.
- *
- * @return
- *   An array of all books.
- */
-function book_get_books() {
-  return \Drupal::service('book.manager')->getAllBooks();
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  *
  * Adds the book form element to the node form.
@@ -245,163 +230,13 @@ function book_form_update($form, $form_state) {
 }
 
 /**
- * Gets the book menu tree for a page and returns it as a linear array.
- *
- * @param $book_link
- *   A fully loaded menu link that is part of the book hierarchy.
- *
- * @return
- *   A linear array of menu links in the order that the links are shown in the
- *   menu, so the previous and next pages are the elements before and after the
- *   element corresponding to the current node. The children of the current node
- *   (if any) will come immediately after it in the array, and links will only
- *   be fetched as deep as one level deeper than $book_link.
- */
-function book_get_flat_menu($book_link) {
-  $flat = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($flat[$book_link['nid']])) {
-    // Call bookTreeAllData() to take advantage of caching.
-    $tree = \Drupal::service('book.manager')->bookTreeAllData($book_link['bid'], $book_link, $book_link['depth'] + 1);
-    $flat[$book_link['nid']] = array();
-    _book_flatten_menu($tree, $flat[$book_link['nid']]);
-  }
-
-  return $flat[$book_link['nid']];
-}
-
-/**
- * Recursively converts a tree of menu links to a flat array.
- *
- * @param $tree
- *   A tree of menu links in an array.
- * @param $flat
- *   A flat array of the menu links from $tree, passed by reference.
- *
- * @see book_get_flat_menu().
- */
-function _book_flatten_menu($tree, &$flat) {
-  foreach ($tree as $data) {
-    $flat[$data['link']['nid']] = $data['link'];
-    if ($data['below']) {
-      _book_flatten_menu($data['below'], $flat);
-    }
-  }
-}
-
-/**
- * Fetches the menu link for the previous page of the book.
- *
- * @param $book_link
- *   A fully loaded menu link that is part of the book hierarchy.
- *
- * @return
- *   A fully loaded menu link for the page before the one represented in
- *   $book_link.
- */
-function book_prev($book_link) {
-  // If the parent is zero, we are at the start of a book.
-  if ($book_link['pid'] == 0) {
-    return NULL;
-  }
-  // Assigning the array to $flat resets the array pointer for use with each().
-  $flat = book_get_flat_menu($book_link);
-  $curr = NULL;
-  do {
-    $prev = $curr;
-    list($key, $curr) = each($flat);
-  } while ($key && $key != $book_link['nid']);
-
-  if ($key == $book_link['nid']) {
-    /** @var \Drupal\book\BookManagerInterface $book_manager */
-    $book_manager = \Drupal::service('book.manager');
-    // The previous page in the book may be a child of the previous visible link.
-    if ($prev['depth'] == $book_link['depth']) {
-      // The subtree will have only one link at the top level - get its data.
-      $tree = $book_manager->bookMenuSubtreeData($prev);
-      $data = array_shift($tree);
-      // The link of interest is the last child - iterate to find the deepest one.
-      while ($data['below']) {
-        $data = end($data['below']);
-      }
-      $book_manager->bookLinkTranslate($data['link']);
-      return $data['link'];
-    }
-    else {
-      $book_manager->bookLinkTranslate($prev);
-      return $prev;
-    }
-  }
-}
-
-/**
- * Fetches the menu link for the next page of the book.
- *
- * @param $book_link
- *   A fully loaded menu link that is part of the book hierarchy.
- *
- * @return
- *   A fully loaded book link for the page after the one represented in
- *   $book_link.
- */
-function book_next($book_link) {
-  // Assigning the array to $flat resets the array pointer for use with each().
-  $flat = book_get_flat_menu($book_link);
-  do {
-    list($key, ) = each($flat);
-  }
-  while ($key && $key != $book_link['nid']);
-
-  if ($key == $book_link['nid']) {
-    $next = current($flat);
-    if ($next) {
-      \Drupal::service('book.manager')->bookLinkTranslate($next);
-    }
-    return $next;
-  }
-}
-
-/**
- * Formats the menu links for the child pages of the current page.
- *
- * @param $book_link
- *   A fully loaded menu link that is part of the book hierarchy.
- *
- * @return
- *   HTML for the links to the child pages of the current page.
- */
-function book_children($book_link) {
-  $flat = book_get_flat_menu($book_link);
-
-  $children = array();
-
-  if ($book_link['has_children']) {
-    // Walk through the array until we find the current page.
-    do {
-      $link = array_shift($flat);
-    }
-    while ($link && ($link['nid'] != $book_link['nid']));
-    // Continue though the array and collect the links whose parent is this page.
-    while (($link = array_shift($flat)) && $link['pid'] == $book_link['nid']) {
-      $data['link'] = $link;
-      $data['below'] = '';
-      $children[] = $data;
-    }
-  }
-
-  if ($children) {
-    $elements = \Drupal::service('book.manager')->bookTreeOutput($children);
-    return drupal_render($elements);
-  }
-  return '';
-}
-
-/**
  * Implements hook_node_load().
  */
 function book_node_load($nodes) {
-  $result = db_query("SELECT * FROM {book} WHERE nid IN (:nids)", array(':nids' =>  array_keys($nodes)), array('fetch' => PDO::FETCH_ASSOC));
-  foreach ($result as $record) {
+  /** @var \Drupal\book\BookManagerInterface $book_manager */
+  $book_manager = \Drupal::service('book.manager');
+  $links = $book_manager->loadBookLinks(array_keys($nodes), FALSE);
+  foreach ($links as $record) {
     $nodes[$record['nid']]->book = $record;
     $nodes[$record['nid']]->book['link_path'] = 'node/' . $record['nid'];
     $nodes[$record['nid']]->book['link_title'] = $nodes[$record['nid']]->label();
@@ -442,28 +277,18 @@ function book_node_presave(EntityInterface $node) {
  * Implements hook_node_insert().
  */
 function book_node_insert(EntityInterface $node) {
+  /** @var \Drupal\book\BookManagerInterface $book_manager */
   $book_manager = \Drupal::service('book.manager');
-  if (!empty($node->book['bid'])) {
-    if ($node->book['bid'] == 'new') {
-      // New nodes that are their own book.
-      $node->book['bid'] = $node->id();
-    }
-    $book_manager->updateOutline($node);
-  }
+  $book_manager->updateOutline($node);
 }
 
 /**
  * Implements hook_node_update().
  */
 function book_node_update(EntityInterface $node) {
+  /** @var \Drupal\book\BookManagerInterface $book_manager */
   $book_manager = \Drupal::service('book.manager');
-  if (!empty($node->book['bid'])) {
-    if ($node->book['bid'] == 'new') {
-      // New nodes that are their own book.
-      $node->book['bid'] = $node->id();
-    }
-    $book_manager->updateOutline($node);
-  }
+  $book_manager->updateOutline($node);
 }
 
 /**
@@ -481,7 +306,7 @@ function book_node_predelete(EntityInterface $node) {
  * Implements hook_node_prepare_form().
  */
 function book_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
-  // Get BookManager service
+  /** @var \Drupal\book\BookManagerInterface $book_manager */
   $book_manager = \Drupal::service('book.manager');
 
   // Prepare defaults for the add/edit form.
@@ -584,12 +409,15 @@ function template_preprocess_book_navigation(&$variables) {
   $variables['current_depth'] = $book_link['depth'];
   $variables['tree'] = '';
 
+  /** @var \Drupal\book\BookOutline $book_outline */
+  $book_outline = \Drupal::service('book.outline');
+
   if ($book_link['nid']) {
-    $variables['tree'] = book_children($book_link);
+    $variables['tree'] = $book_outline->childrenLinks($book_link);
 
     $build = array();
 
-    if ($prev = book_prev($book_link)) {
+    if ($prev = $book_outline->prevLink($book_link)) {
       $prev_href = \Drupal::url('node.view', array('node' => $prev['nid']));
       $build['#attached']['drupal_add_html_head_link'][][] = array(
         'rel' => 'prev',
@@ -611,7 +439,7 @@ function template_preprocess_book_navigation(&$variables) {
       $variables['parent_title'] = String::checkPlain($parent['title']);
     }
 
-    if ($next = book_next($book_link)) {
+    if ($next = $book_outline->nextLink($book_link)) {
       $next_href = \Drupal::url('node.view', array('node' => $next['nid']));
       $build['#attached']['drupal_add_html_head_link'][][] = array(
         'rel' => 'next',

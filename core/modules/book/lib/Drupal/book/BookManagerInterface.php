@@ -54,6 +54,20 @@ interface BookManagerInterface {
   public function loadBookLink($nid, $translate = TRUE);
 
   /**
+   * Loads multiple book entries.
+   *
+   * @param int[] $nids
+   *   An array of nids to load.
+   *
+   * @param bool $translate
+   *   If TRUE, set access, title, and other elements.
+   *
+   * @return array[]
+   *   The book data of each node keyed by NID.
+   */
+  public function loadBookLinks($nids, $translate = TRUE);
+
+  /**
    * Returns an array of book pages in table of contents order.
    *
    * @param int $bid
@@ -94,10 +108,7 @@ interface BookManagerInterface {
   public function bookTreeCollectNodeLinks(&$tree, &$node_links);
 
   /**
-   * Provides menu link access control, translation, and argument handling.
-   *
-   * This function is similar to _menu_translate(), but it also does
-   * link-specific preparation (such as always calling to_arg() functions).
+   * Provides book loading, access control and translation.
    *
    * @param array $link
    *   A book link.
@@ -106,6 +117,21 @@ interface BookManagerInterface {
    * minimal code that's used.
    */
   public function bookLinkTranslate(&$link);
+
+  /**
+   * Gets the book for a page and returns it as a linear array.
+   *
+   * @param array $book_link
+   *   A fully loaded book link that is part of the book hierarchy.
+   *
+   * @return array
+   *   A linear array of book links in the order that the links are shown in the
+   *   book, so the previous and next pages are the elements before and after the
+   *   element corresponding to the current node. The children of the current node
+   *   (if any) will come immediately after it in the array, and links will only
+   *   be fetched as deep as one level deeper than $book_link.
+   */
+  public function bookTreeGetFlat(array $book_link);
 
   /**
    * Returns an array of all books.
@@ -195,7 +221,7 @@ interface BookManagerInterface {
    * - leaf: The menu item has no submenu.
    *
    * @param array $tree
-   *   A data structure representing the tree as returned from menu_tree_data.
+   *   A data structure representing the tree as returned from buildBookOutlineData.
    *
    * @return array
    *   A structured array to be rendered by drupal_render().
@@ -224,12 +250,12 @@ interface BookManagerInterface {
    * tree.
    *
    * @param array $link
-   *   A fully loaded menu link.
+   *   A fully loaded book link.
    *
    * @return
-   *   A subtree of menu links in an array, in the order they should be rendered.
+   *   A subtree of book links in an array, in the order they should be rendered.
    */
-  public function bookMenuSubtreeData($link);
+  public function bookSubtreeData($link);
 
   /**
    * Determines if a node can be removed from the book.

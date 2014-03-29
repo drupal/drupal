@@ -7,9 +7,12 @@ services:
   book.manager:
     class: Drupal\book\BookManager
     arguments: ['@database', '@entity.manager', '@string_translation', '@config.factory']
+  book.outline:
+    class: Drupal\book\BookOutline
+    arguments: ['@book.manager']
   book.export:
     class: Drupal\book\BookExport
-    arguments: ['@entity.manager']
+    arguments: ['@entity.manager', '@book.manager']
 
   access_check.book.removable:
     class: Drupal\book\Access\BookNodeIsRemovableAccessCheck
