@@ -44,6 +44,8 @@ class HtaccessUnitTest extends DrupalUnitTestBase {
     $this->assertTrue(file_save_htaccess($public, FALSE));
     $content = file_get_contents($public . '/.htaccess');
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
+    $this->assertFalse(strpos($content, "Require all denied") !== FALSE);
+    $this->assertFalse(strpos($content, "Deny from all") !== FALSE);
     $this->assertTrue(strpos($content, "Options None") !== FALSE);
     $this->assertTrue(strpos($content, "Options +FollowSymLinks") !== FALSE);
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003") !== FALSE);
@@ -56,6 +58,7 @@ class HtaccessUnitTest extends DrupalUnitTestBase {
     $this->assertTrue(file_save_htaccess($private));
     $content = file_get_contents($private . '/.htaccess');
     $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
+    $this->assertTrue(strpos($content, "Require all denied") !== FALSE);
     $this->assertTrue(strpos($content, "Deny from all") !== FALSE);
     $this->assertTrue(strpos($content, "Options None") !== FALSE);
     $this->assertTrue(strpos($content, "Options +FollowSymLinks") !== FALSE);
@@ -69,6 +72,7 @@ class HtaccessUnitTest extends DrupalUnitTestBase {
     $this->assertTrue(file_save_htaccess($stream));
     $content = file_get_contents($stream . '/.htaccess');
     $this->assertTrue(strpos($content,"SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
+    $this->assertTrue(strpos($content, "Require all denied") !== FALSE);
     $this->assertTrue(strpos($content,"Deny from all") !== FALSE);
     $this->assertTrue(strpos($content,"Options None") !== FALSE);
     $this->assertTrue(strpos($content,"Options +FollowSymLinks") !== FALSE);
