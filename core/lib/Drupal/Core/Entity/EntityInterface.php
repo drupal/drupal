@@ -223,7 +223,7 @@ interface EntityInterface extends AccessibleInterface {
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage object.
-   * @param array $values
+   * @param mixed[] $values
    *   An array of values to set, keyed by property name. If the entity type has
    *   bundles the bundle key has to be specified.
    */
@@ -232,7 +232,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Acts on an entity after it is created but before hooks are invoked.
    *
-   * @param EntityStorageInterface $storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage object.
    */
   public function postCreate(EntityStorageInterface $storage);
@@ -242,7 +242,7 @@ interface EntityInterface extends AccessibleInterface {
    *
    * Used before the entities are deleted and before invoking the delete hook.
    *
-   * @param EntityStorageInterface $storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage object.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
@@ -254,7 +254,7 @@ interface EntityInterface extends AccessibleInterface {
    *
    * Used after the entities are deleted but before invoking the delete hook.
    *
-   * @param EntityStorageInterface $storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage object.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
@@ -264,7 +264,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Acts on loaded entities.
    *
-   * @param EntityStorageInterface $storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage object.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
@@ -284,7 +284,7 @@ interface EntityInterface extends AccessibleInterface {
    * Returns the entity type definition.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
-   *   Entity type definition.
+   *   The entity type definition.
    */
   public function getEntityType();
 
@@ -300,8 +300,8 @@ interface EntityInterface extends AccessibleInterface {
    * Returns the original ID.
    *
    * @return int|string|null
-   *   The original ID, if any. Entity types that do not support renames will
-   *   never have an original ID and will return NULL.
+   *   The original ID, or NULL if no ID was set or for entity types that do not
+   *   support renames.
    */
   public function getOriginalId();
 
@@ -319,7 +319,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns an array of all property values.
    *
-   * @return array
+   * @return mixed[]
    *   An array of property values, keyed by property name.
    */
   public function toArray();
