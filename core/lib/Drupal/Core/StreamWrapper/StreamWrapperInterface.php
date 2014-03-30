@@ -78,21 +78,6 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
   public static function getMimeType($uri, $mapping = NULL);
 
   /**
-   * Changes permissions of the resource.
-   *
-   * PHP lacks this functionality and it is not part of the official stream
-   * wrapper interface. This is a custom implementation for Drupal.
-   *
-   * @param int $mode
-   *   Integer value for the permissions. Consult PHP chmod() documentation
-   *   for more information.
-   *
-   * @return bool
-   *   Returns TRUE on success or FALSE on failure.
-   */
-  public function chmod($mode);
-
-  /**
    * Returns canonical, absolute path of the resource.
    *
    * Implementation placeholder. PHP's realpath() does not support stream

@@ -126,17 +126,6 @@ abstract class LocalStream implements StreamWrapperInterface {
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::chmod().
-   */
-  function chmod($mode) {
-    $output = @chmod($this->getLocalPath(), $mode);
-    // We are modifying the underlying file here, so we have to clear the stat
-    // cache so that PHP understands that URI has changed too.
-    clearstatcache(TRUE, $this->getLocalPath());
-    return $output;
-  }
-
-  /**
    * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::realpath().
    */
   function realpath() {
@@ -352,6 +341,34 @@ abstract class LocalStream implements StreamWrapperInterface {
    */
   public function stream_cast($cast_as) {
     return false;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function stream_metadata($uri, $option, $value) {
+    $target = $this->getLocalPath($uri);
+    $return = FALSE;
+    switch ($option) {
+      case STREAM_META_TOUCH:
+        if (!empty($value)) {
+          $return = touch($target, $value[0], $value[1]);
+        }
+        else {
+          $return = touch($target);
+        }
+        break;
+
+      case STREAM_META_ACCESS:
+        $return = chmod($target, $value);
+        break;
+    }
+    if ($return) {
+      // For convenience clear the file status cache of the underlying file,
+      // since metadata operations are often followed by file status checks.
+      clearstatcache(TRUE, $target);
+    }
+    return $return;
   }
 
   /**

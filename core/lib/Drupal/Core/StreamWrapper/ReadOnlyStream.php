@@ -162,6 +162,16 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
   }
 
   /**
+   * {@inheritdoc}
+   *
+   * Does not change meta data as this is a read-only stream wrapper.
+   */
+  public function stream_metadata($uri, $option, $value) {
+    trigger_error('stream_metadata() not supported for read-only stream wrappers', E_USER_WARNING);
+    return FALSE;
+  }
+
+  /**
    * Support for unlink().
    *
    * The file will not be deleted from the stream as this is a read-only stream
@@ -243,19 +253,4 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
     return FALSE;
   }
 
-  /**
-   * Support for chmod().
-   *
-   * Does not change file permissions as this is a read-only stream wrapper.
-   *
-   * @param int $mode
-   *   Permission flags - see chmod().
-   *
-   * @return bool
-   *   FALSE as the permission change will never be allowed.
-   */
-  public function chmod($mode) {
-    trigger_error('chmod() not supported for read-only stream wrappers', E_USER_WARNING);
-    return FALSE;
-  }
 }
