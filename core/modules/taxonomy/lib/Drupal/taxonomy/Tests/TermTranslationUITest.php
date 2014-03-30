@@ -82,6 +82,25 @@ class TermTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
+   * Returns an edit array containing the values to be posted.
+   */
+  protected function getEditValues($values, $langcode, $new = FALSE) {
+    $edit = parent::getEditValues($values, $langcode, $new);
+
+    // To be able to post values for the configurable base fields (name,
+    // description) have to be suffixed with [0][value].
+    foreach ($edit as $property => $value) {
+      foreach (array('name', 'description') as $key) {
+        if ($property == $key) {
+          $edit[$key . '[0][value]'] = $value;
+          unset($edit[$property]);
+        }
+      }
+    }
+    return $edit;
+  }
+
+  /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::testTranslationUI().
    */
   public function testTranslationUI() {

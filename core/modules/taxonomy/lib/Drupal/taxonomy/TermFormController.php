@@ -61,22 +61,6 @@ class TermFormController extends ContentEntityFormController {
     $form_state['taxonomy']['parent'] = $parent;
     $form_state['taxonomy']['vocabulary'] = $vocabulary;
 
-    $form['name'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Name'),
-      '#default_value' => $term->getName(),
-      '#maxlength' => 255,
-      '#required' => TRUE,
-      '#weight' => -5,
-    );
-
-    $form['description'] = array(
-      '#type' => 'text_format',
-      '#title' => $this->t('Description'),
-      '#default_value' => $term->getDescription(),
-      '#format' => $term->getFormat(),
-      '#weight' => 0,
-    );
     $language_configuration = $this->moduleHandler->moduleExists('language') ? language_get_default_configuration('taxonomy_term', $vocabulary->id()) : FALSE;
     $form['langcode'] = array(
       '#type' => 'language_select',

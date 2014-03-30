@@ -152,12 +152,17 @@ entity_form_display.field.*:
       type: integer
       label: 'Weight'
 
-entity_view_display.field.string:
-  type: entity_field_view_display_base
-  label: 'Plain text display format settings'
+entity_form_display.field.string:
+  type: entity_field_form_display_base
+  label: 'Text field display format settings'
   mapping:
     settings:
-      type: sequence
+      type: mapping
       label: 'Settings'
-      sequence:
-        - type: string
+      mapping:
+        size:
+          type: integer
+          label: 'Size of textfield'
+        placeholder:
+          type: label
+          label: 'Placeholder'

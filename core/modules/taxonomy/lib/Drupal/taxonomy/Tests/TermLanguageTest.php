@@ -57,11 +57,11 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->assertField('edit-langcode', t('The language selector field was found on the page.'));
     // Submit the term.
     $edit = array(
-      'name' => $this->randomName(),
+      'name[0][value]' => $this->randomName(),
       'langcode' => 'aa',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $terms = taxonomy_term_load_multiple_by_name($edit['name']);
+    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
     $this->assertEqual($term->language()->id, $edit['langcode'], 'The term contains the correct langcode.');
 

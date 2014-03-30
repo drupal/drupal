@@ -368,8 +368,8 @@ class ForumTest extends WebTestBase {
     $description = $this->randomName(100);
 
     $edit = array(
-      'name' => $name,
-      'description[value]' => $description,
+      'name[0][value]' => $name,
+      'description[0][value]' => $description,
       'parent[0]' => $parent,
       'weight' => '0',
     );

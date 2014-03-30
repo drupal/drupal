@@ -5,9 +5,15 @@ mode: default
 status: true
 content:
   name:
+    type: string
     weight: -5
+    settings:
+      size: 60
+      placeholder: ''
   description:
+    type: text_textfield
     weight: 0
+    settings: { }
 dependencies:
   entity:
     - taxonomy.vocabulary.forums

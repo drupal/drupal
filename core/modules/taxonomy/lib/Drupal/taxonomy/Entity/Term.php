@@ -132,12 +132,33 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The term name.'))
       ->setRequired(TRUE)
-      ->setSetting('max_length', 255);
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['description'] = FieldDefinition::create('text_long')
       ->setLabel(t('Description'))
       ->setDescription(t('A description of the term.'))
-      ->setSetting('text_processing', 1);
+      ->setSetting('text_processing', 1)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'text_default',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'text_textfield',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['weight'] = FieldDefinition::create('integer')
       ->setLabel(t('Weight'))

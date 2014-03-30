@@ -75,7 +75,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
 
     // Edit $term2, setting $term1 as parent.
     $edit = array();
-    $edit['name'] = '<blink>Blinking Text</blink>';
+    $edit['name[0][value]'] = '<blink>Blinking Text</blink>';
     $edit['parent[]'] = array($term1->id());
     $this->drupalPostForm('taxonomy/term/' . $term2->id() . '/edit', $edit, t('Save'));
 

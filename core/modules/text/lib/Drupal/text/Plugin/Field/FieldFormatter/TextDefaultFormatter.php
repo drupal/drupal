@@ -19,7 +19,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   field_types = {
  *     "text",
  *     "text_long",
- *     "text_with_summary"
+ *     "text_with_summary",
  *   },
  *   edit = {
  *     "editor" = "plain_text"

@@ -133,38 +133,6 @@ function taxonomy_term_uri($term) {
 }
 
 /**
- * Implements hook_entity_extra_field_info().
- */
-function taxonomy_entity_extra_field_info() {
-  $return = array();
-  foreach (entity_get_bundles('taxonomy_term') as $bundle => $bundle_info) {
-    $return['taxonomy_term'][$bundle] = array(
-      'form' => array(
-        'name' => array(
-          'label' => t('Name'),
-          'description' => t('Term name textfield'),
-          'weight' => -5,
-        ),
-        'description' => array(
-          'label' => t('Description'),
-          'description' => t('Term description textarea'),
-          'weight' => 0,
-        ),
-      ),
-      'display' => array(
-        'description' => array(
-          'label' => t('Description'),
-          'description' => t('Term description'),
-          'weight' => 0,
-        ),
-      ),
-    );
-  }
-
-  return $return;
-}
-
-/**
  * Return nodes attached to a term across all field instances.
  *
  * This function requires taxonomy module to be maintaining its own tables,
@@ -349,7 +317,8 @@ function template_preprocess_taxonomy_term(&$variables) {
 
   $variables['url'] = $term->url();
   // We use name here because that is what appears in the UI.
-  $variables['name'] = String::checkPlain($term->getName());
+  $variables['name'] = $variables['elements']['name'];
+  unset($variables['elements']['name']);
   $variables['page'] = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);
 
   // Helpful $content variable for templates.

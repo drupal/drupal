@@ -37,34 +37,34 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     // Visit the main taxonomy administration page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     $this->assertResponse(200);
-    $this->assertField('edit-name', 'Add taxonomy term form opened successfully.');
+    $this->assertField('edit-name-0-value', 'Add taxonomy term form opened successfully.');
 
     // Submit the term.
     $edit = array();
-    $edit['name'] = $this->randomName();
+    $edit['name[0][value]'] = $this->randomName();
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Created new term %name.', array('%name' => $edit['name'])), 'Term created successfully.');
+    $this->assertRaw(t('Created new term %name.', array('%name' => $edit['name[0][value]'])), 'Term created successfully.');
 
-    $terms = taxonomy_term_load_multiple_by_name($edit['name']);
+    $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
 
     // Edit the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $this->assertResponse(200);
-    $this->assertText($edit['name'], 'Edit taxonomy term form opened successfully.');
+    $this->assertText($edit['name[0][value]'], 'Edit taxonomy term form opened successfully.');
 
-    $edit['name'] = $this->randomName();
+    $edit['name[0][value]'] = $this->randomName();
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Updated term %name.', array('%name' => $edit['name'])), 'Term updated successfully.');
+    $this->assertRaw(t('Updated term %name.', array('%name' => $edit['name[0][value]'])), 'Term updated successfully.');
 
     // Delete the vocabulary.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $this->assertRaw(t('Are you sure you want to delete the term %name?', array('%name' => $edit['name'])), 'Delete taxonomy term form opened successfully.');
+    $this->assertRaw(t('Are you sure you want to delete the term %name?', array('%name' => $edit['name[0][value]'])), 'Delete taxonomy term form opened successfully.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Delete'));
-    $this->assertRaw(t('Deleted term %name.', array('%name' => $edit['name'])), 'Term deleted.');
+    $this->assertRaw(t('Deleted term %name.', array('%name' => $edit['name[0][value]'])), 'Term deleted.');
 
     // Test as user with "edit" permissions.
     $user = $this->drupalCreateUser(array("edit terms in {$vocabulary->id()}"));
@@ -82,9 +82,9 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertResponse(200);
     $this->assertText($term->getName(), 'Edit taxonomy term form opened successfully.');
 
-    $edit['name'] = $this->randomName();
+    $edit['name[0][value]'] = $this->randomName();
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Updated term %name.', array('%name' => $edit['name'])), 'Term updated successfully.');
+    $this->assertRaw(t('Updated term %name.', array('%name' => $edit['name[0][value]'])), 'Term updated successfully.');
 
     // Delete the vocabulary.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');

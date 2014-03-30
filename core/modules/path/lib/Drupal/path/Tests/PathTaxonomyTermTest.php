@@ -50,12 +50,12 @@ class PathTaxonomyTermTest extends PathTestBase {
     $vocabulary = entity_load('taxonomy_vocabulary', 'tags');
     $description = $this->randomName();
     $edit = array(
-      'name' => $this->randomName(),
-      'description[value]' => $description,
+      'name[0][value]' => $this->randomName(),
+      'description[0][value]' => $description,
       'path[alias]' => $this->randomName(),
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add', $edit, t('Save'));
-    $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
+    $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name[0][value]']))->fetchField();
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);
