@@ -233,7 +233,8 @@ class File extends ContentEntityBase implements FileInterface {
     $fields['fid'] = FieldDefinition::create('integer')
       ->setLabel(t('File ID'))
       ->setDescription(t('The file ID.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
 
     $fields['uuid'] = FieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
@@ -263,7 +264,8 @@ class File extends ContentEntityBase implements FileInterface {
 
     $fields['filesize'] = FieldDefinition::create('integer')
       ->setLabel(t('File size'))
-      ->setDescription(t('The size of the file in bytes.'));
+      ->setDescription(t('The size of the file in bytes.'))
+      ->setSetting('unsigned', TRUE);
 
     $fields['status'] = FieldDefinition::create('integer')
       ->setLabel(t('Status'))

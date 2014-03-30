@@ -110,7 +110,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
     if ($target_type_info->hasKey('revision') && $target_type_info->getRevisionTable()) {
       $properties['revision_id'] = DataDefinition::create('integer')
         ->setLabel(t('Revision ID'))
-        ->setConstraints(array('Range' => array('min' => 0)));
+        ->setSetting('unsigned', TRUE);
     }
 
     return $properties;

@@ -111,7 +111,8 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['tid'] = FieldDefinition::create('integer')
       ->setLabel(t('Term ID'))
       ->setDescription(t('The term ID.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
 
     $fields['uuid'] = FieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
@@ -150,7 +151,8 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setDescription(t('The parents of this term.'))
       // Save new terms with no parents by default.
       ->setSetting('default_value', 0)
-      ->setConstraints(array('TermParent' => array()));
+      ->setSetting('unsigned', TRUE)
+      ->addConstraint('TermParent', array());
 
     $fields['changed'] = FieldDefinition::create('changed')
       ->setLabel(t('Changed'))

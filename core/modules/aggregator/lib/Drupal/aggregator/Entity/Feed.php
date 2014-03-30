@@ -134,7 +134,8 @@ class Feed extends ContentEntityBase implements FeedInterface {
     $fields['fid'] = FieldDefinition::create('integer')
       ->setLabel(t('Feed ID'))
       ->setDescription(t('The ID of the aggregator feed.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
 
     $fields['uuid'] = FieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
@@ -155,7 +156,8 @@ class Feed extends ContentEntityBase implements FeedInterface {
 
     $fields['refresh'] = FieldDefinition::create('integer')
       ->setLabel(t('Refresh'))
-      ->setDescription(t('How often to check for new feed items, in seconds.'));
+      ->setDescription(t('How often to check for new feed items, in seconds.'))
+      ->setSetting('unsigned', TRUE);
 
     $fields['checked'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Checked'))

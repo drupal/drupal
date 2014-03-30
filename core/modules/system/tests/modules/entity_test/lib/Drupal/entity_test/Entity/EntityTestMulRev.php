@@ -53,7 +53,8 @@ class EntityTestMulRev extends EntityTestRev {
     $fields['revision_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Revision ID'))
       ->setDescription(t('The version id of the test entity.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
 
     $fields['default_langcode'] = FieldDefinition::create('boolean')
       ->setLabel(t('Default language'))

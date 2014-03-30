@@ -63,9 +63,7 @@ class EntityReferenceItem extends FieldItemBase {
       // https://drupal.org/node/2107249
       $target_id_definition = DataDefinition::create('integer')
         ->setLabel(t('Entity ID'))
-        ->setConstraints(array(
-          'Range' => array('min' => 0),
-        ));
+        ->setSetting('unsigned', TRUE);
     }
     else {
       $target_id_definition = DataDefinition::create('string')

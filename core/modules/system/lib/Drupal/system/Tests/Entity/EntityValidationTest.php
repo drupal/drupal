@@ -105,6 +105,12 @@ class EntityValidationTest extends EntityUnitTestBase {
 
     // Test triggering a fail for each of the constraints specified.
     $test_entity = clone $entity;
+    $test_entity->id->value = -1;
+    $violations = $test_entity->validate();
+    $this->assertEqual($violations->count(), 1, 'Validation failed.');
+    $this->assertEqual($violations[0]->getMessage(), t('%name: The integer must be larger or equal to %min.', array('%name' => 'ID', '%min' => 0)));
+
+    $test_entity = clone $entity;
     $test_entity->uuid->value = $this->randomString(129);
     $violations = $test_entity->validate();
     $this->assertEqual($violations->count(), 1, 'Validation failed.');
