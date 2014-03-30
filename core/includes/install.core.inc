@@ -2045,6 +2045,12 @@ function install_finished(&$install_state) {
   $snapshot = \Drupal::service('config.storage.snapshot');
   \Drupal::service('config.manager')->createSnapshot($active, $snapshot);
 
+  // Load current user and perform final login tasks.
+  // This has to be done after drupal_flush_all_caches()
+  // to avoid session regeneration.
+  $account = user_load(1);
+  user_login_finalize($account);
+
   // @todo Temporary hack to satisfy PIFR.
   // @see https://drupal.org/node/1317548
   $pifr_assertion = '<span style="display: none;">Drupal installation complete</span>';
@@ -2578,9 +2584,6 @@ function install_configure_form_submit($form, &$form_state) {
   $account->pass = $form_state['values']['account']['pass'];
   $account->name = $form_state['values']['account']['name'];
   $account->save();
-  // Load current user and perform final login tasks.
-  $account = user_load(1);
-  user_login_finalize($account);
 
   // Record when this install ran.
   \Drupal::state()->set('install_time', $_SERVER['REQUEST_TIME']);
