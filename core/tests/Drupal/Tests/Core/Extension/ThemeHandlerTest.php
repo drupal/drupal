@@ -196,8 +196,8 @@ class ThemeHandlerTest extends UnitTestCase {
           'css/colors.css',
         ),
       ),
-      'libraries' => array(
-        'example/theme',
+      'scripts' => array(
+        'example' => 'theme.js',
       ),
       'engine' => 'twig',
       'base theme' => 'stark',
@@ -207,7 +207,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertCount(1, $list_info);
 
     $this->assertEquals($this->themeHandler->systemList['bartik']->info['stylesheets'], $list_info['bartik']->stylesheets);
-    $this->assertEquals($this->themeHandler->systemList['bartik']->libraries, $list_info['bartik']->libraries);
+    $this->assertEquals($this->themeHandler->systemList['bartik']->scripts, $list_info['bartik']->scripts);
     $this->assertEquals('twig', $list_info['bartik']->engine);
     $this->assertEquals('stark', $list_info['bartik']->base_theme);
     $this->assertEquals(0, $list_info['bartik']->status);
@@ -219,7 +219,7 @@ class ThemeHandlerTest extends UnitTestCase {
           'style.css',
         ),
       ),
-      'libraries' => array(),
+      'scripts' => array(),
     );
     $this->themeHandler->systemList['seven']->status = 1;
 
@@ -274,7 +274,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertEquals('twig', $info->prefix);
 
     $this->assertEquals('twig', $info->info['engine']);
-    $this->assertEquals(array(), $info->info['libraries']);
+    $this->assertEquals(array(), $info->info['scripts']);
 
     // Ensure that the css paths are set with the proper prefix.
     $this->assertEquals(array(

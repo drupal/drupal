@@ -211,28 +211,32 @@ function _drupal_theme_initialize($theme, $base_theme = array()) {
   drupal_render($css);
 
   // Do basically the same as the above for scripts
-  $final_libraries = array();
+  $final_scripts = array();
 
   // Grab scripts from base theme
   foreach ($base_theme as $base) {
-    if (!empty($base->libraries)) {
-      foreach ($base->libraries as $library) {
-        $final_libraries[] = $library;
+    if (!empty($base->scripts)) {
+      foreach ($base->scripts as $name => $script) {
+        $final_scripts[$name] = $script;
       }
     }
   }
 
   // Add scripts used by this theme.
-  if (!empty($theme->libraries)) {
-    foreach ($theme->libraries as $library) {
-      $final_libraries[] = $library;
+  if (!empty($theme->scripts)) {
+    foreach ($theme->scripts as $name => $script) {
+      $final_scripts[$name] = $script;
     }
   }
 
   // Add scripts used by this theme.
   $js = array();
-  foreach ($final_libraries as $library) {
-    $js['#attached']['library'][] = $library;
+  foreach ($final_scripts as $script) {
+    $js['#attached']['js'][] = array(
+      'data' => $script,
+      'group' => JS_THEME,
+      'every_page' => TRUE,
+    );
   }
   drupal_render($js);
 
