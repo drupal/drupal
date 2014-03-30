@@ -18,6 +18,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -66,6 +67,13 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected $configStorage;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a ConfigEntityStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -76,8 +84,10 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    *   The config storage service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service) {
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_type);
 
     $this->idKey = $this->entityType->getKey('id');
@@ -86,6 +96,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $this->configFactory = $config_factory;
     $this->configStorage = $config_storage;
     $this->uuidService = $uuid_service;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -96,7 +107,8 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $entity_type,
       $container->get('config.factory'),
       $container->get('config.storage'),
-      $container->get('uuid')
+      $container->get('uuid'),
+      $container->get('language_manager')
     );
   }
 
@@ -228,7 +240,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $class::preCreate($this, $values);
 
     // Set default language to site default if not provided.
-    $values += array('langcode' => language_default()->id);
+    $values += array('langcode' => $this->languageManager->getDefaultLanguage()->id);
 
     $entity = new $class($values, $this->entityTypeId);
     // Mark this entity as new, so isNew() returns TRUE. This does not check
@@ -331,9 +343,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $config->save();
       $entity->postSave($this, TRUE);
       $this->invokeHook('update', $entity);
-
-      // Immediately update the original ID.
-      $entity->setOriginalId($entity->id());
     }
     else {
       $return = SAVED_NEW;
@@ -342,6 +351,11 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $entity->postSave($this, FALSE);
       $this->invokeHook('insert', $entity);
     }
+
+    // After saving, this is now the "original entity", and subsequent saves
+    // will be updates instead of inserts, and updates must always be able to
+    // correctly identify the original entity.
+    $entity->setOriginalId($entity->id());
 
     unset($entity->original);
 

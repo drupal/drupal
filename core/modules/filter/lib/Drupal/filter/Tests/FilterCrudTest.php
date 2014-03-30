@@ -41,9 +41,10 @@ class FilterCrudTest extends DrupalUnitTestBase {
     $this->verifyTextFormat($format);
 
     // Add another text format specifying all possible properties.
-    $format = entity_create('filter_format');
-    $format->format = 'custom_format';
-    $format->name = 'Custom format';
+    $format = entity_create('filter_format', array(
+      'format' => 'custom_format',
+      'name' => 'Custom format',
+    ));
     $format->setFilterConfig('filter_url', array(
       'status' => 1,
       'settings' => array(

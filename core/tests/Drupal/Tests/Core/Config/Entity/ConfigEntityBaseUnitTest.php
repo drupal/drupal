@@ -369,6 +369,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $duplicate = $this->entity->createDuplicate();
     $this->assertInstanceOf('\Drupal\Core\Entity\Entity', $duplicate);
     $this->assertNotSame($this->entity, $duplicate);
+    $this->assertFalse($this->entity->isNew());
+    $this->assertTrue($duplicate->isNew());
     $this->assertNull($duplicate->id());
     $this->assertNull($duplicate->getOriginalId());
     $this->assertNotEquals($this->entity->uuid(), $duplicate->uuid());

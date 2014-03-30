@@ -13,6 +13,7 @@ use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
@@ -56,6 +57,8 @@ class FieldConfigStorage extends ConfigEntityStorage {
    *   The config storage service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
@@ -63,8 +66,8 @@ class FieldConfigStorage extends ConfigEntityStorage {
    * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, EntityManagerInterface $entity_manager, ModuleHandler $module_handler, StateInterface $state) {
-    parent::__construct($entity_type, $config_factory, $config_storage, $uuid_service);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, ModuleHandler $module_handler, StateInterface $state) {
+    parent::__construct($entity_type, $config_factory, $config_storage, $uuid_service, $language_manager);
     $this->entityManager = $entity_manager;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
@@ -79,6 +82,7 @@ class FieldConfigStorage extends ConfigEntityStorage {
       $container->get('config.factory'),
       $container->get('config.storage'),
       $container->get('uuid'),
+      $container->get('language_manager'),
       $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('state')

@@ -46,7 +46,7 @@ class BreakpointAPITest extends BreakpointTestBase {
     $this->assertTrue($exception, 'breakpoint_config_name: An exception is thrown when an invalid sourceType is entered.');
 
     // Try an invalid source.
-    $breakpoint->id = '';
+    $breakpoint = $breakpoint->createDuplicate();
     $breakpoint->sourceType = Breakpoint::SOURCE_TYPE_USER_DEFINED;
     $breakpoint->source = 'custom*_module source';
 
@@ -60,7 +60,7 @@ class BreakpointAPITest extends BreakpointTestBase {
     $this->assertTrue($exception, 'breakpoint_config_name: An exception is thrown when an invalid source is entered.');
 
     // Try an invalid name (make sure there is at least once capital letter).
-    $breakpoint->id = '';
+    $breakpoint = $breakpoint->createDuplicate();
     $breakpoint->source = 'custom_module';
     $breakpoint->name = drupal_ucfirst($this->randomName());
 
@@ -74,7 +74,7 @@ class BreakpointAPITest extends BreakpointTestBase {
     $this->assertTrue($exception, 'breakpoint_config_name: An exception is thrown when an invalid name is entered.');
 
     // Try a valid breakpoint.
-    $breakpoint->id = '';
+    $breakpoint = $breakpoint->createDuplicate();
     $breakpoint->name = drupal_strtolower($this->randomName());
     $breakpoint->mediaQuery = 'all';
 

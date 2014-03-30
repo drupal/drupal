@@ -49,6 +49,7 @@ class BreakpointGroupAPITest extends BreakpointGroupTestBase {
     $this->assertTrue($exception, 'An exception is thrown when an invalid sourceType is entered.');
 
     // Try an invalid source.
+    $breakpoint_group = $breakpoint_group->createDuplicate();
     $breakpoint_group->name = '';
     $breakpoint_group->sourceType = Breakpoint::SOURCE_TYPE_USER_DEFINED;
     $breakpoint_group->source = 'custom*_module source';
@@ -63,6 +64,7 @@ class BreakpointGroupAPITest extends BreakpointGroupTestBase {
     $this->assertTrue($exception, 'An exception is thrown when an invalid source is entered.');
 
     // Try a valid breakpoint_group.
+    $breakpoint_group = $breakpoint_group->createDuplicate();
     $breakpoint_group->name = 'test';
     $breakpoint_group->source = 'custom_module_source';
 

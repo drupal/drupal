@@ -104,10 +104,19 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
     if (!$this->isValid()) {
       throw new InvalidBreakpointException('Invalid data detected.');
     }
-    if (empty($this->id)) {
+    parent::save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    // If no ID is specified, build one from the properties that uniquely define
+    // this breakpoint group.
+    if (!isset($this->id)) {
       $this->id = $this->sourceType . '.' . $this->source . '.' . $this->name;
     }
-    parent::save();
+    return $this->id;
   }
 
   /**

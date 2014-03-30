@@ -106,19 +106,24 @@ class Breakpoint extends ConfigEntityBase implements BreakpointInterface {
   public $multipliers = array();
 
   /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    // If no ID is specified, build one from the properties that uniquely define
+    // this breakpoint.
+    if (!isset($this->id)) {
+      $this->id = $this->sourceType . '.' . $this->source . '.' . $this->name;
+    }
+    return $this->id;
+  }
+
+  /**
    * Overrides Drupal\config\ConfigEntityBase::save().
    */
   public function save() {
     // Check if everything is valid.
     if (!$this->isValid()) {
       throw new InvalidBreakpointException('Invalid data detected.');
-    }
-
-    // Build an id if none is set.
-    // Since a particular name can be used by multiple theme/modules we need
-    // to make a unique id.
-    if (empty($this->id)) {
-      $this->id = $this->sourceType . '.' . $this->source . '.' . $this->name;
     }
 
     // Set the label if none is set.

@@ -314,7 +314,9 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   public function createDuplicate() {
     $duplicate = clone $this;
     $entity_type = $this->getEntityType();
+    // Reset the entity ID and indicate that this is a new entity.
     $duplicate->{$entity_type->getKey('id')} = NULL;
+    $duplicate->enforceIsNew();
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if ($entity_type->hasKey('uuid')) {
