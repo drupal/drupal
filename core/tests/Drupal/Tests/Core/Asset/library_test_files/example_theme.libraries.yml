@@ -1,0 +1,4 @@
+example:
+  css:
+    theme:
+      css/example.css: {}

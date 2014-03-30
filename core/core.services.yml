@@ -740,5 +740,8 @@ services:
     class: Drupal\Core\Asset\JsCollectionGrouper
   asset.js.dumper:
     class: Drupal\Core\Asset\AssetDumper
+  library.discovery:
+    class: Drupal\Core\Asset\LibraryDiscovery
+    arguments: ['@cache.cache', '@module_handler']
   info_parser:
     class: Drupal\Core\Extension\InfoParser

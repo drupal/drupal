@@ -1,0 +1,5 @@
+example_external:
+  version: v3.14
+  css:
+    theme:
+      css/example_external.css: {}

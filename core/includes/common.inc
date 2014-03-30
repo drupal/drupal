@@ -2602,16 +2602,18 @@ function drupal_process_states(&$elements) {
  *   TRUE if the library was successfully added; FALSE if the library or one of
  *   its dependencies could not be added.
  *
- * @see drupal_get_library()
+ * @see \Drupal\Core\Asset\LibraryDiscovery
  * @see hook_library_info_alter()
  */
 function _drupal_add_library($library_name, $every_page = NULL) {
   $added = &drupal_static(__FUNCTION__, array());
+  /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+  $library_discovery = \Drupal::service('library.discovery');
 
   list($extension, $name) = explode('/', $library_name, 2);
   // Only process the library if it exists and it was not added already.
   if (!isset($added[$extension][$name])) {
-    if ($library = drupal_get_library($library_name)) {
+    if ($library = $library_discovery->getLibraryByName($extension, $name)) {
       // Allow modules and themes to dynamically attach request and context
       // specific data for this library; e.g., localization.
       \Drupal::moduleHandler()->alter('library', $library, $library_name);
@@ -2640,188 +2642,6 @@ function _drupal_add_library($library_name, $every_page = NULL) {
   }
 
   return $added[$extension][$name];
-}
-
-/**
- * Retrieves information for a JavaScript/CSS library.
- *
- * Library information is statically cached. Libraries are keyed by module for
- * several reasons:
- * - Libraries are not unique. Multiple modules might ship with the same library
- *   in a different version or variant. This registry cannot (and does not
- *   attempt to) prevent library conflicts.
- * - Modules implementing and thereby depending on a library that is registered
- *   by another module can only rely on that module's library.
- * - Two (or more) modules can still register the same library and use it
- *   without conflicts in case the libraries are loaded on certain pages only.
- *
- * @param $library_name
- *   The name of a registered library to retrieve. By default, all
- *   libraries registered by the extension are returned.
- *
- * @return
- *   The definition of the requested library, if $name was passed and it exists,
- *   or FALSE if it does not exist. If no $name was passed, an associative array
- *   of libraries registered by the module is returned (which may be empty).
- *
- * @see _drupal_add_library()
- * @see hook_library_info_alter()
- *
- * @todo The purpose of drupal_get_*() is completely different to other page
- *   requisite API functions; find and use a different name.
- */
-function drupal_get_library($library_name) {
-  $libraries = &drupal_static(__FUNCTION__, array());
-
-  $library_info = explode('/', $library_name, 2);
-  $extension = $library_info[0];
-  $name = isset($library_info[1]) ? $library_info[1] : NULL;
-  if (!isset($libraries[$extension]) && ($cache = \Drupal::cache()->get('library:info:' . $extension))) {
-    $libraries[$extension] = $cache->data;
-  }
-
-  if (!isset($libraries[$extension])) {
-    $libraries[$extension] = array();
-    if ($extension === 'core') {
-      $path = 'core';
-      $extension_type = 'core';
-    }
-    else {
-      // @todo Add a $type argument OR automatically figure out the type based
-      //   on current extension data, possibly using a module->theme fallback.
-      $path = drupal_get_path('module', $extension);
-      $extension_type = 'module';
-      if (!$path) {
-        $path = drupal_get_path('theme', $extension);
-        $extension_type = 'theme';
-      }
-    }
-    $library_file = $path . '/' . $extension . '.libraries.yml';
-
-    if ($library_file && file_exists(DRUPAL_ROOT . '/' . $library_file)) {
-      $libraries[$extension] = array();
-      $parser = new Parser();
-      try {
-        $libraries[$extension] = $parser->parse(file_get_contents(DRUPAL_ROOT . '/' . $library_file));
-      }
-      catch (ParseException $e) {
-        // Rethrow a more helpful exception, since ParseException lacks context.
-        throw new \RuntimeException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
-      }
-      // Allow modules to alter the module's registered libraries.
-      \Drupal::moduleHandler()->alter('library_info', $libraries[$extension], $extension);
-    }
-
-    foreach ($libraries[$extension] as $id => &$library) {
-      if (!isset($library['js']) && !isset($library['css']) && !isset($library['settings'])) {
-        throw new \RuntimeException(sprintf("Incomplete library definition for '%s' in %s", $id, $library_file));
-      }
-      $library += array('dependencies' => array(), 'js' => array(), 'css' => array());
-
-      if (isset($library['version'])) {
-        // @todo Retrieve version of a non-core extension.
-        if ($library['version'] === 'VERSION') {
-          $library['version'] = \Drupal::VERSION;
-        }
-        // Remove 'v' prefix from external library versions.
-        elseif ($library['version'][0] === 'v') {
-          $library['version'] = substr($library['version'], 1);
-        }
-      }
-
-      foreach (array('js', 'css') as $type) {
-        // Prepare (flatten) the SMACSS-categorized definitions.
-        // @todo After Asset(ic) changes, retain the definitions as-is and
-        //   properly resolve dependencies for all (css) libraries per category,
-        //   and only once prior to rendering out an HTML page.
-        if ($type == 'css' && !empty($library[$type])) {
-          foreach ($library[$type] as $category => $files) {
-            foreach ($files as $source => $options) {
-              if (!isset($options['weight'])) {
-                $options['weight'] = 0;
-              }
-              // Apply the corresponding weight defined by CSS_* constants.
-              $options['weight'] += constant('CSS_' . strtoupper($category));
-              $library[$type][$source] = $options;
-            }
-            unset($library[$type][$category]);
-          }
-        }
-        foreach ($library[$type] as $source => $options) {
-          unset($library[$type][$source]);
-          // Allow to omit the options hashmap in YAML declarations.
-          if (!is_array($options)) {
-            $options = array();
-          }
-          if ($type == 'js' && isset($options['weight']) && $options['weight'] > 0) {
-            throw new \UnexpectedValueException("The $extension/$id library defines a positive weight for '$source'. Only negative weights are allowed (but should be avoided). Instead of a positive weight, specify accurate dependencies for this library.");
-          }
-          // Unconditionally apply default groups for the defined asset files.
-          // The library system is a dependency management system. Each library
-          // properly specifies its dependencies instead of relying on a custom
-          // processing order.
-          if ($type == 'js') {
-            $options['group'] = JS_LIBRARY;
-          }
-          elseif ($type == 'css') {
-            $options['group'] = $extension_type == 'theme' ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
-          }
-          // By default, all library assets are files.
-          if (!isset($options['type'])) {
-            $options['type'] = 'file';
-          }
-          if ($options['type'] == 'external') {
-            $options['data'] = $source;
-          }
-          // Determine the file asset URI.
-          else {
-            if ($source[0] === '/') {
-              // An absolute path maps to DRUPAL_ROOT / base_path().
-              if ($source[1] !== '/') {
-                $options['data'] = substr($source, 1);
-              }
-              // A protocol-free URI (e.g., //cdn.com/example.js) is external.
-              else {
-                $options['type'] = 'external';
-                $options['data'] = $source;
-              }
-            }
-            // A stream wrapper URI (e.g., public://generated_js/example.js).
-            elseif (file_valid_uri($source)) {
-              $options['data'] = $source;
-            }
-            // By default, file paths are relative to the registering extension.
-            else {
-              $options['data'] = $path . '/' . $source;
-            }
-          }
-          $options['version'] = $library['version'];
-
-          $library[$type][] = $options;
-        }
-      }
-      // @todo Introduce drupal_add_settings().
-      if (isset($library['settings'])) {
-        $library['js'][] = array(
-          'type' => 'setting',
-          'data' => $library['settings'],
-        );
-        unset($library['settings']);
-      }
-    }
-    \Drupal::cache()->set('library:info:' . $extension, $libraries[$extension], Cache::PERMANENT, array(
-      'extension' => array(TRUE, $extension),
-      'library_info' => array(TRUE),
-    ));
-  }
-
-  if (isset($name)) {
-    if (!isset($libraries[$extension][$name])) {
-      $libraries[$extension][$name] = FALSE;
-    }
-    return $libraries[$extension][$name];
-  }
-  return $libraries[$extension];
 }
 
 /**

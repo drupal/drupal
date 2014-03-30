@@ -621,7 +621,9 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testLibraryAlter() {
     // Verify that common_test altered the title of Farbtastic.
-    $library = drupal_get_library('core/jquery.farbtastic');
+    /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+    $library_discovery = \Drupal::service('library.discovery');
+    $library = $library_discovery->getLibraryByName('core', 'jquery.farbtastic');
     $this->assertEqual($library['version'], '0.0', 'Registered libraries were altered.');
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
@@ -637,7 +639,9 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * @see common_test.library.yml
    */
   function testLibraryNameConflicts() {
-    $farbtastic = drupal_get_library('common_test/jquery.farbtastic');
+    /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+    $library_discovery = \Drupal::service('library.discovery');
+    $farbtastic = $library_discovery->getLibraryByName('common_test', 'jquery.farbtastic');
     $this->assertEqual($farbtastic['version'], '0.1', 'Alternative libraries can be added to the page.');
   }
 
@@ -645,7 +649,9 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests non-existing libraries.
    */
   function testLibraryUnknown() {
-    $result = drupal_get_library('unknown/unknown');
+    /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+    $library_discovery = \Drupal::service('library.discovery');
+    $result = $library_discovery->getLibraryByName('unknown', 'unknown');
     $this->assertFalse($result, 'Unknown library returned FALSE.');
     drupal_static_reset('drupal_get_library');
 
@@ -669,19 +675,21 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests retrieval of libraries via drupal_get_library().
    */
   function testGetLibrary() {
+    /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+    $library_discovery = \Drupal::service('library.discovery');
     // Retrieve all libraries registered by a module.
-    $libraries = drupal_get_library('common_test');
+    $libraries = $library_discovery->getLibrariesByExtension('common_test');
     $this->assertTrue(isset($libraries['jquery.farbtastic']), 'Retrieved all module libraries.');
     // Retrieve all libraries for a module not declaring any libraries.
     // Note: This test installs language module.
-    $libraries = drupal_get_library('dblog');
+    $libraries = $library_discovery->getLibrariesByExtension('dblog');
     $this->assertEqual($libraries, array(), 'Retrieving libraries from a module not declaring any libraries returns an emtpy array.');
 
     // Retrieve a specific library by module and name.
-    $farbtastic = drupal_get_library('common_test/jquery.farbtastic');
+    $farbtastic = $library_discovery->getLibraryByName('common_test', 'jquery.farbtastic');
     $this->assertEqual($farbtastic['version'], '0.1', 'Retrieved a single library.');
     // Retrieve a non-existing library by module and name.
-    $farbtastic = drupal_get_library('common_test/foo');
+    $farbtastic = $library_discovery->getLibraryByName('common_test', 'foo');
     $this->assertIdentical($farbtastic, FALSE, 'Retrieving a non-existing library returns FALSE.');
   }
 
