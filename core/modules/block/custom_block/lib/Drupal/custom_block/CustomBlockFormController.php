@@ -96,16 +96,6 @@ class CustomBlockFormController extends ContentEntityFormController {
     // names.
     $form['#attributes']['class'][0] = drupal_html_class('block-' . $block->bundle() . '-form');
 
-    // Basic block information.
-    $form['info'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Block description'),
-      '#required' => TRUE,
-      '#default_value' => $block->label(),
-      '#weight' => -5,
-      '#description' => $this->t('A brief description of your block. Used on the <a href="@overview">Blocks administration page</a>.', array('@overview' => $this->url('block.admin_display'))),
-    );
-
     if ($this->moduleHandler->moduleExists('language')) {
       $language_configuration = language_get_default_configuration('custom_block', $block->bundle());
 
@@ -255,7 +245,7 @@ class CustomBlockFormController extends ContentEntityFormController {
       $exists = $this->customBlockStorage->loadByProperties(array('info' => $form_state['values']['info']));
       if (!empty($exists)) {
         $this->setFormError('info', $form_state, $this->t('A block with description %name already exists.', array(
-          '%name' => $form_state['values']['info'],
+          '%name' => $form_state['values']['info'][0]['value'],
         )));
       }
     }

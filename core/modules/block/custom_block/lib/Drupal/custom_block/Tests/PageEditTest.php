@@ -31,16 +31,16 @@ class PageEditTest extends CustomBlockTestBase {
   public function testPageEdit() {
     $this->drupalLogin($this->adminUser);
 
-    $title_key = 'info';
+    $title_key = 'info[0][value]';
     $body_key = 'body[0][value]';
     // Create block to edit.
     $edit = array();
-    $edit['info'] = drupal_strtolower($this->randomName(8));
+    $edit['info[0][value]'] = drupal_strtolower($this->randomName(8));
     $edit[$body_key] = $this->randomName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the block exists in the database.
-    $blocks = \Drupal::entityQuery('custom_block')->condition('info', $edit['info'])->execute();
+    $blocks = \Drupal::entityQuery('custom_block')->condition('info', $edit['info[0][value]'])->execute();
     $block = entity_load('custom_block', reset($blocks));
     $this->assertTrue($block, 'Custom block found in database.');
 
@@ -59,7 +59,7 @@ class PageEditTest extends CustomBlockTestBase {
     // Edit the same block, creating a new revision.
     $this->drupalGet("block/" . $block->id());
     $edit = array();
-    $edit['info'] = $this->randomName(8);
+    $edit['info[0][value]'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     $edit['revision'] = TRUE;
     $this->drupalPostForm(NULL, $edit, t('Save'));

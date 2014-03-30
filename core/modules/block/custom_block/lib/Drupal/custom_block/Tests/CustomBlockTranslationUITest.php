@@ -100,6 +100,20 @@ class CustomBlockTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
+   * Returns an edit array containing the values to be posted.
+   */
+  protected function getEditValues($values, $langcode, $new = FALSE) {
+    $edit = parent::getEditValues($values, $langcode, $new);
+    foreach ($edit as $property => $value) {
+      if ($property == 'info') {
+        $edit['info[0][value]'] = $value;
+        unset($edit[$property]);
+      }
+    }
+    return $edit;
+  }
+
+  /**
    * Test that no metadata is stored for a disabled bundle.
    */
   public function testDisabledBundle() {

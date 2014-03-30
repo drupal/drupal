@@ -60,14 +60,14 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
 
     // Create a block.
     $edit = array();
-    $edit['info'] = 'Test Block';
+    $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('!block %name has been created.', array(
       '!block' => 'Basic block',
-      '%name' => $edit["info"]
+      '%name' => $edit['info[0][value]']
     )), 'Basic block created.');
 
     // Change the view mode.
@@ -82,7 +82,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $this->assertOption('edit-settings-custom-block-view-mode', 'default', 'The default view mode is available.');
 
     // Check that the block exists in the database.
-    $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info']));
+    $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info[0][value]']));
     $block = reset($blocks);
     $this->assertTrue($block, 'Custom Block found in database.');
 
@@ -92,7 +92,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
 
     // Check that the Basic block has been created.
     $this->assertRaw(format_string('A block with description %name already exists.', array(
-      '%name' => $edit["info"]
+      '%name' => $edit['info[0][value]']
     )));
     $this->assertResponse(200);
   }
@@ -105,7 +105,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
    */
   public function testDefaultCustomBlockCreation() {
     $edit = array();
-    $edit['info'] = $this->randomName(8);
+    $edit['info[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
     // Don't pass the custom block type in the url so the default is forced.
     $this->drupalPostForm('block/add', $edit, t('Save'));
@@ -113,11 +113,11 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     // Check that the block has been created and that it is a basic block.
     $this->assertRaw(format_string('!block %name has been created.', array(
       '!block' => 'Basic block',
-      '%name' => $edit["info"],
+      '%name' => $edit['info[0][value]'],
     )), 'Basic block created.');
 
     // Check that the block exists in the database.
-    $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info']));
+    $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info[0][value]']));
     $block = reset($blocks);
     $this->assertTrue($block, 'Default Custom Block found in database.');
   }
@@ -165,15 +165,15 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
   public function testBlockDelete() {
     // Create a block.
     $edit = array();
-    $edit['info'] = $this->randomName(8);
+    $edit['info[0][value]'] = $this->randomName(8);
     $body = $this->randomName(16);
     $edit['body[0][value]'] = $body;
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Place the block.
     $instance = array(
-      'id' => drupal_strtolower($edit['info']),
-      'settings[label]' => $edit['info'],
+      'id' => drupal_strtolower($edit['info[0][value]']),
+      'settings[label]' => $edit['info[0][value]'],
       'region' => 'sidebar_first',
     );
     $block = entity_load('custom_block', 1);
@@ -194,11 +194,11 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $this->assertText(format_plural(1, 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instance.'));
 
     $this->drupalPostForm(NULL, array(), 'Delete');
-    $this->assertRaw(t('Custom block %name has been deleted.', array('%name' => $edit['info'])));
+    $this->assertRaw(t('Custom block %name has been deleted.', array('%name' => $edit['info[0][value]'])));
 
     // Create another block and force the plugin cache to flush.
     $edit2 = array();
-    $edit2['info'] = $this->randomName(8);
+    $edit2['info[0][value]'] = $this->randomName(8);
     $body2 = $this->randomName(16);
     $edit2['body[0][value]'] = $body2;
     $this->drupalPostForm('block/add/basic', $edit2, t('Save'));
@@ -208,7 +208,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     // Create another block with no instances, and test we don't get a
     // confirmation message about deleting instances.
     $edit3 = array();
-    $edit3['info'] = $this->randomName(8);
+    $edit3['info[0][value]'] = $this->randomName(8);
     $body = $this->randomName(16);
     $edit3['body[0][value]'] = $body;
     $this->drupalPostForm('block/add/basic', $edit3, t('Save'));

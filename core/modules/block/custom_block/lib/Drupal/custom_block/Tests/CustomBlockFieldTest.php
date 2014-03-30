@@ -95,7 +95,7 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
     // Create a block.
     $this->drupalGet('block/add/link');
     $edit = array(
-      'info' => $this->randomName(8),
+      'info[0][value]' => $this->randomName(8),
       $this->field->getName() . '[0][url]' => 'http://example.com',
       $this->field->getName() . '[0][title]' => 'Example.com'
     );
@@ -104,8 +104,8 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
     $url = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
     // Place the block.
     $instance = array(
-      'id' => drupal_strtolower($edit['info']),
-      'settings[label]' => $edit['info'],
+      'id' => drupal_strtolower($edit['info[0][value]']),
+      'settings[label]' => $edit['info[0][value]'],
       'region' => 'sidebar_first',
     );
     $this->drupalPostForm($url, $instance, t('Save block'));

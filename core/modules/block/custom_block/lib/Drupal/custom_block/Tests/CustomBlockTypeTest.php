@@ -178,15 +178,15 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
           $this->clickLink('foo');
         }
         // Create a new block.
-        $edit = array('info' => $this->randomName(8));
+        $edit = array('info[0][value]' => $this->randomName(8));
         $this->drupalPostForm(NULL, $edit, t('Save'));
-        $blocks = $storage->loadByProperties(array('info' => $edit['info']));
+        $blocks = $storage->loadByProperties(array('info' => $edit['info[0][value]']));
         if (!empty($blocks)) {
           $block = reset($blocks);
           $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
           $this->assertUrl(url($destination, array('absolute' => TRUE)));
           $this->drupalPostForm(NULL, array(), t('Save block'));
-          $this->assertUrl(url("admin/structure/block/list/$theme", array('absolute' => TRUE, 'query' => array('block-placement' => drupal_html_class($edit['info'])))));
+          $this->assertUrl(url("admin/structure/block/list/$theme", array('absolute' => TRUE, 'query' => array('block-placement' => drupal_html_class($edit['info[0][value]'])))));
         }
         else {
           $this->fail('Could not load created block.');
@@ -199,9 +199,9 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->drupalGet('admin/structure/block/custom-blocks');
     $this->clickLink(t('Add custom block'));
     $this->clickLink('foo');
-    $edit = array('info' => $this->randomName(8));
+    $edit = array('info[0][value]' => $this->randomName(8));
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $blocks = $storage->loadByProperties(array('info' => $edit['info']));
+    $blocks = $storage->loadByProperties(array('info' => $edit['info[0][value]']));
     if (!empty($blocks)) {
       $destination = 'admin/structure/block/custom-blocks';
       $this->assertUrl(url($destination, array('absolute' => TRUE)));

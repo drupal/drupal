@@ -63,7 +63,7 @@ class CustomBlockListTest extends WebTestBase {
     $this->clickLink($link_text);
     $this->assertResponse(200);
     $edit = array();
-    $edit['info'] = $label;
+    $edit['info[0][value]'] = $label;
     $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
@@ -90,7 +90,7 @@ class CustomBlockListTest extends WebTestBase {
       $this->clickLink(t('Edit'));
       $this->assertResponse(200);
       $this->assertTitle(strip_tags(t('Edit custom block %label', array('%label' => $label)) . ' | Drupal'));
-      $edit = array('info' => $new_label);
+      $edit = array('info[0][value]' => $new_label);
       $this->drupalPostForm(NULL, $edit, t('Save'));
     }
     else {
