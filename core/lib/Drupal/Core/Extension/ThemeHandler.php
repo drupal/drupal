@@ -206,8 +206,8 @@ class ThemeHandler implements ThemeHandlerInterface {
             $theme->stylesheets[$media][$stylesheet] = $path;
           }
         }
-        foreach ($theme->info['scripts'] as $script => $path) {
-          $theme->scripts[$script] = $path;
+        foreach ($theme->info['libraries'] as $library => $name) {
+          $theme->libraries[$library] = $name;
         }
         if (isset($theme->info['engine'])) {
           $theme->engine = $theme->info['engine'];
@@ -265,7 +265,7 @@ class ThemeHandler implements ThemeHandlerInterface {
       'screenshot' => 'screenshot.png',
       'php' => DRUPAL_MINIMUM_PHP,
       'stylesheets' => array(),
-      'scripts' => array(),
+      'libraries' => array(),
     );
 
     $sub_themes = array();
@@ -294,10 +294,9 @@ class ThemeHandler implements ThemeHandlerInterface {
         $theme->prefix = $engines[$engine]->getName();
       }
 
-      // Prefix stylesheets, scripts, and screenshot with theme path.
+      // Prefix stylesheets and screenshot with theme path.
       $path = $theme->getPath();
       $theme->info['stylesheets'] = $this->themeInfoPrefixPath($theme->info['stylesheets'], $path);
-      $theme->info['scripts'] = $this->themeInfoPrefixPath($theme->info['scripts'], $path);
       if (!empty($theme->info['screenshot'])) {
         $theme->info['screenshot'] = $path . '/' . $theme->info['screenshot'];
       }
@@ -338,7 +337,7 @@ class ThemeHandler implements ThemeHandlerInterface {
    *
    * This helper function is mainly used to prefix all array values of an
    * .info.yml file property with a single given path (to the module or theme);
-   * e.g., to prefix all values of the 'stylesheets' or 'scripts' properties
+   * e.g., to prefix all values of the 'stylesheets' properties
    * with the file path to the defining module/theme.
    *
    * @param array $info
