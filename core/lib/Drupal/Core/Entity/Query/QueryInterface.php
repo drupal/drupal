@@ -28,13 +28,6 @@ interface QueryInterface extends AlterableInterface {
   /**
    * Add a condition to the query or a condition group.
    *
-   * @param $field
-   *   Name of the field being queried.
-   *   Some examples:
-   *   - nid
-   *   - tags.value
-   *   - tags this is the same as tags.value as .value is the default.
-   *
    * For example, to find all entities containing both the Turkish 'merhaba'
    * and the Polish 'siema' within a 'greetings' text field:
    * @code
@@ -45,6 +38,18 @@ interface QueryInterface extends AlterableInterface {
    *   $entity_ids = $query->execute();
    * @endcode
    *
+   * @param $field
+   *   Name of the field being queried. It must contain a field name,
+   *   optionally followed by a column name. The column can be "entity" for
+   *   reference fields and that can be followed similarly by a field name
+   *   and so on. Some examples:
+   *   - nid
+   *   - tags.value
+   *   - tags
+   *   - uid.entity.name
+   *   "tags" "is the same as "tags.value" as value is the default column.
+   *   If two or more conditions have the same field names they apply to the
+   *   same delta within that field.
    * @param $value
    *   The value for $field. In most cases, this is a scalar and it's treated as
    *   case-insensitive. For more complex options, it is an array. The meaning
@@ -59,7 +64,12 @@ interface QueryInterface extends AlterableInterface {
    *   - 'BETWEEN': This operator expects $value to be an array of two literals
    *     of the same type as the column.
    * @param $langcode
-   *   Language code (optional).
+   *   Language code (optional). If omitted, any translation satisfies the
+   *   condition. However, if two or more conditions omit the langcode within
+   *   one condition group then they are presumed to apply to the same
+   *   translation. If within one condition group one condition has a langcode
+   *   and another does not they are not presumed to apply to the same
+   *   translation.
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
    * @see \Drupal\Core\Entity\Query\andConditionGroup
