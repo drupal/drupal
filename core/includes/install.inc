@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
@@ -324,6 +325,11 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
         $old_settings = Settings::getAll();
         new Settings($settings_settings + $old_settings);
       }
+      // The existing settings.php file might have been included already. In
+      // case an opcode cache is enabled, the rewritten contents of the file
+      // will not be reflected in this process. Ensure to invalidate the file
+      // in case an opcode cache is enabled.
+      OpCodeCache::invalidate(DRUPAL_ROOT . '/' . $settings_file);
     }
   }
   else {
