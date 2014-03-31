@@ -225,6 +225,8 @@ services:
     synchronized: true
   request_stack:
     class: Symfony\Component\HttpFoundation\RequestStack
+    tags:
+      - { name: persist }
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']

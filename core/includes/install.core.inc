@@ -366,6 +366,7 @@ function install_begin_request(&$install_state) {
   $container = $kernel->getContainer();
   $container->enterScope('request');
   $container->set('request', $request, 'request');
+  $container->get('request_stack')->push($request);
 
   // Register the file translation service.
   if (isset($GLOBALS['config']['locale.settings']['translation.path'])) {

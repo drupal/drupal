@@ -1140,6 +1140,12 @@ abstract class TestBase {
   protected function rebuildContainer($environment = 'testing') {
     // Preserve the request object after the container rebuild.
     $request = \Drupal::request();
+    // When called from InstallerTestBase, the current container is the minimal
+    // container from TestBase::prepareEnvironment(), which does not contain a
+    // request stack.
+    if (\Drupal::getContainer()->initialized('request_stack')) {
+      $request_stack = \Drupal::service('request_stack');
+    }
 
     $this->kernel = new DrupalKernel($environment, drupal_classloader(), FALSE);
     $this->kernel->boot();
@@ -1148,6 +1154,12 @@ abstract class TestBase {
     $this->container = \Drupal::getContainer();
     // The current user is set in TestBase::prepareEnvironment().
     $this->container->set('request', $request);
+    if (isset($request_stack)) {
+      $this->container->set('request_stack', $request_stack);
+    }
+    else {
+      $this->container->get('request_stack')->push($request);
+    }
     $this->container->get('current_user')->setAccount(\Drupal::currentUser());
   }
 

@@ -646,6 +646,7 @@ function drupal_install_system($install_state) {
   if ($request) {
     $kernel->getContainer()->enterScope('request');
     $kernel->getContainer()->set('request', $request, 'request');
+    $kernel->getContainer()->get('request_stack')->push($request);
   }
 
   $system_path = drupal_get_path('module', 'system');

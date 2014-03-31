@@ -340,7 +340,9 @@ new Settings($settings);
 $kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
 $kernel->boot();
 $request = Request::createFromGlobals();
-\Drupal::getContainer()->set('request', $request);
+$container = \Drupal::getContainer();
+$container->set('request', $request);
+$container->get('request_stack')->push($request);
 
 // Determine if the current user has access to run update.php.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
