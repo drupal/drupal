@@ -11,6 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\menu_link\MenuLinkStorageInterface;
 use Drupal\menu_link\MenuTreeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -387,7 +388,7 @@ class MenuFormController extends EntityFormController {
 
     $updated_items = array();
     $fields = array('weight', 'plid');
-    foreach (element_children($form) as $mlid) {
+    foreach (Element::children($form) as $mlid) {
       if (isset($form[$mlid]['#item'])) {
         $element = $form[$mlid];
         // Update any fields that have changed in this menu item.

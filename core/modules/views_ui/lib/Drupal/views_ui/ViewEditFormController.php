@@ -12,6 +12,7 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Render\Element;
 use Drupal\user\TempStoreFactory;
 use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\Request;
@@ -1114,7 +1115,7 @@ class ViewEditFormController extends ViewFormControllerBase {
    */
   public static function addMicroweights(&$build) {
     $count = 0;
-    foreach (element_children($build) as $key) {
+    foreach (Element::children($build) as $key) {
       if (!isset($build[$key]['#weight'])) {
         $build[$key]['#weight'] = $count/1000;
       }

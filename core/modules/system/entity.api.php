@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Render\Element;
 
 /**
  * @addtogroup hooks
@@ -596,7 +597,7 @@ function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDi
  */
 function hook_entity_display_build_alter(&$build, $context) {
   // Append RDF term mappings on displayed taxonomy links.
-  foreach (element_children($build) as $field_name) {
+  foreach (Element::children($build) as $field_name) {
     $element = &$build[$field_name];
     if ($element['#field_type'] == 'entity_reference' && $element['#formatter'] == 'entity_reference_label') {
       foreach ($element['#items'] as $delta => $item) {

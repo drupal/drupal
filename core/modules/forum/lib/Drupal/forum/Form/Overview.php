@@ -8,6 +8,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Render\Element;
 use Drupal\taxonomy\Form\OverviewTerms;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -70,7 +71,7 @@ class Overview extends OverviewTerms {
     // Build base taxonomy term overview.
     $form = parent::buildForm($form, $form_state, $vocabulary);
 
-    foreach (element_children($form['terms']) as $key) {
+    foreach (Element::children($form['terms']) as $key) {
       if (isset($form['terms'][$key]['#term'])) {
         $term = $form['terms'][$key]['#term'];
         $form['terms'][$key]['term']['#href'] = 'forum/' . $term->id();

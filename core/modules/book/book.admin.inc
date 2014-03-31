@@ -5,6 +5,8 @@
  * Administration page callbacks for the Book module.
  */
 
+use Drupal\Core\Render\Element;
+
 /**
  * Returns HTML for a book administration form.
  *
@@ -23,7 +25,7 @@ function theme_book_admin_table($variables) {
   $rows = array();
   $destination = drupal_get_destination();
   $access = \Drupal::currentUser()->hasPermission('administer nodes');
-  foreach (element_children($form) as $key) {
+  foreach (Element::children($form) as $key) {
     $nid = $form[$key]['nid']['#value'];
     $href = \Drupal::url('node.view', array('node' => $nid));
 

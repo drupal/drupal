@@ -8,6 +8,7 @@
 use Drupal\book\BookManagerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Language\Language;
@@ -384,7 +385,7 @@ function template_preprocess_book_all_books_block(&$variables) {
   // Remove all non-renderable elements.
   $elements = $variables['book_menus'];
   $variables['book_menus'] = array();
-  foreach (element_children($elements) as $index) {
+  foreach (Element::children($elements) as $index) {
     $variables['book_menus'][$index] = $elements[$index];
   }
 }

@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
 use Symfony\Component\HttpFoundation\Response;
@@ -230,7 +231,7 @@ function template_preprocess_toolbar(&$variables) {
   $variables['trays'] = array();
   $variables['tabs'] = array();
   $variables['remainder'] = array();
-  foreach (element_children($element) as $key) {
+  foreach (Element::children($element) as $key) {
     // Add the tray.
     if (isset($element[$key]['tray'])) {
       $variables['trays'][$key] = array(
@@ -259,7 +260,7 @@ function template_preprocess_toolbar(&$variables) {
 
     // Add other non-tray, non-tab child elements to the remainder variable for
     // later rendering.
-    foreach (element_children($element[$key]) as $child_key) {
+    foreach (Element::children($element[$key]) as $child_key) {
       if (!in_array($child_key, array('tray', 'tab'))) {
         $variables['remainder'][$key][$child_key] = $element[$key][$child_key];
       }

@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -1095,7 +1096,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * to the 'default_options' fieldset.
    */
   public static function preRenderMoveArgumentOptions($form) {
-    foreach (element_children($form) as $key) {
+    foreach (Element::children($form) as $key) {
       $element = $form[$key];
       if (!empty($element['#argument_option'])) {
         $container_name = $element['#argument_option'] . '_options';

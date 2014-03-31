@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Render\Element;
 use Drupal\entity\Entity\EntityFormDisplay;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -214,7 +215,7 @@ class EditFieldForm extends FormBase {
     // with per-delta elements. Skip single checkboxes, because their title is
     // key to their UI. Also skip widgets with multiple subelements, because in
     // that case, per-element labeling is informative.
-    $num_children = count(element_children($widget_element));
+    $num_children = count(Element::children($widget_element));
     if ($num_children == 0 && $widget_element['#type'] != 'checkbox') {
       $widget_element['#title_display'] = 'invisible';
     }

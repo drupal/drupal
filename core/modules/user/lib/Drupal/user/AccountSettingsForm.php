@@ -10,6 +10,7 @@ namespace Drupal\user;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -141,7 +142,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href="@permissions-url">permissions</a> can override this default method.', array('%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), '@permissions-url' => url('admin/people/permissions'))),
     );
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
-    foreach (element_children($form['registration_cancellation']['user_cancel_method']) as $key) {
+    foreach (Element::children($form['registration_cancellation']['user_cancel_method']) as $key) {
       // All account cancellation methods that specify #access cannot be
       // configured as default method.
       // @see hook_user_cancel_methods_alter()

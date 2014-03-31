@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
@@ -323,7 +324,7 @@ function template_preprocess_taxonomy_term(&$variables) {
 
   // Helpful $content variable for templates.
   $variables['content'] = array();
-  foreach (element_children($variables['elements']) as $key) {
+  foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 

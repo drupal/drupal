@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
@@ -449,7 +450,7 @@ abstract class HandlerBase extends PluginBase {
     // these defaults from getting wiped out. This setting will only be TRUE
     // during a 2nd pass rerender.
     if (!empty($form_state['force_expose_options'])) {
-      foreach (element_children($form['expose']) as $id) {
+      foreach (Element::children($form['expose']) as $id) {
         if (isset($form['expose'][$id]['#default_value']) && !isset($form['expose'][$id]['#value'])) {
           $form['expose'][$id]['#value'] = $form['expose'][$id]['#default_value'];
         }

@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -279,7 +280,7 @@ function theme_system_modules_details($variables) {
   // Individual table headers.
   $rows = array();
   // Iterate through all the modules, which are children of this element.
-  foreach (element_children($form) as $key) {
+  foreach (Element::children($form) as $key) {
     // Stick the key into $module for easier access.
     $module = $form[$key];
     // Create the row for the table.
@@ -381,7 +382,7 @@ function theme_system_modules_uninstall($variables) {
 
   // Display table.
   $rows = array();
-  foreach (element_children($form['modules']) as $module) {
+  foreach (Element::children($form['modules']) as $module) {
     if (!empty($form['modules'][$module]['#required_by'])) {
       $disabled_message = format_plural(count($form['modules'][$module]['#required_by']),
         'To uninstall @module, the following module must be uninstalled first: @required_modules',

@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Render\Element;
 use Drupal\field\FieldConfigInterface;
 
 /**
@@ -118,7 +119,7 @@ function _entity_reference_field_instance_settings_ajax_process_element(&$elemen
     );
   }
 
-  foreach (element_children($element) as $key) {
+  foreach (Element::children($element) as $key) {
     _entity_reference_field_instance_settings_ajax_process_element($element[$key], $main_form);
   }
 }

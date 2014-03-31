@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\filter\FilterFormatInterface;
@@ -471,7 +472,7 @@ function filter_process_format($element) {
   );
   // Move this element into sub-element 'value'.
   unset($element['value']);
-  foreach (element_properties($element) as $key) {
+  foreach (Element::properties($element) as $key) {
     if (!in_array($key, $blacklist)) {
       $element['value'][$key] = $element[$key];
     }
@@ -576,7 +577,7 @@ function filter_process_format($element) {
 
     // Hide the text format selector and any other child element (such as text
     // field's summary).
-    foreach (element_children($element) as $key) {
+    foreach (Element::children($element) as $key) {
       if ($key != 'value') {
         $element[$key]['#access'] = FALSE;
       }

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
 use Drupal\entity\EntityViewModeInterface;
 use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
@@ -274,7 +275,7 @@ function theme_field_ui_table($variables) {
       }
 
       // Render children as table cells.
-      foreach (element_children($element) as $cell_key) {
+      foreach (Element::children($element) as $cell_key) {
         $child = &$element[$cell_key];
         // Do not render a cell for children of #type 'value'.
         if (!(isset($child['#type']) && $child['#type'] == 'value')) {

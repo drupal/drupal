@@ -5,6 +5,8 @@
  * Administrative page callbacks for menu module.
  */
 
+use Drupal\Core\Render\Element;
+
 /**
  * Returns HTML for the menu overview form into a table.
  *
@@ -25,7 +27,7 @@ function theme_menu_overview_form($variables) {
   );
 
   $rows = array();
-  foreach (element_children($form) as $mlid) {
+  foreach (Element::children($form) as $mlid) {
     if (isset($form[$mlid]['hidden'])) {
       $element = &$form[$mlid];
 

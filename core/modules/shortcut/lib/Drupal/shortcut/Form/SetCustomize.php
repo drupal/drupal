@@ -9,6 +9,7 @@ namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -86,7 +87,7 @@ class SetCustomize extends EntityFormController {
     return array(
       'submit' => array(
         '#value' => t('Save changes'),
-        '#access' => (bool) element_get_visible_children($form['shortcuts']['links']),
+        '#access' => (bool) Element::getVisibleChildren($form['shortcuts']['links']),
         '#submit' => array(
           array($this, 'submit'),
           array($this, 'save'),

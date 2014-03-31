@@ -5,6 +5,7 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
+use Drupal\Core\Render\Element;
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
@@ -1413,7 +1414,7 @@ function file_managed_file_submit($form, &$form_state) {
     // Get files that will be removed.
     if ($element['#multiple']) {
       $remove_fids = array();
-      foreach (element_children($element) as $name) {
+      foreach (Element::children($element) as $name) {
         if (strpos($name, 'file_') === 0 && $element[$name]['selected']['#value']) {
           $remove_fids[] = (int) substr($name, 5);
         }

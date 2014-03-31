@@ -8,6 +8,7 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Render\Element;
 use Drupal\locale\SourceString;
 
 /**
@@ -143,7 +144,7 @@ class TranslateEditForm extends TranslateFormBase {
           }
         }
       }
-      if (count(element_children($form['strings']))) {
+      if (count(Element::children($form['strings']))) {
         $form['actions'] = array('#type' => 'actions');
         $form['actions']['submit'] = array(
           '#type' => 'submit',

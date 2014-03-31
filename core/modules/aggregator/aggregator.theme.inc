@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Render\Element;
 
 /**
  * Prepares variables for aggregator item templates.
@@ -86,7 +87,7 @@ function theme_aggregator_page_opml($variables) {
 function template_preprocess_aggregator_summary_items(&$variables) {
   $variables['title'] = String::checkPlain($variables['source']->label());
   $summary_items = array();
-  foreach (element_children($variables['summary_items']) as $key) {
+  foreach (Element::children($variables['summary_items']) as $key) {
     $summary_items[] = $variables['summary_items'][$key];
   }
   $variables['summary_list'] = array(

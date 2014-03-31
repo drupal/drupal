@@ -5,6 +5,7 @@
  * User page callback file for the user module.
  */
 
+use Drupal\Core\Render\Element;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -110,7 +111,7 @@ function template_preprocess_user(&$variables) {
   $account = $variables['elements']['#user'];
 
   // Helpful $content variable for templates.
-  foreach (element_children($variables['elements']) as $key) {
+  foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 

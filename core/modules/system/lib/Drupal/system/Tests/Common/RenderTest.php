@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Json;
+use Drupal\Core\Render\Element;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -305,10 +306,10 @@ class RenderTest extends DrupalUnitTestBase {
     // Confirm that the $elements array has '#sorted' set to TRUE.
     $this->assertTrue($elements['#sorted'], "'#sorted' => TRUE was added to the array");
 
-    // Pass $elements through element_children() and ensure it remains
-    // sorted in the correct order. drupal_render() will return an empty string
-    // if used on the same array in the same request.
-    $children = element_children($elements);
+    // Pass $elements through \Drupal\Core\Render\Element::children() and
+    // ensure it remains sorted in the correct order. drupal_render() will
+    // return an empty string if used on the same array in the same request.
+    $children = Element::children($elements);
     $this->assertTrue(array_shift($children) == 'first', 'Child found in the correct order.');
     $this->assertTrue(array_shift($children) == 'second', 'Child found in the correct order.');
 

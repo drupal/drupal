@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Render\Element;
 use Drupal\simpletest\WebTestBase;
 
 class FormTest extends WebTestBase {
@@ -492,7 +493,7 @@ class FormTest extends WebTestBase {
     // Build a submission that tries to hijack the form by submitting input for
     // elements that are disabled.
     $edit = array();
-    foreach (element_children($form) as $key) {
+    foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#test_hijack_value'])) {
         if (is_array($form[$key]['#test_hijack_value'])) {
           foreach ($form[$key]['#test_hijack_value'] as $subkey => $value) {
@@ -543,7 +544,7 @@ class FormTest extends WebTestBase {
    * Assert that the values submitted to a form matches the default values of the elements.
    */
   function assertFormValuesDefault($values, $form) {
-    foreach (element_children($form) as $key) {
+    foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#default_value'])) {
         if (isset($form[$key]['#expected_value'])) {
           $expected_value = $form[$key]['#expected_value'];

@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Base class for entity form controllers.
@@ -186,7 +187,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     }
 
     $count = 0;
-    foreach (element_children($element) as $action) {
+    foreach (Element::children($element) as $action) {
       $element[$action] += array(
         '#type' => 'submit',
         '#weight' => ++$count * 5,

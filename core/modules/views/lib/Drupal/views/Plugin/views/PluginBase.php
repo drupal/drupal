@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\views;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase as ComponentPluginBase;
+use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -380,7 +381,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *   The form build array.
    */
   public static function preRenderAddFieldsetMarkup(array $form) {
-    foreach (element_children($form) as $key) {
+    foreach (Element::children($form) as $key) {
       $element = $form[$key];
       // In our form builder functions, we added an arbitrary #fieldset property
       // to any element that belongs in a fieldset. If this form element has
@@ -409,10 +410,10 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *   The form build array.
    */
   public static function preRenderFlattenData($form) {
-    foreach (element_children($form) as $key) {
+    foreach (Element::children($form) as $key) {
       $element = $form[$key];
       if (!empty($element['#flatten'])) {
-        foreach (element_children($element) as $child_key) {
+        foreach (Element::children($element) as $child_key) {
           $form[$child_key] = $form[$key][$child_key];
         }
         // All done, remove the now-empty parent.

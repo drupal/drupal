@@ -39,7 +39,7 @@ class SortArray {
   /**
    * Sorts a structured array by '#weight' property.
    *
-   * Callback for uasort() within element_children().
+   * Callback for uasort() within \Drupal\Core\Render\Element::children().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative

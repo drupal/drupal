@@ -1323,7 +1323,7 @@ function template_preprocess_image(&$variables) {
  * @see drupal_attach_tabledrag()
  */
 function drupal_pre_render_table(array $element) {
-  foreach (element_children($element) as $first) {
+  foreach (Element::children($element) as $first) {
     $row = array('data' => array());
     // Apply attributes of first-level elements as table row attributes.
     if (isset($element[$first]['#attributes'])) {
@@ -1332,7 +1332,7 @@ function drupal_pre_render_table(array $element) {
     // Turn second-level elements into table row columns.
     // @todo Do not render a cell for children of #type 'value'.
     // @see http://drupal.org/node/1248940
-    foreach (element_children($element[$first]) as $second) {
+    foreach (Element::children($element[$first]) as $second) {
       // Assign the element by reference, so any potential changes to the
       // original element are taken over.
       $column = array('data' => &$element[$first][$second]);
@@ -1349,7 +1349,7 @@ function drupal_pre_render_table(array $element) {
   }
 
   // Take over $element['#id'] as HTML ID attribute, if not already set.
-  element_set_attributes($element, array('id'));
+  Element::setAttributes($element, array('id'));
 
 
   // Add sticky headers, if applicable.
@@ -1682,8 +1682,9 @@ function template_preprocess_item_list(&$variables) {
           // child elements of the nested list, instead of #items. For
           // convenience, we automatically move them into #items.
           if (!isset($child['#items'])) {
-            // This is the same condition as in element_children(), which cannot
-            // be used here, since it triggers an error on string values.
+            // This is the same condition as in
+            // \Drupal\Core\Render\Element::children(), which cannot be used
+            // here, since it triggers an error on string values.
             foreach ($child as $child_key => $child_value) {
               if ($child_key[0] !== '#') {
                 $child['#items'][$child_key] = $child_value;
@@ -2405,9 +2406,9 @@ function template_preprocess_field(&$variables, $hook) {
   // We want other preprocess functions and the theme implementation to have
   // fast access to the field item render arrays. The item render array keys
   // (deltas) should always be numerically indexed starting from 0, and looping
-  // on those keys is faster than calling element_children() or looping on all
-  // keys within $element, since that requires traversal of all element
-  // properties.
+  // on those keys is faster than calling
+  // \Drupal\Core\Render\Element::children() or looping on all keys within
+  // $element, since that requires traversal of all element properties.
   $variables['items'] = array();
   $delta = 0;
   while (!empty($element[$delta])) {

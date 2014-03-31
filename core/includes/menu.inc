@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -553,7 +554,7 @@ function menu_local_tasks($level = 0) {
 function menu_primary_local_tasks() {
   $links = menu_local_tasks(0);
   // Do not display single tabs.
-  return count(element_get_visible_children($links['tabs'])) > 1 ? $links['tabs'] : '';
+  return count(Element::getVisibleChildren($links['tabs'])) > 1 ? $links['tabs'] : '';
 }
 
 /**
@@ -562,7 +563,7 @@ function menu_primary_local_tasks() {
 function menu_secondary_local_tasks() {
   $links = menu_local_tasks(1);
   // Do not display single tabs.
-  return count(element_get_visible_children($links['tabs'])) > 1 ? $links['tabs'] : '';
+  return count(Element::getVisibleChildren($links['tabs'])) > 1 ? $links['tabs'] : '';
 }
 
 /**

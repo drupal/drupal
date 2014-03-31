@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Core\Render\Element;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -212,7 +213,7 @@ class ValidationTest extends WebTestBase {
     $edit = array();
     $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
-    foreach (element_children($form) as $key) {
+    foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
         $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
         $this->assertText($form[$key]['#required_error']);
@@ -232,7 +233,7 @@ class ValidationTest extends WebTestBase {
     );
     $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
-    foreach (element_children($form) as $key) {
+    foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
         $this->assertNoText(t('!name field is required.', array('!name' => $form[$key]['#title'])));
         $this->assertNoText($form[$key]['#required_error']);

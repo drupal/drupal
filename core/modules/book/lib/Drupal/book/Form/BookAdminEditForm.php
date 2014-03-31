@@ -11,6 +11,7 @@ use Drupal\book\BookManagerInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -97,7 +98,7 @@ class BookAdminEditForm extends FormBase {
     $order = array_flip(array_keys($form_state['input']['table']));
     $form['table'] = array_merge($order, $form['table']);
 
-    foreach (element_children($form['table']) as $key) {
+    foreach (Element::children($form['table']) as $key) {
       if ($form['table'][$key]['#item']) {
         $row = $form['table'][$key];
         $values = $form_state['values']['table'][$key];

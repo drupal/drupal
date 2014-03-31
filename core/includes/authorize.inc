@@ -5,6 +5,8 @@
  * Helper functions and form handlers used for the authorize.php script.
  */
 
+use Drupal\Core\Render\Element;
+
 /**
  * Form constructor for the file transfer authorization form.
  *
@@ -180,7 +182,7 @@ function _authorize_filetransfer_connection_settings_set_defaults(&$element, $ke
   // there's a subarray of settings for the form key we're currently
   // processing, pass in that subarray to the recursive call. Otherwise, just
   // pass on the whole $defaults array.
-  foreach (element_children($element) as $child_key) {
+  foreach (Element::children($element) as $child_key) {
     _authorize_filetransfer_connection_settings_set_defaults($element[$child_key], $child_key, ((isset($defaults[$key]) && is_array($defaults[$key])) ? $defaults[$key] : $defaults));
   }
 }

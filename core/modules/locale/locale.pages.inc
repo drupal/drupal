@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\locale\SourceString;
 use Drupal\locale\TranslationString;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -282,7 +283,7 @@ function theme_locale_translate_edit_form_strings($variables) {
     t('Translation for @language', array('@language' => $form['#language'])),
   );
   $rows = array();
-  foreach (element_children($form) as $lid) {
+  foreach (Element::children($form) as $lid) {
     $string = $form[$lid];
     if ($string['plural']['#value']) {
       $source = drupal_render($string['original_singular']) . '<br />' . drupal_render($string['original_plural']);

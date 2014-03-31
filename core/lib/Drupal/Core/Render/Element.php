@@ -95,7 +95,7 @@ class Element {
       uasort($children, 'Drupal\Component\Utility\SortArray::sortByWeightProperty');
       // Put the sorted children back into $elements in the correct order, to
       // preserve sorting if the same element is passed through
-      // element_children() twice.
+      // \Drupal\Core\Render\Element::children() twice.
       foreach ($children as $key => $child) {
         unset($elements[$key]);
         $elements[$key] = $child;

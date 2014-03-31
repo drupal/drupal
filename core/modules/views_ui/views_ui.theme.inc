@@ -5,6 +5,7 @@
  * Preprocessors and theme functions for the Views UI.
  */
 
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -182,7 +183,7 @@ function theme_views_ui_build_group_filter_form($variables) {
     ),
   );
 
-  foreach (element_children($form['group_items']) as $group_id) {
+  foreach (Element::children($form['group_items']) as $group_id) {
     $form['group_items'][$group_id]['value']['#title'] = '';
     $data = array(
       'default' => drupal_render($form['default_group'][$group_id]) . drupal_render($form['default_group_multiple'][$group_id]),
@@ -382,7 +383,7 @@ function template_preprocess_views_ui_style_plugin_table(&$variables) {
     ),
   );
   $rows = array();
-  foreach (element_children($form['columns']) as $id) {
+  foreach (Element::children($form['columns']) as $id) {
     $row = array();
     $row[]['data'] = $form['info'][$id]['name'];
     $row[]['data'] = $form['columns'][$id];

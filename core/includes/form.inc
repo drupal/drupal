@@ -12,6 +12,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Utility\Color;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -893,7 +894,7 @@ function form_process_select($element) {
  */
 function template_preprocess_select(&$variables) {
   $element = $variables['element'];
-  element_set_attributes($element, array('id', 'name', 'size'));
+  Element::setAttributes($element, array('id', 'name', 'size'));
   _form_set_attributes($element, array('form-select'));
 
   $variables['attributes'] = $element['#attributes'];
@@ -1014,7 +1015,7 @@ function form_get_options($element, $key) {
  */
 function template_preprocess_fieldset(&$variables) {
   $element = $variables['element'];
-  element_set_attributes($element, array('id'));
+  Element::setAttributes($element, array('id'));
   _form_set_attributes($element, array('form-wrapper'));
   $variables['attributes'] = $element['#attributes'];
   $variables['attributes']['class'][] = 'form-item';
@@ -1103,7 +1104,7 @@ function template_preprocess_details(&$variables) {
  */
 function form_pre_render_radio($element) {
   $element['#attributes']['type'] = 'radio';
-  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
+  Element::setAttributes($element, array('id', 'name', '#return_value' => 'value'));
 
   if (isset($element['#return_value']) && $element['#value'] !== FALSE && $element['#value'] == $element['#return_value']) {
     $element['#attributes']['checked'] = 'checked';
@@ -1213,7 +1214,7 @@ function theme_date($variables) {
   if (empty($element['attribute']['type'])) {
     $element['attribute']['type'] = 'date';
   }
-  element_set_attributes($element, array('id', 'name', 'type', 'min', 'max', 'step', 'value', 'size'));
+  Element::setAttributes($element, array('id', 'name', 'type', 'min', 'max', 'step', 'value', 'size'));
   _form_set_attributes($element, array('form-' . $element['attribute']['type']));
 
   return '<input' . new Attribute($element['#attributes']) . ' />';
@@ -1280,7 +1281,7 @@ function form_process_radios($element) {
  */
 function form_pre_render_checkbox($element) {
   $element['#attributes']['type'] = 'checkbox';
-  element_set_attributes($element, array('id', 'name', '#return_value' => 'value'));
+  Element::setAttributes($element, array('id', 'name', '#return_value' => 'value'));
 
   // Unchecked checkbox has #value of integer 0.
   if (!empty($element['#checked'])) {
@@ -1459,7 +1460,7 @@ function form_process_actions($element, &$form_state) {
  */
 function form_pre_render_actions_dropbutton(array $element) {
   $dropbuttons = array();
-  foreach (element_children($element, TRUE) as $key) {
+  foreach (Element::children($element, TRUE) as $key) {
     if (isset($element[$key]['#dropbutton'])) {
       $dropbutton = $element[$key]['#dropbutton'];
       // If there is no dropbutton for this button group yet, create one.
@@ -1604,7 +1605,7 @@ function theme_tableselect($variables) {
   $header = $element['#header'];
   if (!empty($element['#options'])) {
     // Generate a table row for each selectable item in #options.
-    foreach (element_children($element) as $key) {
+    foreach (Element::children($element) as $key) {
       $row = array();
 
       $row['data'] = array();
@@ -1776,7 +1777,7 @@ function form_process_table($element, &$form_state) {
     // Create a checkbox or radio for each row in a way that the value of the
     // tableselect element behaves as if it had been of #type checkboxes or
     // radios.
-    foreach (element_children($element) as $key) {
+    foreach (Element::children($element) as $key) {
       $row = &$element[$key];
       // Prepare the element #parents for the tableselect form element.
       // Their values have to be located in child keys (#tree is ignored), since
@@ -1806,7 +1807,7 @@ function form_process_table($element, &$form_state) {
             $title = $row['title']['#title'];
           }
           else {
-            foreach (element_children($row) as $column) {
+            foreach (Element::children($row) as $column) {
               if (isset($row[$column]['#title'])) {
                 $title = $row[$column]['#title'];
                 break;
@@ -2076,7 +2077,7 @@ function form_process_group(&$element, &$form_state) {
  *   The modified element.
  */
 function form_pre_render_details($element) {
-  element_set_attributes($element, array('id'));
+  Element::setAttributes($element, array('id'));
 
   // The .form-wrapper class is required for #states to treat details like
   // containers.
@@ -2091,7 +2092,7 @@ function form_pre_render_details($element) {
   // Do not render optional details elements if there are no children.
   if (isset($element['#parents'])) {
     $group = implode('][', $element['#parents']);
-    if (!empty($element['#optional']) && !element_get_visible_children($element['#groups'][$group])) {
+    if (!empty($element['#optional']) && !Element::getVisibleChildren($element['#groups'][$group])) {
       $element['#printed'] = TRUE;
     }
   }
@@ -2117,7 +2118,7 @@ function form_pre_render_group($element) {
 
   // Inject group member elements belonging to this group.
   $parents = implode('][', $element['#parents']);
-  $children = element_children($element['#groups'][$parents]);
+  $children = Element::children($element['#groups'][$parents]);
   if (!empty($children)) {
     foreach ($children as $key) {
       // Break references and indicate that the element should be rendered as
@@ -2151,7 +2152,7 @@ function form_pre_render_group($element) {
     }
     // Otherwise, this element belongs to a group and the group exists, so we do
     // not render it.
-    elseif (element_children($element['#groups'][$group])) {
+    elseif (Element::children($element['#groups'][$group])) {
       $element['#printed'] = TRUE;
     }
   }
@@ -2218,7 +2219,7 @@ function form_process_vertical_tabs($element, &$form_state) {
 function form_pre_render_vertical_tabs($element) {
   // Do not render the vertical tabs element if it is empty.
   $group = implode('][', $element['#parents']);
-  if (!element_get_visible_children($element['group']['#groups'][$group])) {
+  if (!Element::getVisibleChildren($element['group']['#groups'][$group])) {
     $element['#printed'] = TRUE;
   }
   return $element;
@@ -2326,7 +2327,7 @@ function theme_input($variables) {
  */
 function form_pre_render_button($element) {
   $element['#attributes']['type'] = 'submit';
-  element_set_attributes($element, array('id', 'name', 'value'));
+  Element::setAttributes($element, array('id', 'name', 'value'));
 
   $element['#attributes']['class'][] = 'button';
   if (!empty($element['#button_type'])) {
@@ -2357,7 +2358,7 @@ function form_pre_render_button($element) {
  */
 function form_pre_render_image_button($element) {
   $element['#attributes']['type'] = 'image';
-  element_set_attributes($element, array('id', 'name', 'value'));
+  Element::setAttributes($element, array('id', 'name', 'value'));
 
   $element['#attributes']['src'] = file_create_url($element['#src']);
   if (!empty($element['#title'])) {
@@ -2391,7 +2392,7 @@ function form_pre_render_image_button($element) {
  */
 function form_pre_render_hidden($element) {
   $element['#attributes']['type'] = 'hidden';
-  element_set_attributes($element, array('name', 'value'));
+  Element::setAttributes($element, array('name', 'value'));
 
   return $element;
 }
@@ -2409,7 +2410,7 @@ function form_pre_render_hidden($element) {
  */
 function form_pre_render_textfield($element) {
   $element['#attributes']['type'] = 'text';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-text'));
 
   return $element;
@@ -2428,7 +2429,7 @@ function form_pre_render_textfield($element) {
  */
 function form_pre_render_email($element) {
   $element['#attributes']['type'] = 'email';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-email'));
 
   return $element;
@@ -2461,7 +2462,7 @@ function form_validate_email(&$element, &$form_state) {
  */
 function form_pre_render_tel($element) {
   $element['#attributes']['type'] = 'tel';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-tel'));
 
   return $element;
@@ -2480,7 +2481,7 @@ function form_pre_render_tel($element) {
  */
 function form_pre_render_number($element) {
   $element['#attributes']['type'] = 'number';
-  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder', 'size'));
+  Element::setAttributes($element, array('id', 'name', 'value', 'step', 'min', 'max', 'placeholder', 'size'));
   _form_set_attributes($element, array('form-number'));
 
   return $element;
@@ -2499,7 +2500,7 @@ function form_pre_render_number($element) {
  */
 function form_pre_render_range($element) {
   $element['#attributes']['type'] = 'range';
-  element_set_attributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
+  Element::setAttributes($element, array('id', 'name', 'value', 'step', 'min', 'max'));
   _form_set_attributes($element, array('form-range'));
 
   return $element;
@@ -2588,7 +2589,7 @@ function form_type_range_value($element, $input = FALSE) {
  */
 function form_pre_render_url($element) {
   $element['#attributes']['type'] = 'url';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-url'));
 
   return $element;
@@ -2607,7 +2608,7 @@ function form_pre_render_url($element) {
  */
 function form_pre_render_search($element) {
   $element['#attributes']['type'] = 'search';
-  element_set_attributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+  Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-search'));
 
   return $element;
@@ -2661,7 +2662,7 @@ function form_validate_color(&$element, &$form_state) {
  */
 function form_pre_render_color($element) {
   $element['#attributes']['type'] = 'color';
-  element_set_attributes($element, array('id', 'name', 'value'));
+  Element::setAttributes($element, array('id', 'name', 'value'));
   _form_set_attributes($element, array('form-color'));
 
   return $element;
@@ -2682,7 +2683,7 @@ function template_preprocess_form(&$variables) {
   if (isset($element['#action'])) {
     $element['#attributes']['action'] = UrlHelper::stripDangerousProtocols($element['#action']);
   }
-  element_set_attributes($element, array('method', 'id'));
+  Element::setAttributes($element, array('method', 'id'));
   if (empty($element['#attributes']['accept-charset'])) {
     $element['#attributes']['accept-charset'] = "UTF-8";
   }
@@ -2704,7 +2705,7 @@ function template_preprocess_form(&$variables) {
  */
 function template_preprocess_textarea(&$variables) {
   $element = $variables['element'];
-  element_set_attributes($element, array('id', 'name', 'rows', 'cols', 'placeholder'));
+  Element::setAttributes($element, array('id', 'name', 'rows', 'cols', 'placeholder'));
   _form_set_attributes($element, array('form-textarea'));
   $variables['wrapper_attributes'] = new Attribute(array(
     'class' => array('form-textarea-wrapper'),
@@ -2733,7 +2734,7 @@ function template_preprocess_textarea(&$variables) {
  */
 function form_pre_render_password($element) {
   $element['#attributes']['type'] = 'password';
-  element_set_attributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
+  Element::setAttributes($element, array('id', 'name', 'size', 'maxlength', 'placeholder'));
   _form_set_attributes($element, array('form-text'));
 
   return $element;
@@ -2782,7 +2783,7 @@ function form_process_weight($element) {
  */
 function form_pre_render_file($element) {
   $element['#attributes']['type'] = 'file';
-  element_set_attributes($element, array('id', 'name', 'size'));
+  Element::setAttributes($element, array('id', 'name', 'size'));
   _form_set_attributes($element, array('form-file'));
 
   return $element;

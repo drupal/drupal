@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Render\Element;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Entity\Editor as EditorEntity;
@@ -165,7 +166,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       ),
     );
     $this->ckeditorPluginManager->injectPluginSettingsForm($form, $form_state, $editor);
-    if (count(element_children($form['plugins'])) === 0) {
+    if (count(Element::children($form['plugins'])) === 0) {
       unset($form['plugins']);
       unset($form['plugin_settings']);
     }

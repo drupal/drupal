@@ -15,6 +15,7 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Access\AccessManager;
 
@@ -142,7 +143,7 @@ class ModulesListForm extends FormBase {
     }
 
     // Add a wrapper around every package.
-    foreach (element_children($form['modules']) as $package) {
+    foreach (Element::children($form['modules']) as $package) {
       $form['modules'][$package] += array(
         '#type' => 'details',
         '#title' => $this->t($package),

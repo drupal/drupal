@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -135,7 +136,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       }
     }
 
-    if (!element_children($form['theme_settings'])) {
+    if (!Element::children($form['theme_settings'])) {
       // If there is no element in the theme settings details then do not show
       // it -- but keep it in the form if another module wants to alter.
       $form['theme_settings']['#access'] = FALSE;

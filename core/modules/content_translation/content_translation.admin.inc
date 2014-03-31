@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\field\Field as FieldService;
 use Drupal\field\FieldInstanceConfigInterface;
 
@@ -157,8 +158,8 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
   array_unshift($build['#header'], array('data' => t('Translatable'), 'class' => array('translatable')));
   $rows = array();
 
-  foreach (element_children($element) as $bundle) {
-    $field_names = !empty($element[$bundle]['fields']) ? element_children($element[$bundle]['fields']) : array();
+  foreach (Element::children($element) as $bundle) {
+    $field_names = !empty($element[$bundle]['fields']) ? Element::children($element[$bundle]['fields']) : array();
     if (!empty($element[$bundle]['translatable'])) {
       $checkbox_id = $element[$bundle]['translatable']['#id'];
     }
@@ -213,7 +214,7 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
 
       if (!empty($element[$bundle]['columns'][$field_name])) {
         $column_element = &$element[$bundle]['columns'][$field_name];
-        foreach (element_children($column_element) as $key) {
+        foreach (Element::children($column_element) as $key) {
           $column_label = $column_element[$key]['#title'];
           unset($column_element[$key]['#title']);
           $rows[] = array(

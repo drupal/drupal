@@ -3,6 +3,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\Core\Page\HtmlPage;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Render\Element;
 use Drupal\simpletest\TestBase;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -304,7 +305,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   }
   $test_results[$test_class]['#name'] = $info['name'];
   $items = array();
-  foreach (element_children($test_results) as $class) {
+  foreach (Element::children($test_results) as $class) {
     array_unshift($items, '<div class="simpletest-' . ($test_results[$class]['#fail'] + $test_results[$class]['#exception'] ? 'fail' : 'pass') . '">' . t('@name: @summary', array('@name' => $test_results[$class]['#name'], '@summary' => _simpletest_format_summary_line($test_results[$class]))) . '</div>');
   }
   $context['message'] = t('Processed test @num of @max - %test.', array('%test' => $info['name'], '@num' => $max - $size, '@max' => $max));

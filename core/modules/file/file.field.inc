@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\Element;
 use Drupal\field\FieldConfigInterface;
 
 /**
@@ -65,7 +66,7 @@ function theme_file_widget_multiple($variables) {
   // Get our list of widgets in order (needed when the form comes back after
   // preview or failed validation).
   $widgets = array();
-  foreach (element_children($element) as $key) {
+  foreach (Element::children($element) as $key) {
     $widgets[] = &$element[$key];
   }
   usort($widgets, '_field_sort_items_value_helper');
@@ -82,7 +83,7 @@ function theme_file_widget_multiple($variables) {
     // Delay rendering of the buttons, so that they can be rendered later in the
     // "operations" column.
     $operations_elements = array();
-    foreach (element_children($widget) as $sub_key) {
+    foreach (Element::children($widget) as $sub_key) {
       if (isset($widget[$sub_key]['#type']) && $widget[$sub_key]['#type'] == 'submit') {
         hide($widget[$sub_key]);
         $operations_elements[] = &$widget[$sub_key];

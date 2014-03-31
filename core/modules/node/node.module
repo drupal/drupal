@@ -9,6 +9,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\Cache;
@@ -653,7 +654,7 @@ function template_preprocess_node(&$variables) {
 
   // Helpful $content variable for templates.
   $variables += array('content' => array());
-  foreach (element_children($variables['elements']) as $key) {
+  foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
@@ -878,7 +879,7 @@ function theme_node_search_admin($variables) {
   $output = drupal_render($form['info']);
 
   $header = array(t('Factor'), t('Influence'));
-  foreach (element_children($form['factors']) as $key) {
+  foreach (Element::children($form['factors']) as $key) {
     $row = array();
     $row[] = $form['factors'][$key]['#title'];
     $form['factors'][$key]['#title_display'] = 'invisible';

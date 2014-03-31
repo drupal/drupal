@@ -10,6 +10,7 @@ namespace Drupal\content_translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Element;
 
 /**
  * Base class for content translation controllers.
@@ -292,7 +293,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
       $ignored_types = array_flip(array('actions', 'value', 'hidden', 'vertical_tabs', 'token', 'details'));
     }
 
-    foreach (element_children($element) as $key) {
+    foreach (Element::children($element) as $key) {
       if (!isset($element[$key]['#type'])) {
         $this->entityFormSharedElements($element[$key], $form_state, $form);
       }
@@ -345,7 +346,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
       $element['#title'] .= $suffix;
     }
     // If the current element does not have a (valid) title, try child elements.
-    elseif ($children = element_children($element)) {
+    elseif ($children = Element::children($element)) {
       foreach ($children as $delta) {
         $this->addTranslatabilityClue($element[$delta], $suffix);
       }

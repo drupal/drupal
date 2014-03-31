@@ -5,6 +5,7 @@
  * Administration pages for image settings.
  */
 use Drupal\Component\Utility\String;
+use Drupal\Core\Render\Element;
 /**
  * Returns HTML for a listing of the effects within a specific image style.
  *
@@ -18,7 +19,7 @@ function theme_image_style_effects($variables) {
   $form = $variables['form'];
   $rows = array();
 
-  foreach (element_children($form) as $key) {
+  foreach (Element::children($form) as $key) {
     $row = array();
     $form[$key]['weight']['#attributes']['class'] = array('image-effect-order-weight');
     if ($key != 'new') {
@@ -181,7 +182,7 @@ function theme_image_anchor($variables) {
 
   $rows = array();
   $row = array();
-  foreach (element_children($element) as $n => $key) {
+  foreach (Element::children($element) as $n => $key) {
     $element[$key]['#attributes']['title'] = $element[$key]['#title'];
     unset($element[$key]['#title']);
     $row[] = drupal_render($element[$key]);

@@ -10,6 +10,7 @@ namespace Drupal\field\Plugin\views\field;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Render\Element;
 use Drupal\field\Field as FieldHelper;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -692,7 +693,7 @@ class Field extends FieldPluginBase {
       return array(array('rendered' => drupal_render($render_array)));
     }
 
-    foreach (element_children($render_array) as $count) {
+    foreach (Element::children($render_array) as $count) {
       $items[$count]['rendered'] = $render_array[$count];
       // FieldItemListInterface::view() adds an #access property to the render
       // array that determines whether or not the current user is allowed to

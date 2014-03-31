@@ -3318,7 +3318,7 @@ function drupal_pre_render_link($element) {
  */
 function drupal_pre_render_links($element) {
   $element += array('#links' => array(), '#attached' => array());
-  foreach (element_children($element) as $key) {
+  foreach (Element::children($element) as $key) {
     $child = &$element[$key];
     // If the child has links which have not been printed yet and the user has
     // access to it, merge its links in to the parent.
@@ -3493,9 +3493,10 @@ function drupal_render_page($page) {
  *     #pre_render functions have been called, #printed is checked a second time
  *     in case a #pre_render function flags the element as printed.
  *   - The child elements of this element are sorted by weight using uasort() in
- *     element_children(). Since this is expensive, when passing already sorted
- *     elements to drupal_render(), for example from a database query, set
- *     $elements['#sorted'] = TRUE to avoid sorting them a second time.
+ *     \Drupal\Core\Render\Element::children(). Since this is expensive, when
+ *     passing already sorted elements to drupal_render(), for example from a
+ *     database query, set $elements['#sorted'] = TRUE to avoid sorting them a
+ *     second time.
  *   - The main render phase to produce #children for this element takes place:
  *     - If this element has #theme defined and #theme is an implemented theme
  *       hook/suggestion then _theme() is called and must render both the element
@@ -3777,7 +3778,8 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
  *   The structured array whose children shall be rendered.
  * @param array $children_keys
  *   (optional) If the keys of the element's children are already known, they
- *   can be passed in to save another run of element_children().
+ *   can be passed in to save another run of
+ *   \Drupal\Core\Render\Element::children().
  *
  * @return string
  *   The rendered HTML of all children of the element.
@@ -3786,7 +3788,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
  */
 function drupal_render_children(&$element, $children_keys = NULL) {
   if ($children_keys === NULL) {
-    $children_keys = element_children($element);
+    $children_keys = Element::children($element);
   }
   $output = '';
   foreach ($children_keys as $key) {
@@ -4154,7 +4156,7 @@ function drupal_render_collect_post_render_cache(array &$elements, array $callba
   // Collect the #post_render_cache callbacks for all child elements, unless
   // we've already collected them above by retrieving this element (and its
   // children) from the render cache.
-  if (!$retrieved_from_cache && $children = element_children($elements)) {
+  if (!$retrieved_from_cache && $children = Element::children($elements)) {
     foreach ($children as $child) {
       $callbacks = drupal_render_collect_post_render_cache($elements[$child], $callbacks, FALSE);
     }
@@ -4186,7 +4188,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
   if (isset($elements['#attached'])) {
     $attached = drupal_merge_attached($attached, $elements['#attached']);
   }
-  if ($children = element_children($elements)) {
+  if ($children = Element::children($elements)) {
     foreach ($children as $child) {
       drupal_render_collect_attached($elements[$child]);
     }
@@ -4236,7 +4238,7 @@ function drupal_render_collect_cache_tags($element, $tags = array()) {
       }
     }
   }
-  if ($children = element_children($element)) {
+  if ($children = Element::children($element)) {
     foreach ($children as $child) {
       $tags = drupal_render_collect_cache_tags($element[$child], $tags);
     }

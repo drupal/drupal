@@ -184,7 +184,7 @@ abstract class OverviewBase extends FormBase {
 
           // Add tabledrag indentation to the first row cell.
           if ($depth = count($parents[$name])) {
-            $children = element_children($row);
+            $children = Element::children($row);
             $cell = current($children);
             $indentation = array(
               '#theme' => 'indentation',

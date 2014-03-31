@@ -10,6 +10,7 @@ namespace Drupal\field_ui;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Render\Element;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -289,7 +290,7 @@ class FieldOverview extends OverviewBase {
     // here instead of a #pre_render callback because this form doesn't have the
     // tabledrag behavior anymore.
     $table['#regions']['content']['rows_order'] = array();
-    foreach (element_children($table) as $name) {
+    foreach (Element::children($table) as $name) {
       $table['#regions']['content']['rows_order'][] = $name;
     }
 
