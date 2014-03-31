@@ -54,6 +54,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Create a new node with an image attached.
     $test_image = current($this->drupalGetTestFiles('image'));
+
+    // Ensure that preview works.
+    $this->previewNodeImage($test_image, $field_name, 'article');
+
+    // Save node.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $node = node_load($nid, TRUE);
 

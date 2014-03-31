@@ -99,6 +99,24 @@ abstract class ImageFieldTestBase extends WebTestBase {
   }
 
   /**
+   * Preview an image in a node.
+   *
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   A file object representing the image to upload.
+   * @param string $field_name
+   *   Name of the image field the image should be attached to.
+   * @param string $type
+   *   The type of node to create.
+   */
+  function previewNodeImage($image, $field_name, $type) {
+    $edit = array(
+      'title[0][value]' => $this->randomName(),
+    );
+    $edit['files[' . $field_name . '_0]'] = drupal_realpath($image->uri);
+    $this->drupalPostForm('node/add/' . $type, $edit, t('Preview'));
+  }
+
+  /**
    * Upload an image to a node.
    *
    * @param $image

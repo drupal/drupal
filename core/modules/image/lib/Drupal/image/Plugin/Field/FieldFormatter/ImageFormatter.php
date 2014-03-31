@@ -102,9 +102,11 @@ class ImageFormatter extends ImageFormatterBase {
     // Check if the formatter involves a link.
     if ($image_link_setting == 'content') {
       $entity = $items->getEntity();
-      // @todo Remove when theme_image_formatter() has support for route name.
-      $uri['path'] = $entity->getSystemPath();
-      $uri['options'] = $entity->urlInfo()->getOptions();
+      if (!$entity->isNew()) {
+        // @todo Remove when theme_image_formatter() has support for route name.
+        $uri['path'] = $entity->getSystemPath();
+        $uri['options'] = $entity->urlInfo()->getOptions();
+      }
     }
     elseif ($image_link_setting == 'file') {
       $link_file = TRUE;
