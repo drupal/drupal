@@ -93,8 +93,8 @@ interface SearchInterface extends PluginInspectionInterface {
    *   Nested array of form elements that comprise the form.
    * @param array $form_state
    *   A keyed array containing the current state of the form. The arguments
-   *   that drupal_get_form() was originally called with are available in the
-   *   array $form_state['build_info']['args'].
+   *   that \Drupal::formBuilder()->getForm() was originally called with are
+   *   available in the array $form_state['build_info']['args'].
    */
   public function searchFormAlter(array &$form, array &$form_state);
 

@@ -16,7 +16,7 @@ class DatabaseTestForm {
    * @todo Remove database_test_theme_tablesort().
    */
   public function testTablesortDefaultSort() {
-    return drupal_get_form('database_test_theme_tablesort');
+    return \Drupal::formBuilder()->getForm('database_test_theme_tablesort');
   }
 
 }

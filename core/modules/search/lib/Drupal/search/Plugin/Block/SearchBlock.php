@@ -34,7 +34,7 @@ class SearchBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    return drupal_get_form('Drupal\search\Form\SearchBlockForm');
+    return \Drupal::formBuilder()->getForm('Drupal\search\Form\SearchBlockForm');
   }
 
 }

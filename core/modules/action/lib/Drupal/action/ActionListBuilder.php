@@ -118,7 +118,7 @@ class ActionListBuilder extends ConfigEntityListBuilder {
     if (!$this->hasConfigurableActions) {
       unset($build['action_table']['#header']['operations']);
     }
-    $build['action_admin_manage_form'] = drupal_get_form('Drupal\action\Form\ActionAdminManageForm');
+    $build['action_admin_manage_form'] = \Drupal::formBuilder()->getForm('Drupal\action\Form\ActionAdminManageForm');
     return $build;
   }
 

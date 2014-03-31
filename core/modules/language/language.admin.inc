@@ -157,7 +157,7 @@ function theme_language_negotiation_configure_browser_form_table($variables) {
  *   Use \Drupal\language\Controller\LanguageController::contentSettings().
  */
 function language_content_settings_page() {
-  return drupal_get_form('language_content_settings_form', language_entity_supported());
+  return \Drupal::formBuilder()->getForm('language_content_settings_form', language_entity_supported());
 }
 
 /**

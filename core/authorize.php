@@ -139,7 +139,7 @@ if (authorize_access_allowed()) {
     }
     elseif (!$batch = batch_get()) {
       // We have a batch to process, show the filetransfer form.
-      $elements = drupal_get_form('authorize_filetransfer_form');
+      $elements = \Drupal::formBuilder()->getForm('authorize_filetransfer_form');
       $output = drupal_render($elements);
     }
   }

@@ -18,7 +18,7 @@ class UpdateForm {
    */
   public function reportInstall() {
     module_load_include('manager.inc', 'update');
-    return drupal_get_form('update_manager_install_form', 'report');
+    return \Drupal::formBuilder()->getForm('update_manager_install_form', 'report');
   }
 
   /**
@@ -28,7 +28,7 @@ class UpdateForm {
    */
   public function reportUpdate() {
     module_load_include('manager.inc', 'update');
-    return drupal_get_form('update_manager_update_form', 'report');
+    return \Drupal::formBuilder()->getForm('update_manager_update_form', 'report');
   }
 
   /**
@@ -38,7 +38,7 @@ class UpdateForm {
    */
   public function moduleInstall() {
     module_load_include('manager.inc', 'update');
-    return drupal_get_form('update_manager_install_form', 'module');
+    return \Drupal::formBuilder()->getForm('update_manager_install_form', 'module');
   }
 
   /**
@@ -48,7 +48,7 @@ class UpdateForm {
    */
   public function moduleUpdate() {
     module_load_include('manager.inc', 'update');
-    return drupal_get_form('update_manager_update_form', 'module');
+    return \Drupal::formBuilder()->getForm('update_manager_update_form', 'module');
   }
 
   /**
@@ -58,7 +58,7 @@ class UpdateForm {
    */
   public function themeInstall() {
     module_load_include('manager.inc', 'update');
-    return drupal_get_form('update_manager_install_form', 'theme');
+    return \Drupal::formBuilder()->getForm('update_manager_install_form', 'theme');
   }
 
   /**
@@ -68,7 +68,7 @@ class UpdateForm {
    */
   public function themeUpdate() {
     module_load_include('manager.inc', 'update');
-    return drupal_get_form('update_manager_update_form', 'theme');
+    return \Drupal::formBuilder()->getForm('update_manager_update_form', 'theme');
   }
 
   /**
@@ -78,7 +78,7 @@ class UpdateForm {
    */
   public function confirmUpdates() {
     module_load_include('manager.inc', 'update');
-    return drupal_get_form('update_manager_update_ready_form');
+    return \Drupal::formBuilder()->getForm('update_manager_update_ready_form');
   }
 
 }

@@ -61,7 +61,7 @@
  * @link http://drupal.org/project/examples Examples module @endlink follows:
  * @code
  * function main_page() {
- *   return drupal_get_form('ajax_example_simplest');
+ *   return \Drupal::formBuilder()->getForm('ajax_example_simplest');
  * }
  *
  * function ajax_example_simplest($form, &$form_state) {

@@ -18,7 +18,7 @@ class UserForm {
    */
   public function resetPass($uid, $timestamp, $hash, $operation) {
     module_load_include('pages.inc', 'user');
-    return drupal_get_form('user_pass_reset', $uid, $timestamp, $hash, $operation);
+    return \Drupal::formBuilder()->getForm('user_pass_reset', $uid, $timestamp, $hash, $operation);
   }
 
 }

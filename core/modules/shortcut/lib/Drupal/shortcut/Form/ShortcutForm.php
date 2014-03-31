@@ -21,7 +21,7 @@ class ShortcutForm {
    */
   public function overview(UserInterface $user) {
     module_load_include('admin.inc', 'shortcut');
-    return drupal_get_form('shortcut_set_switch', $user);
+    return \Drupal::formBuilder()->getForm('shortcut_set_switch', $user);
   }
 
 }

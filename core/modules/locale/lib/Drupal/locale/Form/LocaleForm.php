@@ -18,7 +18,7 @@ class LocaleForm {
    */
   public function import() {
     module_load_include('bulk.inc', 'locale');
-    return drupal_get_form('locale_translate_import_form');
+    return \Drupal::formBuilder()->getForm('locale_translate_import_form');
   }
 
   /**
@@ -28,7 +28,7 @@ class LocaleForm {
    */
   public function status() {
     module_load_include('pages.inc', 'locale');
-    return drupal_get_form('locale_translation_status_form');
+    return \Drupal::formBuilder()->getForm('locale_translation_status_form');
   }
 
 }

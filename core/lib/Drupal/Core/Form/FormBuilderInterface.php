@@ -41,10 +41,10 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   - The name of a function that builds the form.
    * @param ...
    *   Any additional arguments are passed on to the functions called by
-   *   drupal_get_form(), including the unique form constructor function. For
-   *   example, the node_edit form requires that a node object is passed in here
-   *   when it is called. These are available to implementations of
-   *   hook_form_alter() and hook_form_FORM_ID_alter() as the array
+   *   \Drupal::formBuilder()->getForm(), including the unique form constructor
+   *   function. For example, the node_edit form requires that a node object is
+   *   passed in here when it is called. These are available to implementations
+   *   of hook_form_alter() and hook_form_FORM_ID_alter() as the array
    *   $form_state['build_info']['args'].
    *
    * @return array

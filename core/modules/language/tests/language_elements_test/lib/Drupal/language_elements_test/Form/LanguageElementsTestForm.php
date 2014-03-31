@@ -18,7 +18,7 @@ class LanguageElementsTestForm {
    * @todo Remove language_elements_configuration_element().
    */
   public function configFormElement() {
-    return drupal_get_form('language_elements_configuration_element');
+    return \Drupal::formBuilder()->getForm('language_elements_configuration_element');
   }
 
   /**
@@ -27,7 +27,7 @@ class LanguageElementsTestForm {
    * @todo Remove language_element_tests_configuration_element_test().
    */
   public function configFormElementTest() {
-    return drupal_get_form('language_elements_configuration_element_test');
+    return \Drupal::formBuilder()->getForm('language_elements_configuration_element_test');
   }
 
 }

@@ -119,7 +119,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     // If no theme was specified, use the current theme.
     $this->theme = $theme ?: $GLOBALS['theme_key'];
 
-    return drupal_get_form($this);
+    return \Drupal::formBuilder()->getForm($this);
   }
 
   /**

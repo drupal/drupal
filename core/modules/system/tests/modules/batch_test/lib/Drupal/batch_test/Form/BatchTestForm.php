@@ -16,21 +16,21 @@ class BatchTestForm {
    * @todo Remove batch_test_simple_form().
    */
   public function testForm() {
-    return drupal_get_form('batch_test_simple_form');
+    return \Drupal::formBuilder()->getForm('batch_test_simple_form');
   }
 
   /**
    * @todo Remove batch_test_multistep_form().
    */
   public function testMultistepForm() {
-    return drupal_get_form('batch_test_multistep_form');
+    return \Drupal::formBuilder()->getForm('batch_test_multistep_form');
   }
 
   /**
    * @todo Remove batch_test_chained_form().
    */
   public function testChainedForm() {
-    return drupal_get_form('batch_test_chained_form');
+    return \Drupal::formBuilder()->getForm('batch_test_chained_form');
   }
 
 }

@@ -18,7 +18,7 @@ class FormTestForm {
    * @todo Remove form_test_alter_form().
    */
   public function alterForm() {
-    return drupal_get_form('form_test_alter_form');
+    return \Drupal::formBuilder()->getForm('form_test_alter_form');
   }
 
   /**
@@ -27,7 +27,7 @@ class FormTestForm {
    * @todo Remove form_test_validate_form().
    */
   public function validateForm() {
-    return drupal_get_form('form_test_validate_form');
+    return \Drupal::formBuilder()->getForm('form_test_validate_form');
   }
 
   /**
@@ -36,7 +36,7 @@ class FormTestForm {
    * @todo Remove form_test_validate_required_form().
    */
   public function validateRequiredForm() {
-    return drupal_get_form('form_test_validate_required_form');
+    return \Drupal::formBuilder()->getForm('form_test_validate_required_form');
   }
 
   /**
@@ -45,7 +45,7 @@ class FormTestForm {
    * @todo Remove form_test_validate_required_form_no_title().
    */
   public function validateRequiredFormNoTitle() {
-    return drupal_get_form('form_test_validate_required_form_no_title');
+    return \Drupal::formBuilder()->getForm('form_test_validate_required_form_no_title');
   }
 
   /**
@@ -54,7 +54,7 @@ class FormTestForm {
    * @todo Remove form_test_limit_validation_errors_form().
    */
   public function validateFormWithErrorSuppression() {
-    return drupal_get_form('form_test_limit_validation_errors_form');
+    return \Drupal::formBuilder()->getForm('form_test_limit_validation_errors_form');
   }
 
   /**
@@ -63,7 +63,7 @@ class FormTestForm {
    * @todo Remove form_test_pattern_form().
    */
   public function validatePattern() {
-    return drupal_get_form('form_test_pattern_form');
+    return \Drupal::formBuilder()->getForm('form_test_pattern_form');
   }
 
   /**
@@ -72,7 +72,7 @@ class FormTestForm {
    * @todo Remove _form_test_tableselect_multiple_true_form().
    */
   public function testTableSelectCheckboxes() {
-    return drupal_get_form('_form_test_tableselect_multiple_true_form');
+    return \Drupal::formBuilder()->getForm('_form_test_tableselect_multiple_true_form');
   }
 
   /**
@@ -81,7 +81,7 @@ class FormTestForm {
    * @todo Remove _form_test_tableselect_multiple_false_form().
    */
   public function testTableSelectRadios() {
-    return drupal_get_form('_form_test_tableselect_multiple_false_form');
+    return \Drupal::formBuilder()->getForm('_form_test_tableselect_multiple_false_form');
   }
 
   /**
@@ -90,7 +90,7 @@ class FormTestForm {
    * @todo Remove _form_test_tableselect_colspan_form().
    */
   public function testTableSelectColspan() {
-    return drupal_get_form('_form_test_tableselect_colspan_form');
+    return \Drupal::formBuilder()->getForm('_form_test_tableselect_colspan_form');
   }
 
   /**
@@ -99,7 +99,7 @@ class FormTestForm {
    * @todo Remove _form_test_tableselect_empty_form().
    */
   public function testTableSelectEmptyText() {
-    return drupal_get_form('_form_test_tableselect_empty_form');
+    return \Drupal::formBuilder()->getForm('_form_test_tableselect_empty_form');
   }
 
   /**
@@ -108,7 +108,7 @@ class FormTestForm {
    * @todo Remove _form_test_tableselect_js_select_form().
    */
   public function testTableSelectJS($test_action) {
-    return drupal_get_form('_form_test_tableselect_js_select_form', $test_action);
+    return \Drupal::formBuilder()->getForm('_form_test_tableselect_js_select_form', $test_action);
   }
 
   /**
@@ -117,7 +117,7 @@ class FormTestForm {
    * @todo Remove _form_test_vertical_tabs_form().
    */
   public function testVerticalTabs() {
-    return drupal_get_form('_form_test_vertical_tabs_form');
+    return \Drupal::formBuilder()->getForm('_form_test_vertical_tabs_form');
   }
 
   /**
@@ -126,7 +126,7 @@ class FormTestForm {
    * @todo Remove form_test_storage_form().
    */
   public function testStorage() {
-    return drupal_get_form('form_test_storage_form');
+    return \Drupal::formBuilder()->getForm('form_test_storage_form');
   }
 
   /**
@@ -135,7 +135,7 @@ class FormTestForm {
    * @todo Remove form_test_form_state_values_clean_form().
    */
   public function testFormStateClean() {
-    return drupal_get_form('form_test_form_state_values_clean_form');
+    return \Drupal::formBuilder()->getForm('form_test_form_state_values_clean_form');
   }
 
   /**
@@ -144,7 +144,7 @@ class FormTestForm {
    * @todo Remove form_test_form_state_values_clean_advanced_form().
    */
   public function testFormStateCleanAdvanced() {
-    return drupal_get_form('form_test_form_state_values_clean_advanced_form');
+    return \Drupal::formBuilder()->getForm('form_test_form_state_values_clean_advanced_form');
   }
 
   /**
@@ -153,7 +153,7 @@ class FormTestForm {
    * @todo Remove _form_test_checkbox().
    */
   public function testCheckbox() {
-    return drupal_get_form('_form_test_checkbox');
+    return \Drupal::formBuilder()->getForm('_form_test_checkbox');
   }
 
   /**
@@ -162,7 +162,7 @@ class FormTestForm {
    * @todo Remove form_test_select().
    */
   public function testSelect() {
-    return drupal_get_form('form_test_select');
+    return \Drupal::formBuilder()->getForm('form_test_select');
   }
 
   /**
@@ -171,7 +171,7 @@ class FormTestForm {
    * @todo Remove form_test_empty_select().
    */
   public function testEmptySelect() {
-    return drupal_get_form('form_test_empty_select');
+    return \Drupal::formBuilder()->getForm('form_test_empty_select');
   }
 
   /**
@@ -180,7 +180,7 @@ class FormTestForm {
    * @todo Remove form_test_language_select().
    */
   public function testLanguageSelect() {
-    return drupal_get_form('form_test_language_select');
+    return \Drupal::formBuilder()->getForm('form_test_language_select');
   }
 
   /**
@@ -189,7 +189,7 @@ class FormTestForm {
    * @todo Remove form_test_placeholder_test().
    */
   public function testPlaceholder() {
-    return drupal_get_form('form_test_placeholder_test');
+    return \Drupal::formBuilder()->getForm('form_test_placeholder_test');
   }
 
   /**
@@ -198,7 +198,7 @@ class FormTestForm {
    * @todo Remove form_test_number().
    */
   public function testNumber() {
-    return drupal_get_form('form_test_number');
+    return \Drupal::formBuilder()->getForm('form_test_number');
   }
 
   /**
@@ -207,7 +207,7 @@ class FormTestForm {
    * @todo Remove form_test_number().
    */
   public function testNumberRange() {
-    return drupal_get_form('form_test_number', 'range');
+    return \Drupal::formBuilder()->getForm('form_test_number', 'range');
   }
 
   /**
@@ -216,7 +216,7 @@ class FormTestForm {
    * @todo Remove form_test_range().
    */
   public function testRange() {
-    return drupal_get_form('form_test_range');
+    return \Drupal::formBuilder()->getForm('form_test_range');
   }
 
   /**
@@ -225,7 +225,7 @@ class FormTestForm {
    * @todo Remove form_test_range_invalid().
    */
   public function testRangeInvalid() {
-    return drupal_get_form('form_test_range_invalid');
+    return \Drupal::formBuilder()->getForm('form_test_range_invalid');
   }
 
   /**
@@ -234,7 +234,7 @@ class FormTestForm {
    * @todo Remove form_test_color().
    */
   public function testColor() {
-    return drupal_get_form('form_test_color');
+    return \Drupal::formBuilder()->getForm('form_test_color');
   }
 
   /**
@@ -243,7 +243,7 @@ class FormTestForm {
    * @todo Remove form_test_checkboxes_radios().
    */
   public function testCheckboxesRadios($customize) {
-    return drupal_get_form('form_test_checkboxes_radios', $customize);
+    return \Drupal::formBuilder()->getForm('form_test_checkboxes_radios', $customize);
   }
 
   /**
@@ -252,7 +252,7 @@ class FormTestForm {
    * @todo Remove form_test_email().
    */
   public function testEmail() {
-    return drupal_get_form('form_test_email');
+    return \Drupal::formBuilder()->getForm('form_test_email');
   }
 
   /**
@@ -261,7 +261,7 @@ class FormTestForm {
    * @todo Remove form_test_url().
    */
   public function testUrl() {
-    return drupal_get_form('form_test_url');
+    return \Drupal::formBuilder()->getForm('form_test_url');
   }
 
   /**
@@ -270,7 +270,7 @@ class FormTestForm {
    * @todo Remove _form_test_disabled_elements().
    */
   public function testDisabledElements() {
-    return drupal_get_form('_form_test_disabled_elements');
+    return \Drupal::formBuilder()->getForm('_form_test_disabled_elements');
   }
 
   /**
@@ -279,7 +279,7 @@ class FormTestForm {
    * @todo Remove _form_test_input_forgery().
    */
   public function testInputForgery() {
-    return drupal_get_form('_form_test_input_forgery');
+    return \Drupal::formBuilder()->getForm('_form_test_input_forgery');
   }
 
   /**
@@ -288,7 +288,7 @@ class FormTestForm {
    * @todo Remove form_test_form_rebuild_preserve_values_form().
    */
   public function testRebuildPreservation() {
-    return drupal_get_form('form_test_form_rebuild_preserve_values_form');
+    return \Drupal::formBuilder()->getForm('form_test_form_rebuild_preserve_values_form');
   }
 
   /**
@@ -297,7 +297,7 @@ class FormTestForm {
    * @todo Remove form_test_redirect().
    */
   public function testRedirect() {
-    return drupal_get_form('form_test_redirect');
+    return \Drupal::formBuilder()->getForm('form_test_redirect');
   }
 
   /**
@@ -306,7 +306,7 @@ class FormTestForm {
    * @todo Remove form_label_test_form().
    */
   public function testLabel() {
-    return drupal_get_form('form_label_test_form');
+    return \Drupal::formBuilder()->getForm('form_label_test_form');
   }
 
   /**
@@ -315,7 +315,7 @@ class FormTestForm {
    * @todo Remove form_test_state_persist().
    */
   public function testStatePersistence() {
-    return drupal_get_form('form_test_state_persist');
+    return \Drupal::formBuilder()->getForm('form_test_state_persist');
   }
 
   /**
@@ -324,7 +324,7 @@ class FormTestForm {
    * @todo Remove form_test_clicked_button().
    */
   public function testClickedButton($first, $second, $third) {
-    return drupal_get_form('form_test_clicked_button', $first, $second, $third);
+    return \Drupal::formBuilder()->getForm('form_test_clicked_button', $first, $second, $third);
   }
 
   /**
@@ -333,7 +333,7 @@ class FormTestForm {
    * @todo Remove form_test_checkboxes_zero().
    */
   public function testCheckboxesZero($json) {
-    return drupal_get_form('form_test_checkboxes_zero', $json);
+    return \Drupal::formBuilder()->getForm('form_test_checkboxes_zero', $json);
   }
 
   /**
@@ -342,7 +342,7 @@ class FormTestForm {
    * @todo Remove form_test_required_attribute().
    */
   public function testRequired() {
-    return drupal_get_form('form_test_required_attribute');
+    return \Drupal::formBuilder()->getForm('form_test_required_attribute');
   }
 
   /**
@@ -351,7 +351,7 @@ class FormTestForm {
    * @todo Remove form_test_button_class().
    */
   public function testButtonClass() {
-    return drupal_get_form('form_test_button_class');
+    return \Drupal::formBuilder()->getForm('form_test_button_class');
   }
 
   /**
@@ -360,7 +360,7 @@ class FormTestForm {
    * @todo Remove form_test_group_details().
    */
   public function testGroupDetails() {
-    return drupal_get_form('form_test_group_details');
+    return \Drupal::formBuilder()->getForm('form_test_group_details');
   }
 
   /**
@@ -369,7 +369,7 @@ class FormTestForm {
    * @todo Remove form_test_group_container().
    */
   public function testGroupContainer() {
-    return drupal_get_form('form_test_group_container');
+    return \Drupal::formBuilder()->getForm('form_test_group_container');
   }
 
   /**
@@ -378,7 +378,7 @@ class FormTestForm {
    * @todo Remove form_test_group_fieldset().
    */
   public function testGroupFieldset() {
-    return drupal_get_form('form_test_group_fieldset');
+    return \Drupal::formBuilder()->getForm('form_test_group_fieldset');
   }
 
   /**
@@ -387,7 +387,7 @@ class FormTestForm {
    * @todo Remove form_test_group_vertical_tabs().
    */
   public function testGroupVerticalTabs() {
-    return drupal_get_form('form_test_group_vertical_tabs');
+    return \Drupal::formBuilder()->getForm('form_test_group_vertical_tabs');
   }
 
   /**
@@ -396,7 +396,7 @@ class FormTestForm {
    * @todo Remove form_test_form_state_database().
    */
   public function testFormStateDatabase() {
-    return drupal_get_form('form_test_form_state_database');
+    return \Drupal::formBuilder()->getForm('form_test_form_state_database');
   }
 
 }

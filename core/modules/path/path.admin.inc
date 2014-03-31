@@ -19,7 +19,7 @@ use Drupal\Component\Utility\String;
  */
 function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
-  $build['path_admin_filter_form'] = drupal_get_form('path_admin_filter_form', $keys);
+  $build['path_admin_filter_form'] = \Drupal::formBuilder()->getForm('path_admin_filter_form', $keys);
   // Enable language column if language.module is enabled or if we have any
   // alias with a language.
   $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => Language::LANGCODE_NOT_SPECIFIED))->fetchField();
@@ -116,11 +116,11 @@ function path_admin_overview($keys = NULL) {
  */
 function path_admin_edit($path = array()) {
   if ($path) {
-    $output = drupal_get_form('path_admin_form', $path);
+    $output = \Drupal::formBuilder()->getForm('path_admin_form', $path);
     $output['#title'] = String::checkPlain($path['alias']);
   }
   else {
-    $output = drupal_get_form('path_admin_form');
+    $output = \Drupal::formBuilder()->getForm('path_admin_form');
   }
 
   return $output;

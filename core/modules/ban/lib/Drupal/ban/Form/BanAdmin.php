@@ -50,8 +50,9 @@ class BanAdmin extends FormBase {
    * {@inheritdoc}
    *
    * @param string $default_ip
-   *   (optional) IP address to be passed on to drupal_get_form() for use as the
-   *   default value of the IP address form field.
+   *   (optional) IP address to be passed on to
+   *   \Drupal::formBuilder()->getForm() for use as the default value of the IP
+   *   address form field.
    */
   public function buildForm(array $form, array &$form_state, $default_ip = '') {
     $rows = array();
