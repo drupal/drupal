@@ -117,6 +117,7 @@ abstract class SortPluginBase extends HandlerBase {
         '#type' => 'submit',
         '#value' => t('Expose sort'),
         '#submit' => array(array($this, 'displayExposedForm')),
+        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 0;
     }
@@ -129,6 +130,7 @@ abstract class SortPluginBase extends HandlerBase {
         '#type' => 'submit',
         '#value' => t('Hide sort'),
         '#submit' => array(array($this, 'displayExposedForm')),
+        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 1;
     }

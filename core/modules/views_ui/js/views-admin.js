@@ -861,7 +861,7 @@
    */
   Drupal.viewsUi.Checkboxifier.prototype.clickHandler = function (e) {
     this.$button
-      .trigger('mousedown')
+      .trigger('click')
       .trigger('submit');
   };
 

@@ -399,6 +399,7 @@ abstract class FilterPluginBase extends HandlerBase {
         '#type' => 'submit',
         '#value' => t('Grouped filters'),
         '#submit' => array(array($this, 'buildGroupForm')),
+        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['group_button']['radios']['radios']['#default_value'] = 0;
     }
@@ -408,6 +409,7 @@ abstract class FilterPluginBase extends HandlerBase {
         '#type' => 'submit',
         '#value' => t('Single filter'),
         '#submit' => array(array($this, 'buildGroupForm')),
+        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['group_button']['radios']['radios']['#default_value'] = 1;
     }
@@ -468,6 +470,7 @@ abstract class FilterPluginBase extends HandlerBase {
         '#type' => 'submit',
         '#value' => t('Expose filter'),
         '#submit' => array(array($this, 'displayExposedForm')),
+        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 0;
     }
@@ -480,6 +483,7 @@ abstract class FilterPluginBase extends HandlerBase {
         '#type' => 'submit',
         '#value' => t('Hide filter'),
         '#submit' => array(array($this, 'displayExposedForm')),
+        '#attributes' => array('class' => array('use-ajax-submit')),
       );
       $form['expose_button']['checkbox']['checkbox']['#default_value'] = 1;
     }
@@ -1061,6 +1065,7 @@ abstract class FilterPluginBase extends HandlerBase {
       '#type' => 'submit',
       '#value' => t('Add another item'),
       '#submit' => array(array($this, 'addGroupForm')),
+      '#attributes' => array('class' => array('use-ajax-submit')),
     );
 
     $js = array();
