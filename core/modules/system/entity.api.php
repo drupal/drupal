@@ -356,7 +356,7 @@ function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $tra
  *   The original entity object.
  */
 function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
   $variables = array(
     '@language' => $languages[$langcode]->name,
     '@label' => $entity->label(),

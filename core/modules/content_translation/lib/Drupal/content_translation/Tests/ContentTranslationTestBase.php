@@ -103,7 +103,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     foreach ($this->langcodes as $langcode) {
       language_save(new Language(array('id' => $langcode)));
     }
-    array_unshift($this->langcodes, language_default()->id);
+    array_unshift($this->langcodes, \Drupal::languageManager()->getDefaultLanguage()->id);
   }
 
   /**

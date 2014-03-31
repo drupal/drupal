@@ -94,7 +94,7 @@ function content_translation_install() {
  */
 function content_translation_enable() {
   // Translation works when at least two languages are enabled.
-  if (count(language_list()) < 2) {
+  if (count(\Drupal::languageManager()->getLanguages()) < 2) {
     $t_args = array('!language_url' => url('admin/config/regional/language'));
     $message = t('Be sure to <a href="!language_url">enable at least two languages</a> to translate content.', $t_args);
     drupal_set_message($message, 'warning');

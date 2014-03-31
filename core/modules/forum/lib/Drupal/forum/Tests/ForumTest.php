@@ -300,7 +300,7 @@ class ForumTest extends WebTestBase {
       'name' => 'Tags',
       'description' => $description,
       'vid' => 'tags',
-      'langcode' => language_default()->id,
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
       'help' => $help,
     ));
     $vocabulary->save();

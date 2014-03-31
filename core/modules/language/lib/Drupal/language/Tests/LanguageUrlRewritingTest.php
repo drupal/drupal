@@ -54,7 +54,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
    */
   function testUrlRewritingEdgeCases() {
     // Check URL rewriting with a non-installed language.
-    $non_existing = language_default();
+    $non_existing = \Drupal::languageManager()->getDefaultLanguage();
     $non_existing->id = $this->randomName();
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
 
@@ -129,7 +129,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $request = $this->prepareRequestForGenerator(TRUE, array('HTTP_HOST' => $server['HTTP_HOST'] . ':88'));
 
     // Create an absolute French link.
-    $language = language_load('fr');
+    $language = \Drupal::languageManager()->getLanguage('fr');
     $url = url('', array(
       'absolute' => TRUE,
       'language' => $language,

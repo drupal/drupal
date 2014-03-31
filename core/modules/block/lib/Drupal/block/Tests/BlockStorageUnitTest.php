@@ -93,7 +93,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
       'id' => 'test_block',
       'weight' => NULL,
       'status' => TRUE,
-      'langcode' => language_default()->id,
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
       'dependencies' => array('module' => array('block_test'), 'theme' => array('stark')),
       'theme' => 'stark',
       'region' => '-1',

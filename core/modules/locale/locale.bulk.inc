@@ -20,7 +20,7 @@ use Drupal\file\FileInterface;
  */
 function locale_translate_import_form($form, &$form_state) {
   Drupal::languageManager()->reset();
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
 
   // Initialize a language list to the ones available, including English if we
   // are to translate Drupal to English as well.
@@ -118,7 +118,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
   if ($file = file_save_upload('file', $form_state, $form['file']['#upload_validators'], 'translations://', 0)) {
 
     // Add language, if not yet supported.
-    $language = language_load($form_state['values']['langcode']);
+    $language = \Drupal::languageManager()->getLanguage($form_state['values']['langcode']);
     if (empty($language)) {
       $language = new Language(array(
         'id' => $form_state['values']['langcode']
@@ -182,7 +182,7 @@ function locale_translate_batch_import_files($options, $force = FALSE) {
   else {
     // If langcode was not provided, make sure to only import files for the
     // languages we have enabled.
-    $langcodes = array_keys(language_list());
+    $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
   }
 
   $files = locale_translate_get_interface_translation_files(array(), $langcodes);

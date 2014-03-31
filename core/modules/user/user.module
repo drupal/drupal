@@ -812,7 +812,7 @@ function user_user_logout($account) {
 function user_pass_reset_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
   $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
-  $url_options = array('absolute' => TRUE, 'language' => language_load($langcode));
+  $url_options = array('absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage($langcode));
   return url("user/reset/" . $account->id() . "/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()), $url_options);
 }
 
@@ -840,7 +840,7 @@ function user_pass_reset_url($account, $options = array()) {
 function user_cancel_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
   $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
-  $url_options = array('absolute' => TRUE, 'language' => language_load($langcode));
+  $url_options = array('absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage($langcode));
   return url("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()), $url_options);
 }
 
@@ -1124,7 +1124,7 @@ function user_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
   $variables = array('user' => $params['account']);
 
-  $language = language_load($params['account']->getPreferredLangcode());
+  $language = \Drupal::languageManager()->getLanguage($params['account']->getPreferredLangcode());
   $original_language = $language_manager->getConfigOverrideLanguage();
   $language_manager->setConfigOverrideLanguage($language);
   $mail_config = \Drupal::config('user.mail');
@@ -1472,7 +1472,7 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      drupal_mail('user', 'register_pending_approval_admin', $site_mail, language_default()->id, $params);
+      drupal_mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->id, $params);
     }
   }
   return empty($mail) ? NULL : $mail['result'];

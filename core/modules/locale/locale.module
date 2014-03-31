@@ -269,7 +269,7 @@ function locale_language_entity_delete(LanguageEntity $language) {
  *   unless it is marked as translatable.
  */
 function locale_translatable_language_list() {
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
   if (!locale_translate_english()) {
     unset($languages['en']);
   }
@@ -1252,7 +1252,7 @@ function _locale_rebuild_js($langcode = NULL) {
   }
   else {
     // Get information about the locale.
-    $languages = language_list();
+    $languages = \Drupal::languageManager()->getLanguages();
     $language = $languages[$langcode];
   }
 

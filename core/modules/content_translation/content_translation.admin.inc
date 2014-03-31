@@ -277,7 +277,7 @@ function content_translation_form_language_content_settings_validate(array $form
 
         $values = $bundle_settings['settings']['language'];
         if (empty($values['language_show']) && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-          foreach (language_list(Language::STATE_LOCKED) as $language) {
+          foreach (\Drupal::languageManager()->getLanguages(Language::STATE_LOCKED) as $language) {
             $locked_languages[] = $language->name;
           }
           form_set_error($name, $form_state, t('Translation is not supported if language is always one of: @locked_languages', array('@locked_languages' => implode(', ', $locked_languages))));

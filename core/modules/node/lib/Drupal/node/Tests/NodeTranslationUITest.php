@@ -114,7 +114,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   protected function doTestPublishedStatus() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     $path = $entity->getSystemPath('edit-form');
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
 
     $actions = array(
       t('Save and keep published'),
@@ -145,7 +145,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   protected function doTestAuthoringInfo() {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     $path = $entity->getSystemPath('edit-form');
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
     $values = array();
 
     // Post different base field information for each translation.
@@ -331,7 +331,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    *   The translation values to be found.
    */
   protected function doTestTranslations($path, array $values) {
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, array('language' => $languages[$langcode]));
       $this->assertText($values[$langcode]['title'][0]['value'], format_string('The %langcode node translation is correctly displayed.', array('%langcode' => $langcode)));

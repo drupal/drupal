@@ -98,7 +98,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // into database when seen by t(). Without doing this, our target string
     // is for some reason not found when doing translate search. This might
     // be some bug.
-    $default_language = language_default();
+    $default_language = \Drupal::languageManager()->getDefaultLanguage();
     $language = new Language(array(
       'id' => $langcode_browser_fallback,
       'default' => TRUE,
@@ -364,7 +364,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       'id' => $langcode_browser_fallback,
     ));
     language_save($language);
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
 
     // Enable the path prefix for the default language: this way any unprefixed
     // URL must have a valid fallback value.
@@ -416,7 +416,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       'id' => $langcode,
     ));
     language_save($language);
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
 
     // Enable browser and URL language detection.
     $edit = array(

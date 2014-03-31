@@ -32,7 +32,7 @@ class UserRoleAdminTest extends WebTestBase {
    */
   function testRoleAdministration() {
     $this->drupalLogin($this->admin_user);
-    $default_langcode = language_default()->id;
+    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
     // Test presence of tab.
     $this->drupalGet('admin/people/permissions');
     $tabs = $this->xpath('//ul[@class=:classes and //a[contains(., :text)]]', array(

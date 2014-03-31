@@ -57,7 +57,7 @@ class LanguagePathMonolingualTest extends WebTestBase {
     // Verify that French is the only language.
     $this->container->get('language_manager')->reset();
     $this->assertFalse(\Drupal::languageManager()->isMultilingual(), 'Site is mono-lingual');
-    $this->assertEqual(language_default()->id, 'fr', 'French is the default language');
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->id, 'fr', 'French is the default language');
 
     // Set language detection to URL.
     $edit = array('language_interface[enabled][language-url]' => TRUE);

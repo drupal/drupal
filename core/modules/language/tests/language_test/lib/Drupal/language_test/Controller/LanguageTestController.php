@@ -8,6 +8,7 @@
 namespace Drupal\language_test\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -25,20 +26,28 @@ class LanguageTestController implements ContainerInjectionInterface {
   protected $httpKernel;
 
   /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a new LanguageTestController object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   An HTTP kernel.
    */
-  public function __construct(HttpKernelInterface $httpKernel) {
+  public function __construct(HttpKernelInterface $httpKernel, LanguageManager $language_manager) {
     $this->httpKernel = $httpKernel;
+    $this->languageManager = $language_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('http_kernel'));
+    return new static($container->get('http_kernel'), $container->get('language_manager'));
   }
 
   /**
@@ -48,7 +57,7 @@ class LanguageTestController implements ContainerInjectionInterface {
    */
   public function typeLinkActiveClass() {
     // We assume that 'en' and 'fr' have been configured.
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
     return array(
       'no_language' => array(
         '#type' => 'link',

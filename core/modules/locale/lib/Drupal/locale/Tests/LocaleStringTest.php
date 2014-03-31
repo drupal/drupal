@@ -195,7 +195,7 @@ class LocaleStringTest extends WebTestBase {
    */
   function createAllTranslations($source, $values = array()) {
     $list = array();
-    foreach (language_list() as $language) {
+    foreach ($this->container->get('language_manager')->getLanguages() as $language) {
       $list[$language->id] = $this->createTranslation($source, $language->id, $values);
     }
     return $list;

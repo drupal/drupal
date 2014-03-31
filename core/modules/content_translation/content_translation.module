@@ -287,7 +287,7 @@ function content_translation_add_access(EntityInterface $entity, Language $sourc
   $source = !empty($source) ? $source : $entity->language();
   $target = !empty($target) ? $target : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
   return $source->id != $target->id && isset($languages[$source->id]) && isset($languages[$target->id]) && !isset($translations[$target->id]) && content_translation_access($entity, 'create');
 }
 
@@ -303,7 +303,7 @@ function content_translation_add_access(EntityInterface $entity, Language $sourc
 function content_translation_edit_access(EntityInterface $entity, Language $language = NULL) {
   $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
   return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'update');
 }
 
@@ -319,7 +319,7 @@ function content_translation_edit_access(EntityInterface $entity, Language $lang
 function content_translation_delete_access(EntityInterface $entity, Language $language = NULL) {
   $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
   return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'delete');
 }
 
@@ -859,7 +859,7 @@ function content_translation_language_configuration_element_validate($element, a
   $key = $form_state['content_translation']['key'];
   $values = $form_state['values'][$key];
   if (!$values['language_show'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-    foreach (language_list(Language::STATE_LOCKED) as $language) {
+    foreach (\Drupal::languageManager()->getLanguages(Language::STATE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
     }
     // @todo Set the correct form element name as soon as the element parents

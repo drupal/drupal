@@ -39,7 +39,7 @@ class ConfigEntityTest extends WebTestBase {
    * Tests CRUD operations.
    */
   function testCRUD() {
-    $default_langcode = language_default()->id;
+    $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
     // Verify default properties on a newly created empty entity.
     $empty = entity_create('config_test');
     $this->assertIdentical($empty->id, NULL);

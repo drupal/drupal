@@ -12,7 +12,7 @@ use Drupal\Core\Language\LanguageManager;
  * Prepare a language code list for unused predefined languages.
  */
 function language_admin_predefined_list() {
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
   $predefined = LanguageManager::getStandardLanguageList();
   foreach ($predefined as $key => $value) {
     if (isset($languages[$key])) {

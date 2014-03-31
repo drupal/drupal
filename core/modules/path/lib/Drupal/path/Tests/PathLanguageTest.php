@@ -107,7 +107,7 @@ class PathLanguageTest extends PathTestBase {
     // Languages are cached on many levels, and we need to clear those caches.
     $this->container->get('language_manager')->reset();
     $this->rebuildContainer();
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
 
     // Ensure the node was created.
     $english_node = node_load($english_node->id(), TRUE);
@@ -121,7 +121,7 @@ class PathLanguageTest extends PathTestBase {
     // Confirm that the alias is returned by url(). Languages are cached on
     // many levels, and we need to clear those caches.
     $this->container->get('language_manager')->reset();
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
     $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->id(), array('language' => $languages['fr']));
 
     $this->assertTrue(strpos($url, $edit['path[alias]']), 'URL contains the path alias.');

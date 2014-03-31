@@ -51,7 +51,7 @@ class LanguageConditionTest extends DrupalUnitTestBase {
     $this->installConfig(array('language'));
 
     // Setup English.
-    language_save(language_default());
+    language_save(\Drupal::languageManager()->getDefaultLanguage());
 
     // Setup Italian.
     $language = new Language(array(
@@ -70,7 +70,7 @@ class LanguageConditionTest extends DrupalUnitTestBase {
   public function testConditions() {
     // Grab the language condition and configure it to check the content
     // language.
-    $language = language_load('en');
+    $language = \Drupal::languageManager()->getLanguage('en');
     $condition = $this->manager->createInstance('language')
       ->setConfig('langcodes', array('en' => 'en', 'it' => 'it'))
       ->setContextValue('language', $language);
@@ -91,7 +91,7 @@ class LanguageConditionTest extends DrupalUnitTestBase {
     $this->assertEqual($condition->summary(), 'The language is not Italian.');
 
     // Change the default language to Italian.
-    $language = language_load('it');
+    $language = \Drupal::languageManager()->getLanguage('it');
 
     $condition = $this->manager->createInstance('language')
       ->setConfig('langcodes', array('en' => 'en', 'it' => 'it'))

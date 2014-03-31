@@ -42,7 +42,7 @@ class ForumUninstallTest extends WebTestBase {
     // Create a taxonomy term.
     $term = entity_create('taxonomy_term', array(
       'name' => t('A term'),
-      'langcode' => language_default()->id,
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
       'description' => '',
       'parent' => array(0),
       'vid' => 'forums',

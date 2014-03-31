@@ -20,7 +20,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
  */
 function content_translation_overview(EntityInterface $entity) {
   $controller = content_translation_controller($entity->getEntityTypeId());
-  $languages = language_list();
+  $languages = \Drupal::languageManager()->getLanguages();
   $original = $entity->getUntranslated()->language()->id;
   $translations = $entity->getTranslationLanguages();
   $administrator = \Drupal::currentUser()->hasPermission('administer languages');

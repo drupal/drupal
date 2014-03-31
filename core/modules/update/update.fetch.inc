@@ -110,7 +110,7 @@ function _update_cron_notify() {
   if (!empty($params)) {
     $notify_list = $update_config->get('notification.emails');
     if (!empty($notify_list)) {
-      $default_langcode = language_default()->id;
+      $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
       foreach ($notify_list as $target) {
         if ($target_user = user_load_by_mail($target)) {
           $target_langcode = $target_user->getPreferredLangcode();

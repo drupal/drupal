@@ -497,7 +497,8 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
 /**
  * Prepares a list of language names.
  *
- * This is a wrapper around language_list to return a plain key value array.
+ * This is a wrapper around \Drupal::languageManager()->getLanguages() to return
+ * a plain key value array.
  *
  * @param string $field
  *   The field of the language object which should be used as the value of the
@@ -513,7 +514,7 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
  * @see locale_language_list()
  */
 function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
-  $languages = language_list($flags);
+  $languages = \Drupal::languageManager()->getLanguages($flags);
   $list = array();
   foreach ($languages as $language) {
     $list[$language->id] = ($field == 'name') ? t($language->name) : $language->$field;

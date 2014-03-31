@@ -86,14 +86,14 @@ class TwigTransTest extends WebTestBase {
     $this->rebuildContainer();
 
     // Check that lolspeak is the default language for the site.
-    $this->assertEqual(language_default()->id, 'xx', 'Lolspeak is the default language');
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->id, 'xx', 'Lolspeak is the default language');
   }
 
   /**
    * Test Twig "trans" tags.
    */
   public function testTwigTransTags() {
-    $this->drupalGet('twig-theme-test/trans', array('language' => language_load('xx')));
+    $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
 
     $this->assertText(
       'OH HAI SUNZ',
@@ -182,7 +182,7 @@ class TwigTransTest extends WebTestBase {
     $this->writeSettings($settings);
 
     // Get page for assertion testing.
-    $this->drupalGet('twig-theme-test/trans', array('language' => language_load('xx')));
+    $this->drupalGet('twig-theme-test/trans', array('language' => \Drupal::languageManager()->getLanguage('xx')));
 
     // Ensure debug output is printed.
     $this->checkForDebugMarkup(TRUE);

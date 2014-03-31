@@ -227,7 +227,7 @@ function user_install() {
       'uuid' => \Drupal::service('uuid')->generate(),
       'name' => '',
       'mail' => '',
-      'langcode' => language_default()->id,
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
     ))
     ->execute();
 
@@ -241,7 +241,7 @@ function user_install() {
       'mail' => 'placeholder-for-uid-1',
       'created' => REQUEST_TIME,
       'status' => 1,
-      'langcode' => language_default()->id,
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
     ))
     ->execute();
 }

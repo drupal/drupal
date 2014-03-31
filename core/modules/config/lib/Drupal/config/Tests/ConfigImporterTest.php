@@ -169,7 +169,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       'test_dependencies' => array(),
       'status' => TRUE,
       'uuid' => '30df59bd-7b03-4cf7-bb35-d42fc49f0651',
-      'langcode' => language_default()->id,
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
       'dependencies' => array(),
       'protected_property' => '',
     );

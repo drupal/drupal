@@ -161,7 +161,7 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
 
   // A hidden value unless language.module is enabled.
   if (\Drupal::moduleHandler()->moduleExists('language')) {
-    $languages = language_list();
+    $languages = \Drupal::languageManager()->getLanguages();
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;
     }

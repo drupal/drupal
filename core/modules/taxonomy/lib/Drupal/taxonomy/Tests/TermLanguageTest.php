@@ -102,10 +102,10 @@ class TermLanguageTest extends TaxonomyTestBase {
 
     // Change the default language of the site and check if the default terms
     // language is still correctly selected.
-    $old_default = language_default();
+    $old_default = \Drupal::languageManager()->getDefaultLanguage();
     $old_default->default = FALSE;
     language_save($old_default);
-    $new_default = language_load('cc');
+    $new_default = \Drupal::languageManager()->getLanguage('cc');
     $new_default->default = TRUE;
     language_save($new_default);
     $edit = array(

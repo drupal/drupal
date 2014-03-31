@@ -132,7 +132,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $entity = entity_load($this->entityTypeId, $this->entityId);
     $user = $this->drupalCreateUser(array('access comments'));
     $this->drupalLogin($user);
-    $languages = language_list();
+    $languages = $this->container->get('language_manager')->getLanguages();
 
     // Check that simple users cannot see unpublished field translations.
     $path = $entity->getSystemPath();

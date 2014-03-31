@@ -821,7 +821,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
    $languages = array();
 
     // Fill in master language list based on current configuration.
-    $default = language_default();
+    $default = \Drupal::languageManager()->getDefaultLanguage();
     if (\Drupal::languageManager()->isMultilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
       // Use language module configuration if available. We can not use
       // entity_load_multiple() because this breaks during updates.
@@ -858,7 +858,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
 
   // Add the site's default language if flagged as allowed value.
   if ($flags & Language::STATE_SITE_DEFAULT) {
-    $default = isset($default) ? $default : language_default();
+    $default = isset($default) ? $default : \Drupal::languageManager()->getDefaultLanguage();
     // Rename the default language.
     $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
     $filtered_languages['site_default'] = $default;
