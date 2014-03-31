@@ -7,8 +7,11 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
@@ -141,6 +144,55 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertIdentical($config_test->label(), $expected['label']);
     $this->assertIdentical($config_test->isNew(), FALSE);
     $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
+
+    // Verify that a configuration entity can be saved with an ID of the
+    // maximum allowed length, but not longer.
+
+    // Test with a short ID.
+    $id_length_config_test = entity_create('config_test', array(
+      'id' => $this->randomName(8),
+    ));
+    try {
+      $id_length_config_test->save();
+      $this->pass(String::format("config_test entity with ID length @length was saved.", array(
+        '@length' => strlen($id_length_config_test->id))
+      ));
+    }
+    catch (ConfigEntityIdLengthException $e) {
+      $this->fail($e->getMessage());
+    }
+
+    // Test with an ID of the maximum allowed length.
+    $id_length_config_test = entity_create('config_test', array(
+      'id' => $this->randomName(ConfigEntityStorage::MAX_ID_LENGTH),
+    ));
+    try {
+      $id_length_config_test->save();
+      $this->pass(String::format("config_test entity with ID length @length was saved.", array(
+        '@length' => strlen($id_length_config_test->id),
+      )));
+    }
+    catch (ConfigEntityIdLengthException $e) {
+      $this->fail($e->getMessage());
+    }
+
+    // Test with an ID exeeding the maximum allowed length.
+    $id_length_config_test = entity_create('config_test', array(
+      'id' => $this->randomName(ConfigEntityStorage::MAX_ID_LENGTH + 1),
+    ));
+    try {
+      $status = $id_length_config_test->save();
+      $this->fail(String::format("config_test entity with ID length @length exceeding the maximum allowed length of @max saved successfully", array(
+        '@length' => strlen($id_length_config_test->id),
+        '@max' => ConfigEntityStorage::MAX_ID_LENGTH,
+      )));
+    }
+    catch (ConfigEntityIdLengthException $e) {
+      $this->pass(String::format("config_test entity with ID length @length exceeding the maximum allowed length of @max failed to save", array(
+        '@length' => strlen($id_length_config_test->id),
+        '@max' => ConfigEntityStorage::MAX_ID_LENGTH,
+      )));
+    }
 
     // Ensure that creating an entity with the same id as an existing one is not
     // possible.

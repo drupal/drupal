@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageBase;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -37,6 +38,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   custom suffixes are not possible.
  */
 class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStorageInterface, ImportableEntityStorageInterface {
+
+  /**
+   * Length limit of the configuration entity ID.
+   *
+   * Most file systems limit a file name's length to 255 characters. In
+   * order to leave sufficient characters to construct a configuration prefix,
+   * the configuration entity ID is limited to 166 characters which
+   * leaves 83 characters for the configuration prefix. 5 characters are
+   * reserved for the file extension.
+   *
+   * @see \Drupal\Core\Config\ConfigBase::MAX_NAME_LENGTH
+   */
+  const MAX_ID_LENGTH = 166;
 
   /**
    * The UUID service.
@@ -320,6 +334,15 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
 
     if (!$config->isNew() && !isset($entity->original)) {
       $entity->original = $this->loadUnchanged($id);
+    }
+
+    // Check the configuration entity ID length.
+    // @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
+    if (strlen($entity->{$this->idKey}) > self::MAX_ID_LENGTH) {
+      throw new ConfigEntityIdLengthException(String::format('Configuration entity ID @id exceeds maximum allowed length of @length characters.', array(
+        '@id' => $entity->{$this->idKey},
+        '@length' => self::MAX_ID_LENGTH,
+      )));
     }
 
     $entity->preSave($this);
