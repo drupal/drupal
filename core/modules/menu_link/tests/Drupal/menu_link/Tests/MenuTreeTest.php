@@ -275,7 +275,7 @@ class MenuTreeTest extends UnitTestCase {
   /**
    * Tests the output with a single level.
    *
-   * @covers ::output
+   * @covers ::renderTree
    */
   public function testOutputWithSingleLevel() {
     $tree = array(
@@ -300,7 +300,7 @@ class MenuTreeTest extends UnitTestCase {
   /**
    * Tests the output method with a complex example.
    *
-   * @covers ::output
+   * @covers ::renderTree
    */
   public function testOutputWithComplexData() {
     $tree = array(
