@@ -18,7 +18,7 @@ services:
     arguments: ['@rest.link_manager.type', '@rest.link_manager.relation']
   rest.link_manager.type:
     class: Drupal\rest\LinkManager\TypeLinkManager
-    arguments: ['@cache.cache']
+    arguments: ['@cache.default']
   rest.link_manager.relation:
     class: Drupal\rest\LinkManager\RelationLinkManager
-    arguments: ['@cache.cache', '@entity.manager']
+    arguments: ['@cache.default', '@entity.manager']

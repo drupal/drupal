@@ -165,7 +165,7 @@ class AliasTest extends PathUnitTestBase {
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);
 
-    $memoryCounterBackend = new MemoryCounterBackend('cache');
+    $memoryCounterBackend = new MemoryCounterBackend('default');
 
     // Create AliasManager and Path object.
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $connection);

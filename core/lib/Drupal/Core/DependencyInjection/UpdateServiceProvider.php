@@ -43,7 +43,7 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
       $container->register('theme_handler', 'Drupal\Core\Extension\ThemeHandler')
         ->addArgument(new Reference('config.factory'))
         ->addArgument(new Reference('module_handler'))
-        ->addArgument(new Reference('cache.cache'))
+        ->addArgument(new Reference('cache.default'))
         ->addArgument(new Reference('info_parser'));
     }
   }

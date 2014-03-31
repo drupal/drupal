@@ -40,7 +40,7 @@ class RegistryTest extends WebTestBase {
 
     // Directly instantiate the theme registry, this will cause a base cache
     // entry to be written in __construct().
-    $cache = \Drupal::cache('cache');
+    $cache = \Drupal::cache();
     $lock_backend = \Drupal::lock();
     $registry = new ThemeRegistry($cid, $cache, $lock_backend, array('theme_registry' => TRUE), $this->container->get('module_handler')->isLoaded());
 

@@ -75,7 +75,7 @@ class CacheDecorator implements CachedDiscoveryInterface {
    * @param array $cache_tags
    *   The cache tags associated with the definition list.
    */
-  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'cache', $cache_expire = Cache::PERMANENT, array $cache_tags = array()) {
+  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'default', $cache_expire = Cache::PERMANENT, array $cache_tags = array()) {
     $this->decorated = $decorated;
     $this->cacheKey = $cache_key;
     $this->cacheBin = $cache_bin;

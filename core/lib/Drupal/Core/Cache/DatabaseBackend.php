@@ -42,11 +42,9 @@ class DatabaseBackend implements CacheBackendInterface {
    *   The cache bin for which the object is created.
    */
   public function __construct(Connection $connection, $bin) {
-    // All cache tables should be prefixed with 'cache_', except for the
-    // default 'cache' bin.
-    if ($bin != 'cache') {
-      $bin = 'cache_' . $bin;
-    }
+    // All cache tables should be prefixed with 'cache_'.
+    $bin = 'cache_' . $bin;
+
     $this->bin = $bin;
     $this->connection = $connection;
   }

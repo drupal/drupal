@@ -3480,7 +3480,8 @@ function drupal_render_page($page) {
  *       required. If 'cid' is set, 'keys' is ignored. Use only if you have
  *       special requirements.
  *     - 'expire': Set to one of the cache lifetime constants.
- *     - 'bin': Specify a cache bin to cache the element in. Default is 'cache'.
+ *     - 'bin': Specify a cache bin to cache the element in. Default is
+ *       'default'.
  *   - If this element has #type defined and the default attributes for this
  *     element have not already been merged in (#defaults_loaded = TRUE) then
  *     the defaults for this type of element, defined in hook_element_info(),
@@ -4429,7 +4430,7 @@ function watchdog_severity_levels() {
  * - Clears all persistent caches:
  *   - The bootstrap cache bin containing base system, module system, and theme
  *     system information.
- *   - The common 'cache' cache bin containing arbitrary caches.
+ *   - The common 'default' cache bin containing arbitrary caches.
  *   - The page cache.
  *   - The URL alias path cache.
  * - Resets all static variables that have been defined via drupal_static().

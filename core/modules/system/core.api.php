@@ -226,8 +226,8 @@
  *
  * When you request a cache object, you can specify the bin name in your call to
  * \Drupal::cache(). Alternatively, you can request a bin by getting service
- * "cache.nameofbin" from the container. The default bin is called "cache", with
- * service name "cache.cache", it is used to store common and frequently used
+ * "cache.nameofbin" from the container. The default bin is called "default", with
+ * service name "cache.default", it is used to store common and frequently used
  * caches like plugin information.
  *
  * Other common cache bins are the following:
@@ -310,18 +310,18 @@
  * though so that all cached data, or that of an individual cache bin, uses a
  * different cache backend, such as APC or Memcache, for storage.
  *
- * In a settings.php file, you can override the class used for a particular
- * cache bin. For example, if your implementation of
- * \Drupal\Core\Cache\CacheBackendInterface was called MyCustomCache, the
+ * In a settings.php file, you can override the service used for a particular
+ * cache bin. For example, if your service implementation of
+ * \Drupal\Core\Cache\CacheBackendInterface was called cache.custom, the
  * following line would make Drupal use it for the 'cache_render' bin:
  * @code
- *  $settings['cache_classes']['cache_render'] = 'Drupal\full\namespace\to\MyCustomCache';
+ *  $settings['cache']['bins']['render'] = 'cache.custom';
  * @endcode
  *
  * Additionally, you can register your cache implementation to be used by
  * default for all cache bins with:
  * @code
- *  $settings['cache_classes']['cache'] = 'Drupal\full\namespace\to\MyCustomCache';
+ *  $settings['cache']['default'] = 'cache.custom';
  * @endcode
  *
  * @see https://drupal.org/node/1884796

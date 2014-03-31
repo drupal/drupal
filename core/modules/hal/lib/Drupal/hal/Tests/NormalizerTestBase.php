@@ -122,7 +122,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       'bundle' => 'entity_test',
     ))->save();
 
-    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('cache')), new RelationLinkManager(new MemoryBackend('cache'), \Drupal::entityManager()));
+    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('default')), new RelationLinkManager(new MemoryBackend('default'), \Drupal::entityManager()));
 
     $chain_resolver = new ChainEntityResolver(array(new UuidResolver(), new TargetIdResolver()));
 
