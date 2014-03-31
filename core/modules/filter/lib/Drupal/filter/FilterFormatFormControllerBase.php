@@ -109,7 +109,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
 
     // Create filter plugin instances for all available filters, including both
     // enabled/configured ones as well as new and not yet unconfigured ones.
-    $filters = $format->filters()->sort();
+    $filters = $format->filters();
     foreach ($filters as $filter_id => $filter) {
       // When a filter is missing, it is replaced by the null filter. Remove it
       // here, so that saving the form will remove the missing filter.

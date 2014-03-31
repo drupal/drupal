@@ -67,9 +67,40 @@ class FilterAPITest extends EntityUnitTestBase {
   }
 
   /**
+   * Tests that the filter order is respected.
+   */
+  function testCheckMarkupFilterOrder() {
+    // Create crazy HTML format.
+    $crazy_format = entity_create('filter_format', array(
+      'format' => 'crazy',
+      'name' => 'Crazy',
+      'weight' => 1,
+      'filters' => array(
+        'filter_html_escape' => array(
+          'weight' => 10,
+          'status' => 1,
+        ),
+        'filter_html' => array(
+          'weight' => -10,
+          'status' => 1,
+          'settings' => array(
+            'allowed_html' => '<p>',
+          ),
+        ),
+      )
+    ));
+    $crazy_format->save();
+
+    $text = "<p>Llamas are <not> awesome!</p>";
+    $expected_filtered_text = "&lt;p&gt;Llamas are  awesome!&lt;/p&gt;";
+
+    $this->assertIdentical(check_markup($text, 'crazy'), $expected_filtered_text, 'Filters applied in correct order.');
+  }
+
+  /**
    * Tests the ability to apply only a subset of filters.
    */
-  function testCheckMarkup() {
+  function testCheckMarkupFilterSubset() {
     $text = "Text with <marquee>evil content and</marquee> a URL: http://drupal.org!";
     $expected_filtered_text = "Text with evil content and a URL: <a href=\"http://drupal.org\">http://drupal.org</a>!";
     $expected_filter_text_without_html_generators = "Text with evil content and a URL: http://drupal.org!";
@@ -110,7 +141,7 @@ class FilterAPITest extends EntityUnitTestBase {
     );
     $this->assertIdentical(
       $filtered_html_format->getFilterTypes(),
-      array(FilterInterface::TYPE_MARKUP_LANGUAGE, FilterInterface::TYPE_HTML_RESTRICTOR),
+      array(FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE),
       'FilterFormatInterface::getFilterTypes() works as expected for the filtered_html format.'
     );
 
