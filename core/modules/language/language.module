@@ -641,7 +641,7 @@ function language_language_entity_delete(LanguageEntity $language) {
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function language_preprocess_block(&$variables) {
-  if ($variables['configuration']['module'] == 'language') {
+  if ($variables['configuration']['provider'] == 'language') {
     $variables['attributes']['role'] = 'navigation';
   }
 }

@@ -19,9 +19,9 @@ block.block.*:
     weight:
       type: integer
       label: 'Weight'
-    module:
+    provider:
       type: string
-      label: 'Module'
+      label: 'Provider'
     status:
       type: boolean
       label: 'Status'
@@ -94,9 +94,9 @@ block.block.*:
         view_mode:
           type: string
           label: 'View mode'
-        module:
+        provider:
           type: string
-          label: 'Module'
+          label: 'Provider'
     langcode:
       type: string
       label: 'Default language'

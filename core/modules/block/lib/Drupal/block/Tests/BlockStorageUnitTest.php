@@ -100,7 +100,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
       'plugin' => 'test_html',
       'settings' => array(
         'label' => '',
-        'module' => 'block_test',
+        'provider' => 'block_test',
         'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
         'cache' => array(
           'max_age' => 0,

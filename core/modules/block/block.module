@@ -330,7 +330,7 @@ function block_rebuild() {
 function block_theme_suggestions_block(array $variables) {
   $suggestions = array();
 
-  $suggestions[] = 'block__' . $variables['elements']['#configuration']['module'];
+  $suggestions[] = 'block__' . $variables['elements']['#configuration']['provider'];
   // Hyphens (-) and underscores (_) play a special role in theme suggestions.
   // Theme suggestions should only contain underscores, because within
   // drupal_find_theme_templates(), underscores are converted to hyphens to
@@ -392,7 +392,7 @@ function template_preprocess_block(&$variables) {
   }
 
   $variables['attributes']['class'][] = 'block';
-  $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['configuration']['module']);
+  $variables['attributes']['class'][] = drupal_html_class('block-' . $variables['configuration']['provider']);
 
   // Add default class for block content.
   $variables['content_attributes']['class'][] = 'content';

@@ -43,12 +43,12 @@ class BlockBaseTest extends UnitTestCase {
     \Drupal::setContainer($container);
 
     $config = array();
-    $definition = array('admin_label' => 'Admin label', 'module' => 'block_test');
+    $definition = array('admin_label' => 'Admin label', 'provider' => 'block_test');
     $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
     $this->assertEquals('adminlabel', $block_base->getMachineNameSuggestion());
 
     // Test with more unicodes.
-    $definition = array('admin_label' =>'über åwesome', 'module' => 'block_test');
+    $definition = array('admin_label' =>'über åwesome', 'provider' => 'block_test');
     $block_base = new TestBlockInstantiation($config, 'test_block_instantiation', $definition);
     $this->assertEquals('uberawesome', $block_base->getMachineNameSuggestion());
   }

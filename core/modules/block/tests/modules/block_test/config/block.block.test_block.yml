@@ -7,7 +7,7 @@ region: '-1'
 plugin: test_html
 settings:
   label: 'Test HTML block'
-  module: block_test
+  provider: block_test
   label_display: 'hidden'
 visibility:
   path:

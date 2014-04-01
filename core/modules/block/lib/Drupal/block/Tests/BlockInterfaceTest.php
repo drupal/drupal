@@ -45,7 +45,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     );
     $expected_configuration = array(
       'label' => 'Custom Display Message',
-      'module' => 'block_test',
+      'provider' => 'block_test',
       'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       'cache' => array(
         'max_age' => 0,
@@ -70,7 +70,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     $contexts = \Drupal::service("cache_contexts")->getLabels();
     unset($contexts['cache_context.theme']);
     $expected_form = array(
-      'module' => array(
+      'provider' => array(
         '#type' => 'value',
         '#value' => 'block_test',
       ),

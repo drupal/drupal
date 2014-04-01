@@ -7,7 +7,7 @@ region: content
 plugin: system_main_block
 settings:
   label: 'Main page content'
-  module: system
+  provider: system
   label_display: '0'
 visibility:
   path:

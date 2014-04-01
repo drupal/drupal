@@ -7,7 +7,7 @@ region: content
 plugin: user_login_block
 settings:
   label: 'User login'
-  module: user
+  provider: user
   label_display: visible
 visibility:
   path:

@@ -7,7 +7,7 @@ region: sidebar_first
 plugin: search_form_block
 settings:
   label: Search
-  module: search
+  provider: search
   label_display: visible
 visibility:
   path:

@@ -464,7 +464,7 @@ class MenuTest extends MenuWebTestBase {
   public function testBlockContextualLinks() {
     $this->drupalLogin($this->drupalCreateUser(array('administer menu', 'access contextual links', 'administer blocks')));
     $this->addMenuLink();
-    $block = $this->drupalPlaceBlock('system_menu_block:tools', array('label' => 'Tools', 'module' => 'system'));
+    $block = $this->drupalPlaceBlock('system_menu_block:tools', array('label' => 'Tools', 'provider' => 'system'));
     $this->drupalGet('test-page');
 
     $id = 'block:block=' . $block->id() . ':|menu:menu=tools:';

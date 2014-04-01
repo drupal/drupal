@@ -63,7 +63,7 @@ class BlockPluginBag extends DefaultSinglePluginBag {
       parent::initializePlugin($instance_id);
     }
     catch (PluginException $e) {
-      $module = $this->configuration['module'];
+      $module = $this->configuration['provider'];
       // Ignore blocks belonging to disabled modules, but re-throw valid
       // exceptions when the module is enabled and the plugin is misconfigured.
       if (!$module || \Drupal::moduleHandler()->moduleExists($module)) {

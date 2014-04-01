@@ -55,7 +55,7 @@ class ViewsBlockTest extends ViewUnitTestBase {
    */
   public function testMachineNameSuggestion() {
     $plugin_definition = array(
-      'module' => 'views',
+      'provider' => 'views',
     );
     $plugin_id = 'views_block:test_view_block-block_1';
     $views_block = ViewsBlock::create($this->container, array(), $plugin_id, $plugin_definition);

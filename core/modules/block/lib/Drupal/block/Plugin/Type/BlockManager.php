@@ -69,10 +69,6 @@ class BlockManager extends DefaultPluginManager {
     if (!isset($definition['category'])) {
       $definition['category'] = $this->getModuleName($definition['provider']);
     }
-    // @todo Remove any usage of 'module' from block code.
-    if (!isset($definition['module'])) {
-      $definition['module'] = $definition['provider'];
-    }
   }
 
   /**

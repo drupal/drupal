@@ -125,7 +125,8 @@ class ViewsBlockTest extends UnitTestCase {
     $block_id = 'views_block:test_view-block_1';
     $config = array();
     $definition = array();
-    $definition['module'] = 'views';
+
+    $definition['provider'] = 'views';
     $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
 
     $this->assertEquals($build, $plugin->build());
@@ -146,7 +147,8 @@ class ViewsBlockTest extends UnitTestCase {
     $block_id = 'views_block:test_view-block_1';
     $config = array();
     $definition = array();
-    $definition['module'] = 'views';
+
+    $definition['provider'] = 'views';
     $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storage, $this->account);
 
     $this->assertEquals(array(), $plugin->build());

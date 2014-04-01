@@ -7,7 +7,7 @@ region: '-1'
 plugin: system_breadcrumb_block
 settings:
   label: Breadcrumbs
-  module: system
+  provider: system
   label_display: '0'
 visibility:
   path:

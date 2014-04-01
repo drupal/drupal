@@ -7,7 +7,7 @@ region: help
 plugin: system_help_block
 settings:
   label: 'System Help'
-  module: system
+  provider: system
   label_display: '0'
 visibility:
   path:
