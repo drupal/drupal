@@ -251,79 +251,6 @@ function content_translation_translate_access(EntityInterface $entity) {
 }
 
 /**
- * Checks whether the given user can view the specified translation.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity whose translation overview should be displayed.
- * @param $langcode
- *   The language code of the translation to be displayed.
- * @param \Drupal\Core\Session\AccountInterface $account
- *   (optional) The account for which view access should be checked. Defaults to
- *   the current user.
- */
-function content_translation_view_access(EntityInterface $entity, $langcode, AccountInterface $account = NULL) {
-  $entity_type_id = $entity->getEntityTypeId();
-  $entity_type = $entity->getEntityType();
-  $permission = "translate $entity_type_id";
-  if ($entity_type->getPermissionGranularity() == 'bundle') {
-    $permission = "translate {$entity->bundle()} $entity_type_id";
-  }
-  return !empty($entity->translation[$langcode]['status']) || user_access('translate any entity', $account) || user_access($permission, $account);
-}
-
-/**
- * Access callback for the translation addition page.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity being translated.
- * @param \Drupal\Core\Language\Language $source
- *   (optional) The language of the values being translated. Defaults to the
- *   entity language.
- * @param \Drupal\Core\Language\Language $target
- *   (optional) The language of the translated values. Defaults to the current
- *   content language.
- */
-function content_translation_add_access(EntityInterface $entity, Language $source = NULL, Language $target = NULL) {
-  $source = !empty($source) ? $source : $entity->language();
-  $target = !empty($target) ? $target : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
-  $translations = $entity->getTranslationLanguages();
-  $languages = \Drupal::languageManager()->getLanguages();
-  return $source->id != $target->id && isset($languages[$source->id]) && isset($languages[$target->id]) && !isset($translations[$target->id]) && content_translation_access($entity, 'create');
-}
-
-/**
- * Access callback for the translation edit page.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity being translated.
- * @param \Drupal\Core\Language\Language $language
- *   (optional) The language of the translated values. Defaults to the current
- *   content language.
- */
-function content_translation_edit_access(EntityInterface $entity, Language $language = NULL) {
-  $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
-  $translations = $entity->getTranslationLanguages();
-  $languages = \Drupal::languageManager()->getLanguages();
-  return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'update');
-}
-
-/**
- * Access callback for the translation delete page.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity being translated.
- * @param \Drupal\Core\Language\Language $language
- *   (optional) The language of the translated values. Defaults to the current
- *   content language.
- */
-function content_translation_delete_access(EntityInterface $entity, Language $language = NULL) {
-  $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
-  $translations = $entity->getTranslationLanguages();
-  $languages = \Drupal::languageManager()->getLanguages();
-  return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'delete');
-}
-
-/**
  * Returns the key name used to store the configuration setting.
  *
  * Based on the entity type and bundle, the keys used to store configuration
@@ -559,9 +486,13 @@ function content_translation_form_alter(array &$form, array &$form_state) {
  * Performs language fallback for unaccessible translations.
  */
 function content_translation_language_fallback_candidates_entity_view_alter(&$candidates, $context) {
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $entity = $context['data'];
+  $entity_type_id = $entity->getEntityTypeId();
+  $entity_type = $entity->getEntityType();
+  $permission = $entity_type->getPermissionGranularity() == 'bundle' ? $permission = "translate {$entity->bundle()} $entity_type_id" : "translate $entity_type_id";
   foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-    if (!content_translation_view_access($entity, $langcode)) {
+    if (empty($entity->translation[$langcode]['status']) && !user_access('translate any entity') && !user_access($permission)) {
       unset($candidates[$langcode]);
     }
   }
