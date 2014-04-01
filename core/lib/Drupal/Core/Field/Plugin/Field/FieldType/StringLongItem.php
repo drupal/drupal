@@ -30,8 +30,6 @@ class StringLongItem extends StringItem {
         'value' => array(
           'type' => 'text',
           'size' => 'big',
-          'not null' => TRUE,
-          'default' => '',
         ),
       ),
     );
