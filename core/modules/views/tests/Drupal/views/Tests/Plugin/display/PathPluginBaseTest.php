@@ -188,8 +188,6 @@ class PathPluginBaseTest extends UnitTestCase {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
     list($view) = $this->setupViewExecutableAccessPlugin();
 
-    $view->expects($this->once())
-      ->method('initHandlers');
     $view->argument = array();
     $view->argument['nid'] = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
       ->disableOriginalConstructor()
