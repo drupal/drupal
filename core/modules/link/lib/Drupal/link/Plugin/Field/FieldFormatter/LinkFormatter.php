@@ -7,11 +7,11 @@
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Url;
+use Drupal\link\LinkItemInterface;
 
 /**
  * Plugin implementation of the 'link' formatter.
@@ -128,7 +128,8 @@ class LinkFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       // By default use the full URL as the link text.
-      $link_title = $item->url;
+      $url = $this->buildUrl($item);
+      $link_title = $url->toString();
 
       // If the title field value is available, use it for the link text.
       if (empty($settings['url_only']) && !empty($item->title)) {
@@ -148,13 +149,18 @@ class LinkFormatter extends FormatterBase {
         );
       }
       else {
-        $link = $this->buildLink($item);
         $element[$delta] = array(
           '#type' => 'link',
           '#title' => $link_title,
-          '#href' => $link['path'],
-          '#options' => $link['options'],
+          '#options' => $url->getOptions(),
         );
+        if ($url->isExternal()) {
+          $element[$delta]['#href'] = $url->getPath();
+        }
+        else {
+          $element[$delta]['#route_name'] = $url->getRouteName();
+          $element[$delta]['#route_parameters'] = $url->getRouteParameters();
+        }
       }
     }
 
@@ -162,41 +168,36 @@ class LinkFormatter extends FormatterBase {
   }
 
   /**
-   * Builds the link information for a link field item.
+   * Builds the \Drupal\Core\Url object for a link field item.
    *
-   * @param \Drupal\Core\Field\FieldItemInterface $item
+   * @param \Drupal\link\LinkItemInterface $item
    *   The link field item being rendered.
    *
-   * @return array
-   *   An array with the following key/value pairs:
-   *   - 'path': a string suitable for the $path parameter in l().
-   *   - 'options': an array suitable for the $options parameter in l().
+   * @return \Drupal\Core\Url
+   *   An Url object.
    */
-  protected function buildLink(FieldItemInterface $item) {
+  protected function buildUrl(LinkItemInterface $item) {
     $settings = $this->getSettings();
-
-    // Split out the link into the parts required for url(): path and options.
-    $parsed_url = UrlHelper::parse($item->url);
-    $result = array(
-      'path' => $parsed_url['path'],
-      'options' => array(
-        'query' => $parsed_url['query'],
-        'fragment' => $parsed_url['fragment'],
-        'attributes' => $item->attributes,
-      ),
-    );
+    $options = $item->options;
 
     // Add optional 'rel' attribute to link options.
     if (!empty($settings['rel'])) {
-      $result['options']['attributes']['rel'] = $settings['rel'];
+      $options['attributes']['rel'] = $settings['rel'];
     }
     // Add optional 'target' attribute to link options.
     if (!empty($settings['target'])) {
-      $result['options']['attributes']['target'] = $settings['target'];
+      $options['attributes']['target'] = $settings['target'];
     }
 
-    return $result;
+    if ($item->isExternal()) {
+      $url = Url::createFromPath($item->url);
+      $url->setOptions($options);
+    }
+    else {
+      $url = new Url($item->route_name, (array) $item->route_parameters, (array) $options);
+    }
+
+    return $url;
   }
 
 }
-

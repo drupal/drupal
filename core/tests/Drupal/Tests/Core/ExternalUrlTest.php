@@ -142,8 +142,7 @@ class ExternalUrlTest extends UnitTestCase {
    */
   public function testToArray(Url $url) {
     $expected = array(
-      'route_name' => '',
-      'route_parameters' => array(),
+      'path' => $this->path,
       'options' => array(),
     );
     $this->assertSame($expected, $url->toArray());
@@ -154,10 +153,12 @@ class ExternalUrlTest extends UnitTestCase {
    *
    * @depends testCreateFromPath
    *
+   * @expectedException \UnexpectedValueException
+   *
    * @covers ::getRouteName()
    */
   public function testGetRouteName(Url $url) {
-    $this->assertSame('', $url->getRouteName());
+    $url->getRouteName();
   }
 
   /**
@@ -165,10 +166,12 @@ class ExternalUrlTest extends UnitTestCase {
    *
    * @depends testCreateFromPath
    *
+   * @expectedException \UnexpectedValueException
+   *
    * @covers ::getRouteParameters()
    */
   public function testGetRouteParameters(Url $url) {
-    $this->assertSame(array(), $url->getRouteParameters());
+    $url->getRouteParameters();
   }
 
   /**
@@ -182,6 +185,17 @@ class ExternalUrlTest extends UnitTestCase {
    */
   public function testGetInternalPath(Url $url) {
     $this->assertNull($url->getInternalPath());
+  }
+
+  /**
+   * Tests the getPath() method.
+   *
+   * @depends testCreateFromPath
+   *
+   * @covers ::getPath()
+   */
+  public function testGetPath(Url $url) {
+    $this->assertNotNull($url->getPath());
   }
 
   /**

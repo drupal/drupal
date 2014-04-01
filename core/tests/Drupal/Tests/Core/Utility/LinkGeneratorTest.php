@@ -43,13 +43,6 @@ class LinkGeneratorTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
-   * The mocked path alias manager.
-   *
-   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $aliasManager;
-
-  /**
    * Contains the LinkGenerator default options.
    */
   protected $defaultOptions = array(
@@ -80,9 +73,8 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->urlGenerator = $this->getMock('\Drupal\Core\Routing\UrlGenerator', array(), array(), '', FALSE);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->aliasManager = $this->getMock('\Drupal\Core\Path\AliasManagerInterface');
 
-    $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->moduleHandler, $this->aliasManager);
+    $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->moduleHandler);
   }
 
   /**
@@ -342,14 +334,6 @@ class LinkGeneratorTest extends UnitTestCase {
         array('test_route_1', array(), 'test-route-1'),
         array('test_route_3', array(), 'test-route-3'),
         array('test_route_4', array('object' => '1'), 'test-route-4/1'),
-      )));
-
-    $this->aliasManager->expects($this->exactly(7))
-      ->method('getSystemPath')
-      ->will($this->returnValueMap(array(
-        array('test-route-1', NULL, 'test-route-1'),
-        array('test-route-3', NULL, 'test-route-3'),
-        array('test-route-4/1', NULL, 'test-route-4/1'),
       )));
 
     $this->moduleHandler->expects($this->exactly(8))

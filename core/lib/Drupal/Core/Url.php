@@ -169,7 +169,7 @@ class Url extends DependencySerialization {
     $this->path = $this->routeName;
 
     // Set empty route name and parameters.
-    $this->routeName = '';
+    $this->routeName = NULL;
     $this->routeParameters = array();
 
     return $this;
@@ -188,8 +188,15 @@ class Url extends DependencySerialization {
    * Returns the route name.
    *
    * @return string
+   *
+   * @throws \UnexpectedValueException.
+   *   If this is an external URL with no corresponding route.
    */
   public function getRouteName() {
+    if ($this->isExternal()) {
+      throw new \UnexpectedValueException('External URLs do not have an internal route name.');
+    }
+
     return $this->routeName;
   }
 
@@ -197,8 +204,15 @@ class Url extends DependencySerialization {
    * Returns the route parameters.
    *
    * @return array
+   *
+   * @throws \UnexpectedValueException.
+   *   If this is an external URL with no corresponding route.
    */
   public function getRouteParameters() {
+    if ($this->isExternal()) {
+      throw new \UnexpectedValueException('External URLs do not have internal route parameters.');
+    }
+
     return $this->routeParameters;
   }
 
@@ -291,6 +305,25 @@ class Url extends DependencySerialization {
   }
 
   /**
+   * Returns the external path of the URL.
+   *
+   * Only to be used if self::$external is TRUE.
+   *
+   * @return string
+   *   The external path.
+   *
+   * @throws \UnexpectedValueException
+   *   Thrown when the path was requested for an internal URL.
+   */
+  public function getPath() {
+    if (!$this->isExternal()) {
+      throw new \UnexpectedValueException('Internal URLs do not have external paths.');
+    }
+
+    return $this->path;
+  }
+
+  /**
    * Sets the absolute value for this Url.
    *
    * @param bool $absolute
@@ -308,7 +341,7 @@ class Url extends DependencySerialization {
    */
   public function toString() {
     if ($this->isExternal()) {
-      return $this->urlGenerator()->generateFromPath($this->path, $this->getOptions());
+      return $this->urlGenerator()->generateFromPath($this->getPath(), $this->getOptions());
     }
 
     return $this->urlGenerator()->generateFromRoute($this->getRouteName(), $this->getRouteParameters(), $this->getOptions());
@@ -321,11 +354,19 @@ class Url extends DependencySerialization {
    *   An associative array containing all the properties of the route.
    */
   public function toArray() {
-    return array(
-      'route_name' => $this->getRouteName(),
-      'route_parameters' => $this->getRouteParameters(),
-      'options' => $this->getOptions(),
-    );
+    if ($this->isExternal()) {
+      return array(
+        'path' => $this->getPath(),
+        'options' => $this->getOptions(),
+      );
+    }
+    else {
+      return array(
+        'route_name' => $this->getRouteName(),
+        'route_parameters' => $this->getRouteParameters(),
+        'options' => $this->getOptions(),
+      );
+    }
   }
 
   /**
@@ -335,24 +376,38 @@ class Url extends DependencySerialization {
    *   An associative array suitable for a render array.
    */
   public function toRenderArray() {
-    return array(
-      '#route_name' => $this->getRouteName(),
-      '#route_parameters' => $this->getRouteParameters(),
-      '#options' => $this->getOptions(),
-    );
+    if ($this->isExternal()) {
+      return array(
+        '#href' => $this->getPath(),
+        '#options' => $this->getOptions(),
+      );
+    }
+    else {
+      return array(
+        '#route_name' => $this->getRouteName(),
+        '#route_parameters' => $this->getRouteParameters(),
+        '#options' => $this->getOptions(),
+      );
+    }
   }
 
   /**
-   * Returns the internal path for this route.
+   * Returns the internal path (system path) for this route.
    *
    * This path will not include any prefixes, fragments, or query strings.
    *
    * @return string
    *   The internal path for this route.
+   *
+   * @throws \UnexpectedValueException.
+   *   If this is an external URL with no corresponding system path.
+   *
+   * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+   *   System paths should not be used - use route names and parameters.
    */
   public function getInternalPath() {
     if ($this->isExternal()) {
-      throw new \Exception('External URLs do not have internal representations.');
+      throw new \UnexpectedValueException('External URLs do not have internal representations.');
     }
     return $this->urlGenerator()->getPathFromRoute($this->getRouteName(), $this->getRouteParameters());
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
@@ -202,6 +203,31 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getPath() method for internal URLs.
+   *
+   * @depends testCreateFromPath
+   *
+   * @expectedException \UnexpectedValueException
+   *
+   * @covers ::getPath()
+   */
+  public function testGetPathForInternalUrl($urls) {
+    foreach ($urls as $url) {
+      $url->getPath();
+    }
+  }
+
+  /**
+   * Tests the getPath() method for external URLs.
+   *
+   * @covers ::getPath
+   */
+  public function testGetPathForExternalUrl() {
+    $url = Url::createFromPath('http://example.com/test');
+    $this->assertEquals('http://example.com/test', $url->getPath());
+  }
+
+  /**
    * Tests the toString() method.
    *
    * @param \Drupal\Core\Url[] $urls
@@ -256,6 +282,17 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getRouteName() with an external URL.
+   *
+   * @covers ::getRouteName
+   * @expectedException \UnexpectedValueException
+   */
+  public function testGetRouteNameWithExternalUrl() {
+    $url = Url::createFromPath('http://example.com');
+    $url->getRouteName();
+  }
+
+  /**
    * Tests the getRouteParameters() method.
    *
    * @param \Drupal\Core\Url[] $urls
@@ -269,6 +306,17 @@ class UrlTest extends UnitTestCase {
     foreach ($urls as $index => $url) {
       $this->assertSame($this->map[$index][1], $url->getRouteParameters());
     }
+  }
+
+  /**
+   * Tests the getRouteParameter() with an external URL.
+   *
+   * @covers ::getRouteParameter
+   * @expectedException \UnexpectedValueException
+   */
+  public function testGetRouteParametersWithExternalUrl() {
+    $url = Url::createFromPath('http://example.com');
+    $url->getRouteParameters();
   }
 
   /**

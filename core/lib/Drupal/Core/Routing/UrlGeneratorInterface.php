@@ -83,7 +83,7 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
   public function generateFromPath($path = NULL, $options = array());
 
   /**
-   * Gets the internal path of a route.
+   * Gets the internal path (system path) of a route.
    *
    * @param string $name
    *  The route name.

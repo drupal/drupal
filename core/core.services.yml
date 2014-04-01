@@ -309,7 +309,7 @@ services:
       - [setContext, ['@?router.request_context']]
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
-    arguments: ['@url_generator', '@module_handler', '@path.alias_manager.cached']
+    arguments: ['@url_generator', '@module_handler']
   router.dynamic:
     class: Symfony\Cmf\Component\Routing\DynamicRouter
     arguments: ['@router.request_context', '@router.matcher', '@url_generator']

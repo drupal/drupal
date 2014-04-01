@@ -7,8 +7,9 @@
 
 namespace Drupal\link\Tests;
 
-use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
+use Drupal\link\LinkItemInterface;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests link field widgets and formatters.
@@ -73,14 +74,16 @@ class LinkFieldTest extends WebTestBase {
       'type' => 'link',
     ));
     $this->field->save();
-    entity_create('field_instance_config', array(
+    $this->instance = entity_create('field_instance_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_DISABLED,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
-    ))->save();
+    ));
+    $this->instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, array(
         'type' => 'link_default',
@@ -100,21 +103,16 @@ class LinkFieldTest extends WebTestBase {
     $this->assertFieldByName("{$field_name}[0][url]", '', 'Link URL field is displayed');
     $this->assertRaw('placeholder="http://example.com"');
 
-    // Verify that a valid URL can be submitted.
-    $value = 'http://www.example.com/';
-    $edit = array(
-      'user_id' => 1,
-      'name' => $this->randomName(),
-      "{$field_name}[0][url]" => $value,
+    // Define some valid URLs.
+    $valid_external_entries = array(
+      'http://www.example.com/',
     );
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
-    $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
-    $this->assertRaw($value);
+    $valid_internal_entries = array(
+      'entity_test/add',
+    );
 
-    // Verify that invalid URLs cannot be submitted.
-    $wrong_entries = array(
+    // Define some invalid URLs.
+    $invalid_external_entries = array(
       // Missing protcol
       'not-an-url',
       // Invalid protocol
@@ -122,14 +120,66 @@ class LinkFieldTest extends WebTestBase {
       // Missing host name
       'http://',
     );
-    $this->drupalGet('entity_test/add');
-    foreach ($wrong_entries as $invalid_value) {
+    $invalid_internal_entries = array(
+      'non/existing/path',
+    );
+
+    // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.
+    $this->assertValidEntries($field_name, $valid_external_entries + $valid_internal_entries);
+    $this->assertInvalidEntries($field_name, $invalid_external_entries + $invalid_internal_entries);
+
+    // Test external URLs for 'link_type' = LinkItemInterface::LINK_EXTERNAL.
+    $this->instance->settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
+    $this->instance->save();
+    $this->assertValidEntries($field_name, $valid_external_entries);
+    $this->assertInvalidEntries($field_name, $valid_internal_entries + $invalid_external_entries);
+
+    // Test external URLs for 'link_type' = LinkItemInterface::LINK_INTERNAL.
+    $this->instance->settings['link_type'] = LinkItemInterface::LINK_INTERNAL;
+    $this->instance->save();
+    $this->assertValidEntries($field_name, $valid_internal_entries);
+    $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries);
+  }
+
+  /**
+   * Asserts that valid URLs can be submitted.
+   *
+   * @param string $field_name
+   *   The field name.
+   * @param array $valid_entries
+   *   An array of valid URL entries.
+   */
+  protected function assertValidEntries($field_name, array $valid_entries) {
+    foreach ($valid_entries as $value) {
+      $edit = array(
+        'user_id' => 1,
+        'name' => $this->randomName(),
+        "{$field_name}[0][url]" => $value,
+      );
+      $this->drupalPostForm('entity_test/add', $edit, t('Save'));
+      preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+      $id = $match[1];
+      $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
+      $this->assertRaw($value);
+    }
+  }
+
+  /**
+   * Asserts that invalid URLs cannot be submitted.
+   *
+   * @param string $field_name
+   *   The field name.
+   * @param array $invalid_entries
+   *   An array of invalid URL entries.
+   */
+  protected function assertInvalidEntries($field_name, array $invalid_entries) {
+    foreach ($invalid_entries as $invalid_value) {
       $edit = array(
         'user_id' => 1,
         'name' => $this->randomName(),
         "{$field_name}[0][url]" => $invalid_value,
       );
-      $this->drupalPostForm(NULL, $edit, t('Save'));
+      $this->drupalPostForm('entity_test/add', $edit, t('Save'));
       $this->assertText(t('The URL @url is not valid.', array('@url' => $invalid_value)));
     }
   }
@@ -153,6 +203,7 @@ class LinkFieldTest extends WebTestBase {
       'label' => 'Read more about this entity',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
     ));
     $this->instance->save();
@@ -272,6 +323,7 @@ class LinkFieldTest extends WebTestBase {
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
@@ -413,6 +465,7 @@ class LinkFieldTest extends WebTestBase {
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
       ),
     ))->save();
     $display_options = array(

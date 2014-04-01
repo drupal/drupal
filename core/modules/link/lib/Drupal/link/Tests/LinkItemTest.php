@@ -7,6 +7,7 @@
 
 namespace Drupal\link\Tests;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
@@ -53,12 +54,14 @@ class LinkItemTest extends FieldUnitTestBase {
   public function testLinkItem() {
     // Create entity.
     $entity = entity_create('entity_test');
-    $url = 'http://www.drupal.org';
+    $url = 'http://www.drupal.org?test_param=test_value';
+    $parsed_url = UrlHelper::parse($url);
     $title = $this->randomName();
     $class = $this->randomName();
-    $entity->field_test->url = $url;
+    $entity->field_test->url = $parsed_url['path'];
     $entity->field_test->title = $title;
-    $entity->field_test->first()->get('attributes')->set('class', $class);
+    $entity->field_test->first()->get('options')->set('query', $parsed_url['query']);
+    $entity->field_test->first()->get('options')->set('attributes', array('class' => $class));
     $entity->name->value = $this->randomName();
     $entity->save();
 
@@ -67,11 +70,22 @@ class LinkItemTest extends FieldUnitTestBase {
     $entity = entity_load('entity_test', $id);
     $this->assertTrue($entity->field_test instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->field_test->url, $url);
-    $this->assertEqual($entity->field_test[0]->url, $url);
+    $this->assertEqual($entity->field_test->url, $parsed_url['path']);
+    $this->assertEqual($entity->field_test[0]->url, $parsed_url['path']);
     $this->assertEqual($entity->field_test->title, $title);
     $this->assertEqual($entity->field_test[0]->title, $title);
-    $this->assertEqual($entity->field_test->attributes['class'], $class);
+    $this->assertEqual($entity->field_test->options['attributes']['class'], $class);
+    $this->assertEqual($entity->field_test->options['query'], $parsed_url['query']);
+
+    // Update only the entity name property to check if the link field data will
+    // remain intact.
+    $entity->name->value = $this->randomName();
+    $entity->save();
+    $id = $entity->id();
+    $entity = entity_load('entity_test', $id);
+    $this->assertEqual($entity->field_test->url, $parsed_url['path']);
+    $this->assertEqual($entity->field_test->options['attributes']['class'], $class);
+    $this->assertEqual($entity->field_test->options['query'], $parsed_url['query']);
 
     // Verify changing the field value.
     $new_url = 'http://drupal.org';
@@ -79,17 +93,19 @@ class LinkItemTest extends FieldUnitTestBase {
     $new_class = $this->randomName();
     $entity->field_test->url = $new_url;
     $entity->field_test->title = $new_title;
-    $entity->field_test->first()->get('attributes')->set('class', $new_class);
+    $entity->field_test->first()->get('options')->set('query', NULL);
+    $entity->field_test->first()->get('options')->set('attributes', array('class' => $new_class));
     $this->assertEqual($entity->field_test->url, $new_url);
     $this->assertEqual($entity->field_test->title, $new_title);
-    $this->assertEqual($entity->field_test->attributes['class'], $new_class);
+    $this->assertEqual($entity->field_test->options['attributes']['class'], $new_class);
+    $this->assertNull($entity->field_test->options['query']);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = entity_load('entity_test', $id);
     $this->assertEqual($entity->field_test->url, $new_url);
     $this->assertEqual($entity->field_test->title, $new_title);
-    $this->assertEqual($entity->field_test->attributes['class'], $new_class);
+    $this->assertEqual($entity->field_test->options['attributes']['class'], $new_class);
   }
 
 }

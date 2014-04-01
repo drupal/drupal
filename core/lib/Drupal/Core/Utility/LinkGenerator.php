@@ -35,26 +35,16 @@ class LinkGenerator implements LinkGeneratorInterface {
   protected $moduleHandler;
 
   /**
-   * The path alias manager.
-   *
-   * @var \Drupal\Core\Path\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
    * Constructs a LinkGenerator instance.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
-   *   The path alias manager.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, AliasManagerInterface $alias_manager) {
+  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler) {
     $this->urlGenerator = $url_generator;
     $this->moduleHandler = $module_handler;
-    $this->aliasManager = $alias_manager;
   }
 
   /**
@@ -107,8 +97,8 @@ class LinkGenerator implements LinkGeneratorInterface {
       // Add a "data-drupal-link-system-path" attribute to let the
       // drupal.active-link library know the path in a standardized manner.
       if (!isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
-        $path = $url->getInternalPath();
-        $variables['options']['attributes']['data-drupal-link-system-path'] = $this->aliasManager->getSystemPath($path);
+        // @todo System path is deprecated - use the route name and parameters.
+        $variables['options']['attributes']['data-drupal-link-system-path'] = $url->getInternalPath();
       }
     }
 

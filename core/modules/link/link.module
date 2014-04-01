@@ -15,7 +15,7 @@ function link_help($path, $arg) {
     case 'admin/help#link':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Link module allows you to create fields that contain external URLs and optional link text. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!link_documentation">online documentation for the Link module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')), '!link_documentation' => 'https://drupal.org/documentation/modules/link')) . '</p>';
+      $output .= '<p>' . t('The Link module allows you to create fields that contain internal or external URLs and optional link text. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!link_documentation">online documentation for the Link module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')), '!link_documentation' => 'https://drupal.org/documentation/modules/link')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing and displaying link fields') . '</dt>';
@@ -27,7 +27,7 @@ function link_help($path, $arg) {
       $output .= '<dt>' . t('Adding attributes to links') . '</dt>';
       $output .= '<dd>' . t('You can add attributes to links, by changing the <em>Format settings</em> in the <em>Manage display</em> page. Adding <em>rel="nofollow"</em> notifies search engines that links should not be followed.') . '</dd>';
       $output .= '<dt>' . t('Validating URLs') . '</dt>';
-      $output .= '<dd>' . t('All links are validated after a link field is filled in. They can include anchors or query strings. Links need to start with either the scheme name <em>http</em> or <em>https</em>; other scheme names (for example ftp or git) are not supported.') . '</dd>';
+      $output .= '<dd>' . t('All links are validated after a link field is filled in. They can include anchors or query strings.') . '</dd>';
       $output .= '</dl>';
     return $output;
   }
@@ -39,7 +39,7 @@ function link_help($path, $arg) {
 function link_theme() {
   return array(
     'link_formatter_link_separate' => array(
-      'variables' => array('title' => NULL, 'url_title' => NULL, 'href' => NULL, 'options' => array()),
+      'variables' => array('title' => NULL, 'url_title' => NULL, 'url' => NULL),
       'template' => 'link-formatter-link-separate',
     ),
   );
@@ -57,12 +57,17 @@ function link_theme() {
  *   - title: (optional) A descriptive or alternate title for the link, which
  *     may be different than the actual link text.
  *   - url_title: The anchor text for the link.
- *   - href: The link URL.
- *   - options: (optional) An array of options to pass to l().
+ *   - url: A \Drupal\Core\Url object.
  */
 function template_preprocess_link_formatter_link_separate(&$variables) {
   if (!empty($variables['title'])) {
     $variables['title'] = String::checkPlain($variables['title']);
   }
-  $variables['link'] = l($variables['url_title'], $variables['href'], $variables['options']);
+
+  if (!$variables['url']->isExternal()) {
+    $variables['link'] = \Drupal::linkGenerator()->generateFromUrl($variables['url_title'], $variables['url']);
+  }
+  else {
+    $variables['link'] = l($variables['url_title'], $variables['url']->getPath(), $variables['url']->getOptions());
+  }
 }
