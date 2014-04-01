@@ -304,6 +304,7 @@ class FormBuilder implements FormBuilderInterface {
       'submitted' => FALSE,
       'executed' => FALSE,
       'programmed' => FALSE,
+      'programmed_bypass_access_check' => TRUE,
       'cache'=> FALSE,
       'method' => 'post',
       'groups' => array(),
@@ -1511,7 +1512,7 @@ class FormBuilder implements FormBuilderInterface {
     // #access=FALSE on an element usually allow access for some users, so forms
     // submitted with self::submitForm() may bypass access restriction and be
     // treated as high-privilege users instead.
-    $process_input = empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
+    $process_input = empty($element['#disabled']) && (($form_state['programmed'] && $form_state['programmed_bypass_access_check']) || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
 
     // Set the element's #value property.
     if (!isset($element['#value']) && !array_key_exists('#value', $element)) {

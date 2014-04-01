@@ -1768,6 +1768,12 @@ function form_test_programmatic_form($form, &$form_state) {
     '#default_value' => 'all',
   );
 
+  $form['field_restricted'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Textfield (no access)',
+    '#access' => FALSE,
+  );
+
   // The main submit button for the form.
   $form['submit'] = array(
     '#type' => 'submit',

@@ -95,8 +95,35 @@ class ProgrammaticTest extends WebTestBase {
       // submission handler was properly executed.
       $stored_values = $form_state['storage']['programmatic_form_submit'];
       foreach ($values as $key => $value) {
-        $this->assertTrue(isset($stored_values[$key]) && $stored_values[$key] == $value, format_string('Submission handler correctly executed: %stored_key is %stored_value', array('%stored_key' => $key, '%stored_value' => print_r($value, TRUE))));
+        $this->assertEqual($stored_values[$key], $value, format_string('Submission handler correctly executed: %stored_key is %stored_value', array('%stored_key' => $key, '%stored_value' => print_r($value, TRUE))));
       }
     }
+  }
+
+  /**
+   * Test the programmed_bypass_access_check flag.
+   */
+  public function testProgrammaticAccessBypass() {
+    $form_state['values'] = array(
+      'textfield' => 'dummy value',
+      'field_restricted' => 'dummy value'
+    );
+
+    // Programmatically submit the form with a value for the restricted field.
+    // Since programmed_bypass_access_check is set to TRUE by default, the
+    // field is accessible and can be set.
+    \Drupal::formBuilder()->submitForm('form_test_programmatic_form', $form_state);
+    $values = $form_state['storage']['programmatic_form_submit'];
+    $this->assertEqual($values['field_restricted'], 'dummy value', 'The value for the restricted field is stored correctly.');
+
+    // Programmatically submit the form with a value for the restricted field
+    // with programmed_bypass_access_check set to FALSE. Since access
+    // restrictions apply, the restricted field is inaccessible, and the value
+    // should not be stored.
+    $form_state['programmed_bypass_access_check'] = FALSE;
+    \Drupal::formBuilder()->submitForm('form_test_programmatic_form', $form_state);
+    $values = $form_state['storage']['programmatic_form_submit'];
+    $this->assertNotEqual($values['field_restricted'], 'dummy value', 'The value for the restricted field is not stored.');
+
   }
 }
