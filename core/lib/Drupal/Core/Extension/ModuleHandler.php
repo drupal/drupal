@@ -533,7 +533,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function install(array $module_list, $enable_dependencies = TRUE) {
-    $module_config = \Drupal::config('system.module');
+    $extension_config = \Drupal::config('core.extension');
     if ($enable_dependencies) {
       // Get all module data so we can find dependencies and sort.
       $module_data = system_rebuild_module_data();
@@ -544,7 +544,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
 
       // Only process currently uninstalled modules.
-      $installed_modules = $module_config->get('enabled') ?: array();
+      $installed_modules = $extension_config->get('module') ?: array();
       if (!$module_list = array_diff_key($module_list, $installed_modules)) {
         // Nothing to do. All modules already installed.
         return TRUE;
@@ -584,7 +584,7 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     $modules_installed = array();
     foreach ($module_list as $module) {
-      $enabled = $module_config->get("enabled.$module") !== NULL;
+      $enabled = $extension_config->get("module.$module") !== NULL;
       if (!$enabled) {
         // Throw an exception if the module name is too long.
         if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
@@ -594,9 +594,9 @@ class ModuleHandler implements ModuleHandlerInterface {
           )));
         }
 
-        $module_config
-          ->set("enabled.$module", 0)
-          ->set('enabled', module_config_sort($module_config->get('enabled')))
+        $extension_config
+          ->set("module.$module", 0)
+          ->set('module', module_config_sort($extension_config->get('module')))
           ->save();
 
         // Prepare the new module list, sorted by weight, including filenames.
@@ -610,7 +610,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         // contained in the configured enabled modules, we assume a weight of 0.
         $current_module_filenames = $this->getModuleList();
         $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-        $current_modules = module_config_sort(array_merge($current_modules, $module_config->get('enabled')));
+        $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
         $module_filenames = array();
         foreach ($current_modules as $name => $weight) {
           if (isset($current_module_filenames[$name])) {
@@ -712,8 +712,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     // Only process currently installed modules.
-    $module_config = \Drupal::config('system.module');
-    $installed_modules = $module_config->get('enabled') ?: array();
+    $extension_config = \Drupal::config('core.extension');
+    $installed_modules = $extension_config->get('module') ?: array();
     if (!$module_list = array_intersect_key($module_list, $installed_modules)) {
       // Nothing to do. All modules already uninstalled.
       return TRUE;
@@ -767,7 +767,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       drupal_uninstall_schema($module);
 
       // Remove the module's entry from the config.
-      $module_config->clear("enabled.$module")->save();
+      $extension_config->clear("module.$module")->save();
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild

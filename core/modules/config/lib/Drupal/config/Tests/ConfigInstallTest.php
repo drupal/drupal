@@ -75,7 +75,7 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get('integer'), 1);
 
     // Test that uninstalling configuration removes configuration schema.
-    \Drupal::config('system.module')->set('enabled', array())->save();
+    \Drupal::config('core.extension')->set('module', array())->save();
     \Drupal::service('config.manager')->uninstall('module', 'config_test');
     $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_test.schema_in_install'), 'Configuration schema for config_test.schema_in_install does not exist.');
 

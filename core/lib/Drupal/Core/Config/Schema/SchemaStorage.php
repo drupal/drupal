@@ -56,32 +56,4 @@ class SchemaStorage extends ExtensionInstallStorage {
     throw new StorageException('Rename operation is not allowed for config schema storage.');
   }
 
-  /**
-   * Returns a map of all config object names and their folders.
-   *
-   * The list is based on enabled modules and themes.
-   *
-   * @return array
-   *   An array mapping config object names with directories.
-   */
-  protected function getAllFolders() {
-    if (!isset($this->folders)) {
-      parent::getAllFolders();
-      $this->folders += $this->getBaseDataTypeSchema();
-    }
-    return $this->folders;
-  }
-
-  /**
-   * Gets the base data types for configuration schema.
-   *
-   * @return array
-   *   The file containing the base data types for configuration schema.
-   */
-  protected function getBaseDataTypeSchema() {
-    return array(
-      'core.data_types.schema' => 'core/lib/Drupal/Core/Config/Schema'
-    );
-  }
-
 }

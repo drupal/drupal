@@ -1228,9 +1228,11 @@ function drupal_set_time_limit($time_limit) {
  * Returns the path to a system item (module, theme, etc.).
  *
  * @param $type
- *   The type of the item (i.e. theme, theme_engine, module, profile).
+ *   The type of the item; one of 'core', 'profile', 'module', 'theme', or
+ *   'theme_engine'.
  * @param $name
- *   The name of the item for which the path is requested.
+ *   The name of the item for which the path is requested. Ignored for
+ *   $type 'core'.
  *
  * @return
  *   The path to the requested item or an empty string if the item is not found.

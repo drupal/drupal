@@ -48,7 +48,7 @@ class InstallTest extends WebTestBase {
    */
   public function testEnableUserTwice() {
     \Drupal::moduleHandler()->install(array('user'), FALSE);
-    $this->assertIdentical(\Drupal::config('system.module')->get('enabled.user'), 0);
+    $this->assertIdentical(\Drupal::config('core.extension')->get('module.user'), 0);
   }
 
   /**

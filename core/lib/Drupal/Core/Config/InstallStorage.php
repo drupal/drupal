@@ -119,6 +119,7 @@ class InstallStorage extends FileStorage {
   protected function getAllFolders() {
     if (!isset($this->folders)) {
       $this->folders = array();
+      $this->folders += $this->getComponentNames('core', array('core'));
       // @todo Refactor getComponentNames() to use the extension list directly.
       if ($profile = drupal_get_profile()) {
         $this->folders += $this->getComponentNames('profile', array($profile));

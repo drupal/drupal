@@ -1,0 +1,26 @@
+core.extension:
+  type: mapping
+  label: 'Extension settings'
+  mapping:
+    module:
+      type: sequence
+      label: 'Enabled modules'
+      sequence:
+        - type: integer
+          label: 'Weight'
+    theme:
+      type: sequence
+      label: 'Enabled themes'
+      sequence:
+        - type: integer
+          label: 'Weight'
+    disabled:
+      type: mapping
+      label: 'Disabled extensions'
+      mapping:
+        theme:
+          type: sequence
+          label: 'Disabled themes'
+          sequence:
+            - type: integer
+              label: 'Weight'

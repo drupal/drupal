@@ -214,8 +214,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Ensure we know what modules are enabled and that their namespaces are
     // registered.
     if (!isset($this->moduleList)) {
-      $module_list = $this->getConfigStorage()->read('system.module');
-      $this->moduleList = isset($module_list['enabled']) ? $module_list['enabled'] : array();
+      $extensions = $this->getConfigStorage()->read('core.extension');
+      $this->moduleList = isset($extensions['module']) ? $extensions['module'] : array();
     }
     $module_filenames = $this->getModuleFileNames();
     $this->registerNamespaces($this->getModuleNamespaces($module_filenames));
@@ -414,7 +414,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
       // If 'container.modules' is wrong, the container must be rebuilt.
       if (!isset($this->moduleList)) {
-        $this->moduleList = $this->container->get('config.factory')->get('system.module')->get('enabled');
+        $this->moduleList = $this->container->get('config.factory')->get('core.extension')->get('module') ?: array();
       }
       if (array_keys($this->moduleList) !== array_keys($container_modules)) {
         $persist = $this->getServicesToPersist();

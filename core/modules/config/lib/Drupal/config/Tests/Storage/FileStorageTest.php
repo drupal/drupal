@@ -53,7 +53,7 @@ class FileStorageTest extends ConfigStorageTestBase {
    */
   protected function testlistAll() {
     $expected_files = array(
-      'system.module',
+      'core.extension',
       'system.performance',
     );
 

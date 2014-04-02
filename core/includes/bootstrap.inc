@@ -560,9 +560,11 @@ function _drupal_request_initialize() {
  * the above, depending on where the module is located.
  *
  * @param $type
- *   The type of the item (theme, theme_engine, module, profile).
+ *   The type of the item; one of 'core', 'profile', 'module', 'theme', or
+ *   'theme_engine'.
  * @param $name
- *   The name of the item for which the filename is requested.
+ *   The name of the item for which the filename is requested. Ignored for
+ *   $type 'core'.
  * @param $filename
  *   The filename of the item if it is to be set explicitly rather
  *   than by consulting the database.
@@ -574,6 +576,14 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   // The location of files will not change during the request, so do not use
   // drupal_static().
   static $files = array();
+
+  // Type 'core' only exists to simplify application-level logic; it always maps
+  // to the /core directory, whereas $name is ignored. It is only requested via
+  // drupal_get_path(). /core/core.info.yml does not exist, but is required
+  // since drupal_get_path() returns the dirname() of the returned pathname.
+  if ($type === 'core') {
+    return 'core/core.info.yml';
+  }
 
   // Profiles are converted into modules in system_rebuild_module_data().
   // @todo Remove false-exposure of profiles as modules.

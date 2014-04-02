@@ -55,13 +55,14 @@ class ExtensionInstallStorage extends InstallStorage {
   protected function getAllFolders() {
     if (!isset($this->folders)) {
       $this->folders = array();
-      $modules = $this->configStorage->read('system.module');
-      if (isset($modules['enabled'])) {
-        $this->folders += $this->getComponentNames('module', array_keys($modules['enabled']));
+      $this->folders += $this->getComponentNames('core', array('core'));
+
+      $extensions = $this->configStorage->read('core.extension');
+      if (!empty($extensions['module'])) {
+        $this->folders += $this->getComponentNames('module', array_keys($extensions['module']));
       }
-      $themes = $this->configStorage->read('system.theme');
-      if (isset($themes['enabled'])) {
-        $this->folders += $this->getComponentNames('theme', array_keys($themes['enabled']));
+      if (!empty($extensions['theme'])) {
+        $this->folders += $this->getComponentNames('theme', array_keys($extensions['theme']));
       }
 
       // The install profile can override module default configuration. We do

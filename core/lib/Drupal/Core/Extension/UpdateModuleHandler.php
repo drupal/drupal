@@ -80,10 +80,10 @@ class UpdateModuleHandler extends ModuleHandler {
       }
 
       // Enable the module with a weight of 0.
-      $module_config = \Drupal::config('system.module');
-      $module_config
-        ->set("enabled.$module", 0)
-        ->set('enabled', module_config_sort($module_config->get('enabled')))
+      $extension_config = \Drupal::config('core.extension');
+      $extension_config
+        ->set("module.$module", 0)
+        ->set('module', module_config_sort($extension_config->get('module')))
         ->save();
 
       $current_schema = $schema_store->get($module);

@@ -152,10 +152,10 @@ class UpdateScriptTest extends WebTestBase {
     // Since visiting update.php triggers a rebuild of the theme system from an
     // unusual maintenance mode environment, we check that this rebuild did not
     // put any incorrect information about the themes into the database.
-    $original_theme_data = \Drupal::config('system.theme')->get('enabled');
+    $original_theme_data = \Drupal::config('core.extension')->get('theme');
     $this->drupalLogin($this->update_user);
     $this->drupalGet($this->update_url, array('external' => TRUE));
-    $final_theme_data = \Drupal::config('system.theme')->get('enabled');
+    $final_theme_data = \Drupal::config('core.extension')->get('theme');
     $this->assertEqual($original_theme_data, $final_theme_data, 'Visiting update.php does not alter the information about themes stored in the database.');
   }
 

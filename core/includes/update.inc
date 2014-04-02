@@ -23,21 +23,22 @@ use Symfony\Component\HttpFoundation\Request;
  * Disables any extensions that are incompatible with the current core version.
  */
 function update_fix_compatibility() {
+  $extension_config = \Drupal::config('core.extension');
+  $save = FALSE;
   foreach (array('module', 'theme') as $type) {
-    $config = \Drupal::config("system.$type");
-    $save = FALSE;
-    foreach ($config->get('enabled') as $name => $weight) {
+    foreach ($extension_config->get($type) as $name => $weight) {
       if (update_check_incompatibility($name, $type)) {
-        $config->clear("enabled.$name");
+        $extension_config->clear("$type.$name");
+        if ($type === 'theme') {
+          $extension_config->set("disabled.theme.$name", 0);
+        }
         $save = TRUE;
       }
     }
-    if ($save) {
-      if ($type == 'module') {
-        $config->set('enabled', module_config_sort($config->get('enabled')));
-      }
-      $config->save();
-    }
+  }
+  if ($save) {
+    $extension_config->set('module', module_config_sort($extension_config->get('module')));
+    $extension_config->save();
   }
 }
 

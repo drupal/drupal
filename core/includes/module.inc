@@ -41,7 +41,7 @@ function system_list($type) {
       'filepaths' => array(),
     );
     // Build a list of themes.
-    $enabled_themes = (array) \Drupal::config('system.theme')->get('enabled');
+    $enabled_themes = \Drupal::config('core.extension')->get('theme') ?: array();
     // @todo Themes include all themes, including disabled/uninstalled. This
     //   system.theme.data state will go away entirely as soon as themes have
     //   a proper installation status.
@@ -305,11 +305,11 @@ function drupal_required_modules() {
  */
 function module_set_weight($module, $weight) {
   // Update the module weight in the config file that contains it.
-  $module_config = \Drupal::config('system.module');
-  if ($module_config->get("enabled.$module") !== NULL) {
-    $module_config
-      ->set("enabled.$module", $weight)
-      ->set('enabled', module_config_sort($module_config->get('enabled')))
+  $extension_config = \Drupal::config('core.extension');
+  if ($extension_config->get("module.$module") !== NULL) {
+    $extension_config
+      ->set("module.$module", $weight)
+      ->set('module', module_config_sort($extension_config->get('module')))
       ->save();
 
     // Prepare the new module list, sorted by weight, including filenames.
@@ -317,7 +317,7 @@ function module_set_weight($module, $weight) {
     $module_handler = \Drupal::moduleHandler();
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-    $current_modules = module_config_sort(array_merge($current_modules, $module_config->get('enabled')));
+    $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
     $module_filenames = array();
     foreach ($current_modules as $name => $weight) {
       $module_filenames[$name] = $current_module_filenames[$name];

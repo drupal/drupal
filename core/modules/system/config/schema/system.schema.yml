@@ -274,12 +274,6 @@ system.theme:
     admin:
       type: string
       label: 'Administration theme'
-    enabled:
-      type: sequence
-      label: 'Enabled themes'
-      sequence:
-        - type: integer
-          label: 'Weight'
     default:
       type: string
       label: 'Default theme'
@@ -390,17 +384,6 @@ system.mail:
           type: string
           label: 'Default'
 
-system.module:
-  type: mapping
-  label: 'Module settings'
-  mapping:
-    enabled:
-      type: sequence
-      label: 'Enabled modules'
-      sequence:
-        - type: integer
-          label: 'Weight'
-
 system.theme.global:
   type: mapping
   label: 'Theme global settings'
@@ -465,10 +448,3 @@ system.theme.global:
         use_default:
           type: boolean
           label: 'Use default'
-
-system.theme.disabled:
-  type: sequence
-  label: 'Disabled themes'
-  sequence:
-    - type: integer
-      label: 'Weight'

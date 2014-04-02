@@ -1287,7 +1287,7 @@ function system_rebuild_module_data() {
     $files = array();
     ksort($modules);
     // Add status, weight, and schema version.
-    $installed_modules = (array) \Drupal::config('system.module')->get('enabled');
+    $installed_modules = \Drupal::config('core.extension')->get('module') ?: array();
     foreach ($modules as $name => $module) {
       $module->weight = isset($installed_modules[$name]) ? $installed_modules[$name] : 0;
       $module->status = (int) isset($installed_modules[$name]);
@@ -1335,7 +1335,7 @@ function system_rebuild_theme_data() {
   //   based on the current config. Remove this code when themes have a proper
   //   installation status.
   // @see http://drupal.org/node/1067408
-  $enabled_themes = (array) \Drupal::config('system.theme')->get('enabled');
+  $enabled_themes = \Drupal::config('core.extension')->get('theme') ?: array();
   $files = array();
   foreach ($themes as $name => $theme) {
     $theme->status = (int) isset($enabled_themes[$name]);

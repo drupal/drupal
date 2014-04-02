@@ -206,13 +206,13 @@ class UpdateContribTest extends UpdateTestBase {
   function testUpdateShowDisabledThemes() {
     $update_settings = \Drupal::config('update.settings');
     // Make sure all the update_test_* themes are disabled.
-    $theme_config = \Drupal::config('system.theme');
-    foreach ($theme_config->get('enabled') as $theme => $weight) {
+    $extension_config = \Drupal::config('core.extension');
+    foreach ($extension_config->get('theme') as $theme => $weight) {
       if (preg_match('/^update_test_/', $theme)) {
-        $theme_config->clear("enabled.$theme");
+        $extension_config->clear("theme.$theme");
       }
     }
-    $theme_config->save();
+    $extension_config->save();
 
     // Define the initial state for core and the test contrib themes.
     $system_info = array(
