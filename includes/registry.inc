@@ -10,7 +10,7 @@
  * @{
  * The code registry engine.
  *
- * Drupal maintains an internal registry of all functions or classes in the
+ * Drupal maintains an internal registry of all interfaces or classes in the
  * system, allowing it to lazy-load code files as needed (reducing the amount
  * of code that must be parsed on each request).
  */
@@ -120,7 +120,10 @@ function registry_get_parsed_files() {
 }
 
 /**
- * Parse all files that have changed since the registry was last built, and save their function and class listings.
+ * Parse all changed files and save their interface and class listings.
+ *
+ * Parse all files that have changed since the registry was last built, and save
+ * their interface and class listings.
  *
  * @param $files
  *  The list of files to check and parse.
@@ -149,7 +152,7 @@ function _registry_parse_files($files) {
 }
 
 /**
- * Parse a file and save its function and class listings.
+ * Parse a file and save its interface and class listings.
  *
  * @param $filename
  *   Name of the file we are going to parse.
