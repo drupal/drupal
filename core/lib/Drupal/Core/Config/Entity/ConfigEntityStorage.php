@@ -42,13 +42,15 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * Length limit of the configuration entity ID.
    *
-   * Most file systems limit a file name's length to 255 characters. In
-   * order to leave sufficient characters to construct a configuration prefix,
-   * the configuration entity ID is limited to 166 characters which
-   * leaves 83 characters for the configuration prefix. 5 characters are
-   * reserved for the file extension.
+   * Most file systems limit a file name's length to 255 characters, so
+   * ConfigBase::MAX_NAME_LENGTH restricts the full configuration object name
+   * to 250 characters (leaving 5 for the file extension). The config prefix
+   * is limited by ConfigEntityType::PREFIX_LENGTH to 83 characters, so this
+   * leaves 166 remaining characters for the configuration entity ID, with 1
+   * additional character needed for the joining dot.
    *
    * @see \Drupal\Core\Config\ConfigBase::MAX_NAME_LENGTH
+   * @see \Drupal\Core\Config\Entity\ConfigEntityType::PREFIX_LENGTH
    */
   const MAX_ID_LENGTH = 166;
 
