@@ -263,12 +263,15 @@ class ModulesListForm extends FormBase {
 
     // Check the compatibilities.
     $compatible = TRUE;
-    $status = '';
+
+    // Initialize an empty array of reasons why the module is incompatible. Add
+    // each reason as a separate element of the array.
+    $reasons = array();
 
     // Check the core compatibility.
     if ($module->info['core'] != \Drupal::CORE_COMPATIBILITY) {
       $compatible = FALSE;
-      $status .= $this->t('This version is not compatible with Drupal !core_version and should be replaced.', array(
+      $reasons[] = $this->t('This version is not compatible with Drupal !core_version and should be replaced.', array(
         '!core_version' => \Drupal::CORE_COMPATIBILITY,
       ));
     }
@@ -277,7 +280,7 @@ class ModulesListForm extends FormBase {
     if (version_compare(phpversion(), $module->info['php']) < 0) {
       $compatible = FALSE;
       $required = $module->info['php'] . (substr_count($module->info['php'], '.') < 2 ? '.*' : '');
-      $status .= $this->t('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array(
+      $reasons[] = $this->t('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array(
         '@php_required' => $required,
         '!php_version' => phpversion(),
       ));
@@ -285,6 +288,7 @@ class ModulesListForm extends FormBase {
 
     // If this module is not compatible, disable the checkbox.
     if (!$compatible) {
+      $status = implode(' ', $reasons);
       $row['enable']['#disabled'] = TRUE;
       $row['description'] = array(
         '#theme' => 'system_modules_incompatible',
