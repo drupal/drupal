@@ -144,7 +144,6 @@ function tracker_page($account = NULL) {
   );
   $page['pager'] = array(
     '#theme' => 'pager',
-    '#quantity' => 25,
     '#weight' => 10,
   );
   $page['#sorted'] = TRUE;
