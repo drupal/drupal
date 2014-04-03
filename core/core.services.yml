@@ -154,7 +154,12 @@ services:
     class: Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
   http_default_client:
     class: Guzzle\Http\Client
-    arguments: [null, { curl.CURLOPT_TIMEOUT: 30, curl.CURLOPT_MAXREDIRS: 3 }]
+    # Security consideration: we must not use the certificate authority file
+    # shipped with Guzzle because it can easily get outdated if a certificate
+    # authority is hacked. Instead, we rely on the certificate authority file
+    # provided by the operating system which is more likely going to be updated
+    # in a timely fashion.
+    arguments: [null, { curl.CURLOPT_TIMEOUT: 30, curl.CURLOPT_MAXREDIRS: 3, ssl.certificate_authority: system }]
     calls:
       - [addSubscriber, ['@http_client_simpletest_subscriber']]
       - [setUserAgent, ['Drupal (+http://drupal.org/)']]
