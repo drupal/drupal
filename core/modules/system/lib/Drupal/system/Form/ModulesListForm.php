@@ -290,10 +290,8 @@ class ModulesListForm extends FormBase {
     if (!$compatible) {
       $status = implode(' ', $reasons);
       $row['enable']['#disabled'] = TRUE;
-      $row['description'] = array(
-        '#theme' => 'system_modules_incompatible',
-        '#message' => $status,
-      );
+      $row['description']['#markup'] = $status;
+      $row['#attributes']['class'][] = 'incompatible';
     }
 
     // If this module requires other modules, add them to the array.

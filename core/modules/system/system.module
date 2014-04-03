@@ -181,10 +181,6 @@ function system_theme() {
       'render element' => 'form',
       'file' => 'system.admin.inc',
     ),
-    'system_modules_incompatible' => array(
-      'variables' => array('message' => NULL),
-      'file' => 'system.admin.inc',
-    ),
     'system_modules_uninstall' => array(
       'render element' => 'form',
       'file' => 'system.admin.inc',

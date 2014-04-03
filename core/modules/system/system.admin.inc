@@ -333,7 +333,7 @@ function theme_system_modules_details($variables) {
     $col4 = drupal_render($details);
     $row[] = array('class' => array('description', 'expand'), 'data' => $col4);
 
-    $rows[] = $row;
+    $rows[] = $module['#attributes'] + array('data' => $row);
   }
 
   $table = array(
@@ -342,19 +342,6 @@ function theme_system_modules_details($variables) {
     '#rows' => $rows,
   );
   return drupal_render($table);
-}
-
-/**
- * Returns HTML for a message about incompatible modules.
- *
- * @param $variables
- *   An associative array containing:
- *   - message: The form array representing the currently disabled modules.
- *
- * @ingroup themeable
- */
-function theme_system_modules_incompatible($variables) {
-  return '<div class="incompatible">' . $variables['message'] . '</div>';
 }
 
 /**
