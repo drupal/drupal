@@ -303,7 +303,7 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
             else {
               // If the expression was $a = 1 + 2; then we replaced 1 and
               // the + is unexpected.
-              throw new Exception('Unepxected token after replacing value.');
+              throw new Exception('Unexpected token after replacing value.');
             }
             break;
         }
