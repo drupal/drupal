@@ -276,7 +276,7 @@ abstract class Tasks {
       '#title' => t('Port number'),
       '#default_value' => empty($database['port']) ? '' : $database['port'],
       '#min' => 0,
-      '#max' => 65536,
+      '#max' => 65535,
     );
 
     return $form;
