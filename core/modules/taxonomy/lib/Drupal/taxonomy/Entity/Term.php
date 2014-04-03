@@ -122,7 +122,8 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['vid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Vocabulary'))
       ->setDescription(t('The vocabulary to which the term is assigned.'))
-      ->setSetting('target_type', 'taxonomy_vocabulary');
+      ->setSetting('target_type', 'taxonomy_vocabulary')
+      ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH);
 
     $fields['langcode'] = FieldDefinition::create('language')
       ->setLabel(t('Language code'))

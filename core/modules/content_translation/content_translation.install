@@ -5,6 +5,7 @@
  * Installation functions for Content Translation module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\Language;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
@@ -17,7 +18,7 @@ function content_translation_schema() {
     'fields' => array(
       'entity_type' => array(
         'type' => 'varchar',
-        'length' => 128,
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
         'description' => 'The entity type this translation relates to',

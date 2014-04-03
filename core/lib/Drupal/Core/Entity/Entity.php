@@ -9,6 +9,8 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
@@ -336,6 +338,18 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
+    // Check if this is an entity bundle.
+    if ($this->getEntityType()->getBundleOf()) {
+      // Throw an exception if the bundle ID is longer than 32 characters.
+      if (Unicode::strlen($this->id()) > EntityTypeInterface::BUNDLE_MAX_LENGTH) {
+        throw new ConfigEntityIdLengthException(String::format(
+          'Attempt to create a bundle with an ID longer than @max characters: @id.', array(
+            '@max' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
+            '@id' => $this->id(),
+          )
+        ));
+      }
+    }
   }
 
   /**

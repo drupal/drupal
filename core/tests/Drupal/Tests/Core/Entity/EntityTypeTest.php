@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityType;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the \Drupal\Core\Entity\EntityType class.
+ * @coversDefaultClass \Drupal\Core\Entity\EntityType
  *
  * @group Drupal
  * @group Entity
@@ -38,6 +38,9 @@ class EntityTypeTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityTypeInterface
    */
   protected function setUpEntityType($definition) {
+    $definition += array(
+      'id' => 'example_entity_type',
+    );
     return new EntityType($definition);
   }
 
@@ -188,6 +191,25 @@ class EntityTypeTest extends UnitTestCase {
       ),
     ));
     $this->assertSame($controller, $entity_type->getViewBuilderClass());
+  }
+
+  /**
+   * @covers ::__construct
+   */
+  public function testIdExceedsMaxLength() {
+    $id = $this->randomName(33);
+    $message = 'Attempt to create an entity type with an ID longer than 32 characters: ' . $id;
+    $this->setExpectedException('Drupal\Core\Entity\Exception\EntityTypeIdLengthException', $message);
+    $this->setUpEntityType(array('id' => $id));
+  }
+
+  /**
+   * @covers ::id
+   */
+  public function testId() {
+    $id = $this->randomName(32);
+    $entity_type = $this->setUpEntityType(array('id' => $id));
+    $this->assertEquals($id, $entity_type->id());
   }
 
   /**

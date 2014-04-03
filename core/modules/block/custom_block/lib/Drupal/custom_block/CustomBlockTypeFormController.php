@@ -8,6 +8,7 @@
 namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Base form controller for category edit forms.
@@ -36,6 +37,7 @@ class CustomBlockTypeFormController extends EntityFormController {
       '#machine_name' => array(
         'exists' => 'custom_block_type_load',
       ),
+      '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => !$block_type->isNew(),
     );
 

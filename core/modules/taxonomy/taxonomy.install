@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the taxonomy module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
+
 /**
  * Implements hook_schema().
  */
@@ -26,7 +28,7 @@ function taxonomy_schema() {
       ),
       'vid' => array(
         'type' => 'varchar',
-        'length' => 255,
+        'length' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
         'description' => 'The ID of the vocabulary to which the term is assigned.',
@@ -75,8 +77,8 @@ function taxonomy_schema() {
       'uuid' => array('uuid'),
     ),
     'indexes' => array(
-      'taxonomy_tree' => array(array('vid', 64), 'weight', 'name'),
-      'vid_name' => array(array('vid', 64), 'name'),
+      'taxonomy_tree' => array('vid', 'weight', 'name'),
+      'vid_name' => array('vid', 'name'),
       'name' => array('name'),
     ),
   );

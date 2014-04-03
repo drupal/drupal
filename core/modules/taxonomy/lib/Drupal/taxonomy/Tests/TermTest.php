@@ -258,14 +258,19 @@ class TermTest extends TaxonomyTestBase {
     $third_term->save();
 
     // Try to autocomplete a term name that matches both terms.
-    // We should get both term in a json encoded string.
+    // We should get both terms in a json encoded string.
     $input = '10/';
     $path = 'taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id();
     // The result order is not guaranteed, so check each term separately.
     $result = $this->drupalGet($path, array('query' => array('q' => $input)));
+    // Pull the label properties from the array of arrays.
     $data = Json::decode($result);
-    $this->assertEqual($data[0]['label'], String::checkPlain($first_term->getName()), 'Autocomplete returned the first matching term');
-    $this->assertEqual($data[1]['label'], String::checkPlain($second_term->getName()), 'Autocomplete returned the second matching term');
+    $data = array_map(function ($item) {
+      return $item['label'];
+    }, $data);
+
+    $this->assertTrue(in_array(String::checkPlain($first_term->getName()), $data), 'Autocomplete returned the first matching term');
+    $this->assertTrue(in_array(String::checkPlain($second_term->getName()), $data), 'Autocomplete returned the second matching term');
 
     // Try to autocomplete a term name that matches first term.
     // We should only get the first term in a json encoded string.

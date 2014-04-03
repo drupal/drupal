@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityStorage
@@ -76,6 +77,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
   protected $entityQuery;
 
   /**
+   * The entity manager used for testing.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $entityManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -129,6 +137,17 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('getQuery')
       ->will($this->returnValue($this->entityQuery));
     $this->entityStorage->setModuleHandler($this->moduleHandler);
+
+    $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
+    $this->entityManager->expects($this->any())
+      ->method('getDefinition')
+      ->with('test_entity_type')
+      ->will($this->returnValue($this->entityType));
+
+    $container = new ContainerBuilder();
+    $container->set('entity.manager', $this->entityManager);
+    \Drupal::setContainer($container);
+
   }
 
   /**

@@ -9,6 +9,7 @@ namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Form controller for node type forms.
@@ -45,7 +46,7 @@ class NodeTypeFormController extends EntityFormController {
     $form['type'] = array(
       '#type' => 'machine_name',
       '#default_value' => $type->id(),
-      '#maxlength' => 32,
+      '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => $type->isLocked(),
       '#machine_name' => array(
         'exists' => 'node_type_load',

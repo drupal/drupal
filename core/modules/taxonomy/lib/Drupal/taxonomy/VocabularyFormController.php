@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -37,7 +38,7 @@ class VocabularyFormController extends EntityFormController {
     $form['vid'] = array(
       '#type' => 'machine_name',
       '#default_value' => $vocabulary->id(),
-      '#maxlength' => 255,
+      '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => array(
         'exists' => 'taxonomy_vocabulary_load',
         'source' => array('name'),

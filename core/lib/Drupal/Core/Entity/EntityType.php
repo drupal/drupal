@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\Exception\EntityTypeIdLengthException;
 
 /**
  * Provides an implementation of an entity type and its metadata.
@@ -182,8 +184,21 @@ class EntityType implements EntityTypeInterface {
    *
    * @param array $definition
    *   An array of values from the annotation.
+   *
+   * @throws \Drupal\Core\Entity\Exception\EntityTypeIdLengthException
+   *   Thrown when attempting to instantiate an entity type with too long ID.
    */
   public function __construct($definition) {
+    // Throw an exception if the entity type ID is longer than 32 characters.
+    if (Unicode::strlen($definition['id']) > static::ID_MAX_LENGTH) {
+      throw new EntityTypeIdLengthException(String::format(
+        'Attempt to create an entity type with an ID longer than @max characters: @id.', array(
+          '@max' => static::ID_MAX_LENGTH,
+          '@id' => $definition['id'],
+        )
+      ));
+    }
+
     foreach ($definition as $property => $value) {
       $this->{$property} = $value;
     }

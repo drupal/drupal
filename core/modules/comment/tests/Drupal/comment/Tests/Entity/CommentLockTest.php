@@ -7,6 +7,7 @@
 namespace Drupal\comment\Tests\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityType;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -74,10 +75,16 @@ class CommentLockTest extends UnitTestCase {
     $comment->expects($this->any())
       ->method('getThread')
       ->will($this->returnValue(''));
-    $comment->expects($this->at(0))
+
+    $entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $comment->expects($this->any())
+      ->method('getEntityType')
+      ->will($this->returnValue($entity_type));
+    $comment->expects($this->at(1))
       ->method('get')
       ->with('status')
       ->will($this->returnValue((object) array('value' => NULL)));
+
     $storage = $this->getMock('Drupal\comment\CommentStorageInterface');
     $comment->preSave($storage);
     $comment->postSave($storage);

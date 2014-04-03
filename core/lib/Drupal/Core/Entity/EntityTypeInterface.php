@@ -18,6 +18,16 @@ namespace Drupal\Core\Entity;
 interface EntityTypeInterface {
 
   /**
+   * The maximum length of ID, in characters.
+   */
+  const ID_MAX_LENGTH = 32;
+
+  /**
+   * The maximum length of bundle name, in characters.
+   */
+  const BUNDLE_MAX_LENGTH = 32;
+
+  /**
    * Gets any arbitrary property.
    *
    * @param string $property

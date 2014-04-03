@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the custom block module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
+
 /**
  * Implements hook_schema().
  */
@@ -44,7 +46,7 @@ function custom_block_schema() {
       'type' => array(
         'description' => 'The type of this custom block.',
         'type' => 'varchar',
-        'length' => 32,
+        'length' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -64,7 +66,7 @@ function custom_block_schema() {
     ),
     'primary key' => array('id'),
     'indexes' => array(
-      'block_custom_type'   => array(array('type', 4)),
+      'block_custom_type' => array('type'),
     ),
     'unique keys' => array(
       'revision_id' => array('revision_id'),
@@ -161,7 +163,7 @@ function custom_block_schema_0() {
       'type' => array(
         'description' => 'The type of this custom block.',
         'type' => 'varchar',
-        'length' => 32,
+        'length' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -181,7 +183,7 @@ function custom_block_schema_0() {
     ),
     'primary key' => array('id'),
     'indexes' => array(
-      'block_custom_type'   => array(array('type', 4)),
+      'block_custom_type' => array('type'),
     ),
     'unique keys' => array(
       'revision_id' => array('revision_id'),
