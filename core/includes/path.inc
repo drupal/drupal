@@ -115,7 +115,7 @@ function path_load($conditions) {
   elseif (!is_array($conditions)) {
     return FALSE;
   }
-  return \Drupal::service('path.crud')->load($conditions);
+  return \Drupal::service('path.alias_storage')->load($conditions);
 }
 
 /**

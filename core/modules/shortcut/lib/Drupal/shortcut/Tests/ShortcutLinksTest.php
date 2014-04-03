@@ -38,7 +38,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'source' => 'node/' . $this->node->id(),
       'alias' => $this->randomName(8),
     );
-    $this->container->get('path.crud')->save($path['source'], $path['alias']);
+    $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
 
     // Create some paths to test.
     $test_cases = array(

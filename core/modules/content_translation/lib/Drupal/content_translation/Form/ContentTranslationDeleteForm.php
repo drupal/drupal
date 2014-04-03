@@ -83,7 +83,7 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
     if (\Drupal::moduleHandler()->moduleExists('path')) {
       $path = $this->entity->getSystemPath();
       $conditions = array('source' => $path, 'langcode' => $this->language->id);
-      \Drupal::service('path.crud')->delete($conditions);
+      \Drupal::service('path.alias_storage')->delete($conditions);
     }
 
     $form_state['redirect_route'] = $this->getCancelRoute();

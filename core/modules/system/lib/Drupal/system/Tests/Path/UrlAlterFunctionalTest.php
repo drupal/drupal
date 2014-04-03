@@ -46,7 +46,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
 
     // Test that a path always uses its alias.
     $path = array('source' => "user/$uid/test1", 'alias' => 'alias/test1');
-    $this->container->get('path.crud')->save($path['source'], $path['alias']);
+    $this->container->get('path.alias_storage')->save($path['source'], $path['alias']);
     $this->rebuildContainer();
     $this->assertUrlInboundAlter('alias/test1', "user/$uid/test1");
     $this->assertUrlOutboundAlter("user/$uid/test1", 'alias/test1');

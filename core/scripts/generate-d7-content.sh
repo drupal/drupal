@@ -252,7 +252,7 @@ for ($i = 0; $i < 12; $i++) {
     'alias' => "content/poll/$i/results",
     'source' => "node/$node->nid/results",
   );
-  \Drupal::service('path.crud')->save($path['source'], $path['alias']);
+  \Drupal::service('path.alias_storage')->save($path['source'], $path['alias']);
 
   // Add some votes
   $node = node_load($node->nid);

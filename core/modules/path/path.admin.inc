@@ -268,7 +268,7 @@ function path_admin_form_submit($form, &$form_state) {
   // languages.
   $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : Language::LANGCODE_NOT_SPECIFIED;
 
-  \Drupal::service('path.crud')->save($source, $alias, $langcode, $pid);
+  \Drupal::service('path.alias_storage')->save($source, $alias, $langcode, $pid);
 
   drupal_set_message(t('The alias has been saved.'));
   $form_state['redirect'] = 'admin/config/search/path';

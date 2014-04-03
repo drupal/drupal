@@ -8,7 +8,7 @@
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\Path\PathInterface;
+use Drupal\Core\Path\AliasStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,11 +17,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DeleteForm extends ConfirmFormBase {
 
   /**
-   * The path crud service.
+   * The alias storage service.
    *
-   * @var PathInterface $path
+   * @var AliasStorageInterface $path
    */
-  protected $path;
+  protected $aliasStorage;
 
   /**
    * The path alias being deleted.
@@ -33,11 +33,11 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * Constructs a \Drupal\path\Form\DeleteForm object.
    *
-   * @param \Drupal\Core\Path\PathInterface $path
-   *   The path crud service.
+   * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
+   *   The alias storage service.
    */
-  public function __construct(PathInterface $path) {
-    $this->path = $path;
+  public function __construct(AliasStorageInterface $alias_storage) {
+    $this->aliasStorage = $alias_storage;
   }
 
   /**
@@ -45,7 +45,7 @@ class DeleteForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('path.crud')
+      $container->get('path.alias_storage')
     );
   }
 
@@ -73,7 +73,7 @@ class DeleteForm extends ConfirmFormBase {
    * Overrides \Drupal\Core\Form\ConfirmFormBase::buildForm().
    */
   public function buildForm(array $form, array &$form_state, $pid = NULL) {
-    $this->pathAlias = $this->path->load(array('pid' => $pid));
+    $this->pathAlias = $this->aliasStorage->load(array('pid' => $pid));
 
     $form = parent::buildForm($form, $form_state);
 
@@ -86,7 +86,7 @@ class DeleteForm extends ConfirmFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->path->delete(array('pid' => $this->pathAlias['pid']));
+    $this->aliasStorage->delete(array('pid' => $this->pathAlias['pid']));
 
     $form_state['redirect'] = 'admin/config/search/path';
   }

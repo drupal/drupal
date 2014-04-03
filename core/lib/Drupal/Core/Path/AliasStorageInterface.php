@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Path\PathInterface.
+ * Contains \Drupal\Core\Path\AliasStorageInterface.
  */
 
 namespace Drupal\Core\Path;
@@ -12,7 +12,7 @@ use Drupal\Core\Language\Language;
 /**
  * Provides a class for CRUD operations on path aliases.
  */
-interface PathInterface {
+interface AliasStorageInterface {
 
   /**
    * Saves a path alias to the database.

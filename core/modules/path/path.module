@@ -67,7 +67,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     if ($node->language()->id != Language::LANGCODE_NOT_SPECIFIED) {
       $conditions['langcode'] = $node->language()->id;
     }
-    $path = \Drupal::service('path.crud')->load($conditions);
+    $path = \Drupal::service('path.alias_storage')->load($conditions);
     if ($path === FALSE) {
       $path = array();
     }
@@ -153,7 +153,7 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
   // Make sure this does not show up on the delete confirmation form.
   if (empty($form_state['confirm_delete'])) {
     $term = $form_state['controller']->getEntity();
-    $path = ($term->id() ? \Drupal::service('path.crud')->load(array('source' => 'taxonomy/term/' . $term->id())) : array());
+    $path = ($term->id() ? \Drupal::service('path.alias_storage')->load(array('source' => 'taxonomy/term/' . $term->id())) : array());
     if ($path === FALSE) {
       $path = array();
     }

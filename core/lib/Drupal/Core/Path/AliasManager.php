@@ -13,11 +13,11 @@ use Drupal\Core\Language\LanguageManager;
 class AliasManager implements AliasManagerInterface {
 
   /**
-   * The Path CRUD service.
+   * The alias storage service.
    *
-   * @var \Drupal\Core\Path\PathInterface
+   * @var \Drupal\Core\Path\AliasStorageInterface
    */
-  protected $path;
+  protected $storage;
 
   /**
    * Language manager for retrieving the default langcode when none is specified.
@@ -74,15 +74,15 @@ class AliasManager implements AliasManagerInterface {
   /**
    * Constructs an AliasManager.
    *
-   * @param \Drupal\Core\Path\PathInterface $path
-   *   The Path CRUD service.
+   * @param \Drupal\Core\Path\AliasStorageInterface $storage
+   *   The alias storage service.
    * @param \Drupal\Core\Path\AliasWhitelistInterface $whitelist
    *   The whitelist implementation to use.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(PathInterface $path, AliasWhitelistInterface $whitelist, LanguageManager $language_manager) {
-    $this->path = $path;
+  public function __construct(AliasStorageInterface $storage, AliasWhitelistInterface $whitelist, LanguageManager $language_manager) {
+    $this->storage = $storage;
     $this->languageManager = $language_manager;
     $this->whitelist = $whitelist;
   }
@@ -180,7 +180,7 @@ class AliasManager implements AliasManagerInterface {
       // Load system paths from cache.
       if (!empty($this->preloadedPathLookups)) {
         // Now fetch the aliases corresponding to these system paths.
-        $this->lookupMap[$langcode] = $this->path->preloadPathAlias($this->preloadedPathLookups, $langcode);
+        $this->lookupMap[$langcode] = $this->storage->preloadPathAlias($this->preloadedPathLookups, $langcode);
         // Keep a record of paths with no alias to avoid querying twice.
         $this->noAliases[$langcode] = array_flip(array_diff_key($this->preloadedPathLookups, array_keys($this->lookupMap[$langcode])));
       }
@@ -197,7 +197,7 @@ class AliasManager implements AliasManagerInterface {
     }
     // For system paths which were not cached, query aliases individually.
     elseif (!isset($this->noAliases[$langcode][$path])) {
-      $this->lookupMap[$langcode][$path] = $this->path->lookupPathAlias($path, $langcode);
+      $this->lookupMap[$langcode][$path] = $this->storage->lookupPathAlias($path, $langcode);
       return $this->lookupMap[$langcode][$path];
     }
     return FALSE;
@@ -222,7 +222,7 @@ class AliasManager implements AliasManagerInterface {
       // Look for the value $path within the cached $map
       $source = isset($this->lookupMap[$langcode]) ? array_search($path, $this->lookupMap[$langcode]) : FALSE;
       if (!$source) {
-        if ($source = $this->path->lookupPathSource($path, $langcode)) {
+        if ($source = $this->storage->lookupPathSource($path, $langcode)) {
           $this->lookupMap[$langcode][$source] = $path;
         }
         else {
