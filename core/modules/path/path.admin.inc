@@ -63,12 +63,12 @@ function path_admin_overview($keys = NULL) {
 
     $operations = array();
     $operations['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'href' => "admin/config/search/path/edit/$data->pid",
       'query' => $destination,
     );
     $operations['delete'] = array(
-      'title' => t('delete'),
+      'title' => t('Delete'),
       'href' => "admin/config/search/path/delete/$data->pid",
       'query' => $destination,
     );

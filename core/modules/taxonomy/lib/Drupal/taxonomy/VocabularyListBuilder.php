@@ -36,15 +36,15 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $operations = parent::getOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('edit vocabulary');
+      $operations['edit']['title'] = t('Edit vocabulary');
     }
 
     $operations['list'] = array(
-      'title' => t('list terms'),
+      'title' => t('List terms'),
       'weight' => 0,
     ) + $entity->urlInfo('overview-form')->toArray();
     $operations['add'] = array(
-      'title' => t('add terms'),
+      'title' => t('Add terms'),
       'weight' => 10,
     ) + $entity->urlInfo('add-form')->toArray();
     unset($operations['delete']);

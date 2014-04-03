@@ -331,7 +331,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertText(t('Scale and crop 300x200'));
 
     // There should normally be only one edit link on this page initially.
-    $this->clickLink(t('edit'));
+    $this->clickLink(t('Edit'));
     $this->drupalPostForm(NULL, array('data[width]' => '360', 'data[height]' => '240'), t('Update effect'));
     $this->assertText(t('Scale and crop 360x240'));
 
@@ -345,7 +345,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
 
     // Edit the scale effect that was just added.
-    $this->clickLink(t('edit'));
+    $this->clickLink(t('Edit'));
     $this->drupalPostForm(NULL, array('data[width]' => '24', 'data[height]' => '19'), t('Update effect'));
     $this->drupalPostForm(NULL, array('new' => 'image_scale'), t('Add'));
 

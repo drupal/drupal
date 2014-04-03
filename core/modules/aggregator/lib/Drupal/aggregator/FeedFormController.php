@@ -97,7 +97,7 @@ class FeedFormController extends ContentEntityFormController {
       }
     }
     else {
-      watchdog('aggregator', 'Feed %feed added.', array('%feed' => $feed->label()), WATCHDOG_NOTICE, l($this->t('view'), 'admin/config/services/aggregator'));
+      watchdog('aggregator', 'Feed %feed added.', array('%feed' => $feed->label()), WATCHDOG_NOTICE, l($this->t('View'), 'admin/config/services/aggregator'));
       drupal_set_message($this->t('The feed %feed has been added.', array('%feed' => $feed->label())));
     }
   }

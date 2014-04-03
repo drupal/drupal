@@ -101,7 +101,7 @@ class Link extends FieldPluginBase {
    *   Returns a string for the link text.
    */
   protected function renderLink($data, ResultRow $values) {
-    $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
+    $text = !empty($this->options['text']) ? $this->options['text'] : t('View');
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $data;
     $cid = $comment->id();

@@ -442,7 +442,7 @@ class NodeFormController extends ContentEntityFormController {
     $node = $this->entity;
     $insert = $node->isNew();
     $node->save();
-    $node_link = l(t('view'), 'node/' . $node->id());
+    $node_link = l(t('View'), 'node/' . $node->id());
     $watchdog_args = array('@type' => $node->getType(), '%title' => $node->label());
     $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
 

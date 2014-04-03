@@ -316,7 +316,7 @@ class TermTest extends TaxonomyTestBase {
     // Test edit link as accessed from Taxonomy administration pages.
     // Because Simpletest creates its own database when running tests, we know
     // the first edit link found on the listing page is to our term.
-    $this->clickLink(t('edit'));
+    $this->clickLink(t('Edit'), 1);
 
     $this->assertRaw($edit['name[0][value]'], 'The randomly generated term name is present.');
     $this->assertText($edit['description[0][value]'], 'The randomly generated term description is present.');
@@ -332,7 +332,7 @@ class TermTest extends TaxonomyTestBase {
     // Check that the term is still present at admin UI after edit.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $this->assertText($edit['name[0][value]'], 'The randomly generated term name is present.');
-    $this->assertLink(t('edit'));
+    $this->assertLink(t('Edit'));
 
     // Check the term link can be clicked through to the term page.
     $this->clickLink($edit['name[0][value]']);

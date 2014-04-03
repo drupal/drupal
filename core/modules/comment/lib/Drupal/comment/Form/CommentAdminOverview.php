@@ -215,7 +215,7 @@ class CommentAdminOverview extends FormBase {
       $comment_uri_options = $comment->urlInfo()->getOptions();
       $links = array();
       $links['edit'] = array(
-        'title' => $this->t('edit'),
+        'title' => $this->t('Edit'),
         'route_name' => 'comment.edit_page',
         'route_parameters' => array('comment' => $comment->id()),
         'options' => $comment_uri_options,
@@ -223,7 +223,7 @@ class CommentAdminOverview extends FormBase {
       );
       if ($this->moduleHandler->invoke('content_translation', 'translate_access', array($comment))) {
         $links['translate'] = array(
-          'title' => $this->t('translate'),
+          'title' => $this->t('Translate'),
           'route_name' => 'content_translation.translation_overview_comment',
           'route_parameters' => array('comment' => $comment->id()),
           'options' => $comment_uri_options,

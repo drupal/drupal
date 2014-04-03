@@ -200,7 +200,7 @@ class NodeTypeFormController extends EntityFormController {
     }
     elseif ($status == SAVED_NEW) {
       drupal_set_message(t('The content type %name has been added.', $t_args));
-      watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/structure/types'));
+      watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('View'), 'admin/structure/types'));
     }
 
     $form_state['redirect_route']['route_name'] = 'node.overview_types';

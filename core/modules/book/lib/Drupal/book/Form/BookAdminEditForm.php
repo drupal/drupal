@@ -119,7 +119,7 @@ class BookAdminEditForm extends FormBase {
           $node->book['link_title'] = $values['title'];
           $node->setNewRevision();
           $node->save();
-          watchdog('content', 'book: updated %title.', array('%title' => $node->label()), WATCHDOG_NOTICE, l($this->t('view'), 'node/' . $node->id()));
+          watchdog('content', 'book: updated %title.', array('%title' => $node->label()), WATCHDOG_NOTICE, l($this->t('View'), 'node/' . $node->id()));
         }
       }
     }

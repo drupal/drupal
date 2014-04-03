@@ -253,17 +253,17 @@ class OverviewTerms extends FormBase {
       );
       $operations = array(
         'edit' => array(
-          'title' => $this->t('edit'),
+          'title' => $this->t('Edit'),
           'query' => $destination,
         ) + $term->urlInfo('edit-form')->toArray(),
         'delete' => array(
-          'title' => $this->t('delete'),
+          'title' => $this->t('Delete'),
           'query' => $destination,
         ) + $term->urlInfo('delete-form')->toArray(),
       );
       if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($term)) {
         $operations['translate'] = array(
-          'title' => $this->t('translate'),
+          'title' => $this->t('Translate'),
           'query' => $destination,
         ) + $term->urlInfo('drupal:content-translation-overview')->toArray();
       }

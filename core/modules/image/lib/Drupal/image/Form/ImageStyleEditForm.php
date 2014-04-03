@@ -91,12 +91,12 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       $is_configurable = $effect instanceof ConfigurableImageEffectInterface;
       if ($is_configurable) {
         $links['edit'] = array(
-          'title' => $this->t('edit'),
+          'title' => $this->t('Edit'),
           'href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key,
         );
       }
       $links['delete'] = array(
-        'title' => $this->t('delete'),
+        'title' => $this->t('Delete'),
         'href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key . '/delete',
       );
       $form['effects'][$key]['operations'] = array(
@@ -105,13 +105,13 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       );
       $form['effects'][$key]['configure'] = array(
         '#type' => 'link',
-        '#title' => $this->t('edit'),
+        '#title' => $this->t('Edit'),
         '#href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key,
         '#access' => $is_configurable,
       );
       $form['effects'][$key]['remove'] = array(
         '#type' => 'link',
-        '#title' => $this->t('delete'),
+        '#title' => $this->t('Delete'),
         '#href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key . '/delete',
       );
     }

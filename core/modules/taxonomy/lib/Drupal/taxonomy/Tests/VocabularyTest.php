@@ -47,7 +47,7 @@ class VocabularyTest extends TaxonomyTestBase {
     // Edit the vocabulary.
     $this->drupalGet('admin/structure/taxonomy');
     $this->assertText($edit['name'], 'Vocabulary found in the vocabulary overview listing.');
-    $this->clickLink(t('edit vocabulary'));
+    $this->clickLink(t('Edit vocabulary'));
     $edit = array();
     $edit['name'] = $this->randomName();
     $this->drupalPostForm(NULL, $edit, t('Save'));

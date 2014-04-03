@@ -391,7 +391,7 @@ class CommentFormController extends ContentEntityFormController {
       $form_state['values']['cid'] = $comment->id();
 
       // Add an entry to the watchdog log.
-      watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->getSubject()), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id())));
+      watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->getSubject()), WATCHDOG_NOTICE, l(t('View'), 'comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id())));
 
       // Explain the approval queue if necessary.
       if (!$comment->isPublished()) {
