@@ -379,7 +379,7 @@ class Drupal {
    *   AND if all conditions in the query need to apply, OR if any of them is
    *   enough. Optional, defaults to AND.
    *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
+   * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
    *   The query object that can query the given entity type.
    */
   public static function entityQueryAggregate($entity_type, $conjunction = 'AND') {
