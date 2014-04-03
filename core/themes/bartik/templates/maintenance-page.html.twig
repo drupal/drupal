@@ -3,25 +3,11 @@
  * @file
  * Bartik's theme implementation to display a single Drupal page while offline.
  *
- * All of the available variables are mirrored in html.html.twig.
+ * All available variables are mirrored in page.html.twig.
  *
  * @see template_preprocess_maintenance_page()
  */
  #}
-<!DOCTYPE html>
-<html{{ html_attributes }}>
-<head>
-  {{ head }}
-  <title>{{ head_title }}</title>
-  {{ styles }}
-  {{ scripts }}
-</head>
-<body class="{{ attributes.class }}"{{ attributes }}>
-
-  <a href="#main-content" class="visually-hidden focusable skip-link">
-    {{ 'Skip to main content'|t }}
-  </a>
-
   <div id="page-wrapper"><div id="page">
 
     <header id="header" role="banner"><div class="section clearfix">
@@ -47,7 +33,7 @@
       <main id="content" class="column" role="main"><section class="section">
         <a id="main-content"></a>
         {% if title %}<h1 class="title" id="page-title">{{ title }}</h1>{% endif %}
-        {{ content }}
+        {{ page.content }}
         {% if messages %}
           <div id="messages"><div class="section clearfix">
             {{ messages }}
@@ -57,6 +43,3 @@
     </div></div> <!-- /#main, /#main-wrapper -->
 
   </div></div> <!-- /#page, /#page-wrapper -->
-
-</body>
-</html>

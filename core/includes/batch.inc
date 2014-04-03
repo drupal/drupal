@@ -16,6 +16,7 @@
 
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Batch\Percentage;
+use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -121,18 +122,14 @@ function _batch_progress_page() {
     // the error message.
     ob_start();
     $fallback = $current_set['error_message'] . '<br />' . $batch['error_message'];
-    $fallback = array(
-      '#theme' => 'maintenance_page',
-      '#title' => $current_set['title'],
-      '#content' => $fallback,
-      '#show_messages' => FALSE,
-    );
 
     // We strip the end of the page using a marker in the template, so any
     // additional HTML output by PHP shows up inside the page rather than below
     // it. While this causes invalid HTML, the same would be true if we didn't,
     // as content is not allowed to appear after </html> anyway.
-    $fallback = drupal_render($fallback);
+    $fallback = DefaultHtmlPageRenderer::renderPage($fallback, $current_set['title'], 'maintenance', array(
+      '#show_messages' => FALSE,
+    ));
     list($fallback) = explode('<!--partial-->', $fallback);
     print $fallback;
 

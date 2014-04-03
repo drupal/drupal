@@ -16,6 +16,7 @@
 
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Update\Form\UpdateScriptSelectionForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -459,18 +460,8 @@ if (isset($output) && $output) {
   }
   else {
     drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-    $maintenance_page = array(
-      '#theme' => 'maintenance_page',
-      // $output has to be rendered here, because the maintenance page template
-      // is not wrapped into the html template, which means that any #attached
-      // libraries in $output will not be loaded, because the wrapping HTML has
-      // been printed already.
-      '#content' => drupal_render($output),
+    print DefaultHtmlPageRenderer::renderPage($output, $output['#title'], 'maintenance', array(
       '#show_messages' => !$progress_page,
-    );
-    if (isset($output['#title'])) {
-      $maintenance_page['#page']['#title'] = $output['#title'];
-    }
-    print drupal_render($maintenance_page);
+    ));
   }
 }
