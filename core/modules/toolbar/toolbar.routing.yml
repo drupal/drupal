@@ -1,6 +1,7 @@
 toolbar.subtrees:
-  path: '/toolbar/subtrees/{hash}'
+  path: '/toolbar/subtrees/{hash}/{langcode}'
   defaults:
     _controller: '\Drupal\toolbar\Controller\ToolbarController::subtreesJsonp'
+    langcode: null
   requirements:
     _custom_access: '\Drupal\toolbar\Controller\ToolbarController::checkSubTreeAccess'

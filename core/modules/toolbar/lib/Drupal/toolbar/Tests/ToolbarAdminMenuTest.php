@@ -452,6 +452,55 @@ class ToolbarAdminMenuTest extends WebTestBase {
 
     $this->drupalGetJSON('toolbar/subtrees/' . $subtrees_hash);
     $this->assertResponse('200');
+
+    // Test that the subtrees hash changes with a different language code and
+    // that JSON is returned when a language code is specified.
+    // Create a new language with the langcode 'xx'.
+    $langcode = 'xx';
+    // The English name for the language. This will be translated.
+    $name = $this->randomName(16);
+    $edit = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => $langcode,
+      'name' => $name,
+      'direction' => '0',
+    );
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+
+    // Get a page with the new language langcode in the URL.
+    $this->drupalGet('/xx/test-page');
+    // Request a new page to refresh the drupalSettings object.
+    $subtrees_hash = $this->getSubtreesHash();
+
+    $this->drupalGetJSON('toolbar/subtrees/' . $subtrees_hash . '/' . $langcode);
+    $this->assertResponse('200');
+  }
+
+  /**
+   *  Test that subtrees hashes vary by the language of the page.
+   */
+  function testLanguageSwitching() {
+    // Create a new language with the langcode 'xx'.
+    $langcode = 'xx';
+    // The English name for the language. This will be translated.
+    $name = $this->randomName(16);
+    $edit = array(
+      'predefined_langcode' => 'custom',
+      'langcode' => $langcode,
+      'name' => $name,
+      'direction' => '0',
+    );
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+
+    // Get a page with the new language langcode in the URL.
+    $this->drupalGet('/xx/test-page');
+    // Assert different hash.
+    $new_subtree_hash = $this->getSubtreesHash();
+
+    // Assert that the old admin menu subtree hash and the new admin menu
+    // subtree hash are different.
+    $this->assertTrue($new_subtree_hash, 'A valid hash value for the admin menu subtrees was created.');
+    $this->assertNotEqual($this->hash, $new_subtree_hash, 'The user-specific subtree menu hash has been updated.');
   }
 
   /**

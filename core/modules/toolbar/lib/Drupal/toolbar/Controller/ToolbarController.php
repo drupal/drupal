@@ -32,10 +32,19 @@ class ToolbarController extends ControllerBase {
 
   /**
    * Checks access for the subtree controller.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   * @param string $langcode
+   *   The langcode of the requested site, NULL if none given.
+   *
+   * @return string
+   *   Returns AccessInterface::ALLOW when access was granted, otherwise
+   *   AccessInterface::DENY.
    */
-  public function checkSubTreeAccess(Request $request) {
+  public function checkSubTreeAccess(Request $request, $langcode) {
     $hash = $request->get('hash');
-    return ($this->currentUser()->hasPermission('access toolbar') && ($hash == _toolbar_get_subtrees_hash())) ? AccessInterface::ALLOW : AccessInterface::DENY;
+    return ($this->currentUser()->hasPermission('access toolbar') && ($hash == _toolbar_get_subtrees_hash($langcode))) ? AccessInterface::ALLOW : AccessInterface::DENY;
   }
 
 }

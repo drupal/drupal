@@ -378,10 +378,12 @@ function toolbar_toolbar() {
   // toolbar_subtrees route. We provide the JavaScript requesting that JSONP
   // script here with the hash parameter that is needed for that route.
   // @see toolbar_subtrees_jsonp()
+  $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
   $menu['toolbar_administration']['#attached']['js'][] = array(
     'type' => 'setting',
     'data' => array('toolbar' => array(
-      'subtreesHash' => _toolbar_get_subtrees_hash(),
+      'subtreesHash' => _toolbar_get_subtrees_hash($langcode),
+      'langcode' => $langcode,
     )),
   );
 
@@ -503,12 +505,15 @@ function toolbar_get_rendered_subtrees() {
 /**
  * Returns the hash of the per-user rendered toolbar subtrees.
  *
+ * @param string $langcode
+ *   The langcode of the current request.
+ *
  * @return string
  *   The hash of the admin_menu subtrees.
  */
-function _toolbar_get_subtrees_hash() {
+function _toolbar_get_subtrees_hash($langcode) {
   $uid = \Drupal::currentUser()->id();
-  $cid = _toolbar_get_user_cid($uid);
+  $cid = _toolbar_get_user_cid($uid, $langcode);
   if ($cache = \Drupal::cache('toolbar')->get($cid)) {
     $hash = $cache->data;
   }
@@ -566,12 +571,14 @@ function toolbar_user_role_update(RoleInterface $role) {
  *
  * @param int $uid
  *   A user ID.
+ * @param string $langcode
+ *   The langcode of the current request.
  *
  * @return string
  *   A unique cache ID for the user.
  */
-function _toolbar_get_user_cid($uid) {
-  return 'toolbar_' . $uid . ':' . \Drupal::languageManager()->getCurrentLanguage()->id;
+function _toolbar_get_user_cid($uid, $langcode) {
+  return 'toolbar_' . $uid . ':' . $langcode;
 }
 
 /**
