@@ -96,9 +96,7 @@ class DialogController {
     $title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
     $response = new AjaxResponse();
     // Fetch any modal options passed in from data-dialog-options.
-    if (!($options = $request->request->get('dialogOptions'))) {
-      $options = array();
-    }
+    $options = $request->request->get('dialogOptions', array());
     // Set modal flag and re-use the modal ID.
     if ($modal) {
       $options['modal'] = TRUE;
