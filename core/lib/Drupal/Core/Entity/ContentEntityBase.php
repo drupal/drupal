@@ -171,7 +171,24 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * {@inheritdoc}
    */
+  public function postCreate(EntityStorageInterface $storage_controller) {
+    $this->newRevision = TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setNewRevision($value = TRUE) {
+
+    if (!$this->getEntityType()->hasKey('revision')) {
+      throw new \LogicException(String::format('Entity type @entity_type does support revisions.'));
+    }
+
+    if ($value && !$this->newRevision) {
+      // When saving a new revision, set any existing revision ID to NULL so as
+      // to ensure that a new revision will actually be created.
+      $this->set($this->getEntityType()->getKey('revision'), NULL);
+    }
     $this->newRevision = $value;
   }
 

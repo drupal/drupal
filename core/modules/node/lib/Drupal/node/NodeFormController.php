@@ -50,8 +50,6 @@ class NodeFormController extends ContentEntityFormController {
       // Remove the log message from the original node entity.
       $node->log = NULL;
     }
-    // Always use the default revision setting.
-    $node->setNewRevision(!empty($this->settings['options']['revision']));
   }
 
   /**
@@ -123,7 +121,7 @@ class NodeFormController extends ContentEntityFormController {
     $form['revision'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
-      '#default_value' => $node->isNewRevision(),
+      '#default_value' => !empty($this->settings['options']['revision']),
       '#access' => $node->isNewRevision() || user_access('administer nodes'),
       '#group' => 'revision_information',
     );

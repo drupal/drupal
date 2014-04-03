@@ -28,6 +28,9 @@ interface RevisionableInterface {
    * @param bool $value
    *   (optional) Whether a new revision should be saved.
    *
+   * @throws \LogicException
+   *   Thrown if the entity does not support revisions.
+   *
    * @see \Drupal\Core\Entity\EntityInterface::isNewRevision()
    */
   public function setNewRevision($value = TRUE);

@@ -568,7 +568,9 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
         if ($this->revisionDataTable) {
           $this->savePropertyData($entity, 'revision_data_table');
         }
-        $entity->setNewRevision(FALSE);
+        if ($this->revisionTable) {
+          $entity->setNewRevision(FALSE);
+        }
         $this->invokeFieldMethod('update', $entity);
         $this->saveFieldItems($entity, TRUE);
         $this->resetCache(array($entity->id()));
@@ -595,8 +597,11 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
           $this->savePropertyData($entity, 'revision_data_table');
         }
 
-
         $entity->enforceIsNew(FALSE);
+        if ($this->revisionTable) {
+          $entity->setNewRevision(FALSE);
+        }
+
         $this->invokeFieldMethod('insert', $entity);
         $this->saveFieldItems($entity, FALSE);
         // Reset general caches, but keep caches specific to certain entities.
@@ -737,12 +742,6 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
    */
   protected function saveRevision(EntityInterface $entity) {
     $record = $this->mapToStorageRecord($entity, 'revision_table');
-
-    // When saving a new revision, set any existing revision ID to NULL so as to
-    // ensure that a new revision will actually be created.
-    if ($entity->isNewRevision() && isset($record->{$this->revisionKey})) {
-      $record->{$this->revisionKey} = NULL;
-    }
 
     $entity->preSaveRevision($this, $record);
 

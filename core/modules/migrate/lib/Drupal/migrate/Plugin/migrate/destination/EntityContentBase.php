@@ -109,7 +109,6 @@ class EntityContentBase extends Entity {
    *   An array containing the entity id.
    */
   protected function save(ContentEntityInterface $entity, array $old_destination_id_values = array()) {
-    $entity->keepNewRevisionId(TRUE);
     $entity->save();
     return array($entity->id());
   }

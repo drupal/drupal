@@ -447,7 +447,6 @@ class EntityQueryTest extends EntityUnitTestBase {
       'type' => $bundle,
     ));
     $entity->enforceIsNew();
-    $entity->setNewRevision();
     $entity->save();
 
     // As the single entity of this type we just saved does not have a value

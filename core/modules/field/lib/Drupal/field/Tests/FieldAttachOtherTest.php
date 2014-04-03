@@ -38,6 +38,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
   public function setUp() {
     parent::setUp();
+    $this->installSchema('entity_test', array('entity_test_rev', 'entity_test_rev_revision'));
     $this->createFieldWithInstance();
   }
 
@@ -197,8 +198,8 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->assertFalse(\Drupal::cache('entity')->get($cid), 'Non-cached: no cache entry on insert and load');
 
     // Cacheable entity type.
-    $entity_type = 'entity_test_cache';
-    $this->createFieldWithInstance('_2', 'entity_test_cache');
+    $entity_type = 'entity_test_rev';
+    $this->createFieldWithInstance('_2', $entity_type);
     entity_info_cache_clear();
 
     $entity_init = entity_create($entity_type, array(
