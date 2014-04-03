@@ -17,10 +17,10 @@ interface LanguageManagerInterface {
   /**
    * Injects the string translation service.
    *
-   * @param \use Drupal\Core\StringTranslation\TranslationInterface $translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The string translation service.
    */
-  function setTranslation(TranslationInterface $translation);
+  public function setTranslation(TranslationInterface $translation);
 
   /**
    * Initializes each language type to a language object.
@@ -77,17 +77,17 @@ interface LanguageManagerInterface {
   public function getDefaultLanguage();
 
   /**
-    * Returns a list of languages set up on the site.
-    *
-    * @param $flags
-    *   (optional) Specifies the state of the languages that have to be
-    *   returned. It can be: Language::STATE_CONFIGURABLE,
-    *   Language::STATE_LOCKED, Language::STATE_ALL.
-    *
-    * @return array
-    *   An associative array of languages, keyed by the language code, ordered
-    *   by weight ascending and name ascending.
-    */
+   * Returns a list of languages set up on the site.
+   *
+   * @param int $flags
+   *   (optional) Specifies the state of the languages that have to be returned.
+   *   It can be: Language::STATE_CONFIGURABLE,
+   *   Language::STATE_LOCKED, Language::STATE_ALL.
+   *
+   * @return array
+   *   An associative array of languages, keyed by the language code, ordered
+   *   by weight ascending and name ascending.
+   */
   public function getLanguages($flags = Language::STATE_CONFIGURABLE);
 
   /**
@@ -110,7 +110,7 @@ interface LanguageManagerInterface {
    * @return string
    *   The printed name of the language.
    */
-  function getLanguageName($langcode);
+  public function getLanguageName($langcode);
 
   /**
    * Returns a list of the default locked languages.
@@ -158,15 +158,15 @@ interface LanguageManagerInterface {
   /**
    * Returns the language switch links for the given language type.
    *
-   * @param $type
+   * @param string $type
    *   The language type.
-   * @param $path
+   * @param string $path
    *   The internal path the switch links will be relative to.
    *
    * @return array
    *   A keyed array of links ready to be themed.
    */
-  function getLanguageSwitchLinks($type, $path);
+  public function getLanguageSwitchLinks($type, $path);
 
   /**
    * Sets the configuration override language.

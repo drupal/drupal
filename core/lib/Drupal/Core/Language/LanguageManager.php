@@ -50,7 +50,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
   /**
    * {@inheritdoc}
    */
-  function setTranslation(TranslationInterface $translation) {
+  public function setTranslation(TranslationInterface $translation) {
     $this->translation = $translation;
   }
 
@@ -150,7 +150,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
   /**
    * {@inheritdoc}
    */
-  function getLanguageName($langcode) {
+  public function getLanguageName($langcode) {
     if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
       return $this->t('None');
     }
@@ -172,7 +172,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
     $locked_language = array(
       'default' => FALSE,
       'locked' => TRUE,
-     );
+    );
     $languages[Language::LANGCODE_NOT_SPECIFIED] = new Language(array(
       'id' => Language::LANGCODE_NOT_SPECIFIED,
       'name' => $this->t('Not specified'),
@@ -214,9 +214,10 @@ class LanguageManager extends DependencySerialization implements LanguageManager
    * Some common languages with their English and native names.
    *
    * Language codes are defined by the W3C language tags document for
-   * interoperability. Language codes typically have a language and optionally,
-   * a script or regional variant name. See
-   * http://www.w3.org/International/articles/language-tags/ for more information.
+   * interoperability. Language codes typically have a language and, optionally,
+   * a script or regional variant name. See:
+   * http://www.w3.org/International/articles/language-tags/ for more
+   * information.
    *
    * This list is based on languages available from localize.drupal.org. See
    * http://localize.drupal.org/issues for information on how to add languages
@@ -332,9 +333,9 @@ class LanguageManager extends DependencySerialization implements LanguageManager
   /**
    * {@inheritdoc}
    *
-   * This function is a noop since the configuration can not be overridden by
+   * This function is a noop since the configuration cannot be overridden by
    * language unless the Language module is enabled. That replaces the default
-   * language manger with a configurable language manager.
+   * language manager with a configurable language manager.
    *
    * @see \Drupal\language\ConfigurableLanguageManager::setConfigOverrideLanguage()
    */
