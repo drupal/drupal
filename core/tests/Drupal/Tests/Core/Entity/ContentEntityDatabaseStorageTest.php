@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Tests\UnitTestCase;
