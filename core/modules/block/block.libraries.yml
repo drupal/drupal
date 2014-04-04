@@ -1,7 +1,7 @@
 drupal.block:
   version: VERSION
   js:
-    block.js: {}
+    js/block.js: {}
   dependencies:
     - core/jquery
     - core/drupal

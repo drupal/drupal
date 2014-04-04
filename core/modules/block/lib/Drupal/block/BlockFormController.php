@@ -111,7 +111,9 @@ class BlockFormController extends EntityFormController {
       '#type' => 'vertical_tabs',
       '#title' => $this->t('Visibility settings'),
       '#attached' => array(
-        'js' => array(drupal_get_path('module', 'block') . '/block.js'),
+        'library' => array(
+          'block/drupal.block',
+        ),
       ),
       '#tree' => TRUE,
       '#weight' => 10,
