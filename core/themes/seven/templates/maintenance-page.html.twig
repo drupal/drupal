@@ -3,13 +3,25 @@
  * @file
  * Seven's theme implementation to display a single Drupal page while offline.
  *
- * All available variables are mirrored in page.html.twig.
- * Some may be blank but they are provided for consistency.
+ * All of the available variables are mirrored in html.html.twig.
  *
  * @see template_preprocess_maintenance_page()
+ * @see seven_preprocess_maintenance_page()
  */
 #}
+<!DOCTYPE html>
+<html{{ html_attributes }} class="maintenance-background">
+<head>
+  {{ head }}
+  <title>{{ head_title }}</title>
+  {{ styles }}
+  {{ scripts }}
+</head>
+<body{{ attributes }}>
+
 <div class="l-container">
+
+  {{ page_top }}
 
   <header role="banner">
     {% if site_name or site_slogan %}
@@ -24,9 +36,9 @@
     {% endif %}
   </header>
 
-  {% if page.sidebar_first %}
+  {% if sidebar_first %}
     <aside class="l-sidebar-first" role="complementary">
-      {{ page.sidebar_first }}
+      {{ sidebar_first }}
     </aside>{# /.l-sidebar-first #}
   {% endif %}
 
@@ -35,13 +47,16 @@
       <h1>{{ title }}</h1>
     {% endif %}
     {{ messages }}
-    {{ page.content }}
+    {{ content }}
   </main>
 
-  {% if page.page_bottom %}
+  {% if footer %}
     <footer role="contentinfo">
-      {{ page.page_bottom }}
+      {{ footer }}
     </footer>
   {% endif %}
 
 </div>{# /.l-container #}
+
+</body>
+</html>

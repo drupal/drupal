@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Controller;
 
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Page\HtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -354,8 +353,15 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
       drupal_set_message($message, $class, TRUE);
     }
 
-    $content = t('The website has encountered an error. Please try again later.');
-    $output = DefaultHtmlPageRenderer::renderPage($content, t('Error'));
+    $page_content = array(
+      '#theme' => 'maintenance_page',
+      '#content' => t('The website has encountered an error. Please try again later.'),
+      '#page' => array(
+        '#title' => t('Error'),
+      ),
+    );
+
+    $output = drupal_render($page_content);
     $response = new Response($output);
     $response->setStatusCode(500, '500 Service unavailable (with message)');
 

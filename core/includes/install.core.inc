@@ -14,7 +14,6 @@ use Drupal\Core\Installer\Exception\InstallerException;
 use Drupal\Core\Installer\Exception\NoProfilesException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -904,7 +903,6 @@ function install_display_output($output, $install_state) {
   // Only show the task list if there is an active task; otherwise, the page
   // request has ended before tasks have even been started, so there is nothing
   // meaningful to show.
-  $regions = array();
   if (isset($install_state['active_task'])) {
     // Let the theming function know when every step of the installation has
     // been completed.
@@ -914,10 +912,20 @@ function install_display_output($output, $install_state) {
       '#items' => install_tasks_to_display($install_state),
       '#active' => $active_task,
     );
-    $regions['sidebar_first'] = $task_list;
+    drupal_add_region_content('sidebar_first', drupal_render($task_list));
   }
-
-  print DefaultHtmlPageRenderer::renderPage($output, $output['#title'], 'install', $regions);
+  $install_page = array(
+    '#theme' => 'install_page',
+    // $output has to be rendered here, because the install page template is not
+    // wrapped into the html template, which means that any #attached libraries
+    // in $output will not be loaded, because the wrapping HTML has been printed
+    // already.
+    '#content' => drupal_render($output),
+  );
+  if (isset($output['#title'])) {
+    $install_page['#page']['#title'] = $output['#title'];
+  }
+  print drupal_render($install_page);
   exit;
 }
 

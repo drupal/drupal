@@ -5,6 +5,7 @@
  * Functions to support theming in the Bartik theme.
  */
 
+use Drupal\Core\Template\RenderWrapper;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -94,6 +95,7 @@ function bartik_preprocess_maintenance_page(&$variables) {
   if (!$variables['db_is_active']) {
     $variables['site_name'] = '';
   }
+  $variables['styles'] = new RenderWrapper('drupal_get_css');
   // Normally we could attach libraries via hook_page_alter(), but when the
   // database is inactive it's not called so we add them here.
   $libraries = array(
@@ -103,7 +105,6 @@ function bartik_preprocess_maintenance_page(&$variables) {
       ),
     ),
   );
-  drupal_render($libraries);
 
   // Set the options that apply to both page and maintenance page.
   _bartik_process_page($variables);

@@ -5,7 +5,6 @@
  * Functions for error handling.
  */
 
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Utility\Error;
 use Drupal\Component\Utility\String;
 use Symfony\Component\HttpFoundation\Response;
@@ -232,7 +231,12 @@ function _drupal_log_error($error, $fatal = FALSE) {
         install_display_output($output, $GLOBALS['install_state']);
       }
       else {
-        $output = DefaultHtmlPageRenderer::renderPage($message, 'Error');
+        $output = array(
+          '#theme' => 'maintenance_page',
+          '#title' => 'Error',
+          '#content' => $message,
+        );
+        $output = drupal_render($output);
       }
 
       $response = new Response($output, 500);

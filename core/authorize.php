@@ -21,7 +21,6 @@
  */
 
 use Drupal\Component\Utility\Settings;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
 
 // Change the directory to the Drupal root.
 chdir('..');
@@ -156,7 +155,13 @@ else {
 
 if (!empty($output)) {
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-  print DefaultHtmlPageRenderer::renderPage($output, $page_title, 'maintenance', array(
+  $maintenance_page = array(
+    '#page' => array(
+      '#title' => $page_title,
+    ),
+    '#theme' => 'maintenance_page',
+    '#content' => $output,
     '#show_messages' => $show_messages,
-  ));
+  );
+  print drupal_render($maintenance_page);
 }
