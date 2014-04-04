@@ -15,6 +15,20 @@ use Drupal\Component\Utility\String;
 class Views {
 
   /**
+   * The translation manager.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected static $translationManager;
+
+  /**
+   * A static cache for handler types data.
+   *
+   * @var array
+   */
+  protected static $handlerTypes;
+
+  /**
    * Returns the views data service.
    *
    * @return \Drupal\views\ViewsData
@@ -366,6 +380,158 @@ class Views {
       }
     }
     return $plugins;
+  }
+
+  /**
+   * A list of all available views plugin types.
+   *
+   * @var array
+   */
+  protected static $plugins = array(
+    'access' => 'plugin',
+    'area' => 'handler',
+    'argument' => 'handler',
+    'argument_default' => 'plugin',
+    'argument_validator' => 'plugin',
+    'cache' => 'plugin',
+    'display_extender' => 'plugin',
+    'display' => 'plugin',
+    'exposed_form' => 'plugin',
+    'field' => 'handler',
+    'filter' => 'handler',
+    'join' => 'plugin',
+    'pager' => 'plugin',
+    'query' => 'plugin',
+    'relationship' => 'handler',
+    'row' => 'plugin',
+    'sort' => 'handler',
+    'style' => 'plugin',
+    'wizard' => 'plugin',
+  );
+
+  /**
+   * Provide a list of views handler types used in a view, with some information
+   * about them.
+   *
+   * @return array
+   *   An array of associative arrays containing:
+   *   - title: The title of the handler type.
+   *   - ltitle: The lowercase title of the handler type.
+   *   - stitle: A singular title of the handler type.
+   *   - lstitle: A singular lowercase title of the handler type.
+   *   - plural: Plural version of the handler type.
+   *   - (optional) type: The actual internal used handler type. This key is
+   *     just used for header,footer,empty to link to the internal type: area.
+   */
+  public static function getHandlerTypes() {
+    // Statically cache this so translation only occurs once per request for all
+    // of these values.
+    if (!isset(static::$handlerTypes)) {
+      static::$handlerTypes = array(
+        'field' => array(
+          // title
+          'title' => static::t('Fields'),
+          // Lowercase title for mid-sentence.
+          'ltitle' => static::t('fields'),
+          // Singular title.
+          'stitle' => static::t('Field'),
+          // Singular lowercase title for mid sentence
+          'lstitle' => static::t('field'),
+          'plural' => 'fields',
+        ),
+        'argument' => array(
+          'title' => static::t('Contextual filters'),
+          'ltitle' => static::t('contextual filters'),
+          'stitle' => static::t('Contextual filter'),
+          'lstitle' => static::t('contextual filter'),
+          'plural' => 'arguments',
+        ),
+        'sort' => array(
+          'title' => static::t('Sort criteria'),
+          'ltitle' => static::t('sort criteria'),
+          'stitle' => static::t('Sort criterion'),
+          'lstitle' => static::t('sort criterion'),
+          'plural' => 'sorts',
+        ),
+        'filter' => array(
+          'title' => static::t('Filter criteria'),
+          'ltitle' => static::t('filter criteria'),
+          'stitle' => static::t('Filter criterion'),
+          'lstitle' => static::t('filter criterion'),
+          'plural' => 'filters',
+        ),
+        'relationship' => array(
+          'title' => static::t('Relationships'),
+          'ltitle' => static::t('relationships'),
+          'stitle' => static::t('Relationship'),
+          'lstitle' => static::t('Relationship'),
+          'plural' => 'relationships',
+        ),
+        'header' => array(
+          'title' => static::t('Header'),
+          'ltitle' => static::t('header'),
+          'stitle' => static::t('Header'),
+          'lstitle' => static::t('Header'),
+          'plural' => 'header',
+          'type' => 'area',
+        ),
+        'footer' => array(
+          'title' => static::t('Footer'),
+          'ltitle' => static::t('footer'),
+          'stitle' => static::t('Footer'),
+          'lstitle' => static::t('Footer'),
+          'plural' => 'footer',
+          'type' => 'area',
+        ),
+        'empty' => array(
+          'title' => static::t('No results behavior'),
+          'ltitle' => static::t('no results behavior'),
+          'stitle' => static::t('No results behavior'),
+          'lstitle' => static::t('No results behavior'),
+          'plural' => 'empty',
+          'type' => 'area',
+        ),
+      );
+    }
+
+    return static::$handlerTypes;
+  }
+
+  /**
+   * Returns a list of plugin types.
+   *
+   * @param string $type
+   *   (optional) filter the list of plugins by type. Available options are
+   *   'plugin' or 'handler'.
+   *
+   * @return array
+   *   An array of plugin types.
+   */
+  public static function getPluginTypes($type = NULL) {
+    if ($type === NULL) {
+      return array_keys(static::$plugins);
+    }
+
+    if (!in_array($type, array('plugin', 'handler'))) {
+      throw new \Exception('Invalid plugin type used. Valid types are "plugin" or "handler".');
+    }
+
+    return array_keys(array_filter(static::$plugins, function($plugin_type) use ($type) {
+      return $plugin_type == $type;
+    }));
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected static function t($string, array $args = array(), array $options = array()) {
+    if (empty(static::$translationManager)) {
+      static::$translationManager = \Drupal::service('string_translation');
+    }
+
+    return static::$translationManager->translate($string, $args, $options);
   }
 
 }
