@@ -29,6 +29,33 @@ class Views {
   protected static $handlerTypes;
 
   /**
+   * A list of all available views plugin types.
+   *
+   * @var array
+   */
+  protected static $plugins = array(
+    'access' => 'plugin',
+    'area' => 'handler',
+    'argument' => 'handler',
+    'argument_default' => 'plugin',
+    'argument_validator' => 'plugin',
+    'cache' => 'plugin',
+    'display_extender' => 'plugin',
+    'display' => 'plugin',
+    'exposed_form' => 'plugin',
+    'field' => 'handler',
+    'filter' => 'handler',
+    'join' => 'plugin',
+    'pager' => 'plugin',
+    'query' => 'plugin',
+    'relationship' => 'handler',
+    'row' => 'plugin',
+    'sort' => 'handler',
+    'style' => 'plugin',
+    'wizard' => 'plugin',
+  );
+
+  /**
    * Returns the views data service.
    *
    * @return \Drupal\views\ViewsData
@@ -381,33 +408,6 @@ class Views {
     }
     return $plugins;
   }
-
-  /**
-   * A list of all available views plugin types.
-   *
-   * @var array
-   */
-  protected static $plugins = array(
-    'access' => 'plugin',
-    'area' => 'handler',
-    'argument' => 'handler',
-    'argument_default' => 'plugin',
-    'argument_validator' => 'plugin',
-    'cache' => 'plugin',
-    'display_extender' => 'plugin',
-    'display' => 'plugin',
-    'exposed_form' => 'plugin',
-    'field' => 'handler',
-    'filter' => 'handler',
-    'join' => 'plugin',
-    'pager' => 'plugin',
-    'query' => 'plugin',
-    'relationship' => 'handler',
-    'row' => 'plugin',
-    'sort' => 'handler',
-    'style' => 'plugin',
-    'wizard' => 'plugin',
-  );
 
   /**
    * Provide a list of views handler types used in a view, with some information
