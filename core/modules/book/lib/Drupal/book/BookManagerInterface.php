@@ -41,6 +41,19 @@ interface BookManagerInterface {
   public function bookTreeAllData($bid, $link = NULL, $max_depth = NULL);
 
   /**
+   * Gets the active trail IDs for the specified book at the provided path.
+   *
+   * @param string $bid
+   *   The Book ID to find links for.
+   * @param array $link
+   *   A fully loaded menu link.
+   *
+   * @return array
+   *   An array containing the active trail: a list of mlids.
+   */
+  public function getActiveTrailIds($bid, $link);
+
+  /**
    * Loads a single book entry.
    *
    * @param int $nid

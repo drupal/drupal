@@ -60,6 +60,17 @@ interface MenuTreeInterface {
   public function getPath($menu_name);
 
   /**
+   * Gets the active trail IDs of the specified menu tree.
+   *
+   * @param string $menu_name
+   *   The menu name of the requested tree.
+   *
+   * @return array
+   *   An array containing the active trail: a list of mlids.
+   */
+  public function getActiveTrailIds($menu_name);
+
+  /**
    * Sorts and returns the built data representing a menu tree.
    *
    * @param array $links

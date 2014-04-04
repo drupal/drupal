@@ -5,10 +5,12 @@
  * Contains \Drupal\menu_link\Tests\MenuTreeTest.
  */
 
-namespace Drupal\menu_link\Tests;
+namespace Drupal\menu_link\Tests {
 
 use Drupal\menu_link\MenuTree;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -273,6 +275,52 @@ class MenuTreeTest extends UnitTestCase {
   }
 
   /**
+   * Tests getActiveTrailIds().
+   *
+   * @covers ::getActiveTrailIds()
+   */
+  public function testGetActiveTrailIds() {
+    $menu_link = array(
+      'mlid' => 10,
+      'route_name' => 'example1',
+      'p1' => 3,
+      'p2' => 2,
+      'p3' => 1,
+      'p4' => 4,
+      'p5' => 9,
+      'p6' => 5,
+      'p7' => 6,
+      'p8' => 7,
+      'p9' => 8,
+      'menu_name' => 'test_menu'
+    );
+    $this->menuTree->setPreferredMenuLink('test_menu', 'test/path', $menu_link);
+    $request = (new Request());
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'test_route');
+    $this->requestStack->push($request);
+    $this->menuTree->setPath('test_menu', 'test/path');
+
+    $trail = $this->menuTree->getActiveTrailIds('test_menu');
+    $this->assertEquals(array(0 => 0, 3 => 3, 2 => 2, 1 => 1, 4 => 4, 9 => 9, 5 => 5, 6 => 6, 7 => 7), $trail);
+  }
+
+  /**
+   * Tests getActiveTrailIds() without preferred link.
+   *
+   * @covers ::getActiveTrailIds()
+   */
+  public function testGetActiveTrailIdsWithoutPreferredLink() {
+    $request = (new Request());
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'test_route');
+    $this->requestStack->push($request);
+    $this->menuTree->setPath('test_menu', 'test/path');
+
+    $trail = $this->menuTree->getActiveTrailIds('test_menu');
+    $this->assertEquals(array(0 => 0), $trail);
+  }
+
+
+  /**
    * Tests the output with a single level.
    *
    * @covers ::renderTree
@@ -370,6 +418,13 @@ class TestMenuTree extends MenuTree {
   public $menuLinkTranslateCallable;
 
   /**
+   * Stores the preferred menu link per menu and path.
+   *
+   * @var array
+   */
+  protected $preferredMenuLink;
+
+  /**
    * {@inheritdoc}
    */
   protected function menuLinkTranslate(&$item) {
@@ -382,6 +437,29 @@ class TestMenuTree extends MenuTree {
    * {@inheritdoc}
    */
   protected function menuLinkGetPreferred($menu_name, $active_path) {
+    return isset($this->preferredMenuLink[$menu_name][$active_path]) ? $this->preferredMenuLink[$menu_name][$active_path] : NULL;
   }
 
+  /**
+   * Sets the preferred menu link.
+   *
+   * @param string $menu_name
+   *   The menu name.
+   * @param string $active_path
+   *   The active path.
+   * @param array $menu_link
+   *   The preferred menu link.
+   */
+  public function setPreferredMenuLink($menu_name, $active_path, $menu_link) {
+    $this->preferredMenuLink[$menu_name][$active_path] = $menu_link;
+  }
+
+}
+
+}
+
+namespace {
+  if (!defined('MENU_MAX_DEPTH')) {
+    define('MENU_MAX_DEPTH', 9);
+  }
 }

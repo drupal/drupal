@@ -167,11 +167,27 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
+  public function getCacheKeys() {
+    // Add a key for the active book trail.
+    $current_bid = 0;
+    if ($node = $this->request->get('node')) {
+      $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
+    }
+    if ($current_bid === 0) {
+      return parent::getCacheKeys();
+    }
+    $active_trail = $this->bookManager->getActiveTrailIds($node->book['bid'], $node->book);
+    $active_trail_key = 'trail.' . implode('|', $active_trail);
+    return array_merge(parent::getCacheKeys(), array($active_trail_key));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getRequiredCacheContexts() {
-    // The "Book navigation" block must be cached per URL and per role: the
-    // "active" menu link may differ per URL and different roles may have access
-    // to different menu links.
-    return array('cache_context.url', 'cache_context.user.roles');
+    // The "Book navigation" block must be cached per role: different roles may
+    // have access to different menu links.
+    return array('cache_context.user.roles');
   }
 
 }

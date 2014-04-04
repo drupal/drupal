@@ -488,16 +488,9 @@ class BookManager implements BookManagerInterface {
         'max_depth' => $max_depth,
       );
       if ($nid) {
-        // The tree is for a single item, so we need to match the values in its
-        // p columns and 0 (the top level) with the plid values of other links.
-        $parents = array(0);
-        for ($i = 1; $i < static::BOOK_MAX_DEPTH; $i++) {
-          if (!empty($link["p$i"])) {
-            $parents[] = $link["p$i"];
-          }
-        }
-        $tree_parameters['expanded'] = $parents;
-        $tree_parameters['active_trail'] = $parents;
+        $active_trail = $this->getActiveTrailIds($bid, $link);
+        $tree_parameters['expanded'] = $active_trail;
+        $tree_parameters['active_trail'] = $active_trail;
         $tree_parameters['active_trail'][] = $nid;
       }
 
@@ -506,6 +499,22 @@ class BookManager implements BookManagerInterface {
     }
 
     return $tree[$cid];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActiveTrailIds($bid, $link) {
+    $nid = isset($link['nid']) ? $link['nid'] : 0;
+    // The tree is for a single item, so we need to match the values in its
+    // p columns and 0 (the top level) with the plid values of other links.
+    $active_trail = array(0);
+    for ($i = 1; $i < static::BOOK_MAX_DEPTH; $i++) {
+      if (!empty($link["p$i"])) {
+        $active_trail[] = $link["p$i"];
+      }
+    }
+    return $active_trail;
   }
 
   /**

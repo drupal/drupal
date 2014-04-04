@@ -204,8 +204,6 @@ class MenuTree implements MenuTreeInterface {
   public function buildPageData($menu_name, $max_depth = NULL, $only_active_trail = FALSE) {
     $language_interface = $this->languageManager->getCurrentLanguage();
 
-    // Check if the active trail has been overridden for this menu tree.
-    $active_path = $this->getPath($menu_name);
     // Load the request corresponding to the current page.
     $request = $this->requestStack->getCurrentRequest();
     $system_path = NULL;
@@ -247,34 +245,17 @@ class MenuTree implements MenuTreeInterface {
             'min_depth' => 1,
             'max_depth' => $max_depth,
           );
-          // Parent mlids; used both as key and value to ensure uniqueness.
-          // We always want all the top-level links with plid == 0.
-          $active_trail = array(0 => 0);
+          $active_trail = $this->getActiveTrailIds($menu_name);
 
           // If this page is accessible to the current user, build the tree
           // parameters accordingly.
           if ($page_not_403) {
-            // Find a menu link corresponding to the current path. If
-            // $active_path is NULL, let menu_link_get_preferred() determine
-            // the path.
-            if ($active_link = $this->menuLinkGetPreferred($menu_name, $active_path)) {
-              // The active link may only be taken into account to build the
-              // active trail, if it resides in the requested menu.
-              // Otherwise, we'd needlessly re-run _menu_build_tree() queries
-              // for every menu on every page.
-              if ($active_link['menu_name'] == $menu_name) {
-                // Use all the coordinates, except the last one because
-                // there can be no child beyond the last column.
-                for ($i = 1; $i < MENU_MAX_DEPTH; $i++) {
-                  if ($active_link['p' . $i]) {
-                    $active_trail[$active_link['p' . $i]] = $active_link['p' . $i];
-                  }
-                }
-                // If we are asked to build links for the active trail only,skip
-                // the entire 'expanded' handling.
-                if ($only_active_trail) {
-                  $tree_parameters['only_active_trail'] = TRUE;
-                }
+            // The active trail contains more than only array(0 => 0).
+            if (count($active_trail) > 1) {
+              // If we are asked to build links for the active trail only,skip
+              // the entire 'expanded' handling.
+              if ($only_active_trail) {
+                $tree_parameters['only_active_trail'] = TRUE;
               }
             }
             $parents = $active_trail;
@@ -315,6 +296,39 @@ class MenuTree implements MenuTreeInterface {
     }
 
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActiveTrailIds($menu_name) {
+    // Parent mlids; used both as key and value to ensure uniqueness.
+    // We always want all the top-level links with plid == 0.
+    $active_trail = array(0 => 0);
+
+    $request = $this->requestStack->getCurrentRequest();
+
+    if ($route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME)) {
+      // @todo https://drupal.org/node/2068471 is adding support so we can tell
+      // if this is called on a 404/403 page.
+      // Check if the active trail has been overridden for this menu tree.
+      $active_path = $this->getPath($menu_name);
+      // Find a menu link corresponding to the current path. If
+      // $active_path is NULL, let menu_link_get_preferred() determine
+      // the path.
+      if ($active_link = $this->menuLinkGetPreferred($menu_name, $active_path)) {
+        if ($active_link['menu_name'] == $menu_name) {
+          // Use all the coordinates, except the last one because
+          // there can be no child beyond the last column.
+          for ($i = 1; $i < MENU_MAX_DEPTH; $i++) {
+            if ($active_link['p' . $i]) {
+              $active_trail[$active_link['p' . $i]] = $active_link['p' . $i];
+            }
+          }
+        }
+      }
+    }
+    return $active_trail;
   }
 
   /**
