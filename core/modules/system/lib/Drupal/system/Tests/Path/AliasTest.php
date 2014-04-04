@@ -168,8 +168,8 @@ class AliasTest extends PathUnitTestBase {
     $memoryCounterBackend = new MemoryCounterBackend('default');
 
     // Create AliasManager and Path object.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $connection);
     $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
     $aliasManager = new AliasManager($aliasStorage, $whitelist, $this->container->get('language_manager'));
 
     // No alias for user and admin yet, so should be NULL.
@@ -208,7 +208,7 @@ class AliasTest extends PathUnitTestBase {
 
     // Re-initialize the whitelist using the same cache backend, should load
     // from cache.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $connection);
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
     $this->assertNull($whitelist->get('user'));
     $this->assertTrue($whitelist->get('admin'));
     $this->assertNull($whitelist->get($this->randomName()));

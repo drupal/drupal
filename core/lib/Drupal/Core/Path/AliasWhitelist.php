@@ -26,11 +26,11 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
   protected $state;
 
   /**
-   * The database connection.
+   * The Path CRUD service.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Path\AliasStorageInterface
    */
-  protected $connection;
+  protected $aliasStorage;
 
   /**
    * Constructs an AliasWhitelist object.
@@ -43,13 +43,13 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
    *   The lock backend.
    * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state keyvalue store.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The database connection.
+   * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
+   *   The alias storage service.
    */
-  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, StateInterface $state, Connection $connection) {
+  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, StateInterface $state, AliasStorageInterface $alias_storage) {
     parent::__construct($cid, $cache, $lock);
     $this->state = $state;
-    $this->connection = $connection;
+    $this->aliasStorage = $alias_storage;
   }
 
   /**
@@ -107,13 +107,7 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
    * {@inheritdoc}
    */
   public function resolveCacheMiss($root) {
-    $query = $this->connection->select('url_alias', 'u');
-    $query->addExpression(1);
-    $exists = (bool) $query
-      ->condition('u.source', $this->connection->escapeLike($root) . '%', 'LIKE')
-      ->range(0, 1)
-      ->execute()
-      ->fetchField();
+    $exists = $this->aliasStorage->pathHasMatchingAlias($root);
     $this->storage[$root] = $exists;
     $this->persist($root);
     if ($exists) {

@@ -39,7 +39,7 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
    * @param MigrationInterface $migration
    *   The migration.
    * @param \Drupal\Core\Path\AliasStorage $alias_storage
-   *   The path crud service.
+   *   The alias storage service.
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, AliasStorage $alias_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);

@@ -131,15 +131,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
     $path = $form_state['values']['path'];
 
     // Ensure that the submitted alias does not exist yet.
-    $query = db_select('url_alias')
-      ->condition('alias', $path['alias'])
-      ->condition('langcode', $path['langcode']);
-    if (!empty($path['source'])) {
-      $query->condition('source', $path['source'], '<>');
-    }
-    $query->addExpression('1');
-    $query->range(0, 1);
-    if ($query->execute()->fetchField()) {
+    if (\Drupal::service('path.alias_storage')->aliasExists($path['alias'], $path['langcode'], $path['source'])) {
       form_error($element, $form_state, t('The alias is already in use.'));
     }
   }

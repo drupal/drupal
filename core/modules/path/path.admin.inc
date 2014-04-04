@@ -22,8 +22,7 @@ function path_admin_overview($keys = NULL) {
   $build['path_admin_filter_form'] = \Drupal::formBuilder()->getForm('path_admin_filter_form', $keys);
   // Enable language column if language.module is enabled or if we have any
   // alias with a language.
-  $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => Language::LANGCODE_NOT_SPECIFIED))->fetchField();
-  $multilanguage = (\Drupal::moduleHandler()->moduleExists('language') || $alias_exists);
+  $multilanguage = (\Drupal::moduleHandler()->moduleExists('language') || \Drupal::service('path.alias_storage')->languageAliasExists());
 
   $header = array();
   $header[] = array('data' => t('Alias'), 'field' => 'alias', 'sort' => 'asc');
@@ -33,22 +32,11 @@ function path_admin_overview($keys = NULL) {
   }
   $header[] = t('Operations');
 
-  $query = db_select('url_alias')
-    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->extend('Drupal\Core\Database\Query\TableSortExtender');
-  if ($keys) {
-    // Replace wildcards with PDO wildcards.
-    $query->condition('alias', '%' . preg_replace('!\*+!', '%', $keys) . '%', 'LIKE');
-  }
-  $result = $query
-    ->fields('url_alias')
-    ->orderByHeader($header)
-    ->limit(50)
-    ->execute();
-
   $rows = array();
   $destination = drupal_get_destination();
-  foreach ($result as $data) {
+  /** @var \Drupal\core\Path\AliasStorage $alias_storage */
+  $alias_storage = \Drupal::service('path.alias_storage');
+  foreach ($alias_storage->getAliasesForAdminListing($header, $keys) as $data) {
     $row = array();
     $row['data']['alias'] = l(truncate_utf8($data->alias, 50, FALSE, TRUE), $data->source, array(
       'attributes' => array('title' => $data->alias),
@@ -230,19 +218,11 @@ function path_admin_form_validate($form, &$form_state) {
   $source = &$form_state['values']['source'];
   $source = \Drupal::service('path.alias_manager')->getSystemPath($source);
   $alias = $form_state['values']['alias'];
-  $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if language.module is enabled, otherwise save for all
   // languages.
   $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : Language::LANGCODE_NOT_SPECIFIED;
 
-  $has_alias = db_query("SELECT COUNT(alias) FROM {url_alias} WHERE pid <> :pid AND alias = :alias AND langcode = :langcode", array(
-      ':pid' => $pid,
-      ':alias' => $alias,
-      ':langcode' => $langcode,
-    ))
-    ->fetchField();
-
-  if ($has_alias) {
+  if (\Drupal::service('path.alias_storage')->aliasExists($alias, $langcode, $source)) {
     form_set_error('alias', $form_state, t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
   }
   if (!drupal_valid_path($source)) {

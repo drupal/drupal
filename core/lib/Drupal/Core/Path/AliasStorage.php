@@ -185,4 +185,83 @@ class AliasStorage implements AliasStorageInterface {
 
     return $result->fetchField();
   }
+
+  /**
+   * Checks if alias already exists.
+   *
+   * @param string $alias
+   *   Alias to check against.
+   * @param string $langcode
+   *   Language of the alias.
+   * @param string $source
+   *   Path that alias is to be assigned to (optional).
+   * @return boolean
+   *   TRUE if alias already exists and FALSE otherwise.
+   */
+  public function aliasExists($alias, $langcode, $source = NULL) {
+    $query = $this->connection->select('url_alias')
+      ->condition('alias', $alias)
+      ->condition('langcode', $langcode);
+    if (!empty($source)) {
+      $query->condition('source', $source, '<>');
+    }
+    $query->addExpression('1');
+    $query->range(0, 1);
+    return (bool) $query->execute()->fetchField();
+  }
+
+  /**
+   * Checks if there are any aliases with language defined.
+   *
+   * @return bool
+   *   TRUE if aliases with language exist.
+   */
+  public function languageAliasExists() {
+    return (bool) $this->connection->queryRange('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => Language::LANGCODE_NOT_SPECIFIED))->fetchField();
+  }
+
+  /**
+   * Loads aliases for admin listing.
+   *
+   * @param array $header
+   *   Table header.
+   * @param string $keys
+   *   Search keys.
+   * @return array
+   *   Array of items to be displayed on the current page.
+   */
+  public function getAliasesForAdminListing($header, $keys = NULL) {
+    $query = $this->connection->select('url_alias')
+      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend('Drupal\Core\Database\Query\TableSortExtender');
+    if ($keys) {
+      // Replace wildcards with PDO wildcards.
+      $query->condition('alias', '%' . preg_replace('!\*+!', '%', $keys) . '%', 'LIKE');
+    }
+    return $query
+      ->fields('url_alias')
+      ->orderByHeader($header)
+      ->limit(50)
+      ->execute()
+      ->fetchAll();
+  }
+
+  /**
+   * Check if any alias exists starting with $initial_substring.
+   *
+   * @param $initial_substring
+   *   Initial path substring to test against.
+   *
+   * @return
+   *   TRUE if any alias exists, FALSE otherwise.
+   */
+  public function pathHasMatchingAlias($initial_substring) {
+    $query = $this->connection->select('url_alias', 'u');
+    $query->addExpression(1);
+    return (bool) $query
+      ->condition('u.source', $this->connection->escapeLike($initial_substring) . '%', 'LIKE')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+  }
 }
