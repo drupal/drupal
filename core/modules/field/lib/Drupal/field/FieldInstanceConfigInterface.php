@@ -40,4 +40,12 @@ interface FieldInstanceConfigInterface extends ConfigEntityInterface, FieldDefin
    */
   public function targetBundle();
 
+  /**
+   * Gets the deleted flag of the field instance.
+   *
+   * @return bool
+   *   Returns TRUE if the instance is deleted.
+   */
+  public function isDeleted();
+
 }

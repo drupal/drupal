@@ -612,4 +612,14 @@ class Drupal {
     return static::$container->get('form_builder');
   }
 
+  /**
+   * Gets the syncing state.
+   *
+   * @return bool
+   *   Returns TRUE is syncing flag set.
+   */
+  public function isConfigSyncing() {
+    return static::$container->get('config.installer')->isSyncing();
+  }
+
 }

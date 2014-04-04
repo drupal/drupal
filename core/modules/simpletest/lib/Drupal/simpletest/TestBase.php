@@ -1526,7 +1526,9 @@ abstract class TestBase {
         $this->container->get('event_dispatcher'),
         $this->container->get('config.manager'),
         $this->container->get('lock'),
-        $this->container->get('config.typed')
+        $this->container->get('config.typed'),
+        $this->container->get('module_handler'),
+        $this->container->get('theme_handler')
       );
     }
     // Always recalculate the changelist when called.

@@ -32,6 +32,14 @@ interface ConfigManagerInterface {
   public function getEntityManager();
 
   /**
+   * Gets the config factory.
+   *
+   * @return \Drupal\Core\Config\ConfigFactoryInterface
+   *   The entity manager.
+   */
+  public function getConfigFactory();
+
+  /**
    * Return a formatted diff of a named config between two storages.
    *
    * @param \Drupal\Core\Config\StorageInterface $source_storage

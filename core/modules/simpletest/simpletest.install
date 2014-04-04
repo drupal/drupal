@@ -182,7 +182,7 @@ function simpletest_uninstall() {
   // Do not clean the environment in case the Simpletest module is uninstalled
   // in a (recursive) test for itself, since simpletest_clean_environment()
   // would also delete the test site of the parent test process.
-  if (!DRUPAL_TEST_IN_CHILD_SITE) {
+  if (!drupal_valid_test_ua()) {
     simpletest_clean_environment();
   }
   // Delete verbose test output and any other testing framework files.

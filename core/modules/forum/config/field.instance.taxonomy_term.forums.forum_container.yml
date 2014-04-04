@@ -15,5 +15,5 @@ settings: {  }
 field_type: list_boolean
 dependencies:
   entity:
-    - field.field.forum.forum_container
+    - field.field.taxonomy_term.forum_container
     - taxonomy.vocabulary.forums

@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
@@ -71,16 +73,30 @@ class ConfigImporter extends DependencySerialization {
   /**
    * The typed config manager.
    *
-   * @var \Drupal\Core\Config\TypedConfigManager
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
    */
   protected $typedConfigManager;
 
   /**
-   * List of changes processed by the import().
+   * List of configuration file changes processed by the import().
    *
    * @var array
    */
-  protected $processed;
+  protected $processedConfiguration;
+
+  /**
+   * List of extension changes processed by the import().
+   *
+   * @var array
+   */
+  protected $processedExtensions;
+
+  /**
+   * List of extension changes to be processed by the import().
+   *
+   * @var array
+   */
+  protected $extensionChangelist;
 
   /**
    * Indicates changes to import have been validated.
@@ -88,6 +104,27 @@ class ConfigImporter extends DependencySerialization {
    * @var bool
    */
   protected $validated;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
+   * Flag set to import system.theme during processing theme enable and disables.
+   *
+   * @var bool
+   */
+  protected $processedSystemTheme = FALSE;
 
   /**
    * Constructs a configuration import object.
@@ -103,14 +140,21 @@ class ConfigImporter extends DependencySerialization {
    *   The lock backend to ensure multiple imports do not occur at the same time.
    * @param \Drupal\Core\Config\TypedConfigManager $typed_config
    *   The typed configuration manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManager $typed_config) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
     $this->configManager = $config_manager;
     $this->lock = $lock;
     $this->typedConfigManager = $typed_config;
-    $this->processed = $this->storageComparer->getEmptyChangelist();
+    $this->moduleHandler = $module_handler;
+    $this->themeHandler = $theme_handler;
+    $this->processedConfiguration = $this->storageComparer->getEmptyChangelist();
+    $this->processedExtensions = $this->getEmptyExtensionsProcessedList();
   }
 
   /**
@@ -131,13 +175,35 @@ class ConfigImporter extends DependencySerialization {
    */
   public function reset() {
     $this->storageComparer->reset();
-    $this->processed = $this->storageComparer->getEmptyChangelist();
+    $this->processedConfiguration = $this->storageComparer->getEmptyChangelist();
+    $this->processedExtensions = $this->getEmptyExtensionsProcessedList();
+    $this->createExtensionChangelist();
     $this->validated = FALSE;
+    $this->processedSystemTheme = FALSE;
     return $this;
   }
 
   /**
-   * Checks if there are any unprocessed changes.
+   * Gets an empty list of extensions to process.
+   *
+   * @return array
+   *   An empty list of extensions to process.
+   */
+  protected function getEmptyExtensionsProcessedList() {
+    return array(
+      'module' => array(
+        'install' => array(),
+        'uninstall' => array(),
+      ),
+      'theme' => array(
+        'enable' => array(),
+        'disable' => array(),
+      ),
+    );
+  }
+
+  /**
+   * Checks if there are any unprocessed configuration changes.
    *
    * @param array $ops
    *   The operations to check for changes. Defaults to all operations, i.e.
@@ -146,9 +212,9 @@ class ConfigImporter extends DependencySerialization {
    * @return bool
    *   TRUE if there are changes to process and FALSE if not.
    */
-  public function hasUnprocessedChanges($ops = array('delete', 'create', 'update')) {
+  public function hasUnprocessedConfigurationChanges($ops = array('delete', 'create', 'update')) {
     foreach ($ops as $op) {
-      if (count($this->getUnprocessed($op))) {
+      if (count($this->getUnprocessedConfiguration($op))) {
         return TRUE;
       }
     }
@@ -161,8 +227,8 @@ class ConfigImporter extends DependencySerialization {
    * @return array
    *   An array containing a list of processed changes.
    */
-  public function getProcessed() {
-    return $this->processed;
+  public function getProcessedConfiguration() {
+    return $this->processedConfiguration;
   }
 
   /**
@@ -173,8 +239,8 @@ class ConfigImporter extends DependencySerialization {
    * @param string $name
    *   The name of the configuration processed.
    */
-  protected function setProcessed($op, $name) {
-    $this->processed[$op][] = $name;
+  protected function setProcessedConfiguration($op, $name) {
+    $this->processedConfiguration[$op][] = $name;
   }
 
   /**
@@ -187,8 +253,139 @@ class ConfigImporter extends DependencySerialization {
    * @return array
    *   An array of configuration names.
    */
-  public function getUnprocessed($op) {
-    return array_diff($this->storageComparer->getChangelist($op), $this->processed[$op]);
+  public function getUnprocessedConfiguration($op) {
+    return array_diff($this->storageComparer->getChangelist($op), $this->processedConfiguration[$op]);
+  }
+
+  /**
+   * Gets list of processed extension changes.
+   *
+   * @return array
+   *   An array containing a list of processed extension changes.
+   */
+  public function getProcessedExtensions() {
+    return $this->processedExtensions;
+  }
+
+  /**
+   * Determines if the current import has processed extensions.
+   *
+   * @return bool
+   *   TRUE if the ConfigImporter has processed extensions.
+   */
+  protected function hasProcessedExtensions() {
+    $compare = array_diff($this->processedExtensions, getEmptyExtensionsProcessedList());
+    return !empty($compare);
+  }
+
+  /**
+   * Sets an extension change as processed.
+   *
+   * @param string $type
+   *   The type of extension, either 'theme' or 'module'.
+   * @param string $op
+   *   The change operation performed, either install or uninstall.
+   * @param string $name
+   *   The name of the extension processed.
+   */
+  protected function setProcessedExtension($type, $op, $name) {
+    $this->processedExtensions[$type][$op][] = $name;
+  }
+
+  /**
+   * Populates the extension change list.
+   */
+  protected function createExtensionChangelist() {
+    // Read the extensions information to determine changes.
+    $current_extensions = $this->storageComparer->getTargetStorage()->read('core.extension');
+    $new_extensions = $this->storageComparer->getSourceStorage()->read('core.extension');
+
+    // If there is no extension information in staging then exit. This is
+    // probably due to an empty staging directory.
+    if (!$new_extensions) {
+      return;
+    }
+
+    // Get a list of modules with dependency weights as values.
+    $module_data = system_rebuild_module_data();
+    // Set the actual module weights.
+    $module_list = array_combine(array_keys($module_data), array_keys($module_data));
+    $module_list = array_map(function ($module) use ($module_data) {
+      return $module_data[$module]->sort;
+    }, $module_list);
+
+    // Work out what modules to install and uninstall.
+    $uninstall = array_diff(array_keys($current_extensions['module']), array_keys($new_extensions['module']));
+    $install = array_diff(array_keys($new_extensions['module']), array_keys($current_extensions['module']));
+    // Sort the module list by their weights. So that dependencies
+    // are uninstalled last.
+    asort($module_list);
+    $uninstall = array_intersect(array_keys($module_list), $uninstall);
+    // Sort the module list by their weights (reverse). So that dependencies
+    // are installed first.
+    arsort($module_list);
+    $install = array_intersect(array_keys($module_list), $install);
+
+    // Work out what themes to enable and to disable.
+    $enable = array_diff(array_keys($new_extensions['theme']), array_keys($current_extensions['theme']));
+    $disable = array_diff(array_keys($current_extensions['theme']), array_keys($new_extensions['theme']));
+
+    $this->extensionChangelist = array(
+      'module' => array(
+        'uninstall' => $uninstall,
+        'install' => $install,
+      ),
+      'theme' => array(
+        'enable' => $enable,
+        'disable' => $disable,
+      ),
+    );
+  }
+
+  /**
+   * Gets a list changes for extensions.
+   *
+   * @param string $type
+   *   The type of extension, either 'theme' or 'module'.
+   * @param string $op
+   *   The change operation to get the unprocessed list for, either install
+   *   or uninstall.
+   *
+   * @return array
+   *   An array of extension names.
+   */
+  protected function getExtensionChangelist($type, $op = NULL) {
+    if ($op) {
+      return $this->extensionChangelist[$type][$op];
+    }
+    return $this->extensionChangelist[$type];
+  }
+
+  /**
+   * Gets a list of unprocessed changes for extensions.
+   *
+   * @param string $type
+   *   The type of extension, either 'theme' or 'module'.
+   *
+   * @return array
+   *   An array of extension names.
+   */
+  public function getUnprocessedExtensions($type) {
+    $changelist = $this->getExtensionChangelist($type);
+
+    if ($type == 'theme') {
+      $unprocessed = array(
+        'enable' => array_diff($changelist['enable'], $this->processedExtensions[$type]['enable']),
+        'disable' => array_diff($changelist['disable'], $this->processedExtensions[$type]['disable']),
+      );
+    }
+    else {
+      $unprocessed = array(
+        'install' => array_diff($changelist['install'], $this->processedExtensions[$type]['install']),
+        'uninstall' => array_diff($changelist['uninstall'], $this->processedExtensions[$type]['uninstall']),
+      );
+    }
+    return $unprocessed;
   }
 
   /**
@@ -200,7 +397,9 @@ class ConfigImporter extends DependencySerialization {
    *   The ConfigImporter instance.
    */
   public function import() {
-    if ($this->hasUnprocessedChanges()) {
+    if ($this->hasUnprocessedConfigurationChanges()) {
+      $this->createExtensionChangelist();
+
       // Ensure that the changes have been validated.
       $this->validate();
 
@@ -208,18 +407,19 @@ class ConfigImporter extends DependencySerialization {
         // Another process is synchronizing configuration.
         throw new ConfigImporterException(sprintf('%s is already importing', static::LOCK_ID));
       }
+
+      // Process any extension changes before importing configuration.
+      $this->handleExtensions();
+
       // First pass deleted, then new, and lastly changed configuration, in order
       // to handle dependencies correctly.
-      // @todo Implement proper dependency ordering using
-      //   https://drupal.org/node/2080823
       foreach (array('delete', 'create', 'update') as $op) {
-        foreach ($this->getUnprocessed($op) as $name) {
-          $this->process($op, $name);
+        foreach ($this->getUnprocessedConfiguration($op) as $name) {
+          $this->processConfiguration($op, $name);
         }
       }
       // Allow modules to react to a import.
       $this->eventDispatcher->dispatch(ConfigEvents::IMPORT, new ConfigImporterEvent($this));
-
 
       // The import is now complete.
       $this->lock->release(static::LOCK_ID);
@@ -253,10 +453,56 @@ class ConfigImporter extends DependencySerialization {
    * @param string $name
    *   The name of the configuration to process.
    */
-  protected function process($op, $name) {
+  protected function processConfiguration($op, $name) {
     if (!$this->importInvokeOwner($op, $name)) {
       $this->importConfig($op, $name);
     }
+  }
+
+  /**
+   * Processes an extension change.
+   *
+   * @param string $type
+   *   The type of extension, either 'module' or 'theme'.
+   * @param string $op
+   *   The change operation.
+   * @param string $name
+   *   The name of the extension to process.
+   */
+  protected function processExtension($type, $op, $name) {
+    // Set the config installer to use the staging directory instead of the
+    // extensions own default config directories.
+    \Drupal::service('config.installer')
+      ->setSyncing(TRUE)
+      ->setSourceStorage($this->storageComparer->getSourceStorage());
+    if ($type == 'module') {
+      $this->moduleHandler->$op(array($name), FALSE);
+      // Installing a module can cause a kernel boot therefore reinject all the
+      // services.
+      $this->reInjectMe();
+      // During a module install or uninstall the container is rebuilt and the
+      // module handler is called from drupal_get_complete_schema(). This causes
+      // the container's instance of the module handler not to have loaded all
+      // the enabled modules.
+      $this->moduleHandler->loadAll();
+    }
+    if ($type == 'theme') {
+      // Theme disables possible remove default or admin themes therefore we
+      // need to import this before doing any. If there are no disables and
+      // the default or admin theme is change this will be picked up whilst
+      // processing configuration.
+      if ($op == 'disable' && $this->processedSystemTheme === FALSE) {
+        $this->importConfig('update', 'system.theme');
+        $this->configManager->getConfigFactory()->reset('system.theme');
+        $this->processedSystemTheme = TRUE;
+      }
+      $this->themeHandler->$op(array($name));
+    }
+
+    $this->setProcessedExtension($type, $op, $name);
+    \Drupal::service('config.installer')
+      ->setSyncing(FALSE)
+      ->resetSourceStorage();
   }
 
   /**
@@ -277,7 +523,7 @@ class ConfigImporter extends DependencySerialization {
       $config->setData($data ? $data : array());
       $config->save();
     }
-    $this->setProcessed($op, $name);
+    $this->setProcessedConfiguration($op, $name);
   }
 
   /**
@@ -325,7 +571,7 @@ class ConfigImporter extends DependencySerialization {
         throw new EntityStorageException(String::format('The entity storage "@storage" for the "@entity_type" entity type does not support imports', array('@storage' => get_class($entity_storage), '@entity_type' => $entity_type)));
       }
       $entity_storage->$method($name, $new_config, $old_config);
-      $this->setProcessed($op, $name);
+      $this->setProcessedConfiguration($op, $name);
       return TRUE;
     }
     return FALSE;
@@ -341,4 +587,74 @@ class ConfigImporter extends DependencySerialization {
     return !$this->lock->lockMayBeAvailable(static::LOCK_ID);
   }
 
+  /**
+   * Returns the identifier for events and locks.
+   *
+   * @return string
+   *   The identifier for events and locks.
+   */
+  public function getId() {
+    return static::LOCK_ID;
+  }
+
+  /**
+   * Checks if a configuration object will be updated by the import.
+   *
+   * @param string $config_name
+   *   The configuration object name.
+   *
+   * @return bool
+   *   TRUE if the configuration object will be updated.
+   */
+  protected function hasUpdate($config_name) {
+    return in_array($config_name, $this->getUnprocessedConfiguration('update'));
+  }
+
+  /**
+   * Handle changes to installed modules and themes.
+   */
+  protected function handleExtensions() {
+    $processed_extension = FALSE;
+    foreach (array('install', 'uninstall') as $op) {
+      $modules = $this->getUnprocessedExtensions('module');
+      foreach($modules[$op] as $module) {
+        $processed_extension = TRUE;
+        $this->processExtension('module', $op, $module);
+      }
+    }
+    foreach (array('enable', 'disable') as $op) {
+      $themes = $this->getUnprocessedExtensions('theme');
+      foreach($themes[$op] as $theme) {
+        $processed_extension = TRUE;
+        $this->processExtension('theme', $op, $theme);
+      }
+    }
+
+    if ($processed_extension) {
+      // Recalculate differences as default config could have been imported.
+      $this->storageComparer->reset();
+      $this->processed = $this->storageComparer->getEmptyChangelist();
+      // Modules have been updated. Services etc might have changed.
+      // We don't reinject storage comparer because swapping out the active
+      // store during config import is a complete nonsense.
+      $this->recalculateChangelist = TRUE;
+    }
+  }
+
+  /**
+   * Gets all the service dependencies from \Drupal.
+   *
+   * Since the ConfigImporter handles module installation the kernel and the
+   * container can be rebuilt and altered during processing. It is necessary to
+   * keep the services used by the importer in sync.
+   */
+  protected function reInjectMe() {
+    $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    $this->configFactory = \Drupal::configFactory();
+    $this->entityManager = \Drupal::entityManager();
+    $this->lock = \Drupal::lock();
+    $this->typedConfigManager = \Drupal::service('config.typed');
+    $this->moduleHandler = \Drupal::moduleHandler();
+    $this->themeHandler = \Drupal::service('theme_handler');
+  }
 }

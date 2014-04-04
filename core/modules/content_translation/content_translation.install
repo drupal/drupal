@@ -88,6 +88,19 @@ function content_translation_install() {
   // hook_module_implements_alter() is run among the last ones.
   module_set_weight('content_translation', 10);
   \Drupal::service('language_negotiator')->saveConfiguration(Language::TYPE_CONTENT, array(LanguageNegotiationUrl::METHOD_ID => 0));
+
+  $config_names = \Drupal::configFactory()->listAll('field.field.');
+  foreach ($config_names as $name) {
+    \Drupal::config($name)
+      ->set('settings.translation_sync', FALSE)
+      ->save();
+  }
+  $config_names = \Drupal::configFactory()->listAll('field.instance.');
+  foreach ($config_names as $name) {
+    \Drupal::config($name)
+      ->set('settings.translation_sync', FALSE)
+      ->save();
+  }
 }
 
 /**
@@ -104,4 +117,22 @@ function content_translation_enable() {
   $t_args = array('!settings_url' => url('admin/config/regional/content-language'));
   $message = t('<a href="!settings_url">Enable translation</a> for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>accounts</em>, or any other element you wish to translate.', $t_args);
   drupal_set_message($message, 'warning');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function content_translation_uninstall() {
+  $config_names = \Drupal::configFactory()->listAll('field.field.');
+  foreach ($config_names as $name) {
+    \Drupal::config($name)
+      ->clear('settings.translation_sync')
+      ->save();
+  }
+  $config_names = \Drupal::configFactory()->listAll('field.instance.');
+  foreach ($config_names as $name) {
+    \Drupal::config($name)
+      ->clear('settings.translation_sync')
+      ->save();
+  }
 }

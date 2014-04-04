@@ -7,6 +7,10 @@
 
 namespace Drupal\config\Form;
 
+use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Config\StorageInterface;
@@ -73,6 +77,20 @@ class ConfigSync extends FormBase {
   protected $typedConfigManager;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $sourceStorage
@@ -89,8 +107,12 @@ class ConfigSync extends FormBase {
    *   The url generator service.
    * @param \Drupal\Core\Config\TypedConfigManager $typed_config
    *   The typed configuration manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler
    */
-  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, UrlGeneratorInterface $url_generator, TypedConfigManager $typed_config) {
+  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, UrlGeneratorInterface $url_generator, TypedConfigManager $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     $this->sourceStorage = $sourceStorage;
     $this->targetStorage = $targetStorage;
     $this->lock = $lock;
@@ -98,6 +120,8 @@ class ConfigSync extends FormBase {
     $this->configManager = $config_manager;
     $this->urlGenerator = $url_generator;
     $this->typedConfigManager = $typed_config;
+    $this->moduleHandler = $module_handler;
+    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -111,7 +135,9 @@ class ConfigSync extends FormBase {
       $container->get('event_dispatcher'),
       $container->get('config.manager'),
       $container->get('url_generator'),
-      $container->get('config.typed')
+      $container->get('config.typed'),
+      $container->get('module_handler'),
+      $container->get('theme_handler')
     );
   }
 
@@ -222,24 +248,27 @@ class ConfigSync extends FormBase {
       $this->eventDispatcher,
       $this->configManager,
       $this->lock,
-      $this->typedConfigManager
+      $this->typedConfigManager,
+      $this->moduleHandler,
+      $this->themeHandler
     );
     if ($config_importer->alreadyImporting()) {
       drupal_set_message($this->t('Another request may be synchronizing configuration already.'));
     }
     else{
-      $config_importer->initialize();
+      $operations = $config_importer->initialize();
       $batch = array(
-        'operations' => array(
-          array(array(get_class($this), 'processBatch'), array($config_importer)),
-        ),
+        'operations' => array(),
         'finished' => array(get_class($this), 'finishBatch'),
         'title' => t('Synchronizing configuration'),
         'init_message' => t('Starting configuration synchronization.'),
-        'progress_message' => t('Synchronized @current configuration files out of @total.'),
+        'progress_message' => t('Completed @current step of @total.'),
         'error_message' => t('Configuration synchronization has encountered an error.'),
         'file' => drupal_get_path('module', 'config') . '/config.admin.inc',
       );
+      foreach ($operations as $operation) {
+        $batch['operations'][] = array(array(get_class($this), 'processBatch'), array($config_importer, $operation));
+      }
 
       batch_set($batch);
     }
@@ -253,13 +282,13 @@ class ConfigSync extends FormBase {
    * @param $context
    *   The batch context.
    */
-  public static function processBatch(BatchConfigImporter $config_importer, &$context) {
+  public static function processBatch(BatchConfigImporter $config_importer, $operation, &$context) {
     if (!isset($context['sandbox']['config_importer'])) {
       $context['sandbox']['config_importer'] = $config_importer;
     }
 
     $config_importer = $context['sandbox']['config_importer'];
-    $config_importer->processBatch($context);
+    $config_importer->$operation($context);
   }
 
   /**

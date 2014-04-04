@@ -50,6 +50,8 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     // so it has to be cleared out manually.
     unset($GLOBALS['hook_config_test']);
 
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(
       $this->container->get('config.storage.staging'),
@@ -60,9 +62,10 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       $this->container->get('event_dispatcher'),
       $this->container->get('config.manager'),
       $this->container->get('lock'),
-      $this->container->get('config.typed')
+      $this->container->get('config.typed'),
+      $this->container->get('module_handler'),
+      $this->container->get('theme_handler')
     );
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }
 
   /**
@@ -145,8 +148,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->assertTrue(isset($GLOBALS['hook_config_test']['predelete']));
     $this->assertTrue(isset($GLOBALS['hook_config_test']['delete']));
 
-    // Verify that there is nothing more to import.
-    $this->assertFalse($this->configImporter->hasUnprocessedChanges());
+    $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
   }
 
   /**
@@ -193,7 +195,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
 
     // Verify that there is nothing more to import.
-    $this->assertFalse($this->configImporter->hasUnprocessedChanges());
+    $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
   }
 
   /**
@@ -248,7 +250,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
 
     // Verify that there is nothing more to import.
-    $this->assertFalse($this->configImporter->hasUnprocessedChanges());
+    $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
   }
 }
 

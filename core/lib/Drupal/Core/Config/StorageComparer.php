@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\Core\Config;
+
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 
 /**
@@ -118,11 +120,23 @@ class StorageComparer implements StorageComparerInterface {
    *   The change operation performed. Either delete, create or update.
    * @param array $changes
    *   Array of changes to add to the changelist.
+   * @param array $sort_order
+   *   Array to sort that can be used to sort the changelist. This array must
+   *   contain all the items that are in the change list.
    */
-  protected function addChangeList($op, array $changes) {
+  protected function addChangeList($op, array $changes, array $sort_order = NULL) {
     // Only add changes that aren't already listed.
     $changes = array_diff($changes, $this->changelist[$op]);
     $this->changelist[$op] = array_merge($this->changelist[$op], $changes);
+    if (isset($sort_order)) {
+      $count = count($this->changelist[$op]);
+      // Sort the changlist in the same order as the $sort_order array and
+      // ensure the array is keyed from 0.
+      $this->changelist[$op] = array_values(array_intersect($sort_order, $this->changelist[$op]));
+      if ($count != count($this->changelist[$op])) {
+        throw new \InvalidArgumentException(String::format('Sorting the @op changelist should not change its length.', array('@op' => $op)));
+      }
+    }
   }
 
   /**
@@ -188,8 +202,9 @@ class StorageComparer implements StorageComparerInterface {
     if (!empty($recreates)) {
       // Recreates should become deletes and creates. Deletes should be ordered
       // so that dependencies are deleted first.
-      $this->addChangeList('create', $recreates);
-      $this->addChangeList('delete', array_reverse($recreates));
+      $this->addChangeList('create', $recreates, $this->sourceNames);
+      $this->addChangeList('delete', $recreates, array_reverse($this->targetNames));
+
     }
   }
 

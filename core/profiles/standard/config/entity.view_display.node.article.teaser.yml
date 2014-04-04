@@ -4,6 +4,13 @@ bundle: article
 mode: teaser
 status: true
 content:
+  field_image:
+    label: hidden
+    type: image
+    settings:
+      image_style: medium
+      image_link: content
+    weight: -1
   body:
     label: hidden
     type: text_summary_or_trimmed
@@ -15,13 +22,6 @@ content:
     weight: 10
     label: above
     settings: {  }
-  field_image:
-    label: hidden
-    type: image
-    settings:
-      image_style: medium
-      image_link: content
-    weight: -1
 dependencies:
   entity:
     - entity.view_mode.node.teaser

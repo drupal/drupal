@@ -87,7 +87,7 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
     }
 
     // Otherwise, use the first active search page.
-    return reset($search_pages);
+    return is_array($search_pages) ? reset($search_pages) : FALSE;
   }
 
   /**

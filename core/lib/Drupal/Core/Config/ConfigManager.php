@@ -93,6 +93,13 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getConfigFactory() {
+    return $this->configFactory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $name) {
     // @todo Replace with code that can be autoloaded.
     //   https://drupal.org/node/1848266

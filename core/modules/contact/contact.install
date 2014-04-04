@@ -15,5 +15,11 @@ function contact_install() {
   if (empty($site_mail)) {
     $site_mail = ini_get('sendmail_from');
   }
-  \Drupal::config('contact.category.feedback')->set('recipients', array($site_mail))->save();
+  $config = \Drupal::config('contact.category.feedback');
+  // Update the recipients if the default configuration entity has been created.
+  // We should never rely on default config entities as during enabling a module
+  // during config sync they will not exist.
+  if (!$config->isNew()) {
+    \Drupal::config('contact.category.feedback')->set('recipients', array($site_mail))->save();
+  }
 }

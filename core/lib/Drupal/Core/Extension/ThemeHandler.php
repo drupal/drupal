@@ -146,6 +146,15 @@ class ThemeHandler implements ThemeHandlerInterface {
       // Refresh the theme list as installation of default configuration needs
       // an updated list to work.
       $this->reset();
+
+      // The default config installation storage only knows about the currently
+      // enabled list of themes, so it has to be reset in order to pick up the
+      // default config of the newly installed theme. However, do not reset the
+      // source storage when synchronizing configuration, since that would
+      // needlessly trigger a reload of the whole configuration to be imported.
+      if (!$this->configInstaller->isSyncing()) {
+        $this->configInstaller->resetSourceStorage();
+      }
       // Install default configuration of the theme.
       $this->configInstaller->installDefaultConfig('theme', $key);
     }

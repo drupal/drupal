@@ -45,6 +45,8 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
     $this->installSchema('system', 'config_snapshot');
     $this->installSchema('node', 'node');
 
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
+
     // Set up the ConfigImporter object for testing.
     $storage_comparer = new StorageComparer(
       $this->container->get('config.storage.staging'),
@@ -55,9 +57,10 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
       $this->container->get('event_dispatcher'),
       $this->container->get('config.manager'),
       $this->container->get('lock'),
-      $this->container->get('config.typed')
+      $this->container->get('config.typed'),
+      $this->container->get('module_handler'),
+      $this->container->get('theme_handler')
     );
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }
 
   public function testRecreateEntity() {
@@ -89,21 +92,19 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
     $this->configImporter->reset();
     // A node type, a field, a field instance an entity view display and an
     // entity form display will be recreated.
-    $creates = $this->configImporter->getUnprocessed('create');
-    $deletes = $this->configImporter->getUnprocessed('delete');
+    $creates = $this->configImporter->getUnprocessedConfiguration('create');
+    $deletes = $this->configImporter->getUnprocessedConfiguration('delete');
     $this->assertEqual(5, count($creates), 'There are 5 configuration items to create.');
     $this->assertEqual(5, count($deletes), 'There are 5 configuration items to delete.');
-    $this->assertEqual(0, count($this->configImporter->getUnprocessed('update')), 'There are no configuration items to update.');
+    $this->assertEqual(0, count($this->configImporter->getUnprocessedConfiguration('update')), 'There are no configuration items to update.');
     $this->assertIdentical($creates, array_reverse($deletes), 'Deletes and creates contain the same configuration names in opposite orders due to dependencies.');
 
     $this->configImporter->import();
 
     // Verify that there is nothing more to import.
-    $this->assertFalse($this->configImporter->reset()->hasUnprocessedChanges());
+    $this->assertFalse($this->configImporter->reset()->hasUnprocessedConfigurationChanges());
     $content_type = entity_load('node_type', $type_name);
     $this->assertEqual('Node type one', $content_type->label());
   }
 
-
 }
-

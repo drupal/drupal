@@ -28,7 +28,7 @@ class ConfigImportSubscriber implements EventSubscriberInterface {
    */
   public function onConfigImporterValidate(ConfigImporterEvent $event) {
     foreach (array('delete', 'create', 'update') as $op) {
-      foreach ($event->getConfigImporter()->getUnprocessed($op) as $name) {
+      foreach ($event->getConfigImporter()->getUnprocessedConfiguration($op) as $name) {
         Config::validateName($name);
       }
     }

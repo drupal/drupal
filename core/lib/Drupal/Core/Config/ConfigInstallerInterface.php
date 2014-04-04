@@ -37,4 +37,38 @@ interface ConfigInstallerInterface {
    */
   public function installDefaultConfig($type, $name);
 
+  /**
+   * Sets the configuration storage that provides the default configuration.
+   *
+   * @param \Drupal\Core\Config\StorageInterface $storage
+   *
+   * @return self
+   *   The configuration installer.
+   */
+  public function setSourceStorage(StorageInterface $storage);
+
+  /**
+   * Resets the configuration storage that provides the default configuration.
+   *
+   * @return self
+   *   The configuration installer.
+   */
+  public function resetSourceStorage();
+
+  /**
+   * Sets the status of the isSyncing flag.
+   *
+   * @param bool $status
+   *   The status of the sync flag.
+   */
+  public function setSyncing($status);
+
+  /**
+   * Gets the syncing state.
+   *
+   * @return bool
+   *   Returns TRUE is syncing flag set.
+   */
+  public function isSyncing();
+
 }

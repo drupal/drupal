@@ -794,4 +794,11 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     return $this->field->hasCustomStorage();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isDeleted() {
+    return $this->deleted;
+  }
+
 }

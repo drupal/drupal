@@ -32,6 +32,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
   public function setUp() {
     parent::setUp();
     $this->installSchema('system', 'config_snapshot');
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }
 
   /**

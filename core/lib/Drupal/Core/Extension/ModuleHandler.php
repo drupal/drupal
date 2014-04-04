@@ -582,6 +582,12 @@ class ModuleHandler implements ModuleHandlerInterface {
     // Required for module installation checks.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
+    /** @var \Drupal\Core\Config\ConfigInstaller $config_installer */
+    $config_installer = \Drupal::service('config.installer');
+    $sync_status = $config_installer->isSyncing();
+    if ($sync_status) {
+      $source_storage = $config_installer->getSourceStorage();
+    }
     $modules_installed = array();
     foreach ($module_list as $module) {
       $enabled = $extension_config->get("module.$module") !== NULL;
@@ -671,6 +677,18 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
 
         // Install default configuration of the module.
+        $config_installer = \Drupal::service('config.installer');
+        if ($sync_status) {
+          $config_installer
+            ->setSyncing(TRUE)
+            ->setSourceStorage($source_storage);
+        }
+        else {
+          // If we're not in a config synchronisation reset the source storage
+          // so that the extension install storage will pick up the new
+          // configuration.
+          $config_installer->resetSourceStorage();
+        }
         \Drupal::service('config.installer')->installDefaultConfig('module', $module);
 
         // If the module has no current updates, but has some that were
@@ -732,7 +750,7 @@ class ModuleHandler implements ModuleHandlerInterface {
 
           // Skip already uninstalled modules.
           if (isset($installed_modules[$dependent]) && !isset($module_list[$dependent]) && $dependent != $profile) {
-            $module_list[$dependent] = TRUE;
+            $module_list[$dependent] = $dependent;
           }
         }
       }

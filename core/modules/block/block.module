@@ -8,6 +8,7 @@
 use Drupal\block\BlockInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\language\Entity\Language;
+use Drupal\system\Entity\Menu;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -422,10 +423,12 @@ function block_user_role_delete($role) {
 /**
  * Implements hook_menu_delete().
  */
-function block_menu_delete($menu) {
-  foreach (entity_load_multiple('block') as $block) {
-    if ($block->get('plugin') == 'system_menu_block:' . $menu->id()) {
-      $block->delete();
+function block_menu_delete(Menu $menu) {
+  if (!$menu->isSyncing()) {
+    foreach (entity_load_multiple('block') as $block) {
+      if ($block->get('plugin') == 'system_menu_block:' . $menu->id()) {
+        $block->delete();
+      }
     }
   }
 }

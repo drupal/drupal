@@ -184,6 +184,14 @@ class CommentManager implements CommentManagerInterface {
         ))
         ->save();
 
+      // The comment field should be hidden in all other form displays.
+      foreach ($this->entityManager->getFormModes($entity_type) as $id => $form_mode) {
+        $display = entity_get_form_display($entity_type, $bundle, $id);
+        // Only update existing displays.
+        if ($display && !$display->isNew()) {
+          $display->removeComponent($field_name)->save();
+        }
+      }
       // Set default to display comment list.
       entity_get_display($entity_type, $bundle, 'default')
         ->setComponent($field_name, array(
@@ -192,6 +200,15 @@ class CommentManager implements CommentManagerInterface {
           'weight' => 20,
         ))
         ->save();
+        // The comment field should be hidden in all other view displays.
+      foreach ($this->entityManager->getViewModes($entity_type) as $id => $view_mode) {
+        $display = entity_get_display($entity_type, $bundle, $id);
+        // Only update existing displays.
+        if ($display && !$display->isNew()) {
+          $display->removeComponent($field_name)->save();
+        }
+      }
+
     }
     $this->addBodyField($entity_type, $field_name);
   }

@@ -49,6 +49,20 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected $eventDispatcher;
 
   /**
+   * The configuration storage that provides the default configuration.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $sourceStorage;
+
+  /**
+   * Is configuration being created as part of a configuration sync.
+   *
+   * @var bool
+   */
+  protected $isSyncing = FALSE;
+
+  /**
    * Constructs the configuration installer.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -75,7 +89,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    */
   public function installDefaultConfig($type, $name) {
     // Get all default configuration owned by this extension.
-    $source_storage = new ExtensionInstallStorage($this->activeStorage);
+    $source_storage = $this->getSourceStorage();
     $config_to_install = $source_storage->listAll($name . '.');
 
     // Work out if this extension provides default configuration for any other
@@ -130,6 +144,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $new_config->setData($data[$name]);
         }
         if ($entity_type = $this->configManager->getEntityTypeIdByName($name)) {
+
+          // If we are syncing do not create configuration entities. Pluggable
+          // configuration entities can have dependencies on modules that are
+          // not yet enabled. This approach means that any code that expects
+          // default configuration entities to exist will be unstable after the
+          // module has been enabled and before the config entity has been
+          // imported.
+          if ($this->isSyncing) {
+            continue;
+          }
           $entity_storage = $this->configManager
             ->getEntityManager()
             ->getStorage($entity_type);
@@ -159,4 +183,49 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $this->configFactory->reset();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setSourceStorage(StorageInterface $storage) {
+    $this->sourceStorage = $storage;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetSourceStorage() {
+    $this->sourceStorage = null;
+    return $this;
+  }
+
+  /**
+   * Gets the configuration storage that provides the default configuration.
+   *
+   * @return \Drupal\Core\Config\StorageInterface
+   *   The configuration storage that provides the default configuration.
+   */
+  public function getSourceStorage() {
+    if (!isset($this->sourceStorage)) {
+      // Default to using the ExtensionInstallStorage which searches extension's
+      // config directories for default configuration.
+      $this->sourceStorage = new ExtensionInstallStorage($this->activeStorage);
+    }
+    return $this->sourceStorage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSyncing($status) {
+    $this->isSyncing = $status;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSyncing() {
+    return $this->isSyncing;
+  }
 }

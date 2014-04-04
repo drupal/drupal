@@ -4,6 +4,13 @@ bundle: article
 mode: default
 status: true
 content:
+  field_image:
+    label: hidden
+    type: image
+    settings:
+      image_style: large
+      image_link: ''
+    weight: -1
   body:
     label: hidden
     type: text_default
@@ -14,13 +21,6 @@ content:
     weight: 10
     label: above
     settings: {  }
-  field_image:
-    label: hidden
-    type: image
-    settings:
-      image_style: large
-      image_link: ''
-    weight: -1
 dependencies:
   entity:
     - field.instance.node.article.body
