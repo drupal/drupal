@@ -1453,63 +1453,6 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Returns an array of all tables from the query that map to an entity type.
-   *
-   * Includes the base table and all relationships, if eligible.
-   *
-   * Available keys for each table:
-   * - base: The actual base table (i.e. "user" for an author relationship).
-   * - relationship_id: The id of the relationship, or "none".
-   * - alias: The alias used for the relationship.
-   * - entity_type: The entity type matching the base table.
-   * - revision: A boolean that specifies whether the table is a base table or
-   *   a revision table of the entity type.
-   *
-   * @return array
-   *   An array of table information, keyed by table alias.
-   */
-  public function getEntityTableInfo() {
-    // Start with the base table.
-    $entity_tables = array();
-    $views_data = Views::viewsData();
-    $base_table = $this->view->storage->get('base_table');
-    $base_table_data = $views_data->get($base_table);
-
-    if (isset($base_table_data['table']['entity type'])) {
-      $entity_tables[$base_table_data['table']['entity type']] = array(
-        'base' => $base_table,
-        'alias' => $base_table,
-        'relationship_id' => 'none',
-        'entity_type' => $base_table_data['table']['entity type'],
-        'revision' => FALSE,
-      );
-    }
-    // Include all relationships.
-    foreach ($this->view->relationship as $relationship_id => $relationship) {
-      $table_data = $views_data->get($relationship->definition['base']);
-      if (isset($table_data['table']['entity type'])) {
-        $entity_tables[$table_data['table']['entity type']] = array(
-          'base' => $relationship->definition['base'],
-          'relationship_id' => $relationship_id,
-          'alias' => $relationship->alias,
-          'entity_type' => $table_data['table']['entity type'],
-          'revision' => FALSE,
-        );
-      }
-    }
-
-    // Determine which of the tables are revision tables.
-    foreach ($entity_tables as $table_alias => $table) {
-      $entity_type = \Drupal::entityManager()->getDefinition($table['entity_type']);
-      if ($entity_type->getRevisionTable() == $table['base']) {
-        $entity_tables[$table_alias]['revision'] = TRUE;
-      }
-    }
-
-    return $entity_tables;
-  }
-
-  /**
    * Loads all entities contained in the passed-in $results.
    *.
    * If the entity belongs to the base table, then it gets stored in
