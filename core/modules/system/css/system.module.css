@@ -79,6 +79,18 @@
 body.drag {
   cursor: move;
 }
+tr.region-title {
+  font-weight: bold;
+}
+tr.region-message {
+  color: #999;
+}
+tr.region-populated {
+  display: none;
+}
+tr.add-new .tabledrag-changed {
+  display: none;
+}
 .draggable a.tabledrag-handle {
   cursor: move;
   float: left; /* LTR */

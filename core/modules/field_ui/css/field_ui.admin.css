@@ -10,9 +10,6 @@
 [dir="rtl"] .field-ui-overview .add-new .label-input {
   float: right;
 }
-.field-ui-overview .add-new .tabledrag-changed {
-  display: none;
-}
 .field-ui-overview .add-new .description {
   margin-bottom: 0;
   max-width: 250px;
@@ -29,9 +26,6 @@
 }
 .field-ui-overview .region-message td {
   font-style: italic;
-}
-.field-ui-overview .region-populated {
-  display: none;
 }
 .field-ui-overview .region-add-new-title {
   display: none;
