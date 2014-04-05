@@ -264,14 +264,9 @@ abstract class HandlerBase extends PluginBase {
       case 'lower':
         return drupal_strtolower($string);
       case 'ucfirst':
-        return drupal_strtoupper(drupal_substr($string, 0, 1)) . drupal_substr($string, 1);
+        return Unicode::ucfirst($string);
       case 'ucwords':
-        if (Unicode::getStatus() == Unicode::STATUS_MULTIBYTE) {
-          return mb_convert_case($string, MB_CASE_TITLE);
-        }
-        else {
-          return ucwords($string);
-        }
+        return Unicode::ucwords($string);
     }
   }
 
