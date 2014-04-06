@@ -180,7 +180,6 @@ class BookAdminEditForm extends FormBase {
     foreach ($tree as $data) {
       $form['book-admin-' . $data['link']['nid']] = array(
         '#item' => $data['link'],
-        'nid' => array('#type' => 'value', '#value' => $data['link']['nid']),
         'depth' => array('#type' => 'value', '#value' => $data['link']['depth']),
         'title' => array(
           '#type' => 'textfield',
