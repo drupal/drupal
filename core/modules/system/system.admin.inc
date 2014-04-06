@@ -382,7 +382,7 @@ function theme_system_modules_uninstall($variables) {
     }
     $rows[] = array(
       array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),
-      '<strong><label for="' . $form['uninstall'][$module]['#id'] . '">' . drupal_render($form['modules'][$module]['name']) . '</label></strong>',
+      '<label for="' . $form['uninstall'][$module]['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($form['modules'][$module]['name']) . '</label>',
       array('data' => drupal_render($form['modules'][$module]['description']) . $disabled_message, 'class' => array('description')),
     );
   }
@@ -393,7 +393,8 @@ function theme_system_modules_uninstall($variables) {
     '#rows' => $rows,
     '#empty' => t('No modules are available to uninstall.'),
   );
-  $output  = drupal_render($table);
+  $output = drupal_render($form['filters']);
+  $output .= drupal_render($table);
   $output .= drupal_render_children($form);
 
   return $output;

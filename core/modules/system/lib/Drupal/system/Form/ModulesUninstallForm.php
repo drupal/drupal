@@ -74,6 +74,29 @@ class ModulesUninstallForm extends FormBase {
       return empty($modules[$module->getName()]->info['required']) && drupal_get_installed_schema_version($module->getName()) > SCHEMA_UNINSTALLED;
     });
 
+    // Include system.admin.inc so we can use the sort callbacks.
+    $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
+
+    $form['filters'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('table-filter', 'js-show'),
+      ),
+    );
+
+    $form['filters']['text'] = array(
+      '#type' => 'search',
+      '#title' => $this->t('Search'),
+      '#size' => 30,
+      '#placeholder' => $this->t('Enter module name'),
+      '#attributes' => array(
+        'class' => array('table-filter-text'),
+        'data-table' => '#system-modules-uninstall',
+        'autocomplete' => 'off',
+        'title' => $this->t('Enter a part of the module name or description to filter by.'),
+      ),
+    );
+
     $form['modules'] = array();
 
     // Only build the rest of the form if there are any modules available to
@@ -112,6 +135,7 @@ class ModulesUninstallForm extends FormBase {
       }
     }
 
+    $form['#attached']['library'][] = 'system/drupal.system.modules';
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
