@@ -43,6 +43,10 @@
   text-decoration: none;
   outline: none;
 }
+.button:focus {
+  border: 1px solid #3AB2FF;
+  box-shadow: 0 0 0.5em 0.1em hsla(203, 100%, 60%, 0.7);
+}
 .button:hover {
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.125);
 }
@@ -79,6 +83,9 @@
   background-image:   linear-gradient(to bottom, #0c97ed, #1f86c7);
   border-color: #1e5c90;
   color: #fff;
+}
+.button--primary:focus {
+  border: 1px solid #1280DF;
 }
 .button--primary:hover {
   box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
