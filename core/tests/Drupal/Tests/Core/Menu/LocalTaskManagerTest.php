@@ -394,7 +394,7 @@ class LocalTaskManagerTest extends UnitTestCase {
    */
   protected function getLocalTasksCache() {
     $local_task_fixtures = $this->getLocalTaskFixtures();
-    return array(
+    $local_tasks = array(
       'base_routes' => array(
         'menu_local_task_test_tasks_view' => 'menu_local_task_test_tasks_view',
       ),
@@ -414,6 +414,12 @@ class LocalTaskManagerTest extends UnitTestCase {
         ),
       ),
     );
+    $local_tasks['children']['> menu_local_task_test_tasks_view']['menu_local_task_test_tasks_settings']['weight'] = 0;
+    $local_tasks['children']['> menu_local_task_test_tasks_view']['menu_local_task_test_tasks_edit']['weight'] = 20 + 1e-6;
+    $local_tasks['children']['> menu_local_task_test_tasks_view']['menu_local_task_test_tasks_view.tab']['weight'] = 2e-6;
+    $local_tasks['children']['menu_local_task_test_tasks_view.tab']['menu_local_task_test_tasks_view_child1']['weight'] = 3e-6;
+    $local_tasks['children']['menu_local_task_test_tasks_view.tab']['menu_local_task_test_tasks_view_child2']['weight'] = 4e-6;
+    return $local_tasks;
   }
 
 }

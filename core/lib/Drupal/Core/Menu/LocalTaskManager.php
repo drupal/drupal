@@ -169,6 +169,23 @@ class LocalTaskManager extends DefaultPluginManager {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getDefinitions() {
+    $definitions =  parent::getDefinitions();
+
+    $count = 0;
+    foreach ($definitions as &$definition) {
+      if (isset($definition['weight'])) {
+        // Add some micro weight.
+        $definition['weight'] += ($count++) * 1e-6;
+      }
+    }
+
+    return $definitions;
+  }
+
+  /**
    * Find all local tasks that appear on a named route.
    *
    * @param string $route_name
