@@ -48,7 +48,7 @@ class FloodTest extends WebTestBase {
     $name = 'flood_test_cleanup';
 
     // Register expired event.
-    $flood = \Drupal::service('flood');
+    $flood = \Drupal::flood();
     $flood->register($name, $window_expired);
     // Verify event is not allowed.
     $this->assertFalse($flood->isAllowed($name, $threshold));

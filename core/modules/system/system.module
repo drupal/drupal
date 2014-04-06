@@ -1558,7 +1558,7 @@ function system_get_module_admin_tasks($module, array $info) {
  */
 function system_cron() {
   // Cleanup the flood.
-  \Drupal::service('flood')->garbageCollection();
+  \Drupal::flood()->garbageCollection();
 
   foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->garbageCollection();
