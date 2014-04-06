@@ -284,7 +284,7 @@ html5shiv:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: 2.0.3
+  version: 2.1.0
   js:
     assets/vendor/jquery/jquery.js: { weight: -20 }
 
