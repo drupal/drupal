@@ -278,8 +278,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
 
       // Retrieve the config storage to list available languages.
       $prefix = 'language.entity.';
-      $storage = $this->configFactory->get($prefix . Language::LANGCODE_NOT_SPECIFIED)->getStorage();
-      $config_ids = $storage->listAll($prefix);
+      $config_ids = $this->configFactory->listAll($prefix);
 
       // Instantiate languages from config objects.
       $weight = 0;
