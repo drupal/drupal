@@ -1,6 +1,8 @@
 
 Drupal 7.27, xxxx-xx-xx (development version)
 -----------------------
+- Replaced the term "weight" with "influence" in the content ranking settings
+  for search, and added help text for administrators (string change).
 - Fixed untranslatable text strings in the administrative interface for the
   "Crop" effect provided by the Image module (minor string change).
 - Fixed a bug in the Taxonomy module update function introduced in Drupal 7.26
