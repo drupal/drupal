@@ -269,19 +269,9 @@
 }
 .toolbar .toolbar-icon.toolbar-handle:before {
   background-image: url("../../../misc/icons/5181c6/chevron-disc-down.svg");
-  left: 0; /* LTR */
 }
 .no-svg .toolbar .toolbar-icon.toolbar-handle:before {
   background-image: url("../../../misc/icons/5181c6/chevron-disc-down.png");
-  left: 0; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle:before {
-  left: auto;
-  right: 0;
-}
-[dir="rtl"].no-svg .toolbar .toolbar-icon.toolbar-handle:before {
-  left: auto;
-  right: 0;
 }
 .toolbar .toolbar-icon.toolbar-handle.open:before {
   background-image: url("../../../misc/icons/787878/chevron-disc-up.svg");
