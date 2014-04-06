@@ -68,7 +68,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is invalid.
    *
-   * @expectedException \Drupal\migrate\MigrateException
+   * @expectedException \Drupal\migrate\MigrateSkipRowException
    */
   public function testMapwithInvalidSource() {
     $this->plugin->transform(array('bar'), $this->migrateExecutable, $this->row, 'destinationproperty');

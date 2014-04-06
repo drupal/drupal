@@ -12,6 +12,7 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Row;
+use Drupal\migrate\MigrateSkipRowException;
 
 /**
  * This plugin changes the current value based on a static lookup map.
@@ -46,7 +47,7 @@ class StaticMap extends ProcessPluginBase {
         return $this->configuration['default_value'];
       }
       if (empty($this->configuration['bypass'])) {
-        throw new MigrateException(sprintf('Lookup of %s failed.', var_export($value, TRUE)));
+        throw new MigrateSkipRowException();
       }
       else {
         return $value;
