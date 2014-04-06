@@ -66,7 +66,12 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
     $name = 'simpletest.php';
     $php->save($name, '<?php');
     $expected_root_directory = sys_get_temp_dir() . '/php/simpletest';
-    $expected_directory = $expected_root_directory . '/' . $name;
+    if (substr($name, -4) === '.php') {
+      $expected_directory = $expected_root_directory . '/' . substr($name, 0, -4);
+    }
+    else {
+      $expected_directory = $expected_root_directory . '/' . $name;
+    }
     $directory_mtime = filemtime($expected_directory);
     $expected_filename = $expected_directory . '/' . hash_hmac('sha256', $name, $this->secret . $directory_mtime) . '.php';
 
