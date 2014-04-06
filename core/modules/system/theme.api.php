@@ -37,7 +37,7 @@
  * @endcode
  *
  * @section sec_theme_hooks Theme Hooks
- * Modules register theme hooks within a hook_theme()implementation and provide
+ * Modules register theme hooks within a hook_theme() implementation and provide
  * a default implementation via a function named theme_HOOK(). For instance, to
  * theme a taxonomy term, the theme hook name is 'taxonomy_term'. If theming is
  * handled via a function then the corresponding function name is
