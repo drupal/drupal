@@ -338,6 +338,7 @@ function taxonomy_views_data() {
       'base' => 'taxonomy_term_data',
       'field' => 'parent',
       'label' => t('Parent'),
+      'id' => 'standard',
     ),
     'filter' => array(
       'help' => t('Filter the results of "Taxonomy: Term" by the parent pid.'),
