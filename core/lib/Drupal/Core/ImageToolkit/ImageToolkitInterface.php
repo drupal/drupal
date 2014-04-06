@@ -199,7 +199,6 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *   - "width": Width, in pixels.
    *   - "height": Height, in pixels.
    *   - "type": Image type represented as an IMAGETYPE_* constant.
-   *   - "mime_type": MIME type (e.g. 'image/jpeg', 'image/gif', 'image/png').
    *
    * @see \Drupal\Core\Image\ImageInterface::processInfo()
    */

@@ -253,7 +253,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
 
         $directory = $this->public_files_directory .'/imagetest';
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-        $image->save($directory . '/' . $op . '.' . $image->getExtension());
+        $image->save($directory . '/' . $op . image_type_to_extension($image->getType()));
 
         $this->assertTrue($correct_dimensions_real, String::format('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
         $this->assertTrue($correct_dimensions_object, String::format('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));

@@ -309,7 +309,6 @@ class GDToolkit extends ImageToolkitBase {
         'width'     => $data[0],
         'height'    => $data[1],
         'type'      => $data[2],
-        'mime_type' => $data['mime'],
       );
     }
 

@@ -166,7 +166,7 @@ class ImageWidget extends FileWidget {
       }
       else {
         $image = \Drupal::service('image.factory')->get($file->getFileUri());
-        if ($image->getExtension()) {
+        if ($image->isExisting()) {
           $variables['width'] = $image->getWidth();
           $variables['height'] = $image->getHeight();
         }

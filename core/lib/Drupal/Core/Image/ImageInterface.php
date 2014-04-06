@@ -29,14 +29,6 @@ interface ImageInterface {
   public function isExisting();
 
   /**
-   * Returns the extension of the image file.
-   *
-   * @return string
-   *   The extension of the file, or an empty string if the file is invalid.
-   */
-  public function getExtension();
-
-  /**
    * Returns the height of the image file.
    *
    * @return int
@@ -93,7 +85,8 @@ interface ImageInterface {
    * Returns the MIME type of the image file.
    *
    * @return string
-   *   The MIME type of the file, or an empty string if the file is invalid.
+   *   The MIME type of the image file, or an empty string if the image is
+   *   invalid.
    */
   public function getMimeType();
 

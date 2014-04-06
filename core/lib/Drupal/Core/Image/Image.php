@@ -48,25 +48,11 @@ class Image implements ImageInterface {
   protected $width = 0;
 
   /**
-   * Commonly used file extension for the image.
-   *
-   * @var string
-   */
-  protected $extension = '';
-
-  /**
    * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
    *
    * @var int
    */
   protected $type;
-
-  /**
-   * MIME type (e.g. 'image/jpeg', 'image/gif', 'image/png').
-   *
-   * @var string
-   */
-  protected $mimeType = '';
 
   /**
    * File size in bytes.
@@ -108,14 +94,6 @@ class Image implements ImageInterface {
   public function isExisting() {
     $this->processInfo();
     return $this->processed;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getExtension() {
-    $this->processInfo();
-    return $this->extension;
   }
 
   /**
@@ -171,7 +149,7 @@ class Image implements ImageInterface {
    */
   public function getMimeType() {
     $this->processInfo();
-    return $this->mimeType;
+    return $this->type ? image_type_to_mime_type($this->type) : '';
   }
 
   /**
@@ -250,15 +228,7 @@ class Image implements ImageInterface {
       $this->height = $details['height'];
       $this->width = $details['width'];
       $this->type = $details['type'];
-      $this->mimeType = $details['mime_type'];
       $this->fileSize = filesize($destination);
-      $this->extension = pathinfo($destination, PATHINFO_EXTENSION);
-
-      // It may be a temporary file, without extension, or an image created from
-      // an image resource. Fallback to default extension for this image type.
-      if (empty($this->extension)) {
-        $this->extension = image_type_to_extension($this->type, FALSE);
-      }
 
       $this->processed = TRUE;
     }

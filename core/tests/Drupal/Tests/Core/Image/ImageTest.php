@@ -78,13 +78,6 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Core\Image\Image::getExtension().
-   */
-  public function testGetExtension() {
-    $this->assertEquals($this->image->getExtension(), 'png');
-  }
-
-  /**
    * Tests \Drupal\Core\Image\Image::getHeight().
    */
   public function testGetHeight() {
