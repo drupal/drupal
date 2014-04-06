@@ -80,50 +80,6 @@ function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = N
 }
 
 /**
- * Returns the entity form mode info.
- *
- * @param string|null $entity_type_id
- *   The entity type whose form mode info should be returned, or NULL for all
- *   form mode info. Defaults to NULL.
- *
- * @return array
- *   The form mode info for a specific entity type, or all entity types.
- *
- * @deprecated Use \Drupal::entityManager()->getFormModes() or
- *   \Drupal::entityManager()->getAllFormModes().
- */
-function entity_get_form_modes($entity_type_id = NULL) {
-  if (isset($entity_type_id)) {
-    return \Drupal::entityManager()->getFormModes($entity_type_id);
-  }
-  else {
-    return \Drupal::entityManager()->getAllFormModes();
-  }
-}
-
-/**
- * Returns the entity view mode info.
- *
- * @param string|null $entity_type_id
- *   The entity type whose view mode info should be returned, or NULL for all
- *   view mode info. Defaults to NULL.
- *
- * @return array
- *   The view mode info for a specific entity type, or all entity types.
- *
- * @deprecated Use \Drupal::entityManager()->getViewModes() or
- *   \Drupal::entityManager()->getAllViewModes().
- */
-function entity_get_view_modes($entity_type_id = NULL) {
-  if (isset($entity_type_id)) {
-    return \Drupal::entityManager()->getViewModes($entity_type_id);
-  }
-  else {
-    return \Drupal::entityManager()->getAllViewModes();
-  }
-}
-
-/**
  * Loads an entity from the database.
  *
  * @param string $entity_type
