@@ -189,10 +189,14 @@ class PoHeader {
    *   The Plural-Forms entry value.
    *
    * @return
-   *   An array containing the number of plural forms and the converted version
-   *   of the formula that can be evaluated with PHP later.
+   *   An indexed array of parsed plural formula data. Containing:
+   *   - 'nplurals': The number of plural forms defined by the plural formula.
+   *   - 'plurals': Array of plural positions keyed by plural value.
+   *
+   * @throws Exception
    */
   function parsePluralForms($pluralforms) {
+    $plurals = array();
     // First, delete all whitespace.
     $pluralforms = strtr($pluralforms, array(" " => "", "\t" => ""));
 
@@ -214,14 +218,31 @@ class PoHeader {
       return FALSE;
     }
 
-    // Get PHP version of the plural formula.
-    $plural = $this->parseArithmetic($plural);
+    // If the number of plurals is zero, we return a default result.
+    if ($nplurals == 0) {
+      return array($nplurals, array('default' => 0));
+    }
 
-    if ($plural !== FALSE) {
-      return array($nplurals, $plural);
+    // Calculate possible plural positions of different plural values. All known
+    // plural formula's are repetitive above 100.
+    // For data compression we store the last position the array value
+    // changes and store it as default.
+    $element_stack = $this->parseArithmetic($plural);
+    $default = 0;
+    if ($element_stack !== FALSE) {
+      for ($i = 0; $i <= 199; $i++) {
+        $plurals[$i] = $this->evaluatePlural($element_stack, $i);
+      }
+      $default = $plurals[$i - 1];
+      $plurals = array_filter($plurals, function ($value) use ($default) {
+        return ($value != $default);
+      });
+      $plurals['default'] = $default;
+
+      return array($nplurals, $plurals);
     }
     else {
-      throw new Exception('The plural formula could not be parsed.');
+      throw new \Exception('The plural formula could not be parsed.');
     }
   }
 
@@ -247,7 +268,7 @@ class PoHeader {
   }
 
   /**
-   * Parses and sanitizes an arithmetic formula into a PHP expression.
+   * Parses and sanitizes an arithmetic formula into a plural element stack.
    *
    * While parsing, we ensure, that the operators have the right
    * precedence and associativity.
@@ -256,7 +277,7 @@ class PoHeader {
    *   A string containing the arithmetic formula.
    *
    * @return
-   *   A version of the formula to evaluate with PHP later.
+   *   A stack of values and operations to be evaluated.
    */
   private function parseArithmetic($string) {
     // Operator precedence table.
@@ -319,8 +340,9 @@ class PoHeader {
       $element_stack[] = $topop;
       $topop = array_pop($operator_stack);
     }
+    $return = $element_stack;
 
-    // Now extract formula from stack.
+    // Now validate stack.
     $previous_size = count($element_stack) + 1;
     while (count($element_stack) < $previous_size) {
       $previous_size = count($element_stack);
@@ -343,12 +365,7 @@ class PoHeader {
     }
 
     // If only one element is left, the number of operators is appropriate.
-    if (count($element_stack) == 1) {
-      return $element_stack[0];
-    }
-    else {
-      return FALSE;
-    }
+    return count($element_stack) == 1 ? $return : FALSE;
   }
 
   /**
@@ -416,4 +433,136 @@ class PoHeader {
     return $tokens;
   }
 
+  /**
+   * Evaluate the plural element stack using a plural value.
+   *
+   * Using an element stack, which represents a plural formula, we calculate
+   * which plural string should be used for a given plural value.
+   *
+   * An example of plural formula parting and evaluation:
+   *   Plural formula: 'n!=1'
+   * This formula is parsed by parseArithmetic() to a stack (array) of elements:
+   *   array(
+   *     0 => '$n',
+   *     1 => '1',
+   *     2 => '!=',
+   *   );
+   * The evaluatePlural() method evaluates the $element_stack using the plural
+   * value $n. Before the actual evaluation, the '$n' in the array is replaced
+   * by the value of $n.
+   *   For example: $n = 2 results in:
+   *   array(
+   *     0 => '2',
+   *     1 => '1',
+   *     2 => '!=',
+   *   );
+   * The stack is processed until only one element is (the result) is left. In
+   * every iteration the top elements of the stack, up until the first operator,
+   * are evaluated. After evaluation the arguments and the operator itself are
+   * removed and replaced by the evaluation result. This is typically 2
+   * arguments and 1 element for the operator.
+   *   Because the operator is '!=' the example stack is evaluated as:
+   *   $f = (int) 2 != 1;
+   *   The resulting stack is:
+   *   array(
+   *     0 => 1,
+   *   );
+   * With only one element left in the stack (the final result) the loop is
+   * terminated and the result is returned.
+   *
+   * @param array $element_stack
+   *   Array of plural formula values and operators create by parseArithmetic().
+   * @param integer $n
+   *   The @count number for which we are determining the right plural position.
+   *
+   * @return integer
+   *   Number of the plural string to be used for the given plural value.
+   *
+   * @see parseArithmetic()
+   * @throws Exception
+   */
+  protected function evaluatePlural($element_stack, $n) {
+    $count = count($element_stack);
+    $limit = $count;
+    // Replace the '$n' value in the formula by the plural value.
+    for ($i = 0; $i < $count; $i++) {
+      if ($element_stack[$i] === '$n') {
+        $element_stack[$i] = $n;
+      }
+    }
+
+    // We process the stack until only one element is (the result) is left.
+    // We limit the number of evaluation cycles to prevent an endless loop in
+    // case the stack contains an error.
+    while (isset($element_stack[1])) {
+      for ($i = 2; $i < $count; $i++) {
+        // There's no point in checking non-symbols. Also, switch(TRUE) would
+        // match any case and so it would break.
+        if (is_bool($element_stack[$i]) || is_numeric($element_stack[$i])) {
+          continue;
+        }
+        $f = NULL;
+        $length = 3;
+        $delta = 2;
+        switch ($element_stack[$i]) {
+          case '==':
+            $f = $element_stack[$i - 2] == $element_stack[$i - 1];
+            break;
+          case '!=':
+            $f = $element_stack[$i - 2] != $element_stack[$i - 1];
+            break;
+          case '<=':
+            $f = $element_stack[$i - 2] <= $element_stack[$i - 1];
+            break;
+          case '>=':
+            $f = $element_stack[$i - 2] >= $element_stack[$i - 1];
+            break;
+          case '<':
+            $f = $element_stack[$i - 2] < $element_stack[$i - 1];
+            break;
+          case '>':
+            $f = $element_stack[$i - 2] > $element_stack[$i - 1];
+            break;
+          case '+':
+            $f = $element_stack[$i - 2] + $element_stack[$i - 1];
+            break;
+          case '-':
+            $f = $element_stack[$i - 2] - $element_stack[$i - 1];
+            break;
+          case '*':
+            $f = $element_stack[$i - 2] * $element_stack[$i - 1];
+            break;
+          case '/':
+            $f = $element_stack[$i - 2] / $element_stack[$i - 1];
+            break;
+          case '%':
+            $f = $element_stack[$i - 2] % $element_stack[$i - 1];
+            break;
+          case '&&':
+            $f = $element_stack[$i - 2] && $element_stack[$i - 1];
+            break;
+          case '||':
+            $f = $element_stack[$i - 2] || $element_stack[$i - 1];
+            break;
+          case ':':
+            $f = $element_stack[$i - 3] ? $element_stack[$i - 2] : $element_stack[$i - 1];
+            // This operator has 3 preceding elements, instead of the default 2.
+            $length = 5;
+            $delta = 3;
+            break;
+        }
+
+        // If the element is an operator we remove the processed elements and
+        // store the result.
+        if (isset($f)) {
+          array_splice($element_stack, $i - $delta, $length, $f);
+          break;
+        }
+      }
+    }
+    if (!$limit) {
+      throw new \Exception('The plural formula could not be evaluated.');
+    }
+    return (int) $element_stack[0];
+  }
 }

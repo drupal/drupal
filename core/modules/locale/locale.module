@@ -311,9 +311,11 @@ function locale_get_plural($count, $langcode = NULL) {
     // $count and statically cache the result for the combination of language
     // and count, since the result will always be identical.
     if (!empty($plural_formulas[$langcode])) {
-      // $n is used inside the expression in the eval().
-      $n = $count;
-      $plural_indexes[$langcode][$count] = @eval('return intval(' . $plural_formulas[$langcode]['formula'] . ');');
+      // Plural formulas are stored as an array for 0-199. 100 is the highest
+      // modulo used but storing 0-99 is not enough because below 100 we often
+      // find exceptions (1, 2, etc).
+      $index = $count > 199 ? 100 + ($count % 100) : $count;
+      $plural_indexes[$langcode][$count] = isset($plural_formulas[$langcode]['formula'][$index]) ? $plural_formulas[$langcode]['formula'][$index] : $plural_formulas[$langcode]['formula']['default'];
     }
     // In case there is no plural formula for English (no imported translation
     // for English), use a default formula.
@@ -1272,16 +1274,16 @@ function _locale_rebuild_js($langcode = NULL) {
   $data_hash = NULL;
   $data = $status = '';
   if (!empty($translations)) {
-    $data = array();
+    $data = array(
+      'strings' => $translations,
+    );
 
     $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
     if (!empty($locale_plurals[$language->id]['formula'])) {
-      $data[] = "pluralFormula: function (\$n) { return Number({$locale_plurals[$language->id]['formula']}); }";
+      $data['pluralFormula'] = $locale_plurals[$language->id]['formula'];
     }
 
-    $data[] = 'strings: ' . Json::encode($translations);
-
-    $data = 'Drupal.locale = { ' . implode(', ', $data) . ' };';
+    $data = 'Drupal.locale = ' . Json::encode($data) . ';';
     $data_hash = Crypt::hashBase64($data);
   }
 
@@ -1342,6 +1344,7 @@ function _locale_rebuild_js($langcode = NULL) {
     case 'updated':
       watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
+
     case 'rebuilt':
       watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->id]), WATCHDOG_WARNING);
     // Proceed to the 'created' case as the JavaScript translation file has
