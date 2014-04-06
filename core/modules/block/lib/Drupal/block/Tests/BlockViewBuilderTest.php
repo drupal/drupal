@@ -221,7 +221,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->container->get('request')->setMethod('GET');
 
     $default_keys = array('entity_view', 'block', 'test_block', 'en', 'cache_context.theme');
-    $default_tags = array('content' => TRUE, 'block_view' => TRUE, 'block' => array('test_block'), 'block_plugin' => array('test_cache'));
+    $default_tags = array('content' => TRUE, 'block_view' => TRUE, 'block' => array('test_block'), 'theme' => 'stark', 'block_plugin' => array('test_cache'));
 
     // Advanced: cached block, but an alter hook adds an additional cache key.
     $this->setBlockCacheConfig(array(
@@ -236,7 +236,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertIdentical(drupal_render($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
-    $expected_flattened_tags = array('content:1', 'block_view:1', 'block:test_block', 'block_plugin:test_cache');
+    $expected_flattened_tags = array('content:1', 'block_view:1', 'block:test_block', 'theme:stark', 'block_plugin:test_cache');
     $this->assertIdentical($cache_entry->tags, array_combine($expected_flattened_tags, $expected_flattened_tags)); //, 'The block render element has been cached with the expected cache tags.');
     $this->container->get('cache.render')->delete($cid);
 
@@ -250,7 +250,7 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     $this->assertIdentical(drupal_render($build), '');
     $cache_entry = $this->container->get('cache.render')->get($cid);
     $this->assertTrue($cache_entry, 'The block render element has been cached with the expected cache ID.');
-    $expected_flattened_tags = array('content:1', 'block_view:1', 'block:test_block', 'block_plugin:test_cache', $alter_add_tag . ':1');
+    $expected_flattened_tags = array('content:1', 'block_view:1', 'block:test_block', 'theme:stark', 'block_plugin:test_cache', $alter_add_tag . ':1');
     $this->assertIdentical($cache_entry->tags, array_combine($expected_flattened_tags, $expected_flattened_tags)); //, 'The block render element has been cached with the expected cache tags.');
     $this->container->get('cache.render')->delete($cid);
 

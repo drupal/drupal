@@ -66,7 +66,14 @@ class PageCacheTest extends WebTestBase {
     $cid = sha1(implode(':', $cid_parts));
     $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);
-    $this->assertIdentical($cache_entry->tags, array('content:1', 'pre_render:1', 'system_test_cache_tags_page:1'));
+    $expected_tags = array(
+      'content:1',
+      'pre_render:1',
+      'system_test_cache_tags_page:1',
+      'theme:stark',
+      'theme_global_settings:1',
+    );
+    $this->assertIdentical($cache_entry->tags, $expected_tags);
 
     Cache::invalidateTags($tags);
     $this->drupalGet($path);

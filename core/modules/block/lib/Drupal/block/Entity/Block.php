@@ -160,8 +160,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     // When placing a new block, invalidate all cache entries for this theme,
     // since any page that uses this theme might be affected.
     else {
-      // @todo Replace with theme cache tag: https://drupal.org/node/2185617
-      Cache::invalidateTags(array('content' => TRUE));
+      Cache::invalidateTags(array('theme' => $this->theme));
     }
   }
 

@@ -419,6 +419,16 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     theme_settings_convert_to_config($values, $config)->save();
 
+    // Invalidate either the theme-specific cache tag or the global theme
+    // settings cache tag, depending on whose settings were actually changed.
+    if (isset($values['theme'])) {
+      Cache::invalidateTags(array('theme' => $values['theme']));
+    }
+    else {
+      Cache::invalidateTags(array('theme_global_settings' => TRUE));
+    }
+
+    // @todo Remove this in https://drupal.org/node/2124957.
     Cache::invalidateTags(array('content' => TRUE));
   }
 

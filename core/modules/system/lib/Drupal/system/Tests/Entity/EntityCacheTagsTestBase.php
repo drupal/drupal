@@ -210,6 +210,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $non_referencing_entity_path = $this->non_referencing_entity->getSystemPath();
     $listing_path = 'entity_test/list/' . $entity_type . '_reference/' . $entity_type . '/' . $this->entity->id();
 
+    $theme_cache_tags = array('content:1', 'theme:stark', 'theme_global_settings:1');
+
     // Generate the standardized entity cache tags.
     $cache_tag = $entity_type . ':' . $this->entity->id();
     $view_cache_tag = $entity_type . '_view:1';
@@ -232,7 +234,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($referencing_entity_path, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $tags = array_merge(array('content:1'), $referencing_entity_cache_tags);
+    $tags = array_merge($theme_cache_tags, $referencing_entity_cache_tags);
     $this->verifyPageCache($referencing_entity_path, 'HIT', $tags);
 
     // Also verify the existence of an entity render cache entry.
@@ -245,7 +247,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($non_referencing_entity_path, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $tags = array_merge(array('content:1'), $non_referencing_entity_cache_tags);
+    $tags = array_merge($theme_cache_tags, $non_referencing_entity_cache_tags);
     $this->verifyPageCache($non_referencing_entity_path, 'HIT', $tags);
 
     // Also verify the existence of an entity render cache entry.
@@ -259,7 +261,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($listing_path, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $tags = array_merge(array('content:1'), $referencing_entity_cache_tags);
+    $tags = array_merge($theme_cache_tags, $referencing_entity_cache_tags);
     $this->verifyPageCache($listing_path, 'HIT', $tags);
 
 
@@ -407,13 +409,12 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($non_referencing_entity_path, 'HIT');
 
     // Verify cache hits.
-    $tags = array(
-      'content:1',
+    $tags = array_merge($theme_cache_tags, array(
       'entity_test_view:1',
       'entity_test:' . $this->referencing_entity->id(),
-    );
+    ));
     $this->verifyPageCache($referencing_entity_path, 'HIT', $tags);
-    $this->verifyPageCache($listing_path, 'HIT', array('content:1'));
+    $this->verifyPageCache($listing_path, 'HIT', $theme_cache_tags);
   }
 
 }

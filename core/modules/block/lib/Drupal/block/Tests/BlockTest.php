@@ -281,6 +281,8 @@ class BlockTest extends BlockTestBase {
     $cid = sha1(implode(':', $cid_parts));
     $cache_entry = \Drupal::cache('render')->get($cid);
     $expected_cache_tags = array(
+      'theme:stark',
+      'theme_global_settings:1',
       'content:1',
       'block_view:1',
       'block:powered',
@@ -288,6 +290,13 @@ class BlockTest extends BlockTestBase {
     );
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:en:stark');
+    $expected_cache_tags = array(
+      'content:1',
+      'block_view:1',
+      'block:powered',
+      'theme:stark',
+      'block_plugin:system_powered_by_block',
+    );
     $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
 
     // The "Powered by Drupal" block is modified; verify a cache miss.
@@ -312,6 +321,8 @@ class BlockTest extends BlockTestBase {
     $cid = sha1(implode(':', $cid_parts));
     $cache_entry = \Drupal::cache('render')->get($cid);
     $expected_cache_tags = array(
+      'theme:stark',
+      'theme_global_settings:1',
       'content:1',
       'block_view:1',
       'block:powered-2',
@@ -323,6 +334,7 @@ class BlockTest extends BlockTestBase {
       'content:1',
       'block_view:1',
       'block:powered',
+      'theme:stark',
       'block_plugin:system_powered_by_block',
     );
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:en:stark');
@@ -331,6 +343,7 @@ class BlockTest extends BlockTestBase {
       'content:1',
       'block_view:1',
       'block:powered-2',
+      'theme:stark',
       'block_plugin:system_powered_by_block',
     );
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:en:stark');

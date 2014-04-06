@@ -1925,6 +1925,22 @@ function drupal_pre_render_html(array $element) {
 
   return $element;
 }
+
+/**
+ * #pre_render callback for the page element type.
+ *
+ * @param array $element
+ *   A structured array containing the page element type build properties.
+ *
+ * @see system_element_info()
+ */
+function drupal_pre_render_page(array $element) {
+  global $theme;
+  $element['#cache']['tags']['theme'] = $theme;
+  $element['#cache']['tags']['theme_global_settings'] = TRUE;
+  return $element;
+}
+
 /**
  * Prepares variables for HTML document templates.
  *
