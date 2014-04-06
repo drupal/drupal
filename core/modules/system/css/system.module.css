@@ -117,6 +117,14 @@ a.tabledrag-handle .handle {
 .no-svg a.tabledrag-handle .handle {
   background-image: url(../../../misc/icons/787878/move.png);
 }
+a.tabledrag-handle:hover .handle,
+a.tabledrag-handle:focus .handle {
+  background-image: url(../../../misc/icons/000000/move.svg);
+}
+.no-svg a.tabledrag-handle:hover .handle,
+.no-svg a.tabledrag-handle:focus .handle {
+  background-image: url(../../../misc/icons/000000/move.png);
+}
 .touch .draggable td {
   padding: 0 10px;
 }
@@ -134,10 +142,6 @@ a.tabledrag-handle .handle {
 }
 .touch .draggable.drag a.tabledrag-handle .handle {
   background-position: 50% -32px;
-}
-.no-touch a.tabledrag-handle:hover .handle,
-.no-touch a.tabledrag-handle:focus .handle {
-  background-position: 6px -11px;
 }
 div.indentation {
   float: left; /* LTR */
