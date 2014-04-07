@@ -227,11 +227,13 @@ function template_preprocess_datetime_wrapper(&$variables) {
   $element = $variables['element'];
 
   // If the element is required, a required marker is appended to the label.
-  $form_required_marker = array(
-    '#theme' => 'form_required_marker',
-    '#element' => $element,
-  );
-  $variables['required'] = !empty($element['#required']) ? drupal_render($form_required_marker) : '';
+  $variables['required'] = NULL;
+  if(!empty($element['#required'])) {
+    $variables['required'] = array(
+      '#theme' => 'form_required_marker',
+      '#element' => $element,
+    );
+  }
 
   if (!empty($element['#title'])) {
     $variables['title'] = $element['#title'];
