@@ -30,8 +30,9 @@ class ConfigEntityListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function getOperations(EntityInterface $entity) {
-    $operations = parent::getOperations($entity);
+  public function getDefaultOperations(EntityInterface $entity) {
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
+    $operations = parent::getDefaultOperations($entity);
 
     if ($this->entityType->hasKey('status')) {
       if (!$entity->status() && $entity->hasLinkTemplate('enable')) {

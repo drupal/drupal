@@ -83,13 +83,13 @@ class ConfigTranslationEntityListBuilder extends EntityListBuilder implements Co
   /**
    * {@inheritdoc}
    */
-  public function buildOperations(EntityInterface $entity) {
-    $operations = parent::buildOperations($entity);
-    foreach (array_keys($operations['#links']) as $operation) {
+  public function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+    foreach (array_keys($operations) as $operation) {
       // This is a translation UI for translators. Show the translation
       // operation only.
       if (!($operation == 'translate')) {
-        unset($operations['#links'][$operation]);
+        unset($operations[$operation]);
       }
     }
     return $operations;

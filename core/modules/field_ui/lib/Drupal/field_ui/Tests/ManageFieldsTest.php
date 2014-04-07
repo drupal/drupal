@@ -106,6 +106,11 @@ class ManageFieldsTest extends FieldUiTestBase {
     foreach (array('Add new field', 'Re-use existing field') as $element) {
       $this->assertText($element, format_string('"@element" was found.', array('@element' => $element)));
     }
+
+    // Assert entity operations for all field instances.
+    $this->assertLinkByHref("admin/structure/types/manage/$type/fields/node.$type.body");
+    $this->assertLinkByHref("admin/structure/types/manage/$type/fields/node.$type.body/delete");
+    $this->assertLinkByHref("admin/structure/types/manage/$type/fields/node.$type.body/field");
   }
 
   /**

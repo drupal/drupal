@@ -159,9 +159,10 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_entity_operation_alter().
+ * Implements hook_entity_operation().
  */
-function field_ui_entity_operation_alter(array &$operations, EntityInterface $entity) {
+function field_ui_entity_operation(EntityInterface $entity) {
+  $operations = array();
   $info = $entity->getEntityType();
   // Add manage fields and display links if this entity type is the bundle
   // of another.
@@ -185,6 +186,8 @@ function field_ui_entity_operation_alter(array &$operations, EntityInterface $en
       ) + $entity->urlInfo('field_ui-display')->toArray();
     }
   }
+
+  return $operations;
 }
 
 /**
