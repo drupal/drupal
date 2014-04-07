@@ -64,7 +64,7 @@ class UrlAlias extends DestinationBase implements ContainerFactoryPluginInterfac
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
 
-    $path = $this->path->save(
+    $path = $this->aliasStorage->save(
       $row->getDestinationProperty('source'),
       $row->getDestinationProperty('alias'),
       $row->getDestinationProperty('langcode'),
