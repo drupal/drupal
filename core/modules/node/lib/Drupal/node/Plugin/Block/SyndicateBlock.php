@@ -47,4 +47,27 @@ class SyndicateBlock extends BlockBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
+
+    // @see ::isCacheable()
+    $form['cache']['#disabled'] = TRUE;
+    $form['cache']['#description'] = t('This block is never cacheable, it is not configurable.');
+    $form['cache']['max_age']['#value'] = 0;
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    // The 'Syndicate' block is never cacheable, because it is cheaper to just
+    // render it rather than to cache it and incur I/O.
+    return FALSE;
+  }
+
 }
