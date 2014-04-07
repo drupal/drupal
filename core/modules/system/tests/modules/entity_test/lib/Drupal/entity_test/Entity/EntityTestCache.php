@@ -20,7 +20,7 @@ use Drupal\Core\Language\Language;
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationController"
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
  *   base_table = "entity_test",
  *   fieldable = TRUE,

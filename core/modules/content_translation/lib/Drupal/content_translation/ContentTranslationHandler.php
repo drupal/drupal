@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\content_translation\ContentTranslationController.
+ * Contains \Drupal\content_translation\ContentTranslationHandler.
  */
 
 namespace Drupal\content_translation;
@@ -13,9 +13,9 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element;
 
 /**
- * Base class for content translation controllers.
+ * Base class for content translation handlers.
  */
-class ContentTranslationController implements ContentTranslationControllerInterface {
+class ContentTranslationHandler implements ContentTranslationHandlerInterface {
 
   /**
    * The type of the entity being translated.
@@ -43,7 +43,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Implements ContentTranslationControllerInterface::retranslate().
+   * {@inheritdoc}
    */
   public function retranslate(EntityInterface $entity, $langcode = NULL) {
     $updated_langcode = !empty($langcode) ? $langcode : $entity->language()->id;
@@ -54,7 +54,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Implements ContentTranslationControllerInterface::getTranslationAccess().
+   * {@inheritdoc}
    */
   public function getTranslationAccess(EntityInterface $entity, $op) {
     // @todo Move this logic into a translation access controller checking also
@@ -70,14 +70,14 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Implements ContentTranslationControllerInterface::getSourceLanguage().
+   * {@inheritdoc}
    */
   public function getSourceLangcode(array $form_state) {
     return isset($form_state['content_translation']['source']) ? $form_state['content_translation']['source']->id : FALSE;
   }
 
   /**
-   * Implements ContentTranslationControllerInterface::entityFormAlter().
+   * {@inheritdoc}
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
     $form_controller = content_translation_form_controller($form_state);
@@ -282,7 +282,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   /**
    * Process callback: determines which elements get clue in the form.
    *
-   * @see \Drupal\content_translation\ContentTranslationController::entityFormAlter()
+   * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
   public function entityFormSharedElements($element, $form_state, $form) {
     static $ignored_types;
@@ -366,7 +366,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity whose form is being built.
    *
-   * @see \Drupal\content_translation\ContentTranslationController::entityFormAlter()
+   * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, array &$form_state) {
     $form_controller = content_translation_form_controller($form_state);
@@ -403,7 +403,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Form validation handler for ContentTranslationController::entityFormAlter().
+   * Form validation handler for ContentTranslationHandler::entityFormAlter().
    *
    * Validates the submitted content translation metadata.
    */
@@ -422,7 +422,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Form submission handler for ContentTranslationController::entityFormAlter().
+   * Form submission handler for ContentTranslationHandler::entityFormAlter().
    *
    * Takes care of the source language change.
    */
@@ -438,7 +438,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Form submission handler for ContentTranslationController::entityFormAlter().
+   * Form submission handler for ContentTranslationHandler::entityFormAlter().
    *
    * Takes care of entity deletion.
    */
@@ -451,7 +451,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Form submission handler for ContentTranslationController::entityFormAlter().
+   * Form submission handler for ContentTranslationHandler::entityFormAlter().
    *
    * Takes care of content translation deletion.
    */

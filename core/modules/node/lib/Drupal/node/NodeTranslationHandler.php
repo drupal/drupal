@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Definition of Drupal\node\NodeTranslationController.
+ * Contains \Drupal\node\NodeTranslationHandler.
  */
 
 namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationController;
+use Drupal\content_translation\ContentTranslationHandler;
 
 /**
- * Defines the translation controller class for nodes.
+ * Defines the translation handler for nodes.
  */
-class NodeTranslationController extends ContentTranslationController {
+class NodeTranslationHandler extends ContentTranslationHandler {
 
   /**
-   * Overrides ContentTranslationController::entityFormAlter().
+   * {@inheritdoc}
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
@@ -63,7 +63,7 @@ class NodeTranslationController extends ContentTranslationController {
   }
 
   /**
-   * Overrides ContentTranslationController::entityFormTitle().
+   * {@inheritdoc}
    */
   protected function entityFormTitle(EntityInterface $entity) {
     $type_name = node_get_type_label($entity);
@@ -71,7 +71,7 @@ class NodeTranslationController extends ContentTranslationController {
   }
 
   /**
-   * Overrides ContentTranslationController::entityFormEntityBuild().
+   * {@inheritdoc}
    */
   public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, array &$form_state) {
     if (isset($form_state['values']['content_translation'])) {

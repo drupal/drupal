@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\entity_test\Entity\EntityTestMulRev.
+ * Contains \Drupal\entity_test\Entity\EntityTestMulRev.
  */
 
 namespace Drupal\entity_test\Entity;
@@ -22,7 +22,7 @@ use Drupal\entity_test\Entity\EntityTestRev;
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationController"
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
  *   base_table = "entity_test_mulrev",
  *   data_table = "entity_test_mulrev_property_data",

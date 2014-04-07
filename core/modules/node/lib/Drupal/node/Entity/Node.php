@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Entity\Node.
+ * Contains \Drupal\node\Entity\Node.
  */
 
 namespace Drupal\node\Entity;
@@ -32,7 +32,7 @@ use Drupal\user\UserInterface;
  *       "edit" = "Drupal\node\NodeFormController"
  *     },
  *     "list_builder" = "Drupal\node\NodeListBuilder",
- *     "translation" = "Drupal\node\NodeTranslationController"
+ *     "translation" = "Drupal\node\NodeTranslationHandler"
  *   },
  *   base_table = "node",
  *   data_table = "node_field_data",

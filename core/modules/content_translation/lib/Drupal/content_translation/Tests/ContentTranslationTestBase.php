@@ -75,7 +75,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
   /**
    * The translation controller for the current entity type.
    *
-   * @var \Drupal\content_translation\ContentTranslationControllerInterface
+   * @var \Drupal\content_translation\ContentTranslationHandlerInterface
    */
   protected $controller;
 

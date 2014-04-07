@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Entity\User.
+ * Contains \Drupal\user\Entity\User.
  */
 
 namespace Drupal\user\Entity;
@@ -31,7 +31,7 @@ use Drupal\user\UserInterface;
  *       "cancel" = "Drupal\user\Form\UserCancelForm",
  *       "register" = "Drupal\user\RegisterFormController"
  *     },
- *     "translation" = "Drupal\user\ProfileTranslationController"
+ *     "translation" = "Drupal\user\ProfileTranslationHandler"
  *   },
  *   admin_permission = "administer user",
  *   base_table = "users",

@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\TermTranslationController.
+ * Contains \Drupal\user\ProfileTranslationHandler.
  */
 
-namespace Drupal\taxonomy;
+namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationController;
+use Drupal\content_translation\ContentTranslationHandler;
 
 /**
- * Defines the translation controller class for terms.
+ * Defines the translation handler for users.
  */
-class TermTranslationController extends ContentTranslationController {
+class ProfileTranslationHandler extends ContentTranslationHandler {
 
   /**
-   * Overrides ContentTranslationController::entityFormAlter().
+   * {@inheritdoc}
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
@@ -24,7 +24,7 @@ class TermTranslationController extends ContentTranslationController {
   }
 
   /**
-   * Form submission handler for TermTranslationController::entityFormAlter().
+   * Form submission handler for ProfileTranslationHandler::entityFormAlter().
    *
    * This handles the save action.
    *
@@ -33,11 +33,10 @@ class TermTranslationController extends ContentTranslationController {
   function entityFormSave(array $form, array &$form_state) {
     if ($this->getSourceLangcode($form_state)) {
       $entity = content_translation_form_controller($form_state)->getEntity();
-      // We need a redirect here, otherwise we would get an access denied page,
+      // We need a redirect here, otherwise we would get an access denied page
       // since the current URL would be preserved and we would try to add a
       // translation for a language that already has a translation.
-      $form_state['redirect_route'] = $entity->urlInfo('edit-form');
+      $form_state['redirect_route'] = $entity->urlInfo();
     }
   }
-
 }

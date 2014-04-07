@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\custom_block\CustomBlockTranslationController.
+ * Contains \Drupal\custom_block\CustomBlockTranslationHandler.
  */
 
 namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationController;
+use Drupal\content_translation\ContentTranslationHandler;
 
 /**
- * Defines the translation controller class for custom blocks.
+ * Defines the translation handler for custom blocks.
  */
-class CustomBlockTranslationController extends ContentTranslationController {
+class CustomBlockTranslationHandler extends ContentTranslationHandler {
 
   /**
-   * Overrides ContentTranslationController::entityFormAlter().
+   * {@inheritdoc}
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
     parent::entityFormAlter($form, $form_state, $entity);
@@ -33,7 +33,7 @@ class CustomBlockTranslationController extends ContentTranslationController {
   }
 
   /**
-   * Overrides ContentTranslationController::entityFormTitle().
+   * {@inheritdoc}
    */
   protected function entityFormTitle(EntityInterface $entity) {
     $block_type = entity_load('custom_block_type', $entity->bundle());

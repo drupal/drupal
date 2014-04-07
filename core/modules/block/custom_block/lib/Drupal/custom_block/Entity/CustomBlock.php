@@ -30,7 +30,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *       "delete" = "Drupal\custom_block\Form\CustomBlockDeleteForm",
  *       "default" = "Drupal\custom_block\CustomBlockFormController"
  *     },
- *     "translation" = "Drupal\custom_block\CustomBlockTranslationController"
+ *     "translation" = "Drupal\custom_block\CustomBlockTranslationHandler"
  *   },
  *   admin_permission = "administer blocks",
  *   base_table = "custom_block",

@@ -90,9 +90,9 @@ function content_translation_language_types_info_alter(array &$language_types) {
  * Every entity type needs a translation controller to be translated. This can
  * be specified through the 'translation' key in the 'controllers' entity info
  * property. If an entity type is translatable and no translation controller is
- * defined, \Drupal\content_translation\ContentTranslationController will be
+ * defined, \Drupal\content_translation\ContentTranslationHandler will be
  * assumed. Every translation controller class must implement
- * \Drupal\content_translation\ContentTranslationControllerInterface.
+ * \Drupal\content_translation\ContentTranslationHandlerInterface.
  *
  * If the entity paths match the default pattern above and there is no need for
  * an entity-specific translation controller class, Content Translation will
@@ -107,7 +107,7 @@ function content_translation_entity_type_alter(array &$entity_types) {
   foreach ($entity_types as $entity_type) {
     if ($entity_type->isTranslatable()) {
       if (!$entity_type->hasControllerClass('translation')) {
-        $entity_type->setControllerClass('translation', 'Drupal\content_translation\ContentTranslationController');
+        $entity_type->setControllerClass('translation', 'Drupal\content_translation\ContentTranslationHandler');
       }
 
       $translation = $entity_type->get('translation');
@@ -347,7 +347,7 @@ function content_translation_enabled($entity_type, $bundle = NULL) {
  * @param string $entity_type_id
  *   The type of the entity being translated.
  *
- * @return \Drupal\content_translation\ContentTranslationControllerInterface
+ * @return \Drupal\content_translation\ContentTranslationHandlerInterface
  *   An instance of the content translation controller interface.
  *
  * @todo Move to \Drupal\content_translation\ContentTranslationManager.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Entity\Comment.
+ * Contains \Drupal\comment\Entity\Comment.
  */
 
 namespace Drupal\comment\Entity;
@@ -32,7 +32,7 @@ use Drupal\user\UserInterface;
  *       "default" = "Drupal\comment\CommentFormController",
  *       "delete" = "Drupal\comment\Form\DeleteForm"
  *     },
- *     "translation" = "Drupal\comment\CommentTranslationController"
+ *     "translation" = "Drupal\comment\CommentTranslationHandler"
  *   },
  *   base_table = "comment",
  *   uri_callback = "comment_uri",

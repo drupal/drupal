@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\content_translation\ContentTranslationControllerInterface.
+ * Contains \Drupal\content_translation\ContentTranslationHandlerInterface.
  */
 
 namespace Drupal\content_translation;
@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
  * Defines a set of methods to allow any entity to be processed by the entity
  * translation UI.
  */
-interface ContentTranslationControllerInterface {
+interface ContentTranslationHandlerInterface {
 
   /**
    * Checks if the user can perform the given operation on translations of the

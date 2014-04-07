@@ -27,7 +27,7 @@ use Drupal\shortcut\ShortcutInterface;
  *       "add" = "Drupal\shortcut\ShortcutFormController",
  *       "delete" = "Drupal\shortcut\Form\ShortcutDeleteForm"
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationController"
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
  *   base_table = "shortcut",
  *   data_table = "shortcut_field_data",

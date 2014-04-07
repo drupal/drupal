@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Entity\Term.
+ * Contains \Drupal\taxonomy\Entity\Term.
  */
 
 namespace Drupal\taxonomy\Entity;
@@ -30,7 +30,7 @@ use Drupal\taxonomy\TermInterface;
  *       "default" = "Drupal\taxonomy\TermFormController",
  *       "delete" = "Drupal\taxonomy\Form\TermDeleteForm"
  *     },
- *     "translation" = "Drupal\taxonomy\TermTranslationController"
+ *     "translation" = "Drupal\taxonomy\TermTranslationHandler"
  *   },
  *   base_table = "taxonomy_term_data",
  *   uri_callback = "taxonomy_term_uri",
