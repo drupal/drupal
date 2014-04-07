@@ -155,9 +155,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         break;
     }
 
-    $id_prefix = implode('-', array_merge($parents, array($field_name)));
-    $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
-
     $title = String::checkPlain($this->fieldDefinition->getLabel());
     $description = field_filter_xss(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
 
@@ -201,13 +198,17 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         '#required' => $this->fieldDefinition->isRequired(),
         '#title' => $title,
         '#description' => $description,
-        '#prefix' => '<div id="' . $wrapper_id . '">',
-        '#suffix' => '</div>',
         '#max_delta' => $max,
       );
 
       // Add 'add more' button, if not working with a programmed form.
       if ($cardinality == FieldDefinitionInterface::CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
+
+        $id_prefix = implode('-', array_merge($parents, array($field_name)));
+        $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
+        $elements['#prefix'] = '<div id="' . $wrapper_id . '">';
+        $elements['#suffix'] = '</div>';
+
         $elements['add_more'] = array(
           '#type' => 'submit',
           '#name' => strtr($id_prefix, '-', '_') . '_add_more',
