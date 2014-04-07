@@ -287,8 +287,7 @@ services:
       - [fromRequest, ['@request']]
   router.admin_context:
     class: Drupal\Core\Routing\AdminContext
-    calls:
-      - [setRequest, ['@?request=']]
+    arguments: ['@request_stack']
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
     arguments: ['@database', '@router.builder', '@state']
