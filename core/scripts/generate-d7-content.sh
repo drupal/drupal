@@ -4,7 +4,8 @@
 /**
  * Generate content for a Drupal 7 database to test the upgrade process.
  *
- * Run this script at the root of an existing Drupal 6 installation.
+ * Run this script at the root of an existing Drupal 7 installation.
+ *
  * Steps to use this generation script:
  * - Install drupal 7.
  * - Run this script from your Drupal ROOT directory.
@@ -30,6 +31,7 @@ include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 // Enable requested modules
+require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
 include_once './modules/system/system.admin.inc';
 $form = system_modules();
 foreach ($modules_to_enable as $module) {
@@ -44,13 +46,12 @@ drupal_cron_run();
 
 // Create six users
 $query = db_insert('users')->fields(array('uid', 'name', 'pass', 'mail', 'status', 'created', 'access'));
-$password_hasher = \Drupal::service('password');
 for ($i = 0; $i < 6; $i++) {
   $name = "test user $i";
   $pass = md5("test PassW0rd $i !(.)");
   $mail = "test$i@example.com";
   $now = mktime(0, 0, 0, 1, $i + 1, 2010);
-  $query->values(array(db_next_id(), $name, $password_hasher->hash($pass), $mail, 1, $now, $now));
+  $query->values(array(db_next_id(), $name, user_hash_password($pass), $mail, 1, $now, $now));
 }
 $query->execute();
 
@@ -66,17 +67,16 @@ $required  = array(0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1);
 $voc_id = 0;
 $term_id = 0;
 for ($i = 0; $i < 24; $i++) {
+  $vocabulary = new stdClass;
   ++$voc_id;
-  $vocabulary = entity_create('taxonomy_vocabulary', array(
-    'name' => "vocabulary $voc_id (i=$i)",
-    'machine_name' => 'vocabulary_' . $voc_id . '_' . $i,
-    'description' => "description of " . $vocabulary->name,
-    'multiple' => $multiple[$i % 12],
-    'required' => $required[$i % 12],
-    'relations' => 1,
-    'hierarchy' => $hierarchy[$i % 12],
-    'weight' => $i,
-  ));
+  $vocabulary->name = "vocabulary $voc_id (i=$i)";
+  $vocabulary->machine_name = 'vocabulary_' . $voc_id . '_' . $i;
+  $vocabulary->description = "description of ". $vocabulary->name;
+  $vocabulary->multiple = $multiple[$i % 12];
+  $vocabulary->required = $required[$i % 12];
+  $vocabulary->relations = 1;
+  $vocabulary->hierarchy = $hierarchy[$i % 12];
+  $vocabulary->weight = $i;
   taxonomy_vocabulary_save($vocabulary);
   $field = array(
     'field_name' => 'taxonomy_'. $vocabulary->machine_name,
@@ -93,7 +93,7 @@ for ($i = 0; $i < 24; $i++) {
       ),
     ),
   );
-  entity_create('field_entity', $field)->save();
+  field_create_field($field);
   $node_types = $i > 11 ? array('page') : array_keys(node_type_get_types());
   foreach ($node_types as $bundle) {
     $instance = array(
@@ -132,7 +132,7 @@ for ($i = 0; $i < 24; $i++) {
         'settings' => array(),
       );
     }
-    entity_create('field_instance', $instance)->save();
+    field_create_instance($instance);
   }
   $parents = array();
   // Vocabularies without hierarchy get one term, single parent vocabularies get
@@ -151,9 +151,9 @@ for ($i = 0; $i < 24; $i++) {
       'weight' => $i * 3 + $j,
     ));
     taxonomy_term_save($term);
-    $terms[] = $term->id();
-    $term_vocabs[$term->id()] = 'taxonomy_' . $vocabulary->machine_name;
-    $parents[] = $term->id();
+    $terms[] = $term->tid;
+    $term_vocabs[$term->tid] = 'taxonomy_' . $vocabulary->machine_name;
+    $parents[] = $term->tid;
   }
 }
 $node_id = 0;
@@ -171,7 +171,7 @@ for ($i = 0; $i < 36; $i++) {
   else if ($i < 24) {
     $node->type = 'story';
   }
-  else if (\Drupal::moduleHandler()->moduleExists('blog')) {
+  else if (module_exists('blog')) {
     $node->type = 'blog';
   }
   $node->sticky = 0;
@@ -204,7 +204,7 @@ for ($i = 0; $i < 36; $i++) {
     $node->{$field_name}[LANGUAGE_NONE][] = array('tid' => $tid);
   }
   $node->path = array('alias' => "content/$node->created");
-  $node->save();
+  node_save($node);
   if ($node->revision) {
     $user = user_load($uid + 3);
     ++$revision_id;
@@ -220,7 +220,7 @@ for ($i = 0; $i < 36; $i++) {
       $field_name = $term_vocabs[$tid];
       $node->{$field_name}[LANGUAGE_NONE][] = array('tid' => $tid);
     }
-    $node->save();
+    node_save($node);
   }
 }
 
@@ -247,12 +247,12 @@ for ($i = 0; $i < 12; $i++) {
   for ($c = 0; $c < $nbchoices; $c++) {
     $node->choice[] = array('chtext' => "Choice $c for poll $i", 'chvotes' => 0, 'weight' => 0);
   }
-  $node->save();
+  node_save($node);
   $path = array(
     'alias' => "content/poll/$i/results",
     'source' => "node/$node->nid/results",
   );
-  \Drupal::service('path.alias_storage')->save($path['source'], $path['alias']);
+  path_save($path);
 
   // Add some votes
   $node = node_load($node->nid);
@@ -289,7 +289,7 @@ $node->promote = 0;
 $node->created = 1263769200;
 $node->log = "added a broken node";
 $node->path = array('alias' => "content/1263769200");
-$node->save();
+node_save($node);
 db_update('node')
   ->fields(array(
     'type' => $node_type,
