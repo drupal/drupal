@@ -55,12 +55,13 @@ class ForumBlockTest extends WebTestBase {
   public function testNewForumTopicsBlock() {
     $this->drupalLogin($this->adminUser);
 
-    // Create 5 forum topics.
-    $topics = $this->createForumTopics();
-
     // Enable the new forum topics block.
     $block = $this->drupalPlaceBlock('forum_new_block');
     $this->drupalGet('');
+
+    // Create 5 forum topics.
+    $topics = $this->createForumTopics();
+
 
     $this->assertLink(t('More'), 0, 'New forum topics block has a "more"-link.');
     $this->assertLinkByHref('forum', 0, 'New forum topics block has a "more"-link.');

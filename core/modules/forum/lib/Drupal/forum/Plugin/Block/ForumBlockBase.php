@@ -21,6 +21,7 @@ abstract class ForumBlockBase extends BlockBase {
    */
   public function build() {
     $result = $this->buildForumQuery()->execute();
+    $elements = array();
     if ($node_title_list = node_title_list($result)) {
       $elements['forum_list'] = $node_title_list;
       $elements['forum_more'] = array(
