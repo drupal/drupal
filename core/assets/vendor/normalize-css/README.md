@@ -1,19 +1,23 @@
-# normalize.css v2
+# normalize.css v3
 
 Normalize.css is a customisable CSS file that makes browsers render all
-elements more consistently and in line with modern standards. We researched the
-differences between default browser styles in order to precisely target only
-the styles that need normalizing.
+elements more consistently and in line with modern standards.
 
-[Check out the demo](http://necolas.github.io/normalize.css/latest/test.html)
+The project relies on researching the differences between default browser
+styles in order to precisely target only the styles that need or benefit from
+normalizing.
 
-[Legacy browser support is available in v1](https://github.com/necolas/normalize.css/tree/v1)
+[View the test file](http://necolas.github.io/normalize.css/latest/test.html)
 
 ## Install
 
 Download from the [project page](http://necolas.github.io/normalize.css/).
 
-Install with [Bower](http://bower.io/): `bower install --save normalize-css`
+Install with [Component(1)](https://github.com/component/component/): `component install necolas/normalize.css`
+
+Install with [npm](http://npmjs.org/): `npm install --save normalize.css`
+
+Install with [Bower](http://bower.io/): `bower install --save normalize.css`
 
 ## What does it do?
 
@@ -25,21 +29,25 @@ Install with [Bower](http://bower.io/): `bower install --save normalize-css`
 
 ## How to use it
 
-Normalize.css is intended to be used as an alternative to CSS resets.
+No other styles should come before Normalize.css.
 
-It's suggested that you read the `normalize.css` file and consider customising
-it to meet your needs. Alternatively, include the file in your project and
-override the defaults later in your CSS.
+It is recommended that you include the `normalize.css` file as untouched
+library code.
 
 ## Browser support
 
-* Google Chrome
-* Mozilla Firefox 4+
-* Apple Safari 5+
-* Opera 12+
+* Google Chrome (latest)
+* Mozilla Firefox (latest)
+* Mozilla Firefox 4
+* Opera (latest)
+* Apple Safari 6+
 * Internet Explorer 8+
 
-## Contribute
+[Normalize.css v1 provides legacy browser
+support](https://github.com/necolas/normalize.css/tree/v1) (IE 6+, Safari 4+),
+but is no longer actively developed.
+
+## Contributing
 
 Please read the CONTRIBUTING.md
 

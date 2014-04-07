@@ -679,7 +679,7 @@ modernizr:
 
 normalize:
   remote: https://github.com/necolas/normalize.css
-  version: v2.1.2
+  version: 3.0.1
   css:
     base:
       assets/vendor/normalize-css/normalize.css: { every_page: true, weight: -20 }
