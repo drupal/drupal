@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 
 /**
  * Base test for PHP storages.

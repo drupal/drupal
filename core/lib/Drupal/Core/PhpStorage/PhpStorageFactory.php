@@ -5,7 +5,7 @@
  * Definition of Drupal\Component\PhpStorage\PhpStorageFactory.
  */
 
-namespace Drupal\Component\PhpStorage;
+namespace Drupal\Core\PhpStorage;
 
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;

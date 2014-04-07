@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
-use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\EventSubscriber\HtmlViewSubscriber;

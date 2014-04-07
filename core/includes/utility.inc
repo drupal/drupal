@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\Variable;
-use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Cache\Cache;
 
 /**

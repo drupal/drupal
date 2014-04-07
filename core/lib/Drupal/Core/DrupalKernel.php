@@ -7,7 +7,7 @@
 
 namespace Drupal\Core;
 
-use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\CoreServiceProvider;

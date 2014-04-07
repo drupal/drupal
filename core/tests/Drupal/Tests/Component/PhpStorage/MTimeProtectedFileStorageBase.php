@@ -7,8 +7,6 @@
 
 namespace Drupal\Tests\Component\PhpStorage;
 
-use Drupal\Component\Utility\Settings;
-
 /**
  * Base test class for MTime protected storage.
  */
@@ -29,26 +27,32 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
   protected $secret;
 
   /**
+   * Test settings to pass to storage instances.
+   *
+   * @var array
+   */
+  protected $settings;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
 
     $this->secret = $this->randomName();
-    $settings['php_storage']['simpletest'] = array(
-      'class' => $this->storageClass,
+
+    $this->settings = array(
       'directory' => sys_get_temp_dir() . '/php',
+      'bin' => 'test',
       'secret' => $this->secret,
     );
-    new Settings($settings);
   }
 
   /**
    * Tests basic load/save/delete operations.
    */
   public function testCRUD() {
-    $php = $this->storageFactory->get('simpletest');
-    $this->assertSame(get_class($php), $this->storageClass);
+    $php = new $this->storageClass($this->settings);
     $this->assertCRUD($php);
   }
 
@@ -62,10 +66,10 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
    * @medium
    */
   public function testSecurity() {
-    $php = $this->storageFactory->get('simpletest');
+    $php = new $this->storageClass($this->settings);
     $name = 'simpletest.php';
     $php->save($name, '<?php');
-    $expected_root_directory = sys_get_temp_dir() . '/php/simpletest';
+    $expected_root_directory = sys_get_temp_dir() . '/php/test';
     if (substr($name, -4) === '.php') {
       $expected_directory = $expected_root_directory . '/' . substr($name, 0, -4);
     }
@@ -92,7 +96,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
     // a second of the initial save().
     sleep(1);
     for ($i = 0; $i < 2; $i++) {
-      $php = $this->storageFactory->get('simpletest');
+      $php = new $this->storageClass($this->settings);
       $GLOBALS['hacked'] = FALSE;
       $untrusted_code = "<?php\n" . '$GLOBALS["hacked"] = TRUE;';
       chmod($expected_directory, 0700);

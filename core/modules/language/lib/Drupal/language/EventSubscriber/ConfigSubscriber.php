@@ -7,7 +7,7 @@
 
 namespace Drupal\language\EventSubscriber;
 
-use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

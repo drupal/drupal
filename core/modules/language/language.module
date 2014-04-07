@@ -5,7 +5,7 @@
  * Add language handling functionality to Drupal.
  */
 
-use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;

@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 
 /**
  * Tests Twig engine configuration via settings.php.
