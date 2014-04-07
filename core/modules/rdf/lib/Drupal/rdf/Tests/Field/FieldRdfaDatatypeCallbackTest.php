@@ -57,7 +57,7 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
    */
   public function testDefaultFormatter() {
     // Expected value is the output of the datatype callback, not the raw value.
-    $this->assertFormatterRdfa('text_default', 'http://schema.org/interactionCount', 'foo' . $this->test_value);
+    $this->assertFormatterRdfa(array('type'=>'text_default'), 'http://schema.org/interactionCount', array('value' => 'foo' . $this->test_value));
   }
 
 }

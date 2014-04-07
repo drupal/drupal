@@ -58,34 +58,33 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   /**
    * Helper function to test the formatter's RDFa.
    *
-   * @param string $formatter
-   *   The machine name of the formatter to test.
+   * @param array $formatter
+   *   An associative array describing the formatter to test and its settings
+   *   containing:
+   *   - type: The machine name of the field formatter to test.
+   *   - settings: The settings of the field formatter to test.
    * @param string $property
    *   The property that should be found.
-   * @param string $value
-   *   The expected value of the property.
-   * @param string $object_type
-   *   The object's type, either 'uri' or 'literal'.
-   * @param string $datatype
-   *   The data type of the property.
+   * @param array $expected_rdf_value
+   *   An associative array describing the expected value of the property
+   *   containing:
+   *   - value: The actual value of the string or URI.
+   *   - type: The type of RDF value, e.g. 'literal' for a string, or 'uri'.
+   *   Defaults to 'literal'.
+   *   - datatype: (optional) The datatype of the value (e.g. xsd:dateTime).
    */
-  protected function assertFormatterRdfa($formatter, $property, $value, $object_type = 'literal', $datatype = '') {
+  protected function assertFormatterRdfa($formatter, $property, $expected_rdf_value) {
+    $expected_rdf_value += array('type' => 'literal');
+
     // The field formatter will be rendered inside the entity. Set the field
     // formatter in the entity display options before rendering the entity.
     entity_get_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->fieldName, array('type' => $formatter))
+      ->setComponent($this->fieldName, $formatter)
       ->save();
     $build = entity_view($this->entity, 'default');
     $output = drupal_render($build);
     $graph = new \EasyRdf_Graph($this->uri, $output, 'rdfa');
-    $expected_value = array(
-      'type' => $object_type,
-      'value' => $value,
-    );
-    if ($datatype) {
-      $expected_value['datatype'] = $datatype;
-    }
-    $this->assertTrue($graph->hasProperty($this->uri, $property, $expected_value), "Formatter $formatter exposes data correctly for {$this->fieldType} fields.");
+    $this->assertTrue($graph->hasProperty($this->uri, $property, $expected_rdf_value), "Formatter {$formatter['type']} exposes data correctly for {$this->fieldType} fields.");
   }
 
   /**
