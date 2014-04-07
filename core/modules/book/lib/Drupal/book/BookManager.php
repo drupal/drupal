@@ -818,6 +818,7 @@ class BookManager implements BookManagerInterface {
     foreach ($affected_bids as $bid) {
       \Drupal::cache('data')->deleteTags(array('bid' => $bid));
     }
+    return $link;
   }
 
   /**

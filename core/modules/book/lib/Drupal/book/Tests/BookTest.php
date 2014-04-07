@@ -585,4 +585,24 @@ class BookTest extends WebTestBase {
     $this->assertOptionSelected('edit-book-bid', $node->id());
   }
 
+  /**
+   * Tests that saveBookLink() returns something.
+   */
+  public function testSaveBookLink() {
+    $book_manager = \Drupal::service('book.manager');
+
+    // Mock a link for a new book.
+    $link = array('nid' => 1, 'has_children' => 0, 'original_bid' => 0, 'parent_depth_limit' => 8, 'pid' => 0, 'weight' => 0, 'bid' => 1);
+    $new = TRUE;
+
+    // Save the link.
+    $return = $book_manager->saveBookLink($link, $new);
+
+    // Add the link defaults to $link so we have something to compare to the return from saveBookLink().
+    $link += $book_manager->getLinkDefaults($link['nid']);
+
+    // Test the return from saveBookLink.
+    $this->assertEqual($return, $link);
+  }
+
 }
