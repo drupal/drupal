@@ -6,6 +6,7 @@
  */
 
 use Drupal\aggregator\FeedInterface;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Denotes that a feed's items should never expire.
@@ -171,7 +172,7 @@ function aggregator_feed_load($fid) {
  *   The filtered content.
  */
 function aggregator_filter_xss($value) {
-  return filter_xss($value, preg_split('/\s+|<|>/', \Drupal::config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
+  return Xss::filter($value, preg_split('/\s+|<|>/', \Drupal::config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
 }
 
 /**

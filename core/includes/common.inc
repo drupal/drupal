@@ -2934,9 +2934,10 @@ function _drupal_bootstrap_code() {
   // Set the allowed protocols once we have the config available.
   $allowed_protocols = \Drupal::config('system.filter')->get('protocols');
   if (!isset($allowed_protocols)) {
-    // filter_xss_admin() is called by the installer and update.php, in which
-    // case the configuration may not exist (yet). Provide a minimal default set
-    // of allowed protocols for these cases.
+    // \Drupal\Component\Utility\UrlHelper::filterBadProtocol() is called by the
+    // installer and update.php, in which case the configuration may not exist
+    // (yet). Provide a minimal default set of allowed protocols for these
+    // cases.
     $allowed_protocols = array('http', 'https');
   }
   UrlHelper::setAllowedProtocols($allowed_protocols);

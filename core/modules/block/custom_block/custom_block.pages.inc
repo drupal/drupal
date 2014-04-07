@@ -5,6 +5,7 @@
  * Provides page callbacks for custom blocks.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\custom_block\Entity\CustomBlockType;
 use Drupal\custom_block\Entity\CustomBlock;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,7 +27,7 @@ function template_preprocess_custom_block_add_list(&$variables) {
   foreach ($variables['content'] as $type) {
     $variables['types'][$type->id()] = array(
       'link' => \Drupal::l($type->label(), 'custom_block.add_form', array('custom_block_type' => $type->id()), array('query' => $query)),
-      'description' => filter_xss_admin($type->description),
+      'description' => Xss::filterAdmin($type->description),
       'title' => $type->label(),
       'localized_options' => array(
         'query' => $query,

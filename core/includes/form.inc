@@ -2964,7 +2964,7 @@ function theme_form_element_label($variables) {
     $required = drupal_render($marker);
   }
 
-  $title = filter_xss_admin($element['#title']);
+  $title = Xss::filterAdmin($element['#title']);
 
   $attributes = array();
   // Style the label as class option to display inline with the element.
@@ -3062,9 +3062,10 @@ function _form_set_attributes(&$element, $class = array()) {
  * Note: if the batch 'title', 'init_message', 'progress_message', or
  * 'error_message' could contain any user input, it is the responsibility of
  * the code calling batch_set() to sanitize them first with a function like
- * \Drupal\Component\Utility\String::checkPlain() or filter_xss(). Furthermore,
- * if the batch operation returns any user input in the 'results' or 'message'
- * keys of $context, it must also sanitize them first.
+ * \Drupal\Component\Utility\String::checkPlain() or
+ * \Drupal\Component\Utility\Xss::filter(). Furthermore, if the batch operation
+ * returns any user input in the 'results' or 'message' keys of $context, it
+ * must also sanitize them first.
  *
  * Sample callback_batch_operation():
  * @code

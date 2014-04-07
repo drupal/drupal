@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\String;
@@ -135,7 +136,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $tests = array();
     $tests['[vocabulary:vid]'] = $this->vocabulary->id();
     $tests['[vocabulary:name]'] = String::checkPlain($this->vocabulary->name);
-    $tests['[vocabulary:description]'] = filter_xss($this->vocabulary->description);
+    $tests['[vocabulary:description]'] = Xss::filter($this->vocabulary->description);
     $tests['[vocabulary:node-count]'] = 1;
     $tests['[vocabulary:term-count]'] = 2;
 

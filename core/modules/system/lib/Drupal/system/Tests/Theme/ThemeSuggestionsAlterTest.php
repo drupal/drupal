@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -182,7 +183,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
       'test_theme_theme_suggestions_alter() executed.',
       'test_theme_theme_suggestions_theme_test_suggestions_alter() executed.',
     );
-    $content = preg_replace('/\s+/', ' ', filter_xss($this->content, array()));
+    $content = preg_replace('/\s+/', ' ', Xss::filter($this->content, array()));
     $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, 'Suggestion alter hooks executed in the expected order.');
   }
 

@@ -77,7 +77,8 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
     $entries[] = array(
       'message' => '@token1 !token2',
       'variables' => array('@token1' => $this->randomName(), '!token2' => $this->randomName()),
-      // Setup a link with a tag which is filtered by filter_xss_admin.
+      // Setup a link with a tag which is filtered by
+      // \Drupal\Component\Utility\Xss::filterAdmin().
       'link' => l('<object>Link</object>', 'node/2', array('html' => TRUE)),
     );
     foreach ($entries as $entry) {

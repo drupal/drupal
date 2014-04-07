@@ -5,6 +5,7 @@
  * Functions for error handling.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Utility\Error;
 use Drupal\Component\Utility\String;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,7 +71,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       // The standard PHP error handler considers that the error messages
       // are HTML. We mimick this behavior here.
-      '!message' => filter_xss_admin($message),
+      '!message' => Xss::filterAdmin($message),
       '%function' => $caller['function'],
       '%file' => $caller['file'],
       '%line' => $caller['line'],

@@ -9,6 +9,7 @@ namespace Drupal\views_ui;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
+use Drupal\Component\Utility\Xss;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ViewExecutable;
@@ -691,7 +692,7 @@ class ViewUI implements ViewStorageInterface {
             }
           }
           if ($show_info) {
-            $rows['query'][] = array('<strong>' . t('Title') . '</strong>', filter_xss_admin($this->executable->getTitle()));
+            $rows['query'][] = array('<strong>' . t('Title') . '</strong>', Xss::filterAdmin($this->executable->getTitle()));
             if (isset($path)) {
               $path = l($path, $path);
             }

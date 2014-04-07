@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\views\style;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 
 /**
@@ -92,7 +93,7 @@ class EntityReference extends StylePluginBase {
         // Sanitize HTML, remove line breaks and extra whitespace.
         $output = $this->view->rowPlugin->render($values);
         $output = drupal_render($output);
-        $results[$values->{$id_field_alias}] = filter_xss_admin(preg_replace('/\s\s+/', ' ', str_replace("\n", '', $output)));
+        $results[$values->{$id_field_alias}] = Xss::filterAdmin(preg_replace('/\s\s+/', ' ', str_replace("\n", '', $output)));
         $this->view->row_index++;
       }
     }

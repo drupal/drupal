@@ -7,6 +7,8 @@
  * This file handles tokens for the global 'site' and 'date' tokens.
  */
 
+use Drupal\Component\Utility\Xss;
+
 /**
  * Implements hook_token_info().
  */
@@ -109,7 +111,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
 
         case 'slogan':
           $slogan = \Drupal::config('system.site')->get('slogan');
-          $replacements[$original] = $sanitize ? filter_xss_admin($slogan) : $slogan;
+          $replacements[$original] = $sanitize ? Xss::filterAdmin($slogan) : $slogan;
           break;
 
         case 'mail':

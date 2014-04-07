@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Utility\Title;
 use Drupal\simpletest\WebTestBase;
 
@@ -73,7 +74,7 @@ class PageTitleTest extends WebTestBase {
     $title_filtered = check_plain($title);
 
     $slogan = '<script type="text/javascript">alert("Slogan XSS!");</script>';
-    $slogan_filtered = filter_xss_admin($slogan);
+    $slogan_filtered = Xss::filterAdmin($slogan);
 
     // Activate needed appearance settings.
     $edit = array(

@@ -7,6 +7,7 @@
 
 namespace Drupal\views_test_data\Plugin\views\display;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
@@ -124,7 +125,7 @@ class DisplayTest extends DisplayPluginBase {
 
     $render = $this->view->render();
     // Render the test option as the title before the view output.
-    $render['#prefix'] = '<h1>' . filter_xss_admin($this->options['test_option']) . '</h1>';
+    $render['#prefix'] = '<h1>' . Xss::filterAdmin($this->options['test_option']) . '</h1>';
 
     return $render;
   }

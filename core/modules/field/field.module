@@ -266,7 +266,8 @@ function field_cache_clear() {
 /**
  * Filters an HTML string to prevent cross-site-scripting (XSS) vulnerabilities.
  *
- * Like filter_xss_admin(), but with a shorter list of allowed tags.
+ * Like \Drupal\Component\Utility\Xss::filterAdmin(), but with a shorter list
+ * of allowed tags.
  *
  * Used for items entered by administrators, like field descriptions, allowed
  * values, where some (mainly inline) mark-up may be desired (so

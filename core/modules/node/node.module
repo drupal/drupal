@@ -8,6 +8,7 @@
  * API pattern.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -137,12 +138,12 @@ function node_help($path, $arg) {
     case 'node/%/edit':
       $node = node_load($arg[1]);
       $type = node_type_load($node->bundle());
-      return (!empty($type->help) ? filter_xss_admin($type->help) : '');
+      return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
   }
 
   if ($arg[0] == 'node' && $arg[1] == 'add' && $arg[2]) {
     $type = node_type_load($arg[2]);
-    return (!empty($type->help) ? filter_xss_admin($type->help) : '');
+    return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
   }
 }
 

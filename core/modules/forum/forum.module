@@ -6,6 +6,7 @@
  */
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\String;
 use Drupal\field\Field;
@@ -709,7 +710,7 @@ function template_preprocess_forum_list(&$variables) {
   $row = 0;
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
-    $variables['forums'][$id]->description = filter_xss_admin($forum->description->value);
+    $variables['forums'][$id]->description = Xss::filterAdmin($forum->description->value);
     $variables['forums'][$id]->link = url("forum/" . $forum->id());
     $variables['forums'][$id]->name = String::checkPlain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);

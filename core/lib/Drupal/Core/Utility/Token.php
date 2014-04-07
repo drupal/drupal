@@ -107,9 +107,10 @@ class Token {
    *     final text if no replacement value can be generated.
    *   - sanitize: A boolean flag indicating that tokens should be sanitized for
    *     display to a web browser. Defaults to TRUE. Developers who set this
-   *     option to FALSE assume responsibility for running filter_xss(),
-   *     String::checkPlain() or other appropriate scrubbing functions before
-   *     displaying data to users.
+   *     option to FALSE assume responsibility for running
+   *     \Drupal\Component\Utility\Xss::filter(),
+   *     \Drupal\Component\Utility\String::checkPlain() or other appropriate
+   *     scrubbing functions before displaying data to users.
    *
    * @return string
    *   Text with tokens replaced.
@@ -200,8 +201,9 @@ class Token {
    *     encoding or truncation to a specific length.
    *   - sanitize: A boolean flag indicating that tokens should be sanitized for
    *     display to a web browser. Developers who set this option to FALSE assume
-   *     responsibility for running filter_xss(), String::checkPlain() or other
-   *     appropriate scrubbing functions before displaying data to users.
+   *     responsibility for running \Drupal\Component\Utility\Xss::filter(),
+   *     \Drupal\Component\Utility\String::checkPlain() or other appropriate
+   *     scrubbing functions before displaying data to users.
    *
    * @return array
    *   An associative array of replacement values, keyed by the original 'raw'

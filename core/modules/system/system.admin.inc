@@ -5,6 +5,7 @@
  * Admin page callbacks for the system module.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Render\Element;
@@ -105,7 +106,7 @@ function template_preprocess_admin_block_content(&$variables) {
     foreach ($variables['content'] as $key => $item) {
       $variables['content'][$key]['link'] = l($item['title'], $item['link_path'], $item['localized_options']);
       if (!$compact && isset($item['description'])) {
-        $variables['content'][$key]['description'] = filter_xss_admin($item['description']);
+        $variables['content'][$key]['description'] = Xss::filterAdmin($item['description']);
       }
       else {
         $variables['content'][$key]['description'] = FALSE;

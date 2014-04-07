@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 
 /**
@@ -54,11 +55,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests = array();
     $tests['[comment:cid]'] = $comment->id();
     $tests['[comment:hostname]'] = check_plain($comment->getHostname());
-    $tests['[comment:name]'] = filter_xss($comment->getAuthorName());
-    $tests['[comment:author]'] = filter_xss($comment->getAuthorName());
+    $tests['[comment:name]'] = Xss::filter($comment->getAuthorName());
+    $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
     $tests['[comment:mail]'] = check_plain($this->admin_user->getEmail());
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
-    $tests['[comment:title]'] = filter_xss($comment->getSubject());
+    $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:url]'] = url('comment/' . $comment->id(), $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->id() . '/edit', $url_options);

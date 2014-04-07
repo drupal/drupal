@@ -25,8 +25,8 @@ class Standard implements EditorXssFilterInterface {
     // The <script> and <style> tags are blacklisted because their contents
     // can be malicious (and therefor they are inherently unsafe), whereas for
     // all other tags, only their attributes can make them malicious. Since
-    // Xss::filter() protects against malicious attributes, we take no
-    // blacklisting action.
+    // \Drupal\Component\Utility\Xss::filter() protects against malicious
+    // attributes, we take no blacklisting action.
     // The exceptions to the above rule are <link>, <embed> and <object>:
     // - <link> because the href attribute allows the attacker to import CSS
     //   using the HTTP(S) protocols which Xss::filter() considers safe by

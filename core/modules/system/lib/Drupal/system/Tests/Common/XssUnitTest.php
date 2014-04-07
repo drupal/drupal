@@ -11,7 +11,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests for filter_xss() and check_url().
+ * Tests for \Drupal\Component\Utility\Xss::filter() and check_url().
  */
 class XssUnitTest extends DrupalUnitTestBase {
 
@@ -25,7 +25,7 @@ class XssUnitTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'String filtering tests',
-      'description' => 'Confirm that filter_xss() and check_url() work correctly, including invalid multi-byte sequences.',
+      'description' => 'Confirm that \Drupal\Component\Utility\Xss::filter() and check_url() work correctly, including invalid multi-byte sequences.',
       'group' => 'Common',
     );
   }

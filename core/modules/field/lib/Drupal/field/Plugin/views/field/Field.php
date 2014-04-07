@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\views\field;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -650,7 +651,7 @@ class Field extends FieldPluginBase {
       }
 
       if ($this->options['multi_type'] == 'separator') {
-        return implode(filter_xss_admin($this->options['separator']), $items);
+        return implode(Xss::filterAdmin($this->options['separator']), $items);
       }
       else {
         $item_list = array(
@@ -834,8 +835,9 @@ class Field extends FieldPluginBase {
   protected function addSelfTokens(&$tokens, $item) {
     $field = $this->field_info;
     foreach ($field->getColumns() as $id => $column) {
-      // Use filter_xss_admin because it's user data and we can't be sure it is safe.
-      // We know nothing about the data, though, so we can't really do much else.
+      // Use \Drupal\Component\Utility\Xss::filterAdmin() because it's user data
+      // and we can't be sure it is safe. We know nothing about the data,
+      // though, so we can't really do much else.
 
       if (isset($item['raw'])) {
         // If $item['raw'] is an array then we can use as is, if it's an object
@@ -844,7 +846,7 @@ class Field extends FieldPluginBase {
                (is_object($item['raw']) ? (array)$item['raw'] : NULL);
       }
       if (isset($raw) && isset($raw[$id]) && is_scalar($raw[$id])) {
-        $tokens['[' . $this->options['id'] . '-' . $id . ']'] = filter_xss_admin($raw[$id]);
+        $tokens['[' . $this->options['id'] . '-' . $id . ']'] = Xss::filterAdmin($raw[$id]);
       }
       else {
         // Make sure that empty values are replaced as well.

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Utility\Xss as UtilityXss;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -110,7 +111,7 @@ class Boolean extends FieldPluginBase {
     }
 
     if ($this->options['type'] == 'custom') {
-      return $value ? filter_xss_admin($this->options['type_custom_true']) : filter_xss_admin($this->options['type_custom_false']);
+      return $value ? UtilityXss::filterAdmin($this->options['type_custom_true']) : UtilityXss::filterAdmin($this->options['type_custom_false']);
     }
     elseif (isset($this->formats[$this->options['type']])) {
       return $value ? $this->formats[$this->options['type']][0] : $this->formats[$this->options['type']][1];

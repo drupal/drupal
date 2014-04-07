@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Component\Utility\Xss;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -47,7 +48,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       $maintenance_page = array(
         '#theme' => 'maintenance_page',
         '#title' => t('Site under maintenance'),
-        '#content' => filter_xss_admin(
+        '#content' => Xss::filterAdmin(
           t(\Drupal::config('system.maintenance')->get('message'), array('@site' => \Drupal::config('system.site')->get('name')))
         ),
       );

@@ -79,7 +79,8 @@ class String {
    *     this for text that has already been prepared for HTML display (for
    *     example, user-supplied text that has already been run through
    *     String::checkPlain() previously, or is expected to contain some limited
-   *     HTML tags and has already been run through filter_xss() previously).
+   *     HTML tags and has already been run through
+   *     \Drupal\Component\Utility\Xss::filter() previously).
    *
    * @return mixed
    *   The formatted string, or FALSE if no args specified.

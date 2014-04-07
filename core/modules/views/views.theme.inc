@@ -62,7 +62,7 @@ function template_preprocess_views_view(&$variables) {
 
   // @todo: Figure out whether this belongs into views_ui_preprocess_views_view.
   // Render title for the admin preview.
-  $variables['title'] = !empty($view->views_ui_context) ? filter_xss_admin($view->getTitle()) : '';
+  $variables['title'] = !empty($view->views_ui_context) ? Xss::filterAdmin($view->getTitle()) : '';
 
   if ($view->display_handler->renderPager()) {
     $exposed_input = isset($view->exposed_raw_input) ? $view->exposed_raw_input : NULL;
@@ -203,7 +203,7 @@ function template_preprocess_views_view_fields(&$variables) {
       }
 
       if (!empty($variables['options']['separator']) && $previous_inline && $object->inline && $object->content) {
-        $object->separator = filter_xss_admin($variables['options']['separator']);
+        $object->separator = Xss::filterAdmin($variables['options']['separator']);
       }
 
       $object->class = drupal_clean_css_identifier($id);
@@ -453,7 +453,7 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
   foreach ($variables['rows'] as $id => $row) {
     // Only false on first time.
     if ($count++) {
-      $variables['rows'][$id]->separator = filter_xss_admin($variables['options']['separator']);
+      $variables['rows'][$id]->separator = Xss::filterAdmin($variables['options']['separator']);
     }
     $variables['rows'][$id]->attributes = array();
     $variables['rows'][$id]->link = $argument->summaryName($row);
@@ -643,7 +643,7 @@ function template_preprocess_views_view_table(&$variables) {
           // Place the field into the column, along with an optional separator.
           if (!empty($column_reference['content'])) {
             if (!empty($options['info'][$column]['separator'])) {
-              $column_reference['content'] .= filter_xss_admin($options['info'][$column]['separator']);
+              $column_reference['content'] .= Xss::filterAdmin($options['info'][$column]['separator']);
             }
           }
           else {

@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element;
@@ -728,7 +729,7 @@ function template_preprocess_filter_tips(&$variables) {
  */
 function _filter_html($text, $filter) {
   $allowed_tags = preg_split('/\s+|<|>/', $filter->settings['allowed_html'], -1, PREG_SPLIT_NO_EMPTY);
-  $text = filter_xss($text, $allowed_tags);
+  $text = Xss::filter($text, $allowed_tags);
 
   if ($filter->settings['filter_html_nofollow']) {
     $html_dom = Html::load($text);
@@ -772,7 +773,7 @@ function _filter_url($text, $filter) {
   // the identical list. While '//' is technically optional for MAILTO only,
   // we cannot cleanly differ between protocols here without hard-coding MAILTO,
   // so '//' is optional for all protocols.
-  // @see filter_xss_bad_protocol()
+  // @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
   $protocols = \Drupal::config('system.filter')->get('protocols');
   $protocols = implode(':(?://)?|', $protocols) . ':(?://)?';
 
