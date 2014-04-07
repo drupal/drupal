@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Flood;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -23,11 +23,11 @@ class DatabaseBackend implements FloodInterface {
   protected $connection;
 
   /**
-   * A request object.
+   * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * Construct the DatabaseBackend.
@@ -35,12 +35,12 @@ class DatabaseBackend implements FloodInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection which will be used to store the flood event
    *   information.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HttpRequest object representing the current request.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack used to retrieve the current request.
    */
-  public function __construct(Connection $connection, Request $request) {
+  public function __construct(Connection $connection, RequestStack $request_stack) {
     $this->connection = $connection;
-    $this->request = $request;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -48,7 +48,7 @@ class DatabaseBackend implements FloodInterface {
    */
   public function register($name, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = $this->request->getClientIp();
+      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     $this->connection->insert('flood')
       ->fields(array(
@@ -65,7 +65,7 @@ class DatabaseBackend implements FloodInterface {
    */
   public function clear($name, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = $this->request->getClientIp();
+      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     $this->connection->delete('flood')
       ->condition('event', $name)
@@ -78,7 +78,7 @@ class DatabaseBackend implements FloodInterface {
    */
   public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL) {
     if (!isset($identifier)) {
-      $identifier = $this->request->getClientIp();
+      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     $number = $this->connection->select('flood', 'f')
       ->condition('event', $name)

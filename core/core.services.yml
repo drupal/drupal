@@ -608,7 +608,7 @@ services:
     class: Drupal\Core\Transliteration\PHPTransliteration
   flood:
     class: Drupal\Core\Flood\DatabaseBackend
-    arguments: ['@database', '@request']
+    arguments: ['@database', '@request_stack']
   plugin.manager.mail:
     class: Drupal\Core\Mail\MailManager
     arguments: ['@container.namespaces', '@cache.default', '@language_manager', '@module_handler', '@config.factory']

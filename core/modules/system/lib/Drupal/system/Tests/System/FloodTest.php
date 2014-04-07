@@ -16,12 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 class FloodTest extends WebTestBase {
 
   /**
-   * The Request object that flood classes should use.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * {@inheritdoc}
    */
-  protected $request;
-
   public static function getInfo() {
     return array(
       'name' => 'Flood control mechanism',
@@ -30,19 +26,22 @@ class FloodTest extends WebTestBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
 
     // Flood backends need a request object. Create a dummy one and insert it
     // to the container.
-    $this->request = Request::createFromGlobals();
-    $this->container->set('request', $this->request);
+    $request = Request::createFromGlobals();
+    $this->container->get('request_stack')->push($request);
   }
 
   /**
    * Test flood control mechanism clean-up.
    */
-  function testCleanUp() {
+  public function testCleanUp() {
     $threshold = 1;
     $window_expired = -1;
     $name = 'flood_test_cleanup';
@@ -68,12 +67,13 @@ class FloodTest extends WebTestBase {
   /**
    * Test flood control memory backend.
    */
-  function testMemoryBackend() {
+  public function testMemoryBackend() {
     $threshold = 1;
     $window_expired = -1;
     $name = 'flood_test_cleanup';
 
-    $flood = new \Drupal\Core\Flood\MemoryBackend($this->request);
+    $request_stack = \Drupal::service('request_stack');
+    $flood = new \Drupal\Core\Flood\MemoryBackend($request_stack);
     // Register expired event.
     $flood->register($name, $window_expired);
     // Verify event is not allowed.
@@ -90,4 +90,33 @@ class FloodTest extends WebTestBase {
     $flood->garbageCollection();
     $this->assertFalse($flood->isAllowed($name, $threshold));
   }
+
+  /**
+   * Test flood control database backend.
+   */
+  public function testDatabaseBackend() {
+    $threshold = 1;
+    $window_expired = -1;
+    $name = 'flood_test_cleanup';
+
+    $connection = \Drupal::service('database');
+    $request_stack = \Drupal::service('request_stack');
+    $flood = new \Drupal\Core\Flood\DatabaseBackend($connection, $request_stack);
+    // Register expired event.
+    $flood->register($name, $window_expired);
+    // Verify event is not allowed.
+    $this->assertFalse($flood->isAllowed($name, $threshold));
+    // Run cron and verify event is now allowed.
+    $flood->garbageCollection();
+    $this->assertTrue($flood->isAllowed($name, $threshold));
+
+    // Register unexpired event.
+    $flood->register($name);
+    // Verify event is not allowed.
+    $this->assertFalse($flood->isAllowed($name, $threshold));
+    // Run cron and verify event is still not allowed.
+    $flood->garbageCollection();
+    $this->assertFalse($flood->isAllowed($name, $threshold));
+  }
+
 }
