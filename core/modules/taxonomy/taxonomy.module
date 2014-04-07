@@ -438,14 +438,12 @@ function taxonomy_term_load_parents_all($tid) {
  *
  * @param $tid
  *   A taxonomy term ID.
- * @param $vid
- *   An optional vocabulary ID to restrict the child search.
  *
  * @return
  *   An array of term objects that are the children of the term $tid, or an
  *   empty array when no children exist.
  */
-function taxonomy_term_load_children($tid, $vid = NULL) {
+function taxonomy_term_load_children($tid) {
   $children = &drupal_static(__FUNCTION__, array());
 
   if ($tid && !isset($children[$tid])) {
