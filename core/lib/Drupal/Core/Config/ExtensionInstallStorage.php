@@ -7,11 +7,11 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\InstallStorage;
-use Drupal\Core\Config\StorageException;
-
 /**
- * Defines the file storage controller for metadata files.
+ * Storage to access configuration and schema in enabled extensions.
+ *
+ * @see \Drupal\Core\Config\ConfigInstaller
+ * @see \Drupal\Core\Config\TypedConfigManager
  */
 class ExtensionInstallStorage extends InstallStorage {
 
@@ -28,16 +28,13 @@ class ExtensionInstallStorage extends InstallStorage {
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The active configuration store where the list of enabled modules and
    *   themes is stored.
+   * @param string $directory
+   *   The directory to scan in each extension to scan for files. Defaults to
+   *   'config'.
    */
-  public function __construct(StorageInterface $config_storage) {
+  public function __construct(StorageInterface $config_storage, $directory = 'config') {
     $this->configStorage = $config_storage;
-  }
-
-  /**
-   * Resets the static cache.
-   */
-  public function reset() {
-    $this->folders = NULL;
+    $this->directory = $directory;
   }
 
   /**

@@ -93,8 +93,8 @@ services:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', config_snapshot]
   config.storage.schema:
-    class: Drupal\Core\Config\Schema\SchemaStorage
-    arguments: ['@config.storage']
+    class: Drupal\Core\Config\ExtensionInstallStorage
+    arguments: ['@config.storage', 'config/schema']
   config.storage.installer:
     class: Drupal\Core\Config\InstallStorage
   config.typed:

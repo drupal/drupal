@@ -40,18 +40,13 @@ class LocaleConfigManagerTest extends DrupalUnitTestBase {
    */
   public function testHasTranslation() {
     $this->installConfig(array('locale_test'));
-    $locale_config_manager = new LocaleConfigManager(
-      $this->container->get('config.storage'),
-      $this->container->get('config.storage.schema'),
-      $this->container->get('config.storage.installer'),
-      $this->container->get('locale.storage'),
-      $this->container->get('cache.config'),
-      $this->container->get('config.factory'),
-      $this->container->get('language_manager')
-    );
+    $locale_config_manager = \Drupal::service('locale.config.typed');
 
     $language = new Language(array('id' => 'de'));
-    $this->assertFalse($locale_config_manager->hasTranslation('locale_test.no_translation', $language), 'There is no translation for locale_test.no_translation configuration.');
-    $this->assertTrue($locale_config_manager->hasTranslation('locale_test.translation', $language), 'There is a translation for locale_test.translation configuration.');
+    $result = $locale_config_manager->hasTranslation('locale_test.no_translation', $language);
+    $this->assertFalse($result, 'There is no translation for locale_test.no_translation configuration.');
+
+    $result = $locale_config_manager->hasTranslation('locale_test.translation', $language);
+    $this->assertTrue($result, 'There is a translation for locale_test.translation configuration.');
   }
 }
