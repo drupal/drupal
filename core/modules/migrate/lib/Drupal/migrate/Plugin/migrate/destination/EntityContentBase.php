@@ -34,7 +34,7 @@ class EntityContentBase extends Entity {
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin ID for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration entity.
@@ -47,7 +47,7 @@ class EntityContentBase extends Entity {
    * @param \Drupal\Field\FieldInfo $field_info
    *   The field info.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
     $this->migrateEntityFieldPluginManager = $plugin_manager;
     $this->fieldInfo = $field_info;
@@ -56,7 +56,7 @@ class EntityContentBase extends Entity {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     $entity_type = static::getEntityTypeId($plugin_id);
     return new static(
       $configuration,

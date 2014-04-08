@@ -23,7 +23,7 @@ class EntityFile extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
     $configuration += array(
       'source_base_path' => '',
       'source_path_property' => 'filepath',

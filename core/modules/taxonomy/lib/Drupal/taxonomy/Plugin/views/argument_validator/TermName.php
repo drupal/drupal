@@ -33,7 +33,7 @@ class TermName extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_manager);
     // Not handling exploding term names.
     $this->multipleCapable = FALSE;

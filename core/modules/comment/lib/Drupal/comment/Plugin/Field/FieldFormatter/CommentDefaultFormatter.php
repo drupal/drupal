@@ -67,7 +67,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $plugin_id,
       $plugin_definition,
@@ -86,7 +86,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The definition of the field to which the formatter is associated.
@@ -103,7 +103,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    * @param \Drupal\Core\Entity\EntityViewBuilderInterface $comment_view_builder
    *   The comment view builder.
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, AccountInterface $current_user, CommentStorageInterface $comment_storage, EntityViewBuilderInterface $comment_view_builder) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, AccountInterface $current_user, CommentStorageInterface $comment_storage, EntityViewBuilderInterface $comment_view_builder) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode);
     $this->viewBuilder = $comment_view_builder;
     $this->storage = $comment_storage;

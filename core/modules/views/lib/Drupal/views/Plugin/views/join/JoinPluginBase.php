@@ -141,7 +141,7 @@ class JoinPluginBase extends PluginBase {
   /**
    * Constructs a Drupal\views\Plugin\views\join\JoinPluginBase object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     // Merge in some default values.
     $configuration += array(

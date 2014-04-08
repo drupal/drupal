@@ -63,7 +63,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin ID for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\block\Plugin\Type\BlockManager
    *   The Plugin Block Manager.
@@ -74,7 +74,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account for which view access should be checked.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, BlockManager $block_manager, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $account) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockManager $block_manager, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $account) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->blockManager = $block_manager;
@@ -86,7 +86,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,

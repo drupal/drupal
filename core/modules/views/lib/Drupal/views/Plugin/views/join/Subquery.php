@@ -23,7 +23,7 @@ class Subquery extends JoinPluginBase {
   /**
    * Constructs a Subquery object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->left_query = $this->configuration['left_query'];

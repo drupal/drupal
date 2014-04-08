@@ -45,7 +45,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * @param \Drupal\menu_link\MenuTreeInterface $menu_tree
    *   The menu tree.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MenuTreeInterface $menu_tree) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuTreeInterface $menu_tree) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->menuTree = $menu_tree;
   }
@@ -53,7 +53,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,

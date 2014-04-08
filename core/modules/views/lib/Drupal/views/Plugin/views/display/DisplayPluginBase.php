@@ -121,7 +121,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * @todo Replace DisplayPluginBase::$display with
    *   DisplayPluginBase::$configuration to standardize with other plugins.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
   }
 

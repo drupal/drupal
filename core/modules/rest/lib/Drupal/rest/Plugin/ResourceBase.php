@@ -32,12 +32,12 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param array $serializer_formats
    *   The available serialization formats.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, array $serializer_formats) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->serializerFormats = $serializer_formats;
   }
@@ -45,7 +45,7 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,

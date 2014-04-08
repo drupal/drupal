@@ -59,12 +59,12 @@ class ContactLink extends Link {
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The access manager.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, AccessManager $access_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccessManager $access_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->accessManager = $access_manager;
   }
@@ -72,7 +72,7 @@ class ContactLink extends Link {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,

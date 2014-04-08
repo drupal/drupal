@@ -35,8 +35,12 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    *   by configuration option name. The special key 'context' may be used to
    *   initialize the defined contexts by setting it to an array of context
    *   values keyed by context names.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     $context = array();
     if (isset($configuration['context'])) {
       $context = $configuration['context'];

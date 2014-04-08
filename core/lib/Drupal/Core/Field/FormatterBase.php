@@ -45,7 +45,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The definition of the field to which the formatter is associated.
@@ -56,7 +56,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * @param string $view_mode
    *   The view mode.
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
 
     $this->fieldDefinition = $field_definition;

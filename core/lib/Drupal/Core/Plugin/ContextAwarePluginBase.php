@@ -25,7 +25,7 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
   /**
    * Override of \Drupal\Component\Plugin\ContextAwarePluginBase::__construct().
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     $context = array();
     if (isset($configuration['context'])) {
       $context = $configuration['context'];

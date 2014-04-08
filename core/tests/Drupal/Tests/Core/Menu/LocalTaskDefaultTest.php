@@ -233,7 +233,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Menu\LocalTaskDefault::getWeight()
    */
-  public function testGetWeight(array $plugin_definition, $plugin_id, $expected_weight) {
+  public function testGetWeight($plugin_definition, $plugin_id, $expected_weight) {
     $this->pluginDefinition = $plugin_definition;
     $this->pluginId = $plugin_id;
     $this->setupLocalTaskDefault();

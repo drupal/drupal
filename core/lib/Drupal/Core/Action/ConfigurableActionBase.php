@@ -19,7 +19,7 @@ abstract class ConfigurableActionBase extends ActionBase implements Configurable
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->configuration += $this->defaultConfiguration();

@@ -34,7 +34,7 @@ class DateTimeDefaultWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
 
     // @todo Inject this once https://drupal.org/node/2035317 is in.

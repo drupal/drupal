@@ -37,14 +37,14 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *
    * @param array $plugin_id
    *   The plugin_id for the widget.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The definition of the field to which the widget is associated.
    * @param array $settings
    *   The widget settings.
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
     $this->fieldDefinition = $field_definition;
     $this->settings = $settings;

@@ -42,14 +42,14 @@ class Date extends FieldPluginBase {
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin ID for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Datetime\Date $date_service
    *   The date service.
    * @param \Drupal\Core\Entity\EntityStorageInterface $date_format_storage
    *   The date format storage.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, DateService $date_service, EntityStorageInterface $date_format_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateService $date_service, EntityStorageInterface $date_format_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->dateService = $date_service;
@@ -59,7 +59,7 @@ class Date extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,

@@ -70,14 +70,14 @@ class Table extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static($configuration, $plugin_id, $plugin_definition, $container->get('request'));
   }
 
   /**
    * Constructs a Table object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Request $request) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->request = $request;

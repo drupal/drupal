@@ -54,7 +54,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    *
    * @param string $plugin_id
    *   The config mapper plugin ID.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   An array of plugin information as documented in
    *   ConfigNamesMapper::__construct() with the following additional keys:
    *   - entity_type: The name of the entity type this mapper belongs to.
@@ -71,7 +71,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct($plugin_id, array $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManagerInterface $entity_manager) {
+  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManagerInterface $entity_manager) {
     parent::__construct($plugin_id, $plugin_definition, $config_factory, $locale_config_manager, $config_mapper_manager, $route_provider, $translation_manager);
     $this->setType($plugin_definition['entity_type']);
 
@@ -81,7 +81,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     // Note that we ignore the plugin $configuration because mappers have
     // nothing to configure in themselves.
     return new static (

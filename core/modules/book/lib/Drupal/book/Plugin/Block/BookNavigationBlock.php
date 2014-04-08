@@ -45,14 +45,14 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Request $request, BookManagerInterface $book_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, BookManagerInterface $book_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->request = $request;
@@ -62,7 +62,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,

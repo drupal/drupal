@@ -63,7 +63,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    *
    * @param $plugin_id
    *   The config mapper plugin ID.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   An array of plugin information with the following keys:
    *   - title: The title of the mapper, used for generating page titles.
    *   - base_route_name: The route name of the base route this mapper is
@@ -88,7 +88,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    *   Throws an exception if the route specified by the 'base_route_name' in
    *   the plugin definition could not be found by the route provider.
    */
-  public function __construct($plugin_id, array $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager) {
+  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager) {
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
 
@@ -104,7 +104,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     // Note that we ignore the plugin $configuration because mappers have
     // nothing to configure in themselves.
     return new static (

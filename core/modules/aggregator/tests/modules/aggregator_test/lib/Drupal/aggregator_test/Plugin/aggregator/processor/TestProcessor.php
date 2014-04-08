@@ -37,7 +37,7 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
@@ -53,12 +53,12 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The configuration factory object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactoryInterface $config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config) {
     $this->configFactory = $config;
     parent::__construct($configuration + $this->getConfiguration(), $plugin_id, $plugin_definition);
   }

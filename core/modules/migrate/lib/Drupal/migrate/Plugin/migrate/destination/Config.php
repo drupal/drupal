@@ -39,14 +39,14 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface 
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin ID for the plugin instance.
-   * @param array $plugin_definition
+   * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Entity\MigrationInterface $migration
    *   The migration entity.
    * @param \Drupal\Core\Config\Config $config
    *   The configuration object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, ConfigObject $config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigObject $config) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->config = $config;
   }
@@ -54,7 +54,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,
