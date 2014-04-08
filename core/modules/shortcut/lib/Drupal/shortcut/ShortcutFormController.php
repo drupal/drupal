@@ -28,16 +28,6 @@ class ShortcutFormController extends ContentEntityFormController {
   public function form(array $form, array &$form_state) {
     $form = parent::form($form, $form_state);
 
-    $form['title'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Name'),
-      '#default_value' => $this->entity->getTitle(),
-      '#size' => 40,
-      '#maxlength' => 255,
-      '#required' => TRUE,
-      '#weight' => -10,
-    );
-
     $form['path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path'),
@@ -52,19 +42,6 @@ class ShortcutFormController extends ContentEntityFormController {
       '#type' => 'language_select',
       '#default_value' => $this->entity->getUntranslated()->language()->id,
       '#languages' => Language::STATE_ALL,
-    );
-
-    $form['shortcut_set'] = array(
-      '#type' => 'value',
-      '#value' => $this->entity->bundle(),
-    );
-    $form['route_name'] = array(
-      '#type' => 'value',
-      '#value' => $this->entity->getRouteName(),
-    );
-    $form['route_parameters'] = array(
-      '#type' => 'value',
-      '#value' => $this->entity->getRouteParams(),
     );
 
     return $form;

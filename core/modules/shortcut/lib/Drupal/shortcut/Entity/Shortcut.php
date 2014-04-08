@@ -151,9 +151,21 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setRequired(TRUE);
 
     $fields['title'] = FieldDefinition::create('string')
-      ->setLabel(t('Title'))
+      ->setLabel(t('Name'))
       ->setDescription(t('The name of the shortcut.'))
-      ->setTranslatable(TRUE);
+      ->setRequired(TRUE)
+      ->setTranslatable(TRUE)
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 255,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -10,
+        'settings' => array(
+          'size' => 40,
+        ),
+      ));
 
     $fields['weight'] = FieldDefinition::create('integer')
       ->setLabel(t('Weight'))
