@@ -193,8 +193,10 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
  * installation state. At all other times, the "install_profile" setting will be
  * available in settings.php.
  *
- * @return $profile
- *   The name of the installation profile.
+ * @return string|null $profile
+ *   The name of the installation profile or NULL if no installation profile is
+ *   currently active. This is the case for example during the first steps of
+ *   the installer or during unit tests.
  */
 function drupal_get_profile() {
   global $install_state;
@@ -205,11 +207,12 @@ function drupal_get_profile() {
       $profile = $install_state['parameters']['profile'];
     }
     else {
-      $profile = '';
+      $profile = NULL;
     }
   }
   else {
-    $profile = Settings::get('install_profile') ?: 'standard';
+    // Fall back to NULL, if there is no 'install_profile' setting.
+    $profile = Settings::get('install_profile');
   }
 
   return $profile;
