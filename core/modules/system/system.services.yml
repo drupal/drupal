@@ -5,9 +5,7 @@ services:
       - { name: access_check, applies_to: _access_system_cron }
   system.manager:
     class: Drupal\system\SystemManager
-    arguments: ['@module_handler', '@database', '@entity.manager']
-    calls:
-      - [setRequest, ['@?request=']]
+    arguments: ['@module_handler', '@database', '@entity.manager', '@request_stack']
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
     arguments: ['@request', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver', '@current_user']
