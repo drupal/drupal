@@ -10,7 +10,7 @@ use Drupal\Core\Template\RenderWrapper;
 use Drupal\Core\Template\Attribute;
 
 /**
- * Implements hook_preprocess_HOOK() for page templates.
+ * Implements hook_preprocess_HOOK() for page.html.twig.
  *
  * Adds body classes if certain regions have content.
  */
@@ -62,7 +62,11 @@ function bartik_preprocess_page(&$variables) {
   }
   if (!empty($variables['secondary_menu'])) {
     $variables['secondary_menu']['#attributes']['id'] = 'secondary-menu-links';
-    $variables['secondary_menu']['#attributes']['class'] = array('links', 'inline', 'clearfix');
+    $variables['secondary_menu']['#attributes']['class'] = array(
+      'links',
+      'inline',
+      'clearfix',
+    );
   }
 
   // Set the options that apply to both page and maintenance page.
@@ -71,7 +75,8 @@ function bartik_preprocess_page(&$variables) {
   // Since the title and the shortcut link are both block level elements,
   // positioning them next to each other is much simpler with a wrapper div.
   if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
-    // Add a wrapper div using the title_prefix and title_suffix render elements.
+    // Add a wrapper div using the title_prefix and title_suffix render
+    // elements.
     $variables['title_prefix']['shortcut_wrapper'] = array(
       '#markup' => '<div class="shortcut-wrapper clearfix">',
       '#weight' => 100,
@@ -86,7 +91,7 @@ function bartik_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for maintenance page templates.
+ * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
  */
 function bartik_preprocess_maintenance_page(&$variables) {
   // By default, site_name is set to Drupal if no db connection is available
@@ -112,7 +117,7 @@ function bartik_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for node templates.
+ * Implements hook_preprocess_HOOK() for node.html.twig.
  */
 function bartik_preprocess_node(&$variables) {
   // Remove the "Add new comment" link on teasers or when the comment form is
@@ -123,7 +128,7 @@ function bartik_preprocess_node(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block templates.
+ * Implements hook_preprocess_HOOK() for block.html.twig.
  */
 function bartik_preprocess_block(&$variables) {
   // Add a clearfix class to system branding blocks.
@@ -133,21 +138,21 @@ function bartik_preprocess_block(&$variables) {
 }
 
 /**
- * Implements theme_menu_tree().
+ * Implements THEME_menu_tree().
  */
 function bartik_menu_tree($variables) {
   return '<ul class="menu clearfix">' . $variables['tree'] . '</ul>';
 }
 
 /**
- * Implements theme_menu_tree__shortcut_default() {
+ * Implements THEME_menu_tree__MENUNAME().
  */
 function bartik_menu_tree__shortcut_default($variables) {
   return '<ul class="menu">' . $variables['tree'] . '</ul>';
 }
 
 /**
- * Implements theme_preprocess_HOOK() for field templates.
+ * Implements hook_preprocess_HOOK() for field.html.twig.
  *
  * @see template_preprocess_field()
  */
@@ -179,7 +184,8 @@ function _bartik_process_page(&$variables) {
     $variables['site_name'] = check_plain($site_config->get('name'));
   }
   if ($variables['hide_site_slogan']) {
-    // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
+    // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we
+    // rebuild it.
     $variables['site_slogan'] = Xss::filterAdmin($site_config->get('slogan'));
   }
 }
