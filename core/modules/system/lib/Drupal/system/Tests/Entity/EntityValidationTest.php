@@ -7,11 +7,6 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
-
 /**
  * Tests Entity API base functionality.
  */

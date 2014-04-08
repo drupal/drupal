@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Plugin;
 
-use Drupal\Core\Cache\MemoryBackendFactory;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\system\Tests\Plugin\Discovery\DiscoveryTestBase;
 use Drupal\Component\Plugin\Discovery\StaticDiscovery;

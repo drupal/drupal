@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 

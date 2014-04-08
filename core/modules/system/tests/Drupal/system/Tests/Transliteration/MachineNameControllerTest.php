@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Transliteration;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Component\Transliteration\PHPTransliteration;
 use Drupal\system\MachineNameController;
 use Symfony\Component\HttpFoundation\Request;

@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Language\Language;
 
 /**
  * Tests \Drupal\Core\Entity\Controller\EntityViewController.

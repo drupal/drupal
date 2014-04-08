@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\simpletest\WebTestBase;
-use Symfony\Component\Routing\RequestContext;
 
 /**
  * Functional class for the full integrated routing system.

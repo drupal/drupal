@@ -7,10 +7,6 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Core\Database\Database;
-use Drupal\Core\Queue\DatabaseQueue;
-use Drupal\Core\Queue\Memory;
-use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\simpletest\WebTestBase;
 
 /**

@@ -9,7 +9,6 @@ namespace Drupal\system;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;

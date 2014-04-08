@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\form_test\SystemConfigFormTestForm;
 
 /**
  * Tests the SystemConfigFormTestBase class.

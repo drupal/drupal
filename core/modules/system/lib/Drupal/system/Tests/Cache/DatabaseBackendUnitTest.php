@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Cache;
 
 use Drupal\Core\Cache\DatabaseBackend;
-use Drupal\Core\Database\Database;
 
 /**
  * Tests DatabaseBackend using GenericCacheBackendUnitTestBase.

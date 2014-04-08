@@ -10,7 +10,6 @@ namespace Drupal\system\Tests\Plugin;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\plugin_test\Plugin\MockBlockManager;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\Exception\ContextException;
 
 /**
  * Tests that context aware plugins function correctly.

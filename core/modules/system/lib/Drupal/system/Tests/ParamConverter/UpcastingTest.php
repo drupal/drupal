@@ -7,9 +7,6 @@
 
 namespace Drupal\system\Tests\ParamConverter;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\simpletest\WebTestBase;
 
 /**

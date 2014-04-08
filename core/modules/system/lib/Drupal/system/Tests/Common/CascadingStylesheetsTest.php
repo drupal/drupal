@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**

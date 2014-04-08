@@ -7,7 +7,6 @@
 
 namespace Drupal\menu_test\EventSubscriber;
 
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;

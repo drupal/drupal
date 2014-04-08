@@ -10,7 +10,6 @@ namespace Drupal\system;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImporterException;
-use Drupal\Core\Config\StorageDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

@@ -7,8 +7,6 @@
 
 namespace Drupal\entity_test\Entity;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Defines the test entity class.
  *

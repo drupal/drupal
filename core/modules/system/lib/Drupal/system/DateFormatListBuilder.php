@@ -7,7 +7,6 @@
 
 namespace Drupal\system;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Entity\EntityInterface;
