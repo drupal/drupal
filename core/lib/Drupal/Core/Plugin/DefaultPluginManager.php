@@ -173,7 +173,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     if (isset($this->definitions[$plugin_id])) {
       return $this->definitions[$plugin_id];
     }
-    return array();
   }
 
   /**

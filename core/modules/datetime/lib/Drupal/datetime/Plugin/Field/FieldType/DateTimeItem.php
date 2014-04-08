@@ -52,7 +52,7 @@ class DateTimeItem extends FieldItemBase implements PrepareCacheInterface {
     $properties['value'] = DataDefinition::create('datetime_iso8601')
       ->setLabel(t('Date value'));
 
-    $properties['date'] = DataDefinition::create('datetime_computed')
+    $properties['date'] = DataDefinition::create('any')
       ->setLabel(t('Computed date'))
       ->setDescription(t('The computed DateTime object.'))
       ->setComputed(TRUE)
