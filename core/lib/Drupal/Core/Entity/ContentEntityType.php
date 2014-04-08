@@ -10,7 +10,7 @@ namespace Drupal\Core\Entity;
 /**
  * Defines a config entity type annotation object.
  */
-class ContentEntityType extends EntityType {
+class ContentEntityType extends EntityType implements ContentEntityTypeInterface {
 
   /**
    * {@inheritdoc}
