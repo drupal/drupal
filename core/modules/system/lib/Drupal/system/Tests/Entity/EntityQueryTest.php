@@ -235,6 +235,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     // word but allows us to test revisions and string operations.
     $ids = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'merhaba')
+      ->sort('id')
       ->execute();
     $entities = entity_load_multiple('entity_test_mulrev', $ids);
     foreach ($entities as $entity) {
@@ -267,12 +268,14 @@ class EntityQueryTest extends EntityUnitTestBase {
     $this->assertIdentical($results, $assert);
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'siema', 'STARTS_WITH')
+      ->sort('revision_id')
       ->execute();
     // Now we only get the ones that originally were siema, entity id 8 and
     // above.
     $this->assertIdentical($results, array_slice($assert, 4, 8, TRUE));
     $results = $this->factory->get('entity_test_mulrev')
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
+      ->sort('revision_id')
       ->execute();
     // It is very important that we do not get the ones which only have
     // xsiemax despite originally they were merhaba, ie. ended with a.
