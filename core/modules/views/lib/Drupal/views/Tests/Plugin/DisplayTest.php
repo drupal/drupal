@@ -182,7 +182,7 @@ class DisplayTest extends PluginTestBase {
     $output = drupal_render($output);
 
     $this->drupalSetContent($output);
-    $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertEqual($result[0]->attributes()->href, url('test_display_more'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
@@ -191,7 +191,7 @@ class DisplayTest extends PluginTestBase {
     $more_link = $view->display_handler->renderMoreLink();
     $more_link = drupal_render($more_link);
     $this->drupalSetContent($more_link);
-    $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertEqual($result[0]->attributes()->href, url('test_display_more'), 'The right more link is shown.');
     $this->assertEqual(trim($result[0][0]), $expected_more_text, 'The right link text is shown.');
 
@@ -207,7 +207,7 @@ class DisplayTest extends PluginTestBase {
     $output = $view->preview();
     $output = drupal_render($output);
     $this->drupalSetContent($output);
-    $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown.');
 
     $view = Views::getView('test_display_more');
@@ -225,7 +225,7 @@ class DisplayTest extends PluginTestBase {
     $output = $view->preview();
     $output = drupal_render($output);
     $this->drupalSetContent($output);
-    $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
+    $result = $this->xpath('//a[@class=:class]', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');
 
     // Test the default value of use_more_always.
