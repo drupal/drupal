@@ -103,15 +103,12 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
    * @param string $name
    *   The name of property.
    *
-   * @return array|FALSE
-   *   The definition of the property or FALSE if the property does not exist.
+   * @return array|null
+   *   The definition of the property or NULL if the property does not exist.
    */
   public function getPropertyDefinition($name) {
     if (isset($this->definition['mapping'][$name])) {
       return $this->definition['mapping'][$name];
-    }
-    else {
-      return FALSE;
     }
   }
 

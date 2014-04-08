@@ -109,8 +109,8 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
    * @param string $name
    *   The name of the field.
    *
-   * @return \Drupal\Core\Field\FieldDefinitionInterface|false
-   *   The definition of the field or FALSE if the field does not exist.
+   * @return \Drupal\Core\Field\FieldDefinitionInterface|null
+   *   The definition of the field or null if the field does not exist.
    */
   public function getFieldDefinition($name);
 

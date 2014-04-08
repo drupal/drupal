@@ -478,9 +478,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if (isset($this->fieldDefinitions[$name])) {
       return $this->fieldDefinitions[$name];
     }
-    else {
-      return FALSE;
-    }
   }
 
   /**
