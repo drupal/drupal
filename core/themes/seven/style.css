@@ -746,6 +746,14 @@ form {
 fieldset {
   margin: 1em 0;
 }
+.fieldgroup {
+  min-width: 0;
+}
+@-moz-document url-prefix() {
+  .fieldgroup {
+    display: table-cell;
+  }
+}
 .form-item {
   margin: 1em 0;
 }
