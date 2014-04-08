@@ -37,17 +37,17 @@ class UpdateFeedItemTest extends AggregatorTestBase {
 
     // Test updating feed items without valid timestamp information.
     $edit = array(
-      'title' => "Feed without publish timestamp",
-      'url' => $this->getRSS091Sample(),
+      'title[0][value]' => "Feed without publish timestamp",
+      'url[0][value]' => $this->getRSS091Sample(),
     );
 
-    $this->drupalGet($edit['url']);
-    $this->assertResponse(array(200), format_string('URL !url is accessible', array('!url' => $edit['url'])));
+    $this->drupalGet($edit['url[0][value]']);
+    $this->assertResponse(array(200), format_string('URL !url is accessible', array('!url' => $edit['url[0][value]'])));
 
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
+    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed !name has been added.', array('!name' => $edit['title[0][value]'])));
 
-    $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchField();
+    $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url[0][value]']))->fetchField();
     $feed = aggregator_feed_load($fid);
 
     $feed->refreshItems();

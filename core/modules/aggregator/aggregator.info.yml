@@ -7,3 +7,4 @@ core: 8.x
 configure: aggregator.admin_settings
 dependencies:
   - file
+  - options

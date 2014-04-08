@@ -127,7 +127,7 @@ class DependencyTest extends ModuleTestBase {
     // - taxonomy depends on options
     // - ban depends on xmlrpc (via module_test)
     // The correct enable order is:
-    $expected_order = array('filter', 'xmlrpc', 'ban', 'text', 'node', 'datetime', 'comment', 'history', 'options', 'taxonomy', 'forum');
+    $expected_order = array('filter', 'text', 'options', 'xmlrpc', 'ban', 'node', 'datetime', 'comment', 'history', 'taxonomy', 'forum');
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.

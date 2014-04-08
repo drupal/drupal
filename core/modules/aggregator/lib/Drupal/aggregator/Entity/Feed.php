@@ -144,7 +144,13 @@ class Feed extends ContentEntityBase implements FeedInterface {
 
     $fields['title'] = FieldDefinition::create('string')
       ->setLabel(t('Title'))
-      ->setDescription(t('The title of the feed.'));
+      ->setDescription(t('The name of the feed (or the name of the website providing the feed).'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -5,
+      ));
 
     $fields['langcode'] = FieldDefinition::create('language')
       ->setLabel(t('Language code'))
@@ -152,12 +158,28 @@ class Feed extends ContentEntityBase implements FeedInterface {
 
     $fields['url'] = FieldDefinition::create('uri')
       ->setLabel(t('URL'))
-      ->setDescription(t('The URL to the feed.'));
+      ->setDescription(t('The fully-qualified URL of the feed.'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', NULL)
+      ->setDisplayOptions('form', array(
+        'type' => 'uri',
+        'weight' => -3,
+      ));
 
-    $fields['refresh'] = FieldDefinition::create('integer')
-      ->setLabel(t('Refresh'))
-      ->setDescription(t('How often to check for new feed items, in seconds.'))
-      ->setSetting('unsigned', TRUE);
+    $intervals = array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200);
+    $period = array_map('format_interval', array_combine($intervals, $intervals));
+    $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
+
+    $fields['refresh'] = FieldDefinition::create('list_integer')
+      ->setLabel(t('Update interval'))
+      ->setDescription(t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))))
+      ->setSetting('unsigned', TRUE)
+      ->setRequired(TRUE)
+      ->setSetting('allowed_values', $period)
+      ->setDisplayOptions('form', array(
+        'type' => 'options_select',
+        'weight' => -2,
+      ));
 
     $fields['checked'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Checked'))

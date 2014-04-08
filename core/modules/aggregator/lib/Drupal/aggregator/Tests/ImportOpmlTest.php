@@ -101,8 +101,8 @@ class ImportOpmlTest extends AggregatorTestBase {
       'refresh'       => '900',
     );
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertRaw(t('A feed with the URL %url already exists.', array('%url' => $feeds[0]['url'])), 'Verifying that a duplicate URL was identified');
-    $this->assertRaw(t('A feed named %title already exists.', array('%title' => $feeds[1]['title'])), 'Verifying that a duplicate title was identified');
+    $this->assertRaw(t('A feed with the URL %url already exists.', array('%url' => $feeds[0]['url[0][value]'])), 'Verifying that a duplicate URL was identified');
+    $this->assertRaw(t('A feed named %title already exists.', array('%title' => $feeds[1]['title[0][value]'])), 'Verifying that a duplicate title was identified');
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($after, 2, 'Verifying that two distinct feeds were added.');
@@ -115,8 +115,8 @@ class ImportOpmlTest extends AggregatorTestBase {
       $refresh = $refresh && $feed->refresh == 900;
     }
 
-    $this->assertEqual($title[$feeds[0]['url']], $feeds[0]['title'], 'First feed was added correctly.');
-    $this->assertEqual($url[$feeds[1]['title']], $feeds[1]['url'], 'Second feed was added correctly.');
+    $this->assertEqual($title[$feeds[0]['url[0][value]']], $feeds[0]['title[0][value]'], 'First feed was added correctly.');
+    $this->assertEqual($url[$feeds[1]['title[0][value]']], $feeds[1]['url[0][value]'], 'Second feed was added correctly.');
     $this->assertTrue($refresh, 'Refresh times are correct.');
   }
 

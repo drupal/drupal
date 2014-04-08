@@ -54,9 +54,9 @@ abstract class AggregatorTestBase extends WebTestBase {
   function createFeed($feed_url = NULL, array $edit = array()) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
+    $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed !name has been added.', array('!name' => $edit['title[0][value]'])));
 
-    $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetchField();
+    $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title[0][value]'], ':url' => $edit['url[0][value]']))->fetchField();
     $this->assertTrue(!empty($fid), 'The feed found in database.');
     return aggregator_feed_load($fid);
   }
@@ -93,8 +93,8 @@ abstract class AggregatorTestBase extends WebTestBase {
       ));
     }
     $edit += array(
-      'title' => $feed_name,
-      'url' => $feed_url,
+      'title[0][value]' => $feed_name,
+      'url[0][value]' => $feed_url,
       'refresh' => '900',
     );
     return $edit;
@@ -233,7 +233,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   function getValidOpml($feeds) {
     // Properly escape URLs so that XML parsers don't choke on them.
     foreach ($feeds as &$feed) {
-      $feed['url'] = htmlspecialchars($feed['url']);
+      $feed['url[0][value]'] = htmlspecialchars($feed['url[0][value]']);
     }
     /**
      * Does not have an XML declaration, must pass the parser.
@@ -243,18 +243,18 @@ abstract class AggregatorTestBase extends WebTestBase {
   <head></head>
   <body>
     <!-- First feed to be imported. -->
-    <outline text="{$feeds[0]['title']}" xmlurl="{$feeds[0]['url']}" />
+    <outline text="{$feeds[0]['title[0][value]']}" xmlurl="{$feeds[0]['url[0][value]']}" />
 
     <!-- Second feed. Test string delimitation and attribute order. -->
-    <outline xmlurl='{$feeds[1]['url']}' text='{$feeds[1]['title']}'/>
+    <outline xmlurl='{$feeds[1]['url[0][value]']}' text='{$feeds[1]['title[0][value]']}'/>
 
     <!-- Test for duplicate URL and title. -->
-    <outline xmlurl="{$feeds[0]['url']}" text="Duplicate URL"/>
-    <outline xmlurl="http://duplicate.title" text="{$feeds[1]['title']}"/>
+    <outline xmlurl="{$feeds[0]['url[0][value]']}" text="Duplicate URL"/>
+    <outline xmlurl="http://duplicate.title" text="{$feeds[1]['title[0][value]']}"/>
 
     <!-- Test that feeds are only added with required attributes. -->
-    <outline text="{$feeds[2]['title']}" />
-    <outline xmlurl="{$feeds[2]['url']}" />
+    <outline text="{$feeds[2]['title[0][value]']}" />
+    <outline xmlurl="{$feeds[2]['url[0][value]']}" />
   </body>
 </opml>
 EOF;

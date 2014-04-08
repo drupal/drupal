@@ -23,39 +23,16 @@ class FeedFormController extends ContentEntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $feed = $this->entity;
-    $intervals = array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200);
-    $period = array_map('format_interval', array_combine($intervals, $intervals));
-    $period[AGGREGATOR_CLEAR_NEVER] = $this->t('Never');
 
-    $form['title'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#default_value' => $feed->label(),
-      '#maxlength' => 255,
-      '#description' => $this->t('The name of the feed (or the name of the website providing the feed).'),
-      '#required' => TRUE,
-    );
-
+    // @todo: convert to a language selection widget defined in the base field.
+    //   Blocked on https://drupal.org/node/2226493 which adds a generic
+    //   language widget.
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
       '#default_value' => $feed->language()->id,
       '#languages' => Language::STATE_ALL,
-    );
-
-    $form['url'] = array(
-      '#type' => 'url',
-      '#title' => $this->t('URL'),
-      '#default_value' => $feed->getUrl(),
-      '#maxlength' => NULL,
-      '#description' => $this->t('The fully-qualified URL of the feed.'),
-      '#required' => TRUE,
-    );
-    $form['refresh'] = array('#type' => 'select',
-      '#title' => $this->t('Update interval'),
-      '#default_value' => $feed->getRefreshRate(),
-      '#options' => $period,
-      '#description' => $this->t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
+      '#weight' => -4,
     );
 
     return parent::form($form, $form_state, $feed);
