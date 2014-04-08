@@ -21,4 +21,5 @@ status: true
 langcode: und
 dependencies:
   module:
+    - node
     - image

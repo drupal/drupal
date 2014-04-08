@@ -62,36 +62,55 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->entityTypeId = $this->randomName();
-
-    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
-    $this->entityType->expects($this->any())
-      ->method('getProvider')
-      ->will($this->returnValue('entity'));
-
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
-    $this->entityManager->expects($this->any())
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->will($this->returnValue($this->entityType));
-
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     \Drupal::setContainer($container);
-
   }
 
   /**
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    $values = array('name' => 'test_field', 'type' => 'test_field_type', 'entity_type' => 'test_entity_type', 'module' => 'test_module');
-    $entity = new FieldConfig($values, $this->entityTypeId);
-    $dependencies = $entity->calculateDependencies();
+    // Create a mock entity type for fieldConfig.
+    $fieldConfigentityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $fieldConfigentityType->expects($this->any())
+      ->method('getProvider')
+      ->will($this->returnValue('field'));
+
+    // Create a mock entity type to attach the field to.
+    $attached_entity_type_id = $this->randomName();
+    $attached_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $attached_entity_type->expects($this->any())
+      ->method('getProvider')
+      ->will($this->returnValue('entity_provider_module'));
+
+    // Get definition is called three times. Twice in
+    // ConfigEntityBase::addDependency() to get the provider of the field config
+    // entity type and once in FieldConfig::calculateDependencies() to get the
+    // provider of the entity type that field is attached to.
+    $this->entityManager->expects($this->at(0))
+      ->method('getDefinition')
+      ->with('fieldConfig')
+      ->will($this->returnValue($fieldConfigentityType));
+    $this->entityManager->expects($this->at(1))
+      ->method('getDefinition')
+      ->with($attached_entity_type_id)
+      ->will($this->returnValue($attached_entity_type));
+    $this->entityManager->expects($this->at(2))
+      ->method('getDefinition')
+      ->with('fieldConfig')
+      ->will($this->returnValue($fieldConfigentityType));
+
+    $values = array('name' => 'test_field', 'type' => 'test_field_type', 'entity_type' => $attached_entity_type_id, 'module' => 'test_module');
+    $field = new FieldConfig($values, 'fieldConfig');
+
+    $dependencies = $field->calculateDependencies();
     $this->assertContains('test_module', $dependencies['module']);
+    $this->assertContains('entity_provider_module', $dependencies['module']);
   }
 
 }

@@ -15,4 +15,5 @@ indexes:
     - format
 dependencies:
   module:
+    - entity_test
     - text
