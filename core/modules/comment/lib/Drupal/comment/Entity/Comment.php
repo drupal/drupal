@@ -252,7 +252,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
         'default_value' => '',
         'max_length' => 60,
       ))
-      ->setConstraints(array('CommentName' => array()));
+      ->addConstraint('CommentName', array());
 
     $fields['mail'] = FieldDefinition::create('email')
       ->setLabel(t('Email'))

@@ -27,10 +27,9 @@ class ListTextItem extends ListItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
-    $constraints = array('Length' => array('max' => 255));
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('Text value'))
-      ->setConstraints($constraints);
+      ->addConstraint('Length', array('max' => 255));
 
     return $properties;
   }
