@@ -310,6 +310,14 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
       foreach($plugin_bag as $instance) {
         $definition = $instance->getPluginDefinition();
         $this->addDependency('module', $definition['provider']);
+        // Plugins can declare additional dependencies in their definition.
+        if (isset($definition['config_dependencies'])) {
+          foreach ($definition['config_dependencies'] as $type => $dependencies) {
+            foreach ($dependencies as $dependency) {
+              $this->addDependency($type, $dependency);
+            }
+          }
+        }
       }
     }
     return $this->dependencies;

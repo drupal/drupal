@@ -20,6 +20,8 @@ visibility:
       article: '0'
       page: '0'
 dependencies:
+  entity:
+    - system.menu.tools
   module:
     - system
   theme:

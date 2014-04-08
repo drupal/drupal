@@ -18,6 +18,8 @@ visibility:
   node_type:
     types: {  }
 dependencies:
+  entity:
+    - system.menu.tools
   module:
     - system
   theme:
