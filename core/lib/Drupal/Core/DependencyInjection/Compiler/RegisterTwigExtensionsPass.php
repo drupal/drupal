@@ -42,5 +42,4 @@ class RegisterTwigExtensionsPass implements CompilerPassInterface {
       $definition->addMethodCall('addExtension', array(new Reference($id)));
     }
   }
-
 }

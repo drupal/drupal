@@ -29,5 +29,4 @@ class RegisterStringTranslatorsPass implements CompilerPassInterface {
       $access_manager->addMethodCall('addTranslator', array(new Reference($id), $priority));
     }
   }
-
 }

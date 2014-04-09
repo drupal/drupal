@@ -35,5 +35,4 @@ class ModifyServiceDefinitionsPass implements CompilerPassInterface {
       }
     }
   }
-
 }
