@@ -29,5 +29,4 @@ class RegisterBreadcrumbBuilderPass implements CompilerPassInterface {
       $manager->addMethodCall('addBuilder', array(new Reference($id), $priority));
     }
   }
-
 }
