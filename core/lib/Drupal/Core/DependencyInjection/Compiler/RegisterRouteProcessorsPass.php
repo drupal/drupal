@@ -30,5 +30,4 @@ class RegisterRouteProcessorsPass implements CompilerPassInterface {
       $manager->addMethodCall('addOutbound', array(new Reference($id), $priority));
     }
   }
-
 }

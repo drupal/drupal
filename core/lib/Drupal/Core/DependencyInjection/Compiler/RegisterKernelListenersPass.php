@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 class RegisterKernelListenersPass implements CompilerPassInterface {
+
   public function process(ContainerBuilder $container) {
     if (!$container->hasDefinition('event_dispatcher')) {
       return;
