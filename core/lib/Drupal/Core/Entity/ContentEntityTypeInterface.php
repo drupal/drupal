@@ -8,8 +8,7 @@
 namespace Drupal\Core\Entity;
 
 /**
- * Provides an interface for a content entity type.
+ * Provides an interface for a content entity type and its metadata.
  */
-interface ContentEntityTypeInterface {
-
+interface ContentEntityTypeInterface extends EntityTypeInterface {
 }
