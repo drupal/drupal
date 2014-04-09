@@ -12,6 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\StorageException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionNameLengthException;
@@ -862,6 +863,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
       else {
         $theme_keys = array($theme);
       }
+      // Read hard-coded default settings from the theme info files.
       foreach ($theme_keys as $theme_key) {
         if (!empty($themes[$theme_key]->info['settings'])) {
           $cache[$theme]->merge($themes[$theme_key]->info['settings']);
@@ -873,12 +875,17 @@ function theme_get_setting($setting_name, $theme = NULL) {
     $cache[$theme]->merge(\Drupal::config('system.theme.global')->get());
 
     if ($theme) {
-      // Get the saved theme-specific settings from the configuration system.
-      $cache[$theme]->merge(\Drupal::config($theme . '.settings')->get());
+      // Retrieve configured theme-specific settings, if any.
+      try {
+        if ($theme_settings = \Drupal::config($theme . '.settings')->get()) {
+          $cache[$theme]->merge($theme_settings);
+        }
+      }
+      catch (StorageException $e) {
+      }
 
       // If the theme does not support a particular feature, override the global
       // setting and set the value to NULL.
-      //$supports = $cache[$theme]->get('supports');
       if (!empty($theme_object->info['features'])) {
         foreach (_system_default_theme_features() as $feature) {
           if (!in_array($feature, $theme_object->info['features'])) {

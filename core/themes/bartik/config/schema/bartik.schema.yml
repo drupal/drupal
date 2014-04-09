@@ -1,5 +1,11 @@
 # Schema for the configuration files of the Bartik theme.
 
 bartik.settings:
-  type: theme_settings_default
+  type: theme_settings
   label: 'Bartik settings'
+  mapping:
+    # @todo Module-specific settings should be defined by the module:
+    #   https://drupal.org/node/2235901.
+    shortcut_module_link:
+      type: boolean
+      label: 'Shortcut module link'

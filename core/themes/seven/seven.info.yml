@@ -15,9 +15,6 @@ stylesheets-override:
   - jquery.ui.theme.css
 edit_stylesheets:
   - edit.css
-settings:
-  # @todo D8: Remove once themes have to be installed.
-  shortcut_module_link: '1'
 regions:
   content: Content
   help: Help
@@ -26,3 +23,6 @@ regions:
   sidebar_first: 'First sidebar'
 regions_hidden:
   - sidebar_first
+
+settings:
+  shortcut_module_link: true
