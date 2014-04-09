@@ -22,6 +22,13 @@ class SearchMultilingualEntityTest extends SearchTestBase {
    */
   protected $searchable_nodes = array();
 
+  /**
+   * Node search plugin.
+   *
+   * @var \Drupal\node\Plugin\Search\NodeSearch
+   */
+  protected $plugin;
+
   public static $modules = array('language', 'locale', 'comment');
 
   public static function getInfo() {
@@ -81,8 +88,8 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     foreach ($nodes as $setting) {
       $this->searchable_nodes[] = $this->drupalCreateNode($setting);
     }
-    // Add a single translation to the second node.
 
+    // Add a single translation to the second node.
     $translation = $this->searchable_nodes[1]->addTranslation('hu', array('title' => 'Second node hu'));
     $translation->body->value = $this->randomName(32);
     $this->searchable_nodes[1]->save();
@@ -93,42 +100,45 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $translation = $this->searchable_nodes[2]->addTranslation('sv', array('title' => 'Third node sv'));
     $translation->body->value = $this->randomName(32);
     $this->searchable_nodes[2]->save();
+
+    // Create a user who can administer search and do searches.
+    $user = $this->drupalCreateUser(array('administer search', 'search content', 'use advanced search', 'access content'));
+    $this->drupalLogin($user);
+
+    $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
   }
 
   /**
-   * Tests for indexing throttle with nodes in multiple languages.
+   * Tests the indexing throttle and search results with multilingual nodes.
    */
-  function testIndexingThrottle() {
-    // Index only 4 items per cron run.
-    \Drupal::config('search.settings')->set('index.cron_limit', 4)->save();
+  function testMultilingualSearch() {
+    // Index only 2 nodes per cron run. We cannot do this setting in the UI,
+    // because it doesn't go this low.
+    \Drupal::config('search.settings')->set('index.cron_limit', 2)->save();
+    $this->assertIndexCounts(3, 3, 'before updating the search index');
+
     // Update the index. This does the initial processing.
-    $plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
-    $plugin->updateIndex();
+    $this->plugin->updateIndex();
     // Run the shutdown function. Testing is a unique case where indexing
     // and searching has to happen in the same request, so running the shutdown
     // function manually is needed to finish the indexing process.
     search_update_totals();
-    // Then check how many nodes have been indexed. We have created three nodes,
-    // the first has one, the second has two and the third has three language
-    // variants. Indexing the third would exceed the throttle limit, so we
-    // expect that only the first two will be indexed.
-    $status = $plugin->indexStatus();
-    $this->assertEqual($status['remaining'], 1, 'Remaining items after updating the search index is 1.');
-  }
+    $this->assertIndexCounts(1, 3, 'after updating partially');
 
-  /**
-   * Tests searching nodes with multiple languages.
-   */
-  function testSearchingMultilingualFieldValues() {
-    // Update the index and then run the shutdown method.
-    // See testIndexingThrottle() for further explanation.
-    $plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
-    $plugin->updateIndex();
+    // Now index the rest of the nodes.
+    // Make sure index throttle is high enough, via the UI.
+    $this->drupalPostForm('admin/config/search/settings', array('cron_limit' => 20), t('Save configuration'));
+    $this->assertEqual(20, \Drupal::config('search.settings')->get('index.cron_limit', 100), 'Config setting was saved correctly');
+
+    $this->plugin->updateIndex();
     search_update_totals();
+    $this->assertIndexCounts(0, 3, 'after updating fully');
+
+    // Test search results.
 
     // This should find two results for the second and third node.
-    $plugin->setSearch('English OR Hungarian', array(), array());
-    $search_result = $plugin->execute();
+    $this->plugin->setSearch('English OR Hungarian', array(), array());
+    $search_result = $this->plugin->execute();
     $this->assertEqual(count($search_result), 2, 'Found two results.');
     // Nodes are saved directly after each other and have the same created time
     // so testing for the order is not possible.
@@ -137,21 +147,21 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertTrue(in_array('Second node this is the English title', $results), 'The search finds the correct English title.');
 
     // Now filter for Hungarian results only.
-    $plugin->setSearch('English OR Hungarian', array('f' => array('language:hu')), array());
-    $search_result = $plugin->execute();
+    $this->plugin->setSearch('English OR Hungarian', array('f' => array('language:hu')), array());
+    $search_result = $this->plugin->execute();
 
     $this->assertEqual(count($search_result), 1, 'The search found only one result');
     $this->assertEqual($search_result[0]['title'], 'Third node this is the Hungarian title', 'The search finds the correct Hungarian title.');
 
     // Test for search with common key word across multiple languages.
-    $plugin->setSearch('node', array(), array());
-    $search_result = $plugin->execute();
+    $this->plugin->setSearch('node', array(), array());
+    $search_result = $this->plugin->execute();
 
     $this->assertEqual(count($search_result), 6, 'The search found total six results');
 
     // Test with language filters and common key word.
-    $plugin->setSearch('node', array('f' => array('language:hu')), array());
-    $search_result = $plugin->execute();
+    $this->plugin->setSearch('node', array('f' => array('language:hu')), array());
+    $search_result = $this->plugin->execute();
 
     $this->assertEqual(count($search_result), 2, 'The search found 2 results');
 
@@ -159,5 +169,36 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     foreach($search_result as $result) {
       $this->assertEqual($result['langcode'], 'hu', 'The search found the correct Hungarian result');
     }
+
+    // Mark one of the nodes for reindexing, using the API function, and
+    // verify indexing status.
+    search_reindex($this->searchable_nodes[0]->id(), 'node_search');
+    $this->assertIndexCounts(1, 3, 'after marking one node to reindex via API function');
+
+    // Update the index and verify the totals again.
+    $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $this->plugin->updateIndex();
+    search_update_totals();
+    $this->assertIndexCounts(0, 3, 'after indexing again');
+
+    // Mark one node for reindexing by saving it, and verify indexing status.
+    $this->searchable_nodes[1]->save();
+    $this->assertIndexCounts(1, 3, 'after marking one node to reindex via save');
+  }
+
+  /**
+   * Verifies the indexing status counts.
+   *
+   * @param $remaining
+   *   Count of remaining items to verify.
+   * @param $total
+   *   Count of total items to verify.
+   * @param $message
+   *   Message to use, something like "after updating the search index".
+   */
+  protected function assertIndexCounts($remaining, $total, $message) {
+    $status = $this->plugin->indexStatus();
+    $this->assertEqual($status['remaining'], $remaining, 'Remaining items ' . $message . ' is ' . $remaining);
+    $this->assertEqual($status['total'], $total, 'Total items ' . $message . ' is ' . $total);
   }
 }
