@@ -291,4 +291,43 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
   }
 
+  /**
+   * Tests image field and instance having an invalid default image.
+   */
+  public  function testInvalidDefaultImage() {
+    $field = array(
+      'name' => drupal_strtolower($this->randomName()),
+      'entity_type' => 'node',
+      'type' => 'image',
+      'settings' => array(
+        'default_image' => array(
+          'fid' => 100000,
+        )
+      ),
+    );
+    $instance = array(
+      'field_name' => $field['name'],
+      'label' => $this->randomName(),
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'settings' => array(
+        'default_image' => array(
+          'fid' => 100000,
+        )
+      ),
+    );
+    $field_config = entity_create('field_config', $field);
+    $field_config->save();
+    $settings = $field_config->getSettings();
+    // The non-existent default image should not be saved.
+    $this->assertNull($settings['default_image']['fid']);
+
+    $field_instance_config = entity_create('field_instance_config', $instance);
+    $field_instance_config->save();
+    $settings = $field_instance_config->getSettings();
+    // The non-existent default image should not be saved.
+    $this->assertNull($settings['default_image']['fid']);
+
+  }
+
 }

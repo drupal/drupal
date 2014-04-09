@@ -71,6 +71,7 @@ class ImageItem extends FileItem {
       'default_image' => array(
         'fid' => NULL,
         'alt' => '',
+        'title' => '',
         'width' => NULL,
         'height' => NULL,
       ),

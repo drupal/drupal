@@ -49,7 +49,6 @@ class UserCreateTest extends WebTestBase {
       'indexes' => array('target_id' => array('target_id')),
       'settings' => array(
         'uri_scheme' => 'public',
-        'default_image' => FALSE,
       ),
     );
     entity_create('field_config', $field)->save();
@@ -69,7 +68,6 @@ class UserCreateTest extends WebTestBase {
         'title_field' => 0,
         'max_resolution' => '85x85',
         'min_resolution' => '',
-        'default_image' => 0,
       ),
     );
     entity_create('field_instance_config', $instance)->save();
