@@ -1225,7 +1225,7 @@ function drupal_set_time_limit($time_limit) {
   if (function_exists('set_time_limit')) {
     $current = ini_get('max_execution_time');
     // Do not set time limit if it is currently unlimited.
-    if ($current !== 0) {
+    if ($current != 0) {
       @set_time_limit($time_limit);
     }
   }
