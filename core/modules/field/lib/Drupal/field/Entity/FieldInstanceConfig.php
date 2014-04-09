@@ -23,7 +23,7 @@ use Drupal\field\FieldInstanceConfigInterface;
  *   id = "field_instance_config",
  *   label = @Translation("Field instance"),
  *   controllers = {
- *     "list_builder" = "\Drupal\field_ui\FieldInstanceConfigListBuilder",
+ *     "access" = "Drupal\field\FieldInstanceConfigAccessController",
  *     "storage" = "Drupal\field\FieldInstanceConfigStorage"
  *   },
  *   config_prefix = "instance",
@@ -542,6 +542,9 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     $link_templates = parent::linkTemplates();
     if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
       $link_templates['edit-form'] = 'field_ui.instance_edit_' . $this->entity_type;
+      $link_templates['field-settings-form'] = 'field_ui.field_edit_' . $this->entity_type;
+      $link_templates['delete-form'] = 'field_ui.delete_' . $this->entity_type;
+
       if (isset($link_templates['drupal:config-translation-overview'])) {
         $link_templates['drupal:config-translation-overview'] .= $link_templates['edit-form'];
       }

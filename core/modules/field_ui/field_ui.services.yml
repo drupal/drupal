@@ -4,10 +4,6 @@ services:
     arguments: ['@entity.manager']
     tags:
      - { name: event_subscriber }
-  access_check.field_ui.field_delete:
-    class: Drupal\field_ui\Access\FieldDeleteAccessCheck
-    tags:
-     - { name: access_check, applies_to: _field_ui_field_delete_access }
   access_check.field_ui.view_mode:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
     arguments: ['@entity.manager']

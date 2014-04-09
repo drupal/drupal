@@ -108,9 +108,11 @@ class ManageFieldsTest extends FieldUiTestBase {
     }
 
     // Assert entity operations for all field instances.
-    $this->assertLinkByHref("admin/structure/types/manage/$type/fields/node.$type.body");
-    $this->assertLinkByHref("admin/structure/types/manage/$type/fields/node.$type.body/delete");
-    $this->assertLinkByHref("admin/structure/types/manage/$type/fields/node.$type.body/field");
+    $result = $this->xpath('//ul[@class = "dropbutton"]/li/a');
+    $url = base_path() . "admin/structure/types/manage/$type/fields/node.$type.body";
+    $this->assertIdentical($url, (string) $result[0]['href']);
+    $this->assertIdentical("$url/field", (string) $result[1]['href']);
+    $this->assertIdentical("$url/delete", (string) $result[2]['href']);
   }
 
   /**

@@ -62,29 +62,13 @@ class FieldInstanceConfigListBuilder extends ConfigEntityListBuilder {
     /** @var \Drupal\field\FieldInstanceConfigInterface $entity */
     $operations = parent::getDefaultOperations($entity);
 
-    $target_entity_type_bundle_entity_type_id = $this->entityManager->getDefinition($entity->getTargetEntityTypeId())->getBundleEntityType();
-    $route_parameters = array(
-      $target_entity_type_bundle_entity_type_id => $entity->targetBundle(),
-      'field_instance_config' => $entity->id(),
-    );
-    $operations['edit'] = array(
-      'title' => $this->t('Edit'),
-      'route_name' => 'field_ui.instance_edit_' . $entity->getTargetEntityTypeId(),
-      'route_parameters' => $route_parameters,
-      'attributes' => array('title' => $this->t('Edit instance settings.')),
-    );
     $operations['field-settings'] = array(
       'title' => $this->t('Field settings'),
-      'route_name' => 'field_ui.field_edit_' . $entity->getTargetEntityTypeId(),
-      'route_parameters' => $route_parameters,
+      'weight' => 20,
       'attributes' => array('title' => $this->t('Edit field settings.')),
-    );
-    $operations['delete'] = array(
-      'title' => $this->t('Delete'),
-      'route_name' => 'field_ui.delete_' . $entity->getTargetEntityTypeId(),
-      'route_parameters' => $route_parameters,
-      'attributes' => array('title' => $this->t('Delete instance.')),
-    );
+    ) + $entity->urlInfo('field-settings-form')->toArray();
+    $operations['edit']['attributes']['title'] = $this->t('Edit instance settings.');
+    $operations['delete']['attributes']['title'] = $this->t('Delete instance.');
 
     return $operations;
   }
