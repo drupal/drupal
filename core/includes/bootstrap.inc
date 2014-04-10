@@ -1466,7 +1466,9 @@ function drupal_handle_request($test_only = FALSE) {
 
   // Create a request object from the HttpFoundation.
   $request = Request::createFromGlobals();
-  \Drupal::getContainer()->set('request', $request);
+  $container = \Drupal::getContainer();
+  $container->set('request', $request);
+  $container->get('request_stack')->push($request);
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
@@ -1616,7 +1618,9 @@ function _drupal_bootstrap_kernel() {
     $kernel = new DrupalKernel('prod', drupal_classloader());
     $kernel->boot();
     $request = Request::createFromGlobals();
-    \Drupal::getContainer()->set('request', $request);
+    $container = \Drupal::getContainer();
+    $container->set('request', $request);
+    $container->get('request_stack')->push($request);
   }
 }
 
@@ -2173,12 +2177,12 @@ function drupal_classloader_register($name, $path) {
  *
  * Example:
  * @code
- * function drupal_session_started($set = NULL) {
- *   static $session_started = FALSE;
- *   if (isset($set)) {
- *     $session_started = $set;
+ * function mymodule_log_stream_handle($new_handle = NULL) {
+ *   static $handle;
+ *   if (isset($new_handle)) {
+ *     $handle = $new_handle;
  *   }
- *   return $session_started && session_id();
+ *   return $handle;
  * }
  * @endcode
  *

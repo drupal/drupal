@@ -35,11 +35,11 @@ class SessionTestController extends ControllerBase {
    *   A notification message with session ID.
    */
   public function getId() {
-    // Set a value in $_SESSION, so that drupal_session_commit() will start
+    // Set a value in $_SESSION, so that SessionManager::save() will start
     // a session.
     $_SESSION['test'] = 'test';
 
-    drupal_session_commit();
+    \Drupal::service('session_manager')->save();
 
     return 'session_id:' . session_id() . "\n";
   }
@@ -83,7 +83,7 @@ class SessionTestController extends ControllerBase {
    *   A notification message.
    */
   public function noSet($test_value) {
-    drupal_save_session(FALSE);
+    \Drupal::service('session_manager')->disable();
     $this->set($test_value);
     return $this->t('session saving was disabled, and then %val was set', array('%val' => $test_value));
   }
@@ -109,7 +109,7 @@ class SessionTestController extends ControllerBase {
    *   A notification message.
    */
   public function setMessageButDontSave() {
-    drupal_save_session(FALSE);
+    \Drupal::service('session_manager')->disable();
     $this->setMessage();
   }
 

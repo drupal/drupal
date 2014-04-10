@@ -100,7 +100,7 @@ class DrupalDateTimeTest extends WebTestBase {
     $this->drupalPostForm('user/' . $test_user->id() . '/edit', $edit, t('Save'));
 
     // Disable session saving as we are about to modify the global $user.
-    drupal_save_session(FALSE);
+    \Drupal::service('session_manager')->disable();
     // Save the original user and then replace it with the test user.
     $real_user = $user;
     $user = user_load($test_user->id(), TRUE);
@@ -119,7 +119,7 @@ class DrupalDateTimeTest extends WebTestBase {
     $user = $real_user;
     // Restore default time zone.
     date_default_timezone_set(drupal_get_user_timezone());
-    drupal_save_session(TRUE);
+    \Drupal::service('session_manager')->enable();
 
 
   }

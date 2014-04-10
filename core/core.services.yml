@@ -102,7 +102,7 @@ services:
     arguments: ['@config.storage', '@config.storage.schema', '@cache.config']
   cron:
     class: Drupal\Core\Cron
-    arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user']
+    arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user', '@session_manager']
   database:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database
@@ -712,6 +712,7 @@ services:
     class: Drupal\Core\Authentication\AuthenticationManager
   authentication.cookie:
     class: Drupal\Core\Authentication\Provider\Cookie
+    arguments: ['@session_manager']
     tags:
       - { name: authentication_provider, priority: 0 }
   authentication_subscriber:
@@ -722,6 +723,11 @@ services:
   current_user:
     class: Drupal\Core\Session\AccountProxy
     arguments: ['@authentication', '@request']
+  session_manager:
+    class: Drupal\Core\Session\SessionManager
+    arguments: ['@request_stack', '@database']
+    tags:
+      - { name: persist }
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
     arguments: [ '@state' ]

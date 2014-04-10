@@ -46,8 +46,7 @@ const MAINTENANCE_MODE = 'update';
  *   TRUE if the current user can run authorize.php, and FALSE if not.
  */
 function authorize_access_allowed() {
-  require_once DRUPAL_ROOT . '/' . Settings::get('session_inc', 'core/includes/session.inc');
-  drupal_session_initialize();
+  \Drupal::service('session_manager')->initialize();
   return Settings::get('allow_authorize_operations', TRUE) && user_access('administer software updates');
 }
 

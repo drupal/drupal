@@ -37,7 +37,7 @@ class ArgumentDefaultTest extends UserTestBase {
     $this->drupalLogin($account);
     global $user;
     $admin = $user;
-    drupal_save_session(FALSE);
+    $session_manager = \Drupal::service('session_manager')->disable();
     $user = $account;
 
     $view = Views::getView('test_plugin_argument_default_current_user');
@@ -46,7 +46,7 @@ class ArgumentDefaultTest extends UserTestBase {
     $this->assertEqual($view->argument['null']->getDefaultArgument(), $account->id(), 'Uid of the current user is used.');
     // Switch back.
     $user = $admin;
-    drupal_save_session(TRUE);
+    $session_manager->enable();
   }
 
 }

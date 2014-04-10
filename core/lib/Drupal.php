@@ -586,7 +586,7 @@ class Drupal {
    * @return \Drupal\Core\Access\CsrfTokenGenerator
    *   The CSRF token manager.
    *
-   * @see drupal_session_start()
+   * @see \Drupal\Core\Session\SessionManager::start()
    */
   public static function csrfToken() {
     return static::$container->get('csrf_token');

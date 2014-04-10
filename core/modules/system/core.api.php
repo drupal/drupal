@@ -494,7 +494,6 @@
  * @see mail.inc
  * @see php_wrappers
  * @see sanitization
- * @see session.inc
  * @see transliteration
  * @see validation
  * @}

@@ -306,7 +306,6 @@ function install_begin_request(&$install_state) {
 
   // Load module basics (needed for hook invokes).
   include_once __DIR__ . '/module.inc';
-  include_once __DIR__ . '/session.inc';
   require_once __DIR__ . '/entity.inc';
 
   // Create a minimal mocked container to support calls to t() in the pre-kernel
@@ -546,7 +545,7 @@ function install_run_task($task, &$install_state) {
       $response = batch_process(install_redirect_url($install_state), install_full_redirect_url($install_state));
       if ($response instanceof Response) {
         // Save $_SESSION data from batch.
-        drupal_session_commit();
+        \Drupal::service('session_manager')->save();
         // Send the response.
         $response->send();
         exit;
@@ -1780,8 +1779,7 @@ function install_load_profile(&$install_state) {
  */
 function install_bootstrap_full() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  require_once DRUPAL_ROOT . '/' . Settings::get('session_inc', 'core/includes/session.inc');
-  drupal_session_initialize();
+  \Drupal::service('session_manager')->initialize();
 }
 
 /**

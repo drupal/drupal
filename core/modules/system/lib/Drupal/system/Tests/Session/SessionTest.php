@@ -29,14 +29,13 @@ class SessionTest extends WebTestBase {
   }
 
   /**
-   * Tests for drupal_save_session() and drupal_session_regenerate().
+   * Tests for \Drupal\Core\Session\SessionManager::isEnabled() and ::regenerate().
    */
   function testSessionSaveRegenerate() {
-    $this->assertFalse(drupal_save_session(),'drupal_save_session() correctly returns FALSE (inside of testing framework) when initially called with no arguments.', 'Session');
-    $this->assertFalse(drupal_save_session(FALSE), 'drupal_save_session() correctly returns FALSE when called with FALSE.', 'Session');
-    $this->assertFalse(drupal_save_session(), 'drupal_save_session() correctly returns FALSE when saving has been disabled.', 'Session');
-    $this->assertTrue(drupal_save_session(TRUE), 'drupal_save_session() correctly returns TRUE when called with TRUE.', 'Session');
-    $this->assertTrue(drupal_save_session(), 'drupal_save_session() correctly returns TRUE when saving has been enabled.', 'Session');
+    $session_manager = $this->container->get('session_manager');
+    $this->assertFalse($session_manager->isEnabled(), 'SessionManager->isEnabled() initially returns FALSE (in testing framework).');
+    $this->assertFalse($session_manager->disable()->isEnabled(), 'SessionManager->isEnabled() returns FALSE after disabling.');
+    $this->assertTrue($session_manager->enable()->isEnabled(), 'SessionManager->isEnabled() returns TRUE after enabling.');
 
     // Test session hardening code from SA-2008-044.
     $user = $this->drupalCreateUser();

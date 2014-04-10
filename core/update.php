@@ -347,8 +347,7 @@ $container->get('request_stack')->push($request);
 // Determine if the current user has access to run update.php.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
 
-require_once DRUPAL_ROOT . '/' . Settings::get('session_inc', 'core/includes/session.inc');
-drupal_session_initialize();
+\Drupal::service('session_manager')->initialize();
 
 // Ensure that URLs generated for the home and admin pages don't have 'update.php'
 // in them.
@@ -451,7 +450,7 @@ else {
 }
 if (isset($output) && $output) {
   // Explicitly start a session so that the update.php token will be accepted.
-  drupal_session_start();
+  \Drupal::service('session_manager')->start();
   // We defer the display of messages until all updates are done.
   $progress_page = ($batch = batch_get()) && isset($batch['running']);
   if ($output instanceof Response) {

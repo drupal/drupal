@@ -13,6 +13,7 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\Session\SessionManagerInterface;
 
 /**
  * The Drupal core Cron service.
@@ -55,6 +56,13 @@ class Cron implements CronInterface {
   protected $currentUser;
 
   /**
+   * The session manager.
+   *
+   * @var \Drupal\Core\Session\SessionManagerInterface
+   */
+  protected $sessionManager;
+
+  /**
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -67,13 +75,16 @@ class Cron implements CronInterface {
    *   The state service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *    The current user.
+   * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
+   *   The session manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountProxyInterface $current_user) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountProxyInterface $current_user, SessionManagerInterface $session_manager) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;
     $this->state = $state;
     $this->currentUser = $current_user;
+    $this->sessionManager = $session_manager;
   }
 
   /**
@@ -84,8 +95,8 @@ class Cron implements CronInterface {
     @ignore_user_abort(TRUE);
 
     // Prevent session information from being saved while cron is running.
-    $original_session_saving = drupal_save_session();
-    drupal_save_session(FALSE);
+    $original_session_saving = $this->sessionManager->isEnabled();
+    $this->sessionManager->disable();
 
     // Force the current user to anonymous to ensure consistent permissions on
     // cron runs.
@@ -157,7 +168,9 @@ class Cron implements CronInterface {
 
     // Restore the user.
     $this->currentUser->setAccount($original_user);
-    drupal_save_session($original_session_saving);
+    if ($original_session_saving) {
+      $this->sessionManager->enable();
+    }
 
     return $return;
   }

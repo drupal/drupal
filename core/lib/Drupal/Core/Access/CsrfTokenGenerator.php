@@ -69,7 +69,7 @@ class CsrfTokenGenerator {
    *   'drupal_private_key' configuration variable.
    *
    * @see drupal_get_hash_salt()
-   * @see drupal_session_start()
+   * @see \Drupal\Core\Session\SessionManager::start()
    */
   public function get($value = '') {
     return Crypt::hmacBase64($value, session_id() . $this->privateKey->get() . drupal_get_hash_salt());

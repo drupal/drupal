@@ -1026,8 +1026,7 @@ abstract class TestBase {
     $this->originalUser = isset($user) ? clone $user : NULL;
 
     // Ensure that the current session is not changed by the new environment.
-    require_once DRUPAL_ROOT . '/' . Settings::get('session_inc', 'core/includes/session.inc');
-    drupal_save_session(FALSE);
+    \Drupal::service('session_manager')->disable();
 
     // Save and clean the shutdown callbacks array because it is static cached
     // and will be changed by the test run. Otherwise it will contain callbacks
@@ -1268,7 +1267,7 @@ abstract class TestBase {
 
     // Restore original user session.
     $this->container->set('current_user', $this->originalUser);
-    drupal_save_session(TRUE);
+    \Drupal::service('session_manager')->enable();
   }
 
   /**

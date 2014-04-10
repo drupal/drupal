@@ -11,7 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Utility\Error;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Default session handler.
@@ -19,11 +19,18 @@ use Symfony\Component\HttpFoundation\Request;
 class SessionHandler implements \SessionHandlerInterface {
 
   /**
-   * The request.
+   * The session manager.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Drupal\Core\Session\SessionManagerInterface
    */
-  protected $request;
+  protected $sessionManager;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
 
   /**
    * The database connection.
@@ -42,13 +49,16 @@ class SessionHandler implements \SessionHandlerInterface {
   /**
    * Constructs a new SessionHandler instance.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
+   * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
+   *   The session manager.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(Request $request, Connection $connection) {
-    $this->request = $request;
+  public function __construct(SessionManagerInterface $session_manager, RequestStack $request_stack, Connection $connection) {
+    $this->sessionManager = $session_manager;
+    $this->requestStack = $request_stack;
     $this->connection = $connection;
   }
 
@@ -68,7 +78,7 @@ class SessionHandler implements \SessionHandlerInterface {
     // Handle the case of first time visitors and clients that don't store
     // cookies (eg. web crawlers).
     $insecure_session_name = substr(session_name(), 1);
-    $cookies = $this->request->cookies;
+    $cookies = $this->requestStack->getCurrentRequest()->cookies;
     if (!$cookies->has(session_name()) && !$cookies->has($insecure_session_name)) {
       $user = new UserSession();
       return '';
@@ -81,7 +91,7 @@ class SessionHandler implements \SessionHandlerInterface {
     // that is in the user's cookie is hashed before being stored in the
     // database as a security measure. Thus, we have to hash it to match the
     // database.
-    if ($this->request->isSecure()) {
+    if ($this->requestStack->getCurrentRequest()->isSecure()) {
       // Try to load a session using the HTTPS-only secure session id.
       $values = $this->connection->query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(
         ':ssid' => Crypt::hashBase64($sid),
@@ -143,7 +153,7 @@ class SessionHandler implements \SessionHandlerInterface {
     // The exception handler is not active at this point, so we need to do it
     // manually.
     try {
-      if (!drupal_save_session()) {
+      if (!$this->sessionManager->isEnabled()) {
         // We don't have anything to do if we are not allowed to save the
         // session.
         return TRUE;
@@ -160,18 +170,17 @@ class SessionHandler implements \SessionHandlerInterface {
         // Either ssid or sid or both will be added from $key below.
         $fields = array(
           'uid' => $user->id(),
-          'hostname' => $this->request->getClientIP(),
+          'hostname' => $this->requestStack->getCurrentRequest()->getClientIP(),
           'session' => $value,
           'timestamp' => REQUEST_TIME,
         );
         // Use the session ID as 'sid' and an empty string as 'ssid' by default.
-        // _drupal_session_read() does not allow empty strings so that's a safe
-        // default.
+        // read() does not allow empty strings so that's a safe default.
         $key = array('sid' => Crypt::hashBase64($sid), 'ssid' => '');
         // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
-        if ($this->request->isSecure()) {
+        if ($this->requestStack->getCurrentRequest()->isSecure()) {
           $key['ssid'] = Crypt::hashBase64($sid);
-          $cookies = $this->request->cookies;
+          $cookies = $this->requestStack->getCurrentRequest()->cookies;
           // The "secure pages" setting allows a site to simultaneously use both
           // secure and insecure session cookies. If enabled and both cookies
           // are presented then use both keys. The session ID from the cookie is
@@ -228,17 +237,17 @@ class SessionHandler implements \SessionHandlerInterface {
     global $user;
 
     // Nothing to do if we are not allowed to change the session.
-    if (!drupal_save_session()) {
+    if (!$this->sessionManager->isEnabled()) {
       return TRUE;
     }
-    $is_https = $this->request->isSecure();
+    $is_https = $this->requestStack->getCurrentRequest()->isSecure();
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($sid))
       ->execute();
 
     // Reset $_SESSION and $user to prevent a new session from being started
-    // in drupal_session_commit().
+    // in \Drupal\Core\Session\SessionManager::save().
     $_SESSION = array();
     $user = new AnonymousUserSession();
 
@@ -277,8 +286,8 @@ class SessionHandler implements \SessionHandlerInterface {
    *   Force the secure value of the cookie.
    */
   protected function deleteCookie($name, $secure = NULL) {
-    $cookies = $this->request->cookies;
-    if ($cookies->has($name) || (!$this->request->isSecure() && $secure === TRUE)) {
+    $cookies = $this->requestStack->getCurrentRequest()->cookies;
+    if ($cookies->has($name) || (!$this->requestStack->getCurrentRequest()->isSecure() && $secure === TRUE)) {
       $params = session_get_cookie_params();
       if ($secure !== NULL) {
         $params['secure'] = $secure;

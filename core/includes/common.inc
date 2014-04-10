@@ -2877,7 +2877,7 @@ function drupal_get_private_key() {
  *
  * @see drupal_get_hash_salt()
  * @see \Drupal\Core\Access\CsrfTokenGenerator
- * @see drupal_session_start()
+ * @see \Drupal\Core\Session\SessionManager::start()
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::csrfToken()->get().
