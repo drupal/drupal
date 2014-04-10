@@ -34,7 +34,7 @@ function language_help($path, $arg) {
       return $output;
 
     case 'admin/config/regional/language':
-      return '<p>' . t('With multiple languages enabled, registered users may select their preferred language and authors can assign a specific language to content. The selection of what language is used to display page elements is made depending on the detection menthod settings in the <a href="@detection">Detection and Selection</a> tab.', array('@detection' => url('admin/config/regional/language/detection'))) . '</p>';
+      return '<p>' . t('Reorder the added languages to set their order in the language switcher block and, when editing content, in the list of selectable languages. This ordering does not impact <a href="@detection">detection and selection</a>.', array('@detection' => url('admin/config/regional/language/detection'))) . '</p>';
 
     case 'admin/config/regional/language/add':
       return '<p>' . t('Add a language to be supported by your site. If your desired language is not available, pick <em>Custom language...</em> at the end and provide a language code and other details manually.') . '</p>';
