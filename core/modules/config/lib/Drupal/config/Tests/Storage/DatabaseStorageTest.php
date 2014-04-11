@@ -10,13 +10,13 @@ namespace Drupal\config\Tests\Storage;
 use Drupal\Core\Config\DatabaseStorage;
 
 /**
- * Tests DatabaseStorage controller operations.
+ * Tests DatabaseStorage operations.
  */
 class DatabaseStorageTest extends ConfigStorageTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'DatabaseStorage controller operations',
-      'description' => 'Tests DatabaseStorage controller operations.',
+      'name' => 'DatabaseStorage operations',
+      'description' => 'Tests DatabaseStorage operations.',
       'group' => 'Configuration',
     );
   }

@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @see \Drupal\Core\Config\Config
  *
- * Each configuration object gets a storage controller object injected, which
+ * Each configuration object gets a storage object injected, which
  * is used for reading and writing the configuration data.
  *
  * @see \Drupal\Core\Config\StorageInterface
@@ -27,7 +27,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface {
 
   /**
-   * A storage controller instance for reading and writing configuration data.
+   * A storage instance for reading and writing configuration data.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */

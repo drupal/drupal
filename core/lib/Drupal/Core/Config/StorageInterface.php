@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 /**
- * Defines an interface for configuration storage controllers.
+ * Defines an interface for configuration storage.
  *
  * Classes implementing this interface allow reading and writing configuration
  * data from and to the storage.

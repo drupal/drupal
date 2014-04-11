@@ -28,7 +28,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
  * @todo There are too many layers/levels of caching involved for system_list()
  *   data. Consider to add a \Drupal::config($name, $cache = TRUE) argument to allow
  *   callers like system_list() to force-disable a possible configuration
- *   storage controller cache or some other way to circumvent it/take it over.
+ *   storage cache or some other way to circumvent it/take it over.
  */
 function system_list($type) {
   $lists = &drupal_static(__FUNCTION__);

@@ -57,7 +57,7 @@ class Config extends StorableConfigBase {
    * @param string $name
    *   The name of the configuration object being constructed.
    * @param \Drupal\Core\Config\StorageInterface $storage
-   *   A storage controller object to use for reading and writing the
+   *   A storage object to use for reading and writing the
    *   configuration data.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   An event dispatcher instance to use for configuration events.

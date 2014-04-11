@@ -49,7 +49,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
   protected $languageManager;
 
   /**
-   * The config storage controller.
+   * The config storage.
    *
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorage
    */

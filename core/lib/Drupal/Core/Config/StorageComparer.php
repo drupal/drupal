@@ -68,9 +68,9 @@ class StorageComparer implements StorageComparerInterface {
    * Constructs the Configuration storage comparer.
    *
    * @param \Drupal\Core\Config\StorageInterface $source_storage
-   *   Storage controller object used to read configuration.
+   *   Storage object used to read configuration.
    * @param \Drupal\Core\Config\StorageInterface $target_storage
-   *   Storage controller object used to write configuration.
+   *   Storage object used to write configuration.
    */
   public function __construct(StorageInterface $source_storage, StorageInterface $target_storage) {
     $this->sourceStorage = $source_storage;

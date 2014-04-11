@@ -37,7 +37,7 @@ class DatabaseStorage implements StorageInterface {
   protected $options = array();
 
   /**
-   * Constructs a new DatabaseStorage controller.
+   * Constructs a new DatabaseStorage.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Database connection to use for reading and writing configuration data.

@@ -10,7 +10,7 @@ namespace Drupal\Core\Config;
 use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**
- * Storage controller used by the Drupal installer.
+ * Storage used by the Drupal installer.
  *
  * This storage performs a full filesystem scan to discover all available
  * extensions and reads from all default config directories that exist.

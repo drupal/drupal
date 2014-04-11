@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 /**
- * Defines an interface for cached configuration storage controllers.
+ * Defines an interface for cached configuration storage.
  */
 interface StorageCacheInterface {
 

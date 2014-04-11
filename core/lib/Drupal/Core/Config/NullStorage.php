@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 /**
- * Defines a stub storage controller.
+ * Defines a stub storage.
  *
  * This storage is always empty; the controller reads and writes nothing.
  *

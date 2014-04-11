@@ -16,7 +16,7 @@ interface StorageComparerInterface {
    * Gets the configuration source storage.
    *
    * @return \Drupal\Core\Config\StorageInterface
-   *   Storage controller object used to read configuration.
+   *   Storage object used to read configuration.
    */
   public function getSourceStorage();
 
@@ -24,7 +24,7 @@ interface StorageComparerInterface {
    * Gets the configuration target storage.
    *
    * @return \Drupal\Core\Config\StorageInterface
-   *   Storage controller object used to write configuration.
+   *   Storage object used to write configuration.
    */
   public function getTargetStorage();
 

@@ -11,7 +11,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 
 /**
- * Storage controller for migration entities.
+ * Storage for migration entities.
  */
 class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDependencyInterface {
 

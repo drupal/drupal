@@ -352,7 +352,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
 
     if ($id !== $entity->id()) {
       // Renaming a config object needs to cater for:
-      // - Storage controller needs to access the original object.
+      // - Storage needs to access the original object.
       // - The object needs to be renamed/copied in ConfigFactory and reloaded.
       // - All instances of the object need to be renamed.
       $config = $this->configFactory->rename($prefix . $id, $prefix . $entity->id());

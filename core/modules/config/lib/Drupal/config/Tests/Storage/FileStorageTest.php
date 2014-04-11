@@ -11,13 +11,13 @@ use Drupal\Core\Config\FileStorage;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Tests FileStorage controller operations.
+ * Tests FileStorage operations.
  */
 class FileStorageTest extends ConfigStorageTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'FileStorage controller operations',
-      'description' => 'Tests FileStorage controller operations.',
+      'name' => 'FileStorage operations',
+      'description' => 'Tests FileStorage operations.',
       'group' => 'Configuration',
     );
   }

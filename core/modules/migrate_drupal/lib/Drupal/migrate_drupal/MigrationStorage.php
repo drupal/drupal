@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\migrate\MigrationStorage as BaseMigrationStorage;
 
 /**
- * Storage controller for migration entities.
+ * Storage for migration entities.
  */
 class MigrationStorage extends BaseMigrationStorage {
 

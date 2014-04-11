@@ -13,7 +13,7 @@ use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Parser;
 
 /**
- * Defines the file storage controller.
+ * Defines the file storage.
  */
 class FileStorage implements StorageInterface {
 
@@ -39,7 +39,7 @@ class FileStorage implements StorageInterface {
   protected $parser;
 
   /**
-   * Constructs a new FileStorage controller.
+   * Constructs a new FileStorage.
    *
    * @param string $directory
    *   A directory path to use for reading and writing of configuration files.

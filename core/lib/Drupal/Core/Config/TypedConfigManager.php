@@ -26,14 +26,14 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
   const CACHE_ID = 'typed_config_definitions';
 
   /**
-   * A storage controller instance for reading configuration data.
+   * A storage instance for reading configuration data.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $configStorage;
 
   /**
-   * A storage controller instance for reading configuration schema data.
+   * A storage instance for reading configuration schema data.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
@@ -57,9 +57,9 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $configStorage
-   *   The storage controller object to use for reading schema data
+   *   The storage object to use for reading schema data
    * @param \Drupal\Core\Config\StorageInterface $schemaStorage
-   *   The storage controller object to use for reading schema data
+   *   The storage object to use for reading schema data
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend to use for caching the definitions.
    */

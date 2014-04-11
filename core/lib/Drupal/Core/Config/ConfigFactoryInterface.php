@@ -70,7 +70,7 @@ interface ConfigFactoryInterface {
   public function reset($name = NULL);
 
   /**
-   * Renames a configuration object using the storage controller.
+   * Renames a configuration object using the storage.
    *
    * @param string $old_name
    *   The old name of the configuration object.
