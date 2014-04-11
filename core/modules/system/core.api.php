@@ -228,13 +228,15 @@
  * \Drupal::cache(). Alternatively, you can request a bin by getting service
  * "cache.nameofbin" from the container. The default bin is called "default", with
  * service name "cache.default", it is used to store common and frequently used
- * caches like plugin information.
+ * caches.
  *
  * Other common cache bins are the following:
  *   - bootstrap: Small caches needed for the bootstrap on every request.
  *   - render: Contains cached HTML strings like cached pages and blocks, can
  *     grow to large size.
  *   - data: Contains data that can vary by path or similar context.
+ *   - discovery: Contains cached discovery data for things such as plugins,
+ *     views_data, or YAML discovered data such as library info.
  *
  * A module can define a cache bin by defining a service in its
  * modulename.services.yml file as follows (substituting the desired name for

@@ -1,7 +1,7 @@
 services:
   plugin.manager.block:
     class: Drupal\block\Plugin\Type\BlockManager
-    arguments: ['@container.namespaces', '@cache.default', '@language_manager', '@module_handler', '@string_translation']
+    arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler', '@string_translation']
   theme.negotiator.block.admin_demo:
     class: Drupal\block\Theme\AdminDemoNegotiator
     tags:

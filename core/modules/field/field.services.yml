@@ -1,5 +1,4 @@
 services:
   field.info:
     class: Drupal\field\FieldInfo
-    arguments: ['@cache.default', '@config.factory', '@module_handler', '@plugin.manager.field.field_type', '@language_manager']
-
+    arguments: ['@cache.discovery', '@config.factory', '@module_handler', '@plugin.manager.field.field_type', '@language_manager']

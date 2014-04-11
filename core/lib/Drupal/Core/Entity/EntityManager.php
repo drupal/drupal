@@ -157,7 +157,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_type_build');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_type');
-    $this->discovery = new CacheDecorator($this->discovery, 'entity_type:' . $this->languageManager->getCurrentLanguage()->id, 'default', Cache::PERMANENT, array('entity_types' => TRUE));
+    $this->discovery = new CacheDecorator($this->discovery, 'entity_type:' . $this->languageManager->getCurrentLanguage()->id, 'discovery', Cache::PERMANENT, array('entity_types' => TRUE));
 
     $this->container = $container;
   }
