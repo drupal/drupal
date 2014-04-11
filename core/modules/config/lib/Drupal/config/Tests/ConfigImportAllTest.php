@@ -95,6 +95,9 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Import the configuration thereby re-installing all the modules.
     $this->configImporter()->import();
 
+    // Check that there are no errors.
+    $this->assertIdentical($this->configImporter()->getErrors(), array());
+
     // Check that all modules that were uninstalled are now reinstalled.
     $this->assertModules(array_keys($modules_to_uninstall), TRUE);
     foreach($modules_to_uninstall as $module => $info) {

@@ -72,6 +72,11 @@ function entity_reference_field_config_update(FieldConfigInterface $field) {
     return;
   }
 
+  if ($field->isSyncing()) {
+    // Don't change anything during a configuration sync.
+    return;
+  }
+
   if ($field->getSetting('target_type') == $field->original->getSetting('target_type')) {
     // Target type didn't change.
     return;

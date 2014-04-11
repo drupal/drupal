@@ -239,7 +239,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       // Clear the filter cache whenever a text format is updated.
       Cache::deleteTags(array('filter_format' => $this->id()));
     }
-    else {
+    elseif (!$this->isSyncing()) {
       // Default configuration of modules and installation profiles is allowed
       // to specify a list of user roles to grant access to for the new format;
       // apply the defined user role permissions when a new format is inserted

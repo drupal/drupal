@@ -387,6 +387,10 @@ function image_entity_presave(EntityInterface $entity) {
     return;
   }
 
+  if ($field->isSyncing()) {
+    return;
+  }
+
   $fid = $entity->settings['default_image']['fid'];
   if ($fid) {
     $original_fid = isset($entity->original) ? $entity->original->settings['default_image']['fid'] : NULL;

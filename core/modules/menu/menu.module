@@ -133,6 +133,11 @@ function menu_menu_insert(Menu $menu) {
   if (\Drupal::moduleHandler()->moduleExists('block')) {
     \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
+
+  if ($menu->isSyncing()) {
+    return;
+  }
+
   // Make sure the menu is present in the active menus variable so that its
   // items may appear in the menu active trail.
   // See menu_set_active_menu_names().
@@ -322,6 +327,9 @@ function menu_node_update(EntityInterface $node) {
  * Implements hook_node_type_insert().
  */
 function menu_node_type_insert(NodeTypeInterface $type) {
+  if ($type->isSyncing()) {
+    return;
+  }
   \Drupal::config('menu.entity.node.' . $type->id())
     ->set('available_menus', array('main'))
     ->set('parent', 'main:0')
@@ -332,6 +340,9 @@ function menu_node_type_insert(NodeTypeInterface $type) {
  * Implements hook_node_type_delete().
  */
 function menu_node_type_delete(NodeTypeInterface $type) {
+  if ($type->isSyncing()) {
+    return;
+  }
   \Drupal::config('menu.entity.node.' . $type->id())->delete();
 }
 

@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Component\Utility\String;
+
 /**
  * Tests deleting fields and instances as part of config import.
  */
@@ -31,13 +33,21 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
    * Tests deleting fields and instances as part of config import.
    */
   public function testImportDelete() {
+    // At this point there are 5 field configuration objects in the active
+    // storage.
+    // - field.field.entity_test.field_test_import
+    // - field.field.entity_test.field_test_import_2
+    // - field.instance.entity_test.entity_test.field_test_import
+    // - field.instance.entity_test.entity_test.field_test_import_2
+    // - field.instance.entity_test.test_bundle.field_test_import_2
+
     $field_name = 'field_test_import';
     $field_id = "entity_test.$field_name";
     $field_name_2 = 'field_test_import_2';
     $field_id_2 = "entity_test.$field_name_2";
-    $instance_id = "entity_test.test_bundle.$field_name";
-    $instance_id_2a = "entity_test.test_bundle.$field_name_2";
-    $instance_id_2b = "entity_test.test_bundle_2.$field_name_2";
+    $instance_id = "entity_test.entity_test.$field_name";
+    $instance_id_2a = "entity_test.entity_test.$field_name_2";
+    $instance_id_2b = "entity_test.test_bundle.$field_name_2";
     $field_config_name = "field.field.$field_id";
     $field_config_name_2 = "field.field.$field_id_2";
     $instance_config_name = "field.instance.$instance_id";
@@ -45,7 +55,7 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $instance_config_name_2b = "field.instance.$instance_id_2b";
 
     // Create a second bundle for the 'Entity test' entity type.
-    entity_test_create_bundle('test_bundle_2');
+    entity_test_create_bundle('test_bundle');
 
     // Import default config.
     $this->installConfig(array('field_test_config'));
@@ -57,11 +67,14 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $active = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
     $this->copyConfig($active, $staging);
-    $staging->delete($field_config_name);
-    $staging->delete($field_config_name_2);
-    $staging->delete($instance_config_name);
-    $staging->delete($instance_config_name_2a);
-    $staging->delete($instance_config_name_2b);
+    $this->assertTrue($staging->delete($field_config_name), String::format('Deleted field: !field', array('!field' => $field_config_name)));
+    $this->assertTrue($staging->delete($field_config_name_2), String::format('Deleted field: !field', array('!field' => $field_config_name_2)));
+    $this->assertTrue($staging->delete($instance_config_name), String::format('Deleted field instance: !field_instance', array('!field_instance' => $instance_config_name)));
+    $this->assertTrue($staging->delete($instance_config_name_2a), String::format('Deleted field instance: !field_instance', array('!field_instance' => $instance_config_name_2a)));
+    $this->assertTrue($staging->delete($instance_config_name_2b), String::format('Deleted field instance: !field_instance', array('!field_instance' => $instance_config_name_2b)));
+
+    $deletes = $this->configImporter()->getUnprocessedConfiguration('delete');
+    $this->assertEqual(count($deletes), 5, 'Importing configuration will delete 3 field instances and 2 fields.');
 
     // Import the content of the staging directory.
     $this->configImporter()->import();

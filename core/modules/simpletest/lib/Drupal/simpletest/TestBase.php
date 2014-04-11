@@ -1527,7 +1527,8 @@ abstract class TestBase {
         $this->container->get('lock'),
         $this->container->get('config.typed'),
         $this->container->get('module_handler'),
-        $this->container->get('theme_handler')
+        $this->container->get('theme_handler'),
+        $this->container->get('string_translation')
       );
     }
     // Always recalculate the changelist when called.

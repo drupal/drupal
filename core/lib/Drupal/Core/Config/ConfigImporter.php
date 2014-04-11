@@ -14,6 +14,7 @@ use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\StringTranslation\TranslationManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -120,11 +121,25 @@ class ConfigImporter extends DependencySerialization {
   protected $themeHandler;
 
   /**
+   * The string translation service.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationManager
+   */
+  protected $translationManager;
+
+  /**
    * Flag set to import system.theme during processing theme enable and disables.
    *
    * @var bool
    */
   protected $processedSystemTheme = FALSE;
+
+  /**
+   * List of errors that were logged during a config import.
+   *
+   * @var array
+   */
+  protected $errors = array();
 
   /**
    * Constructs a configuration import object.
@@ -144,8 +159,10 @@ class ConfigImporter extends DependencySerialization {
    *   The module handler
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler
+   * @param \Drupal\Core\StringTranslation\TranslationManager $translation_manager
+   *   The string translation service.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, TranslationManager $translation_manager) {
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
     $this->configManager = $config_manager;
@@ -153,8 +170,29 @@ class ConfigImporter extends DependencySerialization {
     $this->typedConfigManager = $typed_config;
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
+    $this->translationManager = $translation_manager;
     $this->processedConfiguration = $this->storageComparer->getEmptyChangelist();
     $this->processedExtensions = $this->getEmptyExtensionsProcessedList();
+  }
+
+  /**
+   * Logs an error message.
+   *
+   * @param string $message
+   *   The message to log.
+   */
+  protected function logError($message) {
+    $this->errors[] = $message;
+  }
+
+  /**
+   * Returns error messages created while running the import.
+   *
+   * @return array
+   *   List of messages.
+   */
+  public function getErrors() {
+    return $this->errors;
   }
 
   /**
@@ -415,7 +453,9 @@ class ConfigImporter extends DependencySerialization {
       // to handle dependencies correctly.
       foreach (array('delete', 'create', 'update') as $op) {
         foreach ($this->getUnprocessedConfiguration($op) as $name) {
-          $this->processConfiguration($op, $name);
+          if ($this->checkOp($op, $name)) {
+            $this->processConfiguration($op, $name);
+          }
         }
       }
       // Allow modules to react to a import.
@@ -452,10 +492,23 @@ class ConfigImporter extends DependencySerialization {
    *   The change operation.
    * @param string $name
    *   The name of the configuration to process.
+   *
+   * @throws \Exception
+   *   Thrown when the import process fails, only thrown when no importer log is
+   *   set, otherwise the exception message is logged and the configuration
+   *   is skipped.
    */
   protected function processConfiguration($op, $name) {
-    if (!$this->importInvokeOwner($op, $name)) {
-      $this->importConfig($op, $name);
+    try {
+      if (!$this->importInvokeOwner($op, $name)) {
+        $this->importConfig($op, $name);
+      }
+    }
+    catch (\Exception $e) {
+      $this->logError($this->t('Unexpected error during import with operation @op for @name: @message', array('@op' => $op, '@name' => $name, '@message' => $e->getMessage())));
+      // Error for that operation was logged, mark it as processed so that
+      // the import can continue.
+      $this->setProcessedConfiguration($op, $name);
     }
   }
 
@@ -503,6 +556,68 @@ class ConfigImporter extends DependencySerialization {
     \Drupal::service('config.installer')
       ->setSyncing(FALSE)
       ->resetSourceStorage();
+  }
+
+  /**
+   * Checks that the operation is still valid.
+   *
+   * During a configuration import secondary writes and deletes are possible.
+   * This method checks that the operation is still valid before processing a
+   * configuration change.
+   *
+   * @param string $op
+   *   The change operation.
+   * @param string $name
+   *   The name of the configuration to process.
+   *
+   * @throws \Drupal\Core\Config\ConfigImporterException
+   *
+   * @return bool
+   *   TRUE is to continue processing, FALSE otherwise.
+   */
+  protected function checkOp($op, $name) {
+    $target_exists = $this->storageComparer->getTargetStorage()->exists($name);
+    switch ($op) {
+      case 'delete':
+        if (!$target_exists) {
+          // The configuration has already been deleted. For example, a field
+          // is automatically deleted if all the instances are.
+          $this->setProcessedConfiguration($op, $name);
+          return FALSE;
+        }
+        break;
+
+      case 'create':
+        if ($target_exists) {
+          // If the target already exists, use the entity storage to delete it
+          // again, if is a simple config, delete it directly.
+          if ($entity_type_id = $this->configManager->getEntityTypeIdByName($name)) {
+            $entity_storage = $this->configManager->getEntityManager()->getStorage($entity_type_id);
+            $entity_type = $this->configManager->getEntityManager()->getDefinition($entity_type_id);
+            $entity = $entity_storage->load($entity_storage->getIDFromConfigName($name, $entity_type->getConfigPrefix()));
+            $entity->delete();
+            $this->logError($this->translationManager->translate('Deleted and replaced configuration entity "@name"', array('@name' => $name)));
+          }
+          else {
+            $this->storageComparer->getTargetStorage()->delete($name);
+            $this->logError($this->t('Deleted and replaced configuration "@name"', array('@name' => $name)));
+          }
+          return TRUE;
+        }
+        break;
+
+      case 'update':
+        if (!$target_exists) {
+          $this->logError($this->t('Update target "@name" is missing.', array('@name' => $name)));
+          // Mark as processed so that the synchronisation continues. Once the
+          // the current synchronisation is complete it will show up as a
+          // create.
+          $this->setProcessedConfiguration($op, $name);
+          return FALSE;
+        }
+        break;
+    }
+    return TRUE;
   }
 
   /**
@@ -574,7 +689,6 @@ class ConfigImporter extends DependencySerialization {
       $this->setProcessedConfiguration($op, $name);
       return TRUE;
     }
-    return FALSE;
   }
 
   /**
@@ -656,5 +770,31 @@ class ConfigImporter extends DependencySerialization {
     $this->typedConfigManager = \Drupal::service('config.typed');
     $this->moduleHandler = \Drupal::moduleHandler();
     $this->themeHandler = \Drupal::service('theme_handler');
+    $this->translationManager = \Drupal::service('string_translation');
   }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * @param string $string
+   *   A string containing the English string to translate.
+   * @param array $args
+   *   An associative array of replacements to make after translation. Based
+   *   on the first character of the key, the value is escaped and/or themed.
+   *   See \Drupal\Component\Utility\String::format() for details.
+   * @param array $options
+   *   An associative array of additional options, with the following elements:
+   *   - 'langcode': The language code to translate to a language other than
+   *      what is used to display the page.
+   *   - 'context': The context the source string belongs to.
+   *
+   * @return string
+   *   The translated string.
+   *
+   * @see \Drupal\Core\StringTranslation\TranslationManager::translate()
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translationManager->translate($string, $args, $options);
+  }
+
 }

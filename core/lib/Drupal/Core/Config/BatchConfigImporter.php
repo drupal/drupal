@@ -108,7 +108,9 @@ class BatchConfigImporter extends ConfigImporter {
     }
     $operation = $this->getNextConfigurationOperation();
     if (!empty($operation)) {
-      $this->processConfiguration($operation['op'], $operation['name']);
+      if ($this->checkOp($operation['op'], $operation['name'])) {
+        $this->processConfiguration($operation['op'], $operation['name']);
+      }
       $context['message'] = t('Synchronizing configuration: @op @name.', array('@op' => $operation['op'], '@name' => $operation['name']));
       $processed_count = count($this->processedConfiguration['create']) + count($this->processedConfiguration['delete']) + count($this->processedConfiguration['update']);
       $context['finished'] = $processed_count / $this->totalConfigurationToProcess;

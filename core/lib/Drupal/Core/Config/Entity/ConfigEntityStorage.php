@@ -9,6 +9,7 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageBase;
@@ -425,6 +426,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   public function importUpdate($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityType->getConfigPrefix());
     $entity = $this->load($id);
+    if (!$entity) {
+      throw new ConfigImporterException(String::format('Attempt to update non-existing entity "@id".', array('@id' => $id)));
+    }
     $entity->setSyncing(TRUE);
     $entity->original = clone $entity;
 

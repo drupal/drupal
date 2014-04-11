@@ -250,7 +250,8 @@ class ConfigSync extends FormBase {
       $this->lock,
       $this->typedConfigManager,
       $this->moduleHandler,
-      $this->themeHandler
+      $this->themeHandler,
+      $this->translationManager()
     );
     if ($config_importer->alreadyImporting()) {
       drupal_set_message($this->t('Another request may be synchronizing configuration already.'));
@@ -289,6 +290,12 @@ class ConfigSync extends FormBase {
 
     $config_importer = $context['sandbox']['config_importer'];
     $config_importer->$operation($context);
+    if ($errors = $config_importer->getErrors()) {
+      if (!isset($context['results']['errors'])) {
+        $context['results']['errors'] = array();
+      }
+      $context['results']['errors'] += $errors;
+    }
   }
 
   /**
@@ -299,7 +306,16 @@ class ConfigSync extends FormBase {
    */
   public static function finishBatch($success, $results, $operations) {
     if ($success) {
-      drupal_set_message(\Drupal::translation()->translate('The configuration was imported successfully.'));
+      if (!empty($results['errors'])) {
+        foreach ($results['errors'] as $error) {
+          drupal_set_message($error, 'error');
+          watchdog('config_sync', $error, NULL, WATCHDOG_ERROR);
+        }
+        drupal_set_message(\Drupal::translation()->translate('The configuration was imported with errors.'), 'warning');
+      }
+      else {
+        drupal_set_message(\Drupal::translation()->translate('The configuration was imported successfully.'));
+      }
     }
     else {
       // An error occurred.

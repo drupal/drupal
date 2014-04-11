@@ -38,6 +38,9 @@ interface ImportableEntityStorageInterface {
    *   A configuration object containing the new configuration data.
    * @param \Drupal\Core\Config\Config $old_config
    *   A configuration object containing the old configuration data.
+   *
+   * @throws \Drupal\Core\Config\ConfigImporterException
+   *   Thrown when the config entity that should be updated can not be found.
    */
   public function importUpdate($name, Config $new_config, Config $old_config);
 

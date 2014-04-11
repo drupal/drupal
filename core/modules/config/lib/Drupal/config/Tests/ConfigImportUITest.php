@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -312,4 +313,55 @@ class ConfigImportUITest extends WebTestBase {
     $config_data['name'] = $new_site_name;
     $staging->write('system.site', $config_data);
   }
+
+  /**
+   * Tests an import that results in an error.
+   */
+  function testImportErrorLog() {
+    $name_primary = 'config_test.dynamic.primary';
+    $name_secondary = 'config_test.dynamic.secondary';
+    $staging = $this->container->get('config.storage.staging');
+    $uuid = $this->container->get('uuid');
+
+    $values_primary = array(
+      'id' => 'primary',
+      'label' => 'Primary',
+      'weight' => 0,
+      'style' => NULL,
+      'test_dependencies' => array(),
+      'status' => TRUE,
+      'uuid' => $uuid->generate(),
+      'langcode' => 'en',
+      'dependencies' => array(),
+      'protected_property' => null,
+    );
+    $staging->write($name_primary, $values_primary);
+    $values_secondary = array(
+      'id' => 'secondary',
+      'label' => 'Secondary Sync',
+      'weight' => 0,
+      'style' => NULL,
+      'test_dependencies' => array(),
+      'status' => TRUE,
+      'uuid' => $uuid->generate(),
+      'langcode' => 'en',
+      // Add a dependency on primary, to ensure that is synced first.
+      'dependencies' => array(
+        'entity' => array($name_primary),
+      ),
+      'protected_property' => null,
+    );
+    $staging->write($name_secondary, $values_secondary);
+    // Verify that there are configuration differences to import.
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertNoText(t('There are no configuration changes.'));
+
+    // Attempt to import configuration and verify that an error message appears.
+    $this->drupalPostForm(NULL, array(), t('Import all'));
+    $this->assertText(String::format('Deleted and replaced configuration entity "@name"', array('@name' => $name_secondary)));
+    $this->assertText(t('The configuration was imported with errors.'));
+    $this->assertNoText(t('The configuration was imported successfully.'));
+    $this->assertText(t('There are no configuration changes.'));
+  }
+
 }
