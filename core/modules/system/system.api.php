@@ -2440,36 +2440,6 @@ function hook_system_themes_page_alter(&$theme_groups) {
 }
 
 /**
- * Alters outbound URLs.
- *
- * @param $path
- *   The outbound path to alter, not adjusted for path aliases yet. It won't be
- *   adjusted for path aliases until all modules are finished altering it. This
- *   may have been altered by other modules before this one.
- * @param $options
- *   A set of URL options for the URL so elements such as a fragment or a query
- *   string can be added to the URL.
- * @param $original_path
- *   The original path, before being altered by any modules.
- *
- * @see url()
- */
-function hook_url_outbound_alter(&$path, &$options, $original_path) {
-  // Use an external RSS feed rather than the Drupal one.
-  if ($path == 'rss.xml') {
-    $path = 'http://example.com/rss.xml';
-    $options['external'] = TRUE;
-  }
-
-  // Instead of pointing to user/[uid]/edit, point to user/me/edit.
-  if (preg_match('|^user/([0-9]*)/edit(/.*)?|', $path, $matches)) {
-    if (\Drupal::currentUser()->id() == $matches[1]) {
-      $path = 'user/me/edit' . $matches[2];
-    }
-  }
-}
-
-/**
  * Provide replacement values for placeholder tokens.
  *
  * This hook is invoked when someone calls
