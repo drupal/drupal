@@ -265,7 +265,10 @@ class Node extends WizardPluginBase {
     $tag_fields = array();
     foreach ($bundles as $bundle) {
       $display = entity_get_form_display($this->entityTypeId, $bundle, 'default');
-      foreach (field_info_instances($this->entityTypeId, $bundle) as $field_name => $instance) {
+      $taxonomy_fields = array_filter(\Drupal::entityManager()->getFieldDefinitions($this->entityTypeId, $bundle), function ($field_definition) {
+        return $field_definition->getType() == 'taxonomy_term_reference';
+      });
+      foreach ($taxonomy_fields as $field_name => $instance) {
         $widget = $display->getComponent($field_name);
         // We define "tag-like" taxonomy fields as ones that use the
         // "Autocomplete term widget (tagging)" widget.

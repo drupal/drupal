@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Alternative plugin implementation of the 'entity_reference' field type.
@@ -142,7 +143,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
     $target_type = $field_definition->getSetting('target_type');
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
 
-    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface') && $field_definition instanceof FieldConfigInterface) {
       $schema['columns']['revision_id'] = array(
         'description' => 'The revision ID of the target entity.',
         'type' => 'int',

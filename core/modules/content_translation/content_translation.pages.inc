@@ -37,8 +37,8 @@ function content_translation_overview(EntityInterface $entity) {
 
     // Determine whether the current entity is translatable.
     $translatable = FALSE;
-    foreach (field_info_instances($entity->getEntityTypeId(), $entity->bundle()) as $instance) {
-      if ($instance->isTranslatable()) {
+    foreach (\Drupal::entityManager()->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {
+      if ($field_definition->isTranslatable()) {
         $translatable = TRUE;
         break;
       }

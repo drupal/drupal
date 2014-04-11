@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 
 /**
  * Implements hook_views_data().
@@ -81,8 +82,10 @@ function field_views_field_label($entity_type, $field_name) {
   $label_counter = array();
   $all_labels = array();
   // Count the amount of instances per label per field.
-  $instances = field_info_instances($entity_type);
-  foreach ($instances as $bundle => $bundle_instances) {
+  foreach (array_keys(\Drupal::entityManager()->getBundleInfo($entity_type)) as $bundle) {
+    $bundle_instances = array_filter(\Drupal::entityManager()->getFieldDefinitions($entity_type, $bundle), function ($field_definition) {
+      return $field_definition instanceof FieldInstanceConfigInterface;
+    });
     if (isset($bundle_instances[$field_name])) {
       $instance = $bundle_instances[$field_name];
       $label = $instance->getLabel();

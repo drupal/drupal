@@ -11,7 +11,6 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 
 /**
@@ -53,10 +52,11 @@ class SelectionBase implements SelectionInterface {
    * {@inheritdoc}
    */
   public static function settingsForm(FieldDefinitionInterface $field_definition) {
-    $target_type = $field_definition->getSetting('target_type');
+    $entity_manager = \Drupal::entityManager();
+    $entity_type_id = $field_definition->getSetting('target_type');
     $selection_handler_settings = $field_definition->getSetting('handler_settings') ?: array();
-    $entity_type = \Drupal::entityManager()->getDefinition($target_type);
-    $bundles = entity_get_bundles($target_type);
+    $entity_type = $entity_manager->getDefinition($entity_type_id);
+    $bundles = $entity_manager->getBundleInfo($entity_type_id);
 
     // Merge-in default values.
     $selection_handler_settings += array(
@@ -75,10 +75,10 @@ class SelectionBase implements SelectionInterface {
 
       $target_bundles_title = t('Bundles');
       // Default core entity types with sensible labels.
-      if ($target_type == 'node') {
+      if ($entity_type_id == 'node') {
         $target_bundles_title = t('Content types');
       }
-      elseif ($target_type == 'taxonomy_term') {
+      elseif ($entity_type_id == 'taxonomy_term') {
         $target_bundles_title = t('Vocabularies');
       }
 
@@ -100,18 +100,26 @@ class SelectionBase implements SelectionInterface {
       );
     }
 
-    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
-      // @todo Use Entity::getFieldDefinitions() when all entity types are
-      // converted to the new Field API.
-      $fields = drupal_schema_fields_sql($entity_type->getBaseTable());
-      $fields = array_combine($fields, $fields);
-      foreach (field_info_instances($target_type) as $bundle_instances) {
-        foreach ($bundle_instances as $instance_name => $instance) {
-          foreach ($instance->getField()->getColumns() as $column_name => $column_info) {
-            $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $instance->getLabel(), '@column' => $column_name));
+    if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+      $fields = array();
+      foreach (array_keys($bundles) as $bundle) {
+        $bundle_fields = array_filter($entity_manager->getFieldDefinitions($entity_type_id, $bundle), function ($field_definition) {
+          return !$field_definition->isComputed();
+        });
+        foreach ($bundle_fields as $instance_name => $field_definition) {
+          /* @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+          $columns = $field_definition->getColumns();
+          // If there is more than one column, display them all, otherwise just
+          // display the field label.
+          // @todo: Use property labels instead of the column name.
+          if (count($columns) > 1) {
+            foreach ($field_definition->getColumns() as $column_name => $column_info) {
+              $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $field_definition->getLabel(), '@column' => $column_name));
+            }
           }
-
+          else {
+            $fields[$instance_name] = t('@label', array('@label' => $field_definition->getLabel()));
+          }
         }
       }
 

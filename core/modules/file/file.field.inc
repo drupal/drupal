@@ -6,8 +6,8 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
-use Drupal\field\FieldConfigInterface;
 
 /**
  * Returns HTML for an individual file upload widget.
@@ -214,14 +214,14 @@ function theme_file_upload_help($variables) {
 /**
  * Determine whether a field references files stored in {file_managed}.
  *
- * @param Drupal\field\FieldConfigInterface $field
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   A field definition.
  *
- * @return
+ * @return bool
  *   The field column if the field references {file_managed}.fid, typically
- *   fid, FALSE if it doesn't.
+ *   fid, FALSE if it does not.
  */
-function file_field_find_file_reference_column(FieldConfigInterface $field) {
+function file_field_find_file_reference_column(FieldDefinitionInterface $field) {
   $schema = $field->getSchema();
   foreach ($schema['foreign keys'] as $data) {
     if ($data['table'] == 'file_managed') {

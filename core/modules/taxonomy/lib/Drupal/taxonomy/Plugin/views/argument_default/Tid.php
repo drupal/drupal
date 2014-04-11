@@ -168,12 +168,11 @@ class Tid extends ArgumentDefaultPluginBase {
       // Just check, if a node could be detected.
       if (($node = $this->request->attributes->has('node')) && $node instanceof NodeInterface) {
         $taxonomy = array();
-        $instances = field_info_instances('node', $node->getType());
-        foreach ($instances as $instance) {
-          $field = $instance->getField();
-          if ($field->type == 'taxonomy_term_reference') {
-            foreach ($node->get($field->name) as $item) {
-              $taxonomy[$item->target_id] = $field->settings['allowed_values'][0]['vocabulary'];
+        foreach ($node->getFieldDefinitions() as $field) {
+          if ($field->getType() == 'taxonomy_term_reference') {
+            foreach ($node->get($field->getName()) as $item) {
+              $allowed_values = $field->getSetting('allowed_values');
+              $taxonomy[$item->target_id] = $allowed_values[0]['vocabulary'];
             }
           }
         }

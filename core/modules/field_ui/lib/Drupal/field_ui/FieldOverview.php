@@ -15,6 +15,7 @@ use Drupal\Core\Render\Element;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\FieldInstanceConfigInterface;
 
 /**
  * Field UI field overview form.
@@ -79,7 +80,9 @@ class FieldOverview extends OverviewBase {
     parent::buildForm($form, $form_state, $entity_type_id, $bundle);
 
     // Gather bundle information.
-    $instances = field_info_instances($this->entity_type, $this->bundle);
+    $instances = array_filter(\Drupal::entityManager()->getFieldDefinitions($this->entity_type, $this->bundle), function ($field_definition) {
+      return $field_definition instanceof FieldInstanceConfigInterface;
+    });
     $field_types = $this->fieldTypeManager->getDefinitions();
 
     // Field prefix.

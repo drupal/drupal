@@ -196,26 +196,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Tests field translation form.
-   */
-  function testFieldTranslationForm() {
-    $this->drupalLogin($this->administrator);
-
-    $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => 'en'));
-
-    // Visit translation page.
-    $this->drupalGet('node/' . $article->id() . '/translations');
-    $this->assertRaw('Not translated');
-
-    // Delete the only translatable field.
-    field_info_field($this->entityTypeId, 'field_test_et_ui_test')->delete();
-
-    // Visit translation page.
-    $this->drupalGet('node/' . $article->id() . '/translations');
-    $this->assertRaw('No translatable fields');
-  }
-
-  /**
    * Tests that no metadata is stored for a disabled bundle.
    */
   public function testDisabledBundle() {

@@ -13,6 +13,17 @@ use Drupal\simpletest\WebTestBase;
  * Tests the Entity Reference Admin UI.
  */
 class EntityReferenceAdminTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'field_ui', 'entity_reference');
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Entity Reference admin UI',
@@ -21,47 +32,22 @@ class EntityReferenceAdminTest extends WebTestBase {
     );
   }
 
-  public static $modules = array('node', 'field_ui', 'entity_reference');
-
   public function setUp() {
     parent::setUp();
 
     // Create test user.
-    $this->admin_user = $this->drupalCreateUser(array('access content', 'administer node fields'));
-    $this->drupalLogin($this->admin_user);
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer node fields'));
+    $this->drupalLogin($admin_user);
 
-    // Create content type, with underscores.
+    // Create a content type, with underscores.
     $type_name = strtolower($this->randomName(8)) . '_test';
     $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
     $this->type = $type->type;
   }
 
-  protected function assertFieldSelectOptions($name, $expected_options) {
-    $xpath = $this->buildXPathQuery('//select[@name=:name]', array(':name' => $name));
-    $fields = $this->xpath($xpath);
-    if ($fields) {
-      $field = $fields[0];
-      $options = $this->getAllOptionsList($field);
-      return $this->assertIdentical($options, $expected_options);
-    }
-    else {
-      return $this->fail(t('Unable to find field @name', array('@name' => $name)));
-    }
-  }
-
   /**
-   * Extract all the options of a select element.
+   * Tests the Entity Reference Admin UI.
    */
-  protected function getAllOptionsList($element) {
-    $options = array();
-    // Add all options items.
-    foreach ($element->option as $option) {
-      $options[] = (string) $option['value'];
-    }
-    // TODO: support optgroup.
-    return $options;
-  }
-
   public function testFieldAdminHandler() {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 
@@ -76,9 +62,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertFieldByName('field[settings][target_type]', 'node');
 
     // Check that all entity types can be referenced.
-    foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-      $this->assertFieldByXPath("//select[@name='field[settings][target_type]']/option[@value='" . $entity_type_id . "']");
-    }
+    $this->assertFieldSelectOptions('field[settings][target_type]', array_keys(\Drupal::entityManager()->getDefinitions()));
 
     // Second step: 'Instance settings' form.
     $this->drupalPostForm(NULL, array(), t('Save field settings'));
@@ -102,8 +86,17 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Option 1: sort by field.
     $this->drupalPostAjaxForm(NULL, array('instance[settings][handler_settings][sort][field]' => 'nid'), 'instance[settings][handler_settings][sort][field]');
     $this->assertFieldByName('instance[settings][handler_settings][sort][direction]', 'ASC');
+
+    // Test that a non-translatable base field is a sort option.
+    $this->assertFieldByXPath("//select[@name='instance[settings][handler_settings][sort][field]']/option[@value='nid']");
+    // Test that a translatable base field is a sort option.
+    $this->assertFieldByXPath("//select[@name='instance[settings][handler_settings][sort][field]']/option[@value='title']");
+    // Test that a configurable field is a sort option.
+    $this->assertFieldByXPath("//select[@name='instance[settings][handler_settings][sort][field]']/option[@value='body.value']");
+
     // Set back to no sort.
     $this->drupalPostAjaxForm(NULL, array('instance[settings][handler_settings][sort][field]' => '_none'), 'instance[settings][handler_settings][sort][field]');
+    $this->assertNoFieldByName('instance[settings][handler_settings][sort][direction]');
 
     // Third step: confirm.
     $this->drupalPostForm(NULL, array(
@@ -113,4 +106,52 @@ class EntityReferenceAdminTest extends WebTestBase {
     // Check that the field appears in the overview form.
     $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', 'Test label', 'Field was created and appears in the overview page.');
   }
+
+  /**
+   * Checks if a select element contains the specified options.
+   *
+   * @param string $name
+   *   The field name.
+   * @param array $expected_options
+   *   An array of expected options.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertFieldSelectOptions($name, array $expected_options) {
+    $xpath = $this->buildXPathQuery('//select[@name=:name]', array(':name' => $name));
+    $fields = $this->xpath($xpath);
+    if ($fields) {
+      $field = $fields[0];
+      $options = $this->getAllOptionsList($field);
+      return $this->assertIdentical($options, $expected_options);
+    }
+    else {
+      return $this->fail('Unable to find field ' . $name);
+    }
+  }
+
+  /**
+   * Extracts all options from a select element.
+   *
+   * @param \SimpleXMLElement $element
+   *   The select element field information.
+   *
+   * @return array
+   *   An array of option values as strings.
+   */
+  protected function getAllOptionsList(\SimpleXMLElement $element) {
+    $options = array();
+    // Add all options items.
+    foreach ($element->option as $option) {
+      $options[] = (string) $option['value'];
+    }
+
+    if (isset($element->optgroup)) {
+      $options += $this->getAllOptionsList($element->optgroup);
+    }
+
+    return $options;
+  }
+
 }

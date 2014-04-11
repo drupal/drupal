@@ -786,10 +786,9 @@ function taxonomy_build_node_index($node) {
   if ($status && $node->isDefaultRevision()) {
     // Collect a unique list of all the term IDs from all node fields.
     $tid_all = array();
-    foreach (field_info_instances('node', $node->getType()) as $instance) {
-      $field = $instance->getField();
+    foreach ($node->getFieldDefinitions() as $field) {
       $field_name = $field->getName();
-      if ($field->module == 'taxonomy') {
+      if ($field->getType() == 'taxonomy_term_reference') {
         foreach ($node->getTranslationLanguages() as $language) {
           foreach ($node->getTranslation($language->id)->$field_name as $item) {
             if (!$item->isEmpty()) {
