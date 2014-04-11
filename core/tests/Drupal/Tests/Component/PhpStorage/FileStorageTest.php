@@ -132,7 +132,7 @@ class FileStorageTest extends PhpStorageTestBase {
     $this->assertFalse($php_read->deleteAll());
 
     // Make sure directory exists prior to removal.
-    $this->assertTrue(file_exists(sys_get_temp_dir() . '/php/simpletest'), 'File storage directory does not exist.');
+    $this->assertTrue(file_exists(sys_get_temp_dir() . '/php/test'), 'File storage directory does not exist.');
 
     // Write out some files.
     $php = new FileStorage($this->standardSettings);
