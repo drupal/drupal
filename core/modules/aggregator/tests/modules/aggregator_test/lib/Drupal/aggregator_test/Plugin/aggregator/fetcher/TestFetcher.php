@@ -10,7 +10,6 @@ namespace Drupal\aggregator_test\Plugin\aggregator\fetcher;
 use Drupal\aggregator\Plugin\FetcherInterface;
 use Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher;
 use Drupal\aggregator\FeedInterface;
-use Guzzle\Http\Exception\BadResponseException;
 
 /**
  * Defines a test fetcher implementation.

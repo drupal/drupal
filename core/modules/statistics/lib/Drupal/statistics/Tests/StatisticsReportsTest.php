@@ -37,8 +37,8 @@ class StatisticsReportsTest extends StatisticsTestBase {
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     $client = \Drupal::httpClient();
-    $client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
-    $client->post($stats_path, $headers, $post)->send();
+    $client->setDefaultOption('config/curl', array(CURLOPT_TIMEOUT => 10));
+    $client->post($stats_path, array('headers' => $headers, 'body' => $post));
 
     // Configure and save the block.
     $this->drupalPlaceBlock('statistics_popular_block', array(

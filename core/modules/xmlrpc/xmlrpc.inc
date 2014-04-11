@@ -11,8 +11,7 @@
  * This version is made available under the GNU GPL License
  */
 
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\RequestException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Turns a data structure into objects with 'data' and 'type' attributes.
@@ -561,15 +560,11 @@ function _xmlrpc($url, array $args, array $headers = array()) {
     $args = $args[$method];
   }
   $xmlrpc_request = xmlrpc_request($method, $args);
-  $request = \Drupal::httpClient()->post($url, $headers, $xmlrpc_request->xml);
-  $request->setHeader('Content-Type', 'text/xml');
+
+  $headers['Content-Type'] = 'text/xml';
+
   try {
-    $response = $request->send();
-  }
-  catch (BadResponseException $exception) {
-    $response = $exception->getResponse();
-    xmlrpc_error($response->getStatusCode(), $response->getReasonPhrase());
-    return FALSE;
+    $response = \Drupal::httpClient()->post($url, array('headers' => $headers, 'body' => $xmlrpc_request->xml));
   }
   catch (RequestException $exception) {
     xmlrpc_error(NULL, $exception->getMethod());

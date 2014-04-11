@@ -10,9 +10,8 @@ namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 use Drupal\aggregator\Plugin\FetcherInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Guzzle\Http\ClientInterface;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\RequestException;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,14 +30,14 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
   /**
    * The HTTP client to fetch the feed data with.
    *
-   * @var \Guzzle\Http\ClientInterface
+   * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
   /**
    * Constructs a DefaultFetcher object.
    *
-   * @param \Guzzle\Http\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $http_client
    *   A Guzzle client object.
    */
   public function __construct(ClientInterface $http_client) {
@@ -58,7 +57,7 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function fetch(FeedInterface $feed) {
-    $request = $this->httpClient->get($feed->getUrl());
+    $request = $this->httpClient->createRequest('GET', $feed->getUrl());
     $feed->source_string = FALSE;
 
     // Generate conditional GET headers.
@@ -70,7 +69,7 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
     }
 
     try {
-      $response = $request->send();
+      $response = $this->httpClient->send($request);
 
       // In case of a 304 Not Modified, there is no new content, so return
       // FALSE.
@@ -79,8 +78,8 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
       }
 
       $feed->source_string = $response->getBody(TRUE);
-      $feed->setEtag($response->getEtag());
-      $feed->setLastModified(strtotime($response->getLastModified()));
+      $feed->setEtag($response->getHeader('ETag'));
+      $feed->setLastModified(strtotime($response->getHeader('Last-Modified')));
       $feed->http_headers = $response->getHeaders();
 
       // Update the feed URL in case of a 301 redirect.
@@ -89,12 +88,6 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
         $feed->setUrl($response->getEffectiveUrl());
       }
       return TRUE;
-    }
-    catch (BadResponseException $e) {
-      $response = $e->getResponse();
-      watchdog('aggregator', 'The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->label(), '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()), WATCHDOG_WARNING);
-      drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->label(), '%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
-      return FALSE;
     }
     catch (RequestException $e) {
       watchdog('aggregator', 'The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->label(), '%error' => $e->getMessage()), WATCHDOG_WARNING);

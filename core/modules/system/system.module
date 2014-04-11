@@ -12,8 +12,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\block\BlockPluginInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\RequestException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Maximum age of temporary files in seconds.
@@ -1677,14 +1676,8 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
   try {
     $data = \Drupal::httpClient()
       ->get($url)
-      ->send()
       ->getBody(TRUE);
     $local = $managed ? file_save_data($data, $path, $replace) : file_unmanaged_save_data($data, $path, $replace);
-  }
-  catch (BadResponseException $exception) {
-    $response = $exception->getResponse();
-    drupal_set_message(t('Failed to fetch file due to HTTP error "%error"', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())), 'error');
-    return FALSE;
   }
   catch (RequestException $exception) {
     drupal_set_message(t('Failed to fetch file due to error "%error"', array('%error' => $exception->getMessage())), 'error');

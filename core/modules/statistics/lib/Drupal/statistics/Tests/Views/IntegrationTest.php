@@ -83,8 +83,8 @@ class IntegrationTest extends ViewTestBase {
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     $client = \Drupal::httpClient();
-    $client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
-    $client->post($stats_path, array(), array('nid' => $this->node->id()))->send();
+    $client->setDefaultOption('config/curl', array(CURLOPT_TIMEOUT => 10));
+    $client->post($stats_path, array('body' => array('nid' => $this->node->id())));
     $this->drupalGet('test_statistics_integration');
 
     $expected = statistics_get($this->node->id());

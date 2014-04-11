@@ -1,0 +1,40 @@
+{
+    "name": "guzzlehttp/guzzle",
+    "type": "library",
+    "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+    "keywords": ["framework", "http", "rest", "web service", "curl", "client", "HTTP client"],
+    "homepage": "http://guzzlephp.org/",
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Michael Dowling",
+            "email": "mtdowling@gmail.com",
+            "homepage": "https://github.com/mtdowling"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.4.0",
+        "guzzlehttp/streams": "1.*"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "GuzzleHttp\\": "src/"
+        },
+        "files": ["src/functions.php"]
+    },
+
+    "require-dev": {
+        "ext-curl": "*",
+        "psr/log": "~1",
+        "phpunit/phpunit": "4.*"
+    },
+
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    }
+}

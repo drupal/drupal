@@ -40,7 +40,7 @@ class StatisticsAdminTest extends WebTestBase {
   /**
    * The Guzzle HTTP client.
    *
-   * @var \Guzzle\Http\ClientInterface;
+   * @var \GuzzleHttp\ClientInterface;
    */
   protected $client;
 
@@ -63,7 +63,7 @@ class StatisticsAdminTest extends WebTestBase {
     $this->drupalLogin($this->privileged_user);
     $this->test_node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->privileged_user->id()));
     $this->client = \Drupal::httpClient();
-    $this->client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
+    $this->client->setDefaultOption('config/curl', array(CURLOPT_TIMEOUT => 10));
   }
 
   /**
@@ -86,16 +86,16 @@ class StatisticsAdminTest extends WebTestBase {
     $post = array('nid' => $nid);
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    $this->client->post($stats_path, array(), $post)->send();
+    $this->client->post($stats_path, array('body' => $post));
 
     // Hit the node again (the counter is incremented after the hit, so
     // "1 view" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->test_node->id());
-    $this->client->post($stats_path, array(), $post)->send();
+    $this->client->post($stats_path, array('body' => $post));
     $this->assertText('1 view', 'Node is viewed once.');
 
     $this->drupalGet('node/' . $this->test_node->id());
-    $this->client->post($stats_path, array(), $post)->send();
+    $this->client->post($stats_path, array('body' => $post));
     $this->assertText('2 views', 'Node is viewed 2 times.');
   }
 
@@ -111,7 +111,7 @@ class StatisticsAdminTest extends WebTestBase {
     $post = array('nid' => $nid);
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    $this->client->post($stats_path, array(), $post)->send();
+    $this->client->post($stats_path, array('body' => $post));
 
     $result = db_select('node_counter', 'n')
       ->fields('n', array('nid'))
@@ -145,9 +145,9 @@ class StatisticsAdminTest extends WebTestBase {
     $post = array('nid' => $nid);
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    $this->client->post($stats_path, array(), $post)->send();
+    $this->client->post($stats_path, array('body' => $post));
     $this->drupalGet('node/' . $this->test_node->id());
-    $this->client->post($stats_path, array(), $post)->send();
+    $this->client->post($stats_path, array('body' => $post));
     $this->assertText('1 view', 'Node is viewed once.');
 
     // statistics_cron() will subtract

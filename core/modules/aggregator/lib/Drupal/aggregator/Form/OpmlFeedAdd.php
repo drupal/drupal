@@ -11,9 +11,8 @@ use Drupal\aggregator\FeedStorageInterface;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Guzzle\Http\Exception\RequestException;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Imports feeds from OPML.
@@ -30,7 +29,7 @@ class OpmlFeedAdd extends FormBase {
   /**
    * The HTTP client to fetch the feed data with.
    *
-   * @var \Guzzle\Http\ClientInterface
+   * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
@@ -39,7 +38,7 @@ class OpmlFeedAdd extends FormBase {
    *
    * @param \Drupal\aggregator\FeedStorageInterface $feed_storage
    *   The feed storage.
-   * @param \Guzzle\Http\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $http_client
    *   The Guzzle HTTP client.
    */
   public function __construct(FeedStorageInterface $feed_storage, ClientInterface $http_client) {
@@ -121,14 +120,8 @@ class OpmlFeedAdd extends FormBase {
     else {
       // @todo Move this to a fetcher implementation.
       try {
-        $response = $this->httpClient->get($form_state['values']['remote'])->send();
+        $response = $this->httpClient->get($form_state['values']['remote']);
         $data = $response->getBody(TRUE);
-      }
-      catch (BadResponseException $e) {
-        $response = $e->getResponse();
-        watchdog('aggregator', 'Failed to download OPML file due to "%error".', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()), WATCHDOG_WARNING);
-        drupal_set_message($this->t('Failed to download OPML file due to "%error".', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
-        return;
       }
       catch (RequestException $e) {
         watchdog('aggregator', 'Failed to download OPML file due to "%error".', array('%error' => $e->getMessage()), WATCHDOG_WARNING);

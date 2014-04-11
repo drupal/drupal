@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Guzzle\Http\Exception\RequestException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * @file
@@ -1580,8 +1580,8 @@ function install_retrieve_file($uri, $destination) {
   }
 
   try {
-    $request = \Drupal::httpClient()->get($uri, array('Accept' => 'text/plain'));
-    $data = $request->send()->getBody(TRUE);
+    $request = \Drupal::httpClient()->get($uri, array('headers' => array('Accept' => 'text/plain')));
+    $data = $request->getBody(TRUE);
     if (empty($data)) {
       return FALSE;
     }
@@ -1603,8 +1603,7 @@ function install_retrieve_file($uri, $destination) {
  */
 function install_check_localization_server($uri) {
   try {
-    $request = \Drupal::httpClient()->head($uri);
-    $request->send();
+    \Drupal::httpClient()->head($uri);
     return TRUE;
   }
   catch (RequestException $e) {

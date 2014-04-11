@@ -10,7 +10,7 @@ namespace Drupal\hal\Normalizer;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\rest\LinkManager\LinkManagerInterface;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Converts the Drupal entity object structure to a HAL array structure.
@@ -27,7 +27,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
   /**
    * The HTTP client.
    *
-   * @var \Guzzle\Http\ClientInterface
+   * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
@@ -36,7 +36,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Guzzle\Http\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $http_client
    *   The HTTP Client.
    * @param \Drupal\rest\LinkManager\LinkManagerInterface $link_manager
    *   The hypermedia link manager.
@@ -64,9 +64,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
    * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = array()) {
-    $file_data = $this->httpClient->get($data['uri'][0]['value'])
-      ->send()
-      ->getBody(TRUE);
+    $file_data = $this->httpClient->get($data['uri'][0]['value'])->getBody(TRUE);
 
     $path = 'temporary://' . drupal_basename($data['uri'][0]['value']);
     $data['uri'] = file_unmanaged_save_data($file_data, $path);

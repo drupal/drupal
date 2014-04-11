@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\CacheContexts;
 use Drupal\Core\Cache\CacheContextInterface;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Fake cache context class.
@@ -38,7 +39,7 @@ class FooCacheContext implements CacheContextInterface {
  *
  * @see \Drupal\Core\Cache\CacheContexts
  */
-class CacheContextsTest extends \PHPUnit_Framework_TestCase {
+class CacheContextsTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(

@@ -8,8 +8,8 @@
 namespace Drupal\update;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Guzzle\Http\ClientInterface;
-use Guzzle\Http\Exception\RequestException;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Fetches project information from remote locations.
@@ -38,7 +38,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
   /**
    * The HTTP client to fetch the feed data with.
    *
-   * @var \Guzzle\Http\ClientInterface
+   * @var \GuzzleHttp\ClientInterface
    */
   protected $httpClient;
 
@@ -47,7 +47,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Guzzle\Http\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $http_client
    *   A Guzzle client object.
    */
   public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $http_client) {
@@ -64,8 +64,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
     $data = '';
     try {
       $data = $this->httpClient
-        ->get($url, array('Accept' => 'text/xml'))
-        ->send()
+        ->get($url, array('headers' => array('Accept' => 'text/xml')))
         ->getBody(TRUE);
     }
     catch (RequestException $exception) {

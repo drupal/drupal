@@ -5,8 +5,7 @@
  *   Batch process to check the availability of remote or local po files.
  */
 
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\RequestException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Load the common translation API.
@@ -231,9 +230,7 @@ function locale_translation_batch_fetch_finished($success, $results) {
 function locale_translation_http_check($uri) {
 
   try {
-    $response = \Drupal::httpClient()
-      ->head($uri)
-      ->send();
+    $response = \Drupal::httpClient()->head($uri);
     $result = array();
 
     // Return the effective URL if it differs from the requested.
@@ -241,10 +238,10 @@ function locale_translation_http_check($uri) {
       $result['location'] = $response->getEffectiveUrl();
     }
 
-    $result['last_modified'] = $response->getLastModified() ? strtotime($response->getLastModified()) : 0;
+    $result['last_modified'] = $response->hasHeader('Last-Modified') ? strtotime($response->getHeader('Last-Modified')) : 0;
     return $result;
   }
-  catch (BadResponseException $e) {
+  catch (RequestException $e) {
     // Handle 4xx and 5xx http responses.
     $response = $e->getResponse();
     if ($response->getStatusCode() == 404) {
@@ -258,11 +255,7 @@ function locale_translation_http_check($uri) {
     }
     watchdog('locale', 'HTTP request to @url failed with error: @error.', array('@url' => $uri, '@error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()));
   }
-  catch (RequestException $e) {
-    // Handle connection problems and cURL specific errors (CurlException) and
-    // other http related errors.
-    watchdog('locale', 'HTTP request to @url failed with error: @error.', array('@url' => $uri, '@error' => $e->getMessage()));
-  }
+
   return FALSE;
 }
 
