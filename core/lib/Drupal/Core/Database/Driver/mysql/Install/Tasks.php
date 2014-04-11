@@ -87,7 +87,9 @@ class Tasks extends InstallTasks {
    */
   public function getFormOptions(array $database) {
     $form = parent::getFormOptions($database);
-    $form['advanced_options']['port']['#default_value'] = '3306';
+    if (empty($form['advanced_options']['port']['#default_value'])) {
+      $form['advanced_options']['port']['#default_value'] = '3306';
+    }
 
     return $form;
   }
