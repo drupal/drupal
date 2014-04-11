@@ -31,7 +31,7 @@ interface BreadcrumbBuilderInterface {
    *   Attributes representing the current page.
    *
    * @return array
-   *   A render array for the breadcrumbs. Returning an empty array will
+   *   An array of HTML links for the breadcrumb. Returning an empty array will
    *   suppress all breadcrumbs.
    */
   public function build(array $attributes);

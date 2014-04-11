@@ -24,9 +24,11 @@ class RegisterBreadcrumbBuilderPass implements CompilerPassInterface {
       return;
     }
     $manager = $container->getDefinition('breadcrumb');
-    foreach ($container->findTaggedServiceIds('breadcrumb_builder') as $id => $attributes) {
-      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
-      $manager->addMethodCall('addBuilder', array(new Reference($id), $priority));
+    if (is_subclass_of($manager->getClass(), 'Drupal\Core\Breadcrumb\ChainBreadcrumbBuilderInterface')) {
+      foreach ($container->findTaggedServiceIds('breadcrumb_builder') as $id => $attributes) {
+        $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+        $manager->addMethodCall('addBuilder', array(new Reference($id), $priority));
+      }
     }
   }
 

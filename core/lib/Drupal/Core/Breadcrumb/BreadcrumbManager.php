@@ -13,11 +13,14 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Provides a breadcrumb manager.
  *
- * Can be assigned any number of other BreadcrumbBuilderInterface objects
- * by calling the addBuilder() method, then uses the highest priority one
- * to build breadcrumbs when build() is called.
+ * Can be assigned any number of BreadcrumbBuilderInterface objects by calling
+ * the addBuilder() method. When build() is called it iterates over the objects
+ * in priority order and uses the first one that returns TRUE from
+ * BreadcrumbBuilderInterface::applies() to build the breadcrumbs.
+ *
+ * @see \Drupal\Core\DependencyInjection\Compiler\RegisterBreadcrumbBuilderPass
  */
-class BreadcrumbManager implements BreadcrumbBuilderInterface {
+class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
 
   /**
    * The module handler to invoke the alter hook.
@@ -53,12 +56,7 @@ class BreadcrumbManager implements BreadcrumbBuilderInterface {
   }
 
   /**
-   * Adds another breadcrumb builder.
-   *
-   * @param \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface $builder
-   *   The breadcrumb builder to add.
-   * @param int $priority
-   *   Priority of the breadcrumb builder.
+   * {@inheritdoc}
    */
   public function addBuilder(BreadcrumbBuilderInterface $builder, $priority) {
     $this->builders[$priority][] = $builder;
