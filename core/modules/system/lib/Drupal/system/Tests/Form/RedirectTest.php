@@ -19,12 +19,12 @@ class RedirectTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = array('form_test', 'block');
 
   public static function getInfo() {
     return array(
       'name' => 'Form redirecting',
-      'description' => 'Tests functionality of drupal_redirect_form().',
+      'description' => 'Tests form redirection functionality.',
       'group' => 'Form API',
     );
   }
@@ -85,4 +85,32 @@ class RedirectTest extends WebTestBase {
     $this->assertUrl($path, $options, 'When using an empty redirection string, there should be no redirection, and the query parameters should be passed along.');
   }
 
+  /**
+   * Tests form redirection from 404/403 pages with the Block form.
+   */
+  public function testRedirectFromErrorPages() {
+    // Make sure the block containing the redirect form is placed.
+    $this->drupalPlaceBlock('redirect_form_block');
+
+    // Create a user that does not have permission to administer blocks.
+    $user = $this->drupalCreateUser(array('administer themes'));
+    $this->drupalLogin($user);
+
+    // Visit page 'foo' (404 page) and submit the form. Verify it ends up
+    // at the right URL.
+    $expected = \Drupal::url('form_test.route1', array(), array('query' => array('test1' => 'test2'), 'absolute' => TRUE));
+    $this->drupalGet('foo');
+    $this->assertResponse(404);
+    $this->drupalPostForm(NULL, array(), t('Submit'));
+    $this->assertResponse(200);
+    $this->assertEqual($this->getUrl(), $expected, 'Redirected to correct url/query.');
+
+    // Visit the block admin page (403 page) and submit the form. Verify it
+    // ends up at the right URL.
+    $this->drupalGet('admin/structure/block');
+    $this->assertResponse(403);
+    $this->drupalPostForm(NULL, array(), t('Submit'));
+    $this->assertResponse(200);
+    $this->assertEqual($this->getUrl(), $expected, 'Redirected to correct url/query.');
+  }
 }

@@ -141,14 +141,8 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
     $system_config = $this->container->get('config.factory')->get('system.site');
     $path = $this->container->get('path.alias_manager')->getSystemPath($system_config->get('page.403'));
     if ($path && $path != $system_path) {
-      // Keep old path for reference, and to allow forms to redirect to it.
-      if (!$request->query->has('destination')) {
-        $request->query->set('destination', $system_path);
-      }
-
       if ($request->getMethod() === 'POST') {
         $subrequest = Request::create($request->getBaseUrl() . '/' . $path, 'POST', array('destination' => $system_path, '_exception_statuscode' => 403) + $request->request->all(), $request->cookies->all(), array(), $request->server->all());
-        $subrequest->query->set('destination', $system_path);
       }
       else {
         $subrequest = Request::create($request->getBaseUrl() . '/' . $path, 'GET', array('destination' => $system_path, '_exception_statuscode' => 403), $request->cookies->all(), array(), $request->server->all());
@@ -217,21 +211,14 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
 
     $system_path = $request->attributes->get('_system_path');
 
-    // Keep old path for reference, and to allow forms to redirect to it.
-    if (!$request->query->has('destination')) {
-      $request->query->set('destination', $system_path);
-    }
-
     $path = $this->container->get('path.alias_manager')->getSystemPath(\Drupal::config('system.site')->get('page.404'));
     if ($path && $path != $system_path) {
       // @todo Um, how do I specify an override URL again? Totally not clear. Do
       //   that and sub-call the kernel rather than using meah().
       // @todo The create() method expects a slash-prefixed path, but we store a
       //   normal system path in the site_404 variable.
-
       if ($request->getMethod() === 'POST') {
         $subrequest = Request::create($request->getBaseUrl() . '/' . $path, 'POST', array('destination' => $system_path, '_exception_statuscode' => 404) + $request->request->all(), $request->cookies->all(), array(), $request->server->all());
-        $subrequest->query->set('destination', $system_path);
       }
       else {
         $subrequest = Request::create($request->getBaseUrl() . '/' . $path, 'GET', array('destination' => $system_path, '_exception_statuscode' => 404), $request->cookies->all(), array(), $request->server->all());

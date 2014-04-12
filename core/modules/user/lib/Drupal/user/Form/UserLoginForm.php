@@ -116,10 +116,17 @@ class UserLoginForm extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $account = $this->userStorage->load($form_state['uid']);
-    $form_state['redirect_route'] = array(
-      'route_name' => 'user.view',
-      'route_parameters' => array('user' => $account->id()),
-    );
+
+    // A destination was set, probably on an exception controller,
+    if (!$this->request->request->has('destination')) {
+      $form_state['redirect_route'] = array(
+        'route_name' => 'user.view',
+        'route_parameters' => array('user' => $account->id()),
+      );
+    }
+    else {
+      $this->request->query->set('destination', $this->request->request->get('destination'));
+    }
 
     user_login_finalize($account);
   }

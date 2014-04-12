@@ -23,6 +23,18 @@ class UserLoginTest extends WebTestBase {
   }
 
   /**
+   * Tests login with destination.
+   */
+  function testLoginDestination() {
+    $user = $this->drupalCreateUser(array());
+    $this->drupalGet('user', array('query' => array('destination' => 'foo')));
+    $edit = array('name' => $user->getUserName(), 'pass' => $user->pass_raw);
+    $this->drupalPostForm(NULL, $edit, t('Log in'));
+    $expected = url('foo', array('absolute' => TRUE));
+    $this->assertEqual($this->getUrl(), $expected, 'Redirected to the correct URL');
+  }
+
+  /**
    * Test the global login flood control.
    */
   function testGlobalLoginFloodControl() {
