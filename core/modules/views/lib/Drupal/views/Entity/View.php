@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Entity;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\Views;
@@ -305,10 +304,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // Clear cache tags for this view.
     // @todo Remove if views implements a view_builder controller.
-    $id = $this->id();
-    Cache::deleteTags(array('view' => array($id => $id)));
     views_invalidate_cache();
   }
 
@@ -359,17 +355,9 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     parent::postDelete($storage, $entities);
 
     $tempstore = \Drupal::service('user.tempstore')->get('views');
-    $tags = array();
-
     foreach ($entities as $entity) {
-      $id = $entity->id();
-      $tempstore->delete($id);
-      $tags['view'][$id] = $id;
+      $tempstore->delete($entity->id());
     }
-
-    // Clear cache tags for these views.
-    // @todo Remove if views implements a view_builder controller.
-    Cache::deleteTags($tags);
   }
 
   /**

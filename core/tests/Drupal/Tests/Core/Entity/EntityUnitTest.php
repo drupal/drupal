@@ -68,6 +68,13 @@ class EntityUnitTest extends UnitTestCase {
   protected $languageManager;
 
   /**
+   * The mocked cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheBackend;
+
+  /**
    * The entity values.
    *
    * @var array
@@ -112,11 +119,14 @@ class EntityUnitTest extends UnitTestCase {
       ->with('en')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
+    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     $container->set('language_manager', $this->languageManager);
-
+    $container->set('cache.test', $this->cacheBackend);
+    $container->setParameter('cache_bins', array('cache.test' => 'test'));
     \Drupal::setContainer($container);
 
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\Entity', array($this->values, $this->entityTypeId));
@@ -280,9 +290,26 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postSave
    */
   public function testPostSave() {
+    $this->cacheBackend->expects($this->at(0))
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId . 's' => TRUE, // List cache tag.
+      ));
+    $this->cacheBackend->expects($this->at(1))
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId . 's' => TRUE, // List cache tag.
+        $this->entityTypeId => array($this->values['id']), // Own cache tag.
+      ));
+
     // This method is internal, so check for errors on calling it only.
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $this->entity->postSave($storage);
+
+    // A creation should trigger the invalidation of the "list" cache tag.
+    $this->entity->postSave($storage, FALSE);
+    // An update should trigger the invalidation of both the "list" and the
+    // "own" cache tags.
+    $this->entity->postSave($storage, TRUE);
   }
 
   /**
@@ -317,16 +344,23 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postDelete
    */
   public function testPostDelete() {
+    $this->cacheBackend->expects($this->once())
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId => array($this->values['id']),
+        $this->entityTypeId . 's' => TRUE,
+      ));
     $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
 
     $entity = $this->getMockBuilder('\Drupal\Core\Entity\Entity')
+      ->setConstructorArgs(array($this->values, $this->entityTypeId))
       ->setMethods(array('onSaveOrDelete'))
-      ->disableOriginalConstructor()
       ->getMock();
     $entity->expects($this->once())
       ->method('onSaveOrDelete');
 
-    $this->entity->postDelete($storage, array($entity));
+    $entities = array($this->values['id'] => $entity);
+    $this->entity->postDelete($storage, $entities);
   }
 
   /**

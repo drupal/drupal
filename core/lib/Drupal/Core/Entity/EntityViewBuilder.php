@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\FieldItemInterface;
@@ -144,11 +145,8 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       '#view_mode' => $view_mode,
       '#langcode' => $langcode,
       '#cache' => array(
-        'tags' =>  array(
-          $this->entityTypeId . '_view' => TRUE,
-          $this->entityTypeId => array($entity->id()),
-        ),
-      )
+        'tags' =>  NestedArray::mergeDeep($this->getCacheTag(), $entity->getCacheTag()),
+      ),
     );
 
     // Cache the rendered output if permitted by the view mode and global entity
@@ -274,14 +272,12 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       // Always invalidate the ENTITY_TYPE_list tag.
       $tags = array($this->entityTypeId . '_list' => TRUE);
       foreach ($entities as $entity) {
-        $id = $entity->id();
-        $tags[$this->entityTypeId][$id] = $id;
-        $tags[$this->entityTypeId . '_view_' . $entity->bundle()] = TRUE;
+        $tags = NestedArray::mergeDeep($tags, $entity->getCacheTag());
       }
-      Cache::deleteTags($tags);
+      Cache::invalidateTags($tags);
     }
     else {
-      Cache::deleteTags(array($this->entityTypeId . '_view' => TRUE));
+      Cache::invalidateTags($this->getCacheTag());
     }
   }
 
@@ -362,6 +358,13 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
     }
     $view_modes_info = $this->entityManager->getViewModes($this->entityTypeId);
     return !empty($view_modes_info[$view_mode]['cache']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTag() {
+    return array($this->entityTypeId . '_view' => TRUE);
   }
 
 }

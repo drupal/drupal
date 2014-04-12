@@ -1213,4 +1213,18 @@ class ViewUI implements ViewStorageInterface {
   public function getConfigDependencyName() {
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTag() {
+    $this->storage->getCacheTag();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListCacheTags() {
+    $this->storage->getListCacheTags();
+  }
+
 }

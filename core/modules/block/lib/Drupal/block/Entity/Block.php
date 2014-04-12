@@ -149,31 +149,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    if ($update) {
-      Cache::invalidateTags(array('block' => $this->id()));
-    }
-    // When placing a new block, invalidate all cache entries for this theme,
-    // since any page that uses this theme might be affected.
-    else {
-      Cache::invalidateTags(array('theme' => $this->theme));
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    parent::postDelete($storage, $entities);
-
-    Cache::invalidateTags(array('block' => array_keys($entities)));
-  }
-
-  /**
    * Sorts active blocks by weight; sorts inactive blocks by name.
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
@@ -200,6 +175,18 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     parent::calculateDependencies();
     $this->addDependency('theme', $this->theme);
     return $this->dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Block configuration entities are a special case: one block entity stores
+   * the placement of one block in one theme. Instead of using an entity type-
+   * specific list cache tag like most entities, use the cache tag of the theme
+   * this block is placed in instead.
+   */
+  public function getListCacheTags() {
+    return array('theme' => $this->theme);
   }
 
 }

@@ -279,13 +279,29 @@
  * @section tags Cache Tags
  *
  * The fourth argument of the set() method can be used to specify cache tags,
- * which are used to identify what type of data is included in each cache. Each
- * cache can have multiple tags, and each tag has a string key and a value. The
- * value can be:
- * - TRUE, to indicate that this type of data is present in the cache.
+ * which are used to identify what type of data is included in each cache item.
+ * Each cache item can have multiple cache tags, and each cache tag has a string
+ * key and a value. The value can be:
+ * - TRUE, to indicate that this type of data is present in the cache item.
  * - An array of values. For example, the "node" tag indicates that particular
- *   nodes' data is present in the cache, so its value is an array of node IDs.
- * Data that has been tagged can be deleted or invalidated as a group.
+ *   node's data is present in the cache item, so its value is an array of node
+ *   IDs.
+ * Data that has been tagged can be deleted or invalidated as a group: no matter
+ * the Cache ID (cid) of the cache item, no matter in which cache bin a cache
+ * item lives; as long as it is tagged with a certain cache tag, it will be
+ * deleted or invalidated.
+ *
+ * Because of that, cache tags are a solution to the cache invalidation problem:
+ * - For caching to be effective, each cache item must only be invalidated when
+ *   absolutely necessary. (i.e. maximizing the cache hit ratio.)
+ * - For caching to be correct, each cache item that depends on a certain thing
+ *   must be invalidated whenever that certain thing is modified.
+ *
+ * A typical scenario: a user has modified a node that appears in two views,
+ * three blocks and on twelve pages. Without cache tags, we couldn't possibly
+ * know which cache items to invalidate, so we'd have to invalidate everything:
+ * we had to sacrifice effectiveness to achieve correctness. With cache tags, we
+ * can have both.
  *
  * Example:
  * @code
@@ -297,14 +313,25 @@
  * );
  * \Drupal::cache()->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
  *
- * // Delete or invalidate all caches with certain tags.
+ * // Delete or invalidate all cache items with certain tags.
  * \Drupal\Core\Cache\Cache::deleteTags(array('node' => array(1));
  * \Drupal\Core\Cache\Cache::invalidateTags(array('user' => array(1)));
  * @endcode
  *
- * @todo Update cache tag deletion in https://drupal.org/node/918538
+ * Drupal is a content management system, so naturally you want changes to your
+ * content to be reflected everywhere, immediately. That's why we made sure that
+ * every entity type in Drupal 8 automatically has support for cache tags: when
+ * you save an entity, you can be sure that the cache items that have the
+ * corresponding cache tags will be invalidated.
+ * This also is the case when you define your own entity types: you'll get the
+ * exact same cache tag invalidation as any of the built-in entity types, with
+ * the ability to override any of the default behavior if needed.
+ * See \Drupal\Core\Entity\EntityInterface::getCacheTag(),
+ * \Drupal\Core\Entity\EntityInterface::getListCacheTags(),
+ * \Drupal\Core\Entity\Entity::invalidateTagsOnSave() and
+ * \Drupal\Core\Entity\Entity::invalidateTagsOnDelete().
  *
- * @todo Extend entity cache tags based on https://drupal.org/node/2217749
+ * @todo Update cache tag deletion in https://drupal.org/node/918538
  *
  * @section configuration Configuration
  *

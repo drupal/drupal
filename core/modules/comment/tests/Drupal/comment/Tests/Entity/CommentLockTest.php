@@ -36,6 +36,8 @@ class CommentLockTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('module_handler', $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface'));
     $container->set('current_user', $this->getMock('Drupal\Core\Session\AccountInterface'));
+    $container->set('cache.test', $this->getMock('Drupal\Core\Cache\CacheBackendInterface'));
+    $container->setParameter('cache_bins', array('cache.test' => 'test'));
     $container->register('request', 'Symfony\Component\HttpFoundation\Request');
     $lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $cid = 2;
@@ -84,7 +86,12 @@ class CommentLockTest extends UnitTestCase {
       ->method('get')
       ->with('status')
       ->will($this->returnValue((object) array('value' => NULL)));
-
+    $comment->expects($this->once())
+      ->method('getCacheTag')
+      ->will($this->returnValue(array('comment' => array($cid))));
+    $comment->expects($this->once())
+      ->method('getListCacheTags')
+      ->will($this->returnValue(array('comments' => TRUE)));
     $storage = $this->getMock('Drupal\comment\CommentStorageInterface');
     $comment->preSave($storage);
     $comment->postSave($storage);

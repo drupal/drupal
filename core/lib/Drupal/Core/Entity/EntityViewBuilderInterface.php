@@ -149,4 +149,15 @@ interface EntityViewBuilderInterface {
    */
   public function viewFieldItem(FieldItemInterface $item, $display_options = array());
 
+  /**
+   * The cache tag associated with this entity view builder.
+   *
+   * An entity view builder is instantiated on a per-entity type basis, so the
+   * cache tags are also per-entity type.
+   *
+   * @return array
+   *   An array of cache tags.
+   */
+  public function getCacheTag();
+
 }

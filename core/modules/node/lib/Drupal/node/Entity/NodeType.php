@@ -8,7 +8,6 @@
 namespace Drupal\node\Entity;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\node\NodeTypeInterface;
@@ -157,9 +156,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
     parent::postSave($storage, $update);
 
     if (!$update) {
-      // Clear the node type cache, so the new type appears.
-      Cache::deleteTags(array('node_types' => TRUE));
-
       entity_invoke_bundle_hook('create', 'node', $this->id());
 
       // Create a body if the create_body property is true and we're not in
@@ -170,9 +166,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
       }
     }
     elseif ($this->getOriginalId() != $this->id()) {
-      // Clear the node type cache to reflect the rename.
-      Cache::deleteTags(array('node_types' => TRUE));
-
       $update_count = node_type_update_nodes($this->getOriginalId(), $this->id());
       if ($update_count) {
         drupal_set_message(format_plural($update_count,
@@ -184,10 +177,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
           )));
       }
       entity_invoke_bundle_hook('rename', 'node', $this->getOriginalId(), $this->id());
-    }
-    else {
-      // Invalidate the cache tag of the updated node type only.
-      Cache::invalidateTags(array('node_type' => $this->id()));
     }
   }
 

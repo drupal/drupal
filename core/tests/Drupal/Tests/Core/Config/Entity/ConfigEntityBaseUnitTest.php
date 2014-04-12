@@ -79,6 +79,13 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   protected $id;
 
   /**
+   * The mocked cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheBackend;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -120,10 +127,14 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->with('en')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
+    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
     $container->set('language_manager', $this->languageManager);
+    $container->set('cache.test', $this->cacheBackend);
+    $container->setParameter('cache_bins', array('cache.test' => 'test'));
     \Drupal::setContainer($container);
 
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', array($values, $this->entityTypeId));
@@ -333,6 +344,10 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @depends testSetStatus
    */
   public function testDisable() {
+    $this->cacheBackend->expects($this->once())
+      ->method('invalidateTags')
+      ->with(array($this->entityTypeId => array($this->id)));
+
     $this->entity->setStatus(TRUE);
     $this->assertSame($this->entity, $this->entity->disable());
     $this->assertFalse($this->entity->status());
@@ -425,4 +440,5 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       $this->assertSame($this->entity->get($name), $properties[$name]);
     }
   }
+
 }

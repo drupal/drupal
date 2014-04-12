@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
@@ -357,9 +359,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     $this->onSaveOrDelete();
-    if ($update) {
-      $this->onUpdateBundleEntity();
-    }
+    $this->invalidateTagsOnSave($update);
   }
 
   /**
@@ -384,9 +384,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    foreach ($entities as $entity) {
-      $entity->onSaveOrDelete();
-    }
+    self::invalidateTagsOnDelete($entities);
   }
 
   /**
@@ -400,6 +398,21 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    */
   public function referencedEntities() {
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTag() {
+    return array($this->entityTypeId => array($this->id()));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListCacheTags() {
+    // @todo Add bundle-specific listing cache tag? https://drupal.org/node/2145751
+    return array($this->entityTypeId . 's' => TRUE);
   }
 
   /**
@@ -419,6 +432,46 @@ abstract class Entity extends DependencySerialization implements EntityInterface
         $this->entityManager()->getViewBuilder($entity_type)->resetCache($entities);
       }
     }
+  }
+
+  /**
+   * Invalidates an entity's cache tags upon save.
+   *
+   * @param bool $update
+   *   TRUE if the entity has been updated, or FALSE if it has been inserted.
+   */
+  protected function invalidateTagsOnSave($update) {
+    // An entity was created or updated: invalidate its list cache tags. (An
+    // updated entity may start to appear in a listing because it now meets that
+    // listing's filtering requirements. A newly created entity may start to
+    // appear in listings because it did not exist before.)
+    $tags = $this->getListCacheTags();
+    if ($update) {
+      // An existing entity was updated, also invalidate its unique cache tag.
+      $tags = NestedArray::mergeDeep($tags, $this->getCacheTag());
+      $this->onUpdateBundleEntity();
+    }
+    Cache::invalidateTags($tags);
+  }
+
+  /**
+   * Invalidates an entity's cache tags upon delete.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   An array of entities.
+   */
+  protected static function invalidateTagsOnDelete(array $entities) {
+    $tags = array();
+    foreach ($entities as $entity) {
+      // An entity was deleted: invalidate its own cache tag, but also its list
+      // cache tags. (A deleted entity may cause changes in a paged list on
+      // other pages than the one it's on. The one it's on is handled by its own
+      // cache tag, but subsequent list pages would not be invalidated, hence we
+      // must invalidate its list cache tags as well.)
+      $tags = NestedArray::mergeDeepArray(array($tags, $entity->getCacheTag(), $entity->getListCacheTags()));
+      $entity->onSaveOrDelete();
+    }
+    Cache::invalidateTags($tags);
   }
 
   /**

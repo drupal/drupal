@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -163,6 +164,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function disable() {
+    // An entity was disabled, invalidate its own cache tag.
+    Cache::invalidateTags(array($this->entityTypeId => array($this->id())));
     return $this->setStatus(FALSE);
   }
 

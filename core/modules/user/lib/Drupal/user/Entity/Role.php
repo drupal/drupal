@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Entity;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\user\RoleInterface;
@@ -134,20 +133,8 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    Cache::invalidateTags(array('role' => $this->id()));
     // Clear render cache.
     entity_render_cache_clear();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    parent::postDelete($storage, $entities);
-
-    $ids = array_keys($entities);
-    $storage->deleteRoleReferences($ids);
-    Cache::invalidateTags(array('role' => $ids));
   }
 
 }

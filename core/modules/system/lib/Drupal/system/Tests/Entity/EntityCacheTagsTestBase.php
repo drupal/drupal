@@ -222,7 +222,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       'entity_test:' . $this->referencing_entity->id(),
       // Includes the main entity's cache tags, since this entity references it.
       $cache_tag,
-      $view_cache_tag
+      $view_cache_tag,
     );
     $non_referencing_entity_cache_tags = array(
       'entity_test_view:1',

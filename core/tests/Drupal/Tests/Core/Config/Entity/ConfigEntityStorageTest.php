@@ -28,6 +28,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
   protected $entityType;
 
   /**
+   * The type ID of the entity under test.
+   *
+   * @var string
+   */
+  protected $entityTypeId;
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -84,6 +91,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * The mocked cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cacheBackend;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -101,6 +115,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     parent::setUp();
 
     $this->entityType = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $this->entityTypeId = 'test_entity_type';
     $this->entityType->expects($this->any())
       ->method('getKey')
       ->will($this->returnValueMap(array(
@@ -109,7 +124,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
       )));
     $this->entityType->expects($this->any())
       ->method('id')
-      ->will($this->returnValue('test_entity_type'));
+      ->will($this->returnValue($this->entityTypeId));
     $this->entityType->expects($this->any())
       ->method('getConfigPrefix')
       ->will($this->returnValue('the_config_prefix'));
@@ -144,8 +159,12 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->with('test_entity_type')
       ->will($this->returnValue($this->entityType));
 
+    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
+    $container->set('cache.test', $this->cacheBackend);
+    $container->setParameter('cache_bins', array('cache.test' => 'test'));
     \Drupal::setContainer($container);
 
   }
@@ -157,6 +176,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
       ->will($this->returnValue(get_class($this->getMockEntity())));
+
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
 
     $this->moduleHandler->expects($this->at(0))
       ->method('invokeAll')
@@ -182,6 +204,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
       ->will($this->returnValue(get_class($this->getMockEntity())));
+
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
 
     $this->moduleHandler->expects($this->at(0))
       ->method('invokeAll')
@@ -220,6 +245,12 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('set');
     $config_object->expects($this->once())
       ->method('save');
+
+    $this->cacheBackend->expects($this->once())
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId . 's' => TRUE, // List cache tag.
+      ));
 
     $this->configFactory->expects($this->once())
       ->method('get')
@@ -273,6 +304,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $config_object->expects($this->once())
       ->method('save');
 
+    $this->cacheBackend->expects($this->once())
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId . 's' => TRUE, // List cache tag.
+        $this->entityTypeId => array('foo'), // Own cache tag.
+      ));
+
     $this->configFactory->expects($this->exactly(2))
       ->method('loadMultiple')
       ->with(array('the_config_prefix.foo'))
@@ -325,6 +363,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $config_object->expects($this->once())
       ->method('save');
 
+    $this->cacheBackend->expects($this->once())
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId . 's' => TRUE, // List cache tag.
+        $this->entityTypeId => array('bar'), // Own cache tag.
+      ));
+
     $this->configFactory->expects($this->once())
       ->method('rename')
       ->will($this->returnValue($config_object));
@@ -362,6 +407,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @expectedExceptionMessage The entity does not have an ID.
    */
   public function testSaveInvalid() {
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
+
     $entity = $this->getMockEntity();
     $this->entityStorage->save($entity);
   }
@@ -382,6 +430,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method('set');
     $config_object->expects($this->never())
       ->method('save');
+
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
 
     $this->configFactory->expects($this->once())
       ->method('get')
@@ -409,6 +460,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $config_object->expects($this->never())
       ->method('save');
+
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
 
     $this->configFactory->expects($this->once())
       ->method('get')
@@ -438,6 +492,12 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $config_object->expects($this->once())
       ->method('save');
+
+    $this->cacheBackend->expects($this->once())
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId . 's' => TRUE, // List cache tag.
+      ));
 
     $this->configFactory->expects($this->once())
       ->method('get')
@@ -481,6 +541,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
         array('', array('id' => 'foo')),
         array('id', 'foo'),
       )));
+
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
 
     $this->configFactory->expects($this->at(1))
       ->method('loadMultiple')
@@ -643,6 +706,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::deleteRevision()
    */
   public function testDeleteRevision() {
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
+
     $this->assertSame(NULL, $this->entityStorage->deleteRevision(1));
   }
 
@@ -668,6 +734,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
       $configs[] = $config_object;
       $config_map[] = array("the_config_prefix.$id", $config_object);
     }
+
+    $this->cacheBackend->expects($this->once())
+      ->method('invalidateTags')
+      ->with(array(
+        $this->entityTypeId . 's' => TRUE, // List cache tag.
+        $this->entityTypeId => array('foo', 'bar'), // Own cache tag.
+      ));
 
     $this->configFactory->expects($this->exactly(2))
       ->method('get')
@@ -709,6 +782,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->method($this->anything());
     $this->configFactory->expects($this->never())
       ->method('get');
+
+    $this->cacheBackend->expects($this->never())
+      ->method('invalidateTags');
 
     $this->entityStorage->delete(array());
   }
