@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
@@ -165,7 +166,8 @@ abstract class DisplayPluginBase extends PluginBase {
         }
         else {
           $this->unpackOptions($this->options, $options);
-          \Drupal::cache('data')->set($cid, $this->options);
+          $id = $this->view->storage->id();
+          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, array('extension' => array(TRUE, 'views'), 'view' => array($id => $id)));
         }
         static::$unpackOptions[$cid] = $this->options;
       }

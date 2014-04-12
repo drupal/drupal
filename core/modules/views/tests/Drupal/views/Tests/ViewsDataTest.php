@@ -71,6 +71,7 @@ class ViewsDataTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->getContainerWithCacheBins($this->cacheBackend);
 
     $configs = array();
     $configs['views.settings']['skip_cache'] = FALSE;

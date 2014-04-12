@@ -57,7 +57,7 @@ class ViewsHandlerManager extends DefaultPluginManager {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($handler_type);
     parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_definition_annotation_name);
 
-    $this->setCacheBackend($cache_backend, $language_manager, "views:$handler_type");
+    $this->setCacheBackend($cache_backend, $language_manager, "views:$handler_type", array('extension' => array(TRUE, 'views')));
 
     $this->viewsData = $views_data;
     $this->handlerType = $handler_type;

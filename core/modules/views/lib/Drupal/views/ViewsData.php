@@ -7,10 +7,10 @@
 
 namespace Drupal\views;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
@@ -177,7 +177,7 @@ class ViewsData {
    *   The data that will be cached.
    */
   protected function cacheSet($cid, $data) {
-    return $this->cacheBackend->set($this->prepareCid($cid), $data);
+    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, array('views_data' => TRUE, 'extension' => array(TRUE, 'views')));
   }
 
   /**
@@ -287,6 +287,6 @@ class ViewsData {
   public function clear() {
     $this->storage = array();
     $this->fullyLoaded = FALSE;
-    $this->cacheBackend->deleteAll();
+    Cache::deleteTags(array('views_data' => TRUE));
   }
 }
