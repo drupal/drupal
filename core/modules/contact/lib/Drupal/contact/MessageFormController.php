@@ -245,16 +245,16 @@ class MessageFormController extends ContentEntityFormController {
     $this->flood->register('contact', $config->get('flood.interval'));
     if (!$message->isPersonal()) {
       watchdog('contact', '%sender-name (@sender-from) sent an e-mail regarding %category.', array(
-        '%sender-name' => $sender->name,
+        '%sender-name' => $sender->getUsername(),
         '@sender-from' => $sender->getEmail(),
         '%category' => $category->label(),
       ));
     }
     else {
       watchdog('contact', '%sender-name (@sender-from) sent %recipient-name an e-mail.', array(
-        '%sender-name' => $sender->name,
+        '%sender-name' => $sender->getUsername(),
         '@sender-from' => $sender->getEmail(),
-        '%recipient-name' => $message->recipient->name,
+        '%recipient-name' => $message->getPersonalRecipient()->getUsername(),
       ));
     }
 

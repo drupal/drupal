@@ -7,6 +7,7 @@
 
 namespace Drupal\contact\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -19,7 +20,7 @@ class ContactPersonalTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contact');
+  public static $modules = array('contact', 'dblog');
 
   /**
    * A user with some administrative permissions.
@@ -54,7 +55,7 @@ class ContactPersonalTest extends WebTestBase {
     parent::setUp();
 
     // Create an admin user.
-    $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users', 'administer account settings'));
+    $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users', 'administer account settings', 'access site reports'));
 
     // Create some normal users with their contact forms enabled by default.
     \Drupal::config('contact.settings')->set('user_default_enabled', 1)->save();
@@ -85,6 +86,18 @@ class ContactPersonalTest extends WebTestBase {
     $this->assertTrue(strpos($mail['body'], t('Hello !recipient-name,', $variables)) !== FALSE, 'Recipient name is in sent message.');
     $this->assertTrue(strpos($mail['body'], $this->web_user->getUsername()) !== FALSE, 'Sender name is in sent message.');
     $this->assertTrue(strpos($mail['body'], $message['message']) !== FALSE, 'Message body is in sent message.');
+
+    // Check there was no problems raised during sending.
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    // Verify that the correct watchdog message has been logged.
+    $this->drupalGet('/admin/reports/dblog');
+    $placeholders = array(
+      '@sender_name' => $this->web_user->username,
+      '@sender_email' => $this->web_user->getEmail(),
+      '@recipient_name' => $this->contact_user->getUsername()
+    );
+    $this->assertText(String::format('@sender_name (@sender_email) sent @recipient_name an e-mail.', $placeholders));
   }
 
   /**
