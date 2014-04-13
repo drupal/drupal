@@ -2162,8 +2162,6 @@ abstract class WebTestBase extends TestBase {
         }
       }
     }
-    // An empty name means the value is not sent.
-    unset($post['']);
     return $submit_matches;
   }
 

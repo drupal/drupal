@@ -1,0 +1,11 @@
+menu_link_add:
+  route_name: menu.link_add
+  title: 'Add link'
+  appears_on:
+    - menu.menu_edit
+
+menu.menu_add:
+  route_name: menu.menu_add
+  title: 'Add menu'
+  appears_on:
+    - menu.overview_page

@@ -15,71 +15,25 @@ use Drupal\Core\Database\StatementEmpty;
 /**
  * Performs a query on the full-text search index for a word or words.
  *
- * This query is used by search plugins that use the search index (not all
- * search plugins do, as some use a different searching mechanism). It
- * assumes you have set up a query on the {search_index} table with alias 'i',
- * and will only work if the user is searching for at least one "positive"
- * keyword or phrase.
+ * This function is normally only called by each plugin that supports the
+ * indexed search.
  *
- * For efficiency, users of this query can run the prepareAndNormalize()
- * method to figure out if there are any search results, before fully setting
- * up and calling execute() to execute the query. The scoring expressions are
- * not needed until the execute() step. However, it's not really necessary
- * to do this, because this class's execute() method does that anyway.
+ * Results are retrieved in two logical passes. However, the two passes are
+ * joined together into a single query, and in the case of most simple queries
+ * the second pass is not even used.
  *
- * During both the prepareAndNormalize() and execute() steps, there can be
- * problems. Call getStatus() to figure out if the query is OK or not.
+ * The first pass selects a set of all possible matches, which has the benefit
+ * of also providing the exact result set for simple "AND" or "OR" searches.
  *
- * The query object is given the tag 'search_$type' and can be further
+ * The second portion of the query further refines this set by verifying
+ * advanced text conditions (such as negative or phrase matches).
+ *
+ * The used query object has the tag 'search_$type' and can be further
  * extended with hook_query_alter().
  */
 class SearchQuery extends SelectExtender {
-
   /**
-   * Indicates no positive keywords were in the search expression.
-   *
-   * Positive keywords are words that are searched for, as opposed to negative
-   * keywords, which are words that are excluded. To count as a keyword, a
-   * word must be at least
-   * \Drupal::config('search.settings')->get('index.minimum_word_size')
-   * characters.
-   *
-   * @see SearchQuery::getStatus()
-   */
-  const NO_POSITIVE_KEYWORDS = 1;
-
-  /**
-   * Indicates that part of the search expression was ignored.
-   *
-   * To prevent Denial of Service attacks, only
-   * \Drupal::config('search.settings')->get('and_or_limit') expressions
-   * (positive keywords, phrases, negative keywords) are allowed; this flag
-   * indicates that expressions existed past that limit and they were removed.
-   *
-   * @see SearchQuery::getStatus()
-   */
-  const EXPRESSIONS_IGNORED = 2;
-
-  /**
-   * Indicates that lower-case "or" was in the search expression.
-   *
-   * The word "or" in lower case was found in the search expression. This
-   * probably means someone was trying to do an OR search but used lower-case
-   * instead of upper-case.
-   *
-   * @see SearchQuery::getStatus()
-   */
-  const LOWER_CASE_OR = 4;
-
-  /**
-   * Indicates that no positive keyword matches were found.
-   *
-   * @see SearchQuery::getStatus()
-   */
-  const NO_KEYWORD_MATCHES = 8;
-
-  /**
-   * The keywords and advanced search options that are entered by the user.
+   * The search query that is used for searching.
    *
    * @var string
    */
@@ -88,22 +42,23 @@ class SearchQuery extends SelectExtender {
   /**
    * The type of search (search type).
    *
-   * This maps to the value of the type column in search_index, and is usually
-   * equal to the machine-readable name of the plugin or the search page.
+   * This maps to the value of the type column in search_index, and is equal
+   * to the machine-readable name of the entity type being indexed, or other
+   * identifier provided by a search plugin.
    *
    * @var string
    */
   protected $type;
 
   /**
-   * Parsed-out positive and negative search keys.
+   * Positive and negative search keys.
    *
    * @var array
    */
   protected $keys = array('positive' => array(), 'negative' => array());
 
   /**
-   * Indicates whether the query conditions are simple or complex (LIKE).
+   * Indicates whether the first pass query requires complex conditions (LIKE).
    *
    * @var bool
    */
@@ -112,8 +67,8 @@ class SearchQuery extends SelectExtender {
   /**
    * Conditions that are used for exact searches.
    *
-   * This is always used for the second step in the query, but is not part of
-   * the preparation step unless $this->simple is FALSE.
+   * This is always used for the second pass query but not for the first pass,
+   * unless $this->simple is FALSE.
    *
    * @var DatabaseCondition
    */
@@ -127,7 +82,7 @@ class SearchQuery extends SelectExtender {
   protected $matches = 0;
 
   /**
-   * Array of positive search words.
+   * Array of search words.
    *
    * These words have to match against {search_index}.word.
    *
@@ -136,46 +91,45 @@ class SearchQuery extends SelectExtender {
   protected $words = array();
 
   /**
-   * Multiplier to normalize the keyword score.
+   * Multiplier for the normalized search score.
    *
-   * This value is calculated by the preparation step, and is used as a
-   * multiplier of the word scores to make sure they are between 0 and 1.
+   * This value is calculated by the first pass query and multiplied with the
+   * actual score of a specific word to make sure that the resulting calculated
+   * score is between 0 and 1.
    *
    * @var float
    */
-  protected $normalize = 0;
+  protected $normalize;
 
   /**
-   * Indicates whether the preparation step has been executed.
+   * Indicates whether the first pass query has been executed.
    *
    * @var bool
    */
-  protected $executedPrepare = FALSE;
+  protected $executedFirstPass = FALSE;
 
   /**
-   * A bitmap of status conditions, described in getStatus().
-   *
-   * @var int
-   *
-   * @see SearchQuery::getStatus()
-   */
-  protected $status = 0;
-
-  /**
-   * The word score expressions.
+   * Stores score expressions.
    *
    * @var array
    *
-   * @see SearchQuery::addScore()
+   * @see addScore()
    */
   protected $scores = array();
 
   /**
-   * Arguments for the score expressions.
+   * Stores arguments for score expressions.
    *
    * @var array
    */
   protected $scoresArguments = array();
+
+  /**
+   * Stores multipliers for score expressions.
+   *
+   * @var array
+   */
+  protected $multiply = array();
 
   /**
    * The number of 'i.relevance' occurrences in score expressions.
@@ -185,32 +139,29 @@ class SearchQuery extends SelectExtender {
   protected $relevance_count = 0;
 
   /**
-   * Multipliers for score expressions.
+   * Whether or not search expressions were ignored.
    *
-   * @var array
+   * The maximum number of AND/OR combinations exceeded can be configured to
+   * avoid Denial-of-Service attacks. Expressions beyond the limit are ignored.
+   *
+   * @var bool
    */
-  protected $multiply = array();
+  protected $expressionsIgnored = FALSE;
 
   /**
-   * Sets the search query expression.
+   * Sets up the search query expression.
    *
-   * @param $expression
-   *   A search string, which can contain keywords and options.
+   * @param $query
+   *   A search query string, which can contain options.
    * @param $type
    *   The search type. This maps to {search_index}.type in the database.
    *
-   * @return $this
+   * @return
+   *   The SearchQuery object.
    */
   public function searchExpression($expression, $type) {
     $this->searchExpression = $expression;
     $this->type = $type;
-
-    // Add query tag.
-    $this->addTag('search_' . $type);
-
-    // Initialize conditions and status.
-    $this->conditions = db_and();
-    $this->status = 0;
 
     return $this;
   }
@@ -218,15 +169,10 @@ class SearchQuery extends SelectExtender {
   /**
    * Parses the search query into SQL conditions.
    *
-   * Sets up the following variables:
-   * - $this->keys
-   * - $this->words
-   * - $this->conditions
-   * - $this->simple
-   * - $this->matches
+   * We build two queries that match the dataset bodies.
    */
   protected function parseSearchExpression() {
-    // Matches words optionally prefixed by a - sign. A word in this case is
+    // Matchs words optionally prefixed by a dash. A word in this case is
     // something between two spaces, optionally quoted.
     preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' .  $this->searchExpression , $keywords, PREG_SET_ORDER);
 
@@ -236,6 +182,7 @@ class SearchQuery extends SelectExtender {
 
     // Classify tokens.
     $or = FALSE;
+    $warning = '';
     $limit_combinations = \Drupal::config('search.settings')->get('and_or_limit');
     // The first search expression does not count as AND.
     $and_count = -1;
@@ -244,10 +191,9 @@ class SearchQuery extends SelectExtender {
       if ($or_count && $and_count + $or_count >= $limit_combinations) {
         // Ignore all further search expressions to prevent Denial-of-Service
         // attacks using a high number of AND/OR combinations.
-        $this->status |= SearchQuery::EXPRESSIONS_IGNORED;
+        $this->expressionsIgnored = TRUE;
         break;
       }
-
       $phrase = FALSE;
       // Strip off phrase quotes.
       if ($match[2]{0} == '"') {
@@ -281,14 +227,14 @@ class SearchQuery extends SelectExtender {
       }
       // AND operator: implied, so just ignore it.
       elseif ($match[2] == 'AND' || $match[2] == 'and') {
+        $warning = $match[2];
         continue;
       }
 
       // Plain keyword.
       else {
         if ($match[2] == 'or') {
-          // Lower-case "or" instead of "OR" is a warning condition.
-          $this->status |= SearchQuery::LOWER_CASE_OR;
+          $warning = $match[2];
         }
         if ($or) {
           // Add to last element (which is an array).
@@ -303,6 +249,7 @@ class SearchQuery extends SelectExtender {
     }
 
     // Convert keywords into SQL statements.
+    $this->conditions = db_and();
     $simple_and = FALSE;
     $simple_or = FALSE;
     // Positive matches.
@@ -343,19 +290,18 @@ class SearchQuery extends SelectExtender {
       $this->conditions->condition('d.data', "% $key %", 'NOT LIKE');
       $this->simple = FALSE;
     }
+
+    if ($warning == 'or') {
+      drupal_set_message(t('Search for either of the two terms with uppercase <strong>OR</strong>. For example, <strong>cats OR dogs</strong>.'));
+    }
   }
 
   /**
-   * Parses a word or phrase for parseQuery().
-   *
-   * Splits a phrase into words. Adds its words to $this->words, if it is not
-   * already there. Returns a list containing the number of new words found,
-   * and the total number of words in the phrase.
+   * Helper function for parseQuery().
    */
   protected function parseWord($word) {
     $num_new_scores = 0;
     $num_valid_words = 0;
-
     // Determine the scorewords of this word/phrase.
     $split = explode(' ', $word);
     foreach ($split as $s) {
@@ -368,43 +314,40 @@ class SearchQuery extends SelectExtender {
         $num_valid_words++;
       }
     }
-
     // Return matching snippet and number of added words.
     return array($num_new_scores, $num_valid_words);
   }
 
   /**
-   * Prepares the query and calculates the normalization factor.
+   * Executes the first pass query.
    *
-   * After the query is normalized the keywords are weighted to give the results
-   * a relevancy score. The query is ready for execution after this.
+   * This can either be done explicitly, so that additional scores and
+   * conditions can be applied to the second pass query, or implicitly by
+   * addScore() or execute().
    *
-   * Error and warning conditions can apply. Call getStatus() after calling
-   * this method to retrieve them.
-   *
-   * @return bool
-   *   TRUE if at least one keyword matched the search index; FALSE if not.
+   * @return
+   *   TRUE if search items exist, FALSE if not.
    */
-  public function prepareAndNormalize() {
+  public function executeFirstPass() {
     $this->parseSearchExpression();
-    $this->executedPrepare = TRUE;
 
     if (count($this->words) == 0) {
-      // Although the query could proceed, there is no point in joining
-      // with other tables and attempting to normalize if there are no
-      // keywords present.
-      $this->status |= SearchQuery::NO_POSITIVE_KEYWORDS;
+      form_set_error('keys', $form_state, format_plural(\Drupal::config('search.settings')->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
       return FALSE;
     }
-
-    // Build the basic search query: match the entered keywords.
-    $or = db_or();
-    foreach ($this->words as $word) {
-      $or->condition('i.word', $word);
+    if ($this->expressionsIgnored) {
+      drupal_set_message(t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', array('@count' => \Drupal::config('search.settings')->get('and_or_limit'))), 'warning');
     }
-    $this->condition($or);
+    $this->executedFirstPass = TRUE;
 
-    // Add keyword normalization information to the query.
+    if (!empty($this->words)) {
+      $or = db_or();
+      foreach ($this->words as $word) {
+        $or->condition('i.word', $word);
+      }
+      $this->condition($or);
+    }
+    // Build query for keyword normalization.
     $this->join('search_total', 't', 'i.word = t.word');
     $this
       ->condition('i.type', $this->type)
@@ -412,38 +355,26 @@ class SearchQuery extends SelectExtender {
       ->groupBy('i.sid')
       ->having('COUNT(*) >= :matches', array(':matches' => $this->matches));
 
-    // Clone the query object to calculate normalization.
-    $normalize_query = clone $this->query;
+    // Clone the query object to do the firstPass query;
+    $first = clone $this->query;
 
-    // For complex search queries, add the LIKE conditions; if the query is
-    // simple, we do not need them for normalization.
+    // For complex search queries, add the LIKE conditions to the first pass query.
     if (!$this->simple) {
-      $normalize_query->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type AND i.langcode = d.langcode');
-      if (count($this->conditions)) {
-        $normalize_query->condition($this->conditions);
-      }
+      $first->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
+      $first->condition($this->conditions);
     }
 
-    // Calculate normalization, which is the max of all the search scores for
-    // positive keywords in the query. And note that the query could have other
-    // fields added to it by the user of this extension.
-    $normalize_query->addExpression('SUM(i.score * t.count)', 'calculated_score');
-    $result = $normalize_query
+    // Calculate maximum keyword relevance, to normalize it.
+    $first->addExpression('SUM(i.score * t.count)', 'calculated_score');
+    $this->normalize = $first
       ->range(0, 1)
       ->orderBy('calculated_score', 'DESC')
       ->execute()
-      ->fetchObject();
-    if (isset($result->calculated_score)) {
-      $this->normalize = (float) $result->calculated_score;
-    }
+      ->fetchField();
 
     if ($this->normalize) {
       return TRUE;
     }
-
-    // If the normalization value was zero, that indicates there were no
-    // matches to the supplied positive keywords.
-    $this->status |= SearchQuery::NO_KEYWORD_MATCHES;
     return FALSE;
   }
 
@@ -506,35 +437,29 @@ class SearchQuery extends SelectExtender {
   /**
    * Executes the search.
    *
-   * If not already done, this calls prepareAndNormalize() first. Then the
-   * complex conditions are applied to the query including score expressions
-   * and ordering.
-   *
-   * Error and warning conditions can apply. Call getStatus() after calling
-   * this method to retrieve them.
+   * If not already done, this executes the first pass query. Then the complex
+   * conditions are applied to the query including score expressions and
+   * ordering.
    *
    * @return
-   *   A query result set containing the results of the query.
+   *   FALSE if the first pass query returned no results, and a database result
+   *   set if there were results.
    */
-  public function execute() {
-
-    if (!$this->executedPrepare) {
-      $this->prepareAndNormalize();
+  public function execute()
+  {
+    if (!$this->executedFirstPass) {
+      $this->executeFirstPass();
     }
-
     if (!$this->normalize) {
-      // There were no keyword matches, so return an empty result set.
       return new StatementEmpty();
     }
 
-    // Add conditions to the query.
-    $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type AND i.langcode = d.langcode');
-    if (count($this->conditions)) {
-      $this->condition($this->conditions);
-    }
+    // Add conditions to query.
+    $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
+    $this->condition($this->conditions);
 
-    // Add default score (keyword relevance) if there are not any defined.
     if (empty($this->scores)) {
+      // Add default score.
       $this->addScore('i.relevance');
     }
 
@@ -547,7 +472,6 @@ class SearchQuery extends SelectExtender {
         $this->scoresArguments[':total_' . $i] = $sum;
       }
     }
-
 
     // Add arguments for the keyword relevance normalization number.
     $normalization = 1.0 / $this->normalize;
@@ -564,8 +488,9 @@ class SearchQuery extends SelectExtender {
       $this->orderBy('calculated_score', 'DESC');
     }
 
-    // Add query metadata.
+    // Add tag and useful metadata.
     $this
+      ->addTag('search_' . $this->type)
       ->addMetaData('normalize', $this->normalize)
       ->fields('i', array('type', 'sid'));
     return $this->query->execute();
@@ -579,18 +504,12 @@ class SearchQuery extends SelectExtender {
    * first.
    */
   public function countQuery() {
-    if (!$this->executedPrepare) {
-      $this->prepareAndNormalize();
-    }
-
     // Clone the inner query.
     $inner = clone $this->query;
 
     // Add conditions to query.
     $inner->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
-    if (count($this->conditions)) {
-      $inner->condition($this->conditions);
-    }
+    $inner->condition($this->conditions);
 
     // Remove existing fields and expressions, they are not needed for a count
     // query.
@@ -599,7 +518,7 @@ class SearchQuery extends SelectExtender {
     $expressions =& $inner->getExpressions();
     $expressions = array();
 
-    // Add sid as the only field and count them as a subquery.
+    // Add the sid as the only field and count them as a subquery.
     $count = db_select($inner->fields('i', array('sid')), NULL, array('target' => 'slave'));
 
     // Add the COUNT() expression.
@@ -607,20 +526,4 @@ class SearchQuery extends SelectExtender {
 
     return $count;
   }
-
-  /**
-   * Returns the query status bitmap.
-   *
-   * @return int
-   *   A bitmap indicating query status. Zero indicates there were no problems.
-   *   A non-zero value is a combination of one or more of the following flags:
-   *   - SearchQuery::NO_POSITIVE_KEYWORDS
-   *   - SearchQuery::EXPRESSIONS_IGNORED
-   *   - SearchQuery::LOWER_CASE_OR
-   *   - SearchQuery::NO_KEYWORD_MATCHES
-   */
-  public function getStatus() {
-    return $this->status;
-  }
-
 }

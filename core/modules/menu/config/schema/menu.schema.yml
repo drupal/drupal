@@ -1,0 +1,23 @@
+# Schema for configuration files of the Menu module.
+
+menu.settings:
+  type: mapping
+  label: 'Menu settings'
+  mapping:
+    main_links:
+      type: string
+      label: 'Main links'
+    secondary_links:
+      type: string
+      label: 'Source for secondary links'
+    override_parent_selector:
+      type: boolean
+      label: 'Override parent selector'
+
+menu.entity.node.*:
+  type: mapping
+  label: 'Per-content type menu settings'
+  mapping:
+    available_menus:
+      type: array
+      label: 'Available menus'

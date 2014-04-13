@@ -7,4 +7,4 @@ core: 8.x
 hidden: true
 dependencies:
   - test_page_test
-  - menu_ui
+  - menu

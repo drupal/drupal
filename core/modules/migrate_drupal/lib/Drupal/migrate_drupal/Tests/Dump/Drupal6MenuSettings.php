@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\Dump;
 
 /**
- * Database dump for testing menu_ui.settings.yml migration.
+ * Database dump for testing menu.settings.yml migration.
  */
 class Drupal6MenuSettings extends Drupal6DumpBase {
 

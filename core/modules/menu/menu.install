@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the menu module.
+ */
+
+use Drupal\Component\Uuid\Uuid;
+
+/**
+ * Implements hook_install().
+ */
+function menu_install() {
+  // Rebuild all the menu data.
+  // @todo - remove this when we understand why removing it breaks the
+  // standard install profile, possibly need to be handled in
+  // \Drupal\Core\Extension\ModuleHandler::install().
+  // @see https://drupal.org/node/2181151
+  \Drupal::service('router.builder')->rebuild();
+  if (\Drupal::moduleHandler()->moduleExists('node')) {
+    $node_types = array_keys(node_type_get_names());
+    foreach ($node_types as $type_id) {
+      \Drupal::config('menu.entity.node.' . $type_id)
+        ->set('available_menus', array('main'))
+        ->set('parent', 'main:0')
+        ->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function menu_uninstall() {
+  \Drupal::service('router.builder')->setRebuildNeeded();
+}

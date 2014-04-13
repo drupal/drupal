@@ -11,4 +11,4 @@ process:
     override_parent_selector: menu_override_parent_selector
 destination:
     plugin: config
-    config_name: menu_ui.settings
+    config_name: menu.settings

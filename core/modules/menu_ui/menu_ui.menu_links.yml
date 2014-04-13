@@ -1,5 +1,0 @@
-menu_ui.overview_page:
-  title: Menus
-  description: 'Add new menus to your site, edit existing menus, and rename and reorganize menu links.'
-  route_name: menu_ui.overview_page
-  parent: system.admin_structure

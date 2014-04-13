@@ -20,9 +20,7 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\node\NodeInterface;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
-use Drupal\Search\SearchQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Handles searching for node entities using the Search module index.
@@ -162,17 +160,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * {@inheritdoc}
    */
-  public function isSearchExecutable() {
-    // Node search is executable if we have keywords or an advanced parameter.
-    // At least, we should parse out the parameters and see if there are any
-    // keyword matches in that case, rather than just printing out the
-    // "Please enter keywords" message.
-    return !empty($this->keywords) || (isset($this->searchParameters['f']) && count($this->searchParameters['f']));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function execute() {
     $results = array();
     if (!$this->isSearchExecutable()) {
@@ -195,8 +182,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // the URL: ?f[]=type:page&f[]=term:27&f[]=term:13&f[]=langcode:en
     // So $parameters['f'] looks like:
     // array('type:page', 'term:27', 'term:13', 'langcode:en');
-    // We need to parse this out into query conditions, some of which go into
-    // the keywords string, and some of which are separate conditions.
+    // We need to parse this out into query conditions.
     $parameters = $this->getParameters();
     if (!empty($parameters['f']) && is_array($parameters['f'])) {
       $filters = array();
@@ -209,7 +195,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
           $filters[$m[1]][$m[2]] = $m[2];
         }
       }
-
       // Now turn these into query conditions. This assumes that everything in
       // $filters is a known type of advanced search.
       foreach ($filters as $option => $matched) {
@@ -226,11 +211,15 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         }
       }
     }
+    // Only continue if the first pass query matches.
+    if (!$query->executeFirstPass()) {
+      return array();
+    }
 
     // Add the ranking expressions.
     $this->addNodeRankings($query);
 
-    // Run the query and load results.
+    // Load results.
     $find = $query
       // Add the language code of the indexed item to the result of the query,
       // since the node will be rendered using the respective language.
@@ -241,21 +230,6 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       ->groupBy('i.langcode')
       ->limit(10)
       ->execute();
-
-    // Check query status and set messages if needed.
-    $status = $query->getStatus();
-
-    if ($status & SearchQuery::EXPRESSIONS_IGNORED) {
-      drupal_set_message($this->t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', array('@count' => $this->searchSettings->get('and_or_limit'))), 'warning');
-    }
-
-    if ($status & SearchQuery::LOWER_CASE_OR) {
-      drupal_set_message($this->t('Search for either of the two terms with uppercase <strong>OR</strong>. For example, <strong>cats OR dogs</strong>.'), 'warning');
-    }
-
-    if ($status & SearchQuery::NO_POSITIVE_KEYWORDS) {
-      drupal_set_message(\Drupal::translation()->formatPlural($this->searchSettings->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'), 'warning');
-    }
 
     $node_storage = $this->entityManager->getStorage('node');
     $node_render = $this->entityManager->getViewBuilder('node');
@@ -396,7 +370,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    * {@inheritdoc}
    */
   public function searchFormAlter(array &$form, array &$form_state) {
-    // Add advanced search keyword-related boxes.
+    // Add keyword boxes.
     $form['advanced'] = array(
       '#type' => 'details',
       '#title' => t('Advanced search'),
@@ -471,18 +445,25 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         '#options' => $language_options,
       );
     }
+
+    // Add a submit handler.
+    $form['#submit'][] = array($this, 'searchFormSubmit');
   }
 
-  /*
-   * {@inheritdoc}
+  /**
+   * Handles submission of elements added in searchFormAlter().
+   *
+   * @param array $form
+   *   Nested array of form elements that comprise the form.
+   * @param array $form_state
+   *   A keyed array containing the current state of the form.
    */
-  public function buildSearchUrlQuery($form_state) {
-    // Read keyword and advanced search information from the form values,
-    // and put these into the GET parameters.
-    $keys = trim($form_state['values']['keys']);
-
-    // Collect extra filters.
+  public function searchFormSubmit(array &$form, array &$form_state) {
+    // Initialize using any existing basic search keywords.
+    $keys = $form_state['values']['processed_keys'];
     $filters = array();
+
+    // Collect extra restrictions.
     if (isset($form_state['values']['type']) && is_array($form_state['values']['type'])) {
       // Retrieve selected types - Form API sets the value of unselected
       // checkboxes to 0.
@@ -518,17 +499,21 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     if ($form_state['values']['phrase'] != '') {
       $keys .= ' "' . str_replace('"', ' ', $form_state['values']['phrase']) . '"';
     }
-    $keys = trim($keys);
-
-    // Put the keywords and advanced parameters into GET parameters. Make sure
-    // to put keywords into the query even if it is empty, because the page
-    // controller uses that to decide it's time to check for search results.
-    $query = array('keys' => $keys);
+    if (!empty($keys)) {
+      form_set_value($form['basic']['processed_keys'], trim($keys), $form_state);
+    }
+    $options = array();
     if ($filters) {
-      $query['f'] = $filters;
+      $options['query'] = array('f' => $filters);
     }
 
-    return $query;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'search.view_' . $form_state['search_page_id'],
+      'route_parameters' => array(
+        'keys' => $keys,
+      ),
+      'options' => $options,
+    );
   }
 
   /**

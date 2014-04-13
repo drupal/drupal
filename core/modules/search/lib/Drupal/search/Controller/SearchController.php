@@ -51,42 +51,42 @@ class SearchController extends ControllerBase {
    *   The request object.
    * @param \Drupal\search\SearchPageInterface $entity
    *   The search page entity.
+   * @param string $keys
+   *   (optional) Search keywords, defaults to an empty string.
    *
-   * @return array
-   *   The search form and search results build array.
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+   *   The search form and search results or redirect response.
    */
-  public function view(Request $request, SearchPageInterface $entity) {
-    $build = array();
-    $plugin = $entity->getPlugin();
-
-    // Build the form first, because it may redirect during the submit,
-    // and we don't want to build the results based on last time's request.
-    if ($request->query->has('keys')) {
-      $keys = trim($request->get('keys'));
-      $plugin->setSearch($keys, $request->query->all(), $request->attributes->all());
+  public function view(Request $request, SearchPageInterface $entity, $keys = '') {
+    // Also try to pull search keywords from the request to support old GET
+    // format of searches for existing links.
+    if (!$keys && $request->query->has('keys')) {
+      $keys = $request->query->get('keys');
     }
+    $keys = trim($keys);
+    $build['#title'] = $this->t('Search');
 
-    $build['search_form'] = $this->entityFormBuilder()->getForm($entity, 'search');
-
-    // Build search results, if keywords or other search parameters are in the
-    // GET parameters. Note that we need to try the search if 'keys' is in
-    // there at all, vs. being empty, due to advanced search.
+    $plugin = $entity->getPlugin();
+    $plugin->setSearch($keys, $request->query->all(), $request->attributes->all());
     $results = array();
-    if ($request->query->has('keys')) {
+
+    // Process the search form. Note that if there is
+    // \Drupal::request()->request data, search_form_submit() will cause a
+    // redirect to search/[path]/[keys], which will get us back to this page
+    // callback. In other words, the search form submits with POST but redirects
+    // to GET. This way we can keep the search query URL clean as a whistle.
+    if ($request->request->has('form_id') || $request->request->get('form_id') != 'search_form') {
+      // Only search if there are keywords or non-empty conditions.
       if ($plugin->isSearchExecutable()) {
-        // Log the search.
-        watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $entity->label()), WATCHDOG_NOTICE);
+        // Log the search keys.
+        watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $entity->label()), WATCHDOG_NOTICE, $this->l(t('results'), 'search.view_' . $entity->id(), array('keys' => $keys)));
 
         // Collect the search results.
         $results = $plugin->buildResults();
       }
-      else {
-        // The search not being executable means that no keywords or other
-        // conditions were entered.
-        drupal_set_message($this->t('Please enter some keywords.'), 'error');
-      }
     }
-
+    // The form may be altered based on whether the search was run.
+    $build['search_form'] = $this->entityFormBuilder()->getForm($entity, 'search');
     if (count($results)) {
       $build['search_results_title'] = array(
         '#markup' => '<h2>' . $this->t('Search results') . '</h2>',

@@ -31,7 +31,7 @@ class MenuLinkAccessController extends EntityAccessController {
 
         case 'delete':
           // Only items created by the menu module can be deleted.
-          return $entity->module == 'menu_ui' || $entity->updated == 1;
+          return $entity->module == 'menu' || $entity->updated == 1;
 
       }
     }

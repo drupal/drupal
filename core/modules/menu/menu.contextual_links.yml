@@ -1,0 +1,4 @@
+menu_edit:
+  title: 'Edit menu'
+  route_name: 'menu.menu_edit'
+  group: menu

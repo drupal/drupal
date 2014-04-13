@@ -1,0 +1,15 @@
+menu.menu_edit:
+  title: 'Edit menu'
+  route_name: menu.menu_edit
+  base_route: menu.menu_edit
+
+menu.overview_page:
+  title: 'List'
+  route_name: menu.overview_page
+  base_route: menu.overview_page
+
+menu.settings:
+  title: 'Settings'
+  route_name: menu.settings
+  base_route: menu.overview_page
+  weight: 100

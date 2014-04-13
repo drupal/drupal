@@ -98,7 +98,7 @@ class MenuLinkFormController extends EntityFormController {
     if (isset($menu_link->options['fragment'])) {
       $path .= '#' . $menu_link->options['fragment'];
     }
-    if ($menu_link->module == 'menu_ui') {
+    if ($menu_link->module == 'menu') {
       $form['link_path'] = array(
         '#type' => 'textfield',
         '#title' => t('Path'),
@@ -137,7 +137,7 @@ class MenuLinkFormController extends EntityFormController {
     );
 
     // Generate a list of possible parents (not including this link or descendants).
-    $options = menu_ui_parent_options(menu_ui_get_menus(), $menu_link);
+    $options = menu_parent_options(menu_get_menus(), $menu_link);
     $default = $menu_link->menu_name . ':' . $menu_link->plid;
     if (!isset($options[$default])) {
       $default = 'tools:0';
@@ -298,7 +298,7 @@ class MenuLinkFormController extends EntityFormController {
     if ($saved) {
       drupal_set_message(t('The menu link has been saved.'));
       $form_state['redirect_route'] = array(
-        'route_name' => 'menu_ui.menu_edit',
+        'route_name' => 'menu.menu_edit',
         'route_parameters' => array(
           'menu' => $menu_link->menu_name,
         ),

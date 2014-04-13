@@ -815,19 +815,3 @@ function search_module_preinstall() {
   // @todo Remove in https://drupal.org/node/2155635.
   \Drupal::service('plugin.manager.search')->clearCachedDefinitions();
 }
-
-/**
- * Implements hook_form_FORM_ID_alter() for the search_block_form form.
- *
- * Since the exposed form is a GET form, we don't want it to send the form
- * tokens. However, you cannot make this happen in the form builder function
- * itself, because the tokens are added to the form after the builder function
- * is called. So, we have to do it in a form_alter.
- *
- * @see \Drupal\search\Form\SearchBlockForm
- */
-function search_form_search_block_form_alter(&$form, &$form_state) {
-  $form['form_build_id']['#access'] = FALSE;
-  $form['form_token']['#access'] = FALSE;
-  $form['form_id']['#access'] = FALSE;
-}
