@@ -694,9 +694,18 @@ function file_file_download($uri, $field_type = 'file') {
  * Implements file_cron()
  */
 function file_cron() {
-  $result = \Drupal::entityManager()->getStorage('file')->retrieveTemporaryFiles();
-  foreach ($result as $row) {
-    if ($file = file_load($row->fid)) {
+  $age = \Drupal::config('system.file')->get('temporary_maximum_age');
+
+  // Only delete temporary files if older than $age. Note that automatic cleanup
+  // is disabled if $age set to 0.
+  if ($age) {
+    $fids = Drupal::entityQuery('file')
+      ->condition('status', FILE_STATUS_PERMANENT, '<>')
+      ->condition('changed', REQUEST_TIME - $age, '<')
+      ->range(0, 100)
+      ->execute();
+    $files = file_load_multiple($fids);
+    foreach ($files as $file) {
       $references = \Drupal::service('file.usage')->listUsage($file);
       if (empty($references)) {
         if (file_exists($file->getFileUri())) {

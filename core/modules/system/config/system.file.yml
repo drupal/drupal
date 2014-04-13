@@ -3,3 +3,4 @@ default_scheme: 'public'
 path:
   private: ''
   temporary: ''
+temporary_maximum_age: 21600

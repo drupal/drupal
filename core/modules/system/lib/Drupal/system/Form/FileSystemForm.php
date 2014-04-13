@@ -68,6 +68,17 @@ class FileSystemForm extends ConfigFormBase {
       );
     }
 
+    $intervals = array(0, 21600, 43200, 86400, 604800, 2419200, 7776000);
+    $period = array_combine($intervals, array_map('format_interval', $intervals));
+    $period[0] = t('Never');
+    $form['temporary_maximum_age'] = array(
+      '#type' => 'select',
+      '#title' => t('Delete orphaned files after'),
+      '#default_value' => $config->get('temporary_maximum_age'),
+      '#options' => $period,
+      '#description' => t('Orphaned files are not referenced from any content but remain in the file system and may appear in administrative listings. <strong>Warning:</strong> If enabled, orphaned files will be permanently deleted and may not be recoverable.'),
+    );
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -77,7 +88,8 @@ class FileSystemForm extends ConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $config = $this->configFactory->get('system.file')
       ->set('path.private', $form_state['values']['file_private_path'])
-      ->set('path.temporary', $form_state['values']['file_temporary_path']);
+      ->set('path.temporary', $form_state['values']['file_temporary_path'])
+      ->set('temporary_maximum_age', $form_state['values']['temporary_maximum_age']);
 
     if (isset($form_state['values']['file_default_scheme'])) {
       $config->set('default_scheme', $form_state['values']['file_default_scheme']);

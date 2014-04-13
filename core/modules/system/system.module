@@ -15,11 +15,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use GuzzleHttp\Exception\RequestException;
 
 /**
- * Maximum age of temporary files in seconds.
- */
-const DRUPAL_MAXIMUM_TEMP_FILE_AGE = 21600;
-
-/**
  * New users will be set to the default time zone at registration.
  */
 const DRUPAL_USER_TIMEZONE_DEFAULT = 0;

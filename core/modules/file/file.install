@@ -69,7 +69,7 @@ function file_schema() {
         'default' => 0,
       ),
       'status' => array(
-        'description' => 'A field indicating the status of the file. Two status are defined in core: temporary (0) and permanent (1). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
+        'description' => 'A field indicating the status of the file. Two status are defined in core: temporary (0) and permanent (1). Temporary files older than system.file.temporary_maximum_age will be removed during a cron run.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

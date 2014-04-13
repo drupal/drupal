@@ -355,6 +355,9 @@ system.file:
         temporary:
           type: string
           label: 'Temporary directory'
+    temporary_maximum_age:
+      type: integer
+      label: 'Maximum age for temporary files'
 
 system.image:
   type: mapping

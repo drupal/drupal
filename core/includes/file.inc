@@ -109,8 +109,10 @@ define('STREAM_WRAPPERS_LOCAL_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_N
  * - filesize: The size of the file in bytes.
  * - status: A bitmapped field indicating the status of the file. The first 8
  *   bits are reserved for Drupal core. The least significant bit indicates
- *   temporary (0) or permanent (1). Temporary files older than
- *   DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during cron runs.
+ *   temporary (0) or permanent (1). Temporary files will be removed during
+ *   cron runs if they are older than the configuration value
+ *   "system.file.temporary_maximum_age", and if clean-up is enabled. Permanent
+ *   files will not be removed.
  * - timestamp: UNIX timestamp for the date the file was added to the database.
  */
 
@@ -142,9 +144,10 @@ const FILE_EXISTS_ERROR = 2;
 /**
  * Indicates that the file is permanent and should not be deleted.
  *
- * Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed
- * during cron runs, but permanent files will not be removed during the file
- * garbage collection process.
+ * Temporary files older than the system.file.temporary_maximum_age
+ * configuration value will be, if clean-up not disabled, removed during cron
+ * runs, but permanent files will not be removed during the file garbage
+ * collection process.
  */
 const FILE_STATUS_PERMANENT = 1;
 

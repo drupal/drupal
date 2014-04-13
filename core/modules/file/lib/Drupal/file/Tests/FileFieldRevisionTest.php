@@ -115,11 +115,12 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     clearstatcache($node_file_r3->getFileUri());
     clearstatcache($node_file_r4->getFileUri());
 
-    // Call system_cron() to clean up the file. Make sure the timestamp
-    // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+    // Call file_cron() to clean up the file. Make sure the changed timestamp
+    // of the file is older than the system.file.temporary_maximum_age
+    // configuration value.
     db_update('file_managed')
       ->fields(array(
-        'changed' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
+        'changed' => REQUEST_TIME - ($this->container->get('config.factory')->get('system.file')->get('temporary_maximum_age') + 1),
       ))
       ->condition('fid', $node_file_r3->id())
       ->execute();
@@ -130,11 +131,12 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Delete the entire node and check that the original file is deleted.
     $this->drupalPostForm('node/' . $nid . '/delete', array(), t('Delete'));
-    // Call system_cron() to clean up the file. Make sure the timestamp
-    // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+    // Call file_cron() to clean up the file. Make sure the changed timestamp
+    // of the file is older than the system.file.temporary_maximum_age
+    // configuration value.
     db_update('file_managed')
       ->fields(array(
-        'changed' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
+        'changed' => REQUEST_TIME - ($this->container->get('config.factory')->get('system.file')->get('temporary_maximum_age') + 1),
       ))
       ->condition('fid', $node_file_r1->id())
       ->execute();
