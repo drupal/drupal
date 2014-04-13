@@ -20,7 +20,7 @@ class ForumTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'comment', 'forum', 'node', 'block', 'menu', 'help');
+  public static $modules = array('taxonomy', 'comment', 'forum', 'node', 'block', 'menu_ui', 'help');
 
   /**
    * A user with various administrative privileges.

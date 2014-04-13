@@ -1,0 +1,78 @@
+menu_ui.settings:
+  path: '/admin/structure/menu/settings'
+  defaults:
+    _form: 'Drupal\menu_ui\MenuSettingsForm'
+    _title: 'Menus'
+  requirements:
+    _permission: 'administer menu'
+
+menu_ui.overview_page:
+  path: '/admin/structure/menu'
+  defaults:
+    _entity_list: 'menu'
+    _title: 'Menus'
+  requirements:
+    _permission: 'administer menu'
+
+menu_ui.parent_options_js:
+  path: '/admin/structure/menu/parents'
+  defaults:
+    _controller: '\Drupal\menu_ui\Controller\MenuController::getParentOptions'
+  requirements:
+    _permission: 'administer menu'
+
+menu_ui.link_add:
+  path: '/admin/structure/menu/manage/{menu}/add'
+  defaults:
+    _content: '\Drupal\menu_ui\Controller\MenuController::addLink'
+    _title: 'Add menu link'
+  requirements:
+    _entity_create_access: 'menu_link'
+
+menu_ui.link_edit:
+  path: '/admin/structure/menu/item/{menu_link}/edit'
+  defaults:
+    _entity_form: 'menu_link'
+    _title: 'Edit menu link'
+  requirements:
+    _entity_access: 'menu_link.update'
+
+menu_ui.link_reset:
+  path: '/admin/structure/menu/item/{menu_link}/reset'
+  defaults:
+    _entity_form: 'menu_link.reset'
+    _title: 'Reset menu link'
+  requirements:
+    _entity_access: 'menu_link.reset'
+
+menu_ui.link_delete:
+  path: '/admin/structure/menu/item/{menu_link}/delete'
+  defaults:
+    _entity_form: 'menu_link.delete'
+    _title: 'Delete menu link'
+  requirements:
+    _entity_access: 'menu_link.delete'
+
+menu_ui.menu_add:
+  path: '/admin/structure/menu/add'
+  defaults:
+    _entity_form: 'menu.add'
+    _title: 'Add menu'
+  requirements:
+    _entity_create_access: 'menu'
+
+menu_ui.menu_edit:
+  path: '/admin/structure/menu/manage/{menu}'
+  defaults:
+    _entity_form: 'menu.edit'
+    _title_callback: '\Drupal\menu_ui\Controller\MenuController::menuTitle'
+  requirements:
+    _entity_access: 'menu.update'
+
+menu_ui.delete_menu:
+  path: '/admin/structure/menu/manage/{menu}/delete'
+  defaults:
+    _entity_form: 'menu.delete'
+    _title: 'Delete menu'
+  requirements:
+    _entity_access: 'menu.delete'

@@ -217,11 +217,11 @@ class Page extends PathPluginBase {
         );
 
         // Only display the menu selector if menu module is enabled.
-        if (\Drupal::moduleHandler()->moduleExists('menu')) {
+        if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
           $form['menu']['name'] = array(
             '#title' => t('Menu'),
             '#type' => 'select',
-            '#options' => menu_get_menus(),
+            '#options' => menu_ui_get_menus(),
             '#default_value' => $menu['name'],
             '#states' => array(
               'visible' => array(
@@ -334,11 +334,11 @@ class Page extends PathPluginBase {
           ),
         );
         // Only display the menu selector if menu module is enabled.
-        if (\Drupal::moduleHandler()->moduleExists('menu')) {
+        if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
           $form['tab_options']['name'] = array(
             '#title' => t('Menu'),
             '#type' => 'select',
-            '#options' => menu_get_menus(),
+            '#options' => menu_ui_get_menus(),
             '#default_value' => $tab_options['name'],
             '#description' => t('Insert item into an available menu.'),
             '#states' => array(

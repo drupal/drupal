@@ -20,15 +20,15 @@ class MigrateMenuConfigsTest extends MigrateDrupalTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu');
+  public static $modules = array('menu_ui');
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
     return array(
-      'name'  => 'Migrate variables to menu.settings.yml',
-      'description'  => 'Upgrade variables to menu.settings.yml',
+      'name'  => 'Migrate variables to menu_ui.settings.yml',
+      'description'  => 'Upgrade variables to menu_ui.settings.yml',
       'group' => 'Migrate Drupal',
     );
   }
@@ -51,7 +51,7 @@ class MigrateMenuConfigsTest extends MigrateDrupalTestBase {
    * Tests migration of variables for the menu module.
    */
   public function testMenuSettings() {
-    $config = \Drupal::config('menu.settings');
+    $config = \Drupal::config('menu_ui.settings');
     $this->assertIdentical($config->get('main_links'), 'primary-links');
     $this->assertIdentical($config->get('secondary_links'), 'secondary-links');
     $this->assertIdentical($config->get('override_parent_selector'), FALSE);

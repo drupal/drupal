@@ -30,7 +30,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     'custom_block',
     'field',
     'field_ui',
-    'menu',
+    'menu_ui',
     'node',
     'shortcut',
     'taxonomy',

@@ -292,8 +292,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       '#prefix' => '<div id="edit-page-link-properties-wrapper">',
       '#suffix' => '</div>',
     );
-    if (\Drupal::moduleHandler()->moduleExists('menu')) {
-      $menu_options = menu_get_menus();
+    if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
+      $menu_options = menu_ui_get_menus();
     }
     else {
       // These are not yet translated.

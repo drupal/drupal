@@ -21,7 +21,7 @@ dependencies:
   - entity_reference
   - help
   - image
-  - menu
+  - menu_ui
   - options
   - path
   - taxonomy
