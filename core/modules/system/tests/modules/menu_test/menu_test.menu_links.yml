@@ -57,25 +57,6 @@ menu_test.hidden.block:
   title: Blocks
   route_name: menu_test.hidden_block
   parent: menu_test.hidden
-# Menu trail tests.
-# @see MenuTrailTestCase
-menu_test.menu-trail:
-  title: 'Menu trail - Case 1'
-  route_name: menu_test.menu_trail
-  parent: menu_test
-menu_test.admin.config.development.menu-trail:
-  title: 'Menu trail - Case 2'
-  description: 'Tests menu_tree_set_path()'
-  route_name: menu_test.menu_trail_admin
-  parent: system.admin_config_development
-menu_test.custom-403-page:
-  title: 'Custom 403 page'
-  route_name: menu_test.custom_403
-  parent: menu_test
-menu_test.custom-404-page:
-  title: 'Custom 404 page'
-  route_name: menu_test.custom_404
-  parent: menu_test
 menu_test.menu-title-test.case1:
   title: 'Example title - Case 1'
   route_name: menu_test.title_test_case1

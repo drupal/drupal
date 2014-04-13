@@ -37,20 +37,6 @@ class MenuTestController {
   }
 
   /**
-   * @todo Remove menu_test_custom_403_404_callback().
-   */
-  public function custom403404() {
-    return menu_test_custom_403_404_callback();
-  }
-
-  /**
-   * @todo Remove menu_test_menu_trail_callback().
-   */
-  public function menuTrail() {
-    return menu_test_menu_trail_callback();
-  }
-
-  /**
    * @todo Remove menu_test_theme_page_callback().
    */
   public function themePage($inherited) {

@@ -226,7 +226,6 @@ class MenuTree implements MenuTreeInterface {
       // that needs to be checked for access on all levels, we simply check
       // whether we have the menu already in cache, or otherwise, build a
       // minimum tree containing the active trail only.
-      // @see menu_set_active_trail()
       if (!isset($this->menuPageTrees[$cid]) && $only_active_trail) {
         $cid .= ':trail';
       }

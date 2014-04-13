@@ -37,9 +37,6 @@ interface MenuTreeInterface {
    * specified in calls to static::setPath(), the preferred link will be
    * overridden by the corresponding path returned by static::getPath().
    *
-   * Setting this path does not affect the main content; for that use
-   * menu_set_active_item() instead.
-   *
    * @param string $menu_name
    *   The name of the affected menu tree.
    * @param string $path

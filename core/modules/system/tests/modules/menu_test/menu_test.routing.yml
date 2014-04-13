@@ -286,38 +286,6 @@ menu_test.hidden_block_delete:
   requirements:
     _access: 'TRUE'
 
-menu_test.custom_403:
-  path: '/menu-test/custom-403-page'
-  defaults:
-    _title: 'Custom 403 page'
-    _content: '\Drupal\menu_test\Controller\MenuTestController::custom403404'
-  requirements:
-    _access: 'TRUE'
-
-menu_test.custom_404:
-  path: '/menu-test/custom-404-page'
-  defaults:
-    _title: 'Custom 404 page'
-    _content: '\Drupal\menu_test\Controller\MenuTestController::custom403404'
-  requirements:
-    _access: 'TRUE'
-
-menu_test.menu_trail:
-  path: '/menu-test/menu-trail'
-  defaults:
-    _title: 'Menu trail - Case 1'
-    _content: '\Drupal\menu_test\Controller\MenuTestController::menuTrail'
-  requirements:
-    _access: 'TRUE'
-
-menu_test.menu_trail_admin:
-  path: '/admin/config/development/menu-trail'
-  defaults:
-    _title: 'Menu trail - Case 2'
-    _content: '\Drupal\menu_test\Controller\MenuTestController::menuTrail'
-  requirements:
-    _permission: 'access administration pages'
-
 menu_test.theme_callback:
   path: '/menu-test/theme-callback/{inherited}'
   defaults:
