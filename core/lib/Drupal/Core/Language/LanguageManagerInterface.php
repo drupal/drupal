@@ -85,8 +85,7 @@ interface LanguageManagerInterface {
    *   Language::STATE_LOCKED, Language::STATE_ALL.
    *
    * @return array
-   *   An associative array of languages, keyed by the language code, ordered
-   *   by weight ascending and name ascending.
+   *   An associative array of languages, keyed by the language code.
    */
   public function getLanguages($flags = Language::STATE_CONFIGURABLE);
 

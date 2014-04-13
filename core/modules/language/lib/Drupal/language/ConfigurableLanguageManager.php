@@ -296,7 +296,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
       // Add locked languages, they will be filtered later if needed.
       $this->languages += $this->getDefaultLockedLanguages($weight);
 
-      // Sort the language list by weight.
+      // Sort the language list by weight then title.
       Language::sort($this->languages);
     }
 
