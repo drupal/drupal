@@ -10,6 +10,7 @@ namespace Drupal\image\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Routing\RequestHelper;
 use Drupal\image\ImageEffectBag;
 use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
@@ -208,7 +209,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       $clean_urls = TRUE;
       try {
         $request = \Drupal::request();
-        $clean_urls = $request->attributes->get('clean_urls');
+        $clean_urls = RequestHelper::isCleanUrl($request);
       }
       catch (ServiceNotFoundException $e) {
       }

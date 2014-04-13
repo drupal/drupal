@@ -50,13 +50,7 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
     $path = trim($request->getPathInfo(), '/');
     $path = $this->pathProcessor->processInbound($path, $request);
     $request->attributes->set('_system_path', $path);
-    // Also set an attribute that indicates whether we are using clean URLs.
-    $clean_urls = TRUE;
-    $base_url = $request->getBaseUrl();
-    if (!empty($base_url) && strpos($base_url, $request->getScriptName()) !== FALSE) {
-      $clean_urls = FALSE;
-    }
-    $request->attributes->set('clean_urls', $clean_urls);
+
     // Set the cache key on the alias manager cache decorator.
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
       $this->aliasManager->setCacheKey($path);
