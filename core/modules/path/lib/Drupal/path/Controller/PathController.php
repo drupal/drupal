@@ -24,7 +24,7 @@ class PathController {
    * @todo Remove path_admin_edit().
    */
   public function adminEdit($path) {
-    $path = path_load($path);
+    $path = \Drupal::service('path.alias_storage')->load(array('pid' => $path));
     module_load_include('admin.inc', 'path');
     return path_admin_edit($path);
   }

@@ -97,28 +97,6 @@ function current_path() {
 }
 
 /**
- * Fetches a specific URL alias from the database.
- *
- * @param $conditions
- *   A string representing the source, a number representing the pid, or an
- *   array of query conditions.
- *
- * @see \Drupal\Core\Path\PathInterface::load()
- */
-function path_load($conditions) {
-  if (is_numeric($conditions)) {
-    $conditions = array('pid' => $conditions);
-  }
-  elseif (is_string($conditions)) {
-    $conditions = array('source' => $conditions);
-  }
-  elseif (!is_array($conditions)) {
-    return FALSE;
-  }
-  return \Drupal::service('path.alias_storage')->load($conditions);
-}
-
-/**
  * Determines whether a path is in the administrative section of the site.
  *
  * By default, paths are considered to be non-administrative. If a path does
