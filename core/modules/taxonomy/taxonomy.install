@@ -144,9 +144,9 @@ function taxonomy_schema() {
         'default'=> 0,
       ),
     ),
+    'primary key' => array('nid', 'tid'),
     'indexes' => array(
       'term_node' => array('tid', 'sticky', 'created'),
-      'nid' => array('nid'),
     ),
     'foreign keys' => array(
       'tracked_node' => array(
