@@ -112,11 +112,9 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
   public function __toString() {
     $return = '';
     foreach ($this->storage as $name => $value) {
-      if (!$value->printed()) {
-        $rendered = $value->render();
-        if ($rendered) {
-          $return .= ' ' . $rendered;
-        }
+      $rendered = $value->render();
+      if ($rendered) {
+        $return .= ' ' . $rendered;
       }
     }
     return $return;

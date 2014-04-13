@@ -28,19 +28,4 @@ class TwigThemeTestController {
     );
   }
 
-  /**
-   * Menu callback for filters in a Twig template.
-   */
-  public function testFilterRender() {
-    return array(
-      '#theme' => 'twig_theme_test_filter',
-      '#quote' => array(
-        'content' => array('#markup' => 'You can only find truth with logic if you have already found truth without it.'),
-        'author' => array('#markup' => 'Gilbert Keith Chesterton'),
-        'date' => array('#markup' => '1874-1936'),
-      ),
-    );
-  }
-
 }
-

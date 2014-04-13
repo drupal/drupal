@@ -75,7 +75,7 @@
  * @ingroup themeable
  */
 #}
-<article id="node-{{ node.id }}" class="{{ attributes.class }} clearfix"{{ attributes }}>
+<article id="node-{{ node.id }}" class="{{ attributes.class }} clearfix"{{ attributes|without('id', 'class') }}>
 
   {{ title_prefix }}
   {% if not page %}

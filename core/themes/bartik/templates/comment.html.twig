@@ -62,7 +62,7 @@
  * @see template_preprocess_comment()
  */
 #}
-<article class="{{ attributes.class }} clearfix"{{ attributes }} role="article">
+<article class="{{ attributes.class }} clearfix" role="article"{{ attributes|without('class', 'role') }}>
 
   <header class="comment-header">
     <div class="attribution">

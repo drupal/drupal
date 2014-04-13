@@ -69,7 +69,7 @@
  * @see template_preprocess_node()
  */
 #}
-<article id="node-{{ node.id }}" class="{{ attributes.class}} clearfix"{{ attributes }} role="article">
+<article id="node-{{ node.id }}" class="{{ attributes.class }} clearfix" role="article"{{ attributes|without('id', 'class', 'role') }}>
 
   <header>
     {{ title_prefix }}

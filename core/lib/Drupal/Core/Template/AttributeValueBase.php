@@ -17,13 +17,6 @@ use Drupal\Component\Utility\String;
 abstract class AttributeValueBase {
 
   /**
-   * Whether this attribute hsa been printed already.
-   *
-   * @var bool
-   */
-  protected $printed = FALSE;
-
-  /**
    * The value itself.
    *
    * @var mixed
@@ -58,16 +51,6 @@ abstract class AttributeValueBase {
     if (isset($this->value)) {
       return String::checkPlain($this->name) . '="' . $this . '"';
     }
-  }
-
-  /**
-   * Whether this attribute hsa been printed already.
-   *
-   * @return bool
-   *   TRUE if this attribute has been printed, FALSE otherwise.
-   */
-  public function printed() {
-    return $this->printed;
   }
 
   /**

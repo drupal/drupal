@@ -16,7 +16,7 @@
  * @see bartik_preprocess_field()
  */
 #}
-<div class="{{ attributes.class }} clearfix"{{ attributes }}>
+<div class="{{ attributes.class }} clearfix"{{ attributes|without('class') }}>
   <h3{{ label_attributes }}>{{ label }}: </h3>
   <ul class="links">
     {% for delta, item in items %}

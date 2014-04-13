@@ -66,7 +66,6 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
    * Implements the magic __toString() method.
    */
   public function __toString() {
-    $this->printed = TRUE;
     return String::checkPlain(implode(' ', $this->value));
   }
 

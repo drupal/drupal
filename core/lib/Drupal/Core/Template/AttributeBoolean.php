@@ -42,7 +42,6 @@ class AttributeBoolean extends AttributeValueBase {
    * Implements the magic __toString() method.
    */
   public function __toString() {
-    $this->printed = TRUE;
     return $this->value === FALSE ? '' : String::checkPlain($this->name);
   }
 

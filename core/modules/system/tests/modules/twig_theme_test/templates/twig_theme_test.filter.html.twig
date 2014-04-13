@@ -12,3 +12,11 @@
     </footer>
   </blockquote>
 </div>
+<div><span{{ attributes }}>All attributes:</span></div>
+<div><span class="{{ attributes.class }}"{{ attributes|without('class') }}>Class attributes in front, remainder at the back:</span></div>
+<div><span{{ attributes|without('class') }} data-class="{{ attributes.class }}">Class attributes in back, remainder at the front:</span></div>
+<div><span class="{{ attributes.class }}">Class attributes only:</span></div>
+<div><span {{ attributes.checked }}{{ attributes|without('checked') }}>Without boolean attribute.</span></div>
+<div><span data-id="{{ attributes.id }}"{{ attributes|without('id') }}>Without string attribute.</span></div>
+<div><span{{ attributes|without('id', 'class') }}>Without either nor class attributes.</span></div>
+<div><span{{ attributes }}>All attributes again.</span></div>

@@ -164,7 +164,12 @@ function twig_render_var($arg) {
  *   The filtered renderable array.
  */
 function twig_without($element) {
-  $filtered_element = $element;
+  if ($element instanceof ArrayAccess) {
+    $filtered_element = clone $element;
+  }
+  else {
+    $filtered_element = $element;
+  }
   $args = func_get_args();
   unset($args[0]);
   foreach ($args as $arg) {
