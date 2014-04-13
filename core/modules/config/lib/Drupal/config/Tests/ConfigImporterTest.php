@@ -30,7 +30,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'system');
+  public static $modules = array('config_test', 'system', 'config_import_test');
 
   public static function getInfo() {
     return array(
@@ -197,6 +197,10 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
     $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
+
+    // Verify that hook_config_import_steps_alter() can add steps to
+    // configuration synchronization.
+    $this->assertTrue(isset($GLOBALS['hook_config_test']['config_import_steps_alter']));
 
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->hasUnprocessedConfigurationChanges());
