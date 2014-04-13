@@ -8,6 +8,7 @@
 namespace Drupal\config\Form;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -15,7 +16,6 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Config\BatchConfigImporter;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -243,7 +243,7 @@ class ConfigSync extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $config_importer = new BatchConfigImporter(
+    $config_importer = new ConfigImporter(
       $form_state['storage_comparer'],
       $this->eventDispatcher,
       $this->configManager,
@@ -257,7 +257,7 @@ class ConfigSync extends FormBase {
       drupal_set_message($this->t('Another request may be synchronizing configuration already.'));
     }
     else{
-      $operations = $config_importer->initialize();
+      $sync_steps = $config_importer->initialize();
       $batch = array(
         'operations' => array(),
         'finished' => array(get_class($this), 'finishBatch'),
@@ -267,8 +267,8 @@ class ConfigSync extends FormBase {
         'error_message' => t('Configuration synchronization has encountered an error.'),
         'file' => drupal_get_path('module', 'config') . '/config.admin.inc',
       );
-      foreach ($operations as $operation) {
-        $batch['operations'][] = array(array(get_class($this), 'processBatch'), array($config_importer, $operation));
+      foreach ($sync_steps as $sync_step) {
+        $batch['operations'][] = array(array(get_class($this), 'processBatch'), array($config_importer, $sync_step));
       }
 
       batch_set($batch);
@@ -278,18 +278,20 @@ class ConfigSync extends FormBase {
   /**
    * Processes the config import batch and persists the importer.
    *
-   * @param BatchConfigImporter $config_importer
+   * @param \Drupal\Core\Config\ConfigImporter $config_importer
    *   The batch config importer object to persist.
+   * @param string $sync_step
+   *   The synchronisation step to do.
    * @param $context
    *   The batch context.
    */
-  public static function processBatch(BatchConfigImporter $config_importer, $operation, &$context) {
+  public static function processBatch(ConfigImporter $config_importer, $sync_step, &$context) {
     if (!isset($context['sandbox']['config_importer'])) {
       $context['sandbox']['config_importer'] = $config_importer;
     }
 
     $config_importer = $context['sandbox']['config_importer'];
-    $config_importer->$operation($context);
+    $config_importer->doSyncStep($sync_step, $context);
     if ($errors = $config_importer->getErrors()) {
       if (!isset($context['results']['errors'])) {
         $context['results']['errors'] = array();
