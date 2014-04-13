@@ -9,10 +9,8 @@ namespace Drupal\field\Entity;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\FieldException;
 use Drupal\field\FieldConfigInterface;
 
@@ -102,10 +100,10 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    * The field cardinality.
    *
    * The maximum number of values the field can hold. Possible values are
-   * positive integers or FieldDefinitionInterface::CARDINALITY_UNLIMITED.
-   * Defaults to 1.
+   * positive integers or
+   * FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED. Defaults to 1.
    *
-   * @var integer
+   * @var int
    */
   public $cardinality = 1;
 
@@ -180,13 +178,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface::getPropertyDefinitions()
    */
   protected $propertyDefinitions;
-
-  /**
-   * The data definition of a field item.
-   *
-   * @var \Drupal\Core\TypedData\DataDefinition
-   */
-  protected $itemDefinition;
 
   /**
    * Constructs a FieldConfig object.
@@ -539,8 +530,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     $settings = $field_type_manager->getDefaultSettings($this->type);
-    $instance_settings = $field_type_manager->getDefaultInstanceSettings($this->type);
-    return $this->settings + $settings + $instance_settings;
+    return $this->settings + $settings;
   }
 
   /**
@@ -630,7 +620,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function isMultiple() {
     $cardinality = $this->getCardinality();
-    return ($cardinality == static::CARDINALITY_UNLIMITED) || ($cardinality > 1);
+    return ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) || ($cardinality > 1);
   }
 
   /**
@@ -638,26 +628,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function isLocked() {
     return $this->locked;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDefaultValue(EntityInterface $entity) { }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isDisplayConfigurable($context) {
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDisplayOptions($display_context) {
-    // Hide configurable fields by default.
-    return array('type' => 'hidden');
   }
 
   /**
@@ -742,62 +712,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * {@inheritdoc}
    */
-  public static function createFromDataType($type) {
-    // Forward to the field definition class for creating new data definitions
-    // via the typed manager.
-    return FieldDefinition::createFromDataType($type);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createFromItemType($item_type) {
-    // Forward to the field definition class for creating new data definitions
-    // via the typed manager.
-    return FieldDefinition::createFromItemType($item_type);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDataType() {
-    return 'list';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isList() {
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isReadOnly() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isComputed() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getClass() {
-    // Derive list class from the field type.
-    $type_definition = \Drupal::service('plugin.manager.field.field_type')
-      ->getDefinition($this->getType());
-    return $type_definition['list_class'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getConstraints() {
     return array();
   }
@@ -807,17 +721,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function getConstraint($constraint_name) {
     return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getItemDefinition() {
-    if (!isset($this->itemDefinition)) {
-      $this->itemDefinition = FieldItemDataDefinition::create($this)
-        ->setSettings($this->getSettings());
-    }
-    return $this->itemDefinition;
   }
 
   /**
@@ -860,19 +763,11 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
 
   /**
    * Helper to retrieve the field item class.
-   *
-   * @todo: Remove once getClass() adds in defaults. See
-   * https://drupal.org/node/2116341.
    */
   protected function getFieldItemClass() {
-    if ($class = $this->getItemDefinition()->getClass()) {
-      return $class;
-    }
-    else {
-      $type_definition = \Drupal::typedDataManager()
-        ->getDefinition($this->getItemDefinition()->getDataType());
-      return $type_definition['class'];
-    }
+    $type_definition = \Drupal::typedDataManager()
+      ->getDefinition('field_item:' . $this->getType());
+    return $type_definition['class'];
   }
 
 }

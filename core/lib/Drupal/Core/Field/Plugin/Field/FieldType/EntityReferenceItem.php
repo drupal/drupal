@@ -8,7 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinition;
@@ -54,7 +54,7 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $settings = $field_definition->getSettings();
     $target_type_info = \Drupal::entityManager()->getDefinition($settings['target_type']);
 
@@ -95,7 +95,7 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
 

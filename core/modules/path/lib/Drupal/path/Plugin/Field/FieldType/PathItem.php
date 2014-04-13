@@ -7,7 +7,7 @@
 
 namespace Drupal\path\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -26,7 +26,7 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['alias'] = DataDefinition::create('string')
         ->setLabel(t('Path alias'));
     $properties['pid'] = DataDefinition::create('string')
@@ -37,7 +37,7 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array();
   }
 

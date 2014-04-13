@@ -8,12 +8,12 @@
 namespace Drupal\field;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Provides an interface defining a field entity.
  */
-interface FieldConfigInterface extends ConfigEntityInterface, FieldDefinitionInterface {
+interface FieldConfigInterface extends ConfigEntityInterface, FieldStorageDefinitionInterface {
 
   /**
    * Returns the list of bundles where the field has instances.

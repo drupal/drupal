@@ -99,6 +99,16 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   protected $fieldDefinitions;
 
   /**
+   * Static cache of field storage definitions per entity type.
+   *
+   * Elements of the array:
+   *  - $entity_type_id: \Drupal\Core\Field\FieldDefinition[]
+   *
+   * @var array
+   */
+  protected $fieldStorageDefinitions;
+
+  /**
    * The root paths.
    *
    * @see self::__construct().
@@ -332,7 +342,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\ContentEntityInterface are supported
+   *   \Drupal\Core\Entity\ContentEntityInterface are supported.
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of field definitions, keyed by field name.
@@ -348,8 +358,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $base_field_definitions = $class::baseFieldDefinitions($entity_type);
     $provider = $entity_type->getProvider();
     foreach ($base_field_definitions as $definition) {
-      // @todo Remove this check one FieldDefinitionInterface exposes a proper
-      //   provider setter. See https://drupal.org/node/2225961.
+      // @todo Remove this check once FieldDefinitionInterface exposes a proper
+      //  provider setter. See https://drupal.org/node/2225961.
       if ($definition instanceof FieldDefinition) {
         $definition->setProvider($provider);
       }
@@ -362,8 +372,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
-          // @todo Remove this check one FieldDefinitionInterface exposes a
-          //   proper provider setter. See https://drupal.org/node/2225961.
+          // @todo Remove this check once FieldDefinitionInterface exposes a
+          //  proper provider setter. See https://drupal.org/node/2225961.
           if ($definition instanceof FieldDefinition) {
             $definition->setProvider($module);
           }
@@ -445,8 +455,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $bundle_field_definitions = $class::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
     $provider = $entity_type->getProvider();
     foreach ($bundle_field_definitions as $definition) {
-      // @todo Remove this check one FieldDefinitionInterface exposes a proper
-      //   provider setter. See https://drupal.org/node/2225961.
+      // @todo Remove this check once FieldDefinitionInterface exposes a proper
+      //  provider setter. See https://drupal.org/node/2225961.
       if ($definition instanceof FieldDefinition) {
         $definition->setProvider($provider);
       }
@@ -459,8 +469,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
-          // @todo Remove this check one FieldDefinitionInterface exposes a
-          //   proper provider setter. See https://drupal.org/node/2225961.
+          // @todo Remove this check once FieldDefinitionInterface exposes a
+          //  proper provider setter. See https://drupal.org/node/2225961.
           if ($definition instanceof FieldDefinition) {
             $definition->setProvider($module);
           }
@@ -486,9 +496,74 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   /**
    * {@inheritdoc}
    */
+  public function getFieldStorageDefinitions($entity_type_id) {
+    if (!isset($this->fieldStorageDefinitions[$entity_type_id])) {
+      $this->fieldStorageDefinitions[$entity_type_id] = array();
+      // Add all non-computed base fields.
+      foreach ($this->getBaseFieldDefinitions($entity_type_id) as $field_name => $definition) {
+        if (!$definition->isComputed()) {
+          $this->fieldStorageDefinitions[$entity_type_id][$field_name] = $definition;
+        }
+      }
+      // Not prepared, try to load from cache.
+      $cid = 'entity_field_storage_definitions:' . $entity_type_id . ':' . $this->languageManager->getCurrentLanguage()->id;
+      if ($cache = $this->cache->get($cid)) {
+        $field_storage_definitions = $cache->data;
+      }
+      else {
+        // Rebuild the definitions and put it into the cache.
+        $field_storage_definitions = $this->buildFieldStorageDefinitions($entity_type_id);
+        $this->cache->set($cid, $field_storage_definitions, Cache::PERMANENT, array('entity_types' => TRUE, 'entity_field_info' => TRUE));
+      }
+      $this->fieldStorageDefinitions[$entity_type_id] += $field_storage_definitions;
+    }
+    return $this->fieldStorageDefinitions[$entity_type_id];
+  }
+
+  /**
+   * Builds field storage definitions for an entity type.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID. Only entity types that implement
+   *   \Drupal\Core\Entity\ContentEntityInterface are supported
+   *
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+   *   An array of field storage definitions, keyed by field name.
+   */
+  protected function buildFieldStorageDefinitions($entity_type_id) {
+    $entity_type = $this->getDefinition($entity_type_id);
+    $field_definitions = array();
+
+    // Retrieve base field definitions from modules.
+    foreach ($this->moduleHandler->getImplementations('entity_field_storage_info') as $module) {
+      $module_definitions = $this->moduleHandler->invoke($module, 'entity_field_storage_info', array($entity_type));
+      if (!empty($module_definitions)) {
+        // Ensure the provider key actually matches the name of the provider
+        // defining the field.
+        foreach ($module_definitions as $field_name => $definition) {
+          // @todo Remove this check once FieldDefinitionInterface exposes a
+          //  proper provider setter. See https://drupal.org/node/2225961.
+          if ($definition instanceof FieldDefinition) {
+            $definition->setProvider($module);
+          }
+          $field_definitions[$field_name] = $definition;
+        }
+      }
+    }
+
+    // Invoke alter hook.
+    $this->moduleHandler->alter('entity_field_storage_info', $field_definitions, $entity_type);
+
+    return $field_definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function clearCachedFieldDefinitions() {
     $this->baseFieldDefinitions = array();
     $this->fieldDefinitions = array();
+    $this->fieldStorageDefinitions = array();
     Cache::deleteTags(array('entity_field_info' => TRUE));
   }
 

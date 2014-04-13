@@ -32,7 +32,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *
    * @see \Drupal\Core\Field\FieldDefinition
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition);
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition);
 
   /**
    * Returns the name of the main property, if any.
@@ -57,7 +57,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *
    * Computed fields having no schema should return an empty array.
    *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_definition
    *   The field definition.
    *
    * @return array
@@ -81,7 +81,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     specify another field as related, only existing SQL tables,
    *     such as {taxonomy_term_data}.
    */
-  public static function schema(FieldDefinitionInterface $field_definition);
+  public static function schema(FieldStorageDefinitionInterface $field_definition);
 
   /**
    * Gets the entity that field belongs to.

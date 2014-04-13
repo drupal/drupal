@@ -707,6 +707,10 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
 /**
  * Provides field definitions for a specific bundle within an entity type.
  *
+ * Bundle fields either have to override an existing base field, or need to
+ * provide a field storage definition via hook_entity_field_storage_info()
+ * unless they are computed.
+ *
  * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
  *   The entity type definition.
  * @param string $bundle
@@ -719,6 +723,8 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
  *
  * @see hook_entity_base_field_info()
  * @see hook_entity_base_field_info_alter()
+ * @see hook_entity_field_storage_info()
+ * @see hook_entity_field_storage_info_alter()
  * @see hook_entity_bundle_field_info_alter()
  * @see \Drupal\Core\Field\FieldDefinitionInterface
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
@@ -753,6 +759,55 @@ function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\Entit
   if ($entity_type->id() == 'node' && $bundle == 'article' && !empty($fields['mymodule_text'])) {
     // Alter the mymodule_text field to use a custom class.
     $fields['mymodule_text']->setClass('\Drupal\anothermodule\EntityComputedText');
+  }
+}
+
+/**
+ * Provides field storage definitions for a content entity type.
+ *
+ * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+ *   The entity type definition.
+ *
+ * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+ *   An array of field storage definitions, keyed by field name.
+ *
+ * @see hook_entity_field_storage_info_alter()
+ * @see \Drupal\Core\Field\FieldStorageDefinitionInterface
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldStorageDefinitions()
+ */
+function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+  // Expose storage definitions for all exposed bundle fields.
+  if ($entity_type->isFieldable()) {
+    // Query by filtering on the ID as this is more efficient than filtering
+    // on the entity_type property directly.
+    $ids = \Drupal::entityQuery('field_config')
+      ->condition('id', $entity_type->id() . '.', 'STARTS_WITH')
+      ->execute();
+
+    // Fetch all fields and key them by field name.
+    $field_configs = entity_load_multiple('field_config', $ids);
+    $result = array();
+    foreach ($field_configs as $field_config) {
+      $result[$field_config->getName()] = $field_config;
+    }
+    return $result;
+  }
+}
+
+/**
+ * Alters field storage definitions for a content entity type.
+ *
+ * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $fields
+ *   The array of field storage definitions for the entity type.
+ * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+ *   The entity type definition.
+ *
+ * @see hook_entity_field_storage_info()
+ */
+function hook_entity_field_storage_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+  // Alter the max_length setting.
+  if ($entity_type->id() == 'node' && !empty($fields['mymodule_text'])) {
+    $fields['mymodule_text']->setSetting('max_length', 128);
   }
 }
 

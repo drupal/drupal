@@ -682,9 +682,9 @@ function content_translation_form_field_ui_field_edit_form_submit($form, array &
  * Implements hook_form_FORM_ID_alter() for 'field_ui_field_instance_edit_form'.
  */
 function content_translation_form_field_ui_field_instance_edit_form_alter(array &$form, array &$form_state, $form_id) {
-  if ($form['#field']->isTranslatable()) {
+  if ($form_state['instance']->isTranslatable()) {
     module_load_include('inc', 'content_translation', 'content_translation.admin');
-    $element = content_translation_field_sync_widget($form['#field']);
+    $element = content_translation_field_sync_widget($form_state['instance']);
     if ($element) {
       $form['instance']['settings']['translation_sync'] = $element;
     }

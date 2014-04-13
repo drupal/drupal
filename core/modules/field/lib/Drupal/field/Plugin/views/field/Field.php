@@ -10,6 +10,7 @@ namespace Drupal\field\Plugin\views\field;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field\Field as FieldHelper;
@@ -42,9 +43,13 @@ class Field extends FieldPluginBase {
   public $items = array();
 
   /**
-   * The field information as returned by field_info_field().
+   * The field definition to use.
    *
-   * @var \Drupal\field\FieldConfigInterface
+   * A field storage definition turned into a field definition, so it can be
+   * used with widgets and formatters. See
+   * FieldDefinition::createFromFieldStorageDefinition().
+   *
+   * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
   public $field_info;
 
@@ -141,7 +146,8 @@ class Field extends FieldPluginBase {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->field_info = FieldHelper::fieldInfo()->getField($this->definition['entity_type'], $this->definition['field_name']);
+    $field_storage_definition = FieldHelper::fieldInfo()->getField($this->definition['entity_type'], $this->definition['field_name']);
+    $this->field_info = FieldDefinition::createFromFieldStorageDefinition($field_storage_definition);
     $this->multiple = FALSE;
     $this->limit_values = FALSE;
 

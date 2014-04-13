@@ -721,7 +721,10 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * {@inheritdoc}
    */
   public function getClass() {
-    return $this->field->getClass();
+    // Derive list class from the field type.
+    $type_definition = \Drupal::service('plugin.manager.field.field_type')
+      ->getDefinition($this->getType());
+    return $type_definition['list_class'];
   }
 
   /**

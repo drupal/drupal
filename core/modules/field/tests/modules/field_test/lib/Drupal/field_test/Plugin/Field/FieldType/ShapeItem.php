@@ -7,7 +7,7 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
 
@@ -36,7 +36,7 @@ class ShapeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['shape'] = DataDefinition::create('string')
       ->setLabel(t('Shape'));
 
@@ -49,7 +49,7 @@ class ShapeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $foreign_keys = array();
     // The 'foreign keys' key is not always used in tests.
     if ($field_definition->getSetting('foreign_key_name')) {

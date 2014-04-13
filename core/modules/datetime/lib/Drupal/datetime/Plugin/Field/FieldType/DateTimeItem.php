@@ -7,7 +7,7 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
@@ -48,7 +48,7 @@ class DateTimeItem extends FieldItemBase implements PrepareCacheInterface {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('datetime_iso8601')
       ->setLabel(t('Date value'));
 
@@ -65,7 +65,7 @@ class DateTimeItem extends FieldItemBase implements PrepareCacheInterface {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'value' => array(

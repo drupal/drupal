@@ -7,7 +7,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -26,7 +26,7 @@ class ListTextItem extends ListItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('Text value'))
       ->addConstraint('Length', array('max' => 255));
@@ -37,7 +37,7 @@ class ListTextItem extends ListItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'value' => array(

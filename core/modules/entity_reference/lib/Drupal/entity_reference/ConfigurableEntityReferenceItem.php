@@ -8,7 +8,7 @@
 namespace Drupal\entity_reference;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
@@ -98,7 +98,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $settings = $field_definition->getSettings();
     $target_type = $settings['target_type'];
 
@@ -137,7 +137,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
 
     $target_type = $field_definition->getSetting('target_type');

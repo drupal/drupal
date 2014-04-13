@@ -8,7 +8,7 @@
 namespace Drupal\link\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\link\LinkItemInterface;
@@ -40,7 +40,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['url'] = DataDefinition::create('string')
       ->setLabel(t('URL'));
 
@@ -62,7 +62,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'url' => array(

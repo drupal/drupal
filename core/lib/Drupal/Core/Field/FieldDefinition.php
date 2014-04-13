@@ -68,6 +68,37 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
   }
 
   /**
+   * Creates a new field definition based upon a field storage definition.
+   *
+   * In cases where one needs a field storage definitions to act like full
+   * field definitions, this creates a new field definition based upon the
+   * (limited) information available. That way it is possible to use the field
+   * definition in places where a full field definition is required; e.g., with
+   * widgets or formatters.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $definition
+   *   The field storage definition to base the new field definition upon.
+   *
+   * @return $this
+   */
+  public static function createFromFieldStorageDefinition(FieldStorageDefinitionInterface $definition) {
+    return static::create($definition->getType())
+      ->setCardinality($definition->getCardinality())
+      ->setConstraints($definition->getConstraints())
+      ->setCustomStorage($definition->hasCustomStorage())
+      ->setDescription($definition->getDescription())
+      ->setLabel($definition->getLabel())
+      ->setName($definition->getName())
+      ->setProvider($definition->getProvider())
+      ->setQueryable($definition->isQueryable())
+      ->setRequired($definition->isRequired())
+      ->setRevisionable($definition->isRevisionable())
+      ->setSettings($definition->getSettings())
+      ->setTargetEntityTypeId($definition->getTargetEntityTypeId())
+      ->setTranslatable($definition->isTranslatable());
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function createFromItemType($item_type) {

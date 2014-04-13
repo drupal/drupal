@@ -7,7 +7,7 @@
 
 namespace Drupal\text\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Plugin implementation of the 'text' field type.
@@ -34,7 +34,7 @@ class TextItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'value' => array(

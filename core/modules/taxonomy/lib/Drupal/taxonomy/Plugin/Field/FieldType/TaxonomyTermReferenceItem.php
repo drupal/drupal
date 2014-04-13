@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
@@ -94,7 +94,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedVa
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'target_id' => array(

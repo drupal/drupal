@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
@@ -84,7 +84,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'target_id' => array(
@@ -131,7 +131,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties = parent::propertyDefinitions($field_definition);
 
     $properties['alt'] = DataDefinition::create('string')

@@ -7,7 +7,7 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -19,7 +19,7 @@ class CommentFieldNameItem extends StringItem {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('String value'))
       ->setClass('\Drupal\comment\CommentFieldNameValue')

@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\FieldInfo;
 use Drupal\field\FieldConfigUpdateForbiddenException;
@@ -821,7 +822,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
             $delta_count[$row->entity_id][$row->langcode] = 0;
           }
 
-          if ($field->getCardinality() == FieldConfigInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getCardinality()) {
+          if ($field->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getCardinality()) {
             $item = array();
             // For each column declared by the field, populate the item from the
             // prefixed database column.
@@ -907,7 +908,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
           $query->values($record);
           $revision_query->values($record);
 
-          if ($field->getCardinality() != FieldConfigInterface::CARDINALITY_UNLIMITED && ++$delta_count == $field->getCardinality()) {
+          if ($field->getCardinality() != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && ++$delta_count == $field->getCardinality()) {
             break;
           }
         }
