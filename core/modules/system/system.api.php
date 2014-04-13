@@ -2879,31 +2879,6 @@ function hook_link_alter(&$variables) {
 }
 
 /**
- * Alter the configuration synchronization steps.
- *
- * @param array $sync_steps
- *   A one-dimensional array of \Drupal\Core\Config\ConfigImporter method names
- *   or callables that are invoked to complete the import, in the order that
- *   they will be processed. Each callable item defined in $sync_steps should
- *   either be a global function or a public static method. The callable should
- *   accept a $context array by reference. For example:
- *   <code>
- *     function _additional_configuration_step(&$context) {
- *       // Do stuff.
- *       // If finished set $context['finished'] = 1.
- *     }
- *   </code>
- *   For more information on creating batches, see the
- *   @link batch Batch operations @endlink documentation.
- *
- * @see callback_batch_operation()
- * @see \Drupal\Core\Config\ConfigImporter::initialize()
- */
-function hook_config_import_steps_alter(&$sync_steps) {
-  $sync_steps[] = '_additional_configuration_step';
-}
-
-/**
  * @} End of "addtogroup hooks".
  */
 
