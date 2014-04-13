@@ -15,7 +15,7 @@ use Drupal\Core\Cache\Cache;
  *
  * @see \Drupal\system\Tests\Bootstrap\PageCacheTest
  * @see \Drupal\node\Tests\NodePageCacheTest
- * @see \Drupal\menu\Tests\MenuTest::testMenuBlockPageCacheTags()
+ * @see \Drupal\menu_ui\Tests\MenuTest::testMenuBlockPageCacheTags()
  */
 class PageCacheTagsIntegrationTest extends WebTestBase {
 

@@ -42,7 +42,7 @@ class SearchPageOverrideTest extends SearchTestBase {
 
   function testSearchPageHook() {
     $keys = 'bike shed ' . $this->randomName();
-    $this->drupalGet("search/dummy_path/{$keys}");
+    $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
     $this->assertText('Dummy search snippet', 'Dummy search snippet is shown');
     $this->assertText('Test page text is here', 'Page override is working');
   }

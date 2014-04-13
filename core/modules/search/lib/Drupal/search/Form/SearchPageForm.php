@@ -8,9 +8,17 @@
 namespace Drupal\search\Form;
 
 use Drupal\Core\Entity\EntityFormController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a search form for site wide search.
+ *
+ * Search plugins can define method searchFormAlter() to alter the form. If they
+ * have additional or substitute fields, they will need to override the form
+ * submit, making sure to redirect with a GET parameter of 'keys' included, to
+ * trigger the search being processed by the controller, and adding in any
+ * additional query parameters they need to execute search.
  */
 class SearchPageForm extends EntityFormController {
 
@@ -33,8 +41,8 @@ class SearchPageForm extends EntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $plugin = $this->entity->getPlugin();
-
     $form_state['search_page_id'] = $this->entity->id();
+
     $form['basic'] = array(
       '#type' => 'container',
       '#attributes' => array(
@@ -58,6 +66,7 @@ class SearchPageForm extends EntityFormController {
       '#type' => 'submit',
       '#value' => $this->t('Search'),
     );
+
     // Allow the plugin to add to or alter the search form.
     $plugin->searchFormAlter($form, $form_state);
 
@@ -75,26 +84,17 @@ class SearchPageForm extends EntityFormController {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-    form_set_value($form['basic']['processed_keys'], trim($form_state['values']['keys']), $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, array &$form_state) {
-    $keys = $form_state['values']['processed_keys'];
-    if ($keys == '') {
-      $this->setFormError('keys', $form_state, $this->t('Please enter some keywords.'));
-      // Fall through to the form redirect.
-    }
-
+    // Redirect to the search page with keywords in the GET parameters.
+    // Plugins with additional search parameters will need to provide their
+    // own form submit handler to replace this, so they can put their values
+    // into the GET as well. If so, make sure to put 'keys' into the GET
+    // parameters so that the search results generation is triggered.
+    $query = $this->entity->getPlugin()->buildSearchUrlQuery($form_state);
+    $route = 'search.view_' . $form_state['search_page_id'];
     $form_state['redirect_route'] = array(
-      'route_name' => 'search.view_' . $this->entity->id(),
-      'route_parameters' => array(
-        'keys' => $keys,
-      ),
+      'route_name' => $route,
+      'options' => array('query' => $query),
     );
   }
-
 }

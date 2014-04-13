@@ -422,8 +422,8 @@ function menu_secondary_menu() {
  *   Returns menu name, if exist
  */
 function _menu_get_links_source($name, $default) {
-  $config = \Drupal::config('menu.settings');
-  return \Drupal::moduleHandler()->moduleExists('menu') ? $config->get($name) : $default;
+  $config = \Drupal::config('menu_ui.settings');
+  return \Drupal::moduleHandler()->moduleExists('menu_ui') ? $config->get($name) : $default;
 }
 
 /**

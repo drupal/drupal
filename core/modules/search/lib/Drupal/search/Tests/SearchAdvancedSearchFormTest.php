@@ -51,11 +51,11 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
     $this->assertNotEqual($dummy_title, $this->node->label(), "Dummy title doesn't equal node title.");
 
     // Search for the dummy title with a GET query.
-    $this->drupalGet('search/node/' . $dummy_title);
+    $this->drupalGet('search/node', array('query' => array('keys' => $dummy_title)));
     $this->assertNoText($this->node->label(), 'Basic page node is not found with dummy title.');
 
     // Search for the title of the node with a GET query.
-    $this->drupalGet('search/node/' . $this->node->label());
+    $this->drupalGet('search/node', array('query' => array('keys' => $this->node->label())));
     $this->assertText($this->node->label(), 'Basic page node is found with GET query.');
 
     // Search for the title of the node with a POST query.

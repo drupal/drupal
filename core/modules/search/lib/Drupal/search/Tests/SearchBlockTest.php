@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchBlockTest.
+ * Contains \Drupal\search\Tests\SearchBlockTest.
  */
 
 namespace Drupal\search\Tests;
@@ -51,15 +51,15 @@ class SearchBlockTest extends SearchTestBase {
     $this->assertText($block->label(), 'Block title was found.');
 
     // Test a normal search via the block form, from the front page.
-    $terms = array('search_block_form' => 'test');
-    $this->drupalPostForm('', $terms, t('Search'));
+    $terms = array('keys' => 'test');
+    $this->submitGetForm('', $terms, t('Search'));
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
     // Test a search from the block on a 404 page.
     $this->drupalGet('foo');
     $this->assertResponse(404);
-    $this->drupalPostForm(NULL, $terms, t('Search'));
+    $this->submitGetForm(NULL, $terms, t('Search'));
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
@@ -67,20 +67,23 @@ class SearchBlockTest extends SearchTestBase {
     $visibility['path']['pages'] = 'search';
     $block->set('visibility', $visibility);
 
-    $this->drupalPostForm('', $terms, t('Search'));
+    $this->submitGetForm('', $terms, t('Search'));
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
-    // Confirm that the user is redirected to the search page.
+    // Confirm that the form submits to the default search page.
+    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    $search_page_repository = \Drupal::service('search.search_page_repository');
+    $entity_id = $search_page_repository->getDefaultSearchPage();
     $this->assertEqual(
       $this->getUrl(),
-      url('search/node/' . $terms['search_block_form'], array('absolute' => TRUE)),
-      'Redirected to correct url.'
+      \Drupal::url('search.view_' . $entity_id, array(), array('query' => array('keys' => $terms['keys']), 'absolute' => TRUE)),
+      'Submitted to correct url.'
     );
 
     // Test an empty search via the block form, from the front page.
-    $terms = array('search_block_form' => '');
-    $this->drupalPostForm('', $terms, t('Search'));
+    $terms = array('keys' => '');
+    $this->submitGetForm('', $terms, t('Search'));
     $this->assertResponse(200);
     $this->assertText('Please enter some keywords');
 
@@ -88,9 +91,24 @@ class SearchBlockTest extends SearchTestBase {
     // submitted empty.
     $this->assertEqual(
       $this->getUrl(),
-      url('search/node/', array('absolute' => TRUE)),
+      \Drupal::url('search.view_' . $entity_id, array(), array('query' => array('keys' => ''), 'absolute' => TRUE)),
       'Redirected to correct url.'
     );
+
+    // Test that after entering a too-short keyword in the form, you can then
+    // search again with a longer keyword. First test using the block form.
+    $this->submitGetForm('node', array('keys' => $this->randomName(1)), t('Search'));
+    $this->assertText('You must include at least one positive keyword', 'Keyword message is displayed when searching for short word');
+    $this->assertNoText(t('Please enter some keywords'), 'With short word entered, no keywords message is not displayed');
+    $this->submitGetForm(NULL, array('keys' => $this->randomName()), t('Search'), 'search-block-form');
+    $this->assertNoText('You must include at least one positive keyword', 'Keyword message is not displayed when searching for long word after short word search');
+
+    // Same test again, using the search page form for the second search this
+    // time.
+    $this->submitGetForm('node', array('keys' => $this->randomName(1)), t('Search'));
+    $this->drupalPostForm(NULL, array('keys' => $this->randomName()), t('Search'), array(), array(), 'search-form');
+    $this->assertNoText('You must include at least one positive keyword', 'Keyword message is not displayed when searching for long word after short word search');
+
   }
 
 }

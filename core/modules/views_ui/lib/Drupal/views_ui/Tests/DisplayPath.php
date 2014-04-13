@@ -59,7 +59,7 @@ class DisplayPath extends UITestBase {
    * Tests the menu and tab option form.
    */
   public function testMenuOptions() {
-    $this->container->get('module_handler')->install(array('menu'));
+    $this->container->get('module_handler')->install(array('menu_ui'));
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.

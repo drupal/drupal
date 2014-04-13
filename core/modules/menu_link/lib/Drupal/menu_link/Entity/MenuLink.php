@@ -111,7 +111,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    *
    * @var string
    */
-  public $module = 'menu';
+  public $module = 'menu_ui';
 
   /**
    * A flag for whether the link should be rendered in menus.

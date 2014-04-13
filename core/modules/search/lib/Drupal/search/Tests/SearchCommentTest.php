@@ -94,18 +94,18 @@ class SearchCommentTest extends SearchTestBase {
 
     // Search for the comment subject.
     $edit = array(
-      'search_block_form' => "'" . $edit_comment['subject'] . "'",
+      'keys' => "'" . $edit_comment['subject'] . "'",
     );
-    $this->drupalPostForm('', $edit, t('Search'));
+    $this->submitGetForm('', $edit, t('Search'));
     $node2 = node_load($node->id(), TRUE);
     $this->assertText($node2->label(), 'Node found in search results.');
     $this->assertText($edit_comment['subject'], 'Comment subject found in search results.');
 
     // Search for the comment body.
     $edit = array(
-      'search_block_form' => "'" . $comment_body . "'",
+      'keys' => "'" . $comment_body . "'",
     );
-    $this->drupalPostForm('', $edit, t('Search'));
+    $this->submitGetForm('', $edit, t('Search'));
     $this->assertText($node2->label(), 'Node found in search results.');
 
     // Verify that comment is rendered using proper format.
@@ -123,7 +123,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->cronRun();
 
     // Search for $title.
-    $this->drupalPostForm('', $edit, t('Search'));
+    $this->submitGetForm('', $edit, t('Search'));
     $this->assertNoText($comment_body, 'Comment body text not found in search results.');
   }
 
@@ -209,9 +209,9 @@ class SearchCommentTest extends SearchTestBase {
 
     // Search for the comment subject.
     $edit = array(
-      'search_block_form' => "'" . $this->comment_subject . "'",
+      'keys' => "'" . $this->comment_subject . "'",
     );
-    $this->drupalPostForm('', $edit, t('Search'));
+    $this->submitGetForm('', $edit, t('Search'));
 
     if ($assume_access) {
       $expected_node_result = $this->assertText($this->node->label());

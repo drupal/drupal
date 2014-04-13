@@ -101,11 +101,21 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
     return $built;
   }
 
- /**
+  /**
    * {@inheritdoc}
    */
   public function searchFormAlter(array &$form, array &$form_state) {
     // Empty default implementation.
   }
 
+  /*
+   * {@inheritdoc}
+   */
+  public function buildSearchUrlQuery($form_state) {
+    // Grab the keywords entered in the form and put them as 'keys' in the GET.
+    $keys = trim($form_state['values']['keys']);
+    $query = array('keys' => $keys);
+
+    return $query;
+  }
 }

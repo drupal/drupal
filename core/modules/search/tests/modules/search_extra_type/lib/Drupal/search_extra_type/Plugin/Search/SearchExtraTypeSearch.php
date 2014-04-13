@@ -10,7 +10,7 @@ namespace Drupal\search_extra_type\Plugin\Search;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 
 /**
- * Executes a keyword search against the search index.
+ * Executes a dummy keyword search.
  *
  * @SearchPlugin(
  *   id = "search_extra_type_search",
@@ -33,7 +33,7 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
    * Verifies if the given parameters are valid enough to execute a search for.
    *
    * @return bool
-   *   A true or false depending on the implementation.
+   *   TRUE if there are keywords or search conditions in the query.
    */
   public function isSearchExecutable() {
     return (bool) ($this->keywords || !empty($this->searchParameters['search_conditions']));

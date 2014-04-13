@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchConfigSettingsFormTest.
+ * Contains \Drupal\search\Tests\SearchConfigSettingsFormTest.
  */
 
 namespace Drupal\search\Tests;
@@ -150,7 +150,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
 
       // Run a search from the correct search URL.
       $info = $plugin_info[$entity_id];
-      $this->drupalGet('search/' . $entity->getPath() . '/' . $info['keys']);
+      $this->drupalGet('search/' . $entity->getPath(), array('query' => array('keys' => $info['keys'])));
       $this->assertResponse(200);
       $this->assertNoText('no results', $entity->label() . ' search found results');
       $this->assertText($info['text'], 'Correct search text found');
@@ -165,12 +165,11 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
 
       // Run a search from the search block on the node page. Verify you get
       // to this plugin's search results page.
-      $terms = array('search_block_form' => $info['keys']);
-      $this->drupalPostForm('node', $terms, t('Search'));
-      $this->assertEqual(
-        $this->getURL(),
-        \Drupal::url('search.view_' . $entity->id(), array('keys' => $info['keys']), array('absolute' => TRUE)),
-        'Block redirected to right search page');
+      $terms = array('keys' => $info['keys']);
+      $this->submitGetForm('node', $terms, t('Search'));
+      $current = $this->getURL();
+      $expected = \Drupal::url('search.view_' . $entity->id(), array(), array('query' => array('keys' => $info['keys']), 'absolute' => TRUE));
+      $this->assertEqual( $current, $expected, 'Block redirected to right search page');
 
       // Try an invalid search path, which should 404.
       $this->drupalGet('search/not_a_plugin_path');
@@ -187,8 +186,13 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Set the node search as default.
     $this->drupalGet('admin/config/search/settings/manage/node_search/set-default');
 
-    foreach (array('search/node/pizza', 'search/node') as $path) {
-      $this->drupalGet($path);
+    $paths = array(
+      'search/node' => array('query' => array('keys' => 'pizza')),
+      'search/node' => array(),
+    );
+
+    foreach ($paths as $path => $options) {
+      $this->drupalGet($path, $options);
       foreach ($plugins as $entity_id) {
         $label = $entities[$entity_id]->label();
         $this->assertText($label, format_string('%label search tab is shown', array('%label' => $label)));

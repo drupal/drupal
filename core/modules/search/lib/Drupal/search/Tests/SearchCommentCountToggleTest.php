@@ -82,11 +82,11 @@ class SearchCommentCountToggleTest extends SearchTestBase {
   function testSearchCommentCountToggle() {
     // Search for the nodes by string in the node body.
     $edit = array(
-      'search_block_form' => "'SearchCommentToggleTestCase'",
+      'keys' => "'SearchCommentToggleTestCase'",
     );
 
     // Test comment count display for nodes with comment status set to Open
-    $this->drupalPostForm('', $edit, t('Search'));
+    $this->submitGetForm('', $edit, t('Search'));
     $this->assertText(t('0 comments'), 'Empty comment count displays for nodes with comment status set to Open');
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Open');
 
@@ -96,7 +96,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->searchable_nodes['1 comment']->set('comment', CommentItemInterface::CLOSED);
     $this->searchable_nodes['1 comment']->save();
 
-    $this->drupalPostForm('', $edit, t('Search'));
+    $this->submitGetForm('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Closed');
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Closed');
 
@@ -106,7 +106,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->searchable_nodes['1 comment']->set('comment', CommentItemInterface::HIDDEN);
     $this->searchable_nodes['1 comment']->save();
 
-    $this->drupalPostForm('', $edit, t('Search'));
+    $this->submitGetForm('', $edit, t('Search'));
     $this->assertNoText(t('0 comments'), 'Empty comment count does not display for nodes with comment status set to Hidden');
     $this->assertNoText(t('1 comment'), 'Non-empty comment count does not display for nodes with comment status set to Hidden');
   }
