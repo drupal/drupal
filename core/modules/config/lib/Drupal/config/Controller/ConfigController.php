@@ -12,6 +12,7 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\system\FileDownloadController;
+use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -81,13 +82,15 @@ class ConfigController implements ContainerInjectionInterface {
    * Downloads a tarball of the site configuration.
    */
   public function downloadExport() {
+    file_unmanaged_delete(file_directory_temp() . '/config.tar.gz');
+
+    $dumper = new Dumper();
+    $dumper->setIndentation(2);
+
     $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
-    $config_dir = config_get_config_directory();
-    $config_files = array();
-    foreach (\Drupal::service('config.storage')->listAll() as $config_name) {
-      $config_files[] = $config_dir . '/' . $config_name . '.yml';
+    foreach (\Drupal::service('config.storage')->listAll() as $name) {
+      $archiver->addString("$name.yml", $dumper->dump(\Drupal::config($name)->get(), PHP_INT_MAX, 0, TRUE));
     }
-    $archiver->createModify($config_files, '', config_get_config_directory());
 
     $request = new Request(array('file' => 'config.tar.gz'));
     return $this->fileDownloadController->download($request, 'temporary');

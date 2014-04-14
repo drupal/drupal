@@ -74,16 +74,9 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [discovery]
-  config.cachedstorage.storage:
-    class: Drupal\Core\Config\FileStorage
-    factory_class: Drupal\Core\Config\FileStorageFactory
-    factory_method: getActive
   config.manager:
     class: Drupal\Core\Config\ConfigManager
     arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage']
-  config.storage:
-    class: Drupal\Core\Config\CachedStorage
-    arguments: ['@config.cachedstorage.storage', '@cache.config']
   config.factory:
     class: Drupal\Core\Config\ConfigFactory
     tags:
@@ -92,6 +85,15 @@ services:
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
     arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher']
+  config.storage:
+    alias: config.storage.active
+  config.storage.active:
+    class: Drupal\Core\Config\DatabaseStorage
+    arguments: ['@database', 'config']
+  config.storage.file:
+    class: Drupal\Core\Config\FileStorage
+    factory_class: Drupal\Core\Config\FileStorageFactory
+    factory_method: getActive
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
     factory_class: Drupal\Core\Config\FileStorageFactory

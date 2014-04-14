@@ -438,7 +438,7 @@ function install_begin_request(&$install_state) {
   // Ensure that the active configuration directory is empty before installation
   // starts.
   if ($install_state['config_verified'] && empty($task)) {
-    $config = glob(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY) . '/*.' . FileStorage::getFileExtension());
+    $config = \Drupal::service('config.storage')->listAll();
     if (!empty($config)) {
       $task = NULL;
       throw new AlreadyInstalledException($container->get('string_translation'));

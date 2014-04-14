@@ -132,6 +132,27 @@ abstract class StorableConfigBase extends ConfigBase {
   }
 
   /**
+   * Validate the values are allowed data types.
+   *
+   * @throws UnsupportedDataTypeConfigException
+   *   If there is any invalid value.
+   */
+  protected function validateValue($key, $value) {
+    // Minimal validation. Should not try to serialize resources or non-arrays.
+    if (is_array($value)) {
+      foreach ($value as $nested_value_key => $nested_value) {
+        $this->validateValue($key . '.' . $nested_value_key, $nested_value);
+      }
+    }
+    elseif ($value !== NULL && !is_scalar($value)) {
+      throw new UnsupportedDataTypeConfigException(String::format('Invalid data type for config element @name:@key', array(
+        '@name' => $this->getName(),
+        '@key' => $key,
+      )));
+    }
+  }
+
+  /**
    * Casts the value to correct data type using the configuration schema.
    *
    * @param string $key

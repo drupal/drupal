@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\Storage\DatabaseStorageTest.
+ * Contains \Drupal\config\Tests\Storage\DatabaseStorageTest.
  */
 
 namespace Drupal\config\Tests\Storage;
@@ -23,28 +23,6 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
 
   function setUp() {
     parent::setUp();
-
-    $schema['config'] = array(
-      'description' => 'Database storage for the configuration system.',
-      'fields' => array(
-        'name' => array(
-          'description' => 'The identifier for the configuration entry, such as module.example (the name of the file, minus the file extension).',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'data' => array(
-          'description' => 'The raw data for this configuration entry.',
-          'type' => 'blob',
-          'not null' => TRUE,
-          'size' => 'big',
-          'translatable' => TRUE,
-        ),
-      ),
-      'primary key' => array('name'),
-    );
-    db_create_table('config', $schema['config']);
 
     $this->storage = new DatabaseStorage($this->container->get('database'), 'config');
     $this->invalidStorage = new DatabaseStorage($this->container->get('database'), 'invalid');

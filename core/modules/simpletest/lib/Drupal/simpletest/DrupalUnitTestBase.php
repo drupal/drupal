@@ -229,8 +229,9 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     $container->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
 
     $container
-      ->register('config.storage', 'Drupal\Core\Config\FileStorage')
-      ->addArgument($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
+      ->register('config.storage.active', 'Drupal\Core\Config\DatabaseStorage')
+      ->addArgument(Database::getConnection())
+      ->addArgument('config');
 
     $this->settingsSet('keyvalue_default', 'keyvalue.memory');
     $container->set('keyvalue.memory', $this->keyValueFactory);

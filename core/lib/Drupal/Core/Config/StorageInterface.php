@@ -41,7 +41,7 @@ interface StorageInterface {
   /**
    * Reads configuration data from the storage.
    *
-   * @param array $name
+   * @param array $names
    *   List of names of the configuration objects to load.
    *
    * @return array
@@ -60,6 +60,9 @@ interface StorageInterface {
    *
    * @return bool
    *   TRUE on success, FALSE in case of an error.
+   *
+   * @throws \Drupal\Core\Config\StorageException
+   *   If the back-end storage does not exist and cannot be created.
    */
   public function write($name, array $data);
 

@@ -28,11 +28,11 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
       $container
         ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
 
-      // Prevent config from accessing {cache_config}.
-      // @see $conf['cache_classes'], update_prepare_d8_bootstrap()
-      $container
-        ->register('config.storage', 'Drupal\Core\Config\FileStorage')
-        ->addArgument(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY));
+      // Prevent config from being accessed via a cache wrapper by removing
+      // any existing definition and setting an alias to the actual storage.
+      $container->removeDefinition('config.storage');
+      $container->setAlias('config.storage', 'config.storage.active');
+
       $container->register('module_handler', 'Drupal\Core\Extension\UpdateModuleHandler')
         ->addArgument('%container.modules%');
       $container

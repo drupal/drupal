@@ -69,6 +69,18 @@ class FileStorage implements StorageInterface {
   }
 
   /**
+   * Check if the directory exists and create it if not.
+   */
+  protected function ensureStorage() {
+    $success = file_prepare_directory($this->directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $success = $success && file_save_htaccess($this->directory, TRUE, TRUE);
+    if (!$success) {
+      throw new StorageException("Failed to create config directory {$this->directory}");
+    }
+    return $this;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::exists().
    */
   public function exists($name) {
@@ -105,21 +117,23 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::write().
-   *
-   * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
-   * @throws \Drupal\Core\Config\StorageException
+   * {@inheritdoc}
    */
   public function write($name, array $data) {
     try {
       $data = $this->encode($data);
     }
     catch(DumpException $e) {
-      throw new UnsupportedDataTypeConfigException(String::format('Invalid data type for used in config: @name', array('@name' => $name)));
+      throw new StorageException(String::format('Invalid data type for used in config: @name', array('@name' => $name)));
     }
 
     $target = $this->getFilePath($name);
     $status = @file_put_contents($target, $data);
+    if ($status === FALSE) {
+      // Try to make sure the directory exists and try witing again.
+      $this->ensureStorage();
+      $status = @file_put_contents($target, $data);
+    }
     if ($status === FALSE) {
       throw new StorageException('Failed to write configuration file: ' . $this->getFilePath($name));
     }
@@ -213,7 +227,7 @@ class FileStorage implements StorageInterface {
     // glob() silently ignores the error of a non-existing search directory,
     // even with the GLOB_ERR flag.
     if (!file_exists($this->directory)) {
-      throw new StorageException($this->directory . '/ not found.');
+      return array();
     }
     $extension = '.' . static::getFileExtension();
     // \GlobIterator on Windows requires an absolute path.

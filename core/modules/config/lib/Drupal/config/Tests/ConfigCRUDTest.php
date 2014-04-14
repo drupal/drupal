@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 
 /**
@@ -192,10 +193,10 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
    */
   public function testDataTypes() {
     \Drupal::moduleHandler()->install(array('config_test'));
-    $storage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
+    $storage = new DatabaseStorage($this->container->get('database'), 'config');
     $name = 'config_test.types';
     $config = $this->container->get('config.factory')->get($name);
-    $original_content = file_get_contents($storage->getFilePath($name));
+    $original_content = file_get_contents(drupal_get_path('module', 'config_test') . "/config/$name.yml");
     $this->verbose('<pre>' . $original_content . "\n" . var_export($storage->read($name), TRUE));
 
     // Verify variable data types are intact.
@@ -220,7 +221,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get(), $data);
     // Assert the data against the file storage.
     $this->assertIdentical($storage->read($name), $data);
-    $this->verbose('<pre>' . file_get_contents($storage->getFilePath($name)) . var_export($storage->read($name), TRUE));
+    $this->verbose('<pre>' . $name . var_export($storage->read($name), TRUE));
 
     // Set data using config::setData().
     $config->setData($data)->save();

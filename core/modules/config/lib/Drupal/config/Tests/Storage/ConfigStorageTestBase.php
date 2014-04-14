@@ -95,6 +95,10 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
     $result = $this->invalidStorage->read($name);
     $this->assertIdentical($result, FALSE);
 
+    // Listing on a non-existing storage bin returns an empty array.
+    $result = $this->invalidStorage->listAll();
+    $this->assertIdentical($result, array());
+
     // Deleting all names with prefix deletes the appropriate data and returns
     // TRUE.
     $files = array(
@@ -111,15 +115,6 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
     $this->assertIdentical($result, TRUE);
     $this->assertIdentical($names, array());
 
-    // Writing to a non-existing storage bin throws an exception.
-    try {
-      $this->invalidStorage->write($name, array('foo' => 'bar'));
-      $this->fail('Exception not thrown upon writing to a non-existing storage bin.');
-    }
-    catch (\Exception $e) {
-      $class = get_class($e);
-      $this->pass($class . ' thrown upon writing to a non-existing storage bin.');
-    }
 
     // Deleting from a non-existing storage bin throws an exception.
     try {
@@ -129,16 +124,6 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
     catch (\Exception $e) {
       $class = get_class($e);
       $this->pass($class . ' thrown upon deleting from a non-existing storage bin.');
-    }
-
-    // Listing on a non-existing storage bin throws an exception.
-    try {
-      $this->invalidStorage->listAll();
-      $this->fail('Exception not thrown upon listing from a non-existing storage bin.');
-    }
-    catch (\Exception $e) {
-      $class = get_class($e);
-      $this->pass($class . ' thrown upon listing from a non-existing storage bin.');
     }
 
     // Test renaming an object that does not exist throws an exception.
@@ -159,6 +144,10 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
       $this->pass($class . ' thrown upon renaming a nonexistent storage bin.');
     }
 
+    // Writing to a non-existing storage bin creates the bin.
+    $this->invalidStorage->write($name, array('foo' => 'bar'));
+    $result = $this->invalidStorage->read($name);
+    $this->assertIdentical($result, array('foo' => 'bar'));
   }
 
   /**

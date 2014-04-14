@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\Config.
+ * Contains \Drupal\Core\Config\Config.
  */
 
 namespace Drupal\Core\Config;
@@ -213,6 +213,11 @@ class Config extends StorableConfigBase {
       $this->schemaWrapper = NULL;
       foreach ($this->data as $key => $value) {
         $this->data[$key] = $this->castValue($key, $value);
+      }
+    }
+    else {
+      foreach ($this->data as $key => $value) {
+        $this->validateValue($key, $value);
       }
     }
 

@@ -368,7 +368,6 @@ class ConfigTranslationUiTest extends WebTestBase {
    */
   public function testDateFormatTranslation() {
     $this->drupalLogin($this->admin_user);
-    $file_storage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
 
     $this->drupalGet('admin/config/regional/date-time');
 

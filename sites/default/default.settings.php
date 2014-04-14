@@ -601,6 +601,19 @@ ini_set('session.cookie_lifetime', 2000000);
 # $cookie_domain = '.example.com';
 
 /**
+ * Active configuration settings.
+ *
+ * By default, the active configuration is stored in the database in the
+ * {config} table. To install Drupal with a different active configuration
+ * storage, you need to override the setting here, in addition to overriding
+ * the config.storage.active service definition in a module or profile.
+ *
+ * The 'bootstrap_config_storage' setting needs to be a callable that returns
+ * core.services.yml.
+ */
+ # $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
+
+/**
  * Configuration overrides.
  *
  * To globally override specific configuration values for this site,

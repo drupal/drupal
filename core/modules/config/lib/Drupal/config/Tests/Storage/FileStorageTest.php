@@ -29,6 +29,7 @@ class FileStorageTest extends ConfigStorageTestBase {
 
     // FileStorage::listAll() requires other configuration data to exist.
     $this->storage->write('system.performance', \Drupal::config('system.performance')->get());
+    $this->storage->write('core.extension', array('module' => array()));
   }
 
   protected function read($name) {
