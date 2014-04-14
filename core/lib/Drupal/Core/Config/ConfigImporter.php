@@ -135,7 +135,11 @@ class ConfigImporter extends DependencySerialization {
   protected $processedSystemTheme = FALSE;
 
   /**
-   * List of errors that were logged during a config import.
+   * A log of any errors encountered.
+   *
+   * If errors are logged during the validation event the configuration
+   * synchronization will not occur. If errors occur during an import then best
+   * efforts are made to complete the synchronization.
    *
    * @var array
    */
@@ -195,7 +199,7 @@ class ConfigImporter extends DependencySerialization {
    * @param string $message
    *   The message to log.
    */
-  protected function logError($message) {
+  public function logError($message) {
     $this->errors[] = $message;
   }
 
@@ -658,14 +662,19 @@ class ConfigImporter extends DependencySerialization {
    *
    * Events should throw a \Drupal\Core\Config\ConfigImporterException to
    * prevent an import from occurring.
+   *
+   * @throws \Drupal\Core\Config\ConfigImporterException
+   *   Exception thrown if the validate event logged any errors.
    */
   public function validate() {
     if (!$this->validated) {
-      if (!$this->storageComparer->validateSiteUuid()) {
-        throw new ConfigImporterException('Site UUID in source storage does not match the target storage.');
-      }
       $this->eventDispatcher->dispatch(ConfigEvents::IMPORT_VALIDATE, new ConfigImporterEvent($this));
-      $this->validated = TRUE;
+      if (count($this->getErrors())) {
+        throw new ConfigImporterException('There were errors validating the config synchronization.');
+      }
+      else {
+        $this->validated = TRUE;
+      }
     }
     return $this;
   }

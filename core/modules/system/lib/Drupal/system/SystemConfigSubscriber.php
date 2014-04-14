@@ -7,37 +7,32 @@
 
 namespace Drupal\system;
 
-use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
-use Drupal\Core\Config\ConfigImporterException;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
+use Drupal\Core\Config\StorageDispatcher;
 
 /**
  * System Config subscriber.
  */
-class SystemConfigSubscriber implements EventSubscriberInterface {
+class SystemConfigSubscriber extends ConfigImportValidateEventSubscriberBase {
 
   /**
-   * {@inheritdoc}
-   */
-  static function getSubscribedEvents() {
-    $events[ConfigEvents::IMPORT_VALIDATE][] = array('onConfigImporterValidate', 20);
-    return $events;
-  }
-
-  /**
-   * Checks that the import source storage is not empty.
+   * Checks that the configuration synchronization is valid.
+   *
+   * This event listener implements two checks:
+   *   - prevents deleting all configuration.
+   *   - checks that the system.site:uuid's in the source and target match.
    *
    * @param ConfigImporterEvent $event
    *   The config import event.
-   *
-   * @throws \Drupal\Core\Config\ConfigImporterException
-   *   Exception thrown if the source storage is empty.
    */
   public function onConfigImporterValidate(ConfigImporterEvent $event) {
     $importList = $event->getConfigImporter()->getStorageComparer()->getSourceStorage()->listAll();
     if (empty($importList)) {
-      throw new ConfigImporterException('This import is empty and if applied would delete all of your configuration, so has been rejected.');
+      $event->getConfigImporter()->logError($this->t('This import is empty and if applied would delete all of your configuration, so has been rejected.'));
+    }
+    if (!$event->getConfigImporter()->getStorageComparer()->validateSiteUuid()) {
+      $event->getConfigImporter()->logError($this->t('Site UUID in source storage does not match the target storage.'));
     }
   }
 }

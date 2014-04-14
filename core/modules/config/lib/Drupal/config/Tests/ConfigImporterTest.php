@@ -114,7 +114,10 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       $this->assertFalse(FALSE, 'ConfigImporterException not thrown, invalid import was not stopped due to mis-matching site UUID.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertEqual($e->getMessage(), 'Site UUID in source storage does not match the target storage.');
+      $this->assertEqual($e->getMessage(), 'There were errors validating the config synchronization.');
+      $error_log = $this->configImporter->getErrors();
+      $expected = array('Site UUID in source storage does not match the target storage.');
+      $this->assertEqual($expected, $error_log);
     }
   }
 

@@ -306,6 +306,31 @@ class ConfigImportUITest extends WebTestBase {
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
   }
 
+  /**
+   * Tests that mutliple validation errors are listed on the page.
+   */
+  public function testImportValidation() {
+    // Set state value so that
+    // \Drupal\config_import_test\EventSubscriber::onConfigImportValidate() logs
+    // validation errors.
+    \Drupal::state()->set('config_import_test.config_import_validate_fail', TRUE);
+    // Ensure there is something to import.
+    $new_site_name = 'Config import test ' . $this->randomString();
+    $this->prepareSiteNameUpdate($new_site_name);
+
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertNoText(t('There are no configuration changes.'));
+    $this->drupalPostForm(NULL, array(), t('Import all'));
+
+    // Verify that the validation messages appear.
+    $this->assertText('The configuration synchronization failed validation.');
+    $this->assertText('Config import validate error 1.');
+    $this->assertText('Config import validate error 2.');
+
+    // Verify site name has not changed.
+    $this->assertNotEqual($new_site_name, \Drupal::config('system.site')->get('name'));
+  }
+
   function prepareSiteNameUpdate($new_site_name) {
     $staging = $this->container->get('config.storage.staging');
     // Create updated configuration object.

@@ -8,6 +8,7 @@
 namespace Drupal\config\Form;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -257,21 +258,30 @@ class ConfigSync extends FormBase {
       drupal_set_message($this->t('Another request may be synchronizing configuration already.'));
     }
     else{
-      $sync_steps = $config_importer->initialize();
-      $batch = array(
-        'operations' => array(),
-        'finished' => array(get_class($this), 'finishBatch'),
-        'title' => t('Synchronizing configuration'),
-        'init_message' => t('Starting configuration synchronization.'),
-        'progress_message' => t('Completed @current step of @total.'),
-        'error_message' => t('Configuration synchronization has encountered an error.'),
-        'file' => drupal_get_path('module', 'config') . '/config.admin.inc',
-      );
-      foreach ($sync_steps as $sync_step) {
-        $batch['operations'][] = array(array(get_class($this), 'processBatch'), array($config_importer, $sync_step));
-      }
+      try {
+        $sync_steps = $config_importer->initialize();
+        $batch = array(
+          'operations' => array(),
+          'finished' => array(get_class($this), 'finishBatch'),
+          'title' => t('Synchronizing configuration'),
+          'init_message' => t('Starting configuration synchronization.'),
+          'progress_message' => t('Completed @current step of @total.'),
+          'error_message' => t('Configuration synchronization has encountered an error.'),
+          'file' => drupal_get_path('module', 'config') . '/config.admin.inc',
+        );
+        foreach ($sync_steps as $sync_step) {
+          $batch['operations'][] = array(array(get_class($this), 'processBatch'), array($config_importer, $sync_step));
+        }
 
-      batch_set($batch);
+        batch_set($batch);
+      }
+      catch (ConfigImporterException $e) {
+        // There are validation errors.
+        drupal_set_message($this->t('The configuration synchronization failed validation.'));
+        foreach ($config_importer->getErrors() as $message) {
+          drupal_set_message($message, 'error');
+        }
+      }
     }
   }
 
