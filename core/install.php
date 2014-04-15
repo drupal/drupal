@@ -8,8 +8,6 @@
 // Change the directory to the Drupal root.
 chdir('..');
 
-require_once __DIR__ . '/vendor/autoload.php';
-
 /**
  * Global flag to indicate the site is in installation mode.
  *
@@ -29,5 +27,6 @@ if (version_compare(PHP_VERSION, '5.4.2') < 0) {
 }
 
 // Start the installer.
+require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/install.core.inc';
 install_drupal();
