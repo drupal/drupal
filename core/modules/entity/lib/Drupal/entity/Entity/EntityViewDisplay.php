@@ -231,6 +231,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         foreach ($entities as $key => $entity) {
           $items = $entity->get($field_name);
           $build[$key][$field_name] = $formatter->view($items);
+          $build[$key][$field_name]['#access'] = $items->access('view');
         }
       }
     }

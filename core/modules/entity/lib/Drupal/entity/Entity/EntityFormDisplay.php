@@ -157,6 +157,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
       if ($widget = $this->getRenderer($name)) {
         $items->filterEmptyItems();
         $form[$name] = $widget->form($items, $form, $form_state);
+        $form[$name]['#access'] = $items->access('edit');
 
         // Assign the correct weight. This duplicates the reordering done in
         // processForm(), but is needed for other forms calling this method
