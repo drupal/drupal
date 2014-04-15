@@ -289,12 +289,10 @@ jquery:
     assets/vendor/jquery/jquery.js: { weight: -20 }
 
 jquery.cookie:
-  # @todo jquery.cookie.js was never supposed to be distributed with jQuery UI.
-  # @see https://drupal.org/node/2161217
   remote: https://github.com/carhartl/jquery-cookie
-  version: v1.0
+  version: v1.4.0
   js:
-    assets/vendor/jquery.ui/external/jquery.cookie.js: {}
+    assets/vendor/jquery.cookie/jquery.cookie.js: {}
   dependencies:
     - core/jquery
 
