@@ -16,7 +16,7 @@ services:
     class: Drupal\hal\Normalizer\FileEntityNormalizer
     tags:
       - { name: normalizer, priority: 20 }
-    arguments: ['@entity.manager', '@http_default_client', '@rest.link_manager', '@module_handler']
+    arguments: ['@entity.manager', '@http_client', '@rest.link_manager', '@module_handler']
   serializer.normalizer.entity.hal:
     class: Drupal\hal\Normalizer\ContentEntityNormalizer
     arguments: ['@rest.link_manager', '@entity.manager', '@module_handler']

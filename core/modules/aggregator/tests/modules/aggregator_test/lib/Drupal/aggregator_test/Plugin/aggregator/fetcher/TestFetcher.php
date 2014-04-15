@@ -14,7 +14,7 @@ use Drupal\aggregator\FeedInterface;
 /**
  * Defines a test fetcher implementation.
  *
- * Uses http_default_client class to download the feed.
+ * Uses http_client class to download the feed.
  *
  * @AggregatorFetcher(
  *   id = "aggregator_test_fetcher",

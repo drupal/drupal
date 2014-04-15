@@ -26,6 +26,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterStringTranslatorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterBreadcrumbBuilderPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAuthenticationPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
+use Drupal\Core\Http\HttpClientSubscriberPass;
 use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Theme\ThemeNegotiatorPass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -92,6 +93,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addCompilerPass(new RegisterTwigExtensionsPass());
     // Register plugin managers.
     $container->addCompilerPass(new PluginManagerPass());
+    // Register HTTP client subscribers.
+    $container->addCompilerPass(new HttpClientSubscriberPass());
   }
 
   /**

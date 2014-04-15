@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a default fetcher implementation.
  *
- * Uses the http_default_client service to download the feed.
+ * Uses the http_client service to download the feed.
  *
  * @AggregatorFetcher(
  *   id = "aggregator",
@@ -49,7 +49,7 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('http_default_client')
+      $container->get('http_client')
     );
   }
 

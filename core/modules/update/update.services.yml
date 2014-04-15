@@ -12,4 +12,4 @@ services:
     arguments: ['@config.factory', '@queue', '@update.fetcher', '@state', '@private_key', '@keyvalue', '@keyvalue.expirable']
   update.fetcher:
     class: Drupal\update\UpdateFetcher
-    arguments: ['@config.factory', '@http_default_client']
+    arguments: ['@config.factory', '@http_client']

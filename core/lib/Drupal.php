@@ -349,7 +349,7 @@ class Drupal {
    *   A guzzle http client instance.
    */
   public static function httpClient() {
-    return static::$container->get('http_default_client');
+    return static::$container->get('http_client');
   }
 
   /**

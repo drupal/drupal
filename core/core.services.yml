@@ -159,8 +159,12 @@ services:
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
     arguments: ['@path.alias_storage', '@path.alias_whitelist', '@language_manager']
-  http_default_client:
+  http_client:
     class: Drupal\Core\Http\Client
+  http_client_simpletest_subscriber:
+    class: Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
+    tags:
+      - { name: http_client_subscriber }
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
     arguments: ['@access_check.theme', '@request_stack']

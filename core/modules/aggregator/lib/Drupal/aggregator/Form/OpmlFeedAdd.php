@@ -52,7 +52,7 @@ class OpmlFeedAdd extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager')->getStorage('aggregator_feed'),
-      $container->get('http_default_client')
+      $container->get('http_client')
     );
   }
 

@@ -177,7 +177,7 @@ class DrupalTest extends UnitTestCase {
    * Tests the httpClient() method.
    */
   public function testHttpClient() {
-    $this->setMockContainerService('http_default_client');
+    $this->setMockContainerService('http_client');
     $this->assertNotNull(\Drupal::httpClient());
   }
 
