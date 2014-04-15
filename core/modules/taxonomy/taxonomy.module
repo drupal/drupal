@@ -800,16 +800,12 @@ function taxonomy_build_node_index($node) {
     }
     // Insert index entries for all the node's terms.
     if (!empty($tid_all)) {
-      $query = db_insert('taxonomy_index')->fields(array('nid', 'tid', 'sticky', 'created'));
       foreach ($tid_all as $tid) {
-        $query->values(array(
-          'nid' => $node->id(),
-          'tid' => $tid,
-          'sticky' => $sticky,
-          'created' => $node->getCreatedTime(),
-        ));
+        db_merge('taxonomy_index')
+          ->key(array('nid' => $node->id(), 'tid' => $tid))
+          ->fields(array('sticky' => $sticky, 'created' => $node->getCreatedTime()))
+          ->execute();
       }
-      $query->execute();
     }
   }
 }
