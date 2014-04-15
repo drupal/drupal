@@ -659,16 +659,16 @@ function update_manager_install_form_submit($form, &$form_state) {
     $field = 'project_url';
     $local_cache = update_manager_file_get($form_state['values']['project_url']);
     if (!$local_cache) {
-      form_set_error($field, $form_state, t('Unable to retrieve Drupal project from %url.', array('%url' => $form_state['values']['project_url'])));
+      drupal_set_message(t('Unable to retrieve Drupal project from %url.', array('%url' => $form_state['values']['project_url'])), 'error');
       return;
     }
   }
   elseif ($_FILES['files']['name']['project_upload']) {
     $validators = array('file_validate_extensions' => array(archiver_get_extensions()));
     $field = 'project_upload';
-    if (!($finfo = file_save_upload($field, $form_state, $validators, NULL, 0, FILE_EXISTS_REPLACE))) {
-      // Failed to upload the file. file_save_upload() calls form_set_error() on
-      // failure.
+    if (!($finfo = file_save_upload($field, $validators, NULL, 0, FILE_EXISTS_REPLACE))) {
+      // Failed to upload the file. file_save_upload() calls
+      // drupal_set_message() on failure.
       return;
     }
     $local_cache = $finfo->getFileUri();
@@ -679,13 +679,13 @@ function update_manager_install_form_submit($form, &$form_state) {
     $archive = update_manager_archive_extract($local_cache, $directory);
   }
   catch (Exception $e) {
-    form_set_error($field, $form_state, $e->getMessage());
+    drupal_set_message($e->getMessage(), 'error');
     return;
   }
 
   $files = $archive->listContents();
   if (!$files) {
-    form_set_error($field, $form_state, t('Provided archive contains no files.'));
+    drupal_set_message(t('Provided archive contains no files.'), 'error');
     return;
   }
 
@@ -696,7 +696,7 @@ function update_manager_install_form_submit($form, &$form_state) {
 
   $archive_errors = update_manager_archive_verify($project, $local_cache, $directory);
   if (!empty($archive_errors)) {
-    form_set_error($field, $form_state, array_shift($archive_errors));
+    drupal_set_message(array_shift($archive_errors), 'error');
     // @todo: Fix me in D8: We need a way to set multiple errors on the same
     // form element and have all of them appear!
     if (!empty($archive_errors)) {
@@ -715,7 +715,7 @@ function update_manager_install_form_submit($form, &$form_state) {
     $updater = Updater::factory($project_location);
   }
   catch (Exception $e) {
-    form_set_error($field, $form_state, $e->getMessage());
+    drupal_set_message($e->getMessage(), 'error');
     return;
   }
 
@@ -723,16 +723,16 @@ function update_manager_install_form_submit($form, &$form_state) {
     $project_title = Updater::getProjectTitle($project_location);
   }
   catch (Exception $e) {
-    form_set_error($field, $form_state, $e->getMessage());
+    drupal_set_message($e->getMessage(), 'error');
     return;
   }
 
   if (!$project_title) {
-    form_set_error($field, $form_state, t('Unable to determine %project name.', array('%project' => $project)));
+    drupal_set_message(t('Unable to determine %project name.', array('%project' => $project)), 'error');
   }
 
   if ($updater->isInstalled()) {
-    form_set_error($field, $form_state, t('%project is already installed.', array('%project' => $project_title)));
+    drupal_set_message(t('%project is already installed.', array('%project' => $project_title)), 'error');
     return;
   }
 

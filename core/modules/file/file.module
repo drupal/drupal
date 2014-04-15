@@ -769,7 +769,7 @@ function file_cron() {
  *   - source: Path to the file before it is moved.
  *   - destination: Path to the file after it is moved (same as 'uri').
  */
-function file_save_upload($form_field_name, array &$form_state, $validators = array(), $destination = FALSE, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
+function file_save_upload($form_field_name, $validators = array(), $destination = FALSE, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
   $user = \Drupal::currentUser();
   static $upload_cache;
 
@@ -927,7 +927,7 @@ function file_save_upload($form_field_name, array &$form_state, $validators = ar
       else {
         $message .= ' ' . array_pop($errors);
       }
-      form_set_error($form_field_name, $form_state, $message);
+      drupal_set_message($message, 'error');
       $files[$i] = FALSE;
       continue;
     }
@@ -937,7 +937,7 @@ function file_save_upload($form_field_name, array &$form_state, $validators = ar
     // operations.
     $file->uri = $file->destination;
     if (!drupal_move_uploaded_file($file_info->getRealPath(), $file->getFileUri())) {
-      form_set_error($form_field_name, $form_state, t('File upload error. Could not move uploaded file.'));
+      drupal_set_message(t('File upload error. Could not move uploaded file.'), 'error');
       watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->uri));
       $files[$i] = FALSE;
       continue;
@@ -1496,7 +1496,7 @@ function file_managed_file_save_upload($element, array &$form_state) {
   $files_uploaded = $element['#multiple'] && count(array_filter($file_upload)) > 0;
   $files_uploaded |= !$element['#multiple'] && !empty($file_upload);
   if ($files_uploaded) {
-    if (!$files = file_save_upload($upload_name, $form_state, $element['#upload_validators'], $destination)) {
+    if (!$files = file_save_upload($upload_name, $element['#upload_validators'], $destination)) {
       watchdog('file', 'The file upload failed. %upload', array('%upload' => $upload_name));
       form_set_error($upload_name, $form_state, t('Files in the !name field were unable to be uploaded.', array('!name' => $element['#title'])));
       return array();

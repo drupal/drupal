@@ -115,7 +115,7 @@ function locale_translate_import_form($form, &$form_state) {
  */
 function locale_translate_import_form_submit($form, &$form_state) {
   // Ensure we have the file uploaded.
-  if ($file = file_save_upload('file', $form_state, $form['file']['#upload_validators'], 'translations://', 0)) {
+  if ($file = file_save_upload('file', $form['file']['#upload_validators'], 'translations://', 0)) {
 
     // Add language, if not yet supported.
     $language = \Drupal::languageManager()->getLanguage($form_state['values']['langcode']);
@@ -136,7 +136,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
     batch_set($batch);
   }
   else {
-    form_set_error('file', $form_state, t('File to import not found.'));
+    drupal_set_message(t('File to import not found.'), 'error');
     $form_state['rebuild'] = TRUE;
     return;
   }

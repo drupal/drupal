@@ -86,7 +86,7 @@ class SearchBlockForm extends FormBase {
     // "field is required" because the search keywords field has no title.
     // The error message would also complain about a missing #title field.)
     if ($form_state['values']['search_block_form'] == '') {
-      $this->setFormError('keys', $form_state, $this->t('Please enter some keywords.'));
+      drupal_set_message($this->t('Please enter some keywords.'), 'error');
     }
 
     $form_id = $form['form_id']['#value'];
@@ -99,7 +99,7 @@ class SearchBlockForm extends FormBase {
       );
     }
     else {
-      $this->setFormError('', $form_state, $this->t('Search is currently disabled.'));
+      drupal_set_message($this->t('Search is currently disabled.'), 'error');
     }
   }
 

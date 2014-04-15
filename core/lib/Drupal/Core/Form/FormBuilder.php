@@ -824,17 +824,14 @@ class FormBuilder implements FormBuilderInterface {
         // Stop here and don't run any further validation handlers, because they
         // could invoke non-safe operations which opens the door for CSRF
         // vulnerabilities.
-        $this->validatedForms[$form_id] = TRUE;
+        $this->finalizeValidation($form_id, $form, $form_state);
         return;
       }
     }
 
     // Recursively validate each form element.
     $this->doValidateForm($form, $form_state, $form_id);
-    // After validation, loop through and assign each element its errors.
-    $this->setElementErrorsFromFormState($form, $form_state);
-    // Mark this form as validated.
-    $this->validatedForms[$form_id] = TRUE;
+    $this->finalizeValidation($form_id, $form, $form_state);
 
     // If validation errors are limited then remove any non validated form values,
     // so that only values that passed validation are left for submit callbacks.
@@ -875,6 +872,23 @@ class FormBuilder implements FormBuilderInterface {
       }
       $form_state['values'] = $values;
     }
+  }
+
+  /**
+   * Finalizes validation.
+   *
+   * @param string $form_id
+   *   The unique string identifying the form.
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param array $form_state
+   *   An associative array containing the current state of the form.
+   */
+  protected function finalizeValidation($form_id, &$form, &$form_state) {
+    // After validation, loop through and assign each element its errors.
+    $this->setElementErrorsFromFormState($form, $form_state);
+    // Mark this form as validated.
+    $this->validatedForms[$form_id] = TRUE;
   }
 
   /**

@@ -114,7 +114,7 @@ class OpmlFeedAdd extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $validators = array('file_validate_extensions' => array('opml xml'));
-    if ($file = file_save_upload('upload', $form_state, $validators, FALSE, 0)) {
+    if ($file = file_save_upload('upload', $validators, FALSE, 0)) {
       $data = file_get_contents($file->getFileUri());
     }
     else {
