@@ -143,8 +143,8 @@ class FilterAdminTest extends WebTestBase {
 
     // Verify access permissions to Full HTML format.
     $full_format = entity_load('filter_format', $full);
-    $this->assertTrue($full_format->access('view', $this->admin_user), 'Admin user may use Full HTML.');
-    $this->assertFalse($full_format->access('view', $this->web_user), 'Web user may not use Full HTML.');
+    $this->assertTrue($full_format->access('use', $this->admin_user), 'Admin user may use Full HTML.');
+    $this->assertFalse($full_format->access('use', $this->web_user), 'Web user may not use Full HTML.');
 
     // Add an additional tag.
     $edit = array();

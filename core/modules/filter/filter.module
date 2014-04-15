@@ -162,7 +162,7 @@ function filter_formats(AccountInterface $account = NULL) {
   if (!isset($formats['user'][$account_id])) {
     $formats['user'][$account_id] = array();
     foreach ($formats['all'] as $format) {
-      if ($format->access('view', $account)) {
+      if ($format->access('use', $account)) {
         $formats['user'][$account_id][$format->format] = $format;
       }
     }

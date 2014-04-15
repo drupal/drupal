@@ -6,10 +6,6 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [filter]
-  access_check.filter_disable:
-    class: Drupal\filter\Access\FormatDisableCheck
-    tags:
-      - { name: access_check, applies_to: _filter_disable_format_access }
   plugin.manager.filter:
     class: Drupal\filter\FilterPluginManager
     parent: default_plugin_manager

@@ -126,9 +126,9 @@ class FilterFormatAccessTest extends WebTestBase {
     // Make sure that a regular user only has access to the text formats for
     // which they were granted access.
     $fallback_format = entity_load('filter_format', filter_fallback_format());
-    $this->assertTrue($this->allowed_format->access('view', $this->web_user), 'A regular user has access to a text format they were granted access to.');
-    $this->assertFalse($this->disallowed_format->access('view', $this->web_user), 'A regular user does not have access to a text format they were not granted access to.');
-    $this->assertTrue($fallback_format->access('view', $this->web_user), 'A regular user has access to the fallback format.');
+    $this->assertTrue($this->allowed_format->access('use', $this->web_user), 'A regular user has access to use a text format they were granted access to.');
+    $this->assertFalse($this->disallowed_format->access('use', $this->web_user), 'A regular user does not have access to use a text format they were not granted access to.');
+    $this->assertTrue($fallback_format->access('use', $this->web_user), 'A regular user has access to use the fallback format.');
 
     // Perform similar checks as above, but now against the entire list of
     // available formats for this user.
