@@ -8,8 +8,6 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\locale\SourceString;
-use Drupal\locale\TranslationString;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -173,7 +171,7 @@ class LocaleStringTest extends WebTestBase {
     // Load Spanish translations using string filter.
     $filter_options['filters'] = array('source' => $prefix);
     $translations = $this->storage->getTranslations(array('language' => 'es'), $filter_options);
-    $this->assertEqual(count($strings), 2, 'Found 2 translations using some string filter.');
+    $this->assertEqual(count($translations), 2, 'Found 2 translations using some string filter.');
 
   }
 
@@ -205,7 +203,7 @@ class LocaleStringTest extends WebTestBase {
    * Creates single translation for source string.
    */
   function createTranslation($source, $langcode, $values = array()) {
-    return $this->storage->createTranslation($values += array(
+    return $this->storage->createTranslation($values + array(
       'lid' => $source->lid,
       'language' => $langcode,
       'translation' => $this->randomName(100),
