@@ -19,7 +19,7 @@ class UserCreateTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('image');
+  public static $modules = array('image', 'contact');
 
   public static function getInfo() {
     return array(

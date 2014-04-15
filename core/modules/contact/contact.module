@@ -208,7 +208,9 @@ function contact_form_user_form_alter(&$form, &$form_state) {
     '#weight' => 5,
   );
   $account = $form_state['controller']->getEntity();
-  $account_data = !\Drupal::currentUser()->isAnonymous() ? \Drupal::service('user.data')->get('contact', $account->id(), 'enabled') : NULL;
+  if (!\Drupal::currentUser()->isAnonymous() && $account->id()) {
+    $account_data = \Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
+  }
   $form['contact']['contact'] = array(
     '#type' => 'checkbox',
     '#title' => t('Personal contact form'),
