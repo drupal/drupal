@@ -33,8 +33,6 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
       $container->removeDefinition('config.storage');
       $container->setAlias('config.storage', 'config.storage.active');
 
-      $container->register('module_handler', 'Drupal\Core\Extension\UpdateModuleHandler')
-        ->addArgument('%container.modules%');
       $container
         ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
       $container
