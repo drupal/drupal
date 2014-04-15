@@ -107,6 +107,15 @@ class MemoryBackend implements CacheBackendInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $items = array()) {
+    foreach ($items as $cid => $item) {
+      $this->set($cid, $item['data'], isset($item['expire']) ? $item['expire'] : CacheBackendInterface::CACHE_PERMANENT, isset($item['tags']) ? $item['tags'] : array());
+    }
+  }
+
+  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
   public function delete($cid) {
@@ -196,11 +205,11 @@ class MemoryBackend implements CacheBackendInterface {
     foreach ($tags as $namespace => $values) {
       if (is_array($values)) {
         foreach ($values as $value) {
-          $flat_tags["$namespace:$value"] = "$namespace:$value";
+          $flat_tags[] = "$namespace:$value";
         }
       }
       else {
-        $flat_tags["$namespace:$values"] = "$namespace:$values";
+        $flat_tags[] = "$namespace:$values";
       }
     }
     return $flat_tags;

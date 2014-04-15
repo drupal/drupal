@@ -202,6 +202,78 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $items) {
+    $deleted_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::deletedTags', array());
+    $invalidated_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::invalidatedTags', array());
+
+    // Use a transaction so that the database can write the changes in a single
+    // commit.
+    $transaction = $this->connection->startTransaction();
+
+    try {
+      // Delete all items first so we can do one insert. Rather than mulitple
+      // merge queries.
+      $this->deleteMultiple(array_keys($items));
+
+      $query = $this->connection
+        ->insert($this->bin)
+        ->fields(array('cid', 'data', 'expire', 'created', 'serialized', 'tags', 'checksum_invalidations', 'checksum_deletions'));
+
+      foreach ($items as $cid => $item) {
+        $item += array(
+          'expire' => CacheBackendInterface::CACHE_PERMANENT,
+          'tags' => array(),
+        );
+
+        $flat_tags = $this->flattenTags($item['tags']);
+
+        // Remove tags that were already deleted or invalidated during this
+        // request from the static caches so that another deletion or
+        // invalidation can occur.
+        foreach ($flat_tags as $tag) {
+          if (isset($deleted_tags[$tag])) {
+            unset($deleted_tags[$tag]);
+          }
+          if (isset($invalidated_tags[$tag])) {
+            unset($invalidated_tags[$tag]);
+          }
+        }
+
+        $checksum = $this->checksumTags($flat_tags);
+
+        $fields = array(
+          'cid' => $cid,
+          'expire' => $item['expire'],
+          'created' => REQUEST_TIME,
+          'tags' => implode(' ', $flat_tags),
+          'checksum_invalidations' => $checksum['invalidations'],
+          'checksum_deletions' => $checksum['deletions'],
+        );
+
+        if (!is_string($item['data'])) {
+          $fields['data'] = serialize($item['data']);
+          $fields['serialized'] = 1;
+        }
+        else {
+          $fields['data'] = $item['data'];
+          $fields['serialized'] = 0;
+        }
+
+        $query->values($fields);
+      }
+
+      $query->execute();
+    }
+    catch (\Exception $e) {
+      $transaction->rollback();
+      // @todo Log something here or just re throw?
+      throw $e;
+    }
+  }
+
+  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
   public function delete($cid) {

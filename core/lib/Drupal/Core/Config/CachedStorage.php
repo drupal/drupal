@@ -93,9 +93,12 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       $list = $this->storage->readMultiple($names);
       // Cache configuration objects that were loaded from the storage, cache
       // missing configuration objects as an explicit FALSE.
+      $items = array();
       foreach ($names as $name) {
-        $this->cache->set($name, isset($list[$name]) ? $list[$name] : FALSE);
+        $items[$name] = array('data' => isset($list[$name]) ? $list[$name] : FALSE);
       }
+
+      $this->cache->setMultiple($items);
     }
 
     // Add the configuration objects from the cache to the list.

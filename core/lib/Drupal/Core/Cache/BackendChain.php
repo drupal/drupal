@@ -132,6 +132,15 @@ class BackendChain implements CacheBackendInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $items) {
+    foreach ($this->backends as $backend) {
+      $backend->setMultiple($items);
+    }
+  }
+
+  /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().
    */
   public function delete($cid) {
