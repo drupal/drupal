@@ -51,7 +51,7 @@ class CacheFactory extends ContainerAware implements CacheFactoryInterface {
   public function get($bin) {
     $cache_settings = $this->settings->get('cache');
     if (isset($cache_settings['bins'][$bin])) {
-      $service_name = $cache_settings[$bin];
+      $service_name = $cache_settings['bins'][$bin];
     }
     elseif (isset($cache_settings['default'])) {
       $service_name = $cache_settings['default'];
