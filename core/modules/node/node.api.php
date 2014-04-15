@@ -898,7 +898,7 @@ function hook_ranking() {
         // always 0, should be 0.
         'score' => 'vote_node_data.average / CAST(%f AS DECIMAL)',
         // Pass in the highest possible voting score as a decimal argument.
-        'arguments' => array(\Drupal::config('vote.settings').get('score_max')),
+        'arguments' => array(\Drupal::config('vote.settings')->get('score_max')),
       ),
     );
   }
