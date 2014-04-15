@@ -72,3 +72,8 @@ system_test.shutdown_functions:
     _content: '\Drupal\system_test\Controller\SystemTestController::shutdownFunctions'
   requirements:
     _access: 'TRUE'
+
+system_test.configure:
+  path: '/system-test/configure/{foo}'
+  requirements:
+    _access: 'TRUE'

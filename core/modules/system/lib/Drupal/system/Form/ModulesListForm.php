@@ -16,6 +16,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Access\AccessManager;
 
@@ -28,6 +29,13 @@ use Drupal\Core\Access\AccessManager;
  * descriptors.
  */
 class ModulesListForm extends FormBase {
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
 
   /**
    * The module handler service.
@@ -66,7 +74,8 @@ class ModulesListForm extends FormBase {
       $container->get('keyvalue.expirable')->get('module_list'),
       $container->get('access_manager'),
       $container->get('entity.manager'),
-      $container->get('entity.query')
+      $container->get('entity.query'),
+      $container->get('current_user')
     );
   }
 
@@ -83,13 +92,16 @@ class ModulesListForm extends FormBase {
    *   The entity manager.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory, AccountInterface $current_user) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
     $this->accessManager = $access_manager;
     $this->entityManager = $entity_manager;
     $this->queryFactory = $query_factory;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -226,7 +238,8 @@ class ModulesListForm extends FormBase {
     // Generate link for module's configuration page, if it has one.
     $row['links']['configure'] = array();
     if ($module->status && isset($module->info['configure'])) {
-      if ($this->accessManager->checkNamedRoute($module->info['configure'], array(), \Drupal::currentUser())) {
+      $route_parameters = isset($module->info['configure_parameters']) ? $module->info['configure_parameters'] : array();
+      if ($this->accessManager->checkNamedRoute($module->info['configure'], $route_parameters, $this->currentUser)) {
         $result = $this->queryFactory->get('menu_link')
           ->condition('route_name', $module->info['configure'])
           ->execute();
@@ -236,6 +249,7 @@ class ModulesListForm extends FormBase {
           '#type' => 'link',
           '#title' => $this->t('Configure'),
           '#route_name' => $module->info['configure'],
+          '#route_parameters' => $route_parameters,
           '#options' => array(
             'attributes' => array(
               'class' => array('module-link', 'module-link-configure'),

@@ -70,6 +70,9 @@ function system_test_system_info_alter(&$info, Extension $file, $type) {
   if ($file->getName() == 'requirements1_test' || $file->getName() == 'requirements2_test') {
     $info['hidden'] = FALSE;
   }
+  if ($file->getName() == 'system_test') {
+    $info['hidden'] = \Drupal::state()->get('system_test.module_hidden', TRUE);
+  }
 }
 
 /**

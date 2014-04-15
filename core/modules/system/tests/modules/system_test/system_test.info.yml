@@ -5,3 +5,6 @@ package: Testing
 version: VERSION
 core: 8.x
 hidden: true
+configure: system_test.configure
+configure_parameters:
+  foo: bar
