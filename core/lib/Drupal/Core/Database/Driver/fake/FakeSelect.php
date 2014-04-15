@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeSelect.
+ * Contains Drupal\Core\Database\Driver\fake\FakeSelect.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Connection;
@@ -302,7 +302,7 @@ class FakeSelect extends Select {
    * @param array $rows
    *   An array of rows excluding non-matching rows.
    *
-   * @return \Drupal\migrate\Tests\ConditionResolver
+   * @return \Drupal\Core\Database\Driver\fake\ConditionResolver
    *   The condition resolver object.
    */
   protected function resolveConditions(Condition $condition_group, array &$rows) {

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeUpdate.
+ * Contains Drupal\Core\Database\Driver\fake\FakeUpdate.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\SelectInterface;

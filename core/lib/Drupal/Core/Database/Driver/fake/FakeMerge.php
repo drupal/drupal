@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeMerge.
+ * Contains Drupal\Core\Database\Driver\fake\FakeMerge.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\InvalidMergeQueryException;

@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\ConditionResolver.
+ * Contains Drupal\Core\Database\Driver\fake\ConditionResolver.
  */
 
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 use Drupal\Core\Database\Query\Condition;
 
@@ -15,7 +15,7 @@ class ConditionResolver {
   /**
    * Match a row against a group of conditions.
    *
-   * @param \Drupal\migrate\tests\DatabaseRowInterface $row
+   * @param \Drupal\Core\Database\Driver\fake\DatabaseRowInterface $row
    *   The database row object.
    * @param \Drupal\Core\Database\Query\Condition $condition_group
    *   The condition group object.

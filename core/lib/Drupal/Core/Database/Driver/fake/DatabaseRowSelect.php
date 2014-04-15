@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\DatabaseRowSelect.
+ * Contains Drupal\Core\Database\Driver\fake\DatabaseRowSelect.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 class DatabaseRowSelect extends DatabaseRow {
 

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeStatement.
+ * Contains Drupal\Core\Database\Driver\fake\FakeStatement.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeTruncate.
+ * Contains Drupal\Core\Database\Driver\fake\FakeTruncate.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 /**
  * Defines FakeTruncate for use in database tests.

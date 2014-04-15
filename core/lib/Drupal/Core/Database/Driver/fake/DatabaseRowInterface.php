@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\DatabaseRowInterface.
+ * Contains Drupal\Core\Database\Driver\fake\DatabaseRowInterface.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 interface DatabaseRowInterface {
 

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeInsert.
+ * Contains Drupal\Core\Database\Driver\fake\FakeInsert.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 use Drupal\Core\Database\Query\Insert;
 use Drupal\Core\Database\Query\SelectInterface;

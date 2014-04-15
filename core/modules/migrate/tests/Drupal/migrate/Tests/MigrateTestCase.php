@@ -8,6 +8,7 @@
 namespace Drupal\migrate\Tests;
 
 use Drupal\Tests\UnitTestCase;
+use Drupal\Core\Database\Driver\fake\FakeConnection;
 
 /**
  * Provides setup and helper methods for Migrate module tests.
@@ -62,7 +63,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    * @param string $prefix
    *   (optional) The table prefix on the database.
    *
-   * @return \Drupal\migrate\Tests\FakeConnection
+   * @return \Drupal\Core\Database\Driver\fake\FakeConnection
    *   The database connection.
    */
   protected function getDatabase(array $database_contents, $connection_options = array(), $prefix = '') {

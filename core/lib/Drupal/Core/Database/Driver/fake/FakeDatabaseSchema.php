@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeDatabaseSchema.
+ * Contains Drupal\Core\Database\Driver\fake\FakeDatabaseSchema.
  */
 
-namespace Drupal\migrate\Tests;
+namespace Drupal\Core\Database\Driver\fake;
 
 use Drupal\Core\Database\Schema;
 
