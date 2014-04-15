@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @file
+ * Common functions that many Drupal modules will need to reference.
+ *
+ * The functions that are critical and need to be available even when serving
+ * a cached page are instead located in bootstrap.inc.
+ */
+
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\Number;
@@ -23,14 +31,6 @@ use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AnonymousUserSession;
-
-/**
- * @file
- * Common functions that many Drupal modules will need to reference.
- *
- * The functions that are critical and need to be available even when serving
- * a cached page are instead located in bootstrap.inc.
- */
 
 /**
  * @defgroup php_wrappers PHP wrapper functions
