@@ -320,14 +320,6 @@ class SystemController extends ControllerBase {
   }
 
   /**
-   * @todo Remove system_theme_default().
-   */
-  public function themeSetDefault() {
-    module_load_include('admin.inc', 'system');
-    return system_theme_default();
-  }
-
-  /**
    * #post_render_cache callback; sets the "active" class on relevant links.
    *
    * This is a PHP implementation of the drupal.active-link JavaScript library.

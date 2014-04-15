@@ -324,7 +324,7 @@ system.theme_set_default:
   path: '/admin/appearance/default'
   defaults:
     _title: 'Set as default theme'
-    _content: '\Drupal\system\Controller\SystemController::themeSetDefault'
+    _content: '\Drupal\system\Controller\ThemeController::setDefaultTheme'
   requirements:
     _permission: 'administer themes'
     _csrf_token: 'TRUE'

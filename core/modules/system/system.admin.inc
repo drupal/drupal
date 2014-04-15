@@ -10,52 +10,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-
-/**
- * Menu callback; Set the default theme.
- */
-function system_theme_default() {
-  $request = \Drupal::request();
-  $theme = $request->get('theme');
-  if (!empty($theme)) {
-    // Get current list of themes.
-    $themes = list_themes();
-
-    // Check if the specified theme is one recognized by the system.
-    if (!empty($themes[$theme])) {
-      // Enable the theme if it is currently disabled.
-      if (empty($themes[$theme]->status)) {
-       theme_enable(array($theme));
-      }
-      // Set the default theme.
-      \Drupal::config('system.theme')
-        ->set('default', $theme)
-        ->save();
-
-      \Drupal::service('router.builder')->setRebuildNeeded();
-
-      // The status message depends on whether an admin theme is currently in use:
-      // a value of 0 means the admin theme is set to be the default theme.
-      $admin_theme = \Drupal::config('system.theme')->get('admin');
-      if ($admin_theme != 0 && $admin_theme != $theme) {
-        drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
-          '%admin_theme' => $themes[$admin_theme]->info['name'],
-          '%selected_theme' => $themes[$theme]->info['name'],
-        )));
-      }
-      else {
-        drupal_set_message(t('%theme is now the default theme.', array('%theme' => $themes[$theme]->info['name'])));
-      }
-    }
-    else {
-      drupal_set_message(t('The %theme theme was not found.', array('%theme' => $theme)), 'error');
-    }
-    return new RedirectResponse(url('admin/appearance', array('absolute' => TRUE)));
-  }
-  throw new AccessDeniedHttpException();
-}
 
 /**
  * Recursively check compatibility.
