@@ -9,6 +9,7 @@
  */
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -41,7 +42,7 @@ function node_test_node_view(NodeInterface $node, EntityViewDisplayInterface $di
 /**
  * Implements hook_node_grants().
  */
-function node_test_node_grants($account, $op) {
+function node_test_node_grants(AccountInterface $account, $op) {
   // Give everyone full grants so we don't break other node tests.
   // Our node access tests asserts three realms of access.
   // See testGrantAlter().
@@ -104,7 +105,7 @@ function node_test_node_access_records_alter(&$grants, NodeInterface $node) {
 /**
  * Implements hook_node_grants_alter().
  */
-function node_test_node_grants_alter(&$grants, $account, $op) {
+function node_test_node_grants_alter(&$grants, AccountInterface $account, $op) {
   // Return an empty array of grants to prove that we can alter by reference.
   $grants = array();
 }

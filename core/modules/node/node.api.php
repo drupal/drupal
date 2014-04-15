@@ -161,12 +161,12 @@ use Drupal\Component\Utility\Xss;
  * sure to restore your {node_access} record after node_access_rebuild() is
  * called.
  *
- * @param $account
- *   The user object whose grants are requested.
- * @param $op
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The acccount object whose grants are requested.
+ * @param string $op
  *   The node operation to be performed, such as 'view', 'update', or 'delete'.
  *
- * @return
+ * @return array
  *   An array whose keys are "realms" of grants, and whose values are arrays of
  *   the grant IDs within this realm that this user is being granted.
  *
@@ -176,7 +176,7 @@ use Drupal\Component\Utility\Xss;
  * @see node_access_rebuild()
  * @ingroup node_access
  */
-function hook_node_grants($account, $op) {
+function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $op) {
   if (user_access('access private content', $account)) {
     $grants['example'] = array(1);
   }
@@ -349,11 +349,11 @@ function hook_node_access_records_alter(&$grants, Drupal\node\NodeInterface $nod
  * permissions assigned to a user role, or specific attributes of a user
  * account.
  *
- * @param $grants
+ * @param array $grants
  *   The $grants array returned by hook_node_grants().
- * @param $account
- *   The user account requesting access to content.
- * @param $op
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The account requesting access to content.
+ * @param string $op
  *   The operation being performed, 'view', 'update' or 'delete'.
  *
  * @see hook_node_grants()
@@ -361,7 +361,7 @@ function hook_node_access_records_alter(&$grants, Drupal\node\NodeInterface $nod
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
-function hook_node_grants_alter(&$grants, $account, $op) {
+function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface $account, $op) {
   // Our sample module never allows certain roles to edit or delete
   // content. Since some other node access modules might allow this
   // permission, we expressly remove it by returning an empty $grants

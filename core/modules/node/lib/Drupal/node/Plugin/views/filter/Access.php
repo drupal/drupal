@@ -28,10 +28,11 @@ class Access extends FilterPluginBase {
    * See _node_access_where_sql() for a non-views query based implementation.
    */
   public function query() {
-    if (!$this->view->getUser()->hasPermission('administer nodes')) {
+    $account = $this->view->getUser();
+    if (!$account->hasPermission('administer nodes')) {
       $table = $this->ensureMyTable();
       $grants = db_or();
-      foreach (node_access_grants('view') as $realm => $gids) {
+      foreach (node_access_grants('view', $account) as $realm => $gids) {
         foreach ($gids as $gid) {
           $grants->condition(db_and()
             ->condition($table . '.gid', $gid)

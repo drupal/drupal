@@ -1406,22 +1406,16 @@ function node_permissions_get_configured_types() {
  * grants array by reference. This hook allows for complex business logic to be
  * applied when integrating multiple node access modules.
  *
- * @param $op
+ * @param string $op
  *   The operation that the user is trying to perform.
- * @param $account
- *   (optional) The user object for the user performing the operation. If
- *   omitted, the current user is used.  Defaults to NULL.
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The account object for the user performing the operation.
  *
- * @return
+ * @return array
  *   An associative array in which the keys are realms, and the values are
  *   arrays of grants for those realms.
  */
-function node_access_grants($op, $account = NULL) {
-
-  if (!isset($account)) {
-    $account = \Drupal::currentUser();
-  }
-
+function node_access_grants($op, AccountInterface $account) {
   // Fetch node access grants from other modules.
   $grants = \Drupal::moduleHandler()->invokeAll('node_grants', array($account, $op));
   // Allow modules to alter the assigned grants.
