@@ -26,8 +26,7 @@ interface StringInterface {
    * @param int $id
    *   The string identifier.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
+   * @return $this
    */
   public function setId($id);
 
@@ -45,8 +44,7 @@ interface StringInterface {
    * @param string $version
    *   Version identifier.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
+   * @return $this
    */
   public function setVersion($version);
 
@@ -64,9 +62,8 @@ interface StringInterface {
    * @param string $string
    *   String to set as value.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
-  */
+   * @return $this
+   */
   public function setString($string);
 
   /**
@@ -85,9 +82,8 @@ interface StringInterface {
    * @param array $plurals
    *   Array of strings with plural variants.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
-  */
+   * @return $this
+   */
   public function setPlurals($plurals);
 
   /**
@@ -104,9 +100,8 @@ interface StringInterface {
    * @param \Drupal\locale\StringStorageInterface $storage
    *   The storage to use for this string.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
-  */
+   * @return $this
+   */
   public function setStorage($storage);
 
   /**
@@ -141,8 +136,7 @@ interface StringInterface {
    * @param bool $override
    *   (optional) Whether to override already set fields, defaults to TRUE.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
+   * @return $this
    */
   public function setValues(array $values, $override = TRUE);
 
@@ -187,8 +181,7 @@ interface StringInterface {
    *   file path in case of imported strings, configuration name for strings
    *   that come from configuration, etc...
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
+   * @return $this
    */
   public function addLocation($type, $name);
 
@@ -208,8 +201,7 @@ interface StringInterface {
   /**
    * Saves string object to storage.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
+   * @return $this
    *
    * @throws \Drupal\locale\StringStorageException
    *   In case of failures, an exception is thrown.
@@ -219,8 +211,7 @@ interface StringInterface {
   /**
    * Deletes string object from storage.
    *
-   * @return \Drupal\locale\LocaleString
-   *   The called object.
+   * @return $this
    *
    * @throws \Drupal\locale\StringStorageException
    *   In case of failures, an exception is thrown.

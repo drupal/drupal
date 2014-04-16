@@ -44,7 +44,7 @@ interface StringStorageInterface {
    *   (optional) An associative array of additional options. It may contain
    *   any of the options defined by getStrings().
    *
-   * @return array
+   * @return \Drupal\locale\StringInterface[]
    *   Array of \Drupal\locale\StringInterface objects matching the conditions.
    *
    * @see \Drupal\locale\StringStorageInterface::getStrings()
@@ -61,7 +61,7 @@ interface StringStorageInterface {
    *   - 'type', The location type.
    *   - 'name', The location name.
    *
-   * @return array
+   * @return \Drupal\locale\StringInterface[]
    *   Array of \Drupal\locale\StringInterface objects matching the conditions.
    *
    * @see \Drupal\locale\StringStorageInterface::getStrings()

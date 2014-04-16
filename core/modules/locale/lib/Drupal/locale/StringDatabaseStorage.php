@@ -7,13 +7,10 @@
 
 namespace Drupal\locale;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 
 /**
- * Defines the locale string class.
- *
- * This is the base class for SourceString and TranslationString.
+ * Defines a class to store localized strings in the database.
  */
 class StringDatabaseStorage implements StringStorageInterface {
 
@@ -32,7 +29,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   protected $options = array();
 
   /**
-   * Constructs a new StringStorage controller.
+   * Constructs a new StringDatabaseStorage class.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Database connection to use for reading and writing configuration data.
@@ -45,21 +42,21 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::getStrings().
+   * {@inheritdoc}
    */
   public function getStrings(array $conditions = array(), array $options = array()) {
     return $this->dbStringLoad($conditions, $options, 'Drupal\locale\SourceString');
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::getTranslations().
+   * {@inheritdoc}
    */
   public function getTranslations(array $conditions = array(), array $options = array()) {
     return $this->dbStringLoad($conditions, array('translation' => TRUE) + $options, 'Drupal\locale\TranslationString');
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::findString().
+   * {@inheritdoc}
    */
   public function findString(array $conditions) {
     $values = $this->dbStringSelect($conditions)
@@ -74,7 +71,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::findTranslation().
+   * {@inheritdoc}
    */
   public function findTranslation(array $conditions) {
     $values = $this->dbStringSelect($conditions, array('translation' => TRUE))
@@ -90,7 +87,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::getLocations().
+   * {@inheritdoc}
    */
   function getLocations(array $conditions = array()) {
     $query = $this->connection->select('locales_location', 'l', $this->options)
@@ -102,21 +99,21 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::countStrings().
+   * {@inheritdoc}
    */
   public function countStrings() {
     return $this->dbExecute("SELECT COUNT(*) FROM {locales_source}")->fetchField();
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::countTranslations().
+   * {@inheritdoc}
    */
   public function countTranslations() {
     return $this->dbExecute("SELECT t.language, COUNT(*) AS translated FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY t.language")->fetchAllKeyed();
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::save().
+   * {@inheritdoc}
    */
   public function save($string) {
     if ($string->isNew()) {
@@ -189,7 +186,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::delete().
+   * {@inheritdoc}
    */
   public function delete($string) {
     if ($keys = $this->dbStringKeys($string)) {
@@ -209,7 +206,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::deleteLanguage().
+   * {@inheritdoc}
    */
   public function deleteStrings($conditions) {
     $lids = $this->dbStringSelect($conditions, array('fields' => array('lid')))->execute()->fetchCol();
@@ -221,21 +218,21 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::deleteLanguage().
+   * {@inheritdoc}
    */
   public function deleteTranslations($conditions) {
     $this->dbDelete('locales_target', $conditions)->execute();
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::createString().
+   * {@inheritdoc}
    */
   public function createString($values = array()) {
     return new SourceString($values + array('storage' => $this));
   }
 
   /**
-   * Implements Drupal\locale\StringStorageInterface::createTranslation().
+   * {@inheritdoc}
    */
   public function createTranslation($values = array()) {
     return new TranslationString($values + array(
@@ -248,11 +245,15 @@ class StringDatabaseStorage implements StringStorageInterface {
    * Gets table alias for field.
    *
    * @param string $field
-   *   Field name to find the table alias for.
+   *   One of the field names of the locales_source, locates_location,
+   *   locales_target tables to find the table alias for.
    *
    * @return string
-   *   Either 's', 't' or 'l' depending on whether the field belongs to source,
-   *   target or location table table.
+   *   One of the following values:
+   *   - 's' for "source", "context", "version" (locales_source table fields).
+   *   - 'l' for "type", "name" (locales_location table fields)
+   *   - 't' for "language", "translation", "customized" (locales_target
+   *     table fields)
    */
   protected function dbFieldTable($field) {
     if (in_array($field, array('language', 'translation', 'customized'))) {
@@ -318,13 +319,14 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @param string $class
    *   Class name to use for fetching returned objects.
    *
-   * @return array
+   * @return \Drupal\locale\StringInterface[]
    *   Array of objects of the class requested.
    */
   protected function dbStringLoad(array $conditions, array $options, $class) {
     $strings = array();
     $result = $this->dbStringSelect($conditions, $options)->execute();
     foreach ($result as $item) {
+      /** @var \Drupal\locale\StringInterface $string */
       $string = new $class($item);
       $string->setStorage($this);
       $strings[] = $string;
@@ -349,7 +351,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   these additional ones:
    *   - 'translation', Whether to include translation fields too. Defaults to
    *     FALSE.
-   * @return SelectQuery
+   * @return \Drupal\Core\Database\Query\Select
    *   Query object with all the tables, fields and conditions.
    */
   protected function dbStringSelect(array $conditions, array $options = array()) {
@@ -525,8 +527,8 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @param array $keys
    *   Array with object keys indexed by field name.
    *
-   * @return DeleteQuery
-   *   Returns a new DeleteQuery object for the active database.
+   * @return \Drupal\Core\Database\Query\Delete
+   *   Returns a new Delete object for the injected database connection.
    */
   protected function dbDelete($table, $keys) {
     $query = $this->connection->delete($table, $this->options);
@@ -537,7 +539,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   }
 
   /**
-   * Executes an arbitrary SELECT query string.
+   * Executes an arbitrary SELECT query string with the injected options.
    */
   protected function dbExecute($query, array $args = array()) {
     return $this->connection->query($query, $args, $this->options);
