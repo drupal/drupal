@@ -329,9 +329,6 @@ jquery.joyride:
   version: v2.0.3
   js:
     assets/vendor/jquery-joyride/jquery.joyride-2.0.3.js: {}
-  css:
-    component:
-      assets/vendor/jquery-joyride/joyride-2.0.3.css: { media: screen }
   dependencies:
     - core/jquery
     - core/jquery.cookie

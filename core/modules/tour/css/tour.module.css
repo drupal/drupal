@@ -18,29 +18,132 @@
 }
 .toolbar .tour-toolbar-tab button.active {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
 .tour-toolbar-tab button:focus {
   outline: thin dotted;
 }
 
-/* Joyride tips should always be on top of everything else. */
-.joyride-tip-guide {
-  z-index: 999;
+/* @todo Remove once http://drupal.org/node/1916690 is resolved. */
+.toolbar .tour-toolbar-tab.toolbar-tab.hidden {
+  display: none;
 }
 
 /* Override placement of the tour progress indicator. */
 .tour-progress {
   position: absolute;
-  bottom: 10px;
-  right: 15px; /* LTR */
+  /* Equals paddings from .joyride-content-wrapper */
+  bottom: 0;
+  right: 0; /* LTR */
 }
 [dir="rtl"] .tour-progress {
-  right: 0;
-  left: 15px;
+  right: auto;
+  left: 0;
 }
 
 /* @todo Remove once http://drupal.org/node/1916690 is resolved. */
 .toolbar .tour-toolbar-tab.toolbar-tab.hidden {
   display: none;
+}
+
+/* JoyRide Styles. */
+#joyRideTipContent {
+  display: none;
+}
+
+/* Default styles for the container */
+.joyride-tip-guide {
+  position: absolute;
+  display: none;
+  background: #fff;
+  width: 300px;
+  z-index: 101;
+  top: 0; /* keeps the page from scrolling when calculating position. */
+  left: 0;
+  padding: 1em 1em 1.5em 1.5em;
+}
+
+.joyride-content-wrapper {
+  /* Apply padding from parent .joyride-tip-guide to absolutely positioned children. */
+  position: relative;
+  padding-right: 1em;
+}
+
+/* Mobile */
+@media only screen and (max-width: 767px) {
+  .joyride-tip-guide {
+    width: 85%;
+    left: 2.5%;
+  }
+}
+
+/* Add a little css triangle pip, older browser just miss out on the fanciness of it. */
+.joyride-tip-guide .joyride-nub {
+  display: block;
+  position: absolute;
+  left: 22px;
+  width: 0;
+  height: 0;
+}
+
+.joyride-tip-guide .joyride-nub.top {
+  top: -28px;
+  bottom: auto;
+}
+
+.joyride-tip-guide .joyride-nub.bottom {
+  bottom: -28px;
+}
+
+.joyride-tip-guide .joyride-nub.right {
+  top: 22px;
+  bottom: auto;
+  left: auto;
+  right: -28px;
+}
+
+.joyride-tip-guide .joyride-nub.left {
+  top: 22px;
+  left: -28px;
+  right: auto;
+  bottom: auto;
+}
+
+.joyride-tip-guide p {
+  margin: 0 0 1.4em;
+}
+
+.joyride-timer-indicator-wrap {
+  width: 50px;
+  height: 3px;
+  position: absolute;
+  right: 17px;
+  bottom: 16px;
+}
+.joyride-timer-indicator {
+  display: block;
+  width: 0;
+  height: inherit;
+}
+
+.joyride-close-tip {
+  position: absolute;
+  right: 0; /* LTR */
+  top: 0;
+}
+[dir="rtl"] .joyride-close-tip {
+  left: 0;
+}
+
+.joyride-modal-bg {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  display: none;
+  top: 0;
+  left: 0;
+  cursor: pointer;
 }

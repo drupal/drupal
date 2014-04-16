@@ -102,7 +102,11 @@
         var that = this;
         if ($tour.find('li').length) {
           $tour.joyride({
-            postRideCallback: function () { that.model.set('isActive', false); }
+            postRideCallback: function () { that.model.set('isActive', false); },
+            template : { // HTML segments for tip layout
+              link : '<a href=\"#close\" class=\"joyride-close-tip\">&times;</a>',
+              button : '<a href=\"#\" class=\"button button--primary joyride-next-tip\"></a>'
+            }
           });
           this.model.set({ isActive: true, activeTour: $tour });
         }
