@@ -9,7 +9,7 @@ namespace Drupal\editor\Plugin\InPlaceEditor;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\edit\Plugin\InPlaceEditorInterface;
+use Drupal\quickedit\Plugin\InPlaceEditorInterface;
 use Drupal\filter\Plugin\FilterInterface;
 
 /**
@@ -88,7 +88,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     $attachments = $manager->getAttachments($formats);
 
     // Also include editor.module's formatted text editor.
-    $attachments['library'][] = 'editor/edit.inPlaceEditor.formattedText';
+    $attachments['library'][] = 'editor/quickedit.inPlaceEditor.formattedText';
 
     return $attachments;
   }

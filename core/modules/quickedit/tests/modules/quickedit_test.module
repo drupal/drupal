@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the Quick Edit tests.
+ */
+
+use Drupal\Core\Language\Language;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function quickedit_test_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity->getEntityTypeId() == 'node' && $entity->bundle() == 'article') {
+    $build['pseudo'] = array(
+      '#theme' => 'field',
+      '#title' => 'My pseudo field',
+      '#field_name' => 'quickedit_test_pseudo_field',
+      '#label_display' => 'Label',
+      '#entity_type' => $entity->getEntityTypeId(),
+      '#bundle' => $entity->bundle(),
+      '#language' => Language::LANGCODE_NOT_SPECIFIED,
+      '#field_type' => 'pseudo',
+      '#view_mode' => 'default',
+      '#object' => $entity,
+      '#access' => TRUE,
+      '#items' => array(
+        0 => array(
+          'value' => 'pseudo field',
+        ),
+      ),
+      0 => array(
+        '#markup' => 'pseudo field',
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_quickedit_render_field().
+ */
+function quickedit_test_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+  $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
+  return array(
+    '#prefix' => '<div class="quickedit-test-wrapper">',
+    'field' => $entity->get($field_name)->view($view_mode_id),
+    '#suffix' => '</div>',
+  );
+}
+

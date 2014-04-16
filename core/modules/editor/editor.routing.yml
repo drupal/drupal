@@ -13,7 +13,7 @@ editor.field_untransformed_text:
     _theme: ajax_base_page
   requirements:
     _permission: 'access in-place editing'
-    _access_edit_entity_field: 'TRUE'
+    _access_quickedit_entity_field: 'TRUE'
 
 editor.image_dialog:
   path: '/editor/dialog/image/{filter_format}'

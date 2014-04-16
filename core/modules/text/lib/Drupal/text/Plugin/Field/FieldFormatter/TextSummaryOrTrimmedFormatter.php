@@ -16,7 +16,7 @@ namespace Drupal\text\Plugin\Field\FieldFormatter;
  *   field_types = {
  *     "text_with_summary"
  *   },
- *   edit = {
+ *   quickedit = {
  *     "editor" = "form"
  *   }
  * )

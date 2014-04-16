@@ -21,7 +21,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *     "string",
  *     "email"
  *   },
- *   edit = {
+ *   quickedit = {
  *     "editor" = "plain_text"
  *   }
  * )

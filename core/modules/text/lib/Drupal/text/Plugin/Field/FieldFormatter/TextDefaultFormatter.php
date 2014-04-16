@@ -21,7 +21,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *     "text_long",
  *     "text_with_summary",
  *   },
- *   edit = {
+ *   quickedit = {
  *     "editor" = "plain_text"
  *   }
  * )

@@ -1,0 +1,34 @@
+quickedit.metadata:
+  path: '/quickedit/metadata'
+  defaults:
+    _controller: '\Drupal\quickedit\QuickEditController::metadata'
+  options:
+    _theme: ajax_base_page
+  requirements:
+    _permission: 'access in-place editing'
+
+quickedit.attachments:
+  path: '/quickedit/attachments'
+  defaults:
+    _controller: '\Drupal\quickedit\QuickEditController::attachments'
+  requirements:
+    _permission: 'access in-place editing'
+
+quickedit.field_form:
+  path: '/quickedit/form/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  defaults:
+    _controller: '\Drupal\quickedit\QuickEditController::fieldForm'
+  options:
+    _access_mode: 'ALL'
+    _theme: ajax_base_page
+  requirements:
+    _permission: 'access in-place editing'
+    _access_quickedit_entity_field: 'TRUE'
+
+quickedit.entity_save:
+  path: '/quickedit/entity/{entity_type}/{entity}'
+  defaults:
+    _controller: '\Drupal\quickedit\QuickEditController::entitySave'
+  requirements:
+    _permission: 'access in-place editing'
+    _access_quickedit_entity: 'TRUE'

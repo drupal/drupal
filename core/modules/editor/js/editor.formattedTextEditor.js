@@ -14,7 +14,7 @@
 
   "use strict";
 
-  Drupal.edit.editors.editor = Drupal.edit.EditorView.extend({
+  Drupal.quickedit.editors.editor = Drupal.quickedit.EditorView.extend({
 
     // The text format for this field.
     textFormat: null,
@@ -32,9 +32,9 @@
      * {@inheritdoc}
      */
     initialize: function (options) {
-      Drupal.edit.EditorView.prototype.initialize.call(this, options);
+      Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
 
-      var metadata = Drupal.edit.metadata.get(this.fieldModel.get('fieldID'), 'custom');
+      var metadata = Drupal.quickedit.metadata.get(this.fieldModel.get('fieldID'), 'custom');
       this.textFormat = drupalSettings.editor.formats[metadata.format];
       this.textFormatHasTransformations = metadata.formatHasTransformations;
       this.textEditor = Drupal.editors[this.textFormat.editor];
@@ -137,7 +137,7 @@
     /**
      * {@inheritdoc}
      */
-    getEditUISettings: function () {
+    getQuickEditUISettings: function () {
       return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: false };
     },
 
@@ -164,7 +164,7 @@
 
       // Create a Drupal.ajax instance to load the form.
       var textLoaderAjax = new Drupal.ajax(fieldID, this.$el, {
-        url: Drupal.edit.util.buildUrl(fieldID, Drupal.url('editor/!entity_type/!id/!field_name/!langcode/!view_mode')),
+        url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('editor/!entity_type/!id/!field_name/!langcode/!view_mode')),
         event: 'editor-internal.editor',
         submit: { nocssjs: true },
         progress: { type: null } // No progress indicator.

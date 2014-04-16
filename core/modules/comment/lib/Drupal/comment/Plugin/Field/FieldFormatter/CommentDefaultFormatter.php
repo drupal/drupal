@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   field_types = {
  *     "comment"
  *   },
- *   edit = {
+ *   quickedit = {
  *     "editor" = "disabled"
  *   }
  * )

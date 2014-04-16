@@ -31,12 +31,12 @@ drupal.editor.dialog:
     - core/drupal.ajax
     - core/drupalSettings
 
-edit.inPlaceEditor.formattedText:
+quickedit.inPlaceEditor.formattedText:
   version: VERSION
   js:
     js/editor.formattedTextEditor.js: { scope: footer, attributes: { defer: true } }
   dependencies:
-    - edit/edit
+    - quickedit/quickedit
     - editor/drupal.editor
     - core/drupal.ajax
     - core/drupalSettings

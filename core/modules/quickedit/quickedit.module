@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * Provides in-place content editing functionality for fields.
+ *
+ * The Quick Edit module makes content editable in-place. Rather than having to
+ * visit a separate page to edit content, it may be edited in-place.
+ *
+ * Technically, this module adds classes and data- attributes to fields and
+ * entities, enabling them for in-place editing.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_permission().
+ */
+function quickedit_permission() {
+  return array(
+    'access in-place editing' => array(
+      'title' => t('Access in-place editing'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_page_build().
+ *
+ * Adds the quickedit library to the page for any user who has the 'access
+ * in-place editing' permission.
+ */
+function quickedit_page_build(&$page) {
+  if (!\Drupal::currentUser()->hasPermission('access in-place editing')) {
+    return;
+  }
+
+  // In-place editing is only supported on the front-end.
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    return;
+  }
+
+  $page['#attached']['library'][] = 'quickedit/quickedit';
+}
+
+/**
+ * Implements hook_library_alter().
+ *
+ * Includes additional stylesheets defined by the admin theme to allow it to
+ * customize the Quick Edit toolbar appearance.
+ *
+ * An admin theme can specify CSS files to make the front-end administration
+ * experience of in-place editing match the administration experience in the
+ * back-end.
+ *
+ * The CSS files can be specified via the "edit_stylesheets" property in the
+ * .info.yml file:
+ * @code
+ * quickedit_stylesheets:
+ *   - css/quickedit.css
+ * @endcode
+ *
+ * The library needs to be dynamically enhanced, because an admin theme normally
+ * does not participate in the front-end.
+ *
+ * @param array &$library
+ *   The JavaScript/CSS library that is being altered.
+ * @param string $name
+ *   The name of the library.
+ * @param string $theme
+ *   (optional) Internal use only. A base theme name for which to retrieve the
+ *   'edit_stylesheets' property.
+ *
+ * @todo Remove this in favor of the 'stylesheets-additional' property proposed
+ *   in https://drupal.org/node/1209958
+ */
+function quickedit_library_alter(array &$library, $name, $theme = NULL) {
+  if ($name == 'quickedit/quickedit') {
+    // Retrieve the admin theme.
+    if (!isset($theme)) {
+      $theme = Drupal::config('system.theme')->get('admin');
+    }
+    if ($theme && $theme_path = drupal_get_path('theme', $theme)) {
+      $info = system_get_info('theme', $theme);
+      // Recurse to process base theme(s) first.
+      if (isset($info['base theme'])) {
+        quickedit_library_alter($library, $name, $info['base theme']);
+      }
+      if (isset($info['quickedit_stylesheets']) && is_array($info['quickedit_stylesheets'])) {
+        foreach ($info['quickedit_stylesheets'] as $path) {
+          $library['css'][$theme_path . '/' . $path] = array(
+            'group' => CSS_AGGREGATE_THEME,
+            'weight' => CSS_THEME,
+          );
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ *
+ * Quick Edit extends the @FieldFormatter annotation with the following keys:
+ * - quickedit: currently only contains one subkey 'editor' which indicates
+ *   which in-place editor should be used. Possible values are 'form',
+ *   'plain_text', 'disabled' or another in-place editor other than the ones
+ *   Quick Edit module provides.
+ */
+function quickedit_field_formatter_info_alter(&$info) {
+  foreach ($info as $key => $settings) {
+    // Set in-place editor to 'form' if none is supplied.
+    if (empty($settings['quickedit'])) {
+      $info[$key]['quickedit'] = array('editor' => 'form');
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field templates.
+ */
+function quickedit_preprocess_field(&$variables) {
+  $element = $variables['element'];
+  /** @var $entity \Drupal\Core\Entity\EntityInterface */
+  $entity = $element['#object'];
+
+  // Quick Edit module only supports view modes, not dynamically defined
+  // "display options" (which \Drupal\Core\Field\FieldItemListInterface::view()
+  // always names the "_custom" view mode).
+  // @see \Drupal\Core\Field\FieldItemListInterface::view()
+  // @see https://drupal.org/node/2120335
+  if ($element['#view_mode'] === '_custom') {
+    return;
+  }
+
+  // Fields that are not part of the entity (i.e. dynamically injected "pseudo
+  // fields") and computed fields are not editable.
+  $definition = $entity->getFieldDefinition($element['#field_name']);
+  if ($definition && !$definition->isComputed()) {
+    $variables['attributes']['data-quickedit-field-id'] = $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  $build['#attributes']['data-quickedit-entity-id'] = $entity->getEntityTypeId() . '/' . $entity->id();
+}
+

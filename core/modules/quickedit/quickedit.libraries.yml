@@ -1,0 +1,56 @@
+quickedit:
+  version: VERSION
+  js:
+    # Core.
+    js/quickedit.js: { scope: footer }
+    js/util.js: { scope: footer }
+    # Models.
+    js/models/BaseModel.js: { scope: footer }
+    js/models/AppModel.js: { scope: footer }
+    js/models/EntityModel.js: { scope: footer }
+    js/models/FieldModel.js: { scope: footer }
+    js/models/EditorModel.js: { scope: footer }
+    # Views.
+    js/views/AppView.js: { scope: footer }
+    js/views/FieldDecorationView.js: { scope: footer }
+    js/views/EntityDecorationView.js: { scope: footer }
+    js/views/EntityToolbarView.js: { scope: footer }
+    js/views/ContextualLinkView.js: { scope: footer }
+    js/views/FieldToolbarView.js: { scope: footer }
+    js/views/EditorView.js: { scope: footer }
+    # Other.
+    js/theme.js: { scope: footer }
+  css:
+    component:
+      css/quickedit.module.css: {}
+    theme:
+      css/quickedit.theme.css: {}
+      css/quickedit.icons.css: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/underscore
+    - core/backbone
+    - core/jquery.form
+    - core/jquery.ui.position
+    - core/drupal
+    - core/drupal.displace
+    - core/drupal.form
+    - core/drupal.ajax
+    - core/drupal.debounce
+    - core/drupalSettings
+    - core/drupal.dialog
+
+quickedit.inPlaceEditor.form:
+  version: VERSION
+  js:
+    js/editors/formEditor.js: { scope: footer }
+  dependencies:
+    - quickedit/quickedit
+
+quickedit.inPlaceEditor.plainText:
+  version: VERSION
+  js:
+    js/editors/plainTextEditor.js: { scope: footer }
+  dependencies:
+    - quickedit/quickedit

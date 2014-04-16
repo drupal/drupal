@@ -16,7 +16,7 @@ dependencies:
   - contact
   - datetime
   - custom_block
-  - edit
+  - quickedit
   - editor
   - entity_reference
   - help

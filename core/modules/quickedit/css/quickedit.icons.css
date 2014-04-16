@@ -1,0 +1,74 @@
+/**
+ * @file
+ * Icons for Quick Edit module.
+ */
+
+.quickedit .icon {
+  min-height: 1em;
+  min-width: 2.5em;
+  position: relative;
+}
+.quickedit .icon.icon-only {
+  text-indent: -9999px;
+}
+.quickedit .icon.icon-end {
+  padding-right: 2.5em; /* LTR */
+}
+[dir="rtl"] .quickedit .icon.icon-end {
+  padding-left: 2.5em;
+  padding-right: 0;
+}
+.quickedit .icon:before {
+  background-attachment: scroll;
+  background-color: transparent;
+  background-position: center center;
+  background-repeat: no-repeat;
+  content: '';
+  display: block;
+  height: 100%;
+  left: 0; /* LTR */
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+[dir="rtl"] .quickedit .icon:before {
+  left: auto;
+  right: 0;
+}
+.quickedit .icon-end:before {
+  left: auto; /* LTR */
+  right: 0.5em; /* LTR */
+  width: 18px;
+}
+[dir="rtl"] .quickedit .icon-end:before {
+  left: 0.5em;
+  right: auto;
+}
+.quickedit button.icon {
+  font-size: 1em;
+}
+.quickedit .icon-pencil {
+  margin-left: .5em;
+  padding-left: 1.5em;
+}
+
+/**
+ * Images.
+ */
+.quickedit .icon-close:before {
+  background-image: url('../../../misc/icons/787878/ex.svg');
+  height: 12px;
+  top: 10px;
+}
+.quickedit .icon-close:hover:before,
+.quickedit .icon-close:active:before {
+  background-image: url('../../../misc/icons/000000/ex.svg');
+}
+.quickedit .icon-throbber:before {
+  background-image: url("../images/icon-throbber.gif");
+}
+.quickedit .icon-pencil:before {
+  background-image: url('../../../misc/icons/5181c6/pencil.svg');
+  background-position: left center;
+  background-size: 1.3em;
+}
