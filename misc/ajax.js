@@ -616,6 +616,13 @@ Drupal.ajax.prototype.commands = {
       .removeClass('odd even')
       .filter(':even').addClass('odd').end()
       .filter(':odd').addClass('even');
+  },
+
+  /**
+   * Command to update a form's build ID.
+   */
+  updateBuildId: function(ajax, response, status) {
+    $('input[name="form_build_id"][value="' + response.old + '"]').val(response.new);
   }
 };
 

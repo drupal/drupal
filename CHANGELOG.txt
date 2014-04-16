@@ -1,4 +1,8 @@
 
+Drupal 7.27, 2014-04-16
+----------------------
+- Fixed security issues (information disclosure). See SA-CORE-2014-002.
+
 Drupal 7.26, 2014-01-15
 ----------------------
 - Fixed security issues (multiple vulnerabilities). See SA-CORE-2014-001.
