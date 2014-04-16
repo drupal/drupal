@@ -70,8 +70,8 @@ class MTimeProtectedFastFileStorage extends FileStorage {
 
     // Write the file out to a temporary location. Prepend with a '.' to keep it
     // hidden from listings and web servers.
-    $temporary_path = $this->directory . '/.' . str_replace('/', '#', $name);
-    if (!@file_put_contents($temporary_path, $data)) {
+    $temporary_path = tempnam($this->directory, '.');
+    if (!$temporary_path || !@file_put_contents($temporary_path, $data)) {
       return FALSE;
     }
     // The file will not be chmod() in the future so this is the final
@@ -102,6 +102,8 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       // Reset the file back in the temporary location if this is not the first
       // iteration.
       if ($i > 0) {
+        $this->unlink($temporary_path);
+        $temporary_path = tempnam($this->directory, '.');
         rename($full_path, $temporary_path);
         // Make sure to not loop infinitely on a hopelessly slow filesystem.
         if ($i > 10) {
