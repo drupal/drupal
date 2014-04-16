@@ -63,13 +63,6 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function id() {
-    return $this->get('uid')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isNew() {
     return !empty($this->enforceIsNew) || $this->id() === NULL;
   }

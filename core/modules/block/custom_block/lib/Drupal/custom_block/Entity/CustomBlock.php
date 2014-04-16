@@ -79,13 +79,6 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRevisionId() {
-    return $this->get('revision_id')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setTheme($theme) {
     $this->theme = $theme;
     return $this;

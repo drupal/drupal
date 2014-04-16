@@ -34,13 +34,6 @@ use Drupal\Core\Field\FieldDefinition;
 class Item extends ContentEntityBase implements ItemInterface {
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
-   */
-  public function id() {
-    return $this->get('iid')->value;
-  }
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::label().
    */
   public function label() {

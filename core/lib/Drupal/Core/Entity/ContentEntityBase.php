@@ -35,13 +35,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   const TRANSLATION_CREATED = 2;
 
   /**
-   * Local cache holding the value of the bundle field.
-   *
-   * @var string
-   */
-  protected $bundle;
-
-  /**
    * The plain data values of the contained fields.
    *
    * This always holds the original, unchanged values of the entity. The values
@@ -129,20 +122,43 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected $isDefaultRevision = TRUE;
 
   /**
+   * Holds entity keys like the ID, bundle and revision ID.
+   *
+   * @var array
+   */
+  protected $entityKeys = array();
+
+  /**
+   * The instantiated entity data definition.
+   *
+   * @var \Drupal\Core\Entity\TypedData\EntityDataDefinition
+   */
+  protected $dataDefinition;
+
+  /**
    * Overrides Entity::__construct().
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = array()) {
     $this->entityTypeId = $entity_type;
-    $this->bundle = $bundle ? $bundle : $this->entityTypeId;
+    $this->entityKeys['bundle'] = $bundle ? $bundle : $this->entityTypeId;
     $this->languages = $this->languageManager()->getLanguages(Language::STATE_ALL);
 
     foreach ($values as $key => $value) {
       // If the key matches an existing property set the value to the property
-      // to ensure non converted properties have the correct value.
+      // to set properties like isDefaultRevision.
+      // @todo: Should this be converted somehow?
       if (property_exists($this, $key) && isset($value[Language::LANGCODE_DEFAULT])) {
         $this->$key = $value[Language::LANGCODE_DEFAULT];
       }
-      $this->values[$key] = $value;
+    }
+
+    $this->values = $values;
+    foreach ($this->getEntityType()->getKeys() as $key => $field_name) {
+      if (isset($this->values[$field_name])) {
+        if (is_array($this->values[$field_name]) && isset($this->values[$field_name][Language::LANGCODE_DEFAULT])) {
+          $this->entityKeys[$key] = $this->values[$field_name][Language::LANGCODE_DEFAULT];
+        }
+      }
     }
 
     // Initialize translations. Ensure we have at least an entry for the default
@@ -214,7 +230,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function getRevisionId() {
-    return NULL;
+    return $this->getEntityKey('revision');
   }
 
   /**
@@ -235,9 +251,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function getDataDefinition() {
-    $definition = EntityDataDefinition::create($this->getEntityTypeId());
-    $definition->setBundles(array($this->bundle()));
-    return $definition;
+    if (!$this->dataDefinition) {
+      $this->dataDefinition = EntityDataDefinition::create($this->getEntityTypeId());
+      $this->dataDefinition->setBundles(array($this->bundle()));
+    }
+    return $this->dataDefinition;
   }
 
   /**
@@ -347,6 +365,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
     $this->fields = array();
     $this->fieldDefinitions = NULL;
+    $this->dataDefinition = NULL;
     $this->clearTranslationCache();
 
     return parent::__sleep();
@@ -356,21 +375,21 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function id() {
-    return $this->id->value;
+    return $this->getEntityKey('id');
   }
 
   /**
    * {@inheritdoc}
    */
   public function bundle() {
-    return $this->bundle;
+    return $this->getEntityKey('bundle');
   }
 
   /**
-   * Overrides Entity::uuid().
+   * {inheritdoc}
    */
   public function uuid() {
-    return $this->get('uuid')->value;
+    return $this->getEntityKey('uuid');
   }
 
   /**
@@ -443,8 +462,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function set($name, $value, $notify = TRUE) {
-    // If default language changes we need to react to that.
-    $notify = $name == 'langcode';
+    // If default language or an entity key changes we need to react to that.
+    $notify = $name == 'langcode' || in_array($name, $this->getEntityType()->getKeys());
     $this->get($name)->setValue($value, $notify);
   }
 
@@ -592,6 +611,15 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       }
       $this->updateFieldLangcodes($this->defaultLangcode);
     }
+    // Check if the changed name is the value of an entity key and if the value
+    // of that is currently cached, if so, reset it. Exclude the bundle from
+    // that check, as it ready only and must not change, unsetting it could
+    // lead to recursions.
+    if ($key = array_search($name, $this->getEntityType()->getKeys())) {
+      if (isset($this->entityKeys[$key]) && $key != 'bundle') {
+        unset($this->entityKeys[$key]);
+      }
+    }
   }
 
   /**
@@ -681,6 +709,9 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $translation->translations = &$this->translations;
     $translation->enforceIsNew = &$this->enforceIsNew;
     $translation->translationInitialize = FALSE;
+    // The label is the only entity key that can change based on the language,
+    // so unset that in case it is currently set.
+    unset($translation->entityKeys['label']);
 
     return $translation;
   }
@@ -707,7 +738,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Instantiate a new empty entity so default values will be populated in the
     // specified language.
     $entity_type = $this->getEntityType();
-    $default_values = array($entity_type->getKey('bundle') => $this->bundle, 'langcode' => $langcode);
+    $default_values = array($entity_type->getKey('bundle') => $this->bundle(), 'langcode' => $langcode);
     $entity = $this->entityManager()
       ->getStorage($this->getEntityTypeId())
       ->create($default_values);
@@ -905,6 +936,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $duplicate->{$entity_type->getKey('revision')}->value = NULL;
     }
 
+    $duplicate->entityKeys = array();
+
     return $duplicate;
   }
 
@@ -948,8 +981,8 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if (($label_callback = $entity_type->getLabelCallback()) && is_callable($label_callback)) {
       $label = call_user_func($label_callback, $this);
     }
-    elseif (($label_key = $entity_type->getKey('label')) && isset($this->{$label_key})) {
-      $label = $this->{$label_key}->value;
+    elseif (($label_key = $entity_type->getKey('label'))) {
+      $label = $this->getEntityKey('label');
     }
     return $label;
   }
@@ -973,6 +1006,30 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
 
     return $referenced_entities;
+  }
+
+  /**
+   * Returns the value of the given entity key, if defined.
+   *
+   * @param string $key
+   *   Name of the entity key, for example id, revision or bundle.
+   *
+   * @return mixed
+   *   The value of the entity key, NULL if not defined.
+   */
+  protected function getEntityKey($key) {
+    if (!isset($this->entityKeys[$key]) || !array_key_exists($key, $this->entityKeys)) {
+      if ($this->getEntityType()->hasKey($key)) {
+        $field_name = $this->getEntityType()->getKey($key);
+        $property = $this->getFieldDefinition($field_name)->getMainPropertyName();
+        $this->entityKeys[$key] = $this->get($field_name)->$property;
+      }
+      else {
+        $this->entityKeys[$key] = NULL;
+      }
+
+    }
+    return $this->entityKeys[$key];
   }
 
   /**

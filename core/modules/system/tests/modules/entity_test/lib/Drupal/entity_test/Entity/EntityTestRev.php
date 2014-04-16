@@ -43,13 +43,6 @@ use Drupal\entity_test\Entity\EntityTest;
 class EntityTestRev extends EntityTest {
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getRevisionId().
-   */
-  public function getRevisionId() {
-    return $this->get('revision_id')->value;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {

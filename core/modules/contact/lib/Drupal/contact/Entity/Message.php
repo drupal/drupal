@@ -38,7 +38,7 @@ use Drupal\Core\Field\FieldDefinition;
 class Message extends ContentEntityBase implements MessageInterface {
 
   /**
-   * Overrides Drupal\Core\Entity\Entity::id().
+   * {@inheritdoc}
    */
   public function id() {
     return NULL;

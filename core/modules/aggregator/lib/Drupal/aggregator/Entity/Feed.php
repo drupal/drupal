@@ -46,13 +46,6 @@ use Drupal\aggregator\FeedInterface;
 class Feed extends ContentEntityBase implements FeedInterface {
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
-   */
-  public function id() {
-    return $this->get('fid')->value;
-  }
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::label().
    */
   public function label() {

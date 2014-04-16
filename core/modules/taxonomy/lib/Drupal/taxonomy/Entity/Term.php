@@ -57,13 +57,6 @@ class Term extends ContentEntityBase implements TermInterface {
   /**
    * {@inheritdoc}
    */
-  public function id() {
-    return $this->get('tid')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 

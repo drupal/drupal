@@ -49,13 +49,6 @@ class File extends ContentEntityBase implements FileInterface {
   /**
    * {@inheritdoc}
    */
-  public function id() {
-    return $this->get('fid')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFilename() {
     return $this->get('filename')->value;
   }
