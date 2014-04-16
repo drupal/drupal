@@ -47,6 +47,13 @@ class SchemaTest extends UnitTestBase {
           'not null' => TRUE,
           'description' => 'Schema column description.',
         ),
+        'test_field_string'  => array(
+          'type' => 'varchar',
+          'length' => 20,
+          'not null' => TRUE,
+          'default' => "'\"funky default'\"",
+          'description' => 'Schema column description for string.',
+        ),
       ),
     );
     db_create_table('test_table', $table_specification);
@@ -282,6 +289,8 @@ class SchemaTest extends UnitTestBase {
       $variations = array(
         array('not null' => FALSE),
         array('not null' => FALSE, 'default' => '7'),
+        array('not null' => FALSE, 'default' => substr('"thing"', 0, $length)),
+        array('not null' => FALSE, 'default' => substr("\"'hing", 0, $length)),
         array('not null' => TRUE, 'initial' => 'd'),
         array('not null' => TRUE, 'initial' => 'd', 'default' => '7'),
       );

@@ -207,7 +207,7 @@ class Schema extends DatabaseSchema {
       }
     }
     if (isset($spec['default'])) {
-      $default = is_string($spec['default']) ? "'" . $spec['default'] . "'" : $spec['default'];
+      $default = is_string($spec['default']) ? $this->connection->quote($spec['default']) : $spec['default'];
       $sql .= " default $default";
     }
 
@@ -436,7 +436,7 @@ class Schema extends DatabaseSchema {
       $default = 'NULL';
     }
     else {
-      $default = is_string($default) ? "'$default'" : $default;
+      $default = is_string($default) ? $this->connection->quote($default) : $default;
     }
 
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" SET DEFAULT ' . $default);
@@ -603,7 +603,7 @@ class Schema extends DatabaseSchema {
       // Set sequence to maximal field value to not conflict with existing
       // entries.
       $this->connection->query("SELECT setval('" . $seq . "', MAX(\"" . $field . '")) FROM {' . $table . "}");
-      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" SET DEFAULT nextval(\'' . $seq . '\')');
+      $this->connection->query('ALTER TABLE {' . $table . '} ALTER ' . $field . ' SET DEFAULT nextval(' . $this->connection->quote($seq) . ')');
     }
 
     // Rename the column if necessary.

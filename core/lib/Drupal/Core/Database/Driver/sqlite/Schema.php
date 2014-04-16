@@ -179,7 +179,7 @@ class Schema extends DatabaseSchema {
 
       if (isset($spec['default'])) {
         if (is_string($spec['default'])) {
-          $spec['default'] = "'" . $spec['default'] . "'";
+          $spec['default'] = $this->connection->quote($spec['default']);
         }
         $sql .= ' DEFAULT ' . $spec['default'];
       }
