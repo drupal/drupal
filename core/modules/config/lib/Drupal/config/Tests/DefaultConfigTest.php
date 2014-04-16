@@ -8,6 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\config_test\TestInstallStorage;
+use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\Schema\Property;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\TypedData\Type\BooleanInterface;
@@ -69,7 +70,7 @@ class DefaultConfigTest extends DrupalUnitTestBase {
     // every module, profile and theme.
     $typed_config = new TypedConfigManager(
       \Drupal::service('config.storage'),
-      new TestInstallStorage('config/schema'),
+      new TestInstallStorage(InstallStorage::CONFIG_SCHEMA_DIRECTORY),
       \Drupal::service('cache.config')
     );
 

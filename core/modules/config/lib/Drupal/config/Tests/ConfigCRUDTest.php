@@ -9,6 +9,7 @@ namespace Drupal\config\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigNameException;
+use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\DatabaseStorage;
@@ -196,7 +197,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $storage = new DatabaseStorage($this->container->get('database'), 'config');
     $name = 'config_test.types';
     $config = $this->container->get('config.factory')->get($name);
-    $original_content = file_get_contents(drupal_get_path('module', 'config_test') . "/config/$name.yml");
+    $original_content = file_get_contents(drupal_get_path('module', 'config_test') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.yml");
     $this->verbose('<pre>' . $original_content . "\n" . var_export($storage->read($name), TRUE));
 
     // Verify variable data types are intact.

@@ -23,6 +23,16 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 class InstallStorage extends FileStorage {
 
   /**
+   * Extension sub-directory containing default configuration for installation.
+   */
+  const CONFIG_INSTALL_DIRECTORY = 'config/install';
+
+  /**
+   * Extension sub-directory containing configuration schema.
+   */
+  const CONFIG_SCHEMA_DIRECTORY = 'config/schema';
+
+  /**
    * Folder map indexed by configuration name.
    *
    * @var array
@@ -43,7 +53,7 @@ class InstallStorage extends FileStorage {
    *   The directory to scan in each extension to scan for files. Defaults to
    *   'config'.
    */
-  public function __construct($directory = 'config') {
+  public function __construct($directory = self::CONFIG_INSTALL_DIRECTORY) {
     $this->directory = $directory;
   }
 

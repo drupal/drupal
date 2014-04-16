@@ -19,7 +19,7 @@ interface ConfigInstallerInterface {
    * directories for all other extensions to locate any configuration with its
    * name prefix. For example, the Node module provides the frontpage view as a
    * default configuration file:
-   * core/modules/node/config/views.view.frontpage.yml
+   * core/modules/node/config/install/views.view.frontpage.yml
    * When the Views module is installed after the Node module is already
    * enabled, the frontpage view will be installed.
    *

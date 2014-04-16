@@ -32,7 +32,7 @@ class ExtensionInstallStorage extends InstallStorage {
    *   The directory to scan in each extension to scan for files. Defaults to
    *   'config'.
    */
-  public function __construct(StorageInterface $config_storage, $directory = 'config') {
+  public function __construct(StorageInterface $config_storage, $directory = self::CONFIG_INSTALL_DIRECTORY) {
     $this->configStorage = $config_storage;
     $this->directory = $directory;
   }

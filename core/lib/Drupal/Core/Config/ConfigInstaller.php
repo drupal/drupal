@@ -92,36 +92,36 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $source_storage = $this->getSourceStorage();
     $config_to_install = $source_storage->listAll($name . '.');
 
-    // Work out if this extension provides default configuration for any other
-    // enabled extensions.
-    $config_dir = drupal_get_path($type, $name) . '/config';
-    if (is_dir($config_dir)) {
-      if (is_dir($config_dir . '/schema')) {
-        // Refresh the schema cache if installing default configuration and the
-        // extension has a configuration schema directory.
-        $this->typedConfig->clearCachedDefinitions();
-      }
-      // If not installing the core base system default configuration, retrieve
-      // the list of integration configuration of currently enabled extensions.
-      if ($type !== 'core') {
-        $default_storage = new FileStorage($config_dir);
-        $other_module_config = array_filter($default_storage->listAll(), function ($value) use ($name) {
-          return !preg_match('/^' . $name . '\./', $value);
-        });
-        $enabled_extensions = array();
-        // Read enabled extensions directly from configuration to avoid circular
-        // dependencies with ModuleHandler and ThemeHandler.
-        $extension_config = $this->configFactory->get('core.extension');
-        $enabled_extensions += array_keys((array) $extension_config->get('module'));
-        $enabled_extensions += array_keys((array) $extension_config->get('theme'));
+    $extension_path = drupal_get_path($type, $name);
+    // If the extension provides configuration schema clear the definitions.
+    if (is_dir($extension_path . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY)) {
+      // Refresh the schema cache if installing default configuration and the
+      // extension has a configuration schema directory.
+      $this->typedConfig->clearCachedDefinitions();
+    }
 
-        $other_module_config = array_filter($other_module_config, function ($config_name) use ($enabled_extensions) {
-          $provider = Unicode::substr($config_name, 0, strpos($config_name, '.'));
-          return in_array($provider, $enabled_extensions);
-        });
+    // If not installing the core base system default configuration, work out if
+    // this extension provides default configuration for any other enabled
+    // extensions.
+    if ($type !== 'core' && is_dir($extension_path . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY)) {
+      $enabled_extensions = $other_module_config = array();
+      $default_storage = new FileStorage($extension_path . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY);
+      $other_module_config = array_filter($default_storage->listAll(), function ($value) use ($name) {
+        return !preg_match('/^' . $name . '\./', $value);
+      });
 
-        $config_to_install = array_merge($config_to_install, $other_module_config);
-      }
+      // Read enabled extensions directly from configuration to avoid circular
+      // dependencies with ModuleHandler and ThemeHandler.
+      $extension_config = $this->configFactory->get('core.extension');
+      $enabled_extensions += array_keys((array) $extension_config->get('module'));
+      $enabled_extensions += array_keys((array) $extension_config->get('theme'));
+
+      $other_module_config = array_filter($other_module_config, function ($config_name) use ($enabled_extensions) {
+        $provider = Unicode::substr($config_name, 0, strpos($config_name, '.'));
+        return in_array($provider, $enabled_extensions);
+      });
+
+      $config_to_install = array_merge($config_to_install, $other_module_config);
     }
 
     if (!empty($config_to_install)) {

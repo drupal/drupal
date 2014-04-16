@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\simpletest\DrupalUnitTestBase;
 
@@ -54,7 +55,7 @@ class ThemeSettingsTest extends DrupalUnitTestBase {
   function testDefaultConfig() {
     $name = 'test_basetheme';
     $path = $this->availableThemes[$name]->getPath();
-    $this->assertTrue(file_exists("$path/config/$name.settings.yml"));
+    $this->assertTrue(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
     $this->container->get('theme_handler')->enable(array($name));
     $this->assertIdentical(theme_get_setting('base', $name), 'only');
   }
@@ -65,7 +66,7 @@ class ThemeSettingsTest extends DrupalUnitTestBase {
   function testNoDefaultConfig() {
     $name = 'stark';
     $path = $this->availableThemes[$name]->getPath();
-    $this->assertFalse(file_exists("$path/config/$name.settings.yml"));
+    $this->assertFalse(file_exists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml"));
     $this->container->get('theme_handler')->enable(array($name));
     $this->assertNotNull(theme_get_setting('features.favicon', $name));
   }

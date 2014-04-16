@@ -159,7 +159,7 @@ class ConfigManager implements ConfigManagerInterface {
     foreach ($config_names as $config_name) {
       $this->configFactory->get($config_name)->delete();
     }
-    $schema_dir = drupal_get_path($type, $name) . '/config/schema';
+    $schema_dir = drupal_get_path($type, $name) . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY;
     if (is_dir($schema_dir)) {
       // Refresh the schema cache if uninstalling an extension that provides
       // configuration schema.
