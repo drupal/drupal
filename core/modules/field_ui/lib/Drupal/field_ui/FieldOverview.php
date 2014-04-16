@@ -269,7 +269,10 @@ class FieldOverview extends OverviewBase {
     $form['fields'] = $table;
 
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save'));
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#button_type' => 'primary',
+      '#value' => $this->t('Save'));
 
     return $form;
   }
