@@ -90,6 +90,21 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form_test/form-storage-legacy'] = array(
+    'title' => 'Emulate legacy AHAH-style ajax callback',
+    'page callback' => 'form_test_storage_legacy_handler',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form_test/form-storage-page-cache'] = array(
+    'title' => 'Form storage with page cache test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('form_test_storage_page_cache_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   $items['form_test/wrapper-callback'] = array(
     'title' => 'Form wrapper callback test',
     'page callback' => 'form_test_wrapper_callback',
@@ -746,7 +761,34 @@ function form_test_storage_form($form, &$form_state) {
     $form_state['cache'] = TRUE;
   }
 
+  if (isset($_REQUEST['immutable'])) {
+    $form_state['build_info']['immutable'] = TRUE;
+  }
+
   return $form;
+}
+
+/**
+ * Emulate legacy AHAH-style ajax callback.
+ *
+ * Drupal 6 AHAH callbacks used to operate directly on forms retrieved using
+ * form_get_cache and stored using form_set_cache after manipulation. This
+ * callback helps testing whether form_set_cache prevents resaving of immutable
+ * forms.
+ */
+function form_test_storage_legacy_handler($form_build_id) {
+  $form_state = array();
+  $form = form_get_cache($form_build_id, $form_state);
+
+  drupal_json_output(array(
+    'form' => $form,
+    'form_state' => $form_state,
+  ));
+
+  $form['#poisoned'] = TRUE;
+  $form_state['poisoned'] = TRUE;
+
+  form_set_cache($form_build_id, $form, $form_state);
 }
 
 /**
@@ -783,6 +825,56 @@ function form_test_storage_form_submit($form, &$form_state) {
     drupal_set_message("The thing has been changed.");
   }
   $form_state['redirect'] = 'node';
+}
+
+/**
+ * A simple form for testing form storage when page caching is enabled.
+ */
+function form_test_storage_page_cache_form($form, &$form_state) {
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Title',
+    '#required' => TRUE,
+  );
+
+  $form['test_build_id_old'] = array(
+    '#type' => 'item',
+    '#title' => 'Old build id',
+    '#markup' => 'No old build id',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save',
+  );
+
+  $form['rebuild'] = array(
+    '#type' => 'submit',
+    '#value' => 'Rebuild',
+    '#submit' => array('form_test_storage_page_cache_rebuild'),
+  );
+
+  $form['#after_build'] = array('form_test_storage_page_cache_old_build_id');
+  $form_state['cache'] = TRUE;
+
+  return $form;
+}
+
+/**
+ * Form element #after_build callback: output the old form build-id.
+ */
+function form_test_storage_page_cache_old_build_id($form) {
+  if (isset($form['#build_id_old'])) {
+    $form['test_build_id_old']['#markup'] = check_plain($form['#build_id_old']);
+  }
+  return $form;
+}
+
+/**
+ * Form submit callback: Rebuild the form and continue.
+ */
+function form_test_storage_page_cache_rebuild($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
 }
 
 /**

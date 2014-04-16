@@ -1,5 +1,5 @@
 
-Drupal 7.27, xxxx-xx-xx (development version)
+Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
 - Replaced the term "weight" with "influence" in the content ranking settings
   for search, and added help text for administrators (string change).
@@ -8,6 +8,10 @@ Drupal 7.27, xxxx-xx-xx (development version)
 - Fixed a bug in the Taxonomy module update function introduced in Drupal 7.26
   that caused memory and CPU problems on sites with very large numbers of
   unpublished nodes.
+
+Drupal 7.27, 2014-04-16
+----------------------
+- Fixed security issues (information disclosure). See SA-CORE-2014-002.
 
 Drupal 7.26, 2014-01-15
 ----------------------
