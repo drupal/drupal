@@ -130,4 +130,16 @@ class ViewsHandlerManager extends DefaultPluginManager {
     return $this->createInstance('broken', array('optional' => $optional, 'original_configuration' => $item));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($plugin_id, array $configuration = array()) {
+    $instance = parent::createInstance($plugin_id, $configuration);
+    if ($instance instanceof HandlerBase) {
+      $instance->setModuleHandler($this->moduleHandler);
+      $instance->setViewsData($this->viewsData);
+    }
+    return $instance;
+  }
+
 }
