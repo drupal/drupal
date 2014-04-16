@@ -370,16 +370,33 @@ class ConfigImporter extends DependencySerialization {
       return $module_data[$module]->sort;
     }, $module_list);
 
-    // Work out what modules to install and uninstall.
+    // Determine which modules to uninstall.
     $uninstall = array_diff(array_keys($current_extensions['module']), array_keys($new_extensions['module']));
-    $install = array_diff(array_keys($new_extensions['module']), array_keys($current_extensions['module']));
-    // Sort the module list by their weights. So that dependencies
-    // are uninstalled last.
-    asort($module_list);
+    // Sort the list of newly uninstalled extensions by their weights, so that
+    // dependencies are uninstalled last. Extensions of the same weight are
+    // sorted in reverse alphabetical order, to ensure the order is exactly
+    // opposite from installation. For example, this module list:
+    // array(
+    //   'actions' => 0,
+    //   'ban' => 0,
+    //   'options' => -2,
+    //   'text' => -1,
+    // );
+    // will result in the following sort order:
+    // -2   options
+    // -1   text
+    //  0 0 ban
+    //  0 1 actions
+    // @todo Move this sorting functionality to the extension system.
+    array_multisort(array_values($module_list), SORT_ASC, array_keys($module_list), SORT_DESC, $module_list);
     $uninstall = array_intersect(array_keys($module_list), $uninstall);
-    // Sort the module list by their weights (reverse). So that dependencies
-    // are installed first.
-    arsort($module_list);
+
+    // Determine which modules to install.
+    $install = array_diff(array_keys($new_extensions['module']), array_keys($current_extensions['module']));
+    // Ensure that installed modules are sorted in exactly the reverse order
+    // (with dependencies installed first, and modules of the same weight sorted
+    // in alphabetical order).
+    $module_list = array_reverse($module_list);
     $install = array_intersect(array_keys($module_list), $install);
 
     // Work out what themes to enable and to disable.

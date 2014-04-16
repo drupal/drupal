@@ -152,8 +152,8 @@ class ConfigImportUITest extends WebTestBase {
     // Ensure installations and uninstallation occur as expected.
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', array());
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', array());
-    $expected = array('ban', 'action', 'text', 'options');
-    $this->assertIdentical($expected, $installed, 'Ban, Action, Text and Options modules installed in the correct order.');
+    $expected = array('action', 'ban', 'text', 'options');
+    $this->assertIdentical($expected, $installed, 'Action, Ban, Text and Options modules installed in the correct order.');
     $this->assertTrue(empty($uninstalled), 'No modules uninstalled during import');
 
     // Verify that the action.settings configuration object was only written
@@ -207,7 +207,7 @@ class ConfigImportUITest extends WebTestBase {
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', array());
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', array());
     $expected = array('options', 'text', 'ban', 'action');
-    $this->assertIdentical($expected, $uninstalled, 'Options, Text, Action and Ban modules uninstalled in the correct order.');
+    $this->assertIdentical($expected, $uninstalled, 'Options, Text, Ban and Action modules uninstalled in the correct order.');
     $this->assertTrue(empty($installed), 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
