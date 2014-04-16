@@ -2732,6 +2732,7 @@ function drupal_common_theme() {
     ),
     'checkboxes' => array(
       'render element' => 'element',
+      'template' => 'checkboxes',
     ),
     'form' => array(
       'render element' => 'element',
