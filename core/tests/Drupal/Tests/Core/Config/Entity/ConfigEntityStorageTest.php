@@ -515,8 +515,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(array('baz')));
 
     $entity = $this->getMockEntity(array('id' => 'foo'));
-    $entity->enforceIsNew();
     $entity->setOriginalId('baz');
+    $entity->enforceIsNew();
     $this->entityStorage->save($entity);
   }
 

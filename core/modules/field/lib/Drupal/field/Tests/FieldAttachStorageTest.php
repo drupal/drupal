@@ -190,6 +190,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $entity = $this->entitySaveReload($entity);
     $this->assertTrue($entity->{$this->field_name}->isEmpty(), 'Insert: NULL field results in no value saved');
 
+    // All saves after this point should be updates, not inserts.
+    $entity_init->enforceIsNew(FALSE);
+
     // Add some real data.
     $entity = clone($entity_init);
     $values = $this->_generateTestFieldValues(1);

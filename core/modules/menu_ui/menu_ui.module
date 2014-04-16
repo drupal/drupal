@@ -564,7 +564,14 @@ function menu_ui_form_node_form_alter(&$form, $form_state) {
  */
 function menu_ui_node_submit(EntityInterface $node, $form, $form_state) {
   if (!empty($form_state['values']['menu'])) {
+    $original_menu_id = !empty($node->menu) ? $node->menu->id() : NULL;
     $node->menu = entity_create('menu_link', $form_state['values']['menu']);
+    // @todo Do not create a new entity in order to update it, see
+    //   https://drupal.org/node/2241865
+    // If this menu had a previous menu link associated, mark it as not new.
+    if ($original_menu_id) {
+      $node->menu->setOriginalId($original_menu_id);
+    }
     // Decompose the selected menu parent option into 'menu_name' and 'plid', if
     // the form used the default parent selection widget.
     if (!empty($form_state['values']['menu']['parent'])) {

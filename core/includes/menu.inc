@@ -823,6 +823,9 @@ function menu_link_rebuild_defaults() {
         $link['customized'] = $existing_item->customized;
         $link['updated'] = $existing_item->updated;
         $menu_link = $menu_link_storage->createFromDefaultLink($link);
+        // @todo Do not create a new entity in order to update it, see
+        //   https://drupal.org/node/2241865
+        $menu_link->setOriginalId($existing_item->mlid);
 
         // Convert the existing item to a typed object.
         /** @var \Drupal\menu_link\MenuLinkInterface $existing_item */

@@ -114,7 +114,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function setOriginalId($id) {
     $this->originalId = $id;
 
-    return $this;
+    return parent::setOriginalId($id);
   }
 
   /**

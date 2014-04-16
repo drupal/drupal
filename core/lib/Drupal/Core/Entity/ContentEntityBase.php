@@ -925,6 +925,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $duplicate = clone $this;
     $entity_type = $this->getEntityType();
     $duplicate->{$entity_type->getKey('id')}->value = NULL;
+    $duplicate->enforceIsNew();
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if ($entity_type->hasKey('uuid')) {

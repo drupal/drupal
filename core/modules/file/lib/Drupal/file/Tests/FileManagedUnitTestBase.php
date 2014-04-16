@@ -161,20 +161,19 @@ abstract class FileManagedUnitTestBase extends DrupalUnitTestBase {
    *   File entity.
    */
   function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
-    $file = new \stdClass();
-    $file->uri = $this->createUri($filepath, $contents, $scheme);
-    $file->filename = drupal_basename($file->uri);
-    $file->filemime = 'text/plain';
-    $file->uid = 1;
-    $file->created = REQUEST_TIME;
-    $file->changed = REQUEST_TIME;
-    $file->filesize = filesize($file->uri);
-    $file->status = 0;
+    // Don't count hook invocations caused by creating the file.
+    \Drupal::state()->set('file_test.count_hook_invocations', FALSE);
+    $file = entity_create('file', array(
+      'uri' => $this->createUri($filepath, $contents, $scheme),
+      'uid' => 1,
+    ));
+    $file->save();
     // Write the record directly rather than using the API so we don't invoke
     // the hooks.
-    $this->assertNotIdentical(drupal_write_record('file_managed', $file), FALSE, 'The file was added to the database.', 'Create test file');
+    $this->assertTrue($file->id() > 0, 'The file was added to the database.', 'Create test file');
 
-    return entity_create('file', (array) $file);
+    \Drupal::state()->set('file_test.count_hook_invocations', TRUE);
+    return $file;
   }
 
   /**

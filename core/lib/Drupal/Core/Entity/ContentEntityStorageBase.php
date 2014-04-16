@@ -67,6 +67,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
       $bundle = $values[$this->bundleKey];
     }
     $entity = new $entity_class(array(), $this->entityTypeId, $bundle);
+    $entity->enforceIsNew();
 
     foreach ($entity as $name => $field) {
       if (isset($values[$name])) {

@@ -502,6 +502,12 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    */
   public function setOriginalId($id) {
     // By default, entities do not support renames and do not have original IDs.
+    // If the specified ID is anything except NULL, this should mark this entity
+    // as no longer new.
+    if ($id !== NULL) {
+      $this->enforceIsNew(FALSE);
+    }
+
     return $this;
   }
 

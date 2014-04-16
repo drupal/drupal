@@ -173,11 +173,14 @@ function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
     $file->setFileUri($uri);
     $file->setFilename(drupal_basename($uri));
     // If we are replacing an existing file re-use its database record.
+    // @todo Do not create a new entity in order to update it, see
+    //   https://drupal.org/node/2241865
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->id();
+        $file->setOriginalId($existing->id());
         $file->setFilename($existing->getFilename());
       }
     }
@@ -254,6 +257,7 @@ function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
         $existing = reset($existing_files);
         $delete_source = TRUE;
         $file->fid = $existing->id();
+        $file->uuid = $existing->uuid();
       }
     }
     // If we are renaming around an existing file (rather than a directory),
@@ -520,11 +524,14 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
       'status' => FILE_STATUS_PERMANENT,
     ));
     // If we are replacing an existing file re-use its database record.
+    // @todo Do not create a new entity in order to update it, see
+    //   https://drupal.org/node/2241865
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $uri));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->id();
+        $file->setOriginalId($existing->id());
         $file->setFilename($existing->getFilename());
       }
     }
@@ -946,11 +953,14 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     drupal_chmod($file->getFileUri());
 
     // If we are replacing an existing file re-use its database record.
+    // @todo Do not create a new entity in order to update it, see
+    //   https://drupal.org/node/2241865
     if ($replace == FILE_EXISTS_REPLACE) {
       $existing_files = entity_load_multiple_by_properties('file', array('uri' => $file->getFileUri()));
       if (count($existing_files)) {
         $existing = reset($existing_files);
         $file->fid = $existing->id();
+        $file->setOriginalId($existing->id());
       }
     }
 

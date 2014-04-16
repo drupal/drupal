@@ -369,7 +369,10 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     $original['machine_name'] = $this->machine_name;
     /** @var \Drupal\menu_link\MenuLinkStorageInterface $storage */
     $storage = \Drupal::entityManager()->getStorage($this->entityTypeId);
+    // @todo Do not create a new entity in order to update it, see
+    //   https://drupal.org/node/2241865
     $new_link = $storage->createFromDefaultLink($original);
+    $new_link->setOriginalId($this->id());
     // Allow the menu to be determined by the parent
     if (!empty($new_link['parent']) && !empty($all_links[$new_link['parent']])) {
       // Walk up the tree to find the menu name.

@@ -108,9 +108,11 @@ function file_test_get_all_calls() {
  * @see file_test_reset()
  */
 function _file_test_log_call($op, $args) {
-  $results = \Drupal::state()->get('file_test.results') ?: array();
-  $results[$op][] = $args;
-  \Drupal::state()->set('file_test.results', $results);
+  if (\Drupal::state()->get('file_test.count_hook_invocations', TRUE)) {
+    $results = \Drupal::state()->get('file_test.results') ?: array();
+    $results[$op][] = $args;
+    \Drupal::state()->set('file_test.results', $results);
+  }
 }
 
 /**

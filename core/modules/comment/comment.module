@@ -1281,7 +1281,11 @@ function comment_prepare_author(CommentInterface $comment) {
   // The account has been pre-loaded by CommentViewBuilder::buildContent().
   $account = $comment->getOwner();
   if (empty($account->uid->value)) {
+    // @todo Avoid creating a new entity by just creating a new instance
+    //   directly, see https://drupal.org/node/1867228.
     $account = entity_create('user', array('uid' => 0, 'name' => $comment->getAuthorName(), 'homepage' => $comment->getHomepage()));
+    // The anonymous user is not a new account, do not treat it as one.
+    $account->enforceIsNew(FALSE);
   }
   return $account;
 }

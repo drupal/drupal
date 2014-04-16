@@ -226,10 +226,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // Update with different values, and check that the cache entry is wiped.
     $values = $this->_generateTestFieldValues($this->field_2->getCardinality());
-    $entity = entity_create($entity_type, array(
-      'type' => $entity_type,
-      'id' => $entity->id(),
-    ));
     $entity->{$this->field_name_2} = $values;
     $entity->save();
     $this->assertFalse(\Drupal::cache('entity')->get($cid), 'Cached: no cache entry on update');
@@ -241,10 +237,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->assertEqual($cache->data[$langcode][$this->field_name_2], $values, 'Cached: correct cache entry on load');
 
     // Create a new revision, and check that the cache entry is wiped.
-    $entity = entity_create($entity_type, array(
-      'type' => $entity_type,
-      'id' => $entity->id(),
-    ));
     $values = $this->_generateTestFieldValues($this->field_2->getCardinality());
     $entity->{$this->field_name_2} = $values;
     $entity->setNewRevision();

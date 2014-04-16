@@ -238,6 +238,7 @@ class EntityDatabaseStorage extends EntityStorageBase {
     $entity_class::preCreate($this, $values);
 
     $entity = new $entity_class($values, $this->entityTypeId);
+    $entity->enforceIsNew();
 
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey && !isset($entity->{$this->uuidKey})) {
