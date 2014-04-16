@@ -79,8 +79,6 @@ if (authorize_access_allowed()) {
   // Load both the Form API and Batch API.
   require_once __DIR__ . '/includes/form.inc';
   require_once __DIR__ . '/includes/batch.inc';
-  // Load the code that drives the authorize process.
-  require_once __DIR__ . '/includes/authorize.inc';
 
   if (isset($_SESSION['authorize_page_title'])) {
     $page_title = $_SESSION['authorize_page_title'];
@@ -138,7 +136,7 @@ if (authorize_access_allowed()) {
     }
     elseif (!$batch = batch_get()) {
       // We have a batch to process, show the filetransfer form.
-      $elements = \Drupal::formBuilder()->getForm('authorize_filetransfer_form');
+      $elements = \Drupal::formBuilder()->getForm('Drupal\Core\FileTransfer\Form\FileTransferAuthorizeForm');
       $output = drupal_render($elements);
     }
   }
