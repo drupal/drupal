@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Settings;
 
 /**
@@ -29,7 +30,7 @@ class PublicStream extends LocalStream {
    */
   public function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
-    return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . drupal_encode_path($path);
+    return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . UrlHelper::encodePath($path);
   }
 
   /**

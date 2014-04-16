@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link\Entity;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -476,7 +477,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
 
     // This is the easiest way to handle the unique internal path '<front>',
     // since a path marked as external does not need to match a route.
-    $this->external = (url_is_external($this->link_path) || $this->link_path == '<front>') ? 1 : 0;
+    $this->external = (UrlHelper::isExternal($this->link_path) || $this->link_path == '<front>') ? 1 : 0;
 
     // Try to find a parent link. If found, assign it and derive its menu.
     $parent = $this->findParent($storage);

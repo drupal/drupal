@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\Views;
 
 /**
@@ -284,11 +285,11 @@ class FieldWebTest extends HandlerTestBase {
     $id_field->options['alter']['path_case'] = 'ucfirst';
     $id_field->options['alter']['path'] = 'drupal has a great community';
     $output = $id_field->theme($row);
-    $this->assertSubString($output, drupal_encode_path('Drupal has a great community'));
+    $this->assertSubString($output, UrlHelper::encodePath('Drupal has a great community'));
 
     $id_field->options['alter']['path_case'] = 'ucwords';
     $output = $id_field->theme($row);
-    $this->assertSubString($output, drupal_encode_path('Drupal Has A Great Community'));
+    $this->assertSubString($output, UrlHelper::encodePath('Drupal Has A Great Community'));
     unset($id_field->options['alter']['path_case']);
 
     // Tests the linkclass setting and see whether it actuall exists in the output.

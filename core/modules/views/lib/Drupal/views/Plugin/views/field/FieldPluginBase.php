@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -1424,7 +1425,7 @@ abstract class FieldPluginBase extends HandlerBase {
     if (isset($alter['query'])) {
       // Convert the query to a string, perform token replacement, and then
       // convert back to an array form for l().
-      $options['query'] = drupal_http_build_query($alter['query']);
+      $options['query'] = UrlHelper::buildQuery($alter['query']);
       $options['query'] = strtr($options['query'], $tokens);
       $query = array();
       parse_str($options['query'], $query);

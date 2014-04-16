@@ -246,8 +246,9 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
       // call the slow
       // \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols() if $path
       // contains a ':' before any / ? or #. Note: we could use
-      // url_is_external($path) here, but that would require another function
-      // call, and performance inside url() is critical.
+      // \Drupal\Component\Utility\UrlHelper::isExternal($path) here, but that
+      // would require another function call, and performance inside url() is
+      // critical.
       $colonpos = strpos($path, ':');
       $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && UrlHelper::stripDangerousProtocols($path) == $path);
     }

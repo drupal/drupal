@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Path\AliasManagerInterface;
@@ -212,7 +213,7 @@ class MenuLinkFormController extends EntityFormController {
       $menu_link->link_path = $normal_path;
       $form_state['values']['link_path'] = $normal_path;
     }
-    if (!url_is_external($menu_link->link_path)) {
+    if (!UrlHelper::isExternal($menu_link->link_path)) {
       $parsed_link = parse_url($menu_link->link_path);
       if (isset($parsed_link['query'])) {
         $menu_link->options['query'] = array();

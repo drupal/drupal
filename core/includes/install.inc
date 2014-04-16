@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Settings;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -908,7 +909,7 @@ function drupal_current_script_url($query = array()) {
   $uri = $_SERVER['SCRIPT_NAME'];
   $query = array_merge(drupal_get_query_parameters(), $query);
   if (!empty($query)) {
-    $uri .= '?' . drupal_http_build_query($query);
+    $uri .= '?' . UrlHelper::buildQuery($query);
   }
   return $uri;
 }

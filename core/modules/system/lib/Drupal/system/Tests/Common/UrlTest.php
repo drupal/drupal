@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class UrlTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'URL generation tests',
-      'description' => 'Confirm that url(), drupal_get_query_parameters(), drupal_http_build_query(), and l() work correctly with various input.',
+      'description' => 'Confirm that url(), drupal_get_query_parameters(), \Drupal\Component\Utility\UrlHelper::buildQuery(), and l() work correctly with various input.',
       'group' => 'Common',
     );
   }
@@ -219,7 +220,7 @@ class UrlTest extends WebTestBase {
   }
 
   /**
-   * Tests drupal_parse_url().
+   * Tests UrlHelper::parse().
    */
   function testDrupalParseUrl() {
     // Relative, absolute, and external URLs, without/with explicit script path,
@@ -233,7 +234,7 @@ class UrlTest extends WebTestBase {
             'query' => array('foo' => 'bar', 'bar' => 'baz', 'baz' => ''),
             'fragment' => 'foo',
           );
-          $this->assertEqual(drupal_parse_url($url), $expected, 'URL parsed correctly.');
+          $this->assertEqual(UrlHelper::parse($url), $expected, 'URL parsed correctly.');
         }
       }
     }
@@ -245,15 +246,15 @@ class UrlTest extends WebTestBase {
       'query' => array(),
       'fragment' => '',
     );
-    $this->assertEqual(drupal_parse_url($url), $result, 'Relative URL parsed correctly.');
+    $this->assertEqual(UrlHelper::parse($url), $result, 'Relative URL parsed correctly.');
 
     // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
     $url = 'http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
-    $this->assertTrue(url_is_external($url), 'Correctly identified an external URL.');
+    $this->assertTrue(UrlHelper::isExternal($url), 'Correctly identified an external URL.');
 
-    // Test that drupal_parse_url() does not allow spoofing a URL to force a malicious redirect.
-    $parts = drupal_parse_url('forged:http://cwe.mitre.org/data/definitions/601.html');
-    $this->assertFalse(valid_url($parts['path'], TRUE), 'drupal_parse_url() correctly parsed a forged URL.');
+    // Test that UrlHelper::parse() does not allow spoofing a URL to force a malicious redirect.
+    $parts = UrlHelper::parse('forged:http://cwe.mitre.org/data/definitions/601.html');
+    $this->assertFalse(UrlHelper::isValid($parts['path'], TRUE), '\Drupal\Component\Utility\UrlHelper::isValid() correctly parsed a forged URL.');
   }
 
   /**

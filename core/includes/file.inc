@@ -5,6 +5,7 @@
  * API for handling file uploads and server file management.
  */
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Settings;
@@ -472,7 +473,7 @@ function file_create_url($uri) {
     else {
       // If this is not a properly formatted stream, then it is a shipped file.
       // Therefore, return the urlencoded URI with the base URL prepended.
-      return $GLOBALS['base_url'] . '/' . drupal_encode_path($uri);
+      return $GLOBALS['base_url'] . '/' . UrlHelper::encodePath($uri);
     }
   }
   elseif ($scheme == 'http' || $scheme == 'https') {

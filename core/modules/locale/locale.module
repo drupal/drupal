@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
@@ -1121,7 +1122,7 @@ function _locale_strip_quotes($string) {
 function _locale_parse_js_file($filepath) {
   // The file path might contain a query string, so make sure we only use the
   // actual file.
-  $parsed_url = drupal_parse_url($filepath);
+  $parsed_url = UrlHelper::parse($filepath);
   $filepath = $parsed_url['path'];
 
   // If there is still a protocol component in the path, reject that.

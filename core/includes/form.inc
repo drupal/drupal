@@ -2624,7 +2624,7 @@ function form_validate_url(&$element, &$form_state) {
   $value = trim($element['#value']);
   form_set_value($element, $value, $form_state);
 
-  if ($value !== '' && !valid_url($value, TRUE)) {
+  if ($value !== '' && !UrlHelper::isValid($value, TRUE)) {
     form_error($element, $form_state, t('The URL %url is not valid.', array('%url' => $value)));
   }
 }
