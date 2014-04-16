@@ -182,6 +182,26 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
+   * Test block display of theme titles.
+   */
+  function testThemeName() {
+    \Drupal::moduleHandler()->install(array('block_test'));
+    // Explicitly set the default and admin themes.
+    $theme = 'cat_mouse';
+    theme_enable(array($theme, 'seven', 'block_test_theme'));
+    $this->resetAll();
+
+    \Drupal::config('system.theme')
+      ->set('default', 'seven')
+      ->set('admin', 'seven')
+      ->save();
+    \Drupal::service('router.builder')->rebuild();
+    $this->drupalGet('admin/appearance');
+    $this->drupalGet('admin/structure/block');
+    $this->assertText('&lt;&quot;Cat&quot; &amp; &#039;Mouse&#039;&gt;');
+  }
+
+  /**
    * Test block title display settings.
    */
   function testHideBlockTitle() {

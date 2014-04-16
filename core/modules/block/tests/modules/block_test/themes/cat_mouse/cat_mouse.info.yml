@@ -1,0 +1,16 @@
+name: '<"Cat" & ''Mouse''>'
+type: theme
+description: 'Theme for testing special characters in block admin.'
+core: 8.x
+hidden: true
+regions:
+  sidebar_first: 'Left sidebar'
+  sidebar_second: 'Right sidebar'
+  content: Content
+  header: Header
+  footer: Footer
+  highlighted: Highlighted
+  help: Help
+regions_hidden:
+  - sidebar_first
+  - sidebar_second
