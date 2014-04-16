@@ -68,8 +68,15 @@ class OptionsWidgetsTest extends FieldTestBase {
       'type' => 'list_integer',
       'cardinality' => 1,
       'settings' => array(
-        // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>', 3 => 'Some HTML encoded markup with &lt; &amp; &gt;'),
+        'allowed_values' => array(
+          // Make sure that 0 works as an option.
+          0 => 'Zero',
+          1 => 'One',
+          // Make sure that option text is properly sanitized.
+          2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+          // Make sure that HTML entities in option text are not double-encoded.
+          3 => 'Some HTML encoded markup with &lt; &amp; &gt;',
+        ),
       ),
     ));
     $this->card_1->save();
@@ -81,8 +88,13 @@ class OptionsWidgetsTest extends FieldTestBase {
       'type' => 'list_integer',
       'cardinality' => 2,
       'settings' => array(
-        // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(
+          // Make sure that 0 works as an option.
+          0 => 'Zero',
+          1 => 'One',
+          // Make sure that option text is properly sanitized.
+          2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+        ),
       ),
     ));
     $this->card_2->save();
@@ -94,7 +106,12 @@ class OptionsWidgetsTest extends FieldTestBase {
       'type' => 'list_boolean',
       'cardinality' => 1,
       'settings' => array(
-        'allowed_values' => array(0 => 'Zero', 1 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(
+          // Make sure that 0 works as an option.
+          0 => 'Zero',
+          // Make sure that option text is properly sanitized.
+          1 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+        ),
       ),
     ));
     $this->bool->save();
@@ -540,7 +557,12 @@ class OptionsWidgetsTest extends FieldTestBase {
       'type' => 'list_boolean',
       'cardinality' => 1,
       'settings' => array(
-        'allowed_values' => array(0 => 'Zero', 1 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(
+          // Make sure that 0 works as an option.
+          0 => 'Zero',
+          // Make sure that option text is properly sanitized.
+          1 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
+        ),
       ),
     ))->save();
     entity_create('field_instance_config', array(
