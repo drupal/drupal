@@ -284,13 +284,6 @@ class TestFormBuilder extends FormBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function menuGetItem() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
   }
 
