@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Functions that need to be loaded on every Drupal request.
+ */
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
@@ -24,11 +28,6 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-
-/**
- * @file
- * Functions that need to be loaded on every Drupal request.
- */
 
 /**
  * Minimum supported version of PHP.
