@@ -56,4 +56,16 @@ interface ImportableEntityStorageInterface {
    */
   public function importDelete($name, Config $new_config, Config $old_config);
 
+  /**
+   * Renames entities upon synchronizing configuration changes.
+   *
+   * @param string $old_name
+   *   The original name of the configuration object.
+   * @param \Drupal\Core\Config\Config $new_config
+   *   A configuration object containing the new configuration data.
+   * @param \Drupal\Core\Config\Config $old_config
+   *   A configuration object containing the old configuration data.
+   */
+  public function importRename($old_name, Config $new_config, Config $old_config);
+
 }

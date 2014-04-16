@@ -455,4 +455,19 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function importRename($old_name, Config $new_config, Config $old_config) {
+    $id = static::getIDFromConfigName($old_name, $this->entityType->getConfigPrefix());
+    $entity = $this->load($id);
+    $entity->setSyncing(TRUE);
+    $data = $new_config->get();
+    foreach ($data as $key => $value) {
+      $entity->set($key, $value);
+    }
+    $entity->save();
+    return TRUE;
+  }
+
 }

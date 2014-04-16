@@ -184,8 +184,8 @@ class ConfigSync extends FormBase {
     // Add the AJAX library to the form for dialog support.
     $form['#attached']['library'][] = 'core/drupal.ajax';
 
-    foreach ($storage_comparer->getChangelist() as $config_change_type => $config_files) {
-      if (empty($config_files)) {
+    foreach ($storage_comparer->getChangelist() as $config_change_type => $config_names) {
+      if (empty($config_names)) {
         continue;
       }
 
@@ -197,15 +197,19 @@ class ConfigSync extends FormBase {
       );
       switch ($config_change_type) {
         case 'create':
-          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_files), '@count new', '@count new');
+          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count new', '@count new');
           break;
 
         case 'update':
-          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_files), '@count changed', '@count changed');
+          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count changed', '@count changed');
           break;
 
         case 'delete':
-          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_files), '@count removed', '@count removed');
+          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count removed', '@count removed');
+          break;
+
+        case 'rename':
+          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count renamed', '@count renamed');
           break;
       }
       $form[$config_change_type]['list'] = array(
@@ -213,10 +217,18 @@ class ConfigSync extends FormBase {
         '#header' => array('Name', 'Operations'),
       );
 
-      foreach ($config_files as $config_file) {
+      foreach ($config_names as $config_name) {
+        if ($config_change_type == 'rename') {
+          $names = $storage_comparer->extractRenameNames($config_name);
+          $href = $this->urlGenerator->getPathFromRoute('config.diff', array('source_name' => $names['old_name'], 'target_name' => $names['new_name']));
+          $config_name = $this->t('!source_name to !target_name', array('!source_name' => $names['old_name'], '!target_name' => $names['new_name']));
+        }
+        else {
+          $href = $this->urlGenerator->getPathFromRoute('config.diff', array('source_name' => $config_name));
+        }
         $links['view_diff'] = array(
           'title' => $this->t('View differences'),
-          'href' => $this->urlGenerator->getPathFromRoute('config.diff', array('config_file' => $config_file)),
+          'href' => $href,
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-accepts' => 'application/vnd.drupal-modal',
@@ -226,7 +238,7 @@ class ConfigSync extends FormBase {
           ),
         );
         $form[$config_change_type]['list']['#rows'][] = array(
-          'name' => $config_file,
+          'name' => $config_name,
           'operations' => array(
             'data' => array(
               '#type' => 'operations',

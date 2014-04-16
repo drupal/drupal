@@ -100,7 +100,10 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $name) {
+  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $source_name, $target_name = NULL) {
+    if (!isset($target_name)) {
+      $target_name = $source_name;
+    }
     // @todo Replace with code that can be autoloaded.
     //   https://drupal.org/node/1848266
     require_once __DIR__ . '/../../Component/Diff/DiffEngine.php';
@@ -111,8 +114,8 @@ class ConfigManager implements ConfigManagerInterface {
     $dumper = new Dumper();
     $dumper->setIndentation(2);
 
-    $source_data = explode("\n", $dumper->dump($source_storage->read($name), PHP_INT_MAX));
-    $target_data = explode("\n", $dumper->dump($target_storage->read($name), PHP_INT_MAX));
+    $source_data = explode("\n", $dumper->dump($source_storage->read($source_name), PHP_INT_MAX));
+    $target_data = explode("\n", $dumper->dump($target_storage->read($target_name), PHP_INT_MAX));
 
     // Check for new or removed files.
     if ($source_data === array('false')) {

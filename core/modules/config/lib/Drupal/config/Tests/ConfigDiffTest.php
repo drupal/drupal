@@ -84,6 +84,33 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     $this->assertEqual($diff->edits[1]->type, 'add', 'The second item in the diff is an add.');
     $this->assertFalse($diff->edits[1]->orig, format_string("The key '%add_key' does not exist in active.", array('%add_key' => $add_key)));
     $this->assertEqual($diff->edits[1]->closing[0], $add_key . ': ' . $add_data, format_string("The staging value for key '%add_key' is '%add_data'.", array('%add_key' => $add_key, '%add_data' => $add_data)));
+
+    // Test diffing a renamed config entity.
+    $test_entity_id = $this->randomName();
+    $test_entity = entity_create('config_test', array(
+      'id' => $test_entity_id,
+      'label' => $this->randomName(),
+    ));
+    $test_entity->save();
+    $data = $active->read('config_test.dynamic.' . $test_entity_id);
+    $staging->write('config_test.dynamic.' . $test_entity_id, $data);
+    $config_name = 'config_test.dynamic.' . $test_entity_id;
+    $diff = \Drupal::service('config.manager')->diff($active, $staging, $config_name, $config_name);
+    // Prove the fields match.
+    $this->assertEqual($diff->edits[0]->type, 'copy',  'The first item in the diff is a copy.');
+    $this->assertEqual(count($diff->edits), 1, 'There is one item in the diff');
+
+    // Rename the entity.
+    $new_test_entity_id = $this->randomName();
+    $test_entity->set('id', $new_test_entity_id);
+    $test_entity->save();
+
+    $diff = \Drupal::service('config.manager')->diff($active, $staging, 'config_test.dynamic.' . $new_test_entity_id, $config_name);
+    $this->assertEqual($diff->edits[0]->type, 'change',  'The second item in the diff is a copy.');
+    $this->assertEqual($diff->edits[0]->orig, array('id: ' . $new_test_entity_id));
+    $this->assertEqual($diff->edits[0]->closing, array('id: ' . $test_entity_id));
+    $this->assertEqual($diff->edits[1]->type, 'copy',  'The second item in the diff is a copy.');
+    $this->assertEqual(count($diff->edits), 2, 'There are two items in the diff.');
   }
 
 }

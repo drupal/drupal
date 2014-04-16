@@ -46,15 +46,18 @@ interface ConfigManagerInterface {
    *   The storage to diff configuration from.
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   The storage to diff configuration to.
-   * @param string $name
-   *   The name of the configuration object to diff.
+   * @param string $source_name
+   *   The name of the configuration object in the source storage to diff.
+   * @param string $target_name
+   *   (optional) The name of the configuration object in the target storage.
+   *   If omitted, the source name is used.
    *
    * @return core/lib/Drupal/Component/Diff
    *   A formatted string showing the difference between the two storages.
    *
    * @todo Make renderer injectable
    */
-  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $name);
+  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $source_name, $target_name = NULL);
 
   /**
    * Creates a configuration snapshot following a successful import.

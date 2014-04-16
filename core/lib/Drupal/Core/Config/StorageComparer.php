@@ -100,6 +100,7 @@ class StorageComparer implements StorageComparerInterface {
       'create' => array(),
       'update' => array(),
       'delete' => array(),
+      'rename' => array(),
     );
   }
 
@@ -117,7 +118,7 @@ class StorageComparer implements StorageComparerInterface {
    * Adds changes to the changelist.
    *
    * @param string $op
-   *   The change operation performed. Either delete, create or update.
+   *   The change operation performed. Either delete, create, rename, or update.
    * @param array $changes
    *   Array of changes to add to the changelist.
    * @param array $sort_order
@@ -147,6 +148,7 @@ class StorageComparer implements StorageComparerInterface {
     $this->addChangelistCreate();
     $this->addChangelistUpdate();
     $this->addChangelistDelete();
+    $this->addChangelistRename();
     $this->sourceData = NULL;
     $this->targetData = NULL;
     return $this;
@@ -209,6 +211,80 @@ class StorageComparer implements StorageComparerInterface {
   }
 
   /**
+   * Creates the rename changelist.
+   *
+   * The list of renames is created from the different source and target names
+   * with same UUID. These changes will be removed from the create and delete
+   * lists.
+   */
+  protected function addChangelistRename() {
+    // Renames will be present in both the create and delete lists.
+    $create_list = $this->getChangelist('create');
+    $delete_list = $this->getChangelist('delete');
+    if (empty($create_list) || empty($delete_list)) {
+      return;
+    }
+
+    $create_uuids = array();
+    foreach ($this->sourceData as $id => $data) {
+      if (isset($data['uuid']) && in_array($id, $create_list)) {
+        $create_uuids[$data['uuid']] = $id;
+      }
+    }
+    if (empty($create_uuids)) {
+      return;
+    }
+
+    $renames = array();
+
+    // Renames should be ordered so that dependencies are renamed last. This
+    // ensures that if there is logic in the configuration entity class to keep
+    // names in sync it will still work. $this->targetNames is in the desired
+    // order due to the use of configuration dependencies in
+    // \Drupal\Core\Config\StorageComparer::getAndSortConfigData().
+    // Node type is a good example of a configuration entity that renames other
+    // configuration when it is renamed.
+    // @see \Drupal\node\Entity\NodeType::postSave()
+    foreach ($this->targetNames as $name) {
+      $data = $this->targetData[$name];
+      if (isset($data['uuid']) && isset($create_uuids[$data['uuid']])) {
+        // Remove the item from the create list.
+        $this->removeFromChangelist('create', $create_uuids[$data['uuid']]);
+        // Remove the item from the delete list.
+        $this->removeFromChangelist('delete', $name);
+        // Create the rename name.
+        $renames[] = $this->createRenameName($name, $create_uuids[$data['uuid']]);
+      }
+    }
+
+    $this->addChangeList('rename', $renames);
+  }
+
+  /**
+   * Removes the entry from the given operation changelist for the given name.
+   *
+   * @param string $op
+   *   The changelist to act on. Either delete, create, rename or update.
+   * @param string $name
+   *   The name of the configuration to remove.
+   */
+  protected function removeFromChangelist($op, $name) {
+    $key = array_search($name, $this->changelist[$op]);
+    if ($key !== FALSE) {
+      unset($this->changelist[$op][$key]);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function moveRenameToUpdate($rename) {
+    $names = $this->extractRenameNames($rename);
+    $this->removeFromChangelist('rename', $rename);
+    $this->addChangeList('update', array($names['new_name']), $this->sourceNames);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function reset() {
@@ -220,7 +296,7 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasChanges($ops = array('delete', 'create', 'update')) {
+  public function hasChanges($ops = array('delete', 'create', 'update', 'rename')) {
     foreach ($ops as $op) {
       if (!empty($this->changelist[$op])) {
         return TRUE;
@@ -249,4 +325,31 @@ class StorageComparer implements StorageComparerInterface {
     $this->sourceNames = $dependency_manager->setData($this->sourceData)->sortAll();
   }
 
+  /**
+   * Creates a rename name from the old and new names for the object.
+   *
+   * @param string $old_name
+   *   The old configuration object name.
+   * @param string $new_name
+   *   The new configuration object name.
+   *
+   * @return string
+   *   The configuration change name that encodes both the old and the new name.
+   *
+   * @see \Drupal\Core\Config\StorageComparerInterface::extractRenameNames()
+   */
+  protected function createRenameName($name1, $name2) {
+    return $name1 . '::' . $name2;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function extractRenameNames($name) {
+    $names = explode('::', $name, 2);
+    return array(
+      'old_name' => $names[0],
+      'new_name' => $names[1],
+    );
+  }
 }

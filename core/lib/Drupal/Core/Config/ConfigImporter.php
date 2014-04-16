@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -263,12 +264,12 @@ class ConfigImporter extends DependencySerialization {
    *
    * @param array $ops
    *   The operations to check for changes. Defaults to all operations, i.e.
-   *   array('delete', 'create', 'update').
+   *   array('delete', 'create', 'update', 'rename').
    *
    * @return bool
    *   TRUE if there are changes to process and FALSE if not.
    */
-  public function hasUnprocessedConfigurationChanges($ops = array('delete', 'create', 'update')) {
+  public function hasUnprocessedConfigurationChanges($ops = array('delete', 'create', 'rename', 'update')) {
     foreach ($ops as $op) {
       if (count($this->getUnprocessedConfiguration($op))) {
         return TRUE;
@@ -291,7 +292,7 @@ class ConfigImporter extends DependencySerialization {
    * Sets a change as processed.
    *
    * @param string $op
-   *   The change operation performed, either delete, create or update.
+   *   The change operation performed, either delete, create, rename, or update.
    * @param string $name
    *   The name of the configuration processed.
    */
@@ -304,7 +305,7 @@ class ConfigImporter extends DependencySerialization {
    *
    * @param string $op
    *   The change operation to get the unprocessed list for, either delete,
-   *   create or update.
+   *   create, rename, or update.
    *
    * @return array
    *   An array of configuration names.
@@ -586,7 +587,7 @@ class ConfigImporter extends DependencySerialization {
     // into account.
     if ($this->totalConfigurationToProcess == 0) {
       $this->storageComparer->reset();
-      foreach (array('delete', 'create', 'update') as $op) {
+      foreach (array('delete', 'create', 'rename', 'update') as $op) {
         foreach ($this->getUnprocessedConfiguration($op) as $name) {
           $this->totalConfigurationToProcess += count($this->getUnprocessedConfiguration($op));
         }
@@ -662,7 +663,7 @@ class ConfigImporter extends DependencySerialization {
   protected function getNextConfigurationOperation() {
     // The order configuration operations is processed is important. Deletes
     // have to come first so that recreates can work.
-    foreach (array('delete', 'create', 'update') as $op) {
+    foreach (array('delete', 'create', 'rename', 'update') as $op) {
       $config_names = $this->getUnprocessedConfiguration($op);
       if (!empty($config_names)) {
         return array(
@@ -685,6 +686,19 @@ class ConfigImporter extends DependencySerialization {
    */
   public function validate() {
     if (!$this->validated) {
+      // Validate renames.
+      foreach ($this->getUnprocessedConfiguration('rename') as $name) {
+        $names = $this->storageComparer->extractRenameNames($name);
+        $old_entity_type_id = $this->configManager->getEntityTypeIdByName($names['old_name']);
+        $new_entity_type_id = $this->configManager->getEntityTypeIdByName($names['new_name']);
+        if ($old_entity_type_id != $new_entity_type_id) {
+          $this->logError($this->t('Entity type mismatch on rename. !old_type not equal to !new_type for existing configuration !old_name and staged configuration !new_name.', array('old_type' => $old_entity_type_id, 'new_type' => $new_entity_type_id, 'old_name' => $names['old_name'], 'new_name' => $names['new_name'])));
+        }
+        // Has to be a configuration entity.
+        if (!$old_entity_type_id) {
+          $this->logError($this->t('Rename operation for simple configuration. Existing configuration !old_name and staged configuration !new_name.', array('old_name' => $names['old_name'], 'new_name' => $names['new_name'])));
+        }
+      }
       $this->eventDispatcher->dispatch(ConfigEvents::IMPORT_VALIDATE, new ConfigImporterEvent($this));
       if (count($this->getErrors())) {
         throw new ConfigImporterException('There were errors validating the config synchronization.');
@@ -787,6 +801,20 @@ class ConfigImporter extends DependencySerialization {
    *   TRUE is to continue processing, FALSE otherwise.
    */
   protected function checkOp($op, $name) {
+    if ($op == 'rename') {
+      $names = $this->storageComparer->extractRenameNames($name);
+      $target_exists = $this->storageComparer->getTargetStorage()->exists($names['new_name']);
+      if ($target_exists) {
+        // If the target exists, the rename has already occurred as the
+        // result of a secondary configuration write. Change the operation
+        // into an update. This is the desired behavior since renames often
+        // have to occur together. For example, renaming a node type must
+        // also result in renaming its field instances and entity displays.
+        $this->storageComparer->moveRenameToUpdate($name);
+        return FALSE;
+      }
+      return TRUE;
+    }
     $target_exists = $this->storageComparer->getTargetStorage()->exists($name);
     switch ($op) {
       case 'delete':
@@ -862,7 +890,7 @@ class ConfigImporter extends DependencySerialization {
    *
    * @param string $op
    *   The change operation to get the unprocessed list for, either delete,
-   *   create or update.
+   *   create, rename, or update.
    * @param string $name
    *   The name of the configuration to process.
    *
@@ -875,6 +903,10 @@ class ConfigImporter extends DependencySerialization {
    *   otherwise.
    */
   protected function importInvokeOwner($op, $name) {
+    // Renames are handled separately.
+    if ($op == 'rename') {
+      return $this->importInvokeRename($name);
+    }
     // Validate the configuration object name before importing it.
     // Config::validateName($name);
     if ($entity_type = $this->configManager->getEntityTypeIdByName($name)) {
@@ -900,6 +932,45 @@ class ConfigImporter extends DependencySerialization {
       $this->setProcessedConfiguration($op, $name);
       return TRUE;
     }
+    return FALSE;
+  }
+
+  /**
+   * Imports a configuration entity rename.
+   *
+   * @param string $rename_name
+   *   The rename configuration name, as provided by
+   *   \Drupal\Core\Config\StorageComparer::createRenameName().
+   *
+   * @return bool
+   *   TRUE if the configuration was imported as a configuration entity. FALSE
+   *   otherwise.
+   *
+   * @see \Drupal\Core\Config\ConfigImporter::createRenameName()
+   */
+  protected function importInvokeRename($rename_name) {
+    $names = $this->storageComparer->extractRenameNames($rename_name);
+    $entity_type_id = $this->configManager->getEntityTypeIdByName($names['old_name']);
+    $old_config = new Config($names['old_name'], $this->storageComparer->getTargetStorage(), $this->eventDispatcher, $this->typedConfigManager);
+    if ($old_data = $this->storageComparer->getTargetStorage()->read($names['old_name'])) {
+      $old_config->initWithData($old_data);
+    }
+
+    $data = $this->storageComparer->getSourceStorage()->read($names['new_name']);
+    $new_config = new Config($names['new_name'], $this->storageComparer->getTargetStorage(), $this->eventDispatcher, $this->typedConfigManager);
+    if ($data !== FALSE) {
+      $new_config->setData($data);
+    }
+
+    $entity_storage = $this->configManager->getEntityManager()->getStorage($entity_type_id);
+    // Call to the configuration entity's storage to handle the configuration
+    // change.
+    if (!($entity_storage instanceof ImportableEntityStorageInterface)) {
+      throw new EntityStorageException(String::format('The entity storage "@storage" for the "@entity_type" entity type does not support imports', array('@storage' => get_class($entity_storage), '@entity_type' => $entity_type_id)));
+    }
+    $entity_storage->importRename($names['old_name'], $new_config, $old_config);
+    $this->setProcessedConfiguration('rename', $rename_name);
+    return TRUE;
   }
 
   /**
