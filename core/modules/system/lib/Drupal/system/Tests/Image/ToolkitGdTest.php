@@ -15,6 +15,14 @@ use Drupal\Component\Utility\String;
  * Test the core GD image manipulation functions.
  */
 class ToolkitGdTest extends DrupalUnitTestBase {
+
+  /**
+   * The image factory service.
+   *
+   * @var \Drupal\Core\Image\ImageFactory
+   */
+  protected $imageFactory;
+
   // Colors that are used in testing.
   protected $black       = array(0, 0, 0, 0);
   protected $red         = array(255, 0, 0, 0);
@@ -41,6 +49,16 @@ class ToolkitGdTest extends DrupalUnitTestBase {
       'description' => 'Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.',
       'group' => 'Image',
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    // Set the image factory service.
+    $this->imageFactory = $this->container->get('image.factory');
   }
 
   protected function checkRequirements() {
@@ -92,6 +110,10 @@ class ToolkitGdTest extends DrupalUnitTestBase {
    * the expected height and widths for the final images.
    */
   function testManipulations() {
+
+    // Test that the image factory is set to use the GD toolkit.
+    $this->assertEqual($this->imageFactory->getToolkitId(), 'gd', 'The image factory is set to use the \'gd\' image toolkit.');
+
     // Typically the corner colors will be unchanged. These colors are in the
     // order of top-left, top-right, bottom-right, bottom-left.
     $default_corners = array($this->red, $this->green, $this->blue, $this->transparent);
@@ -211,11 +233,10 @@ class ToolkitGdTest extends DrupalUnitTestBase {
       );
     }
 
-    $image_factory = $this->container->get('image.factory')->setToolkitId('gd');
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {
         // Load up a fresh image.
-        $image = $image_factory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
+        $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
         $toolkit = $image->getToolkit();
         if (!$image) {
           $this->fail(String::format('Could not load image %file.', array('%file' => $file)));

@@ -88,16 +88,13 @@ class GDToolkit extends ImageToolkitBase {
 
     $res = $this->createTmp($image->getType(), $width, $height);
 
-    if (!imagecopyresampled($res, $this->getResource(), 0, 0, 0, 0, $width, $height, $image->getWidth(), $image->getHeight())) {
+    if (!imagecopyresampled($res, $this->getResource(), 0, 0, 0, 0, $width, $height, $this->getWidth($image), $this->getHeight($image))) {
       return FALSE;
     }
 
     imagedestroy($this->getResource());
     // Update image object.
     $this->setResource($res);
-    $image
-      ->setWidth($width)
-      ->setHeight($height);
     return TRUE;
   }
 
@@ -147,9 +144,6 @@ class GDToolkit extends ImageToolkitBase {
       imagecolortransparent($this->getResource(), $background);
     }
 
-    $image
-      ->setWidth(imagesx($this->getResource()))
-      ->setHeight(imagesy($this->getResource()));
     return TRUE;
   }
 
@@ -159,7 +153,7 @@ class GDToolkit extends ImageToolkitBase {
   public function crop(ImageInterface $image, $x, $y, $width, $height) {
     // @todo Dimensions computation will be moved into a dedicated functionality
     //   in https://drupal.org/node/2108307.
-    $aspect = $image->getHeight() / $image->getWidth();
+    $aspect = $this->getHeight($image) / $this->getWidth($image);
     $height = empty($height) ? $width * $aspect : $height;
     $width = empty($width) ? $height / $aspect : $width;
     $width = (int) round($width);
@@ -174,9 +168,6 @@ class GDToolkit extends ImageToolkitBase {
     // Destroy the original image and return the modified image.
     imagedestroy($this->getResource());
     $this->setResource($res);
-    $image
-      ->setWidth($width)
-      ->setHeight($height);
     return TRUE;
   }
 
@@ -200,8 +191,8 @@ class GDToolkit extends ImageToolkitBase {
     // @todo Dimensions computation will be moved into a dedicated functionality
     //   in https://drupal.org/node/2108307.
     $dimensions = array(
-      'width' => $image->getWidth(),
-      'height' => $image->getHeight(),
+      'width' => $this->getWidth($image),
+      'height' => $this->getHeight($image),
     );
 
     // Scale the dimensions - if they don't change then just return success.
@@ -218,11 +209,11 @@ class GDToolkit extends ImageToolkitBase {
   public function scaleAndCrop(ImageInterface $image, $width, $height) {
     // @todo Dimensions computation will be moved into a dedicated functionality
     //   in https://drupal.org/node/2108307.
-    $scale = max($width / $image->getWidth(), $height / $image->getHeight());
-    $x = ($image->getWidth() * $scale - $width) / 2;
-    $y = ($image->getHeight() * $scale - $height) / 2;
+    $scale = max($width / $this->getWidth($image), $height / $this->getHeight($image));
+    $x = ($this->getWidth($image) * $scale - $width) / 2;
+    $y = ($this->getHeight($image) * $scale - $height) / 2;
 
-    if ($this->resize($image, $image->getWidth() * $scale, $image->getHeight() * $scale)) {
+    if ($this->resize($image, $this->getWidth($image) * $scale, $this->getHeight($image) * $scale)) {
       return $this->crop($image, $x, $y, $width, $height);
     }
 
@@ -247,8 +238,8 @@ class GDToolkit extends ImageToolkitBase {
       if (!imageistruecolor($resource)) {
         // Convert indexed images to true color, so that filters work
         // correctly and don't result in unnecessary dither.
-        $new_image = $this->createTmp($details['type'], $details['width'], $details['height']);
-        imagecopy($new_image, $resource, 0, 0, 0, 0, $details['width'], $details['height']);
+        $new_image = $this->createTmp($details['type'], imagesx($resource), imagesy($resource));
+        imagecopy($new_image, $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
         imagedestroy($resource);
         $this->setResource($new_image);
       }
@@ -301,18 +292,11 @@ class GDToolkit extends ImageToolkitBase {
    * {@inheritdoc}
    */
   public function getInfo(ImageInterface $image) {
-    $details = FALSE;
+    $details = array();
     $data = getimagesize($image->getSource());
 
-    if (isset($data) && is_array($data) && in_array($data[2], $this->supportedTypes())) {
-      $details = array(
-        'width'     => $data[0],
-        'height'    => $data[1],
-        'type'      => $data[2],
-      );
-    }
-
-    if ($details) {
+    if (isset($data) && is_array($data) && in_array($data[2], static::supportedTypes())) {
+      $details['type'] = $data[2];
       $this->load($image->getSource(), $details);
     }
     return $details;
@@ -361,6 +345,20 @@ class GDToolkit extends ImageToolkitBase {
     }
 
     return $res;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWidth(ImageInterface $image) {
+    return $this->getResource() ? imagesx($this->getResource()) : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHeight(ImageInterface $image) {
+    return $this->getResource() ? imagesy($this->getResource()) : NULL;
   }
 
   /**

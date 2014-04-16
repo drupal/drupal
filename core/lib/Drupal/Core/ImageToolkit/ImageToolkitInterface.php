@@ -63,8 +63,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * Scales an image to the specified size.
    *
    * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object. The $image->resource, $image->info['width'], and
-   *   $image->info['height'] values will be modified by this call.
+   *   An image object.
    * @param int $width
    *   The new width of the resized image, in pixels.
    * @param int $height
@@ -79,8 +78,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * Rotates an image the given number of degrees.
    *
    * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object. The $image->resource, $image->info['width'], and
-   *   $image->info['height'] values will be modified by this call.
+   *   An image object.
    * @param int $degrees
    *   The number of (clockwise) degrees to rotate the image.
    * @param string $background
@@ -99,8 +97,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * Crops an image.
    *
    * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object. The $image->resource, $image->info['width'], and
-   *   $image->info['height'] values will be modified by this call.
+   *   An image object.
    * @param int $x
    *   The starting x offset at which to start the crop, in pixels.
    * @param int $y
@@ -194,15 +191,35 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *   An image object.
    *
    * @return array
-   *   FALSE, if the file could not be found or is not an image. Otherwise, a
-   *   keyed array containing information about the image:
-   *   - "width": Width, in pixels.
-   *   - "height": Height, in pixels.
+   *   If the file could not be found or is not an image, an empty array;
+   *   otherwise, a keyed array containing information about the image:
    *   - "type": Image type represented as an IMAGETYPE_* constant.
    *
    * @see \Drupal\Core\Image\ImageInterface::processInfo()
    */
   public function getInfo(ImageInterface $image);
+
+  /**
+   * Returns the height of the image.
+   *
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   An image object.
+   *
+   * @return int|null
+   *   The height of the image, or NULL if the image is invalid.
+   */
+  public function getHeight(ImageInterface $image);
+
+  /**
+   * Returns the width of the image.
+   *
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   An image object.
+   *
+   * @return int|null
+   *   The width of the image, or NULL if the image is invalid.
+   */
+  public function getWidth(ImageInterface $image);
 
   /**
    * Gets toolkit requirements in a format suitable for hook_requirements().

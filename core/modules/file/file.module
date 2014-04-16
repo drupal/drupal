@@ -407,9 +407,8 @@ function file_validate_is_image(File $file) {
 
   $image = \Drupal::service('image.factory')->get($file->getFileUri());
   if (!$image->isSupported()) {
-    $toolkit = \Drupal::service('image.toolkit.manager')->getDefaultToolkit();
     $extensions = array();
-    foreach ($toolkit->supportedTypes() as $image_type) {
+    foreach ($image->getToolkit()->supportedTypes() as $image_type) {
       $extensions[] = Unicode::strtoupper(image_type_to_extension($image_type));
     }
     $errors[] = t('Image type not supported. Allowed types: @types.', array('@types' => implode(', ', $extensions)));

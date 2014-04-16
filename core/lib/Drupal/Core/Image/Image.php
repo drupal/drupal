@@ -34,20 +34,6 @@ class Image implements ImageInterface {
   protected $toolkit;
 
   /**
-   * Height, in pixels.
-   *
-   * @var int
-   */
-  protected $height = 0;
-
-  /**
-   * Width, in pixels.
-   *
-   * @var int
-   */
-  protected $width = 0;
-
-  /**
    * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
    *
    * @var int
@@ -71,14 +57,18 @@ class Image implements ImageInterface {
   /**
    * Constructs a new Image object.
    *
-   * @param string $source
-   *   The path to an image file.
    * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
    *   The image toolkit.
+   * @param string|null $source
+   *   (optional) The path to an image file, or NULL to construct the object
+   *   with no image source.
    */
-  public function __construct($source, ImageToolkitInterface $toolkit) {
-    $this->source = $source;
+  public function __construct(ImageToolkitInterface $toolkit, $source = NULL) {
     $this->toolkit = $toolkit;
+    if ($source) {
+      $this->source = $source;
+      $this->processInfo();
+    }
   }
 
   /**
@@ -101,15 +91,7 @@ class Image implements ImageInterface {
    */
   public function getHeight() {
     $this->processInfo();
-    return $this->height;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setHeight($height) {
-    $this->height = $height;
-    return $this;
+    return $this->toolkit->getHeight($this);
   }
 
   /**
@@ -117,15 +99,7 @@ class Image implements ImageInterface {
    */
   public function getWidth() {
     $this->processInfo();
-    return $this->width;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setWidth($width) {
-    $this->width = $width;
-    return $this;
+    return $this->toolkit->getWidth($this);
   }
 
   /**
@@ -225,8 +199,6 @@ class Image implements ImageInterface {
     }
 
     if ($details = $this->toolkit->getInfo($this)) {
-      $this->height = $details['height'];
-      $this->width = $details['width'];
       $this->type = $details['type'];
       $this->fileSize = filesize($destination);
 
@@ -244,7 +216,7 @@ class Image implements ImageInterface {
    * interface method ImageInterface::apply(). An image operation will be
    * performed as in the next example:
    * @code
-   * $image = new Image($path, $toolkit);
+   * $image = new Image($toolkit, $path);
    * $image->apply('scale', array('width' => 50, 'height' => 100));
    * @endcode
    * Also in https://drupal.org/node/2110499 operation arguments sent to toolkit
@@ -255,11 +227,13 @@ class Image implements ImageInterface {
    */
   public function __call($method, $arguments) {
     // @todo Temporary to avoid that legacy GD setResource(), getResource(),
-    //  hasResource() methods moved to GD toolkit in #2103621 get invoked
-    //  from this class anyway through the magic __call. Will be removed
-    //  through https://drupal.org/node/2110499, when call_user_func_array()
-    //  will be replaced by $this->toolkit->apply($name, $this, $arguments).
-    if (in_array($method, array('setResource', 'getResource', 'hasResource'))) {
+    //  hasResource() methods moved to GD toolkit in #2103621, and setWidth(),
+    //  setHeight() methods moved to ImageToolkitInterface in #2196067 get
+    //  invoked from this class anyway through the magic __call. Will be
+    //  removed through https://drupal.org/node/2110499, when
+    //  call_user_func_array() will be replaced by
+    //  $this->toolkit->apply($name, $this, $arguments).
+    if (in_array($method, array('setResource', 'getResource', 'hasResource', 'setWidth', 'setHeight'))) {
       throw new \BadMethodCallException();
     }
     if (is_callable(array($this->toolkit, $method))) {

@@ -29,40 +29,20 @@ interface ImageInterface {
   public function isExisting();
 
   /**
-   * Returns the height of the image file.
+   * Returns the height of the image.
    *
-   * @return int
-   *   The height of the file, or 0 if the file is invalid.
+   * @return int|null
+   *   The height of the image, or NULL if the image is invalid.
    */
   public function getHeight();
 
   /**
-   * Sets the height of the image file.
+   * Returns the width of the image.
    *
-   * @param int $height
-   *
-   * @return self
-   *   Returns this image file.
-   */
-  public function setHeight($height);
-
-  /**
-   * Returns the width of the image file.
-   *
-   * @return int
-   *   The width of the file, or 0 if the file is invalid.
+   * @return int|null
+   *   The width of the image, or NULL if the image is invalid.
    */
   public function getWidth();
-
-  /**
-   * Sets the width of the image file.
-   *
-   * @param int $width
-   *
-   * @return self
-   *   Returns this image file.
-   */
-  public function setWidth($width);
 
   /**
    * Returns the size of the image file.

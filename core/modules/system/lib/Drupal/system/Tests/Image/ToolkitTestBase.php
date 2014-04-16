@@ -30,6 +30,13 @@ abstract class ToolkitTestBase extends WebTestBase {
   protected $file;
 
   /**
+   * The image factory service.
+   *
+   * @var \Drupal\Core\Image\ImageFactory
+   */
+  protected $imageFactory;
+
+  /**
    * The image object for the test file.
    *
    * @var \Drupal\Core\Image\ImageInterface
@@ -38,6 +45,9 @@ abstract class ToolkitTestBase extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+
+    // Set the image factory service.
+    $this->imageFactory = $this->container->get('image.factory');
 
     // Pick a file for testing.
     $file = current($this->drupalGetTestFiles('image'));
@@ -57,9 +67,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    *   The image object.
    */
   protected function getImage() {
-    $image = $this->container->get('image.factory')
-      ->setToolkitId('test')
-      ->get($this->file);
+    $image = $this->imageFactory->get($this->file, 'test');
     $this->assertTrue($image->isExisting(), 'Image was loaded.');
     return $image;
   }

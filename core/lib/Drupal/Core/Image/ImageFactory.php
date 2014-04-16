@@ -36,13 +36,14 @@ class ImageFactory {
    */
   public function __construct(ImageToolkitManager $toolkit_manager) {
     $this->toolkitManager = $toolkit_manager;
+    $this->toolkitId = $this->toolkitManager->getDefaultToolkitId();
   }
 
   /**
-   * Sets this factory image toolkit ID.
+   * Sets the ID of the image toolkit.
    *
    * @param string $toolkit_id
-   *   The image toolkit ID to use for this image factory.
+   *   The ID of the image toolkit to use for this image factory.
    *
    * @return self
    *   Returns this image.
@@ -53,19 +54,40 @@ class ImageFactory {
   }
 
   /**
-   * Constructs a new Image object.
+   * Gets the ID of the image toolkit currently in use.
    *
-   * @param string $source
-   *   The path to an image file.
-   *
-   * @return \Drupal\Core\Image\ImageInterface
-   *   The new Image object.
+   * @return string
+   *   The ID of the image toolkit in use by the image factory.
    */
-  public function get($source) {
-    if (!$this->toolkitId) {
-      $this->toolkitId = $this->toolkitManager->getDefaultToolkitId();
-    }
-    return new Image($source, $this->toolkitManager->createInstance($this->toolkitId));
+  public function getToolkitId() {
+    return $this->toolkitId;
   }
 
+  /**
+   * Constructs a new Image object.
+   *
+   * Normally, the toolkit set as default in the admin UI is used by the
+   * factory to create new Image objects. This can be overridden through
+   * \Drupal\Core\Image\ImageInterface::setToolkitId() so that any new Image
+   * object created will use the new toolkit specified. Finally, a single
+   * Image object can be created using a specific toolkit, regardless of the
+   * current factory settings, by passing its plugin ID in the $toolkit_id
+   * argument.
+   *
+   * @param string|null $source
+   *   (optional) The path to an image file, or NULL to construct the object
+   *   with no image source.
+   * @param string|null $toolkit_id
+   *   (optional) The ID of the image toolkit to use for this image, or NULL
+   *   to use the current toolkit.
+   *
+   * @return \Drupal\Core\Image\ImageInterface
+   *   An Image object.
+   *
+   * @see ImageFactory::setToolkitId()
+   */
+  public function get($source = NULL, $toolkit_id = NULL) {
+    $toolkit_id = $toolkit_id ?: $this->toolkitId;
+    return new Image($this->toolkitManager->createInstance($toolkit_id), $source);
+  }
 }
