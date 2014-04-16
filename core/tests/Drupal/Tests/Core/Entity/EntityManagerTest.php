@@ -149,7 +149,8 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->container, $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->formBuilder);
+    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->formBuilder);
+    $this->entityManager->setContainer($this->container);
     $this->entityManager->setDiscovery($this->discovery);
   }
 

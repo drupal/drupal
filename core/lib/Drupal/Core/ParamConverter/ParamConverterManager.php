@@ -7,7 +7,8 @@
 
 namespace Drupal\Core\ParamConverter;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
  * A typical use case for this would be upcasting (converting) a node id to a
  * node entity.
  */
-class ParamConverterManager extends ContainerAware implements ParamConverterManagerInterface {
+class ParamConverterManager implements ParamConverterManagerInterface, ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * An array of registered converter service ids.

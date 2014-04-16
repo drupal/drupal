@@ -8,13 +8,16 @@
 namespace Drupal\Core\Controller;
 
 use Drupal\Core\Ajax\AjaxResponseRenderer;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Default controller for Ajax requests.
  */
-class AjaxController extends ContainerAware {
+class AjaxController implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * The controller resolver.

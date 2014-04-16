@@ -7,7 +7,6 @@
 
 namespace Drupal\theme_test\EventSubscriber;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Theme test subscriber for controller requests.
  */
-class ThemeTestSubscriber extends ContainerAware implements EventSubscriberInterface {
+class ThemeTestSubscriber implements EventSubscriberInterface {
 
   /**
    * The used container.
@@ -23,6 +22,7 @@ class ThemeTestSubscriber extends ContainerAware implements EventSubscriberInter
    * @var \Symfony\Component\DependencyInjection\IntrospectableContainerInterface
    */
   protected $container;
+
 
   /**
    * Generates themed output early in a page request.

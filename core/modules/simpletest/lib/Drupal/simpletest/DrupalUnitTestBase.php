@@ -13,7 +13,6 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Reference;
 use Drupal\Core\Database\Database;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

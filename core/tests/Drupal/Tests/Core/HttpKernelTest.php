@@ -46,9 +46,11 @@ class HttpKernelTest extends UnitTestCase {
     $container->set('request', $request, 'request');
 
     $dispatcher = new EventDispatcher();
-    $controller_resolver = new ControllerResolver($container);
+    $controller_resolver = new ControllerResolver();
+    $controller_resolver->setContainer($container);
 
-    $http_kernel = new HttpKernel($dispatcher, $container, $controller_resolver);
+    $http_kernel = new HttpKernel($dispatcher, $controller_resolver);
+    $http_kernel->setContainer($container);
 
     $test_controller = '\Drupal\Tests\Core\Controller\TestController';
     $random_attribute = $this->randomName();

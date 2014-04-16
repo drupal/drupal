@@ -183,6 +183,10 @@ services:
     arguments: [ '%container.namespaces%' ]
     tags:
       - { name: persist }
+  container.trait:
+    abstract: true
+    calls:
+      - [setContainer, ['@service_container']]
   default_plugin_manager:
     abstract: true
     arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
@@ -194,7 +198,8 @@ services:
     arguments: ['@config.factory', '@module_handler', '@cache.default', '@info_parser', '@config.installer', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation']
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation']
+    parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }
   entity.form_builder:
@@ -239,13 +244,14 @@ services:
     arguments: ['@service_container']
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@service_container']
+    parent: container.trait
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation']
   http_kernel:
     class: Drupal\Core\HttpKernel
-    arguments: ['@event_dispatcher', '@service_container', '@controller_resolver', '@request_stack']
+    arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack']
+    parent: container.trait
   language_manager:
     class: Drupal\Core\Language\LanguageManager
     arguments: ['@language.default']
@@ -431,7 +437,8 @@ services:
       - { name: event_subscriber }
   route_content_form_controller_subscriber:
     class: Drupal\Core\EventSubscriber\ContentFormControllerSubscriber
-    arguments: ['@service_container', '@controller_resolver', '@form_builder']
+    arguments: ['@controller_resolver', '@form_builder']
+    parent: container.trait
     tags:
       - { name: event_subscriber }
   route_special_attributes_subscriber:

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * ControllerResolver to enhance controllers beyond Symfony's basic handling.
@@ -28,14 +28,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *    controller by using a service:method notation (Symfony uses the same
  *    convention).
  */
-class ControllerResolver extends BaseControllerResolver implements ControllerResolverInterface {
+class ControllerResolver extends BaseControllerResolver implements ControllerResolverInterface, ContainerAwareInterface {
 
-  /**
-   * The injection container that should be injected into all controllers.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
+   use ContainerAwareTrait;
 
   /**
    * The PSR-3 logger. (optional)
@@ -47,14 +42,10 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   /**
    * Constructs a new ControllerResolver.
    *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   A ContainerInterface instance.
    * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
    *   (optional) A LoggerInterface instance.
    */
-  public function __construct(ContainerInterface $container, LoggerInterface $logger = NULL) {
-    $this->container = $container;
-
+  public function __construct(LoggerInterface $logger = NULL) {
     parent::__construct($logger);
   }
 

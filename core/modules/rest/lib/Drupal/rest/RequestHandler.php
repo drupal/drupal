@@ -8,7 +8,8 @@
 namespace Drupal\rest;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -18,7 +19,9 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 /**
  * Acts as intermediate request forwarder for resource plugins.
  */
-class RequestHandler extends ContainerAware {
+class RequestHandler implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * Handles a web API request.

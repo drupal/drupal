@@ -6,8 +6,8 @@
  */
 
 namespace Drupal\Core\EventSubscriber;
-
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -15,8 +15,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Destructs services that are initiated and tagged with "needs_destruction".
  */
-class KernelDestructionSubscriber extends ContainerAware implements EventSubscriberInterface {
+class KernelDestructionSubscriber implements EventSubscriberInterface, ContainerAwareInterface {
 
+  use ContainerAwareTrait;
   /**
    * Holds an array of service ID's that will require destruction.
    *

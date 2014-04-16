@@ -8,12 +8,15 @@
 namespace Drupal\Core\Entity\Query;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Factory class Creating entity query objects.
  */
-class QueryFactory extends ContainerAware {
+class QueryFactory implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * Stores the entity manager used by the query.

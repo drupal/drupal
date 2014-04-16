@@ -14,14 +14,12 @@ namespace Drupal\Core;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernel as BaseHttpKernel;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * This HttpKernel is used to manage scope changes of the DI container.
@@ -29,30 +27,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class HttpKernel extends BaseHttpKernel
-{
-    protected $container;
+class HttpKernel extends BaseHttpKernel implements ContainerAwareInterface {
+
+    use ContainerAwareTrait;
 
     private $esiSupport;
-
-  /**
-   * Constructs a new HttpKernel.
-   *
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-   *   The event dispatcher.
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The dependency injection container.
-   * @param \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   */
-    public function __construct(EventDispatcherInterface $dispatcher, ContainerInterface $container, ControllerResolverInterface $controller_resolver, RequestStack $request_stack = NULL)
-    {
-        parent::__construct($dispatcher, $controller_resolver, $request_stack);
-
-        $this->container = $container;
-    }
 
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {

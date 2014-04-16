@@ -24,7 +24,8 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Manages entity type plugin definitions.
@@ -40,7 +41,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\Core\Entity\EntityTypeInterface
  * @see hook_entity_type_alter()
  */
-class EntityManager extends PluginManagerBase implements EntityManagerInterface {
+class EntityManager extends PluginManagerBase implements EntityManagerInterface, ContainerAwareInterface  {
+
+  use ContainerAwareTrait;
 
   /**
    * Extra fields by bundle.
@@ -48,13 +51,6 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * @var array
    */
   protected $extraFields = array();
-
-  /**
-   * The injection container that should be passed into the controller factory.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
 
   /**
    * Contains instantiated controllers keyed by controller type and entity type.
@@ -144,8 +140,6 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations,
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The service container this object should use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
@@ -155,7 +149,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The string translationManager.
    */
-  public function __construct(\Traversable $namespaces, ContainerInterface $container, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, TranslationInterface $translation_manager) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, TranslationInterface $translation_manager) {
     // Allow the plugin definition to be altered by hook_entity_type_alter().
 
     $this->moduleHandler = $module_handler;
@@ -169,7 +163,6 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $this->discovery = new AlterDecorator($this->discovery, 'entity_type');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_type:' . $this->languageManager->getCurrentLanguage()->id, 'discovery', Cache::PERMANENT, array('entity_types' => TRUE));
 
-    $this->container = $container;
   }
 
   /**

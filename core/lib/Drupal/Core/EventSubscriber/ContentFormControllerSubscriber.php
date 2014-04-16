@@ -13,19 +13,15 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Subscriber for setting wrapping form logic.
  */
-class ContentFormControllerSubscriber implements EventSubscriberInterface {
+class ContentFormControllerSubscriber implements EventSubscriberInterface, ContainerAwareInterface {
 
-  /**
-   * The service container.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
+  use ContainerAwareTrait;
 
   /**
    * The controller resolver.
@@ -44,15 +40,12 @@ class ContentFormControllerSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new ContentFormControllerSubscriber object.
    *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The service container.
    * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
    *   The controller resolver.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
    */
-  public function __construct(ContainerInterface $container, ControllerResolverInterface $resolver, FormBuilderInterface $form_builder) {
-    $this->container = $container;
+  public function __construct(ControllerResolverInterface $resolver, FormBuilderInterface $form_builder) {
     $this->resolver = $resolver;
     $this->formBuilder = $form_builder;
   }

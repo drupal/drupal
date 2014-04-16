@@ -8,12 +8,15 @@
 namespace Drupal\Core\Queue;
 
 use Drupal\Component\Utility\Settings;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Defines the queue factory.
  */
-class QueueFactory extends ContainerAware {
+class QueueFactory implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * Instantiated queues, keyed by name.

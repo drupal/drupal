@@ -16,7 +16,8 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -26,7 +27,9 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *
  * @see \Drupal\Tests\Core\Access\AccessManagerTest
  */
-class AccessManager extends ContainerAware {
+class AccessManager implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * Array of registered access check service ids.
