@@ -44,6 +44,8 @@ Drupal.ahah = function(base, element_settings) {
   this.method = element_settings.method;
   this.progress = element_settings.progress;
   this.button = element_settings.button || { };
+  this.immutable = element_settings.immutable;
+  this.buildId = null;
 
   if (this.effect == 'none') {
     this.showEffect = 'show';
@@ -76,6 +78,9 @@ Drupal.ahah = function(base, element_settings) {
     beforeSubmit: function(form_values, element_settings, options) {
       return ahah.beforeSubmit(form_values, element_settings, options);
     },
+    beforeSend: function(request, options) {
+      return ahah.beforeSend(request, options);
+    },
     success: function(response, status) {
       // Sanity check for browser support (object expected).
       // When using iFrame uploads, responses must be returned as a string.
@@ -85,6 +90,7 @@ Drupal.ahah = function(base, element_settings) {
       return ahah.success(response, status);
     },
     complete: function(response, status) {
+      ahah.complete(response, status);
       if (status == 'error' || status == 'parsererror') {
         return ahah.error(response, ahah.url);
       }
@@ -139,7 +145,27 @@ Drupal.ahah.prototype.beforeSubmit = function (form_values, element, options) {
     }
     $(this.element).after(this.progress.element);
   }
+
+  // Record the build-id.
+  if (this.immutable) {
+    var ahah = this;
+    $.each(form_values, function () {
+      if (this.name == 'form_build_id') {
+        ahah.buildId = this.value;
+        return false;
+      }
+    });
+  }
 };
+
+/**
+ * Modify the request object before it is sent.
+ */
+Drupal.ahah.prototype.beforeSend = function (request, options) {
+  if (this.immutable) {
+    request.setRequestHeader('X-Drupal-Accept-Build-Id', '1');
+  }
+}
 
 /**
  * Handler for the form redirection completion.
@@ -222,3 +248,19 @@ Drupal.ahah.prototype.error = function (response, uri) {
   // Re-enable the element.
   $(this.element).removeClass('progess-disabled').attr('disabled', false);
 };
+
+/**
+ * Handler called when the request finishes, whether in failure or success.
+ */
+Drupal.ahah.prototype.complete = function (response, status) {
+  // Update form build id if necessary.
+  if (this.immutable) {
+    var newBuildId = response.getResponseHeader('X-Drupal-Build-Id');
+    if (this.buildId && newBuildId && this.buildId != newBuildId) {
+      var $element = $('input[name="form_build_id"][value="' + this.buildId + '"]');
+      $element.val(newBuildId);
+      $element.attr('id', newBuildId);
+    }
+    this.buildId = null;
+  }
+}
