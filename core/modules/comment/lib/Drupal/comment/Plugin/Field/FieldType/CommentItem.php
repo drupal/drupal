@@ -126,10 +126,13 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#description' => t('Show comment replies in a threaded list.'),
     );
     $element['comment']['per_page'] = array(
-      '#type' => 'select',
+      '#type' => 'number',
       '#title' => t('Comments per page'),
       '#default_value' => $settings['per_page'],
-      '#options' => _comment_per_page(),
+      '#required' => TRUE,
+      '#min' => 10,
+      '#max' => 1000,
+      '#step' => 10,
     );
     $element['comment']['anonymous'] = array(
       '#type' => 'select',
