@@ -241,11 +241,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $form['displays']['page']['options']['title'] = array(
       '#title' => t('Page title'),
       '#type' => 'textfield',
+      '#maxlength' => 255,
     );
     $form['displays']['page']['options']['path'] = array(
       '#title' => t('Path'),
       '#type' => 'textfield',
       '#field_prefix' => $path_prefix,
+      // Account for the leading backslash.
+      '#maxlength' => 254,
     );
     $form['displays']['page']['options']['style'] = array(
       '#type' => 'fieldset',
@@ -332,6 +335,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         '#title' => t('Feed path'),
         '#type' => 'textfield',
         '#field_prefix' => $path_prefix,
+        // Account for the leading backslash.
+        '#maxlength' => 254,
       );
       // This will almost never be visible.
       $form['displays']['page']['options']['feed_properties']['row_plugin'] = array(
@@ -385,6 +390,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $form['displays']['block']['options']['title'] = array(
       '#title' => t('Block title'),
       '#type' => 'textfield',
+      '#maxlength' => 255,
     );
     $form['displays']['block']['options']['style'] = array(
       '#type' => 'fieldset',

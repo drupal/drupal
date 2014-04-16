@@ -1126,7 +1126,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $options['title'] = array(
       'category' => 'title',
       'title' => t('Title'),
-      'value' => $title,
+      'value' => views_ui_truncate($title, 32),
       'desc' => t('Change the title that this display will use.'),
     );
 
@@ -1429,6 +1429,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#type' => 'textfield',
           '#description' => t('This title will be displayed with the view, wherever titles are normally displayed; i.e, as the page title, block title, etc.'),
           '#default_value' => $this->getOption('title'),
+          '#maxlength' => 255,
         );
         break;
       case 'css_class':

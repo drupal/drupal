@@ -381,6 +381,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)),
           '#field_suffix' => '</span>&lrm;',
           '#attributes' => array('dir' => 'ltr'),
+          // Account for the leading backslash.
+          '#maxlength' => 254,
         );
         break;
     }
