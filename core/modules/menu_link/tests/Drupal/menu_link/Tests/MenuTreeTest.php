@@ -7,11 +7,18 @@
 
 namespace Drupal\menu_link\Tests {
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Language\Language;
 use Drupal\menu_link\MenuTree;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+
+if (!defined('MENU_MAX_DEPTH')) {
+  define('MENU_MAX_DEPTH', 9);
+}
 
 /**
  * Tests the menu tree.
@@ -321,6 +328,78 @@ class MenuTreeTest extends UnitTestCase {
 
 
   /**
+   * Tests buildTree with simple menu_name and no parameters.
+   */
+  public function testBuildTreeWithoutParameters() {
+    $language = new Language(array('id' => 'en'));
+    $this->languageManager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->will($this->returnValue($language));
+
+    // Setup query and the query result.
+    $query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
+    $this->entityQueryFactory->expects($this->once())
+      ->method('get')
+      ->with('menu_link')
+      ->will($this->returnValue($query));
+    $query->expects($this->once())
+      ->method('condition')
+      ->with('menu_name', 'test_menu');
+    $query->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(array(1, 2, 3)));
+
+    $storage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
+    $base = array(
+      'access' => TRUE,
+      'weight' => 0,
+      'title' => 'title',
+    );
+    $menu_link = $base + array(
+      'mlid' => 1,
+      'p1' => 3,
+      'p2' => 2,
+      'p3' => 1,
+    );
+    $links[1] = $menu_link;
+    $menu_link = $base + array(
+      'mlid' => 3,
+      'p1' => 3,
+      'depth' => 1,
+    );
+    $links[3] = $menu_link;
+    $menu_link = $base + array(
+      'mlid' => 2,
+      'p1' => 3,
+      'p2' => 2,
+      'depth' => 2,
+    );
+    $links[2] = $menu_link;
+    $storage->expects($this->once())
+      ->method('loadMultiple')
+      ->with(array(1, 2, 3))
+      ->will($this->returnValue($links));
+    $this->menuTree->setStorage($storage);
+
+    // Ensure that static/non static caching works.
+    // First setup no working caching.
+    $this->cacheBackend->expects($this->at(0))
+      ->method('get')
+      ->with('links:test_menu:tree-data:en:35786c7117b4e38d0f169239752ce71158266ae2f6e4aa230fbbb87bd699c0e3')
+      ->will($this->returnValue(FALSE));
+    $this->cacheBackend->expects($this->at(1))
+      ->method('set')
+      ->with('links:test_menu:tree-data:en:35786c7117b4e38d0f169239752ce71158266ae2f6e4aa230fbbb87bd699c0e3', $this->anything(), Cache::PERMANENT, array('menu' => 'test_menu'));
+
+    // Ensure that the static caching triggered.
+    $this->cacheBackend->expects($this->exactly(1))
+      ->method('get');
+
+    $this->menuTree->buildTree('test_menu');
+    $this->menuTree->buildTree('test_menu');
+  }
+
+  /**
    * Tests the output with a single level.
    *
    * @covers ::renderTree
@@ -438,6 +517,16 @@ class TestMenuTree extends MenuTree {
    */
   protected function menuLinkGetPreferred($menu_name, $active_path) {
     return isset($this->preferredMenuLink[$menu_name][$active_path]) ? $this->preferredMenuLink[$menu_name][$active_path] : NULL;
+  }
+
+  /**
+   * Set the storage.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The menu link storage.
+   */
+  public function setStorage(EntityStorageInterface $storage) {
+    $this->menuLinkStorage = $storage;
   }
 
   /**

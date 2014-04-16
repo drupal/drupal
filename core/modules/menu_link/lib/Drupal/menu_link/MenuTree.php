@@ -460,7 +460,7 @@ class MenuTree implements MenuTreeInterface {
     if (!isset($this->menuTree[$tree_cid])) {
       $cache = $this->cache->get($tree_cid);
       if ($cache && $cache->data) {
-        $this->menuFullTrees[$tree_cid] = $cache->data;
+        $this->menuTree[$tree_cid] = $cache->data;
       }
     }
 
