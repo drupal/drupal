@@ -3290,6 +3290,17 @@ function node_query_entity_field_access_alter(QueryAlterableInterface $query) {
 /**
  * Helper for node access functions.
  *
+ * Queries tagged with 'node_access' that are not against the {node} table
+ * should add the base table as metadata. For example:
+ * @code
+ *   $query
+ *     ->addTag('node_access')
+ *     ->addMetaData('base_table', 'taxonomy_index');
+ * @endcode
+ * If the query is not against the {node} table, an attempt is made to guess
+ * the table, but is not recommended to rely on this as it is deprecated and not
+ * allowed in Drupal 8. It is always safer to provide the table.
+ *
  * @param $query
  *   The query to add conditions to.
  * @param $type
