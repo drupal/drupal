@@ -108,7 +108,7 @@ class SearchRankingTest extends SearchTestBase {
     $this->cronRun();
 
     // Test that the settings form displays the context ranking section.
-    $this->drupalGet('admin/config/search/settings/manage/node_search');
+    $this->drupalGet('admin/config/search/pages/manage/node_search');
     $this->assertText(t('Content ranking'));
 
     // Check that all rankings are visible and set to 0.
@@ -121,8 +121,8 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($node_ranks as $node_rank) {
       // Enable the ranking we are testing.
       $edit['rankings_' . $node_rank] = 10;
-      $this->drupalPostForm('admin/config/search/settings/manage/node_search', $edit, t('Save search page'));
-      $this->drupalGet('admin/config/search/settings/manage/node_search');
+      $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, t('Save search page'));
+      $this->drupalGet('admin/config/search/pages/manage/node_search');
       $this->assertTrue($this->xpath('//select[@id="edit-rankings-' . $node_rank . '"]//option[@value="10"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 10.');
 
       // Reload the plugin to get the up-to-date values.
@@ -137,8 +137,8 @@ class SearchRankingTest extends SearchTestBase {
 
     // Save the final node_rank change then check that all rankings are visible
     // and have been set back to 0.
-    $this->drupalPostForm('admin/config/search/settings/manage/node_search', $edit, t('Save search page'));
-    $this->drupalGet('admin/config/search/settings/manage/node_search');
+    $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, t('Save search page'));
+    $this->drupalGet('admin/config/search/pages/manage/node_search');
     foreach ($node_ranks as $node_rank) {
       $this->assertTrue($this->xpath('//select[@id="edit-rankings-' . $node_rank . '"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');
     }

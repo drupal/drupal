@@ -27,7 +27,7 @@ interface SearchIndexingInterface {
    *
    * This method is called every cron run if the plugin has been set as
    * an active search module on the Search settings page
-   * (admin/config/search/settings). It allows your module to add items to the
+   * (admin/config/search/pages). It allows your module to add items to the
    * built-in search index using search_index(), or to add them to your module's
    * own indexing mechanism.
    *

@@ -70,26 +70,26 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   function testSearchSettingsPage() {
 
     // Test that the settings form displays the correct count of items left to index.
-    $this->drupalGet('admin/config/search/settings');
+    $this->drupalGet('admin/config/search/pages');
     $this->assertText(t('There are @count items left to index.', array('@count' => 0)));
 
     // Test the re-index button.
-    $this->drupalPostForm('admin/config/search/settings', array(), t('Re-index site'));
+    $this->drupalPostForm('admin/config/search/pages', array(), t('Re-index site'));
     $this->assertText(t('Are you sure you want to re-index the site'));
-    $this->drupalPostForm('admin/config/search/settings/reindex', array(), t('Re-index site'));
+    $this->drupalPostForm('admin/config/search/pages/reindex', array(), t('Re-index site'));
     $this->assertText(t('The index will be rebuilt'));
-    $this->drupalGet('admin/config/search/settings');
+    $this->drupalGet('admin/config/search/pages');
     $this->assertText(t('There is 1 item left to index.'));
 
     // Test that the form saves with the default values.
-    $this->drupalPostForm('admin/config/search/settings', array(), t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/pages', array(), t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Form saves with the default values.');
 
     // Test that the form does not save with an invalid word length.
     $edit = array(
       'minimum_word_size' => $this->randomName(3),
     );
-    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/pages', $edit, t('Save configuration'));
     $this->assertNoText(t('The configuration options have been saved.'), 'Form does not save with an invalid word length.');
   }
 
@@ -97,7 +97,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    * Verifies plugin-supplied settings form.
    */
   function testSearchModuleSettingsPage() {
-    $this->drupalGet('admin/config/search/settings');
+    $this->drupalGet('admin/config/search/pages');
     $this->clickLink(t('Edit'), 1);
 
     // Ensure that the default setting was picked up from the default config
@@ -111,7 +111,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
 
     // Ensure that the modifications took effect.
     $this->assertRaw(t('The %label search page has been updated.', array('%label' => 'Dummy search type')));
-    $this->drupalGet('admin/config/search/settings/manage/dummy_search_type');
+    $this->drupalGet('admin/config/search/pages/manage/dummy_search_type');
     $this->assertTrue($this->xpath('//select[@id="edit-extra-type-settings-boost"]//option[@value="ii" and @selected="selected"]'), 'Module specific settings can be changed');
   }
 
@@ -146,7 +146,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Test each plugin if it's enabled as the only search plugin.
     foreach ($entities as $entity_id => $entity) {
       // Set this as default.
-      $this->drupalGet("admin/config/search/settings/manage/$entity_id/set-default");
+      $this->drupalGet("admin/config/search/pages/manage/$entity_id/set-default");
 
       // Run a search from the correct search URL.
       $info = $plugin_info[$entity_id];
@@ -185,7 +185,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       $entity->enable()->save();
     }
     // Set the node search as default.
-    $this->drupalGet('admin/config/search/settings/manage/node_search/set-default');
+    $this->drupalGet('admin/config/search/pages/manage/node_search/set-default');
 
     foreach (array('search/node/pizza', 'search/node') as $path) {
       $this->drupalGet($path);
@@ -217,7 +217,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $this->assertDefaultSearch(FALSE);
 
     // Ensure that no search pages are configured.
-    $this->drupalGet('admin/config/search/settings');
+    $this->drupalGet('admin/config/search/pages');
     $this->assertText(t('No search pages have been configured.'));
 
     // Add a search page.
@@ -264,14 +264,14 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       'entities[' . $first_id . '][weight]' => 10,
       'entities[' . $second_id . '][weight]' => -10,
     );
-    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/pages', $edit, t('Save configuration'));
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', array(':class' => 'tabs primary'));
     $this->assertIdentical((string) $elements[0]['href'], url('search/' . $second['path']));
     $this->assertIdentical((string) $elements[1]['href'], url('search/' . $first['path']));
 
     // Check the initial state of the search pages.
-    $this->drupalGet('admin/config/search/settings');
+    $this->drupalGet('admin/config/search/pages');
     $this->verifySearchPageOperations($first_id, TRUE, FALSE, FALSE, FALSE);
     $this->verifySearchPageOperations($second_id, TRUE, TRUE, TRUE, FALSE);
 
@@ -318,28 +318,28 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    */
   protected function verifySearchPageOperations($id, $edit, $delete, $disable, $enable) {
     if ($edit) {
-      $this->assertLinkByHref("admin/config/search/settings/manage/$id");
+      $this->assertLinkByHref("admin/config/search/pages/manage/$id");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id");
+      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id");
     }
     if ($delete) {
-      $this->assertLinkByHref("admin/config/search/settings/manage/$id/delete");
+      $this->assertLinkByHref("admin/config/search/pages/manage/$id/delete");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id/delete");
+      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id/delete");
     }
     if ($disable) {
-      $this->assertLinkByHref("admin/config/search/settings/manage/$id/disable");
+      $this->assertLinkByHref("admin/config/search/pages/manage/$id/disable");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id/disable");
+      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id/disable");
     }
     if ($enable) {
-      $this->assertLinkByHref("admin/config/search/settings/manage/$id/enable");
+      $this->assertLinkByHref("admin/config/search/pages/manage/$id/enable");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id/enable");
+      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id/enable");
     }
   }
 

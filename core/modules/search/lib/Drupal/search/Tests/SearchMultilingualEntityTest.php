@@ -127,7 +127,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Now index the rest of the nodes.
     // Make sure index throttle is high enough, via the UI.
-    $this->drupalPostForm('admin/config/search/settings', array('cron_limit' => 20), t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/pages', array('cron_limit' => 20), t('Save configuration'));
     $this->assertEqual(20, \Drupal::config('search.settings')->get('index.cron_limit', 100), 'Config setting was saved correctly');
 
     $this->plugin->updateIndex();
