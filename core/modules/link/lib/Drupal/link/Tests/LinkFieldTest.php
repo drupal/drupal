@@ -103,12 +103,15 @@ class LinkFieldTest extends WebTestBase {
     $this->assertFieldByName("{$field_name}[0][url]", '', 'Link URL field is displayed');
     $this->assertRaw('placeholder="http://example.com"');
 
+    // Create a path alias.
+    \Drupal::service('path.alias_storage')->save('admin', 'a/path/alias');
     // Define some valid URLs.
     $valid_external_entries = array(
       'http://www.example.com/',
     );
     $valid_internal_entries = array(
       'entity_test/add',
+      'a/path/alias',
     );
 
     // Define some invalid URLs.
