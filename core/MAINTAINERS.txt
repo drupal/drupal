@@ -56,6 +56,7 @@ Configuration system
 - Matthew Tift 'mtift' https://drupal.org/user/751908
 
 Configuration entity system
+- Alex Pott 'alexpott' http://drupal.org/user/157725
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 
