@@ -65,6 +65,7 @@
 
 .button--primary {
   border-color: #1e5c90;
+  background-color: #0071b8;
   background-image: -webkit-linear-gradient(top, #007bc6, #0071b8);
   background-image:    -moz-linear-gradient(top, #007bc6, #0071b8);
   background-image:      -o-linear-gradient(top, #007bc6, #0071b8);
