@@ -2097,16 +2097,26 @@ function template_preprocess_page(&$variables) {
 
   $variables['base_path']         = base_path();
   $variables['front_page']        = url();
-  $variables['feed_icons']        = drupal_get_feeds();
   $variables['language']          = $language_interface;
   $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo.url');
-  $variables['main_menu']         = theme_get_setting('features.main_menu') ? menu_main_menu() : array();
-  $variables['secondary_menu']    = theme_get_setting('features.secondary_menu') ? menu_secondary_menu() : array();
-  $variables['action_links']      = menu_get_local_actions();
   $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');
-  $variables['tabs']              = menu_local_tabs();
+
+  if (!defined('MAINTENANCE_MODE')) {
+    $variables['main_menu']      = theme_get_setting('features.main_menu') ? menu_main_menu() : array();
+    $variables['secondary_menu'] = theme_get_setting('features.secondary_menu') ? menu_secondary_menu() : array();
+    $variables['action_links']   = menu_get_local_actions();
+    $variables['tabs']           = menu_local_tabs();
+    $variables['feed_icons']     = drupal_get_feeds();
+  }
+  else {
+    $variables['main_menu']      = array();
+    $variables['secondary_menu'] = array();
+    $variables['action_links']   = array();
+    $variables['tabs']           = array();
+    $variables['feed_icons']     = '';
+  }
 
   // Pass the main menu and secondary menu to the template as render arrays.
   if (!empty($variables['main_menu'])) {
@@ -2147,10 +2157,12 @@ function template_preprocess_page(&$variables) {
   // re-use the cache of an already retrieved menu containing the active link
   // for the current page.
   // @see menu_tree_page_data()
-  $variables['breadcrumb'] = array(
-    '#theme' => 'breadcrumb',
-    '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::request()->attributes->all()),
-  );
+  if (!defined('MAINTENANCE_MODE')) {
+    $variables['breadcrumb'] = array(
+      '#theme' => 'breadcrumb',
+      '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::request()->attributes->all()),
+    );
+  }
 }
 
 /**
@@ -2228,12 +2240,6 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  *
  * Default template: maintenance-page.html.twig.
  *
- * The variables array generated here is a mirror of
- * template_preprocess_page(). This preprocessor will run its course when
- * theme_maintenance_page() is invoked. An alternate template file of
- * maintenance-page--offline.html.twig can be used when the database is offline
- * to hide errors and completely replace the content.
- *
  * @param array $variables
  *   An associative array containing:
  *   - content - An array of page content.
@@ -2241,117 +2247,29 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  * @see system_page_build()
  */
 function template_preprocess_maintenance_page(&$variables) {
-  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+  // @todo Rename the templates to page--maintenance + page--install.
+  template_preprocess_page($variables);
 
-  // Initializes attributes which are specific to the html element.
-  $variables['html_attributes'] = new Attribute;
-
-  // HTML element attributes.
-  $variables['html_attributes']['lang'] = $language_interface->id;
-  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
-
-  // Add favicon
-  if (theme_get_setting('features.favicon')) {
-    $favicon = theme_get_setting('favicon.url');
-    $type = theme_get_setting('favicon.mimetype');
-    $build['#attached']['drupal_add_html_head_link'][][] = array(
-      'rel' => 'shortcut icon',
-      'href' => UrlHelper::stripDangerousProtocols($favicon),
-      'type' => $type,
-    );
-    drupal_render($build);
-  }
-
-  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
-    if (!isset($variables[$region_key])) {
-      $variables[$region_key] = array();
-    }
-    // Append region content set with drupal_add_region_content() as markup.
-    if ($region_content = drupal_get_region_content($region_key)) {
-      $variables[$region_key][]['#markup'] = $region_content;
-    }
-  }
-
-  // Setup layout variable.
-  $variables['layout'] = 'none';
-  if (!empty($variables['sidebar_first'])) {
-    $variables['layout'] = 'first';
-  }
-  if (!empty($variables['sidebar_second'])) {
-    $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
-  }
-
-  $site_config = \Drupal::config('system.site');
-  $site_name = $site_config->get('name');
-  $site_slogan = $site_config->get('slogan');
-
-   // Construct the page title.
-  if (isset($variables['page']['#title'])) {
-    $head_title = array(
-      'title' => strip_tags($variables['page']['#title']),
-      'name' => String::checkPlain($site_config->get('name')),
-    );
-  }
-  else {
-    $head_title = array('name' => String::checkPlain($site_name));
-    if ($site_slogan) {
-      $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_slogan));
-    }
-  }
-
-  // These are usually added from system_page_build() except maintenance.css.
-  // When the database is inactive it's not called so we add it here.
-  $default_css['library'][] = 'core/normalize';
-  $default_css['library'][] = 'system/maintenance';
-  $attached = array('#attached' => $default_css);
-  drupal_render($attached);
-  $variables['messages'] = array(
-    '#theme' => 'status_messages',
-    '#access' => $variables['show_messages'],
-  );
-
-  $variables['head_title_array']  = $head_title;
-  $variables['head_title']        = implode(' | ', $head_title);
-  $variables['front_page']        = url();
-  $variables['help']              = '';
-  $variables['language']          = $language_interface;
-  $variables['logo']              = theme_get_setting('logo.url');
-  $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_name) : '');
-  $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_slogan) : '');
-
-  // Compile a list of classes that are going to be applied to the body element.
-  $variables['attributes']['class'][] = 'maintenance-page';
-  $variables['attributes']['class'][] = 'in-maintenance';
+  $page_object = $variables['page']['#page'];
+  $attributes = $page_object->getBodyAttributes();
+  $classes = $attributes['class'];
+  $classes[] = 'maintenance-page';
+  $classes[] = 'in-maintenance';
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
-    $variables['attributes']['class'][] = 'db-offline';
+    $classes[] = 'db-offline';
   }
-  if ($variables['layout'] == 'both') {
-    $variables['attributes']['class'][] = 'two-sidebars';
-  }
-  elseif ($variables['layout'] == 'none') {
-    $variables['attributes']['class'][] = 'no-sidebars';
-  }
-  else {
-    $variables['attributes']['class'][] = 'one-sidebar';
-    $variables['attributes']['class'][] = 'sidebar-' . $variables['layout'];
-  }
+  $attributes['class'] = $classes;
 
-  $variables['head'] = drupal_get_html_head();
-
-  // While this code is used in the installer, the language module may not be
-  // enabled yet (even maybe no database set up yet), but an RTL language
-  // selected should result in RTL stylesheets loaded properly already.
-  $css = _drupal_add_css();
-  include_once DRUPAL_ROOT . '/core/modules/language/language.module';
-  // Wrapping drupal_get_css() and drupal_get_js() in an object so they can
-  // be called when printed.
-  $variables['styles'] = new RenderWrapper('drupal_get_css', array($css));
-  $variables['scripts'] = new RenderWrapper('drupal_get_js');
-
-  // Allow the page to define a title.
-  if (isset($variables['page']['#title'])) {
-    $variables['title'] = $variables['page']['#title'];
-  }
+  // @see system_page_build()
+  $attached = array(
+    '#attached' => array(
+      'library' => array(
+        'core/normalize',
+        'system/maintenance',
+      ),
+    ),
+  );
+  drupal_render($attached);
 }
 
 /**
@@ -2359,20 +2277,21 @@ function template_preprocess_maintenance_page(&$variables) {
  *
  * Default template: install-page.html.twig.
  *
- * The variables array generated here is a mirror of
- * template_preprocess_page(). This preprocessor will run its course when
- * theme_install_page() is invoked.
- *
  * @param array $variables
  *   An associative array containing:
  *   - content - An array of page content.
  *
  * @see template_preprocess_maintenance_page()
- *
  */
 function template_preprocess_install_page(&$variables) {
   template_preprocess_maintenance_page($variables);
-  $variables['attributes']['class'][] = 'install-page';
+
+  $page_object = $variables['page']['#page'];
+  $attributes = $page_object->getBodyAttributes();
+  $classes = $attributes['class'];
+  $classes[] = 'install-page';
+  $attributes['class'] = $classes;
+
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
   $distribution_name = String::checkPlain(drupal_install_profile_distribution_name());
@@ -2670,11 +2589,11 @@ function drupal_common_theme() {
     ),
     // From theme.maintenance.inc.
     'maintenance_page' => array(
-      'variables' => array('content' => NULL, 'show_messages' => TRUE, 'page' => array()),
+      'render element' => 'page',
       'template' => 'maintenance-page',
     ),
     'install_page' => array(
-      'variables' => array('content' => NULL, 'show_messages' => TRUE, 'page' => array()),
+      'render element' => 'page',
       'template' => 'install-page',
     ),
     'task_list' => array(

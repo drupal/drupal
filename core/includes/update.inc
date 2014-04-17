@@ -14,6 +14,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Utility\Error;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
@@ -147,20 +148,15 @@ function update_check_requirements($skip_warnings = FALSE) {
   // If there are errors, always display them. If there are only warnings, skip
   // them if the caller has indicated they should be skipped.
   if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$skip_warnings)) {
-    update_task_list('requirements');
-    $status = array(
+    $regions['sidebar_first'] = update_task_list('requirements');
+    $status_report = array(
       '#theme' => 'status_report',
       '#requirements' => $requirements,
     );
-    $status_report = drupal_render($status);
-    $status_report .= 'Check the messages and <a href="' . check_url(drupal_requirements_url($severity)) . '">try again</a>.';
+    $status_report['#suffix'] = 'Check the messages and <a href="' . check_url(drupal_requirements_url($severity)) . '">try again</a>.';
+
     drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-    $maintenance_page = array(
-      '#theme' => 'maintenance_page',
-      '#title' => 'Requirements problem',
-      '#content' => $status_report,
-    );
-    print drupal_render($maintenance_page);
+    print DefaultHtmlPageRenderer::renderPage($status_report, 'Requirements problem', 'maintenance', $regions);
     exit();
   }
 }

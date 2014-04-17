@@ -3,23 +3,12 @@
  * @file
  * Seven theme implementation to display a Drupal installation page.
  *
- * All the available variables are mirrored in html.html.twig and
- * page.html.twig.
+ * All available variables are mirrored in page.html.twig.
  * Some may be blank but they are provided for consistency.
  *
  * @see template_preprocess_install_page()
  */
 #}
-<!DOCTYPE html>
-<html{{ html_attributes }} class="install-background">
-<head>
-  {{ head }}
-  <title>{{ head_title }}</title>
-  {{ styles }}
-  {{ scripts }}
-</head>
-<body class="{{ attributes.class }}">
-
 <div class="l-container">
 
   <header role="banner">
@@ -35,9 +24,9 @@
     {% endif %}
   </header>
 
-  {% if sidebar_first %}
+  {% if page.sidebar_first %}
     <aside class="l-sidebar-first" role="complementary">
-      {{ sidebar_first }}
+      {{ page.sidebar_first }}
     </aside>{# /.l-sidebar-first #}
   {% endif %}
 
@@ -46,22 +35,19 @@
       <h1>{{ title }}</h1>
     {% endif %}
     {{ messages }}
-    {{ content }}
+    {{ page.content }}
   </main>
 
-  {% if sidebar_second %}
+  {% if page.sidebar_second %}
     <aside class="l-sidebar-second" role="complementary">
-      {{ sidebar_second }}
+      {{ page.sidebar_second }}
     </aside>{# /.l-sidebar-second #}
   {% endif %}
 
-  {% if footer %}
+  {% if page.page_bottom %}
     <footer role="contentinfo">
-      {{ footer }}
+      {{ page.page_bottom }}
     </footer>
   {% endif %}
 
 </div>{# /.l-container #}
-
-</body>
-</html>

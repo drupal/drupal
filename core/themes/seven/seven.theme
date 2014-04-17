@@ -270,8 +270,11 @@ function seven_element_info_alter(&$type) {
  * Implements hook_preprocess_install_page().
  */
 function seven_preprocess_install_page(&$variables) {
-  $variables['styles'] = new RenderWrapper('drupal_get_css');
-  $variables['scripts'] = new RenderWrapper('drupal_get_js');
+  $page_object = $variables['page']['#page'];
+  $attributes = $page_object->getHtmlAttributes();
+  $classes = $attributes['class'];
+  $classes[] = 'install-background';
+  $attributes['class'] = $classes;
 
   // Normally we could attach libraries via hook_page_alter(), but when the
   // database is inactive it's not called so we add them here.
@@ -290,8 +293,12 @@ function seven_preprocess_install_page(&$variables) {
  * Implements hook_preprocess_maintenance_page().
  */
 function seven_preprocess_maintenance_page(&$variables) {
-  $variables['styles'] = new RenderWrapper('drupal_get_css');
-  $variables['scripts'] = new RenderWrapper('drupal_get_js');
+  $page_object = $variables['page']['#page'];
+  $attributes = $page_object->getHtmlAttributes();
+  $classes = $attributes['class'];
+  $classes[] = 'maintenance-background';
+  $attributes['class'] = $classes;
+
   // // Normally we could attach libraries via hook_page_alter(), but when the
   // // database is inactive it's not called so we add them here.
   $libraries = array(

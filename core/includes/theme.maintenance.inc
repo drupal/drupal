@@ -31,6 +31,7 @@ function _drupal_maintenance_theme() {
   require_once __DIR__ . '/unicode.inc';
   require_once __DIR__ . '/file.inc';
   require_once __DIR__ . '/module.inc';
+  require_once __DIR__ . '/database.inc';
   Unicode::check();
 
   // Install and update pages are treated differently to prevent theming overrides.
@@ -43,13 +44,6 @@ function _drupal_maintenance_theme() {
     }
   }
   else {
-    // The bootstrap was not complete. So we are operating in a crippled
-    // environment, we need to bootstrap just enough to allow hook invocations
-    // to work. See _drupal_log_error().
-    if (!class_exists('Drupal\Core\Database\Database', FALSE)) {
-      require_once __DIR__ . '/database.inc';
-    }
-
     // Use the maintenance theme if specified, otherwise attempt to use the
     // default site theme.
     try {
