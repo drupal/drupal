@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Discovery\DiscoverableInterface.
+ * Contains \Drupal\Component\Discovery\DiscoverableInterface.
  */
 
 namespace Drupal\Component\Discovery;

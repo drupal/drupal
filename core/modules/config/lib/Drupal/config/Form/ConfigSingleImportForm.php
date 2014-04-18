@@ -7,11 +7,11 @@
 
 namespace Drupal\config\Form;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Provides a form for importing a single configuration file.
@@ -31,13 +31,6 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $configStorage;
-
-  /**
-   * The YAML component.
-   *
-   * @var \Symfony\Component\Yaml\Yaml
-   */
-  protected $yaml;
 
   /**
    * If the config exists, this is that object. Otherwise, FALSE.
@@ -60,13 +53,10 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    *   The entity manager.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage.
-   * @param \Symfony\Component\Yaml\Yaml $yaml
-   *   The YAML component.
    */
-  public function __construct(EntityManagerInterface $entity_manager, StorageInterface $config_storage, Yaml $yaml) {
+  public function __construct(EntityManagerInterface $entity_manager, StorageInterface $config_storage) {
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;
-    $this->yaml = $yaml;
   }
 
   /**
@@ -75,8 +65,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('config.storage'),
-      new Yaml()
+      $container->get('config.storage')
     );
   }
 
@@ -196,7 +185,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     }
 
     // Decode the submitted import.
-    $data = $this->yaml->parse($form_state['values']['import']);
+    $data = Yaml::decode($form_state['values']['import']);
 
     // Validate for config entities.
     if ($form_state['values']['config_type'] !== 'system.simple') {

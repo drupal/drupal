@@ -8,11 +8,11 @@
 namespace Drupal\config\Controller;
 
 use Drupal\Component\Archiver\ArchiveTar;
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\system\FileDownloadController;
-use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -84,12 +84,9 @@ class ConfigController implements ContainerInjectionInterface {
   public function downloadExport() {
     file_unmanaged_delete(file_directory_temp() . '/config.tar.gz');
 
-    $dumper = new Dumper();
-    $dumper->setIndentation(2);
-
     $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
     foreach (\Drupal::service('config.storage')->listAll() as $name) {
-      $archiver->addString("$name.yml", $dumper->dump(\Drupal::config($name)->get(), PHP_INT_MAX, 0, TRUE));
+      $archiver->addString("$name.yml", Yaml::encode(\Drupal::config($name)->get()));
     }
 
     $request = new Request(array('file' => 'config.tar.gz'));

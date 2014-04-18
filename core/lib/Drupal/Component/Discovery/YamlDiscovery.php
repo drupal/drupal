@@ -7,7 +7,7 @@
 
 namespace Drupal\Component\Discovery;
 
-use Symfony\Component\Yaml\Parser;
+use Drupal\Component\Serialization\Yaml;
 
 /**
  * Provides discovery for YAML files within a given set of directories.
@@ -29,13 +29,6 @@ class YamlDiscovery implements DiscoverableInterface {
   protected $directories = array();
 
   /**
-   * The symfony YAML parser.
-   *
-   * @var \Symfony\Component\Yaml\Parser
-   */
-  protected $parser;
-
-  /**
    * Constructs a YamlDiscovery object.
    *
    * @param string $name
@@ -54,26 +47,11 @@ class YamlDiscovery implements DiscoverableInterface {
    */
   public function findAll() {
     $all = array();
-    $parser = $this->parser();
-
     foreach ($this->findFiles() as $provider => $file) {
-      $all[$provider] = $parser->parse(file_get_contents($file));
+      $all[$provider] = Yaml::decode(file_get_contents($file));
     }
 
     return $all;
-  }
-
-  /**
-   * Returns the YAML parser.
-   *
-   * @return \Symfony\Component\Yaml\Parser
-   *   The symfony YAML parser.
-   */
-  protected function parser() {
-    if (!isset($this->parser)) {
-      $this->parser = new Parser();
-    }
-    return $this->parser;
   }
 
   /**

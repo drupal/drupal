@@ -7,12 +7,12 @@
 
 namespace Drupal\config\Form;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Yaml\Dumper;
 
 /**
  * Provides a form for exporting a single configuration file.
@@ -34,13 +34,6 @@ class ConfigSingleExportForm extends FormBase {
   protected $configStorage;
 
   /**
-   * The YAML dumper.
-   *
-   * @var \Symfony\Component\Yaml\Dumper
-   */
-  protected $dumper;
-
-  /**
    * Tracks the valid config entity type definitions.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface[]
@@ -54,14 +47,10 @@ class ConfigSingleExportForm extends FormBase {
    *   The entity manager.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage.
-   * @param \Symfony\Component\Yaml\Dumper $dumper
-   *   The yaml dumper.
    */
-  public function __construct(EntityManagerInterface $entity_manager, StorageInterface $config_storage, Dumper $dumper) {
+  public function __construct(EntityManagerInterface $entity_manager, StorageInterface $config_storage) {
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;
-    $this->dumper = $dumper;
-    $this->dumper->setIndentation(2);
   }
 
   /**
@@ -70,8 +59,7 @@ class ConfigSingleExportForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('config.storage'),
-      new Dumper()
+      $container->get('config.storage')
     );
   }
 
@@ -164,7 +152,7 @@ class ConfigSingleExportForm extends FormBase {
       $name = $form_state['values']['config_name'];
     }
     // Read the raw data for this config name, encode it, and display it.
-    $form['export']['#value'] = $this->dumper->dump($this->configStorage->read($name), PHP_INT_MAX);
+    $form['export']['#value'] = Yaml::encode($this->configStorage->read($name));
     $form['export']['#description'] = $this->t('The filename is %name.', array('%name' => $name . '.yml'));
     return $form['export'];
   }

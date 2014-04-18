@@ -7,8 +7,8 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\simpletest\WebTestBase;
-use Symfony\Component\Yaml\Dumper;
 
 /**
  * Tests the user interface for importing/exporting a single configuration.
@@ -22,28 +22,12 @@ class ConfigSingleImportExportTest extends WebTestBase {
    */
   public static $modules = array('config', 'config_test');
 
-  /**
-   * The YAML dumper.
-   *
-   * @var \Symfony\Component\Yaml\Dumper
-   */
-  protected $dumper;
-
   public static function getInfo() {
     return array(
       'name' => 'Configuration Single Import/Export UI',
       'description' => 'Tests the user interface for importing/exporting a single configuration.',
       'group' => 'Configuration',
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $this->dumper = new Dumper();
-    $this->dumper->setIndentation(2);
   }
 
   /**
@@ -131,7 +115,7 @@ EOD;
     $edit = array(
       'config_type' => 'system.simple',
       'config_name' => $config->getName(),
-      'import' => $this->dumper->dump($config->get(), PHP_INT_MAX),
+      'import' => Yaml::encode($config->get()),
     );
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
     $this->assertRaw(t('Are you sure you want to update the %name @type?', array('%name' => $config->getName(), '@type' => 'simple configuration')));
@@ -167,7 +151,7 @@ EOD;
     $this->assertFieldByXPath('//select[@name="config_name"]//option[@selected="selected"]', t('Fallback date format'), 'The fallback date format config entity is selected when specified in the URL.');
 
     $fallback_date = \Drupal::entityManager()->getStorage('date_format')->load('fallback');
-    $data = $this->dumper->dump($fallback_date->toArray(), PHP_INT_MAX);
+    $data = Yaml::encode($fallback_date->toArray());
     $this->assertFieldByXPath('//textarea[@name="export"]', $data, 'The fallback date format config entity export code is displayed.');
   }
 

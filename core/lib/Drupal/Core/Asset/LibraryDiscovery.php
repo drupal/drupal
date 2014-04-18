@@ -7,15 +7,14 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Component\Serialization\Yaml;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Parser;
-
 
 /**
  * Discovers available asset libraries in Drupal.
@@ -299,12 +298,11 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    *   Thrown when a parser exception got thrown.
    */
   protected function parseLibraryInfo($extension, $library_file) {
-    $parser = new Parser();
     try {
-      $this->libraries[$extension] = $parser->parse(file_get_contents(DRUPAL_ROOT . '/' . $library_file));
+      $this->libraries[$extension] = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/' . $library_file));
     }
-    catch (ParseException $e) {
-      // Rethrow a more helpful exception, since ParseException lacks context.
+    catch (InvalidDataTypeException $e) {
+      // Rethrow a more helpful exception to provide context.
       throw new InvalidLibraryFileException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
     }
     // Allow modules to alter the module's registered libraries.

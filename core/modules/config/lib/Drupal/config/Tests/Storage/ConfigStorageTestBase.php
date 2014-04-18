@@ -27,7 +27,6 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
    * Tests storage CRUD operations.
    *
    * @todo Coverage: Trigger PDOExceptions / Database exceptions.
-   * @todo Coverage: Trigger Yaml's ParseException and DumpException.
    */
   function testCRUD() {
     $name = 'config_test.storage';

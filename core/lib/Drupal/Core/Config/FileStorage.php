@@ -7,10 +7,9 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Serialization\Yaml;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\String;
-use Symfony\Component\Yaml\Dumper;
-use Symfony\Component\Yaml\Exception\DumpException;
-use Symfony\Component\Yaml\Parser;
 
 /**
  * Defines the file storage.
@@ -23,20 +22,6 @@ class FileStorage implements StorageInterface {
    * @var string
    */
   protected $directory = '';
-
-  /**
-   * A shared YAML dumper instance.
-   *
-   * @var \Symfony\Component\Yaml\Dumper
-   */
-  protected $dumper;
-
-  /**
-   * A shared YAML parser instance.
-   *
-   * @var \Symfony\Component\Yaml\Parser
-   */
-  protected $parser;
 
   /**
    * Constructs a new FileStorage.
@@ -90,16 +75,22 @@ class FileStorage implements StorageInterface {
   /**
    * Implements Drupal\Core\Config\StorageInterface::read().
    *
-   * @throws Symfony\Component\Yaml\Exception\ParseException
+   * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
    */
   public function read($name) {
     if (!$this->exists($name)) {
       return FALSE;
     }
     $data = file_get_contents($this->getFilePath($name));
-    // @todo Yaml throws a ParseException on invalid data. Is it expected to be
-    //   caught or not?
-    $data = $this->decode($data);
+    try {
+      $data = $this->decode($data);
+    }
+    catch (InvalidDataTypeException $e) {
+      throw new UnsupportedDataTypeConfigException(String::format('Invalid data type in config @name: !message', array(
+        '@name' => $name,
+        '!message' => $e->getMessage(),
+      )));
+    }
     return $data;
   }
 
@@ -123,8 +114,11 @@ class FileStorage implements StorageInterface {
     try {
       $data = $this->encode($data);
     }
-    catch(DumpException $e) {
-      throw new StorageException(String::format('Invalid data type for used in config: @name', array('@name' => $name)));
+    catch (InvalidDataTypeException $e) {
+      throw new StorageException(String::format('Invalid data type in config @name: !message', array(
+        '@name' => $name,
+        '!message' => $e->getMessage(),
+      )));
     }
 
     $target = $this->getFilePath($name);
@@ -168,51 +162,17 @@ class FileStorage implements StorageInterface {
   }
 
   /**
-   * Gets the YAML dumper instance.
-   *
-   * @return Symfony\Component\Yaml\Dumper
-   */
-  protected function getDumper() {
-    if (!isset($this->dumper)) {
-      $this->dumper = new Dumper();
-      // Set Yaml\Dumper's default indentation for nested nodes/collections to
-      // 2 spaces for consistency with Drupal coding standards.
-      $this->dumper->setIndentation(2);
-    }
-    return $this->dumper;
-  }
-
-  /**
-   * Gets the YAML parser instance.
-   *
-   * @return Symfony\Component\Yaml\Parser
-   */
-  protected function getParser() {
-    if (!isset($this->parser)) {
-      $this->parser = new Parser();
-    }
-    return $this->parser;
-  }
-
-  /**
    * Implements Drupal\Core\Config\StorageInterface::encode().
-   *
-   * @throws Symfony\Component\Yaml\Exception\DumpException
    */
   public function encode($data) {
-    // The level where you switch to inline YAML is set to PHP_INT_MAX to ensure
-    // this does not occur. Also set the exceptionOnInvalidType parameter to
-    // TRUE, so exceptions are thrown for an invalid data type.
-    return $this->getDumper()->dump($data, PHP_INT_MAX, 0, TRUE);
+    return Yaml::encode($data);
   }
 
   /**
    * Implements Drupal\Core\Config\StorageInterface::decode().
-   *
-   * @throws Symfony\Component\Yaml\Exception\ParseException
    */
   public function decode($raw) {
-    $data = $this->getParser()->parse($raw);
+    $data = Yaml::decode($raw);
     // A simple string is valid YAML for any reason.
     if (!is_array($data)) {
       return FALSE;

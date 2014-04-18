@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\Extension;
 
+use Drupal\Component\Serialization\Yaml;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\String;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Parser;
 
 /**
  * Parses extension .info.yml files.
@@ -24,13 +24,6 @@ class InfoParser implements InfoParserInterface {
   protected static $parsedInfos = array();
 
   /**
-   * Symfony YAML parser object.
-   *
-   * @var \Symfony\Component\Yaml\Parser
-   */
-  protected $parser;
-
-  /**
    * {@inheritdoc}
    */
   public function parse($filename) {
@@ -40,16 +33,16 @@ class InfoParser implements InfoParserInterface {
       }
       else {
         try {
-          static::$parsedInfos[$filename] = $this->getParser()->parse(file_get_contents($filename));
+          static::$parsedInfos[$filename] = Yaml::decode(file_get_contents($filename));
         }
-        catch (ParseException $e) {
-          $message = String::format("Unable to parse !file. Parser error !error.", array('!file' => $filename, '!error' => $e->getMessage()));
-          throw new InfoParserException($message, $filename);
+        catch (InvalidDataTypeException $e) {
+          $message = String::format("Unable to parse !file: !error", array('!file' => $filename, '!error' => $e->getMessage()));
+          throw new InfoParserException($message);
         }
         $missing_keys = array_diff($this->getRequiredKeys(), array_keys(static::$parsedInfos[$filename]));
         if (!empty($missing_keys)) {
           $message = format_plural(count($missing_keys), 'Missing required key (!missing_keys) in !file.', 'Missing required keys (!missing_keys) in !file.', array('!missing_keys' => implode(', ', $missing_keys), '!file' => $filename));
-          throw new InfoParserException($message, $filename);
+          throw new InfoParserException($message);
         }
         if (isset(static::$parsedInfos[$filename]['version']) && static::$parsedInfos[$filename]['version'] === 'VERSION') {
           static::$parsedInfos[$filename]['version'] = \Drupal::VERSION;
@@ -57,19 +50,6 @@ class InfoParser implements InfoParserInterface {
       }
     }
     return static::$parsedInfos[$filename];
-  }
-
-  /**
-   * Returns a parser for parsing .info.yml files.
-   *
-   * @return \Symfony\Component\Yaml\Parser
-   *   Symfony YAML parser object.
-   */
-  protected function getParser() {
-    if (!$this->parser) {
-      $this->parser = new Parser();
-    }
-    return $this->parser;
   }
 
   /**

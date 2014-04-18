@@ -7,8 +7,8 @@
 
 namespace Drupal\config\Tests\Storage;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\FileStorage;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests FileStorage operations.
@@ -34,7 +34,7 @@ class FileStorageTest extends ConfigStorageTestBase {
 
   protected function read($name) {
     $data = file_get_contents($this->storage->getFilePath($name));
-    return Yaml::parse($data);
+    return Yaml::decode($data);
   }
 
   protected function insert($name, $data) {

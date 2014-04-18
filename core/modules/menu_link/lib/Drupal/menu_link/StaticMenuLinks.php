@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\menu_link;
+
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 

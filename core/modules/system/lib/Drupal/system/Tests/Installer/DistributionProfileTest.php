@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\Installer;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\simpletest\InstallerTestBase;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests the installer translation detection.
@@ -45,7 +45,7 @@ class DistributionProfileTest extends InstallerTestBase {
     // File API functions are not available yet.
     $path = $this->siteDirectory . '/profiles/mydistro';
     mkdir($path, 0777, TRUE);
-    file_put_contents("$path/mydistro.info.yml", Yaml::dump($this->info, PHP_INT_MAX, 2));
+    file_put_contents("$path/mydistro.info.yml", Yaml::encode($this->info));
     file_put_contents("$path/mydistro.profile", "<?php\n");
 
     parent::setUp();
