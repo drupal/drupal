@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\KeyValueStore;
 
+use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Database\Connection;
 
@@ -23,6 +24,13 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
   protected $storages = array();
 
   /**
+   * The serialization class to use.
+   *
+   * @var \Drupal\Component\Serialization\SerializationInterface
+   */
+  protected $serializer;
+
+  /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
@@ -32,11 +40,13 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
   /**
    * Constructs this factory object.
    *
-   *
+   * @param \Drupal\Component\Serialization\SerializationInterface $serializer
+   *   The serialization class to use.
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
    */
-  function __construct(Connection $connection) {
+  function __construct(SerializationInterface $serializer, Connection $connection) {
+    $this->serializer = $serializer;
     $this->connection = $connection;
   }
 
@@ -45,7 +55,7 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
    */
   public function get($collection) {
     if (!isset($this->storages[$collection])) {
-      $this->storages[$collection] = new DatabaseStorageExpirable($collection, $this->connection);
+      $this->storages[$collection] = new DatabaseStorageExpirable($collection, $this->serializer, $this->connection);
     }
     return $this->storages[$collection];
   }

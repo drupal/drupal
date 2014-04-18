@@ -35,7 +35,10 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
       ->addArgument('default');
     $this->container
       ->register('keyvalue.expirable.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory')
+      ->addArgument(new Reference('serialization.phpserialize'))
       ->addArgument(new Reference('database'));
+    $this->container
+      ->register('serialization.phpserialize', 'Drupal\Component\Serialization\PhpSerialize');
     $this->settingsSet('keyvalue_expirable_default', 'keyvalue.expirable.database');
   }
 

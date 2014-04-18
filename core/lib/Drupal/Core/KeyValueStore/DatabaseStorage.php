@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\KeyValueStore;
 
+use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Connection;
 
@@ -17,6 +18,13 @@ use Drupal\Core\Database\Connection;
  * to store key/value data.
  */
 class DatabaseStorage extends StorageBase {
+
+  /**
+   * The serialization class to use.
+   *
+   * @var \Drupal\Component\Serialization\SerializationInterface
+   */
+  protected $serializer;
 
   /**
    * The database connection.
@@ -37,11 +45,16 @@ class DatabaseStorage extends StorageBase {
    *
    * @param string $collection
    *   The name of the collection holding key and value pairs.
+   * @param \Drupal\Component\Serialization\SerializationInterface $serializer
+   *   The serialization class to use.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection to use.
    * @param string $table
    *   The name of the SQL table to use, defaults to key_value.
    */
-  public function __construct($collection, Connection $connection, $table = 'key_value') {
+  public function __construct($collection, SerializationInterface $serializer, Connection $connection, $table = 'key_value') {
     parent::__construct($collection);
+    $this->serializer = $serializer;
     $this->connection = $connection;
     $this->table = $table;
   }
@@ -65,7 +78,7 @@ class DatabaseStorage extends StorageBase {
       $result = $this->connection->query('SELECT name, value FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN (:keys) AND collection = :collection', array(':keys' => $keys, ':collection' => $this->collection))->fetchAllAssoc('name');
       foreach ($keys as $key) {
         if (isset($result[$key])) {
-          $values[$key] = unserialize($result[$key]->value);
+          $values[$key] = $this->serializer->decode($result[$key]->value);
         }
       }
     }
@@ -86,7 +99,7 @@ class DatabaseStorage extends StorageBase {
 
     foreach ($result as $item) {
       if ($item) {
-        $values[$item->name] = unserialize($item->value);
+        $values[$item->name] = $this->serializer->decode($item->value);
       }
     }
     return $values;
@@ -101,7 +114,7 @@ class DatabaseStorage extends StorageBase {
         'name' => $key,
         'collection' => $this->collection,
       ))
-      ->fields(array('value' => serialize($value)))
+      ->fields(array('value' => $this->serializer->encode($value)))
       ->execute();
   }
 
@@ -113,7 +126,7 @@ class DatabaseStorage extends StorageBase {
       ->insertFields(array(
         'collection' => $this->collection,
         'name' => $key,
-        'value' => serialize($value),
+        'value' => $this->serializer->encode($value),
       ))
       ->condition('collection', $this->collection)
       ->condition('name', $key)

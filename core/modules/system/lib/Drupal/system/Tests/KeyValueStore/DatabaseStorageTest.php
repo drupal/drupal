@@ -34,7 +34,10 @@ class DatabaseStorageTest extends StorageTestBase {
       ->addArgument('default');
     $this->container
       ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
+      ->addArgument(new Reference('serialization.phpserialize'))
       ->addArgument(new Reference('database'));
+    $this->container
+      ->register('serialization.phpserialize', 'Drupal\Component\Serialization\PhpSerialize');
     $this->settingsSet('keyvalue_default', 'keyvalue.database');
   }
 

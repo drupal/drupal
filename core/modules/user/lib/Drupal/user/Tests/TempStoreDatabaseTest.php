@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\simpletest\UnitTestBase;
 use Drupal\user\TempStoreFactory;
 use Drupal\Core\Lock\DatabaseLockBackend;
@@ -83,7 +84,7 @@ class TempStoreDatabaseTest extends UnitTestBase {
    */
   public function testUserTempStore() {
     // Create a key/value collection.
-    $factory = new TempStoreFactory(Database::getConnection(), new DatabaseLockBackend(Database::getConnection()));
+    $factory = new TempStoreFactory(new PhpSerialize(), Database::getConnection(), new DatabaseLockBackend(Database::getConnection()));
     $collection = $this->randomName();
 
     // Create two mock users.

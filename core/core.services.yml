@@ -127,15 +127,23 @@ services:
     arguments: ['@service_container', '@settings']
   keyvalue.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseFactory
-    arguments: ['@database']
+    arguments: ['@serialization.phpserialize', '@database']
   keyvalue.expirable:
     class: Drupal\Core\KeyValueStore\KeyValueExpirableFactory
     arguments: ['@service_container', '@settings']
   keyvalue.expirable.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory
+    arguments: ['@serialization.phpserialize', '@database']
     tags:
       - { name: needs_destruction }
-    arguments: ['@database']
+
+  serialization.json:
+    class: Drupal\Component\Serialization\Json
+  serialization.phpserialize:
+    class: Drupal\Component\Serialization\PhpSerialize
+  serialization.yaml:
+    class: Drupal\Component\Serialization\Yaml
+
   settings:
     class: Drupal\Component\Utility\Settings
     factory_class: Drupal\Component\Utility\Settings
@@ -288,7 +296,7 @@ services:
     arguments: ['@database']
   user.tempstore:
     class: Drupal\user\TempStoreFactory
-    arguments: ['@database', '@lock']
+    arguments: ['@serialization.phpserialize', '@database', '@lock']
   router.request_context:
     class: Symfony\Component\Routing\RequestContext
     tags:
