@@ -15,7 +15,15 @@ class PathController {
   /**
    * @todo Remove path_admin_overview().
    */
-  public function adminOverview($keys = NULL) {
+  public function adminOverview() {
+    module_load_include('admin.inc', 'path');
+    return path_admin_overview();
+  }
+
+  /**
+   * @todo Remove path_admin_overview().
+   */
+  public function adminOverviewFiltered($keys) {
     module_load_include('admin.inc', 'path');
     return path_admin_overview($keys);
   }

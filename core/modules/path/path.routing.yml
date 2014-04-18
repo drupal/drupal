@@ -7,11 +7,18 @@ path.delete:
     _permission: 'administer url aliases'
 
 path.admin_overview:
-  path: '/admin/config/search/path/{keys}'
+  path: '/admin/config/search/path'
   defaults:
     _title: 'URL aliases'
     _content: '\Drupal\path\Controller\PathController::adminOverview'
-    keys: NULL
+  requirements:
+    _permission: 'administer url aliases'
+
+path.admin_overview_filter:
+  path: '/admin/config/search/path/list/{keys}'
+  defaults:
+    _title: 'URL aliases'
+    _content: '\Drupal\path\Controller\PathController::adminOverviewFiltered'
   requirements:
     _permission: 'administer url aliases'
 

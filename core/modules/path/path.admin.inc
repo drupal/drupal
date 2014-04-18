@@ -307,5 +307,5 @@ function path_admin_filter_form_submit_filter($form, &$form_state) {
  * @see path_admin_filter_form_submit_filter()
  */
 function path_admin_filter_form_submit_reset($form, &$form_state) {
-  $form_state['redirect'] = 'admin/config/search/path/list';
+  $form_state['redirect'] = 'admin/config/search/path';
 }
