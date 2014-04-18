@@ -8,7 +8,7 @@ services:
     arguments: ['@module_handler', '@database', '@entity.manager', '@request_stack']
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
-    arguments: ['@request', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver', '@current_user']
+    arguments: ['@router.request_context', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver', '@current_user']
     tags:
       - { name: breadcrumb_builder, priority: 0 }
   path_processor.files:

@@ -15,6 +15,7 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -56,11 +57,11 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   protected $requestMatcher;
 
   /**
-   * The mocked request object.
+   * The mocked route request context.
    *
-   * @var \Symfony\Component\HttpFoundation\Request|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\Routing\RequestContext|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $request;
+  protected $context;
 
   /**
    * The mocked link generator.
@@ -107,14 +108,14 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $config_factory = $this->getConfigFactoryStub(array('system.site' => array('front' => 'test_frontpage')));
 
     $this->pathProcessor = $this->getMock('\Drupal\Core\PathProcessor\InboundPathProcessorInterface');
-    $this->request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')->disableOriginalConstructor()->getMock();
+    $this->context = $this->getMock('\Symfony\Component\Routing\RequestContext');
 
     $this->accessManager = $this->getMockBuilder('\Drupal\Core\Access\AccessManager')
       ->disableOriginalConstructor()->getMock();
     $this->titleResolver = $this->getMock('\Drupal\Core\Controller\TitleResolverInterface');
     $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->builder = new TestPathBasedBreadcrumbBuilder(
-      $this->request,
+      $this->context,
       $this->accessManager,
       $this->requestMatcher,
       $this->pathProcessor,
@@ -135,7 +136,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::build()
    */
   public function testBuildOnFrontpage() {
-    $this->request->expects($this->once())
+    $this->context->expects($this->once())
       ->method('getPathInfo')
       ->will($this->returnValue('/'));
 
@@ -149,7 +150,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::build()
    */
   public function testBuildWithOnePathElement() {
-    $this->request->expects($this->once())
+    $this->context->expects($this->once())
       ->method('getPathInfo')
       ->will($this->returnValue('/example'));
 
@@ -166,7 +167,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::getRequestForPath()
    */
   public function testBuildWithTwoPathElements() {
-    $this->request->expects($this->once())
+    $this->context->expects($this->once())
       ->method('getPathInfo')
       ->will($this->returnValue('/example/baz'));
     $this->setupStubPathProcessor();
@@ -208,7 +209,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::getRequestForPath()
    */
   public function testBuildWithThreePathElements() {
-    $this->request->expects($this->once())
+    $this->context->expects($this->once())
       ->method('getPathInfo')
       ->will($this->returnValue('/example/bar/baz'));
     $this->setupStubPathProcessor();
@@ -266,7 +267,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @dataProvider providerTestBuildWithException
    */
   public function testBuildWithException($exception_class, $exception_argument) {
-    $this->request->expects($this->once())
+    $this->context->expects($this->once())
       ->method('getPathInfo')
       ->will($this->returnValue('/example/bar'));
     $this->setupStubPathProcessor();
@@ -305,7 +306,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::getRequestForPath()
    */
   public function testBuildWithNonProcessedPath() {
-    $this->request->expects($this->once())
+    $this->context->expects($this->once())
       ->method('getPathInfo')
       ->will($this->returnValue('/example/bar'));
 
@@ -340,7 +341,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::getRequestForPath()
    */
   public function testBuildWithUserPath() {
-    $this->request->expects($this->once())
+    $this->context->expects($this->once())
       ->method('getPathInfo')
       ->will($this->returnValue('/user/1/edit'));
     $this->setupStubPathProcessor();

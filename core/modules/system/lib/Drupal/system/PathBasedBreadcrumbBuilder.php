@@ -18,6 +18,7 @@ use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -27,11 +28,11 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
 
   /**
-   * The current request.
+   * The router request context.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\Routing\RequestContext
    */
-  protected $request;
+  protected $context;
 
   /**
    * The menu link access service.
@@ -78,8 +79,8 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * Constructs the PathBasedBreadcrumbBuilder.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current Request object.
+   * @param \Symfony\Component\Routing\RequestContext $context
+   *   The router request context.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The menu link access service.
    * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
@@ -93,8 +94,8 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user object.
    */
-  public function __construct(Request $request, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user) {
-    $this->request = $request;
+  public function __construct(RequestContext $context, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user) {
+    $this->context = $context;
     $this->accessManager = $access_manager;
     $this->router = $router;
     $this->pathProcessor = $path_processor;
@@ -119,7 +120,7 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
     // General path-based breadcrumbs. Use the actual request path, prior to
     // resolving path aliases, so the breadcrumb can be defined by simply
     // creating a hierarchy of path aliases.
-    $path = trim($this->request->getPathInfo(), '/');
+    $path = trim($this->context->getPathInfo(), '/');
     $path_elements = explode('/', $path);
     $exclude = array();
     // Don't show a link to the front-page path.
@@ -178,7 +179,7 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
     }
     // @todo Use the RequestHelper once https://drupal.org/node/2090293 is
     //   fixed.
-    $request = Request::create($this->request->getBaseUrl() . '/' . $path);
+    $request = Request::create($this->context->getBaseUrl() . '/' . $path);
     // Performance optimization: set a short accept header to reduce overhead in
     // AcceptHeaderMatcher when matching the request.
     $request->headers->set('Accept', 'text/html');
