@@ -52,13 +52,6 @@ class SessionManager implements SessionManagerInterface {
   protected static $enabled = TRUE;
 
   /**
-   * Whether the session has been started.
-   *
-   * @var bool
-   */
-  protected static $started = FALSE;
-
-  /**
    * Constructs a new session manager instance.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request
@@ -127,7 +120,6 @@ class SessionManager implements SessionManagerInterface {
     $session_data = isset($_SESSION) ? $_SESSION : NULL;
 
     session_start();
-    static::$started = TRUE;
 
     // Restore session data.
     if (!empty($session_data)) {
@@ -175,7 +167,7 @@ class SessionManager implements SessionManagerInterface {
    * {@inheritdoc}
    */
   public function isStarted() {
-    return static::$started && session_status() === \PHP_SESSION_ACTIVE;
+    return session_status() === \PHP_SESSION_ACTIVE;
   }
 
   /**
