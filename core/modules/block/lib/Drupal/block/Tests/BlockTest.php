@@ -9,6 +9,7 @@ namespace Drupal\block\Tests;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Component\Utility\String;
 
 /**
  * Provides testing for basic block module functionality.
@@ -185,20 +186,16 @@ class BlockTest extends BlockTestBase {
    * Test block display of theme titles.
    */
   function testThemeName() {
-    \Drupal::moduleHandler()->install(array('block_test'));
+    // Enable the help block.
+    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
     // Explicitly set the default and admin themes.
-    $theme = 'cat_mouse';
-    theme_enable(array($theme, 'seven', 'block_test_theme'));
-    $this->resetAll();
-
-    \Drupal::config('system.theme')
-      ->set('default', 'seven')
-      ->set('admin', 'seven')
-      ->save();
+    $theme = 'block_test_specialchars_theme';
+    theme_enable(array($theme));
     \Drupal::service('router.builder')->rebuild();
-    $this->drupalGet('admin/appearance');
     $this->drupalGet('admin/structure/block');
-    $this->assertText('&lt;&quot;Cat&quot; &amp; &#039;Mouse&#039;&gt;');
+    $this->assertRaw(String::checkPlain('<"Cat" & \'Mouse\'>'));
+    $this->drupalGet('admin/structure/block/list/block_test_specialchars_theme');
+    $this->assertRaw(String::checkPlain('Demonstrate block regions (<"Cat" & \'Mouse\'>)'));
   }
 
   /**
