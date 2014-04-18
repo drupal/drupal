@@ -22,12 +22,6 @@ class Client extends GuzzleClient {
    */
   public function __construct(array $config = []) {
     $default_config = array(
-      'config' => array(
-        'curl' => array(
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_MAXREDIRS => 3,
-        ),
-      ),
       // Security consideration: we must not use the certificate authority
       // file shipped with Guzzle because it can easily get outdated if a
       // certificate authority is hacked. Instead, we rely on the certificate
@@ -35,6 +29,7 @@ class Client extends GuzzleClient {
       // going to be updated in a timely fashion. This overrides the default
       // path to the pem file bundled with Guzzle.
       'verify' => TRUE,
+      'timeout' => 30,
       'headers' => array(
         'User-Agent' => 'Drupal (+http://drupal.org/)',
       ),
