@@ -395,7 +395,8 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  * @param $sid
  *   An ID number identifying this particular item (e.g., node ID).
  * @param $type
- *   The plugin ID or other machine-readable type of this item.
+ *   The plugin ID or other machine-readable type of this item,
+ *   which should be less than 64 bytes.
  * @param $text
  *   The content of this item. Must be a piece of HTML or plain text.
  * @param $langcode

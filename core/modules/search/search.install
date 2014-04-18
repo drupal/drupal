@@ -28,7 +28,7 @@ function search_schema() {
       ),
       'type' => array(
         'type' => 'varchar',
-        'length' => 16,
+        'length' => 64,
         'not null' => TRUE,
         'description' => 'Type of item, e.g. node.',
       ),
@@ -75,7 +75,7 @@ function search_schema() {
       ),
       'type' => array(
         'type' => 'varchar',
-        'length' => 16,
+        'length' => 64,
         'not null' => TRUE,
         'description' => 'The {search_dataset}.type of the searchable item to which the word belongs.',
       ),
