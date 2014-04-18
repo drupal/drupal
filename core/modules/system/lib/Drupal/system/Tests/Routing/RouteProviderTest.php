@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
-use Drupal\Core\KeyValueStore\State;
+use Drupal\Core\State\State;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -44,7 +44,7 @@ class RouteProviderTest extends UnitTestBase {
   /**
    * The state.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 

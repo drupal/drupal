@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 use Drupal\Core\Database\Connection;
@@ -34,7 +34,7 @@ class MatcherDumper implements MatcherDumperInterface {
   /**
    * The state.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -51,7 +51,7 @@ class MatcherDumper implements MatcherDumperInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection which will be used to store the route
    *   information.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state.
    * @param string $table
    *   (optional) The table to store the route info in. Defaults to 'router'.

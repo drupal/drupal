@@ -25,7 +25,7 @@ abstract class LanguageTestBase extends DrupalUnitTestBase {
   /**
    * The state storage service.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 

@@ -9,7 +9,7 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Core\Controller\ControllerResolverInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouteCollection;

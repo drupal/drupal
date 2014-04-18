@@ -9,7 +9,7 @@ namespace Drupal\update;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Queue\QueueFactory;
 
@@ -70,7 +70,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
   /**
    * The state service.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $stateStore;
 
@@ -90,7 +90,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
    *   The queue factory
    * @param \Drupal\update\UpdateFetcherInterface $update_fetcher
    *   The update fetcher service
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state_store
+   * @param \Drupal\Core\State\StateInterface $state_store
    *   The state service.
    * @param \Drupal\Core\PrivateKey $private_key
    *   The private key factory service.

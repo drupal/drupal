@@ -8,7 +8,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\ContentNegotiation;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -33,7 +33,7 @@ class RoutePreloader implements EventSubscriberInterface {
   /**
    * The state key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -56,7 +56,7 @@ class RoutePreloader implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    * @param \Drupal\Core\ContentNegotiation $negotiation
    *   The content negotiation.

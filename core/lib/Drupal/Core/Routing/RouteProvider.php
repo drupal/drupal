@@ -8,7 +8,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -46,7 +46,7 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
   /**
    * The state.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -64,7 +64,7 @@ class RouteProvider implements RouteProviderInterface, EventSubscriberInterface 
    *   A database connection object.
    * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
    *   The route builder.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state.
    * @param string $table
    *   The table in the database to use for matching.

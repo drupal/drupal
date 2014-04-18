@@ -12,7 +12,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
 
@@ -42,7 +42,7 @@ class CommentStatistics implements CommentStatisticsInterface {
   /**
    * The state service.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -55,7 +55,7 @@ class CommentStatistics implements CommentStatisticsInterface {
    *   The current logged in user.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
   public function __construct(Connection $database, AccountInterface $current_user, EntityManagerInterface $entity_manager, StateInterface $state) {

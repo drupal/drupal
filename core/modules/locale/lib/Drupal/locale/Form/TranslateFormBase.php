@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\locale\StringStorageInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,7 +31,7 @@ abstract class TranslateFormBase extends FormBase {
   /**
    * The state store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -54,7 +54,7 @@ abstract class TranslateFormBase extends FormBase {
    *
    * @param \Drupal\locale\StringStorageInterface $locale_storage
    *   The locale storage.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.

@@ -9,7 +9,7 @@ namespace Drupal\views\EventSubscriber;
 
 use Drupal\Core\Page\HtmlPage;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
@@ -49,7 +49,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * The state key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -65,7 +65,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
   public function __construct(EntityManagerInterface $entity_manager, StateInterface $state) {

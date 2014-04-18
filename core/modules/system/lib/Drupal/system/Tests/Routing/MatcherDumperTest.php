@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
-use Drupal\Core\KeyValueStore\State;
+use Drupal\Core\State\State;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -32,7 +32,7 @@ class MatcherDumperTest extends UnitTestBase {
   /**
    * The state.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 

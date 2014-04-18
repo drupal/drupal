@@ -9,7 +9,7 @@ namespace Drupal\system\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\CronInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -36,7 +36,7 @@ class AutomaticCron implements EventSubscriberInterface {
   /**
    * The state key value store.
    *
-   * Drupal\Core\KeyValueStore\StateInterface;
+   * Drupal\Core\State\StateInterface;
    */
   protected $state;
 
@@ -47,7 +47,7 @@ class AutomaticCron implements EventSubscriberInterface {
    *   The cron service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
   public function __construct(CronInterface $cron, ConfigFactoryInterface $config_factory, StateInterface $state) {

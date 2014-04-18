@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 
 /**
  * Controller class for fields.
@@ -42,7 +42,7 @@ class FieldConfigStorage extends ConfigEntityStorage {
   /**
    * The state keyvalue collection.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -63,7 +63,7 @@ class FieldConfigStorage extends ConfigEntityStorage {
    *   The entity manager.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
    *   The module handler.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, ModuleHandler $module_handler, StateInterface $state) {

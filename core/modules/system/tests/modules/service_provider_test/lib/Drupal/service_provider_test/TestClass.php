@@ -7,7 +7,7 @@
 
 namespace Drupal\service_provider_test;
 
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\DestructableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -18,14 +18,14 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
   /**
    * The state keyvalue collection.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
   /**
    * Constructor.
    *
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
   public function __construct(StateInterface $state) {

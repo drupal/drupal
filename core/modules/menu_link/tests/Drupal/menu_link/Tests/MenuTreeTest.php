@@ -82,7 +82,7 @@ class MenuTreeTest extends UnitTestCase {
   /**
    * The mocked state.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
 
@@ -130,7 +130,7 @@ class MenuTreeTest extends UnitTestCase {
     $this->entityQueryFactory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->state = $this->getMock('Drupal\Core\KeyValueStore\StateInterface');
+    $this->state = $this->getMock('Drupal\Core\State\StateInterface');
 
     $this->menuTree = new TestMenuTree($this->connection, $this->cacheBackend, $this->languageManager, $this->requestStack, $this->entityManager, $this->entityQueryFactory, $this->state);
   }

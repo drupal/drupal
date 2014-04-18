@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\Core\KeyValueStore\StateInterface.
+ * Contains \Drupal\Core\State\StateInterface.
  */
 
-namespace Drupal\Core\KeyValueStore;
+namespace Drupal\Core\State;
 
 /**
  * Defines the interface for the state system.

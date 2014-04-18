@@ -10,7 +10,7 @@ namespace Drupal\config_import_test;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -21,14 +21,14 @@ class EventSubscriber implements EventSubscriberInterface {
   /**
    * The key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
   /**
    * Constructs the event subscriber.
    *
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The key value store.
    */
   public function __construct(StateInterface $state) {

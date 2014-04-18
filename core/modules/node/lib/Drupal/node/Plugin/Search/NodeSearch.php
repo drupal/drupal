@@ -12,7 +12,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
@@ -63,7 +63,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * The Drupal state object used to set 'node.cron_last'.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -135,7 +135,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    *   A module manager object.
    * @param \Drupal\Core\Config\Config $search_settings
    *   A config object for 'search.settings'.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The Drupal state object used to set 'node.cron_last'.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The $account object to use for checking for access to advanced search.

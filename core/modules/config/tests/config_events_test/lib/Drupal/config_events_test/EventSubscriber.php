@@ -10,7 +10,7 @@ namespace Drupal\config_events_test;
 
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class EventSubscriber implements EventSubscriberInterface {
@@ -18,14 +18,14 @@ class EventSubscriber implements EventSubscriberInterface {
   /**
    * The state key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
   /**
    * Constructs the Event Subscriber object.
    *
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
   public function __construct(StateInterface $state) {

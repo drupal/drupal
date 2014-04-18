@@ -6,7 +6,7 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 
 
 /**
@@ -38,7 +38,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
   /**
    * The state key/value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -51,7 +51,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
    *   The optimizer for a single JS asset.
    * @param \Drupal\Core\Asset\AssetDumperInterface
    *   The dumper for optimized JS assets.
-   * @param \Drupal\Core\KeyValueStore\StateInterface
+   * @param \Drupal\Core\State\StateInterface
    *   The state key/value store.
    */
   public function __construct(AssetCollectionGrouperInterface $grouper, AssetOptimizerInterface $optimizer, AssetDumperInterface $dumper, StateInterface $state) {

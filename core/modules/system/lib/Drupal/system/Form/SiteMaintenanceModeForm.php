@@ -8,7 +8,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,7 +20,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   /**
    * The state keyvalue collection.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -29,7 +29,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state keyvalue collection to use.
    */
   public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state) {

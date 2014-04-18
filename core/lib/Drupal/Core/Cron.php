@@ -8,7 +8,7 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -44,7 +44,7 @@ class Cron implements CronInterface {
   /**
    * The state service.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -71,7 +71,7 @@ class Cron implements CronInterface {
    *   The lock service.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
    *   The queue service.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *    The current user.

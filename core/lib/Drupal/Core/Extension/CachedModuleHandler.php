@@ -8,7 +8,7 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 
 /**
  * Class that manages enabled modules in a Drupal installation.
@@ -18,7 +18,7 @@ class CachedModuleHandler extends ModuleHandler implements CachedModuleHandlerIn
   /**
    * State key/value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 

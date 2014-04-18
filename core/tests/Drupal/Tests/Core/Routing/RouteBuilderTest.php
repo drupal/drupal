@@ -78,7 +78,7 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
 
@@ -99,7 +99,7 @@ class RouteBuilderTest extends UnitTestCase {
     $this->yamlDiscovery = $this->getMockBuilder('\Drupal\Component\Discovery\YamlDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->state = $this->getMock('\Drupal\Core\KeyValueStore\StateInterface');
+    $this->state = $this->getMock('\Drupal\Core\State\StateInterface');
 
     $this->routeBuilder = new TestRouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->state);
     $this->routeBuilder->setYamlDiscovery($this->yamlDiscovery);

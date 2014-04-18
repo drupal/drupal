@@ -10,7 +10,7 @@ namespace Drupal\Core\Path;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
@@ -21,7 +21,7 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
   /**
    * The Key/Value Store to use for state.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -41,7 +41,7 @@ class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state keyvalue store.
    * @param \Drupal\Core\Path\AliasStorageInterface $alias_storage
    *   The alias storage service.

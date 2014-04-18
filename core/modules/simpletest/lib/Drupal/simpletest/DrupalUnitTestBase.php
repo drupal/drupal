@@ -254,7 +254,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
         ->addArgument(new Reference('service_container'))
         ->addArgument(new Reference('settings'));
 
-      $container->register('state', 'Drupal\Core\KeyValueStore\State')
+      $container->register('state', 'Drupal\Core\State\State')
         ->addArgument(new Reference('keyvalue'));
     }
 

@@ -18,7 +18,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandler;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 
 /**
  * Controller class for field instances.
@@ -40,7 +40,7 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
   /**
    * The state keyvalue collection.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -59,7 +59,7 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
    *   The language manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityManagerInterface $entity_manager, StateInterface $state) {

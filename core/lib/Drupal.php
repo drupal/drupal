@@ -336,7 +336,7 @@ class Drupal {
    * needs to be the same across development, production, etc. environments
    * (for example, the system maintenance message) should use \Drupal::config() instead.
    *
-   * @return \Drupal\Core\KeyValueStore\StateInterface
+   * @return \Drupal\Core\State\StateInterface
    */
   public static function state() {
     return static::$container->get('state');

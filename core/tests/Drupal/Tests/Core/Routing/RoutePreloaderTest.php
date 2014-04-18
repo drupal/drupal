@@ -31,7 +31,7 @@ class RoutePreloaderTest extends UnitTestCase {
   /**
    * The mocked state.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
 
@@ -65,7 +65,7 @@ class RoutePreloaderTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->state = $this->getMock('\Drupal\Core\KeyValueStore\StateInterface');
+    $this->state = $this->getMock('\Drupal\Core\State\StateInterface');
     $this->negotiation = $this->getMockBuilder('\Drupal\Core\ContentNegotiation')
       ->disableOriginalConstructor()
       ->getMock();

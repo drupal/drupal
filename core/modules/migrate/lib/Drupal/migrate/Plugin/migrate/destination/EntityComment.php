@@ -8,7 +8,7 @@
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\field\FieldInfo;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
@@ -25,7 +25,7 @@ class EntityComment extends EntityContentBase {
   /**
    * The state storage object.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
@@ -48,7 +48,7 @@ class EntityComment extends EntityContentBase {
    *   The migrate plugin manager.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field and instance definitions service.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\State\StateInterface $state
    *   The state storage object.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info, StateInterface $state) {
