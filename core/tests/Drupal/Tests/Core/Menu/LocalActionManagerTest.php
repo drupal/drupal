@@ -19,6 +19,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 /**
@@ -378,7 +379,8 @@ class TestLocalActionManager extends LocalActionManager {
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->controllerResolver = $controller_resolver;
-    $this->request = $request;
+    $this->requestStack = new RequestStack();
+    $this->requestStack->push($request);
     $this->moduleHandler = $module_handler;
     $this->alterInfo('menu_local_actions');
     $this->setCacheBackend($cache_backend, $language_manager, 'local_action_plugins', array('local_action' => TRUE));

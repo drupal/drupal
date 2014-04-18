@@ -19,7 +19,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteProviderInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -65,11 +65,11 @@ class LocalActionManager extends DefaultPluginManager {
   protected $controllerResolver;
 
   /**
-   * A request object.
+   * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The route provider to load routes by name.
@@ -92,7 +92,7 @@ class LocalActionManager extends DefaultPluginManager {
    */
   protected $account;
 
-/**
+  /**
    * The plugin instances.
    *
    * @var \Drupal\Core\Menu\LocalActionInterface[]
@@ -104,9 +104,8 @@ class LocalActionManager extends DefaultPluginManager {
    *
    * @param \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface $controller_resolver
    *   An object to use in introspecting route methods.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object to use for building titles and paths for plugin
-   *   instances.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -120,18 +119,18 @@ class LocalActionManager extends DefaultPluginManager {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManager $access_manager, AccountInterface $account) {
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
     $this->discovery = new YamlDiscovery('local_actions', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
+    $this->controllerResolver = $controller_resolver;
+    $this->requestStack = $request_stack;
     $this->routeProvider = $route_provider;
     $this->accessManager = $access_manager;
     $this->moduleHandler = $module_handler;
     $this->account = $account;
-    $this->controllerResolver = $controller_resolver;
-    $this->request = $request;
     $this->alterInfo('menu_local_actions');
     $this->setCacheBackend($cache_backend, $language_manager, 'local_action_plugins', array('local_action' => TRUE));
   }
@@ -150,7 +149,7 @@ class LocalActionManager extends DefaultPluginManager {
    */
   public function getTitle(LocalActionInterface $local_action) {
     $controller = array($local_action, 'getTitle');
-    $arguments = $this->controllerResolver->getArguments($this->request, $controller);
+    $arguments = $this->controllerResolver->getArguments($this->requestStack->getCurrentRequest(), $controller);
     return call_user_func_array($controller, $arguments);
   }
 
@@ -182,16 +181,17 @@ class LocalActionManager extends DefaultPluginManager {
       }
     }
     $links = array();
+    $request = $this->requestStack->getCurrentRequest();
     foreach ($this->instances[$route_appears] as $plugin_id => $plugin) {
       $route_name = $plugin->getRouteName();
-      $route_parameters = $plugin->getRouteParameters($this->request);
+      $route_parameters = $plugin->getRouteParameters($request);
       $links[$plugin_id] = array(
         '#theme' => 'menu_local_action',
         '#link' => array(
           'title' => $this->getTitle($plugin),
           'route_name' => $route_name,
           'route_parameters' => $route_parameters,
-          'localized_options' => $plugin->getOptions($this->request),
+          'localized_options' => $plugin->getOptions($request),
         ),
         '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account),
         '#weight' => $plugin->getWeight(),

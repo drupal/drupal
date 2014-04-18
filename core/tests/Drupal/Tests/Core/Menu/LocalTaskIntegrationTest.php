@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 if (!defined('DRUPAL_ROOT')) {
   define('DRUPAL_ROOT', dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)))));
@@ -63,9 +64,10 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
 
     // todo mock a request with a route.
     $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'request');
+    $request_stack = new RequestStack();
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'requestStack');
     $property->setAccessible(TRUE);
-    $property->setValue($manager, $request);
+    $property->setValue($manager, $request_stack);
 
     $accessManager = $this->getMockBuilder('Drupal\Core\Access\AccessManager')
       ->disableOriginalConstructor()

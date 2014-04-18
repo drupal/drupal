@@ -21,7 +21,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Manages discovery and instantiation of menu local task plugins.
@@ -64,11 +64,11 @@ class LocalTaskManager extends DefaultPluginManager {
   protected $controllerResolver;
 
   /**
-   * A request object.
+   * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The plugin instances.
@@ -110,7 +110,7 @@ class LocalTaskManager extends DefaultPluginManager {
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   An object to use in introspecting route methods.
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request object to use for building titles and paths for plugin instances.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider to load routes by name.
@@ -127,12 +127,12 @@ class LocalTaskManager extends DefaultPluginManager {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
     $this->discovery = new YamlDiscovery('local_tasks', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
     $this->controllerResolver = $controller_resolver;
-    $this->request = $request;
+    $this->requestStack = $request_stack;
     $this->routeProvider = $route_provider;
     $this->routeBuilder = $route_builder;
     $this->accessManager = $access_manager;
@@ -164,7 +164,8 @@ class LocalTaskManager extends DefaultPluginManager {
    */
   public function getTitle(LocalTaskInterface $local_task) {
     $controller = array($local_task, 'getTitle');
-    $arguments = $this->controllerResolver->getArguments($this->request, $controller);
+    $request = $this->requestStack->getCurrentRequest();
+    $arguments = $this->controllerResolver->getArguments($request, $controller);
     return call_user_func_array($controller, $arguments);
   }
 
@@ -312,10 +313,11 @@ class LocalTaskManager extends DefaultPluginManager {
     // of SQL queries that would otherwise be triggered by the access manager.
     $routes = $route_names ? $this->routeProvider->getRoutesByNames($route_names) : array();
 
+    $request = $this->requestStack->getCurrentRequest();
     foreach ($tree as $level => $instances) {
       foreach ($instances as $plugin_id => $child) {
         $route_name = $child->getRouteName();
-        $route_parameters = $child->getRouteParameters($this->request);
+        $route_parameters = $child->getRouteParameters($request);
 
         // Find out whether the user has access to the task.
         $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account);
@@ -331,7 +333,7 @@ class LocalTaskManager extends DefaultPluginManager {
             'title' => $this->getTitle($child),
             'route_name' => $route_name,
             'route_parameters' => $route_parameters,
-            'localized_options' => $child->getOptions($this->request),
+            'localized_options' => $child->getOptions($request),
           );
           $build[$level][$plugin_id] = array(
             '#theme' => 'menu_local_task',
@@ -363,13 +365,14 @@ class LocalTaskManager extends DefaultPluginManager {
     // Flag the list element as active if this tab's route and parameters match
     // the current request's route and route variables.
     $active = $current_route_name == $route_name;
+    $request = $this->requestStack->getCurrentRequest();
     if ($active) {
       // The request is injected, so we need to verify that we have the expected
       // _raw_variables attribute.
-      $raw_variables_bag = $this->request->attributes->get('_raw_variables');
+      $raw_variables_bag = $request->attributes->get('_raw_variables');
       // If we don't have _raw_variables, we assume the attributes are still the
       // original values.
-      $raw_variables = $raw_variables_bag ? $raw_variables_bag->all() : $this->request->attributes->all();
+      $raw_variables = $raw_variables_bag ? $raw_variables_bag->all() : $request->attributes->all();
       $active = array_intersect_assoc($route_parameters, $raw_variables) == $route_parameters;
     }
     return $active;

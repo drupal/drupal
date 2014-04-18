@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Zend\Stdlib\ArrayObject;
 
 /**
@@ -263,9 +264,11 @@ class LocalTaskManagerTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($this->manager, $this->controllerResolver);
 
-    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'request');
+    $request_stack = new RequestStack();
+    $request_stack->push($this->request);
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'requestStack');
     $property->setAccessible(TRUE);
-    $property->setValue($this->manager, $this->request);
+    $property->setValue($this->manager, $request_stack);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'accessManager');
     $property->setAccessible(TRUE);
