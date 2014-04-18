@@ -12,7 +12,7 @@ views_ui.add:
     _entity_form: 'view.add'
     _title: 'Add new view'
   requirements:
-    _permission: 'administer views'
+    _entity_create_access: view
 
 views_ui.settings_basic:
   path: '/admin/structure/views/settings'
@@ -52,7 +52,7 @@ views_ui.enable:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
     op: enable
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.enable
     _csrf_token: 'TRUE'
 
 views_ui.disable:
@@ -61,7 +61,7 @@ views_ui.disable:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
     op: disable
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.disable
     _csrf_token: 'TRUE'
 
 views_ui.clone:
@@ -70,7 +70,7 @@ views_ui.clone:
     _entity_form: 'view.clone'
     _title: 'Clone view'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.duplicate
 
 views_ui.delete:
   path: '/admin/structure/views/view/{view}/delete'
@@ -78,7 +78,7 @@ views_ui.delete:
     _entity_form: 'view.delete'
     _title: 'Delete view'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.delete
 
 views_ui.autocomplete:
   path: '/admin/views/ajax/autocomplete/tag'
@@ -96,7 +96,7 @@ views_ui.edit:
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
 
 views_ui.edit_display:
   path: '/admin/structure/views/view/{view}/edit/{display_id}'
@@ -108,7 +108,7 @@ views_ui.edit_display:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
     display_id: NULL
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
 
 views_ui.preview:
   path: '/admin/structure/views/view/{view}/preview/{display_id}'
@@ -127,7 +127,7 @@ views_ui.break_lock:
   defaults:
     _entity_form: 'view.break_lock'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.break-lock
 
 views_ui.form_add_handler:
   path: '/admin/structure/views/{js}/add-handler/{view}/{display_id}/{type}'
@@ -138,7 +138,7 @@ views_ui.form_add_handler:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\AddHandler::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_edit_details:
@@ -150,7 +150,7 @@ views_ui.form_edit_details:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_reorder_displays:
@@ -162,7 +162,7 @@ views_ui.form_reorder_displays:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_analyze:
@@ -174,7 +174,7 @@ views_ui.form_analyze:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_rearrange:
@@ -186,7 +186,7 @@ views_ui.form_rearrange:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_rearrange_filter:
@@ -198,7 +198,7 @@ views_ui.form_rearrange_filter:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_display:
@@ -210,7 +210,7 @@ views_ui.form_display:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\Display::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_handler:
@@ -222,7 +222,7 @@ views_ui.form_handler:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\ConfigHandler::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_handler_extra:
@@ -234,7 +234,7 @@ views_ui.form_handler_extra:
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerExtra::getForm'
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
 
 views_ui.form_handler_group:
@@ -247,5 +247,5 @@ views_ui.form_handler_group:
     _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerGroup::getForm'
     form_state: NULL
   requirements:
-    _permission: 'administer views'
+    _entity_access: view.update
     js: 'nojs|ajax'
