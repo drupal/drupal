@@ -133,8 +133,8 @@ class UserSelection extends SelectionBase {
     }
 
     // Add the filter by role option.
-    if (!empty($this->instance['settings']['handler_settings']['filter'])) {
-      $filter_settings = $this->instance['settings']['handler_settings']['filter'];
+    if (!empty($this->fieldDefinition->getSetting('handler_settings')['filter'])) {
+      $filter_settings = $this->fieldDefinition->getSetting('handler_settings')['filter'];
       if ($filter_settings['type'] == 'role') {
         $tables = $query->getTables();
         $base_table = $tables['base_table']['alias'];
