@@ -105,7 +105,9 @@ class DefaultPluginManagerTest extends UnitTestCase {
    * Tests the plugin manager with no cache and altering.
    */
   public function testDefaultPluginManagerWithAlter() {
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandler');
+    $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
+      ->disableOriginalConstructor()
+      ->getMock();
 
     // Configure the stub.
     $alter_hook_name = $this->randomName();

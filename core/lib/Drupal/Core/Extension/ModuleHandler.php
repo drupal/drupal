@@ -56,6 +56,20 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $hookInfo;
 
   /**
+   * Cache backend for storing module hook implementation information.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
+   * Whether the cache needs to be written.
+   *
+   * @var bool
+   */
+  protected $cacheNeedsWriting = FALSE;
+
+  /**
    * List of alter hook implementations keyed by hook name(s).
    *
    * @var array
@@ -69,19 +83,22 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend for storing module hook implementation information.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct(array $module_list = array()) {
+  public function __construct(array $module_list = array(), CacheBackendInterface $cache_backend) {
     $this->moduleList = array();
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($module['type'], $module['pathname'], $module['filename']);
     }
+    $this->cacheBackend = $cache_backend;
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::load().
+   * {@inheritdoc}
    */
   public function load($name) {
     if (isset($this->loadedFiles[$name])) {
@@ -97,7 +114,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::loadAll().
+   * {@inheritdoc}
    */
   public function loadAll() {
     if (!$this->loaded) {
@@ -109,7 +126,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::reload().
+   * {@inheritdoc}
    */
   public function reload() {
     $this->loaded = FALSE;
@@ -117,21 +134,21 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::isLoaded().
+   * {@inheritdoc}
    */
   public function isLoaded() {
     return $this->loaded;
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getModuleList().
+   * {@inheritdoc}
    */
   public function getModuleList() {
     return $this->moduleList;
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::setModuleList().
+   * {@inheritdoc}
    */
   public function setModuleList(array $module_list = array()) {
     $this->moduleList = $module_list;
@@ -172,7 +189,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::buildModuleDependencies().
+   * {@inheritdoc}
    */
   public function buildModuleDependencies(array $modules) {
     foreach ($modules as $module) {
@@ -195,14 +212,14 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::moduleExists().
+   * {@inheritdoc}
    */
   public function moduleExists($module) {
     return isset($this->moduleList[$module]);
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::loadAllIncludes().
+   * {@inheritdoc}
    */
   public function loadAllIncludes($type, $name = NULL) {
     foreach ($this->moduleList as $module => $filename) {
@@ -211,7 +228,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::loadInclude().
+   * {@inheritdoc}
    */
   public function loadInclude($module, $type, $name = NULL) {
     if ($type == 'install') {
@@ -232,17 +249,31 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getHookInfo().
+   * {@inheritdoc}
    */
   public function getHookInfo() {
-    if (isset($this->hookInfo)) {
-      return $this->hookInfo;
+    if (!isset($this->hookInfo)) {
+      if ($cache = $this->cacheBackend->get('hook_info')) {
+        $this->hookInfo = $cache->data;
+      }
+      else {
+        $this->buildHookInfo();
+        $this->cacheBackend->set('hook_info', $this->hookInfo);
+      }
     }
+    return $this->hookInfo;
+  }
+
+  /**
+   * Builds hook_hook_info() information.
+   *
+   * @see \Drupal\Core\Extension\ModuleHandler::getHookInfo()
+   */
+  protected function buildHookInfo() {
     $this->hookInfo = array();
-    // We can't use $this->invokeAll() here or it would cause an infinite
-    // loop.
     // Make sure that the modules are loaded before checking.
     $this->reload();
+    // $this->invokeAll() would cause an infinite recursion.
     foreach ($this->moduleList as $module => $filename) {
       $function = $module . '_hook_info';
       if (function_exists($function)) {
@@ -252,11 +283,10 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
       }
     }
-    return $this->hookInfo;
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getImplementations().
+   * {@inheritdoc}
    */
   public function getImplementations($hook) {
     $implementations = $this->getImplementationInfo($hook);
@@ -264,16 +294,39 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::resetImplementations().
+   * {@inheritdoc}
+   */
+  public function writeCache() {
+    if ($this->cacheNeedsWriting) {
+      $this->cacheBackend->set('module_implements', $this->implementations);
+      $this->cacheNeedsWriting = FALSE;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function resetImplementations() {
     $this->implementations = NULL;
     $this->hookInfo = NULL;
     $this->alterFunctions = NULL;
+    // We maintain a persistent cache of hook implementations in addition to the
+    // static cache to avoid looping through every module and every hook on each
+    // request. Benchmarks show that the benefit of this caching outweighs the
+    // additional database hit even when using the default database caching
+    // backend and only a small number of modules are enabled. The cost of the
+    // $this->cacheBackend->get() is more or less constant and reduced further
+    // when non-database caching backends are used, so there will be more
+    // significant gains when a large number of modules are installed or hooks
+    // invoked, since this can quickly lead to
+    // \Drupal::moduleHandler()->implementsHook() being called several thousand
+    // times per request.
+    $this->cacheBackend->set('module_implements', array());
+    $this->cacheBackend->delete('hook_info');
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::implementsHook().
+   * {@inheritdoc}
    */
   public function implementsHook($module, $hook) {
     $function = $module . '_' . $hook;
@@ -293,7 +346,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::invoke().
+   * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = array()) {
     if (!$this->implementsHook($module, $hook)) {
@@ -304,7 +357,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll().
+   * {@inheritdoc}
    */
   public function invokeAll($hook, array $args = array()) {
     $return = array();
@@ -326,7 +379,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::alter().
+   * {@inheritdoc}
    */
   public function alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     // Most of the time, $type is passed as a string, so for performance,
@@ -338,8 +391,8 @@ class ModuleHandler implements ModuleHandlerInterface {
       $extra_types = $type;
       $type = array_shift($extra_types);
       // Allow if statements in this function to use the faster isset() rather
-      // than !empty() both when $type is passed as a string, or as an array with
-      // one item.
+      // than !empty() both when $type is passed as a string, or as an array
+      // with one item.
       if (empty($extra_types)) {
         unset($extra_types);
       }
@@ -357,8 +410,8 @@ class ModuleHandler implements ModuleHandlerInterface {
       $modules = $this->getImplementations($hook);
       if (!isset($extra_types)) {
         // For the more common case of a single hook, we do not need to call
-        // function_exists(), since $this->getImplementations() returns only modules with
-        // implementations.
+        // function_exists(), since $this->getImplementations() returns only
+        // modules with implementations.
         foreach ($modules as $module) {
           $this->alterFunctions[$cid][] = $module . '_' . $hook;
         }
@@ -372,22 +425,24 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
         // If any modules implement one of the extra hooks that do not implement
         // the primary hook, we need to add them to the $modules array in their
-        // appropriate order. $this->getImplementations() can only return ordered
-        // implementations of a single hook. To get the ordered implementations
-        // of multiple hooks, we mimic the $this->getImplementations() logic of first
-        // ordering by $this->getModuleList(), and then calling
+        // appropriate order. $this->getImplementations() can only return
+        // ordered implementations of a single hook. To get the ordered
+        // implementations of multiple hooks, we mimic the
+        // $this->getImplementations() logic of first ordering by
+        // $this->getModuleList(), and then calling
         // $this->alter('module_implements').
         if (array_diff($extra_modules, $modules)) {
           // Merge the arrays and order by getModuleList().
           $modules = array_intersect(array_keys($this->moduleList), array_merge($modules, $extra_modules));
-          // Since $this->getImplementations() already took care of loading the necessary
-          // include files, we can safely pass FALSE for the array values.
+          // Since $this->getImplementations() already took care of loading the
+          // necessary include files, we can safely pass FALSE for the array
+          // values.
           $implementations = array_fill_keys($modules, FALSE);
           // Let modules adjust the order solely based on the primary hook. This
           // ensures the same module order regardless of whether this if block
-          // runs. Calling $this->alter() recursively in this way does not result
-          // in an infinite loop, because this call is for a single $type, so we
-          // won't end up in this code block again.
+          // runs. Calling $this->alter() recursively in this way does not
+          // result in an infinite loop, because this call is for a single
+          // $type, so we won't end up in this code block again.
           $this->alter('module_implements', $implementations, $hook);
           $modules = array_keys($implementations);
         }
@@ -450,9 +505,55 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   hook_hook_info() or FALSE if the implementation is in the module file.
    */
   protected function getImplementationInfo($hook) {
-    if (isset($this->implementations[$hook])) {
-      return $this->implementations[$hook];
+    if (!isset($this->implementations)) {
+      $this->implementations = array();
+      if ($cache = $this->cacheBackend->get('module_implements')) {
+        $this->implementations = $cache->data;
+      }
     }
+    if (!isset($this->implementations[$hook])) {
+      // The hook is not cached, so ensure that whether or not it has
+      // implementations, the cache is updated at the end of the request.
+      $this->cacheNeedsWriting = TRUE;
+      $this->implementations[$hook] = $this->buildImplementationInfo($hook);
+    }
+    else {
+      foreach ($this->implementations[$hook] as $module => $group) {
+        // If this hook implementation is stored in a lazy-loaded file, include
+        // that file first.
+        if ($group) {
+          $this->loadInclude($module, 'inc', "$module.$group");
+        }
+        // It is possible that a module removed a hook implementation without
+        // the implementations cache being rebuilt yet, so we check whether the
+        // function exists on each request to avoid undefined function errors.
+        // Since ModuleHandler::implementsHook() may needlessly try to
+        // load the include file again, function_exists() is used directly here.
+        if (!function_exists($module . '_' . $hook)) {
+          // Clear out the stale implementation from the cache and force a cache
+          // refresh to forget about no longer existing hook implementations.
+          unset($this->implementations[$hook][$module]);
+          $this->cacheNeedsWriting = TRUE;
+        }
+      }
+    }
+    return $this->implementations[$hook];
+  }
+
+  /**
+   * Builds hook implementation information for a given hook name.
+   *
+   * @param string $hook
+   *   The name of the hook (e.g. "help" or "menu").
+   *
+   * @return array
+   *   An array whose keys are the names of the modules which are implementing
+   *   this hook and whose values are either an array of information from
+   *   hook_hook_info() or FALSE if the implementation is in the module file.
+   *
+   * @see \Drupal\Core\Extension\ModuleHandler::getImplementationInfo()
+   */
+  protected function buildImplementationInfo($hook) {
     $this->implementations[$hook] = array();
     $hook_info = $this->getHookInfo();
     foreach ($this->moduleList as $module => $filename) {
@@ -552,8 +653,8 @@ class ModuleHandler implements ModuleHandlerInterface {
 
       // Conditionally add the dependencies to the list of modules.
       if ($enable_dependencies) {
-        // Add dependencies to the list. The new modules will be processed as the
-        // while loop continues.
+        // Add dependencies to the list. The new modules will be processed as
+        // the while loop continues.
         while (list($module) = each($module_list)) {
           foreach (array_keys($module_data[$module]->requires) as $dependency) {
             if (!isset($module_data[$dependency])) {
@@ -606,14 +707,15 @@ class ModuleHandler implements ModuleHandlerInterface {
           ->save();
 
         // Prepare the new module list, sorted by weight, including filenames.
-        // This list is used for both the ModuleHandler and DrupalKernel. It needs
-        // to be kept in sync between both. A DrupalKernel reboot or rebuild will
-        // automatically re-instantiate a new ModuleHandler that uses the new
-        // module list of the kernel. However, DrupalKernel does not cause any
-        // modules to be loaded.
-        // Furthermore, the currently active (fixed) module list can be different
-        // from the configured list of enabled modules. For all active modules not
-        // contained in the configured enabled modules, we assume a weight of 0.
+        // This list is used for both the ModuleHandler and DrupalKernel. It
+        // needs to be kept in sync between both. A DrupalKernel reboot or
+        // rebuild will automatically re-instantiate a new ModuleHandler that
+        // uses the new module list of the kernel. However, DrupalKernel does
+        // not cause any modules to be loaded.
+        // Furthermore, the currently active (fixed) module list can be
+        // different from the configured list of enabled modules. For all active
+        // modules not contained in the configured enabled modules, we assume a
+        // weight of 0.
         $current_module_filenames = $this->getModuleList();
         $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
         $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
@@ -631,10 +733,10 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
 
         // Update the module handler in order to load the module's code.
-        // This allows the module to participate in hooks and its existence to be
-        // discovered by other modules.
-        // The current ModuleHandler instance is obsolete with the kernel rebuild
-        // below.
+        // This allows the module to participate in hooks and its existence to
+        // be discovered by other modules.
+        // The current ModuleHandler instance is obsolete with the kernel
+        // rebuild below.
         $this->setModuleList($module_filenames);
         $this->load($module);
         module_load_install($module);
@@ -647,8 +749,8 @@ class ModuleHandler implements ModuleHandlerInterface {
         // Update the kernel to include it.
         // This reboots the kernel to register the module's bundle and its
         // services in the service container. The $module_filenames argument is
-        // taken over as %container.modules% parameter, which is passed to a fresh
-        // ModuleHandler instance upon first retrieval.
+        // taken over as %container.modules% parameter, which is passed to a
+        // fresh ModuleHandler instance upon first retrieval.
         // @todo install_begin_request() creates a container without a kernel.
         if ($kernel = \Drupal::service('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
           $kernel->updateModules($module_filenames, $module_filenames);

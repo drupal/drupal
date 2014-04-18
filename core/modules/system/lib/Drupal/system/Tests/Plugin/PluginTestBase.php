@@ -11,6 +11,7 @@ use Drupal\simpletest\UnitTestBase;
 use Drupal\plugin_test\Plugin\TestPluginManager;
 use Drupal\plugin_test\Plugin\MockBlockManager;
 use Drupal\plugin_test\Plugin\DefaultsTestPluginManager;
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Extension\ModuleHandler;
 
 /**
@@ -37,7 +38,7 @@ abstract class PluginTestBase extends UnitTestBase {
     //   as derivatives and ReflectionFactory.
     $this->testPluginManager = new TestPluginManager();
     $this->mockBlockManager = new MockBlockManager();
-    $module_handler = new ModuleHandler();
+    $module_handler = new ModuleHandler(array(), new MemoryBackend('plugin'));
     $this->defaultsTestPluginManager = new DefaultsTestPluginManager($module_handler);
 
     // The expected plugin definitions within each manager. Several tests assert
