@@ -39,6 +39,7 @@ class CommentValidationTest extends EntityUnitTestBase {
   public function setUp() {
     parent::setUp();
     $this->installSchema('node', array('node', 'node_field_data', 'node_field_revision', 'node_revision'));
+    $this->installSchema('comment', array('comment_entity_statistics'));
   }
 
   /**

@@ -216,7 +216,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setDescription(t('The parent comment ID if this is a reply to a comment.'))
       ->setSetting('target_type', 'comment');
 
-    $fields['entity_id'] = FieldDefinition::create('integer')
+    $fields['entity_id'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Entity ID'))
       ->setDescription(t('The ID of the entity of which this comment is a reply.'))
       ->setRequired(TRUE);
@@ -305,6 +305,16 @@ class Comment extends ContentEntityBase implements CommentInterface {
   /**
    * {@inheritdoc}
    */
+  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    list($target_type) = explode('__', $bundle, 2);
+    $fields['entity_id'] = clone $base_field_definitions['entity_id'];
+    $fields['entity_id']->setSetting('target_type', $target_type);
+    return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasParentComment() {
     $parent = $this->get('pid')->entity;
     return !empty($parent);
@@ -321,16 +331,14 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function getCommentedEntity() {
-    $entity_id = $this->getCommentedEntityId();
-    $entity_type = $this->getCommentedEntityTypeId();
-    return entity_load($entity_type, $entity_id);
+    return $this->get('entity_id')->entity;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCommentedEntityId() {
-    return $this->get('entity_id')->value;
+    return $this->get('entity_id')->target_id;
   }
 
   /**
