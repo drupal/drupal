@@ -291,8 +291,8 @@ services:
     arguments: ['@database', '@lock']
   router.request_context:
     class: Symfony\Component\Routing\RequestContext
-    calls:
-      - [fromRequest, ['@request']]
+    tags:
+      - { name: persist }
   router.admin_context:
     class: Drupal\Core\Routing\AdminContext
     arguments: ['@request_stack']
@@ -467,7 +467,7 @@ services:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
       - { name: event_subscriber }
-    arguments: ['@router']
+    arguments: ['@router', '@router.request_context', NULL, '@request_stack']
   content_negotiation:
     class: Drupal\Core\ContentNegotiation
   view_subscriber:

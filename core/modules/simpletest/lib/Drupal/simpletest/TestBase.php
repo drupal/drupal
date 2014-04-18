@@ -1160,6 +1160,12 @@ abstract class TestBase {
       $this->container->get('request_stack')->push($request);
     }
     $this->container->get('current_user')->setAccount(\Drupal::currentUser());
+
+    // The request context is normally set by the router_listener from within
+    // its KernelEvents::REQUEST listener. In the simpletest parent site this
+    // event is not fired, therefore it is necessary to updated the request
+    // context manually here.
+    $this->container->get('router.request_context')->fromRequest($request);
   }
 
   /**
