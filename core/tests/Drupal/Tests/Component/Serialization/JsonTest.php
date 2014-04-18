@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Utility\JsonTest.
+ * Contains \Drupal\Tests\Component\Serialization\JsonTest.
  */
 
-namespace Drupal\Tests\Component\Utility;
+namespace Drupal\Tests\Component\Serialization;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the Json::encode() and Json::decode() functions.
  *
- * @see \Drupal\Component\Utility\Json
+ * @see \Drupal\Component\Serialization\Json
  */
 class JsonTest extends UnitTestCase {
 

@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\Controller;
 
+use Drupal\Component\Serialization\Json;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Component\Utility\Json;
 use Drupal\Core\Template\Attribute;
 use Drupal\system\Controller\SystemController;
 use Drupal\Tests\UnitTestCase;

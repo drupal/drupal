@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Utility\Json.
+ * Contains \Drupal\Component\Serialization\Json.
  */
 
-namespace Drupal\Component\Utility;
+namespace Drupal\Component\Serialization;
 
 /**
  * Provides helpers for dealing with json.

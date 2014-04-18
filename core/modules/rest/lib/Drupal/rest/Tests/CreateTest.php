@@ -7,7 +7,7 @@
 
 namespace Drupal\rest\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Tests resource creation on user, node and test entities.

@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\String;

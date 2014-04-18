@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Json;
 use Drupal\Core\Render\Element;
 use Drupal\simpletest\DrupalUnitTestBase;
 

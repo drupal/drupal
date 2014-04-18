@@ -6,8 +6,8 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\State\StateInterface;
-use Drupal\Component\Utility\Json;
 
 /**
  * Renders JavaScript assets.

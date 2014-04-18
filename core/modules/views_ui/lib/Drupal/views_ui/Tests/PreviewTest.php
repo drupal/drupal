@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Tests the preview form in the UI.

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 

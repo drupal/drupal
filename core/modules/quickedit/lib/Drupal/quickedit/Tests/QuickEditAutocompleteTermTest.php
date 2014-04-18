@@ -7,7 +7,7 @@
 
 namespace Drupal\quickedit\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;

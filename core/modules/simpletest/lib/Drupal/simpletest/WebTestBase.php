@@ -7,8 +7,8 @@
 
 namespace Drupal\simpletest;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;

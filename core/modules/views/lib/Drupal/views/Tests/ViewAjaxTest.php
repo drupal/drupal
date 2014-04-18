@@ -6,7 +6,8 @@
  */
 
 namespace Drupal\views\Tests;
-use Drupal\Component\Utility\Json;
+
+use Drupal\Component\Serialization\Json;
 
 /**
  * Tests the ajax view functionality.

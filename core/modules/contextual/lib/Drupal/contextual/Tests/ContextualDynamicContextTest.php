@@ -7,7 +7,7 @@
 
 namespace Drupal\contextual\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Template\Attribute;
 

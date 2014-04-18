@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Component\Utility\Crypt;
 

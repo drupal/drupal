@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\Language;
 use Drupal\comment\CommentInterface;
 

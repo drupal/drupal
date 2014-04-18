@@ -7,7 +7,7 @@
 
 namespace Drupal\menu_ui\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Defines a test class for testing menu and menu link functionality.

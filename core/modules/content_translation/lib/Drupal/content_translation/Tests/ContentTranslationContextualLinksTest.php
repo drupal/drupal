@@ -7,7 +7,7 @@
 
 namespace Drupal\content_translation\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 

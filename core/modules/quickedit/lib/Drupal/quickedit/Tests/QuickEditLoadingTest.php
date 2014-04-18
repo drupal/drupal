@@ -7,7 +7,7 @@
 
 namespace Drupal\quickedit\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\quickedit\Ajax\MetadataCommand;
 use Drupal\Core\Ajax\AppendCommand;

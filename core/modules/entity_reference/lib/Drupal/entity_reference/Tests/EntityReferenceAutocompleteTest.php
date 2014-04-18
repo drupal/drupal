@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\entity_reference\EntityReferenceController;

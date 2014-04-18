@@ -7,7 +7,7 @@
 
 namespace Drupal\block\Tests\Views;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;

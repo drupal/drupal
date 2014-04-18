@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Tests\Views;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

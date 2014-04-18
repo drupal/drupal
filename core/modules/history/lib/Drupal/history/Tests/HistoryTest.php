@@ -7,7 +7,7 @@
 
 namespace Drupal\history\Tests;
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 
 /**

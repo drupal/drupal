@@ -8,7 +8,7 @@
 namespace Drupal\block;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

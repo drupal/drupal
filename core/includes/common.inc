@@ -8,8 +8,8 @@
  * a cached page are instead located in bootstrap.inc.
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\SortArray;
@@ -2824,7 +2824,7 @@ function drupal_clear_js_cache() {
  * @ingroup php_wrappers
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\Json::encode().
+ *   Use \Drupal\Component\Serialization\Json::encode().
  */
 function drupal_json_encode($var) {
   return Json::encode($var);
@@ -2838,7 +2838,7 @@ function drupal_json_encode($var) {
  * @ingroup php_wrappers
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\Json::decode().
+ *   Use \Drupal\Component\Serialization\Json::decode().
  */
 function drupal_json_decode($var) {
   return Json::decode($var);

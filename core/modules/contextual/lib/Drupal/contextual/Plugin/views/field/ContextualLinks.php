@@ -7,10 +7,10 @@
 
 namespace Drupal\contextual\Plugin\views\field;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
-use Drupal\Component\Utility\Json;
 
 /**
  * Provides a handler that adds contextual links.
