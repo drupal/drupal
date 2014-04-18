@@ -9,9 +9,11 @@ namespace Drupal\views\Tests\Routing;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Routing\ViewPageController;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\Routing\Route;
 
 /**
  * Tests the page controller but not the actual execution/rendering of a view.
@@ -95,6 +97,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'default');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(''));
 
     $output = $this->pageController->handle($request);
     $this->assertInternalType('array', $output);
@@ -141,6 +144,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('arg_0', 'test-argument');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(''));
 
     $this->pageController->handle($request);
   }
@@ -187,9 +191,9 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('parameter', 'test-argument');
-    $request->attributes->set('_view_argument_map', array(
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('', array(), array(), array('_view_argument_map' => array(
       'arg_0' => 'parameter',
-    ));
+    ))));
 
     $this->pageController->handle($request);
   }
@@ -240,9 +244,9 @@ class ViewPageControllerTest extends UnitTestCase {
     $raw_variables = new ParameterBag(array('test_entity' => 'example_id'));
     $request->attributes->set('_raw_variables', $raw_variables);
 
-    $request->attributes->set('_view_argument_map', array(
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('', array(), array(), array('_view_argument_map' => array(
       'arg_0' => 'test_entity',
-    ));
+    ))));
 
     $this->pageController->handle($request);
   }

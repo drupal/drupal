@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ViewExecutableFactory;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -74,7 +75,7 @@ class ViewPageController implements ContainerInjectionInterface {
     $view->initHandlers();
 
     $args = array();
-    $map = $request->attributes->get('_view_argument_map', array());
+    $map = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getOption('_view_argument_map', array());
     $arguments_length = count($view->argument);
     for ($argument_index = 0; $argument_index < $arguments_length; $argument_index++) {
       // Allow parameters be pulled from the request.

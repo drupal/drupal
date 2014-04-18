@@ -197,7 +197,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $route->setOption('_access_mode', 'ANY');
 
     // Set the argument map, in order to support named parameters.
-    $route->setDefault('_view_argument_map', $argument_map);
+    $route->setOption('_view_argument_map', $argument_map);
 
     return $route;
   }
@@ -253,7 +253,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           $argument_map['arg_' . $position] = $parameter_name;
         }
         // Set the corrected path and the mapping to the route object.
-        $route->setDefault('_view_argument_map', $argument_map);
+        $route->setOption('_view_argument_map', $argument_map);
         $route->setPath($path);
 
         $collection->add($name, $route);

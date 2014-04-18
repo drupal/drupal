@@ -210,7 +210,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('/test_route/{node}/example', $route->getPath());
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertEquals(array('arg_0' => 'node'), $route->getDefault('_view_argument_map'));
+    $this->assertEquals(array('arg_0' => 'node'), $route->getOption('_view_argument_map'));
   }
 
   /**
@@ -246,7 +246,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     // Ensure that the path did not changed and placeholders are respected.
     $this->assertEquals('/test_route/{parameter}', $route->getPath());
-    $this->assertEquals(array('arg_0' => 'parameter'), $route->getDefault('_view_argument_map'));
+    $this->assertEquals(array('arg_0' => 'parameter'), $route->getOption('_view_argument_map'));
   }
 
   /**
