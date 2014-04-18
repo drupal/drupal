@@ -45,11 +45,11 @@ class BasicAuth implements AuthenticationProviderInterface {
   protected $flood;
 
   /**
-   * The user storage.
+   * The entity manager.
    *
-   * @var \Drupal\user\UserStorageInterface
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $userStorage;
+  protected $entityManager;
 
   /**
    * Constructs a HTTP basic authentication provider object.
@@ -67,7 +67,7 @@ class BasicAuth implements AuthenticationProviderInterface {
     $this->configFactory = $config_factory;
     $this->userAuth = $user_auth;
     $this->flood = $flood;
-    $this->userStorage = $entity_manager->getStorage('user');
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -94,7 +94,7 @@ class BasicAuth implements AuthenticationProviderInterface {
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
     if ($this->flood->isAllowed('basic_auth.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-      $accounts = $this->userStorage->loadByProperties(array('name' => $username, 'status' => 1));
+      $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $username, 'status' => 1));
       $account = reset($accounts);
       if ($account) {
         if ($flood_config->get('uid_only')) {
@@ -114,7 +114,7 @@ class BasicAuth implements AuthenticationProviderInterface {
           $uid = $this->userAuth->authenticate($username, $password);
           if ($uid) {
             $this->flood->clear('basic_auth.failed_login_user', $identifier);
-            return $this->userStorage->load($uid);
+            return $this->entityManager->getStorage('user')->load($uid);
           }
           else {
             // Register a per-user failed login event.

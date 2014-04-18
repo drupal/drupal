@@ -17,11 +17,11 @@ use Drupal\Core\Password\PasswordInterface;
 class UserAuth implements UserAuthInterface {
 
   /**
-   * The user storage.
+   * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $storage;
+  protected $entityManager;
 
   /**
    * The password service.
@@ -39,7 +39,7 @@ class UserAuth implements UserAuthInterface {
    *   The password service.
    */
   public function __construct(EntityManagerInterface $entity_manager, PasswordInterface $password_checker) {
-    $this->storage = $entity_manager->getStorage('user');
+    $this->entityManager = $entity_manager;
     $this->passwordChecker = $password_checker;
   }
 
@@ -50,7 +50,7 @@ class UserAuth implements UserAuthInterface {
     $uid = FALSE;
 
     if (!empty($username) && !empty($password)) {
-      $account_search = $this->storage->loadByProperties(array('name' => $username));
+      $account_search = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $username));
 
       if ($account = reset($account_search)) {
         if ($this->passwordChecker->check($password, $account)) {

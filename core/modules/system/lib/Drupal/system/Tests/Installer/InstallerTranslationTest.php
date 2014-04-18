@@ -52,6 +52,10 @@ class InstallerTranslationTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertUrl('user/1');
     $this->assertResponse(200);
+
+    // Ensure that we can enable basic_auth on a non-english site.
+    $this->drupalPostForm('admin/modules', array('modules[Web services][basic_auth][enable]' => TRUE), t('Save configuration'));
+    $this->assertResponse(200);
   }
 
 }

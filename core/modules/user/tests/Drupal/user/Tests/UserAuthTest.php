@@ -80,8 +80,7 @@ class UserAuthTest extends UnitTestCase {
     $this->userStorage = $this->getMock('Drupal\Core\Entity\EntityStorageInterface');
 
     $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    // Getting the user storage should only happen once per test.
-    $entity_manager->expects($this->once())
+    $entity_manager->expects($this->any())
       ->method('getStorage')
       ->with('user')
       ->will($this->returnValue($this->userStorage));
