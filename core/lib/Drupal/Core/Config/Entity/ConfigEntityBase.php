@@ -36,10 +36,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * This is needed when the entity utilizes a PluginBag, to dictate where the
    * plugin configuration should be stored.
    *
-   * @todo Move this to a trait along with
-   *   \Drupal\Core\Config\Entity\EntityWithPluginBagInterface, and give it a
-   *   default value of 'configuration'.
-   *
    * @var string
    */
   protected $pluginConfigKey;
@@ -139,8 +135,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function set($property_name, $value) {
-    // @todo When \Drupal\Core\Config\Entity\EntityWithPluginBagInterface moves
-    //   to a trait, switch to class_uses() instead.
     if ($this instanceof EntityWithPluginBagInterface) {
       if ($property_name == $this->pluginConfigKey) {
         // If external code updates the settings, pass it along to the plugin.
@@ -262,8 +256,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    // @todo When \Drupal\Core\Config\Entity\EntityWithPluginBagInterface moves
-    //   to a trait, switch to class_uses() instead.
     if ($this instanceof EntityWithPluginBagInterface) {
       // Any changes to the plugin configuration must be saved to the entity's
       // copy as well.
