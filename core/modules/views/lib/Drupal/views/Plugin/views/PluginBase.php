@@ -424,4 +424,16 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     return $form;
   }
 
+  /**
+   * Returns an array of module dependencies for this plugin.
+   *
+   * Dependencies are a list of module names, which might depend on the
+   * configuration.
+   *
+   * @return array
+   */
+  public function getDependencies() {
+    return array();
+  }
+
 }

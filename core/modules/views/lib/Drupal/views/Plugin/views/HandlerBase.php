@@ -168,6 +168,7 @@ abstract class HandlerBase extends PluginBase {
     $options['relationship'] = array('default' => 'none');
     $options['group_type'] = array('default' => 'group');
     $options['admin_label'] = array('default' => '', 'translatable' => TRUE);
+    $options['dependencies'] = array('default' => array());
 
     return $options;
   }

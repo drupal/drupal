@@ -767,6 +767,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     foreach ($display_options as &$options) {
       $options['options'] = array();
       $options['provider'] = 'views';
+      $options['dependencies'] = array();
     }
 
     // Add a least one field so the view validates and the user has a preview.

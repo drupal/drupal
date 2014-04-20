@@ -377,6 +377,31 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
+   * Adds multiple dependencies.
+   *
+   * @param array $dependencies.
+   *   An array of dependencies keyed by the type of dependency. One example:
+   * @code
+   * array(
+   *   'module' => array(
+   *     'node',
+   *     'field',
+   *     'image'
+   *   ),
+   * );
+   * @endcode
+   *
+   * @see ::addDependency
+   */
+  protected function addDependencies(array $dependencies) {
+    foreach ($dependencies as $dependency_type => $list) {
+      foreach ($list as $name) {
+        $this->addDependency($dependency_type, $name);
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getConfigDependencyName() {

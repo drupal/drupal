@@ -29,4 +29,5 @@ interface ViewStorageInterface extends ConfigEntityInterface {
    * Add defaults to the display options.
    */
   public function mergeDefaultDisplaysOptions();
+
 }
