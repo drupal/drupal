@@ -652,7 +652,7 @@ services:
     arguments: ['@module_handler']
   token:
     class: Drupal\Core\Utility\Token
-    arguments: ['@module_handler']
+    arguments: ['@module_handler', '@cache.discovery', '@language_manager']
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database']

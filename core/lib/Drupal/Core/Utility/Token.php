@@ -7,7 +7,10 @@
 
 namespace Drupal\Core\Utility;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Drupal placeholder/token replacement system.
@@ -55,9 +58,28 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class Token {
 
   /**
+   * The tag to cache token info with.
+   */
+  const TOKEN_INFO_CACHE_TAG = 'token_info';
+
+  /**
+   * The token cache.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Token definitions.
    *
-   * @var array|null
+   * @var array[]|null
    *   An array of token definitions, or NULL when the definitions are not set.
    *
    * @see self::setInfo()
@@ -74,11 +96,18 @@ class Token {
   protected $moduleHandler;
 
   /**
-   * Constructor.
+   * Constructs a new class instance.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The token cache.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager) {
+    $this->cache = $cache;
+    $this->languageManager = $language_manager;
     $this->moduleHandler = $module_handler;
   }
 
@@ -282,8 +311,18 @@ class Token {
    */
   public function getInfo() {
     if (is_null($this->tokenInfo)) {
-      $this->tokenInfo = $this->moduleHandler->invokeAll('token_info');
-      $this->moduleHandler->alter('token_info', $this->tokenInfo);
+      $cache_id = 'token_info:' . $this->languageManager->getCurrentLanguage(Language::TYPE_CONTENT)->id;
+      $cache = $this->cache->get($cache_id);
+      if ($cache) {
+        $this->tokenInfo = $cache->data;
+      }
+      else {
+        $this->tokenInfo = $this->moduleHandler->invokeAll('token_info');
+        $this->moduleHandler->alter('token_info', $this->tokenInfo);
+        $this->cache->set($cache_id, $this->tokenInfo, CacheBackendInterface::CACHE_PERMANENT, array(
+          static::TOKEN_INFO_CACHE_TAG => TRUE,
+        ));
+      }
     }
 
     return $this->tokenInfo;
@@ -307,5 +346,8 @@ class Token {
    */
   public function resetInfo() {
     $this->tokenInfo = NULL;
+    $this->cache->deleteTags(array(
+      static::TOKEN_INFO_CACHE_TAG => TRUE,
+    ));
   }
 }
