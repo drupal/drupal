@@ -66,7 +66,8 @@ class SearchPageTextTest extends SearchTestBase {
     $limit = \Drupal::config('search.settings')->get('and_or_limit');
     $keys = array();
     for ($i = 0; $i < $limit + 1; $i++) {
-      $keys[] = $this->randomName(3);
+      // Use a key of 4 characters to ensure we never generate 'AND' or 'OR'.
+      $keys[] = $this->randomName(4);
       if ($i % 2 == 0) {
         $keys[] = 'OR';
       }
