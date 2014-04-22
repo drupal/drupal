@@ -26,13 +26,6 @@ class CsrfTokenGenerator {
   protected $privateKey;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs the token generator.
    *
    * @param \Drupal\Core\PrivateKey $private_key
@@ -40,16 +33,6 @@ class CsrfTokenGenerator {
    */
   public function __construct(PrivateKey $private_key) {
     $this->privateKey = $private_key;
-  }
-
-  /**
-   * Sets the current user.
-   *
-   * @param \Drupal\Core\Session\AccountInterface|null $current_user
-   *  The current user service.
-   */
-  public function setCurrentUser(AccountInterface $current_user = NULL) {
-    $this->currentUser = $current_user;
   }
 
   /**
@@ -82,15 +65,12 @@ class CsrfTokenGenerator {
    *   The token to be validated.
    * @param string $value
    *   (optional) An additional value to base the token on.
-   * @param bool $skip_anonymous
-   *   (optional) Set to TRUE to skip token validation for anonymous users.
    *
    * @return bool
-   *   TRUE for a valid token, FALSE for an invalid token. When $skip_anonymous
-   *   is TRUE, the return value will always be TRUE for anonymous users.
+   *   TRUE for a valid token, FALSE for an invalid token.
    */
-  public function validate($token, $value = '', $skip_anonymous = FALSE) {
-    return ($skip_anonymous && $this->currentUser->isAnonymous()) || ($token === $this->get($value));
+  public function validate($token, $value = '') {
+    return $token === $this->get($value);
   }
 
 }

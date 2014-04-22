@@ -2893,20 +2893,17 @@ function drupal_get_token($value = '') {
  *   The token to be validated.
  * @param string $value
  *   An additional value to base the token on.
- * @param bool $skip_anonymous
- *   Set to true to skip token validation for anonymous users.
  *
  * @return bool
- *   True for a valid token, false for an invalid token. When $skip_anonymous
- *   is true, the return value will always be true for anonymous users.
+ *   True for a valid token, false for an invalid token.
  *
  * @see \Drupal\Core\Access\CsrfTokenGenerator
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use return \Drupal::csrfToken()->validate().
  */
-function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
-  return \Drupal::csrfToken()->validate($token, $value, $skip_anonymous);
+function drupal_valid_token($token, $value = '') {
+  return \Drupal::csrfToken()->validate($token, $value);
 }
 
 /**
