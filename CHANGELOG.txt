@@ -1,7 +1,7 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
-- Added several missing countries from the default list returned by
+- Added several missing countries to the default list returned by
   country_get_list() (string change).
 - Replaced the term "weight" with "influence" in the content ranking settings
   for search, and added help text for administrators (string change).
