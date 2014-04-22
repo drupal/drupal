@@ -138,12 +138,10 @@ class MenuLinkStorage extends EntityDatabaseStorage implements MenuLinkStorageIn
       );
     $query_result = $query->execute();
 
-    if ($class = $this->entityType->getClass()) {
-      // We provide the necessary arguments for PDO to create objects of the
-      // specified entity class.
-      // @see \Drupal\Core\Entity\EntityInterface::__construct()
-      $query_result->setFetchMode(\PDO::FETCH_CLASS, $class, array(array(), $this->entityTypeId));
-    }
+    // We provide the necessary arguments for PDO to create objects of the
+    // specified entity class.
+    // @see \Drupal\Core\Entity\EntityInterface::__construct()
+    $query_result->setFetchMode(\PDO::FETCH_CLASS, $this->entityClass, array(array(), $this->entityTypeId));
 
     return $query_result->fetchAllAssoc($this->idKey);
   }

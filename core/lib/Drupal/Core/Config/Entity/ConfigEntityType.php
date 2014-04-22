@@ -58,6 +58,11 @@ class ConfigEntityType extends EntityType {
   /**
    * {@inheritdoc}
    */
+  protected $static_cache = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   public function getControllerClasses() {
     return parent::getControllerClasses() + array(
       'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',

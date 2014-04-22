@@ -17,8 +17,6 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,11 +54,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   const MAX_ID_LENGTH = 166;
 
   /**
-   * The UUID service.
-   *
-   * @var \Drupal\Component\Uuid\UuidInterface
+   * {@inheritdoc}
    */
-  protected $uuidService;
+  protected $uuidKey = 'uuid';
 
   /**
    * Name of the entity's status key or FALSE if a status is not supported.
@@ -107,7 +103,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_type);
 
-    $this->idKey = $this->entityType->getKey('id');
     $this->statusKey = $this->entityType->getKey('status');
 
     $this->configFactory = $config_factory;
@@ -127,53 +122,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $container->get('uuid'),
       $container->get('language_manager')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function loadMultiple(array $ids = NULL) {
-    $entities = array();
-
-    // Create a new variable which is either a prepared version of the $ids
-    // array for later comparison with the entity cache, or FALSE if no $ids
-    // were passed.
-    $passed_ids = !empty($ids) ? array_flip($ids) : FALSE;
-
-    // Load any remaining entities. This is the case if $ids is set to NULL (so
-    // we load all entities).
-    if ($ids === NULL || $ids) {
-      $queried_entities = $this->buildQuery($ids);
-    }
-
-    // Pass all entities loaded from the database through $this->postLoad(),
-    // which calls the
-    // entity type specific load callback, for example hook_node_type_load().
-    if (!empty($queried_entities)) {
-      $this->postLoad($queried_entities);
-      $entities += $queried_entities;
-    }
-
-    // Ensure that the returned array is ordered the same as the original
-    // $ids array if this was passed in and remove any invalid ids.
-    if ($passed_ids) {
-      // Remove any invalid ids from the array.
-      $passed_ids = array_intersect_key($passed_ids, $entities);
-      foreach ($entities as $entity) {
-        $passed_ids[$entity->id()] = $entity;
-      }
-      $entities = $passed_ids;
-    }
-
-    return $entities;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function load($id) {
-    $entities = $this->loadMultiple(array($id));
-    return isset($entities[$id]) ? $entities[$id] : NULL;
   }
 
   /**
@@ -205,28 +153,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   }
 
   /**
-   * Builds the query to load the entity.
-   *
-   * This has full revision support. For entities requiring special queries,
-   * the class can be extended, and the default query can be constructed by
-   * calling parent::buildQuery(). This is usually necessary when the object
-   * being loaded needs to be augmented with additional data from another
-   * table, such as loading node type into comments or vocabulary machine name
-   * into terms, however it can also support $conditions on different tables.
-   * See Drupal\comment\CommentStorage::buildQuery() or
-   * Drupal\taxonomy\TermStorage::buildQuery() for examples.
-   *
-   * @param $ids
-   *   An array of entity IDs, or NULL to load all entities.
-   * @param $revision_id
-   *   The ID of the revision to load, or FALSE if this query is asking for the
-   *   most current revision(s).
-   *
-   * @return SelectQuery
-   *   A SelectQuery object for loading the entity.
+   * {@inheritdoc}
    */
-  protected function buildQuery($ids, $revision_id = FALSE) {
-    $config_class = $this->entityType->getClass();
+  protected function doLoadMultiple(array $ids = NULL) {
     $prefix = $this->getConfigPrefix();
 
     // Get the names of the configuration entities we are going to load.
@@ -242,69 +171,35 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     }
 
     // Load all of the configuration entities.
-    $result = array();
+    $records = array();
     foreach ($this->configFactory->loadMultiple($names) as $config) {
-      $result[$config->get($this->idKey)] = new $config_class($config->get(), $this->entityTypeId);
+      $records[$config->get($this->idKey)] = $config->get();
     }
-    return $result;
+    return $this->mapFromStorageRecords($records);
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageInterface::create().
+   * {@inheritdoc}
    */
-  public function create(array $values = array()) {
-    $class = $this->entityType->getClass();
-    $class::preCreate($this, $values);
-
+  protected function doCreate(array $values) {
     // Set default language to site default if not provided.
     $values += array('langcode' => $this->languageManager->getDefaultLanguage()->id);
-
-    $entity = new $class($values, $this->entityTypeId);
-    // Mark this entity as new, so isNew() returns TRUE. This does not check
-    // whether a configuration entity with the same ID (if any) already exists.
-    $entity->enforceIsNew();
-
-    // Assign a new UUID if there is none yet.
-    if (!$entity->uuid()) {
-      $entity->set('uuid', $this->uuidService->generate());
-    }
-    $entity->postCreate($this);
-
-    // Modules might need to add or change the data initially held by the new
-    // entity object, for instance to fill-in default values.
-    $this->invokeHook('create', $entity);
+    $entity = new $this->entityClass($values, $this->entityTypeId);
 
     // Default status to enabled.
     if (!empty($this->statusKey) && !isset($entity->{$this->statusKey})) {
       $entity->{$this->statusKey} = TRUE;
     }
-
     return $entity;
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageInterface::delete().
+   * {@inheritdoc}
    */
-  public function delete(array $entities) {
-    if (!$entities) {
-      // If no IDs or invalid IDs were passed, do nothing.
-      return;
-    }
-
-    $entity_class = $this->entityType->getClass();
-    $entity_class::preDelete($this, $entities);
-    foreach ($entities as $entity) {
-      $this->invokeHook('predelete', $entity);
-    }
-
+  protected function doDelete($entities) {
     foreach ($entities as $entity) {
       $config = $this->configFactory->get($this->getConfigPrefix() . $entity->id());
       $config->delete();
-    }
-
-    $entity_class::postDelete($this, $entities);
-    foreach ($entities as $entity) {
-      $this->invokeHook('delete', $entity);
     }
   }
 
@@ -315,32 +210,16 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    *   When attempting to save a configuration entity that has no ID.
    */
   public function save(EntityInterface $entity) {
-    $prefix = $this->getConfigPrefix();
-
     // Configuration entity IDs are strings, and '0' is a valid ID.
     $id = $entity->id();
     if ($id === NULL || $id === '') {
       throw new EntityMalformedException('The entity does not have an ID.');
     }
 
-    // Load the stored entity, if any.
-    // At this point, the original ID can only be NULL or a valid ID.
-    if ($entity->getOriginalId() !== NULL) {
-      $id = $entity->getOriginalId();
-    }
-    $config = $this->configFactory->get($prefix . $id);
-
-    // Prevent overwriting an existing configuration file if the entity is new.
-    if ($entity->isNew() && !$config->isNew()) {
-      throw new EntityStorageException(String::format('@type entity with ID @id already exists.', array('@type' => $this->entityTypeId, '@id' => $id)));
-    }
-
-    if (!$config->isNew() && !isset($entity->original)) {
-      $entity->original = $this->loadUnchanged($id);
-    }
-
     // Check the configuration entity ID length.
     // @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
+    // @todo Consider moving this to a protected method on the parent class, and
+    //   abstracting it for all entity types.
     if (strlen($entity->{$this->idKey}) > self::MAX_ID_LENGTH) {
       throw new ConfigEntityIdLengthException(String::format('Configuration entity ID @id exceeds maximum allowed length of @length characters.', array(
         '@id' => $entity->{$this->idKey},
@@ -348,9 +227,15 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       )));
     }
 
-    $entity->preSave($this);
-    $this->invokeHook('presave', $entity);
+    return parent::save($entity);
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function doSave($id, EntityInterface $entity) {
+    $is_new = $entity->isNew();
+    $prefix = $this->getConfigPrefix();
     if ($id !== $entity->id()) {
       // Renaming a config object needs to cater for:
       // - Storage needs to access the original object.
@@ -358,34 +243,26 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       // - All instances of the object need to be renamed.
       $config = $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
     }
+    else {
+      $config = $this->configFactory->get($prefix . $id);
+    }
 
     // Retrieve the desired properties and set them in config.
     foreach ($entity->toArray() as $key => $value) {
       $config->set($key, $value);
     }
+    $config->save();
 
-    if (!$config->isNew()) {
-      $return = SAVED_UPDATED;
-      $config->save();
-      $entity->postSave($this, TRUE);
-      $this->invokeHook('update', $entity);
-    }
-    else {
-      $return = SAVED_NEW;
-      $config->save();
-      $entity->enforceIsNew(FALSE);
-      $entity->postSave($this, FALSE);
-      $this->invokeHook('insert', $entity);
-    }
+    return $is_new ? SAVED_NEW : SAVED_UPDATED;
+  }
 
-    // After saving, this is now the "original entity", and subsequent saves
-    // will be updates instead of inserts, and updates must always be able to
-    // correctly identify the original entity.
-    $entity->setOriginalId($entity->id());
-
-    unset($entity->original);
-
-    return $return;
+  /**
+   * {@inheritdoc}
+   */
+  protected function has($id, EntityInterface $entity) {
+    $prefix = $this->getConfigPrefix();
+    $config = $this->configFactory->get($prefix . $id);
+    return !$config->isNew();
   }
 
   /**

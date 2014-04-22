@@ -79,23 +79,20 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
   /**
    * {@inheritdoc}
    */
-  function postLoad(array &$queried_users) {
-    foreach ($queried_users as $key => $record) {
-      $queried_users[$key]->roles = array();
+  function mapFromStorageRecords(array $records) {
+    foreach ($records as $record) {
+      $record->roles = array();
       if ($record->uid) {
-        $queried_users[$record->uid]->roles[] = DRUPAL_AUTHENTICATED_RID;
+        $record->roles[] = DRUPAL_AUTHENTICATED_RID;
       }
       else {
-        $queried_users[$record->uid]->roles[] = DRUPAL_ANONYMOUS_RID;
+        $record->roles[] = DRUPAL_ANONYMOUS_RID;
       }
     }
 
     // Add any additional roles from the database.
-    $this->addRoles($queried_users);
-
-    // Call the default postLoad() method. This will add fields and call
-    // hook_user_load().
-    parent::postLoad($queried_users);
+    $this->addRoles($records);
+    return parent::mapFromStorageRecords($records);
   }
 
   /**
@@ -129,9 +126,11 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
    * {@inheritdoc}
    */
   public function addRoles(array $users) {
-    $result = $this->database->query('SELECT rid, uid FROM {users_roles} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
-    foreach ($result as $record) {
-      $users[$record->uid]->roles[] = $record->rid;
+    if ($users) {
+      $result = $this->database->query('SELECT rid, uid FROM {users_roles} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
+      foreach ($result as $record) {
+        $users[$record->uid]->roles[] = $record->rid;
+      }
     }
   }
 

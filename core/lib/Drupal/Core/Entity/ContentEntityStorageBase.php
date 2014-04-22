@@ -23,13 +23,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
   protected $bundleKey = FALSE;
 
   /**
-   * Name of the entity class.
-   *
-   * @var string
-   */
-  protected $entityClass;
-
-  /**
    * Constructs a ContentEntityStorageBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -39,7 +32,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
     parent::__construct($entity_type);
 
     $this->bundleKey = $this->entityType->getKey('bundle');
-    $this->entityClass = $this->entityType->getClass();
   }
 
   /**
@@ -54,10 +46,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
   /**
    * {@inheritdoc}
    */
-  public function create(array $values = array()) {
-    $entity_class = $this->entityType->getClass();
-    $entity_class::preCreate($this, $values);
-
+  protected function doCreate(array $values) {
     // We have to determine the bundle first.
     $bundle = FALSE;
     if ($this->bundleKey) {
@@ -66,8 +55,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
       }
       $bundle = $values[$this->bundleKey];
     }
-    $entity = new $entity_class(array(), $this->entityTypeId, $bundle);
-    $entity->enforceIsNew();
+    $entity = new $this->entityClass(array(), $this->entityTypeId, $bundle);
 
     foreach ($entity as $name => $field) {
       if (isset($values[$name])) {
@@ -83,12 +71,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
     foreach ($values as $name => $value) {
       $entity->$name = $value;
     }
-    $entity->postCreate($this);
-
-    // Modules might need to add or change the data initially held by the new
-    // entity object, for instance to fill-in default values.
-    $this->invokeHook('create', $entity);
-
     return $entity;
   }
 

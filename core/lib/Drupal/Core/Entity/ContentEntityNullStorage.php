@@ -27,6 +27,12 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
   /**
    * {@inheritdoc}
    */
+  protected function doLoadMultiple(array $ids = NULL) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function load($id) {
     return NULL;
   }
@@ -55,6 +61,12 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   public function delete(array $entities) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doDelete($entities) {
   }
 
   /**
@@ -104,6 +116,18 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function purgeFieldItems(EntityInterface $entity, FieldInstanceConfigInterface $instance) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doSave($id, EntityInterface $entity) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function has($id, EntityInterface $entity) {
   }
 
 }
