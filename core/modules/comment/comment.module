@@ -465,7 +465,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
               $links['comment-add'] += $node->urlInfo()->toArray();
             }
           }
-          else {
+          elseif (\Drupal::currentUser()->isAnonymous()) {
             $links['comment-forbidden'] = array(
               'title' => \Drupal::service('comment.manager')->forbiddenMessage($node, $field_name),
               'html' => TRUE,
@@ -500,7 +500,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
               }
             }
           }
-          else {
+          elseif (\Drupal::currentUser()->isAnonymous()) {
             $links['comment-forbidden'] = array(
               'title' => \Drupal::service('comment.manager')->forbiddenMessage($node, $field_name),
               'html' => TRUE,
@@ -844,6 +844,10 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
  * @see \Drupal\comment\Plugin\Field\FieldType\CommentItem::propertyDefinitions()
  */
 function comment_entity_load($entities, $entity_type) {
+  // Comments can only be attached to content entities, so skip others.
+  if (!\Drupal::entityManager()->getDefinition($entity_type)->isSubclassOf('Drupal\Core\Entity\ContentEntityInterface')) {
+    return;
+  }
   if (!\Drupal::service('comment.manager')->getFields($entity_type)) {
     // Do not query database when entity has no comment fields.
     return;

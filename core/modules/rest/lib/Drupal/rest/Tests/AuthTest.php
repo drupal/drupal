@@ -19,7 +19,7 @@ class AuthTest extends RESTTestBase {
    *
    * @var array
    */
-  public static $modules = array('basic_auth', 'hal', 'rest', 'entity_test');
+  public static $modules = array('basic_auth', 'hal', 'rest', 'entity_test', 'comment');
 
   /**
    * {@inheritdoc}

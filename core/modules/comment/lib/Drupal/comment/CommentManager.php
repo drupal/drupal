@@ -37,13 +37,6 @@ class CommentManager implements CommentManagerInterface {
   protected $entityManager;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface $current_user
-   */
-  protected $currentUser;
-
-  /**
    * Whether the DRUPAL_AUTHENTICATED_RID can post comments.
    *
    * @var bool
@@ -78,8 +71,6 @@ class CommentManager implements CommentManagerInterface {
    *   The field info service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
@@ -87,10 +78,9 @@ class CommentManager implements CommentManagerInterface {
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(FieldInfo $field_info, EntityManagerInterface $entity_manager, AccountInterface $current_user, ConfigFactoryInterface $config_factory, TranslationInterface $translation_manager, UrlGeneratorInterface $url_generator) {
+  public function __construct(FieldInfo $field_info, EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $translation_manager, UrlGeneratorInterface $url_generator) {
     $this->fieldInfo = $field_info;
     $this->entityManager = $entity_manager;
-    $this->currentUser = $current_user;
     $this->userConfig = $config_factory->get('user.settings');
     $this->translationManager = $translation_manager;
     $this->urlGenerator = $url_generator;
@@ -277,39 +267,37 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function forbiddenMessage(EntityInterface $entity, $field_name) {
-    if ($this->currentUser->isAnonymous()) {
-      if (!isset($this->authenticatedCanPostComments)) {
-        // We only output a link if we are certain that users will get the
-        // permission to post comments by logging in.
-        $this->authenticatedCanPostComments = $this->entityManager
-          ->getStorage('user_role')
-          ->load(DRUPAL_AUTHENTICATED_RID)
-          ->hasPermission('post comments');
+    if (!isset($this->authenticatedCanPostComments)) {
+      // We only output a link if we are certain that users will get the
+      // permission to post comments by logging in.
+      $this->authenticatedCanPostComments = $this->entityManager
+        ->getStorage('user_role')
+        ->load(DRUPAL_AUTHENTICATED_RID)
+        ->hasPermission('post comments');
+    }
+
+    if ($this->authenticatedCanPostComments) {
+      // We cannot use drupal_get_destination() because these links
+      // sometimes appear on /node and taxonomy listing pages.
+      if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
+        $destination = array('destination' => 'comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
+      }
+      else {
+        $destination = array('destination' => $entity->getSystemPath() . '#comment-form');
       }
 
-      if ($this->authenticatedCanPostComments) {
-        // We cannot use drupal_get_destination() because these links
-        // sometimes appear on /node and taxonomy listing pages.
-        if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
-          $destination = array('destination' => 'comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
-        }
-        else {
-          $destination = array('destination' => $entity->getSystemPath() . '#comment-form');
-        }
-
-        if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-          // Users can register themselves.
-          return $this->t('<a href="@login">Log in</a> or <a href="@register">register</a> to post comments', array(
-            '@login' => $this->urlGenerator->generateFromRoute('user.login', array(), array('query' => $destination)),
-            '@register' => $this->urlGenerator->generateFromRoute('user.register', array(), array('query' => $destination)),
-          ));
-        }
-        else {
-          // Only admins can add new users, no public registration.
-          return $this->t('<a href="@login">Log in</a> to post comments', array(
-            '@login' => $this->urlGenerator->generateFromRoute('user.login', array(), array('query' => $destination)),
-          ));
-        }
+      if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+        // Users can register themselves.
+        return $this->t('<a href="@login">Log in</a> or <a href="@register">register</a> to post comments', array(
+          '@login' => $this->urlGenerator->generateFromRoute('user.login', array(), array('query' => $destination)),
+          '@register' => $this->urlGenerator->generateFromRoute('user.register', array(), array('query' => $destination)),
+        ));
+      }
+      else {
+        // Only admins can add new users, no public registration.
+        return $this->t('<a href="@login">Log in</a> to post comments', array(
+          '@login' => $this->urlGenerator->generateFromRoute('user.login', array(), array('query' => $destination)),
+        ));
       }
     }
     return '';

@@ -241,14 +241,14 @@ class CommentViewBuilder extends EntityViewBuilder {
           'html' => TRUE,
         );
       }
-      if (empty($links)) {
+      if (empty($links) && \Drupal::currentUser()->isAnonymous()) {
         $links['comment-forbidden']['title'] = \Drupal::service('comment.manager')->forbiddenMessage($commented_entity, $entity->getFieldName());
         $links['comment-forbidden']['html'] = TRUE;
       }
     }
 
     // Add translations link for translation-enabled comment bundles.
-    if ($container->get('module_handler')->moduleExists('content_translation') && content_translation_translate_access($entity)) {
+    if (\Drupal::moduleHandler()->moduleExists('content_translation') && content_translation_translate_access($entity)) {
       $links['comment-translations'] = array(
         'title' => t('Translate'),
         'href' => 'comment/' . $entity->id() . '/translations',
