@@ -1290,51 +1290,16 @@ function system_rebuild_module_data() {
 }
 
 /**
- * Helper function to scan and collect theme .info.yml data and their engines.
- *
- * @return \Drupal\Core\Extension\Extension[]
- *   An associative array of themes information.
- *
- * @see \Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('theme_handler')->rebuildThemeData().
- */
-function _system_rebuild_theme_data() {
-  return \Drupal::service('theme_handler')->rebuildThemeData();
-}
-
-/**
  * Rebuild, save, and return data about all currently available themes.
  *
  * @return \Drupal\Core\Extension\Extension[]
  *   Array of all available themes and their data.
+ *
+ * @deprecated 8.x
+ *   Use \Drupal::service('theme_handler')->rebuildThemeData().
  */
 function system_rebuild_theme_data() {
-  $themes = _system_rebuild_theme_data();
-  ksort($themes);
-  // @todo This function has no business in determining/setting the status of
-  //   a theme, but various other functions expect it to return themes with a
-  //   $status property. system_list() stores the return value of this function
-  //   in state, and ensures to set/override the $status property for each theme
-  //   based on the current config. Remove this code when themes have a proper
-  //   installation status.
-  // @see http://drupal.org/node/1067408
-  $enabled_themes = \Drupal::config('core.extension')->get('theme') ?: array();
-  $files = array();
-  foreach ($themes as $name => $theme) {
-    $theme->status = (int) isset($enabled_themes[$name]);
-    $files[$name] = $theme->getPathname();
-  }
-  // Replace last known theme data state.
-  // @todo Obsolete with proper installation status for themes.
-  \Drupal::state()->set('system.theme.data', $themes);
-
-  // Store filenames to allow system_list() and drupal_get_filename() to
-  // retrieve them without having to rebuild or scan the filesystem.
-  \Drupal::state()->set('system.theme.files', $files);
-
-  return $themes;
+  return \Drupal::service('theme_handler')->rebuildThemeData();
 }
 
 /**
@@ -1357,22 +1322,24 @@ function _system_default_theme_features() {
 /**
  * Get a list of available regions from a specified theme.
  *
- * @param $theme_key
- *   The name of a theme.
+ * @param \Drupal\Core\Extension\Extension|string $theme
+ *   A theme extension object, or the name of a theme.
  * @param $show
  *   Possible values: REGIONS_ALL or REGIONS_VISIBLE. Visible excludes hidden
  *   regions.
  * @return
  *   An array of regions in the form $region['name'] = 'description'.
  */
-function system_region_list($theme_key, $show = REGIONS_ALL) {
-  $themes = list_themes();
-  if (!isset($themes[$theme_key])) {
-    return array();
+function system_region_list($theme, $show = REGIONS_ALL) {
+  if (!$theme instanceof Extension) {
+    $themes = \Drupal::service('theme_handler')->listInfo();
+    if (!isset($themes[$theme])) {
+      return array();
+    }
+    $theme = $themes[$theme];
   }
-
   $list = array();
-  $info = $themes[$theme_key]->info;
+  $info = $theme->info;
   // If requested, suppress hidden regions. See block_admin_display_form().
   foreach ($info['regions'] as $name => $label) {
     if ($show == REGIONS_ALL || !isset($info['regions_hidden']) || !in_array($name, $info['regions_hidden'])) {

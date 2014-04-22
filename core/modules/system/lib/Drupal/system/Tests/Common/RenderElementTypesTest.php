@@ -33,7 +33,6 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
     $this->installConfig(array('system'));
-    $this->container->get('theme_handler')->enable(array('stark'));
   }
 
   /**

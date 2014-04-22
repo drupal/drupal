@@ -1,5 +1,4 @@
 module: {}
-theme:
-  stark: 0
+theme: {}
 disabled:
   theme: {}

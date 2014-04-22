@@ -202,11 +202,13 @@ class ThemeTest extends WebTestBase {
    * Test the list_themes() function.
    */
   function testListThemes() {
-    $themes = list_themes();
+    $theme_handler = $this->container->get('theme_handler');
+    $theme_handler->enable(array('test_subtheme'));
+    $themes = $theme_handler->listInfo();
+
     // Check if drupal_theme_access() retrieves enabled themes properly from list_themes().
     $this->assertTrue(drupal_theme_access('test_theme'), 'Enabled theme detected');
-    // Check if list_themes() returns disabled themes.
-    $this->assertTrue(array_key_exists('test_basetheme', $themes), 'Disabled theme detected');
+
     // Check for base theme and subtheme lists.
     $base_theme_list = array('test_basetheme' => 'Theme test base theme');
     $sub_theme_list = array('test_subtheme' => 'Theme test subtheme');
@@ -223,6 +225,7 @@ class ThemeTest extends WebTestBase {
    * Test the theme_get_setting() function.
    */
   function testThemeGetSetting() {
+    $this->container->get('theme_handler')->enable(array('test_subtheme'));
     $GLOBALS['theme_key'] = 'test_theme';
     $this->assertIdentical(theme_get_setting('theme_test_setting'), 'default value', 'theme_get_setting() uses the default theme automatically.');
     $this->assertNotEqual(theme_get_setting('subtheme_override', 'test_basetheme'), theme_get_setting('subtheme_override', 'test_subtheme'), 'Base theme\'s default settings values can be overridden by subtheme.');
@@ -279,29 +282,4 @@ class ThemeTest extends WebTestBase {
     $this->assertText('theme test page bottom markup', 'Modules are able to set the page bottom region.');
   }
 
-  /**
-   * Test that themes can be disabled programmatically but admin theme and default theme can not.
-   */
-  function testDisableTheme() {
-    // Enable Bartik, Seven and Stark.
-    \Drupal::service('theme_handler')->enable(array('bartik', 'seven', 'stark'));
-
-    // Set Bartik as the default theme and Seven as the admin theme.
-    \Drupal::config('system.theme')
-      ->set('default', 'bartik')
-      ->set('admin', 'seven')
-      ->save();
-
-    $theme_list = array_keys(\Drupal::service('theme_handler')->listInfo());
-    // Attempt to disable all themes. theme_disable() ensures that the default
-    // theme and the admin theme will not be disabled.
-    \Drupal::service('theme_handler')->disable($theme_list);
-
-    $theme_list = \Drupal::service('theme_handler')->listInfo();
-
-    // Ensure Bartik and Seven are still enabled and Stark is disabled.
-    $this->assertTrue($theme_list['bartik']->status == 1, 'Default theme is enabled.');
-    $this->assertTrue($theme_list['seven']->status == 1, 'Admin theme is enabled.');
-    $this->assertTrue($theme_list['stark']->status == 0, 'Stark is disabled.');
-  }
 }

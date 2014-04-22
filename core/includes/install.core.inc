@@ -686,6 +686,8 @@ function install_tasks($install_state) {
       'display_name' => t('Install site'),
       'type' => 'batch',
     ),
+    'install_profile_themes' => array(
+    ),
     'install_import_translations' => array(
       'display_name' => t('Set up translations'),
       'display' => $needs_translations,
@@ -1825,6 +1827,34 @@ function install_profile_modules(&$install_state) {
     'finished' => '_install_profile_modules_finished',
   );
   return $batch;
+}
+
+/**
+ * Installs themes.
+ *
+ * This does not use a batch, since installing themes is faster than modules and
+ * because an installation profile typically enables 1-3 themes only (default
+ * theme, base theme, admin theme).
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
+ */
+function install_profile_themes(&$install_state) {
+  $theme_handler = \Drupal::service('theme_handler');
+
+  // ThemeHandler::enable() resets the current list of themes. The theme used in
+  // the installer is not necessarily in the list of themes to install, so
+  // retain the current list.
+  // @see _drupal_maintenance_theme()
+  $current_themes = $theme_handler->listInfo();
+
+  // Install the themes specified by the installation profile.
+  $themes = $install_state['profile_info']['themes'];
+  $theme_handler->enable($themes);
+
+  foreach ($current_themes as $theme) {
+    $theme_handler->addTheme($theme);
+  }
 }
 
 /**

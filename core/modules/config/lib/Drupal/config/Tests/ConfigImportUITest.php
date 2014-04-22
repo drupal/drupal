@@ -211,7 +211,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertTrue(empty($installed), 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
-    $this->assertTrue(isset($theme_info['bartik']) && !$theme_info['bartik']->status, 'Bartik theme disabled during import.');
+    $this->assertFalse(isset($theme_info['bartik']), 'Bartik theme disabled during import.');
 
     // Verify that the action.settings configuration object was only deleted
     // once during the import process.

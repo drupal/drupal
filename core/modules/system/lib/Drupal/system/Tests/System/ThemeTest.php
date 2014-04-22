@@ -178,7 +178,7 @@ class ThemeTest extends WebTestBase {
    * Test the administration theme functionality.
    */
   function testAdministrationTheme() {
-    theme_enable(array('bartik', 'seven'));
+    $this->container->get('theme_handler')->enable(array('seven'));
 
     // Enable an administration theme and show it on the node admin pages.
     $edit = array(
@@ -212,9 +212,6 @@ class ThemeTest extends WebTestBase {
     $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
 
     // Reset to the default theme settings.
-    \Drupal::config('system.theme')
-      ->set('default', 'bartik')
-      ->save();
     $edit = array(
       'admin_theme' => '0',
       'use_admin_theme' => FALSE,
@@ -222,10 +219,10 @@ class ThemeTest extends WebTestBase {
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
-    $this->assertRaw('core/themes/bartik', 'Site default theme used on administration page.');
+    $this->assertRaw('core/themes/stark', 'Site default theme used on administration page.');
 
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/bartik', 'Site default theme used on the add content page.');
+    $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
   }
 
   /**

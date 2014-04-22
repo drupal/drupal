@@ -1,0 +1,11 @@
+# Themes are not supposed to provide/install this kind of config normally.
+# This exists for testing purposes only.
+# @see \Drupal\system\Tests\Extension\ThemeHandlerTest
+id: fancy
+label: 'Fancy date'
+status: true
+langcode: en
+locked: false
+pattern:
+  php: 'U'
+  intl: 'EEEE, LLLL d, yyyy - kk:mm'

@@ -115,12 +115,8 @@ class ThemeController extends ControllerBase {
     $theme = $request->get('theme');
 
     if (isset($theme)) {
-      // Get current list of themes.
-      $themes = $this->themeHandler->listInfo();
-
-      // Check if the specified theme is one recognized by the system.
-      if (!empty($themes[$theme])) {
-        $this->themeHandler->enable(array($theme));
+      if ($this->themeHandler->enable(array($theme))) {
+        $themes = $this->themeHandler->listInfo();
         drupal_set_message($this->t('The %theme theme has been enabled.', array('%theme' => $themes[$theme]->info['name'])));
       }
       else {
@@ -154,11 +150,9 @@ class ThemeController extends ControllerBase {
       $themes = $this->themeHandler->listInfo();
 
       // Check if the specified theme is one recognized by the system.
-      if (!empty($themes[$theme])) {
-        // Enable the theme if it is currently disabled.
-        if (empty($themes[$theme]->status)) {
-          $this->themeHandler->enable(array($theme));
-        }
+      // Or try to enable the theme.
+      if (isset($themes[$theme]) || $this->themeHandler->enable(array($theme))) {
+        $themes = $this->themeHandler->listInfo();
 
         // Set the default theme.
         $config->set('default', $theme)->save();

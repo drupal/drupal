@@ -758,8 +758,6 @@ class ModuleHandler implements ModuleHandlerInterface {
 
         // Refresh the schema to include it.
         drupal_get_schema(NULL, TRUE);
-        // Update the theme registry to include it.
-        drupal_theme_rebuild();
 
         // Allow modules to react prior to the installation of a module.
         $this->invokeAll('module_preinstall', array($module));
@@ -804,8 +802,18 @@ class ModuleHandler implements ModuleHandlerInterface {
         // Record the fact that it was installed.
         $modules_installed[] = $module;
 
+        // Update the theme registry to include it.
+        drupal_theme_rebuild();
+
+        // Modules can alter theme info, so refresh theme data.
+        // @todo ThemeHandler cannot be injected into ModuleHandler, since that
+        //   causes a circular service dependency.
+        // @see https://drupal.org/node/2208429
+        \Drupal::service('theme_handler')->refreshInfo();
+
         // Allow the module to perform install tasks.
         $this->invoke($module, 'install');
+
         // Record the fact that it was installed.
         watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
@@ -911,6 +919,12 @@ class ModuleHandler implements ModuleHandlerInterface {
 
       // Update the theme registry to remove the newly uninstalled module.
       drupal_theme_rebuild();
+
+      // Modules can alter theme info, so refresh theme data.
+      // @todo ThemeHandler cannot be injected into ModuleHandler, since that
+      //   causes a circular service dependency.
+      // @see https://drupal.org/node/2208429
+      \Drupal::service('theme_handler')->refreshInfo();
 
       watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
 

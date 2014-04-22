@@ -49,15 +49,13 @@ abstract class TourTestBasic extends TourTestBase {
 
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
+    $this->container->get('theme_handler')->enable(array('bartik', 'seven'));
     $this->container->get('config.factory')
       ->get('system.theme')
       ->set('default', 'bartik')
-      ->save();
-    theme_enable(array('seven'));
-    $this->container->get('config.factory')
-      ->get('system.theme')
       ->set('admin', 'seven')
       ->save();
+
     $this->permissions[] = 'view the administration theme';
 
     //Create an admin user to view tour tips.

@@ -11,6 +11,8 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\ThemeHandler;
 use Drupal\Core\Config\ConfigInstaller;
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -38,11 +40,11 @@ class ThemeHandlerTest extends UnitTestCase {
   protected $infoParser;
 
   /**
-   * The mocked cache backend.
+   * The mocked state backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $cacheBackend;
+  protected $state;
 
   /**
    * The mocked config factory.
@@ -104,7 +106,7 @@ class ThemeHandlerTest extends UnitTestCase {
       ),
     ));
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->state = new State(new KeyValueMemoryFactory());
     $this->infoParser = $this->getMock('Drupal\Core\Extension\InfoParserInterface');
     $this->configInstaller = $this->getMock('Drupal\Core\Config\ConfigInstallerInterface');
     $this->routeBuilder = $this->getMockBuilder('Drupal\Core\Routing\RouteBuilder')
@@ -113,131 +115,10 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->extensionDiscovery = $this->getMockBuilder('Drupal\Core\Extension\ExtensionDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->cacheBackend, $this->infoParser, $this->configInstaller, $this->routeBuilder, $this->extensionDiscovery);
+    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->state, $this->infoParser, $this->configInstaller, $this->routeBuilder, $this->extensionDiscovery);
 
-    $this->getContainerWithCacheBins($this->cacheBackend);
-  }
-
-  /**
-   * Tests enabling a theme with a name longer than 50 chars.
-   *
-   * @expectedException \Drupal\Core\Extension\ExtensionNameLengthException
-   * @expectedExceptionMessage Theme name <em class="placeholder">thisNameIsFarTooLong0000000000000000000000000000051</em> is over the maximum allowed length of 50 characters.
-   */
-  public function testThemeEnableWithTooLongName() {
-    $this->themeHandler->enable(array('thisNameIsFarTooLong0000000000000000000000000000051'));
-  }
-
-  /**
-   * Tests enabling a single theme.
-   *
-   * @see \Drupal\Core\Extension\ThemeHandler::enable()
-   */
-  public function testEnableSingleTheme() {
-    $theme_list = array('theme_test');
-
-    $this->configFactory->get('core.extension')
-      ->expects($this->once())
-      ->method('set')
-      ->with('theme.theme_test', 0)
-      ->will($this->returnSelf());
-    $this->configFactory->get('core.extension')
-      ->expects($this->once())
-      ->method('save');
-
-    $this->configFactory->get('core.extension')
-      ->expects($this->once())
-      ->method('clear')
-      ->with('disabled.theme.theme_test')
-      ->will($this->returnSelf());
-    $this->configFactory->get('core.extension')
-      ->expects($this->once())
-      ->method('save');
-
-    $this->extensionDiscovery->expects($this->any())
-      ->method('scan')
-      ->will($this->returnValue(array()));
-
-    // Ensure that the themes_enabled hook is fired.
-    $this->moduleHandler->expects($this->at(0))
-      ->method('invokeAll')
-      ->with('themes_enabled', array($theme_list));
-
-    // Ensure the config installer will be called.
-    $this->configInstaller->expects($this->once())
-      ->method('installDefaultConfig')
-      ->with('theme', $theme_list[0]);
-
-    $this->themeHandler->enable($theme_list);
-
-    $this->assertTrue($this->themeHandler->clearedCssCache);
-    $this->assertTrue($this->themeHandler->registryRebuild);
-  }
-
-  /**
-   * Ensures that enabling a theme does clear the theme info listing.
-   *
-   * @see \Drupal\Core\Extension\ThemeHandler::listInfo()
-   */
-  public function testEnableAndListInfo() {
-    $this->configFactory->get('core.extension')
-      ->expects($this->exactly(2))
-      ->method('set')
-      ->will($this->returnSelf());
-
-    $this->configFactory->get('core.extension')
-      ->expects($this->exactly(2))
-      ->method('clear')
-      ->will($this->returnSelf());
-
-    $this->extensionDiscovery->expects($this->any())
-      ->method('scan')
-      ->will($this->returnValue(array()));
-
-    $this->themeHandler->enable(array('bartik'));
-    $this->themeHandler->systemList['bartik'] = new Extension('theme', DRUPAL_ROOT . '/core/themes/bartik/bartik.info.yml', 'bartik.info.yml');
-    $this->themeHandler->systemList['bartik']->info = array(
-      'stylesheets' => array(
-        'all' => array(
-          'css/layout.css',
-          'css/style.css',
-          'css/colors.css',
-        ),
-      ),
-      'libraries' => array(
-        'example/theme',
-      ),
-      'engine' => 'twig',
-      'base theme' => 'stark',
-    );
-
-    $list_info = $this->themeHandler->listInfo();
-    $this->assertCount(1, $list_info);
-
-    $this->assertEquals($this->themeHandler->systemList['bartik']->info['stylesheets'], $list_info['bartik']->stylesheets);
-    $this->assertEquals($this->themeHandler->systemList['bartik']->libraries, $list_info['bartik']->libraries);
-    $this->assertEquals('twig', $list_info['bartik']->engine);
-    $this->assertEquals('stark', $list_info['bartik']->base_theme);
-    $this->assertEquals(0, $list_info['bartik']->status);
-
-    $this->themeHandler->systemList['seven'] = new Extension('theme', DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', 'seven.info.yml');
-    $this->themeHandler->systemList['seven']->info = array(
-      'stylesheets' => array(
-        'screen' => array(
-          'style.css',
-        ),
-      ),
-      'libraries' => array(),
-    );
-    $this->themeHandler->systemList['seven']->status = 1;
-
-    $this->themeHandler->enable(array('seven'));
-
-    $list_info = $this->themeHandler->listInfo();
-    $this->assertCount(2, $list_info);
-
-    $this->assertEquals($this->themeHandler->systemList['seven']->info['stylesheets'], $list_info['seven']->stylesheets);
-    $this->assertEquals(1, $list_info['seven']->status);
+    $cache_backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->getContainerWithCacheBins($cache_backend);
   }
 
   /**
@@ -265,6 +146,9 @@ class ThemeHandlerTest extends UnitTestCase {
         $info_parser = new InfoParser();
         return $info_parser->parse($file);
       }));
+    $this->moduleHandler->expects($this->once())
+      ->method('buildModuleDependencies')
+      ->will($this->returnArgument(0));
 
     $this->moduleHandler->expects($this->once())
       ->method('alter');
@@ -328,6 +212,9 @@ class ThemeHandlerTest extends UnitTestCase {
         $info_parser = new InfoParser();
         return $info_parser->parse($file);
       }));
+    $this->moduleHandler->expects($this->once())
+      ->method('buildModuleDependencies')
+      ->will($this->returnArgument(0));
 
     $theme_data = $this->themeHandler->rebuildThemeData();
     $this->assertCount(2, $theme_data);

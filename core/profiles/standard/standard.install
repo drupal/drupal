@@ -14,15 +14,6 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
  * @see system_install()
  */
 function standard_install() {
-  // Enable Bartik theme and set it as default theme instead of Stark.
-  // @see system_install()
-  $default_theme = 'bartik';
-  \Drupal::config('system.theme')
-    ->set('default', $default_theme)
-    ->save();
-  theme_enable(array($default_theme));
-  theme_disable(array('stark'));
-
   // Set front page to "node".
   \Drupal::config('system.site')->set('page.front', 'node')->save();
 
@@ -78,7 +69,5 @@ function standard_install() {
   $shortcut->save();
 
   // Enable the admin theme.
-  theme_enable(array('seven'));
-  \Drupal::config('system.theme')->set('admin', 'seven')->save();
   \Drupal::config('node.settings')->set('use_admin_theme', '1')->save();
 }

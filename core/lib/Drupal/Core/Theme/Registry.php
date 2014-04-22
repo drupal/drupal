@@ -10,6 +10,7 @@ namespace Drupal\Core\Theme;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Utility\ThemeRegistry;
@@ -145,23 +146,17 @@ class Registry implements DestructableInterface {
   protected function init($theme_name = NULL) {
     // Unless instantiated for a specific theme, use globals.
     if (!isset($theme_name)) {
-      // #1: The theme registry might get instantiated before the theme was
-      // initialized. Cope with that.
-      if (!isset($GLOBALS['theme_info']) || !isset($GLOBALS['theme'])) {
-        unset($this->runtimeRegistry);
-        unset($this->registry);
-        drupal_theme_initialize();
+      if (isset($GLOBALS['theme']) && isset($GLOBALS['theme_info'])) {
+        $this->theme = $GLOBALS['theme_info'];
+        $this->baseThemes = $GLOBALS['base_theme_info'];
+        $this->engine = $GLOBALS['theme_engine'];
       }
-      // #2: The testing framework only cares for the global $theme variable at
-      // this point. Cope with that.
-      if ($GLOBALS['theme'] != $GLOBALS['theme_info']->getName()) {
-        unset($this->runtimeRegistry);
-        unset($this->registry);
-        $this->initializeTheme();
+      else {
+        // @see drupal_theme_initialize()
+        $this->theme = new Extension('theme', 'core/core.info.yml');
+        $this->baseThemes = array();
+        $this->engine = 'twig';
       }
-      $this->theme = $GLOBALS['theme_info'];
-      $this->baseThemes = $GLOBALS['base_theme_info'];
-      $this->engine = $GLOBALS['theme_engine'];
     }
     // Instead of the global theme, a specific theme was requested.
     else {

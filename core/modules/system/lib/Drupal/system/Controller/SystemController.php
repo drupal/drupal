@@ -183,16 +183,19 @@ class SystemController extends ControllerBase {
    *
    * @return string
    *   An HTML string of the theme listing page.
+   *
+   * @todo Move into ThemeController.
    */
   public function themesPage() {
     $config = $this->config('system.theme');
-    // Get current list of themes.
-    $themes = $this->themeHandler->listInfo();
+    // Get all available themes.
+    $themes = $this->themeHandler->rebuildThemeData();
     uasort($themes, 'system_sort_modules_by_info_name');
 
     $theme_default = $config->get('default');
-    $theme_groups  = array();
+    $theme_groups  = array('enabled' => array(), 'disabled' => array());
     $admin_theme = $config->get('admin');
+    $admin_theme_options = array();
 
     foreach ($themes as &$theme) {
       if (!empty($theme->info['hidden'])) {

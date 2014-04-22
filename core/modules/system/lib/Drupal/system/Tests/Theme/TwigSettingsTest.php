@@ -77,23 +77,21 @@ class TwigSettingsTest extends WebTestBase {
    */
   function testTwigCacheOverride() {
     $extension = twig_extension();
-    theme_enable(array('test_theme'));
-    \Drupal::config('system.theme')
-      ->set('default', 'test_theme')
-      ->save();
+    $theme_handler = $this->container->get('theme_handler');
+    $theme_handler->enable(array('test_theme'));
+    $theme_handler->setDefault('test_theme');
 
-    // Unset the global variables, so \Drupal\Core\Theme\Registry::init() fires
-    // drupal_theme_initialize, which fills up the global variables  properly
-    // and chosen the current active theme.
-    unset($GLOBALS['theme_info']);
-    unset($GLOBALS['theme']);
+    // The registry still works on theme globals, so set them here.
+    $GLOBALS['theme'] = 'test_theme';
+    $GLOBALS['theme_info'] = $theme_handler->listInfo()['test_theme'];
+
     // Reset the theme registry, so that the new theme is used.
     $this->container->set('theme.registry', NULL);
 
     // Load array of Twig templates.
+    // reset() is necessary to invalidate caches tagged with 'theme_registry'.
     $registry = $this->container->get('theme.registry');
     $registry->reset();
-
     $templates = $registry->getRuntime();
 
     // Get the template filename and the cache filename for

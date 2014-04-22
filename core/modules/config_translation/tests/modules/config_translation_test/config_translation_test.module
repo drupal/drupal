@@ -5,6 +5,18 @@
  * Configuration Translation Test module.
  */
 
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function config_translation_test_system_info_alter(array &$info, Extension $file, $type) {
+  // @see \Drupal\config_translation\Tests\ConfigTranslationUiThemeTest
+  if ($file->getType() == 'theme' && $file->getName() == 'config_translation_test_theme') {
+    $info['hidden'] = FALSE;
+  }
+}
+
 /**
  * Implements hook_entity_type_alter().
  */

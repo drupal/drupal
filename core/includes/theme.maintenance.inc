@@ -66,13 +66,21 @@ function _drupal_maintenance_theme() {
   }
 
   // Ensure that system.module is loaded.
-  if (!function_exists('_system_rebuild_theme_data')) {
+  if (!function_exists('system_rebuild_theme_data')) {
     $module_handler = \Drupal::moduleHandler();
     $module_handler->addModule('system', 'core/modules/system');
     $module_handler->load('system');
   }
 
   $themes = list_themes();
+
+  // If no themes are installed yet, or if the requested custom theme is not
+  // installed, retrieve all available themes.
+  if (empty($themes) || !isset($themes[$custom_theme])) {
+    $theme_handler = \Drupal::service('theme_handler');
+    $themes = $theme_handler->rebuildThemeData();
+    $theme_handler->addTheme($themes[$custom_theme]);
+  }
 
   // list_themes() triggers a \Drupal\Core\Extension\ModuleHandler::alter() in
   // maintenance mode, but we can't let themes alter the .info.yml data until

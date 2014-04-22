@@ -56,6 +56,28 @@ function config_translation_theme() {
 }
 
 /**
+ * Implements hook_themes_enabled().
+ */
+function config_translation_themes_enabled() {
+  // Themes can provide *.config_translation.yml declarations.
+  // @todo Make ThemeHandler trigger an event instead and make
+  //   ConfigMapperManager plugin manager subscribe to it.
+  // @see https://drupal.org/node/2206347
+  \Drupal::service('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_themes_disabled().
+ */
+function config_translation_themes_disabled() {
+  // Themes can provide *.config_translation.yml declarations.
+  // @todo Make ThemeHandler trigger an event instead and make
+  //   ConfigMapperManager plugin manager subscribe to it.
+  // @see https://drupal.org/node/2206347
+  \Drupal::service('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
+}
+
+/**
  * Implements hook_entity_type_alter().
  */
 function config_translation_entity_type_alter(array &$entity_types) {

@@ -17,28 +17,35 @@ interface ThemeHandlerInterface {
    *
    * @param array $theme_list
    *   An array of theme names.
+   * @param bool $enable_dependencies
+   *   (optional) If TRUE, dependencies will automatically be installed in the
+   *   correct order. This incurs a significant performance cost, so use FALSE
+   *   if you know $theme_list is already complete and in the correct order.
+   *
+   * @return bool
+   *   Whether any of the given themes have been enabled.
    *
    * @throws \Drupal\Core\Extension\ExtensionNameLengthException
    *   Thrown when the theme name is to long
    */
-  public function enable(array $theme_list);
+  public function enable(array $theme_list, $enable_dependencies = TRUE);
 
   /**
    * Disables a given list of themes.
    *
    * @param array $theme_list
    *   An array of theme names.
+   *
+   * @return bool
+   *   Whether any of the given themes have been disabled.
    */
   public function disable(array $theme_list);
 
   /**
-   * Returns a list of all currently available themes.
-   *
-   * Retrieved from the database, if available and the site is not in
-   * maintenance mode; otherwise compiled freshly from the filesystem.
+   * Returns a list of currently enabled themes.
    *
    * @return \Drupal\Core\Extension\Extension[]
-   *   An associative array of the currently available themes. The keys are the
+   *   An associative array of the currently enabled themes. The keys are the
    *   themes' machine names and the values are objects having the following
    *   properties:
    *   - filename: The filepath and name of the .info.yml file.
@@ -74,6 +81,14 @@ interface ThemeHandlerInterface {
    *     the system that declare this theme as their base theme.
    */
   public function listInfo();
+
+  /**
+   * Refreshes the theme info data of currently enabled themes.
+   *
+   * Modules can alter theme info, so this is typically called after a module
+   * has been installed or uninstalled.
+   */
+  public function refreshInfo();
 
   /**
    * Resets the internal state of the theme handler.

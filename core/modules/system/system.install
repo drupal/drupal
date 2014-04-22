@@ -567,13 +567,6 @@ function system_requirements($phase) {
  * Implements hook_install().
  */
 function system_install() {
-  // Enable and set the default theme. Can't use theme_enable() this early in
-  // installation.
-  \Drupal::service('config.installer')->installDefaultConfig('theme', 'stark');
-  \Drupal::config('system.theme')
-    ->set('default', 'stark')
-    ->save();
-
   // Populate the cron key state variable.
   $cron_key = Crypt::randomBytesBase64(55);
   \Drupal::state()->set('system.cron_key', $cron_key);

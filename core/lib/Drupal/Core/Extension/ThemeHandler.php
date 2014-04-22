@@ -9,9 +9,9 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteBuilder;
 
 /**
@@ -41,7 +41,7 @@ class ThemeHandler implements ThemeHandlerInterface {
    *
    * @var array
    */
-  protected $list = array();
+  protected $list;
 
   /**
    * The config factory to get the enabled themes.
@@ -58,11 +58,11 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $moduleHandler;
 
   /**
-   * The cache backend to clear the local tasks cache.
+   * The state backend.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\State\StateInterface
    */
-  protected $cacheBackend;
+  protected $state;
 
   /**
    *  The config installer to install configuration.
@@ -99,8 +99,8 @@ class ThemeHandler implements ThemeHandlerInterface {
    *   The config factory to get the enabled themes.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to fire themes_enabled/themes_disabled hooks.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   The cache backend to clear the local tasks cache.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state store.
    * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
    *   The info parser to parse the theme.info.yml files.
    * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
@@ -112,10 +112,10 @@ class ThemeHandler implements ThemeHandlerInterface {
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
    *   (optional) A extension discovery instance (for unit tests).
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, InfoParserInterface $info_parser, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, StateInterface $state, InfoParserInterface $info_parser, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
-    $this->cacheBackend = $cache_backend;
+    $this->state = $state;
     $this->infoParser = $info_parser;
     $this->configInstaller = $config_installer;
     $this->routeBuilder = $route_builder;
@@ -125,10 +125,90 @@ class ThemeHandler implements ThemeHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function enable(array $theme_list) {
-    $this->clearCssCache();
+  public function getDefault() {
+    return $this->configFactory->get('system.theme')->get('default');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDefault($name) {
+    if (!isset($this->list)) {
+      $this->listInfo();
+    }
+    if (!isset($this->list[$name])) {
+      throw new \InvalidArgumentException("$name theme is not enabled.");
+    }
+    $this->configFactory->get('system.theme')
+      ->set('default', $name)
+      ->save();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function enable(array $theme_list, $enable_dependencies = TRUE) {
     $extension_config = $this->configFactory->get('core.extension');
+
+    $theme_data = $this->rebuildThemeData();
+
+    if ($enable_dependencies) {
+      $theme_list = array_combine($theme_list, $theme_list);
+
+      if ($missing = array_diff_key($theme_list, $theme_data)) {
+        // One or more of the given themes doesn't exist.
+        throw new \InvalidArgumentException(String::format('Unknown themes: !themes.', array(
+          '!themes' => implode(', ', $missing),
+        )));
+      }
+
+      // Only process themes that are not enabled currently.
+      $installed_themes = $extension_config->get('theme') ?: array();
+      if (!$theme_list = array_diff_key($theme_list, $installed_themes)) {
+        // Nothing to do. All themes already enabled.
+        return TRUE;
+      }
+      $installed_themes += $extension_config->get('disabled.theme') ?: array();
+
+      while (list($theme) = each($theme_list)) {
+        // Add dependencies to the list. The new themes will be processed as
+        // the while loop continues.
+        foreach (array_keys($theme_data[$theme]->requires) as $dependency) {
+          if (!isset($theme_data[$dependency])) {
+            // The dependency does not exist.
+            return FALSE;
+          }
+
+          // Skip already installed themes.
+          if (!isset($theme_list[$dependency]) && !isset($installed_themes[$dependency])) {
+            $theme_list[$dependency] = $dependency;
+          }
+        }
+      }
+
+      // Set the actual theme weights.
+      $theme_list = array_map(function ($theme) use ($theme_data) {
+        return $theme_data[$theme]->sort;
+      }, $theme_list);
+
+      // Sort the theme list by their weights (reverse).
+      arsort($theme_list);
+      $theme_list = array_keys($theme_list);
+    }
+    else {
+      $installed_themes = $extension_config->get('theme') ?: array();
+      $installed_themes += $extension_config->get('disabled.theme') ?: array();
+    }
+
+    $themes_enabled = array();
     foreach ($theme_list as $key) {
+      // Only process themes that are not already enabled.
+      $enabled = $extension_config->get("theme.$key") !== NULL;
+      if ($enabled) {
+        continue;
+      }
+
       // Throw an exception if the theme name is too long.
       if (strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
         throw new ExtensionNameLengthException(String::format('Theme name %name is over the maximum allowed length of @max characters.', array(
@@ -143,53 +223,107 @@ class ThemeHandler implements ThemeHandlerInterface {
         ->clear("disabled.theme.$key")
         ->save();
 
-      // Refresh the theme list as installation of default configuration needs
-      // an updated list to work.
-      $this->reset();
+      // Add the theme to the current list.
+      // @todo Remove all code that relies on $status property.
+      $theme_data[$key]->status = 1;
+      $this->addTheme($theme_data[$key]);
 
-      // The default config installation storage only knows about the currently
-      // enabled list of themes, so it has to be reset in order to pick up the
-      // default config of the newly installed theme. However, do not reset the
-      // source storage when synchronizing configuration, since that would
-      // needlessly trigger a reload of the whole configuration to be imported.
-      if (!$this->configInstaller->isSyncing()) {
-        $this->configInstaller->resetSourceStorage();
+      // Update the current theme data accordingly.
+      $current_theme_data = $this->state->get('system.theme.data', array());
+      $current_theme_data[$key] = $theme_data[$key];
+      $this->state->set('system.theme.data', $current_theme_data);
+
+      // Reset theme settings.
+      $theme_settings = &drupal_static('theme_get_setting');
+      unset($theme_settings[$key]);
+
+      // @todo Remove system_list().
+      $this->systemListReset();
+
+      // Only install default configuration if this theme has not been installed
+      // already.
+      if (!isset($installed_themes[$key])) {
+        // The default config installation storage only knows about the currently
+        // enabled list of themes, so it has to be reset in order to pick up the
+        // default config of the newly installed theme. However, do not reset the
+        // source storage when synchronizing configuration, since that would
+        // needlessly trigger a reload of the whole configuration to be imported.
+        if (!$this->configInstaller->isSyncing()) {
+          $this->configInstaller->resetSourceStorage();
+        }
+
+        // Install default configuration of the theme.
+        $this->configInstaller->installDefaultConfig('theme', $key);
       }
-      // Install default configuration of the theme.
-      $this->configInstaller->installDefaultConfig('theme', $key);
+
+      $themes_enabled[] = $key;
+
+      // Record the fact that it was enabled.
+      watchdog('system', '%theme theme enabled.', array('%theme' => $key), WATCHDOG_INFO);
     }
 
+    $this->clearCssCache();
     $this->resetSystem();
 
     // Invoke hook_themes_enabled() after the themes have been enabled.
-    $this->moduleHandler->invokeAll('themes_enabled', array($theme_list));
+    $this->moduleHandler->invokeAll('themes_enabled', array($themes_enabled));
+
+    return !empty($themes_enabled);
   }
 
   /**
    * {@inheritdoc}
    */
   public function disable(array $theme_list) {
-    // Don't disable the default or admin themes.
     $theme_config = $this->configFactory->get('system.theme');
-    $default_theme = $theme_config->get('default');
-    $admin_theme = $theme_config->get('admin');
-    $theme_list = array_diff($theme_list, array($default_theme, $admin_theme));
-    if (empty($theme_list)) {
-      return;
+
+    foreach ($theme_list as $key) {
+      if (!isset($this->list[$key])) {
+        throw new \InvalidArgumentException("Unknown theme: $key.");
+      }
+      if ($key === $theme_config->get('default')) {
+        throw new \InvalidArgumentException("The current default theme $key cannot be disabled.");
+      }
+      if ($key === $theme_config->get('admin')) {
+        throw new \InvalidArgumentException("The current admin theme $key cannot be disabled.");
+      }
+      // Base themes cannot be disabled if sub themes are enabled, and if they
+      // are not disabled at the same time.
+      if (!empty($this->list[$key]->sub_themes)) {
+        foreach ($this->list[$key]->sub_themes as $sub_key => $sub_label) {
+          if (isset($this->list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
+            throw new \InvalidArgumentException("The base theme $key cannot be disabled, because theme $sub_key depends on it.");
+          }
+        }
+      }
     }
 
     $this->clearCssCache();
 
     $extension_config = $this->configFactory->get('core.extension');
+    $current_theme_data = $this->state->get('system.theme.data', array());
     foreach ($theme_list as $key) {
       // The value is not used; the weight is ignored for themes currently.
       $extension_config
         ->clear("theme.$key")
         ->set("disabled.theme.$key", 0);
+
+      // Remove the theme from the current list.
+      unset($this->list[$key]);
+
+      // Update the current theme data accordingly.
+      unset($current_theme_data[$key]);
+
+      // Reset theme settings.
+      $theme_settings = &drupal_static('theme_get_setting');
+      unset($theme_settings[$key]);
+
+      // @todo Remove system_list().
+      $this->systemListReset();
     }
     $extension_config->save();
+    $this->state->set('system.theme.data', $current_theme_data);
 
-    $this->reset();
     $this->resetSystem();
 
     // Invoke hook_themes_disabled after the themes have been disabled.
@@ -200,37 +334,11 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function listInfo() {
-    if (empty($this->list)) {
+    if (!isset($this->list)) {
       $this->list = array();
-      try {
-        $themes = $this->systemThemeList();
-      }
-      catch (\Exception $e) {
-        // If the database is not available, rebuild the theme data.
-        $themes = $this->rebuildThemeData();
-      }
-
+      $themes = $this->systemThemeList();
       foreach ($themes as $theme) {
-        foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
-          foreach ($stylesheets as $stylesheet => $path) {
-            $theme->stylesheets[$media][$stylesheet] = $path;
-          }
-        }
-        foreach ($theme->info['libraries'] as $library => $name) {
-          $theme->libraries[$library] = $name;
-        }
-        if (isset($theme->info['engine'])) {
-          $theme->engine = $theme->info['engine'];
-        }
-        if (isset($theme->info['base theme'])) {
-          $theme->base_theme = $theme->info['base theme'];
-        }
-        // Status is normally retrieved from the database. Add zero values when
-        // read from the installation directory to prevent notices.
-        if (!isset($theme->status)) {
-          $theme->status = 0;
-        }
-        $this->list[$theme->getName()] = $theme;
+        $this->addTheme($theme);
       }
     }
     return $this->list;
@@ -239,13 +347,50 @@ class ThemeHandler implements ThemeHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function addTheme(Extension $theme) {
+    // @todo Remove this 100% unnecessary duplication of properties.
+    foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
+      foreach ($stylesheets as $stylesheet => $path) {
+        $theme->stylesheets[$media][$stylesheet] = $path;
+      }
+    }
+    foreach ($theme->info['libraries'] as $library => $name) {
+      $theme->libraries[$library] = $name;
+    }
+    if (isset($theme->info['engine'])) {
+      $theme->engine = $theme->info['engine'];
+    }
+    if (isset($theme->info['base theme'])) {
+      $theme->base_theme = $theme->info['base theme'];
+    }
+    $this->list[$theme->getName()] = $theme;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function refreshInfo() {
+    $this->reset();
+    $extension_config = $this->configFactory->get('core.extension');
+    $enabled = $extension_config->get('theme') ?: array();
+
+    // @todo Avoid re-scanning all themes by retaining the original (unaltered)
+    //   theme info somewhere.
+    $list = $this->rebuildThemeData();
+    foreach ($list as $name => $theme) {
+      if (isset($enabled[$name])) {
+        $this->list[$name] = $theme;
+      }
+    }
+    $this->state->set('system.theme.data', $this->list);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function reset() {
-    // listInfo() calls system_info() which has a lot of side effects that have
-    // to be triggered like the classloading of theme classes.
-    $this->list = array();
     $this->systemListReset();
-    $this->listInfo();
-    $this->list = array();
+    $this->list = NULL;
   }
 
   /**
@@ -255,6 +400,8 @@ class ThemeHandler implements ThemeHandlerInterface {
     $listing = $this->getExtensionDiscovery();
     $themes = $listing->scan('theme');
     $engines = $listing->scan('theme_engine');
+    $extension_config = $this->configFactory->get('core.extension');
+    $enabled = $extension_config->get('theme') ?: array();
 
     // Set defaults for theme info.
     $defaults = array(
@@ -279,8 +426,12 @@ class ThemeHandler implements ThemeHandlerInterface {
     );
 
     $sub_themes = array();
+    $files = array();
     // Read info files for each theme.
     foreach ($themes as $key => $theme) {
+      // @todo Remove all code that relies on the $status property.
+      $theme->status = (int) isset($enabled[$key]);
+
       $theme->info = $this->infoParser->parse($theme->getPathname()) + $defaults;
 
       // Add the info file modification time, so it becomes available for
@@ -295,6 +446,8 @@ class ThemeHandler implements ThemeHandlerInterface {
 
       if (!empty($theme->info['base theme'])) {
         $sub_themes[] = $key;
+        // Add the base theme as a proper dependency.
+        $themes[$key]->info['dependencies'][] = $themes[$key]->info['base theme'];
       }
 
       // Defaults to 'twig' (see $defaults above).
@@ -310,7 +463,17 @@ class ThemeHandler implements ThemeHandlerInterface {
       if (!empty($theme->info['screenshot'])) {
         $theme->info['screenshot'] = $path . '/' . $theme->info['screenshot'];
       }
+
+      $files[$key] = $theme->getPathname();
     }
+    // Build dependencies.
+    // @todo Move into a generic ExtensionHandler base class.
+    // @see https://drupal.org/node/2208429
+    $themes = $this->moduleHandler->buildModuleDependencies($themes);
+
+    // Store filenames to allow system_list() and drupal_get_filename() to
+    // retrieve them without having to scan the filesystem.
+    $this->state->set('system.theme.files', $files);
 
     // After establishing the full list of available themes, fill in data for
     // sub-themes.

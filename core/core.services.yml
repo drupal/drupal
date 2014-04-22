@@ -203,7 +203,7 @@ services:
     arguments: ['%container.modules%', '@cache.bootstrap']
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
-    arguments: ['@config.factory', '@module_handler', '@cache.default', '@info_parser', '@config.installer', '@router.builder']
+    arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@config.installer', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation']
