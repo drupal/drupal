@@ -17,6 +17,11 @@ use Symfony\Component\HttpFoundation\Request;
 interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface {
 
   /**
+   * Rebuild the container to register services needed on multilingual sites.
+   */
+  public static function rebuildServices();
+
+  /**
    * Injects the request object.
    *
    * @param \Symfony\Component\HttpFoundation\Request

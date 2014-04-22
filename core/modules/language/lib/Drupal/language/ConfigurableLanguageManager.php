@@ -92,7 +92,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   protected $initializing = FALSE;
 
   /**
-   * Rebuild the container to register services needed on multilingual sites.
+   * {@inheritdoc}
    */
   public static function rebuildServices() {
     PhpStorageFactory::get('service_container')->deleteAll();

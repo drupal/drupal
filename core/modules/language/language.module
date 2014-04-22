@@ -431,9 +431,7 @@ function language_save($language) {
   $language_entity->direction = isset($language->direction) ? $language->direction : '0';
   $language_entity->locked = !empty($language->locked);
   $language_entity->weight = isset($language->weight) ? $language->weight : 0;
-
-  // Save the record and inform others about the change.
-  $multilingual = \Drupal::languageManager()->isMultilingual();
+  $language_entity->setDefault(!empty($language->default));
   $language_entity->save();
   $t_args = array('%language' => $language->name, '%langcode' => $language->id);
   if ($language->is_new) {
@@ -441,30 +439,6 @@ function language_save($language) {
   }
   else {
     watchdog('language', 'The %language (%langcode) language has been updated.', $t_args);
-  }
-
-  if (!empty($language->default)) {
-    // Update the config. Saving the configuration fires and event that causes
-    // the container to be rebuilt.
-    \Drupal::config('system.site')->set('langcode', $language->id)->save();
-    \Drupal::service('language.default')->set($language);
-  }
-
-  $language_manager = \Drupal::languageManager();
-  $language_manager->reset();
-  if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
-    $language_manager->updateLockedLanguageWeights();
-  }
-
-  // Update URL Prefixes for all languages after the new default language is
-  // propagated and the LanguageManagerInterface::getLanguages() cache is
-  // flushed.
-  language_negotiation_url_prefixes_update();
-
-  // If after adding this language the site will become multilingual, we need to
-  // rebuild language services.
-  if (!$multilingual && $language->is_new) {
-    ConfigurableLanguageManager::rebuildServices();
   }
 
   return $language;

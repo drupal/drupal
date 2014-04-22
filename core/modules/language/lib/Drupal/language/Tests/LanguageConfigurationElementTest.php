@@ -88,6 +88,9 @@ class LanguageConfigurationElementTest extends WebTestBase {
 
     // Site's default.
     $old_default = \Drupal::languageManager()->getDefaultLanguage();
+    // Ensure the language entity default value is correct.
+    $language_entity = entity_load('language_entity', $old_default->getId());
+    $this->assertTrue($language_entity->get('default'), 'The en language entity is flagged as the default language.');
     $old_default->default = FALSE;
     language_save($old_default);
     $new_default = \Drupal::languageManager()->getLanguage('cc');
@@ -96,6 +99,14 @@ class LanguageConfigurationElementTest extends WebTestBase {
     language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'site_default', 'language_show' => TRUE));
     $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
     $this->assertEqual($langcode, 'cc');
+
+    // Ensure the language entity default value is correct.
+    $language_entity = entity_load('language_entity', $old_default->getId());
+    $this->assertFalse($language_entity->get('default'), 'The en language entity is not flagged as the default language.');
+    $language_entity = entity_load('language_entity', 'cc');
+    // Check calling the Drupal\language\Entity\Language::isDefault() method
+    // directly.
+    $this->assertTrue($language_entity->isDefault(), 'The cc language entity is flagged as the default language.');
 
     // Check the default value of a language field when authors preferred option
     // is selected.
