@@ -1048,6 +1048,9 @@ abstract class TestBase {
 
     $this->generatedTestFiles = FALSE;
 
+    // Ensure the configImporter is refreshed for each test.
+    $this->configImporter = NULL;
+
     // Unregister all custom stream wrappers of the parent site.
     // Availability of Drupal stream wrappers varies by test base class:
     // - UnitTestBase operates in a completely empty environment.

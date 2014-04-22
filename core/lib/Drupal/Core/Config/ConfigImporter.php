@@ -499,11 +499,11 @@ class ConfigImporter extends DependencySerialization {
    *   Exception thrown if the $sync_step can not be called.
    */
   public function doSyncStep($sync_step, &$context) {
-    if (method_exists($this, $sync_step)) {
+    if (!is_array($sync_step) && method_exists($this, $sync_step)) {
       $this->$sync_step($context);
     }
     elseif (is_callable($sync_step)) {
-      call_user_func_array($sync_step, array(&$context));
+      call_user_func_array($sync_step, array(&$context, $this));
     }
     else {
       throw new \InvalidArgumentException('Invalid configuration synchronization step');
@@ -549,7 +549,7 @@ class ConfigImporter extends DependencySerialization {
     $sync_steps[] = 'processConfigurations';
 
     // Allow modules to add new steps to configuration synchronization.
-    $this->moduleHandler->alter('config_import_steps', $sync_steps);
+    $this->moduleHandler->alter('config_import_steps', $sync_steps, $this);
     $sync_steps[] = 'finish';
     return $sync_steps;
   }

@@ -6,6 +6,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\field\Field;
@@ -361,4 +362,50 @@ function field_hook_info() {
   );
 
   return $hooks;
+}
+
+/**
+ * Implements hook_config_import_steps_alter().
+ */
+function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_importer) {
+  $fields = \Drupal\field\ConfigImporterFieldPurger::getFieldsToPurge(
+    $config_importer->getStorageComparer()->getSourceStorage()->read('core.extension'),
+    $config_importer->getStorageComparer()->getChangelist('delete')
+  );
+  if ($fields) {
+    // Add a step to the beginning of the configuration synchronization process
+    // to purge field data where the module that provides the field is being
+    // uninstalled.
+    array_unshift($sync_steps, array('\Drupal\field\ConfigImporterFieldPurger', 'process'));
+  };
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds a warning if field data will be permanently removed by the configuration
+ * synchronization.
+ *
+ * @see \Drupal\field\ConfigImporterFieldPurger
+ */
+function field_form_config_admin_import_form_alter(&$form, &$form_state) {
+  // Only display the message when there is a storage comparer available and the
+  // form is not submitted.
+  if (isset($form_state['storage_comparer']) && empty($form_state['input'])) {
+    $fields = \Drupal\field\ConfigImporterFieldPurger::getFieldsToPurge(
+      $form_state['storage_comparer']->getSourceStorage()->read('core.extension'),
+      $form_state['storage_comparer']->getChangelist('delete')
+    );
+    if ($fields) {
+      foreach ($fields as $field) {
+        $field_labels[] = $field->label();
+      }
+      drupal_set_message(\Drupal::translation()->formatPlural(
+        count($fields),
+        'This synchronization will delete data from the field %fields.',
+        'This synchronization will delete data from the fields: %fields.',
+        array('%fields' => implode(', ', $field_labels))
+      ), 'warning');
+    }
+  }
 }

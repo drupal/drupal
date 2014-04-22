@@ -2899,8 +2899,11 @@ function hook_link_alter(&$variables) {
  * @see callback_batch_operation()
  * @see \Drupal\Core\Config\ConfigImporter::initialize()
  */
-function hook_config_import_steps_alter(&$sync_steps) {
-  $sync_steps[] = '_additional_configuration_step';
+function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\ConfigImporter $config_importer) {
+  $deletes = $config_importer->getUnprocessedConfiguration('delete');
+  if (isset($deletes['field.field.node.body'])) {
+    $sync_steps[] = '_additional_configuration_step';
+  }
 }
 
 /**
