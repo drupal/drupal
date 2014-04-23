@@ -56,12 +56,11 @@
  * toolbar width (240px). In this case, 240px + 780px.
  */
 @media
-  screen and (max-width: 1020px),
-  (orientation: landscape) and (max-device-height: 1020px) {
+  screen and (max-width: 1020px) {
 
-  .toolbar-vertical .layout-region-node-main,
-  .toolbar-vertical .layout-region-node-footer,
-  .toolbar-vertical .layout-region-node-secondary {
+  .toolbar-vertical.toolbar-tray-open .layout-region-node-main,
+  .toolbar-vertical.toolbar-tray-open .layout-region-node-footer,
+  .toolbar-vertical.toolbar-tray-open .layout-region-node-secondary {
     float: none;
     width: auto;
     padding-right: 0;
