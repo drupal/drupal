@@ -138,7 +138,7 @@ class BreadcrumbTest extends MenuTestBase {
     // @todo Remove this part once we have a _title_callback, see
     //   https://drupal.org/node/2076085.
     $trail += array(
-      "admin/config/content/formats/manage/$format_id" => Unicode::ucfirst(Unicode::strtolower($format->name)),
+      "admin/config/content/formats/manage/$format_id" => $format->label(),
     );
     $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id/disable", $trail);
 

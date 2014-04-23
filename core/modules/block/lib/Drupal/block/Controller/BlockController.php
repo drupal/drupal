@@ -9,12 +9,41 @@ namespace Drupal\block\Controller;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Extension\ThemeHandler;
+use Drupal\Core\Extension\ThemeHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller routines for admin block routes.
  */
 class BlockController extends ControllerBase {
+
+  /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
+   * Constructs a new BlockController instance.
+   *
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
+   */
+  public function __construct(ThemeHandlerInterface $theme_handler) {
+    $this->themeHandler = $theme_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('theme_handler')
+    );
+  }
 
   /**
    * Returns a block theme demo page.
@@ -26,9 +55,8 @@ class BlockController extends ControllerBase {
    *   A render array containing the CSS and title for the block region demo.
    */
   public function demo($theme) {
-    $themes = list_themes();
     return array(
-      '#title' => String::checkPlain($themes[$theme]->info['name']),
+      '#title' => String::checkPlain($this->themeHandler->getName($theme)),
       '#attached' => array(
         'js' => array(
           array(

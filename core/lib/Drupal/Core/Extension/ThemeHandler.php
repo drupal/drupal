@@ -620,6 +620,17 @@ class ThemeHandler implements ThemeHandlerInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getName($theme) {
+    $themes = $this->listInfo();
+    if (!isset($themes[$theme])) {
+      throw new \InvalidArgumentException(String::format('Requested the name of a non-existing theme @theme', array('@theme' => $theme)));
+    }
+    return String::checkPlain($themes[$theme]->info['name']);
+  }
+
+  /**
    * Wraps system_list_reset().
    */
   protected function systemListReset() {

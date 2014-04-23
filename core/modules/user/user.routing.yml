@@ -103,6 +103,7 @@ user.role_edit:
   path: '/admin/people/roles/manage/{user_role}'
   defaults:
     _entity_form: user_role.default
+    _title: 'Edit role'
   requirements:
     _entity_access: user_role.update
 
@@ -110,7 +111,7 @@ user.role_delete:
   path: '/admin/people/roles/manage/{user_role}/delete'
   defaults:
     _entity_form: user_role.delete
-    _title: 'Edit role'
+    _title: 'Delete role'
   requirements:
     _entity_access: user_role.delete
 

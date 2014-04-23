@@ -126,6 +126,7 @@ views_ui.break_lock:
   path: '/admin/structure/views/view/{view}/break-lock'
   defaults:
     _entity_form: 'view.break_lock'
+    _title: 'Break lock'
   requirements:
     _entity_access: view.break-lock
 

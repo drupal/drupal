@@ -120,4 +120,15 @@ interface ThemeHandlerInterface {
    */
   public function getBaseThemes(array $themes, $theme);
 
+  /**
+   * Gets the human readable name of a given theme.
+   *
+   * @param string $theme
+   *   The machine name of the theme which title should be shown.
+   *
+   * @return string
+   *   Returns the human readable name of the theme.
+   */
+  public function getName($theme);
+
 }

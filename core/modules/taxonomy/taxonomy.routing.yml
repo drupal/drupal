@@ -62,6 +62,7 @@ taxonomy.vocabulary_reset:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset'
   defaults:
     _entity_form: 'taxonomy_vocabulary.reset'
+    _title: 'Reset'
   requirements:
     _permission: 'administer taxonomy'
 

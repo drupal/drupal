@@ -50,6 +50,7 @@ shortcut.link_add:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link'
   defaults:
     _content: '\Drupal\shortcut\Controller\ShortcutController::addForm'
+    _title: 'Add link'
   requirements:
     _entity_create_access: 'shortcut:{shortcut_set}'
 
@@ -57,6 +58,7 @@ shortcut.link_edit:
   path: '/admin/config/user-interface/shortcut/link/{shortcut}'
   defaults:
     _entity_form: 'shortcut.default'
+    _title: 'Edit'
   requirements:
     _entity_access: 'shortcut.update'
 
@@ -64,6 +66,7 @@ shortcut.link_delete:
   path: '/admin/config/user-interface/shortcut/link/{shortcut}/delete'
   defaults:
     _entity_form: 'shortcut.delete'
+    _title: 'Delete'
   requirements:
     _entity_access: 'shortcut.delete'
 

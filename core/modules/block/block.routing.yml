@@ -2,6 +2,7 @@ block.admin_demo:
   path: '/admin/structure/block/demo/{theme}'
   defaults:
     _content: '\Drupal\block\Controller\BlockController::demo'
+    _title_callback: 'theme_handler:getName'
   requirements:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
@@ -20,6 +21,7 @@ block.admin_edit:
   path: '/admin/structure/block/manage/{block}'
   defaults:
     _entity_form: 'block.default'
+    _title: 'Configure block'
   requirements:
     _entity_access: 'block.update'
 

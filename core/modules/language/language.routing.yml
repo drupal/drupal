@@ -2,6 +2,7 @@ language.negotiation_url:
   path: '/admin/config/regional/language/detection/url'
   defaults:
     _form: 'Drupal\language\Form\NegotiationUrlForm'
+    _title: 'Configure URL language negotiation'
   requirements:
     _permission: 'administer languages'
 
@@ -9,6 +10,7 @@ language.negotiation_session:
   path: '/admin/config/regional/language/detection/session'
   defaults:
     _form: 'Drupal\language\Form\NegotiationSessionForm'
+    _title: 'Configure session language negotiation'
   requirements:
     _permission: 'administer languages'
 
@@ -16,6 +18,7 @@ language.negotiation_selected:
   path: '/admin/config/regional/language/detection/selected'
   defaults:
     _form: 'Drupal\language\Form\NegotiationSelectedForm'
+    _title: 'Configure selection language negotiation'
   requirements:
     _permission: 'administer languages'
 
@@ -71,6 +74,7 @@ language.negotiation_browser_delete:
   path: '/admin/config/regional/language/detection/browser/delete/{browser_langcode}'
   defaults:
     _form: '\Drupal\language\Form\NegotiationBrowserDeleteForm'
+    _title: 'Delete'
   requirements:
     _permission: 'administer languages'
 

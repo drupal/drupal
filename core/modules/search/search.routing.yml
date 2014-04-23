@@ -57,6 +57,7 @@ search.delete:
   path: '/admin/config/search/pages/manage/{search_page}/delete'
   defaults:
     _entity_form: 'search_page.delete'
+    _title: 'Delete'
   requirements:
     _entity_access: 'search_page.delete'
 

@@ -341,6 +341,7 @@ system.theme_settings_theme:
   path: '/admin/appearance/settings/{theme}'
   defaults:
     _form: '\Drupal\system\Form\ThemeSettingsForm'
+    _title_callback: 'theme_handler:getName'
   requirements:
     _permission: 'administer themes'
 
