@@ -341,11 +341,17 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
    *   An array of field definitions, keyed by field name.
    *
    * @throws \LogicException
-   *   Thrown if one of the entity keys is flagged as translatable.
+   *   Thrown if a config entity type is given or if one of the entity keys is
+   *   flagged as translatable.
    */
   protected function buildBaseFieldDefinitions($entity_type_id) {
     $entity_type = $this->getDefinition($entity_type_id);
     $class = $entity_type->getClass();
+
+    // Fail with an exception for config entity types.
+    if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+      throw new \LogicException(String::format('Getting the base fields is not supported for entity type @type.', array('@type' => $entity_type->getLabel())));
+    }
 
     // Retrieve base field definitions and assign them the entity type provider.
     $base_field_definitions = $class::baseFieldDefinitions($entity_type);

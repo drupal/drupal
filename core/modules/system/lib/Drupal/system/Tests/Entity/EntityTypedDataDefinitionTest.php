@@ -114,6 +114,10 @@ class EntityTypedDataDefinitionTest extends DrupalUnitTestBase {
     // entity data types variants.
     $this->assertEqual($this->typedDataManager->createDataDefinition('entity'), EntityDataDefinition::create());
     $this->assertEqual($this->typedDataManager->createDataDefinition('entity:node'), EntityDataDefinition::create('node'));
+
+    // Config entities don't support typed data.
+    $entity_definition = EntityDataDefinition::create('node_type');
+    $this->assertEqual(array(), $entity_definition->getPropertyDefinitions());
   }
 
   /**

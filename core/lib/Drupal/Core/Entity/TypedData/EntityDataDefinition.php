@@ -57,14 +57,21 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
   public function getPropertyDefinitions() {
     if (!isset($this->propertyDefinitions)) {
       if ($entity_type_id = $this->getEntityTypeId()) {
-        // @todo: Add support for handling multiple bundles.
-        // See https://drupal.org/node/2169813.
-        $bundles = $this->getBundles();
-        if (is_array($bundles) && count($bundles) == 1) {
-          $this->propertyDefinitions = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, reset($bundles));
+        // Return an empty array for entity types that don't support typed data.
+        $entity_type_class = \Drupal::entityManager()->getDefinition($entity_type_id)->getClass();
+        if (!in_array('Drupal\Core\TypedData\TypedDataInterface', class_implements($entity_type_class))) {
+          $this->propertyDefinitions = array();
         }
         else {
-          $this->propertyDefinitions = \Drupal::entityManager()->getBaseFieldDefinitions($entity_type_id);
+          // @todo: Add support for handling multiple bundles.
+          // See https://drupal.org/node/2169813.
+          $bundles = $this->getBundles();
+          if (is_array($bundles) && count($bundles) == 1) {
+            $this->propertyDefinitions = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, reset($bundles));
+          }
+          else {
+            $this->propertyDefinitions = \Drupal::entityManager()->getBaseFieldDefinitions($entity_type_id);
+          }
         }
       }
       else {

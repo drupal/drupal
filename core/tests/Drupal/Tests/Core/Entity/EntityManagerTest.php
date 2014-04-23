@@ -695,6 +695,10 @@ class EntityManagerTest extends UnitTestCase {
     $entity_type->expects($this->any())
       ->method('getKeys')
       ->will($this->returnValue(array()));
+    $entity_type->expects($this->any())
+      ->method('isSubclassOf')
+      ->with($this->equalTo('\Drupal\Core\Entity\ContentEntityInterface'))
+      ->will($this->returnValue(TRUE));
     $field_definition = $this->getMockBuilder('Drupal\Core\Field\FieldDefinition')
       ->disableOriginalConstructor()
       ->getMock();
