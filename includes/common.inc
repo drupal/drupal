@@ -7833,7 +7833,10 @@ function entity_load_unchanged($entity_type, $id) {
 }
 
 /**
- * Get the entity controller class for an entity type.
+ * Gets the entity controller for an entity type.
+ *
+ * @return DrupalEntityControllerInterface
+ *   The entity controller object for the specified entity type.
  */
 function entity_get_controller($entity_type) {
   $controllers = &drupal_static(__FUNCTION__, array());
