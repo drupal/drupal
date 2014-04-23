@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Tests the form builder.
  *
+ * @coversDefaultClass \Drupal\Core\Form\FormBuilder
+ *
  * @group Drupal
  * @group Form
  */
@@ -216,6 +218,34 @@ class FormBuilderTest extends FormTestBase {
       $this->assertSame('exit', $e->getMessage());
     }
     $this->assertSame($response, $form_state['response']);
+  }
+
+  /**
+   * Tests that form errors during submission throw an exception.
+   *
+   * @covers ::setErrorByName
+   *
+   * @expectedException \LogicException
+   * @expectedExceptionMessage Form errors cannot be set after form validation has finished.
+   */
+  public function testFormErrorsDuringSubmission() {
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
+
+    $form_arg = $this->getMockForm($form_id, $expected_form);
+    $form_builder = $this->formBuilder;
+    $form_arg->expects($this->any())
+      ->method('submitForm')
+      ->will($this->returnCallback(function ($form, &$form_state) use ($form_builder) {
+        $form_builder->setErrorByName('test', $form_state, 'Hello');
+      }));
+
+    $form_state = array();
+    $this->formBuilder->getFormId($form_arg, $form_state);
+
+    $form_state['values'] = array();
+    $form_state['input']['form_id'] = $form_id;
+    $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
   }
 
   /**
@@ -525,6 +555,47 @@ class FormBuilderTest extends FormTestBase {
     $this->formBuilder->submitForm($form_arg, $form_state);
     $errors = $this->formBuilder->getErrors($form_state);
     $this->assertNotEmpty($errors['options']);
+  }
+
+  /**
+   * Tests the 'must_validate' $form_state flag.
+   *
+   * @covers ::validateForm
+   */
+  public function testMustValidate() {
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
+
+    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->any())
+      ->method('getFormId')
+      ->will($this->returnValue($form_id));
+    $form_arg->expects($this->any())
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
+    $form_builder = $this->formBuilder;
+    $form_arg->expects($this->exactly(2))
+      ->method('validateForm')
+      ->will($this->returnCallback(function (&$form, &$form_state) use ($form_builder) {
+        $form_builder->setErrorByName('test', $form_state, 'foo');
+      }));
+
+    $form_state = array();
+    // This submission will trigger validation.
+    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
+    $errors = $this->formBuilder->getErrors($form_state);
+    $this->assertNotEmpty($errors['test']);
+
+    // This submission will not re-trigger validation.
+    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
+    $errors = $this->formBuilder->getErrors($form_state);
+    $this->assertNotEmpty($errors['test']);
+
+    // The must_validate flag will re-trigger validation.
+    $form_state['must_validate'] = TRUE;
+    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
+    $errors = $this->formBuilder->getErrors($form_state);
+    $this->assertNotEmpty($errors['test']);
   }
 
   /**

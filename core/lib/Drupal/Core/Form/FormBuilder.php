@@ -106,13 +106,6 @@ class FormBuilder implements FormBuilderInterface {
   protected $forms;
 
   /**
-   * An array of validated forms.
-   *
-   * @var array
-   */
-  protected $validatedForms = array();
-
-  /**
    * An array of options used for recursive flattening.
    *
    * @var array
@@ -301,6 +294,7 @@ class FormBuilder implements FormBuilderInterface {
         'files' => array(),
       ),
       'temporary' => array(),
+      'validation_complete' => FALSE,
       'submitted' => FALSE,
       'executed' => FALSE,
       'programmed' => FALSE,
@@ -431,6 +425,7 @@ class FormBuilder implements FormBuilderInterface {
       'input',
       'method',
       'submit_handlers',
+      'validation_complete',
       'submitted',
       'executed',
       'validate_handlers',
@@ -806,7 +801,14 @@ class FormBuilder implements FormBuilderInterface {
    * {@inheritdoc}
    */
   public function validateForm($form_id, &$form, &$form_state) {
-    if (isset($this->validatedForms[$form_id]) && empty($form_state['must_validate'])) {
+    // If this form is flagged to always validate, ensure that previous runs of
+    // validation are ignored.
+    if (!empty($form_state['must_validate'])) {
+      $form_state['validation_complete'] = FALSE;
+    }
+
+    // If this form has completed validation, do not validate again.
+    if (!empty($form_state['validation_complete'])) {
       return;
     }
 
@@ -888,7 +890,7 @@ class FormBuilder implements FormBuilderInterface {
     // After validation, loop through and assign each element its errors.
     $this->setElementErrorsFromFormState($form, $form_state);
     // Mark this form as validated.
-    $this->validatedForms[$form_id] = TRUE;
+    $form_state['validation_complete'] = TRUE;
   }
 
   /**
@@ -1198,6 +1200,10 @@ class FormBuilder implements FormBuilderInterface {
    * {@inheritdoc}
    */
   public function setErrorByName($name, array &$form_state, $message = '') {
+    if (!empty($form_state['validation_complete'])) {
+      throw new \LogicException('Form errors cannot be set after form validation has finished.');
+    }
+
     if (!isset($form_state['errors'][$name])) {
       $record = TRUE;
       if (isset($form_state['limit_validation_errors'])) {
