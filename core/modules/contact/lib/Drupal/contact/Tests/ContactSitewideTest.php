@@ -9,6 +9,7 @@ namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Tests the site-wide contact form.
@@ -108,8 +109,16 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertText(t('Machine-readable name field is required.'));
     $this->assertText(t('Recipients field is required.'));
 
-    // Create first valid category.
+    // Test validation of max_length machine name.
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
+    $max_length = EntityTypeInterface::BUNDLE_MAX_LENGTH;
+    $max_length_exceeded = $max_length + 1;
+    $this->addCategory($id = drupal_strtolower($this->randomName($max_length_exceeded)), $label = $this->randomName($max_length_exceeded), implode(',', array($recipients[0])), '', TRUE);
+    $this->assertText(format_string('Machine-readable name cannot be longer than !max characters but is currently !exceeded characters long.', array('!max' => $max_length, '!exceeded' => $max_length_exceeded)));
+    $this->addCategory($id = drupal_strtolower($this->randomName($max_length)), $label = $this->randomName($max_length), implode(',', array($recipients[0])), '', TRUE);
+    $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
+
+    // Create first valid category.
     $this->addCategory($id = drupal_strtolower($this->randomName(16)), $label = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 

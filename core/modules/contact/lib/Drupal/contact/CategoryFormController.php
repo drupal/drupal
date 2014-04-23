@@ -8,6 +8,7 @@
 namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Base form controller for category edit forms.
@@ -34,6 +35,7 @@ class CategoryFormController extends EntityFormController {
     $form['id'] = array(
       '#type' => 'machine_name',
       '#default_value' => $category->id(),
+      '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => array(
         'exists' => 'contact_category_load',
       ),
