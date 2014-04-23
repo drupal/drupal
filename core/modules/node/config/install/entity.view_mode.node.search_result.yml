@@ -1,5 +1,5 @@
 id: node.search_result
-label: 'Search result'
+label: 'Search result highlighting input'
 status: false
 cache: true
 targetEntityType: node
