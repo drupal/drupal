@@ -185,65 +185,6 @@ class AdminController extends ControllerBase {
   }
 
   /**
-   * Returns an overview of the entity types a comment field is attached to.
-   *
-   * @param string $commented_entity_type
-   *   The entity type to which the comment field is attached.
-   * @param string $field_name
-   *   The comment field for which the overview is to be displayed.
-   *
-   * @return array
-   *   A renderable array containing the list of entity types and bundle
-   *   combinations on which the comment field is in use.
-   */
-  public function bundleInfo($commented_entity_type, $field_name) {
-    // Add a link to manage entity fields if the Field UI module is enabled.
-    $field_ui_enabled = $this->moduleHandler()->moduleExists('field_ui');
-
-    $field_info = $this->fieldInfo->getField($commented_entity_type, $field_name);
-
-    $entity_type_info = $this->entityManager()->getDefinition($commented_entity_type);
-    $entity_bundle_info = $this->entityManager()->getBundleInfo($commented_entity_type);
-
-    $build['usage'] = array(
-      '#theme' => 'item_list',
-      '#title' => String::checkPlain($entity_type_info->getLabel()),
-      '#items' => array(),
-    );
-    // Loop over all of bundles to which this comment field is attached.
-    foreach ($field_info->getBundles() as $bundle) {
-      // Add the current instance to the list of bundles.
-      if ($field_ui_enabled && $route_info = FieldUI::getOverviewRouteInfo($commented_entity_type, $bundle)) {
-        // Add a link to configure the fields on the given bundle and entity
-        // type combination.
-        $build['usage']['#items'][] = $this->l($entity_bundle_info[$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
-      }
-      else {
-        // Field UI is disabled so fallback to a list of bundle labels
-        // instead of links to configure fields.
-        $build['usage']['#items'][] = String::checkPlain($entity_bundle_info[$bundle]['label']);
-      }
-    }
-
-    return $build;
-  }
-
-  /**
-   * Route title callback.
-   *
-   * @param string $commented_entity_type
-   *   The entity type to which the comment field is attached.
-   * @param string $field_name
-   *   The comment field for which the overview is to be displayed.
-   *
-   * @return string
-   *   The human readable field name.
-   */
-  public function bundleTitle($commented_entity_type, $field_name) {
-    return $this->commentManager->getFieldUIPageTitle($commented_entity_type, $field_name);
-  }
-
-  /**
    * Presents an administrative comment listing.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

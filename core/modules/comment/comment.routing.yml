@@ -74,11 +74,9 @@ comment.bundle_list:
   requirements:
     _permission: 'administer comments'
 
+# This route is only used by Field UI.
 comment.bundle:
   path: '/admin/structure/comments/manage/{bundle}'
-  defaults:
-    _content: 'Drupal\comment\Controller\AdminController::bundleInfo'
-    _title_callback: 'Drupal\comment\Controller\AdminController::bundleTitle'
   requirements:
     _access: 'FALSE'
 
