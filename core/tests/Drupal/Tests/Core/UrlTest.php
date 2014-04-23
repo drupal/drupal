@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core;
 
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
