@@ -122,7 +122,7 @@ theme_settings:
           label: 'Use the default shortcut icon supplied by the theme'
     features:
       type: mapping
-      label: 'Shortcut icon settings'
+      label: 'Optional features'
       mapping:
         comment_user_picture:
           type: boolean
@@ -153,7 +153,7 @@ theme_settings:
           label: 'Site slogan'
     logo:
       type: mapping
-      label: 'Shortcut icon settings'
+      label: 'Logo settings'
       mapping:
         path:
           type: string
