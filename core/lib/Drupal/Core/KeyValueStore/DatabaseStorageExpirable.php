@@ -88,7 +88,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreExpireInterface::setWithExpire().
+   * {@inheritdoc}
    */
   function setWithExpire($key, $value, $expire) {
     // We are already writing to the table, so perform garbage collection at
@@ -127,7 +127,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   }
 
   /**
-   * Implements Drupal\Core\KeyValueStore\KeyValueStoreExpirablInterface::setMultipleWithExpire().
+   * {@inheritdoc}
    */
   function setMultipleWithExpire(array $data, $expire) {
     foreach ($data as $key => $value) {

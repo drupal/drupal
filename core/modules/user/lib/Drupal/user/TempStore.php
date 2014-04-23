@@ -41,7 +41,7 @@ class TempStore {
   /**
    * The key/value storage object used for this data.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpireInterface;
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
   protected $storage;
 
@@ -74,7 +74,7 @@ class TempStore {
   /**
    * Constructs a new object for accessing data from a key/value store.
    *
-   * @param KeyValueStoreExpireInterface $storage
+   * @param KeyValueStoreExpirableInterface $storage
    *   The key/value storage object used for this data. Each storage object
    *   represents a particular collection of data and will contain any number
    *   of key/value pairs.
