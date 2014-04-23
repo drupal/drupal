@@ -310,12 +310,11 @@ jquery.farbtastic:
 
 jquery.form:
   remote: https://github.com/malsup/form
-  version: 3.39
+  version: 3.50
   js:
     assets/vendor/jquery-form/jquery.form.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.cookie
 
 jquery.intrinsic:
   version: VERSION
