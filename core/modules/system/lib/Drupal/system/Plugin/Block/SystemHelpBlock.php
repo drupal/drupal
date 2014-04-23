@@ -91,8 +91,8 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
   protected function getActiveHelp(Request $request) {
     $output = '';
     $router_path = $request->attributes->get('_system_path');
-    // We will always have a path unless we are on a 403 or 404.
-    if (!$router_path) {
+    // Do not show on a 403 or 404 page.
+    if ($request->attributes->has('exception')) {
       return '';
     }
 

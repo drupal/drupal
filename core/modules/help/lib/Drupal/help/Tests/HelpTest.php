@@ -88,6 +88,15 @@ class HelpTest extends WebTestBase {
    *   An HTTP response code.
    */
   protected function verifyHelp($response = 200) {
+    $this->drupalGet('admin/index');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText('This page shows you all available administration tasks for each module.');
+    }
+    else {
+      $this->assertNoText('This page shows you all available administration tasks for each module.');
+    }
+
     foreach ($this->getModuleList() as $module => $name) {
       // View module help node.
       $this->drupalGet('admin/help/' . $module);
