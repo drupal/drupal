@@ -4,6 +4,23 @@ views.area.*:
   type: views_area
   label: 'Default area'
 
+views.area.entity:
+  type: views_area
+  label: 'Entity'
+  mapping:
+    entity_id:
+      type: string
+      label: 'ID'
+    view_mode:
+      type: string
+      label: 'View mode'
+    tokenize:
+      type: boolean
+      label: 'Should replacement tokens be used from the first row'
+    bypass_access:
+      type: boolean
+      label: 'Bypass access checks'
+
 views.area.text:
   type: views_area
   label: 'Text'
