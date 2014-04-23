@@ -309,9 +309,9 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getRouteParameter() with an external URL.
+   * Tests the getRouteParameters() with an external URL.
    *
-   * @covers ::getRouteParameter
+   * @covers ::getRouteParameters
    * @expectedException \UnexpectedValueException
    */
   public function testGetRouteParametersWithExternalUrl() {

@@ -16,8 +16,7 @@ use Drupal\Component\PhpStorage\FileReadOnlyStorage;
  * @group Drupal
  * @group PhpStorage
  *
- * @coversDefaultClass \Drupal\Component\PhpStorage\FileStorage
- * @coversDefaultClass \Drupal\Component\PhpStorage\FileReadOnlyStorage
+ * @coversDefaultClass \Drupal\Component\PhpStorage\FileStorage|\Drupal\Component\PhpStorage\FileReadOnlyStorage
  */
 class FileStorageTest extends PhpStorageTestBase {
 
