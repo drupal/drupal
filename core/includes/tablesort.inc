@@ -30,27 +30,26 @@ function tablesort_init($header) {
  * If the cell in question is the column header for the current sort criterion,
  * it gets special formatting. All possible sort criteria become links.
  *
- * @param $cell
- *   The cell to format.
- * @param $header
+ * @param string $cell_content
+ *   The cell content to format. Passed by reference.
+ * @param array $cell_attributes
+ *   The cell attributes. Passed by reference.
+ * @param array $header
  *   An array of column headers in the format described in '#type' => 'table'.
- * @param $ts
+ * @param array $ts
  *   The current table sort context as returned from tablesort_init().
- *
- * @return
- *   A properly formatted cell, ready for _theme_table_cell().
  */
-function tablesort_header($cell, $header, $ts) {
+function tablesort_header(&$cell_content, array &$cell_attributes, array $header, array $ts) {
   // Special formatting for the currently sorted column header.
-  if (is_array($cell) && isset($cell['field'])) {
-    $title = t('sort by @s', array('@s' => $cell['data']));
-    if ($cell['data'] == $ts['name']) {
+  if (isset($cell_attributes['field'])) {
+    $title = t('sort by @s', array('@s' => $cell_content));
+    if ($cell_content == $ts['name']) {
       // aria-sort is a WAI-ARIA property that indicates if items in a table
       // or grid are sorted in ascending or descending order. See
       // http://www.w3.org/TR/wai-aria/states_and_properties#aria-sort
-      $cell['aria-sort'] = ($ts['sort'] == 'asc') ? 'ascending' : 'descending';
+      $cell_attributes['aria-sort'] = ($ts['sort'] == 'asc') ? 'ascending' : 'descending';
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
-      $cell['class'][] = 'active';
+      $cell_attributes['class'][] = 'active';
       $tablesort_indicator = array(
         '#theme' => 'tablesort_indicator',
         '#style' => $ts['sort'],
@@ -62,40 +61,17 @@ function tablesort_header($cell, $header, $ts) {
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell['data'] = l($cell['data'] . $image, current_path(), array('attributes' => array('title' => $title), 'query' => array_merge($ts['query'], array('sort' => $ts['sort'], 'order' => $cell['data'])), 'html' => TRUE));
+    $cell_content = l($cell_content . $image, current_path(), array(
+      'attributes' => array('title' => $title),
+      'query' => array_merge($ts['query'], array(
+        'sort' => $ts['sort'],
+        'order' => $cell_content,
+      )),
+      'html' => TRUE,
+    ));
 
-    unset($cell['field'], $cell['sort']);
+    unset($cell_attributes['field'], $cell_attributes['sort']);
   }
-  return $cell;
-}
-
-/**
- * Formats a table cell.
- *
- * Adds a class attribute to all cells in the currently active column.
- *
- * @param $cell
- *   The cell to format.
- * @param $header
- *   An array of column headers in the format described in '#type' => 'table'.
- * @param $ts
- *   The current table sort context as returned from tablesort_init().
- * @param $i
- *   The index of the cell's table column.
- *
- * @return
- *   A properly formatted cell, ready for _theme_table_cell().
- */
-function tablesort_cell($cell, $header, $ts, $i) {
-  if (isset($header[$i]['data']) && $header[$i]['data'] == $ts['name'] && !empty($header[$i]['field'])) {
-    if (is_array($cell)) {
-      $cell['class'][] = 'active';
-    }
-    else {
-      $cell = array('data' => $cell, 'class' => array('active'));
-    }
-  }
-  return $cell;
 }
 
 /**

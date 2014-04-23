@@ -7,16 +7,24 @@
 
 namespace Drupal\system\Tests\Theme;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Unit tests for theme_table().
  */
-class TableTest extends WebTestBase {
+class TableTest extends DrupalUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
+
   public static function getInfo() {
     return array(
       'name' => 'Theme Table',
-      'description' => 'Tests built-in theme functions.',
+      'description' => 'Tests built-in table theme functions.',
       'group' => 'Theme',
     );
   }
@@ -106,4 +114,58 @@ class TableTest extends WebTestBase {
     $this->assertNoRaw('class="odd"', 'Odd/even classes were not added because $no_striping = TRUE.');
     $this->assertNoRaw('no_striping', 'No invalid no_striping HTML attribute was printed.');
   }
+
+  /**
+   * Tests that the 'header' option in cells works correctly.
+   */
+  function testThemeTableHeaderCellOption() {
+    $rows = array(
+      array(
+        array('data' => 1, 'header' => TRUE),
+        array('data' => 1, 'header' => FALSE),
+        array('data' => 1),
+      ),
+    );
+    $table = array(
+      '#type' => 'table',
+      '#rows' => $rows,
+    );
+    $this->content = drupal_render($table);
+    $this->assertRaw('<th>1</th><td>1</td><td>1</td>', 'The th and td tags was printed correctly.');
+  }
+
+  /**
+   * Asserts that a raw string appears in $this->content.
+   *
+   * @param string $value
+   *   The expected string.
+   * @param string $message
+   *   (optional) A custom assertion message.
+   */
+  protected function assertRaw($value, $message = NULL) {
+    if (!isset($message)) {
+      $message = String::format("Raw value @value found.", array(
+        '@value' => var_export($value, TRUE),
+      ));
+    }
+    $this->assert(strpos($this->content, $value) !== FALSE, $message);
+  }
+
+  /**
+   * Asserts that a raw string does not appear in $this->content.
+   *
+   * @param string $value
+   *   The not expected string.
+   * @param string $message
+   *   (optional) A custom assertion message.
+   */
+  protected function assertNoRaw($value, $message = NULL) {
+    if (!isset($message)) {
+      $message = String::format("Raw value @value not found.", array(
+        '@value' => var_export($value, TRUE),
+      ));
+    }
+    $this->assert(strpos($this->content, $value) === FALSE, $message);
+  }
+
 }

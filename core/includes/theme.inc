@@ -1569,20 +1569,45 @@ function theme_table($variables) {
     $i = 0;
     foreach ($header as $cell) {
       $i++;
-      // Track responsive classes for each column as needed. Only the header
-      // cells for a column are marked up with the responsive classes by a
-      // module developer or themer. The responsive classes on the header cells
-      // must be transferred to the content cells.
-      if (!empty($cell['class']) && is_array($cell['class'])) {
-        if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
-          $responsive[$i] =  RESPONSIVE_PRIORITY_MEDIUM;
-        }
-        elseif (in_array(RESPONSIVE_PRIORITY_LOW, $cell['class'])) {
-          $responsive[$i] =  RESPONSIVE_PRIORITY_LOW;
-        }
+      if (!is_array($cell)) {
+        $cell_content = $cell;
+        $cell_attributes = '';
+        $is_header = TRUE;
       }
-      $cell = tablesort_header($cell, $header, $ts);
-      $output .= _theme_table_cell($cell, TRUE);
+      else {
+        $cell_content = '';
+        if (isset($cell['data'])) {
+          $cell_content = $cell['data'];
+          unset($cell['data']);
+        }
+        // Flag the cell as a header or not and remove the flag.
+        $is_header = isset($cell['header']) ? $cell['header'] : TRUE;
+        unset($cell['header']);
+
+        // Track responsive classes for each column as needed. Only the header
+        // cells for a column are marked up with the responsive classes by a
+        // module developer or themer. The responsive classes on the header cells
+        // must be transferred to the content cells.
+        if (!empty($cell['class']) && is_array($cell['class'])) {
+          if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
+            $responsive[$i] = RESPONSIVE_PRIORITY_MEDIUM;
+          }
+          elseif (in_array(RESPONSIVE_PRIORITY_LOW, $cell['class'])) {
+            $responsive[$i] = RESPONSIVE_PRIORITY_LOW;
+          }
+        }
+
+        if (is_array($cell_content)) {
+          $cell_content = drupal_render($cell_content);
+        }
+
+        tablesort_header($cell_content, $cell, $header, $ts);
+
+        // tablesort_header() removes the 'sort' and 'field' keys.
+        $cell_attributes = new Attribute($cell);
+      }
+      $cell_tag = $is_header ? 'th' : 'td';
+      $output .= '<' . $cell_tag . $cell_attributes . '>' . $cell_content . '</' . $cell_tag . '>';
     }
     // Using ternary operator to close the tags based on whether or not there are rows
     $output .= (count($rows) ? " </tr></thead>\n" : "</tr>\n");
@@ -1624,19 +1649,39 @@ function theme_table($variables) {
         $i = 0;
         foreach ($cells as $cell) {
           $i++;
+          if (!is_array($cell)) {
+            $cell_content = $cell;
+            $cell_attributes = array();
+            $is_header = FALSE;
+          }
+          else {
+            $cell_content = '';
+            if (isset($cell['data'])) {
+              $cell_content = $cell['data'];
+              unset($cell['data']);
+            }
+            // Flag the cell as a header or not and remove the flag.
+            $is_header = !empty($cell['header']);
+            unset($cell['header']);
+
+            $cell_attributes = $cell;
+
+            if (is_array($cell_content)) {
+              $cell_content = drupal_render($cell_content);
+            }
+          }
           // Add active class if needed for sortable tables.
-          $cell = tablesort_cell($cell, $header, $ts, $i);
+          if (isset($header[$i]['data']) && $header[$i]['data'] == $ts['name'] && !empty($header[$i]['field'])) {
+            $cell_attributes['class'][] = 'active';
+          }
           // Copy RESPONSIVE_PRIORITY_LOW/RESPONSIVE_PRIORITY_MEDIUM
           // class from header to cell as needed.
           if (isset($responsive[$i])) {
-            if (is_array($cell)) {
-              $cell['class'][] = $responsive[$i];
-            }
-            else {
-              $cell = array('data' => $cell, 'class' => $responsive[$i]);
-            }
+            $cell_attributes['class'][] = $responsive[$i];
           }
-          $output .= _theme_table_cell($cell);
+
+          $cell_tag = $is_header ? 'th' : 'td';
+          $output .= '<' . $cell_tag . new Attribute($cell_attributes) . '>' . $cell_content . '</' . $cell_tag . '>';
         }
         $output .= " </tr>\n";
       }
@@ -1820,47 +1865,6 @@ function template_preprocess_container(&$variables) {
 /**
  * @} End of "addtogroup themeable".
  */
-
-/**
- * Returns HTML output for a single table cell for theme_table().
- *
- * @param $cell
- *   Array of cell information, or string to display in cell.
- * @param bool $header
- *   TRUE if this cell is a table header cell, FALSE if it is an ordinary
- *   table cell. If $cell is an array with element 'header' set to TRUE, that
- *   will override the $header parameter.
- *
- * @return
- *   HTML for the cell.
- */
-function _theme_table_cell($cell, $header = FALSE) {
-  $attributes = '';
-
-  if (is_array($cell)) {
-    $data = isset($cell['data']) ? $cell['data'] : '';
-    // Cell's data property can be a string or a renderable array.
-    if (is_array($data)) {
-      $data = drupal_render($data);
-    }
-    $header |= isset($cell['header']);
-    unset($cell['data']);
-    unset($cell['header']);
-    $attributes = new Attribute($cell);
-  }
-  else {
-    $data = $cell;
-  }
-
-  if ($header) {
-    $output = "<th$attributes>$data</th>";
-  }
-  else {
-    $output = "<td$attributes>$data</td>";
-  }
-
-  return $output;
-}
 
 /**
  * Adds a default set of helper variables for preprocessors and templates.
