@@ -618,19 +618,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Overrides and eliminates this method from the parent class. Do not use.
-   *
-   * This method is part of the KernelInterface interface, but takes an object
-   * implementing LoaderInterface as its only parameter. This is part of the
-   * Config compoment from Symfony, which is not provided by Drupal core.
-   *
-   * Modules wishing to provide an extension to this class which uses this
-   * method are responsible for ensuring the Config component exists.
-   */
-  public function registerContainerConfiguration(LoaderInterface $loader) {
-  }
-
-  /**
    * Gets the PHP code storage object to use for the compiled container.
    *
    * @return \Drupal\Component\PhpStorage\PhpStorageInterface
