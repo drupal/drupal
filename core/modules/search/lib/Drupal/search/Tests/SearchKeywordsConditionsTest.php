@@ -49,20 +49,15 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     $this->assertNoText('Dummy search snippet to display');
     // With keys - get results.
     $keys = 'bike shed ' . $this->randomName();
-    $this->drupalGet("search/dummy_path/{$keys}");
+    $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
     $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
     $keys = 'blue drop ' . $this->randomName();
     $this->drupalGet("search/dummy_path", array('query' => array('keys' => $keys)));
     $this->assertText("Dummy search snippet to display. Keywords: {$keys}");
     // Add some conditions and keys.
     $keys = 'moving drop ' . $this->randomName();
-    $this->drupalGet("search/dummy_path/bike", array('query' => array('search_conditions' => $keys)));
+    $this->drupalGet("search/dummy_path", array('query' => array('keys' => 'bike', 'search_conditions' => $keys)));
     $this->assertText("Dummy search snippet to display.");
-    $this->assertRaw(print_r(array('search_conditions' => $keys), TRUE));
-    // Add some conditions and no keys.
-    $keys = 'drop kick ' . $this->randomName();
-    $this->drupalGet("search/dummy_path", array('query' => array('search_conditions' => $keys)));
-    $this->assertText("Dummy search snippet to display.");
-    $this->assertRaw(print_r(array('search_conditions' => $keys), TRUE));
+    $this->assertRaw(print_r(array('keys' => 'bike', 'search_conditions' => $keys), TRUE));
   }
 }

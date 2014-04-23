@@ -77,15 +77,13 @@ class SearchPageRoutes implements ContainerInjectionInterface {
     $active_pages = $this->searchPageRepository->getActiveSearchPages();
     foreach ($active_pages as $entity_id => $entity) {
       $routes["search.view_$entity_id"] = new Route(
-        '/search/' . $entity->getPath() . '/{keys}',
+        '/search/' . $entity->getPath(),
         array(
           '_content' => 'Drupal\search\Controller\SearchController::view',
-          '_title' => $entity->label(),
+          '_title' => 'Search',
           'entity' => $entity_id,
-          'keys' => '',
         ),
         array(
-          'keys' => '.+',
           '_entity_access' => 'entity.view',
           '_permission' => 'search content',
         ),

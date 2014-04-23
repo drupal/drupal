@@ -18,6 +18,7 @@ class ViewsSearchQuery extends SearchQuery {
    * Returns the conditions property.
    *
    * @return array
+   *   The query conditions.
    */
   public function &conditions() {
     return $this->conditions;
@@ -27,6 +28,7 @@ class ViewsSearchQuery extends SearchQuery {
    * Returns the words property.
    *
    * @return array
+   *   The positive search keywords.
    */
   public function words() {
     return $this->words;
@@ -36,6 +38,8 @@ class ViewsSearchQuery extends SearchQuery {
    * Returns the simple property.
    *
    * @return bool
+   *   TRUE if it is a simple query, and FALSE if it is complicated (phrases
+   *   or LIKE).
    */
   public function simple() {
     return $this->simple;
@@ -45,6 +49,7 @@ class ViewsSearchQuery extends SearchQuery {
    * Returns the matches property.
    *
    * @return int
+   *   The number of matches needed.
    */
   public function matches() {
     return $this->matches;

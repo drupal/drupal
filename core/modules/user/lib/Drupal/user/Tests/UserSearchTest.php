@@ -34,7 +34,7 @@ class UserSearchTest extends WebTestBase {
     $this->drupalLogin($user1);
     $keys = $user1->getEmail();
     $edit = array('keys' => $keys);
-    $this->drupalPostForm('search/user/', $edit, t('Search'));
+    $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertNoText($keys);
     $this->drupalLogout();
 
@@ -42,7 +42,7 @@ class UserSearchTest extends WebTestBase {
     $this->drupalLogin($user2);
     $keys = $user2->getEmail();
     $edit = array('keys' => $keys);
-    $this->drupalPostForm('search/user/', $edit, t('Search'));
+    $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText($keys);
 
     // Create a blocked user.
@@ -53,14 +53,14 @@ class UserSearchTest extends WebTestBase {
     // Verify that users with "administer users" permissions can see blocked
     // accounts in search results.
     $edit = array('keys' => $blocked_user->getUsername());
-    $this->drupalPostForm('search/user/', $edit, t('Search'));
+    $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText($blocked_user->getUsername(), 'Blocked users are listed on the user search results for users with the "administer users" permission.');
 
     // Verify that users without "administer users" permissions do not see
     // blocked accounts in search results.
     $this->drupalLogin($user1);
     $edit = array('keys' => $blocked_user->getUsername());
-    $this->drupalPostForm('search/user/', $edit, t('Search'));
+    $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertNoText($blocked_user->getUsername(), 'Blocked users are hidden from the user search results.');
 
     $this->drupalLogout();

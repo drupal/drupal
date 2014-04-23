@@ -20,7 +20,7 @@ interface SearchInterface extends PluginInspectionInterface {
    * @param string $keywords
    *   The keywords to use in a search.
    * @param array $parameters
-   *   Array of parameters as am associative array. This is expected to
+   *   Array of parameters as an associative array. This is expected to
    *   be the query string from the current request.
    * @param array $attributes
    *   Array of attributes, usually from the current request object.
@@ -85,9 +85,9 @@ interface SearchInterface extends PluginInspectionInterface {
    * Alters the search form when being built for a given plugin.
    *
    * The core search module only invokes this method on active module plugins
-   * when building a form for them in search_form(). A plugin implementing
-   * this needs to add validate and submit callbacks to the form if it needs
-   * to act after form submission.
+   * when building a form for them in
+   * \Drupal\search\Form\SearchPageForm::form(). A plugin implementing this
+   * will also need to implement the buildSearchUrlQuery() method.
    *
    * @param array $form
    *   Nested array of form elements that comprise the form.
@@ -95,7 +95,30 @@ interface SearchInterface extends PluginInspectionInterface {
    *   A keyed array containing the current state of the form. The arguments
    *   that \Drupal::formBuilder()->getForm() was originally called with are
    *   available in the array $form_state['build_info']['args'].
+   *
+   * @see SearchInterface::buildSearchUrlQuery()
    */
   public function searchFormAlter(array &$form, array &$form_state);
+
+  /**
+   * Builds the URL GET query parameters array for search.
+   *
+   * When the search form is submitted, a redirect is generated with the
+   * search input as GET query parameters. Plugins using the searchFormAlter()
+   * method to add form elements to the search form will need to override this
+   * method to gather the form input and add it to the GET query parameters.
+   *
+   * @param array $form_state
+   *   The form state, with submitted form information.
+   *
+   * @return array
+   *   An array of GET query parameters containing all relevant form values
+   *   to process the search. The 'keys' element must be present in order to
+   *   trigger generation of search results, even if it is empty or unused by
+   *   the search plugin.
+   *
+   * @see SearchInterface::searchFormAlter()
+   */
+  public function buildSearchUrlQuery($form_state);
 
 }
