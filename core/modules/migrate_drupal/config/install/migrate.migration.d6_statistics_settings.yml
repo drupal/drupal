@@ -1,4 +1,5 @@
 id: d6_statistics_settings
+label: Drupal 6 statistics configuration
 source:
   plugin: variable
   variables:

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\source\d6\FilterFormats.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\FilterFormats.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
@@ -96,6 +96,7 @@ class FilterFormat extends DrupalSqlBase {
     $ids['format']['type'] = 'integer';
     return $ids;
   }
+
 }
 
 

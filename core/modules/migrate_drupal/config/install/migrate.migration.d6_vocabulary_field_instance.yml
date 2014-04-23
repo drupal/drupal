@@ -1,0 +1,20 @@
+id: d6_vocabulary_field_instance
+label: Drupal 6 vocabulary field instance configuration
+source:
+  plugin: d6_taxonomy_vocabulary_per_type
+  constants:
+    entity_type: node
+    parent: 0
+process:
+  entity_type: constants.entity_type
+  bundle: type
+  field_name:
+    plugin: migration
+    migration: d6_taxonomy_vocabulary
+    source: vid
+  'settings.allowed_values.0.vocabulary': @field_name
+  'settings.allowed_values.0.parent': constants.parent
+destination:
+  plugin: entity:field_instance_config
+migration_dependencies:
+  - d6_vocabulary_field

@@ -1,4 +1,5 @@
 id: d6_system_site
+label: Drupal 6 site configuration
 source:
   plugin: variable
   variables:

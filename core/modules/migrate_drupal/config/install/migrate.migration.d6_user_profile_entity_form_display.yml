@@ -1,0 +1,43 @@
+id: d6_user_profile_entity_form_display
+label: Drupal 6 user profile form display configuration
+source:
+  plugin: d6_profile_field
+  constants:
+    empty: {}
+    entity_type: user
+    bundle: user
+    form_mode: default
+    options:
+      label: hidden
+process:
+  entity_type: constants.entity_type
+  bundle: constants.bundle
+  field_name: name
+  form_mode: constants.form_mode
+  type:
+    plugin: static_map
+    source: type
+    map:
+      checkbox: options_select
+      date: datetime_default
+      list: text_textfield
+      selection: options_select
+      textfield: text_textfield
+      textarea: text_textarea
+      url: link_default
+  options: constants.options
+  'options.type': @type
+  'options.settings':
+    plugin: field_instance_widget_settings
+    source:
+      - @type
+      - constants.empty # we don't have any settings.
+  hidden:
+    plugin: static_map
+    source: visibility
+    default_value: false
+    map:
+      1: true # PROFILE_PRIVATE
+      4: true # PROFILE_HIDDEN
+destination:
+  plugin: component_entity_form_display

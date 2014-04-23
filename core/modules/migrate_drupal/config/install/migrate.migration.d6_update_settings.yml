@@ -1,4 +1,5 @@
 id: d6_update_settings
+label: Drupal 6 update configuration
 source:
   plugin: variable
   variables:

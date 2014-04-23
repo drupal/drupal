@@ -1,4 +1,5 @@
 id: d6_node_settings
+label: Drupal 6 node configuration
 source:
   plugin: variable
   variables:
@@ -8,5 +9,5 @@ process:
 destination:
   plugin: config
   config_name: node.settings
-dependencies:
+migration_dependencies:
   - d6_node_type

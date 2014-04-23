@@ -1,4 +1,5 @@
 id: d6_menu_settings
+label: Drupal 6 menu configuration
 source:
     plugin: variable
     variables:

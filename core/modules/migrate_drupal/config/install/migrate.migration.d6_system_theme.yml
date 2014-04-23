@@ -1,4 +1,5 @@
 id: d6_system_theme
+label: Drupal 6 theme configuration
 source:
   plugin: variable
   variables:

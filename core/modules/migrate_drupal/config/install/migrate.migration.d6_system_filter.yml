@@ -1,4 +1,5 @@
 id: d6_system_filter
+label: Drupal 6 filter configuration
 source:
   plugin: variable
   variables:

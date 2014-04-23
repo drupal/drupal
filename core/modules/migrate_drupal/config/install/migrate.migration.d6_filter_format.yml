@@ -1,4 +1,5 @@
 id: d6_filter_format
+label: Drupal 6 filter format configuration
 source:
   plugin: d6_filter_format
 process:
@@ -25,7 +26,7 @@ process:
           - delta
         map:
           filter:
-            - filter_html_escape
+            - filter_html
             - filter_autop
             - filter_url
             - filter_htmlcorrector

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\source\d6\Drupal6SqlBase.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\source\Drupal6SqlBase.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source;

@@ -1,0 +1,20 @@
+id: d6_taxonomy_vocabulary
+label: Drupal 6 taxonomy vocabularies
+source:
+  plugin: d6_taxonomy_vocabulary
+process:
+  vid:
+    -
+      plugin: machine_name
+      source: name
+    -
+      plugin: dedupe_entity
+      entity_type: taxonomy_vocabulary
+      field: vid
+  label: name
+  name: name
+  description: description
+  hierarchy: hierarchy
+  weight: weight
+destination:
+  plugin: entity:taxonomy_vocabulary

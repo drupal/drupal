@@ -1,0 +1,19 @@
+id: d6_user_picture_file
+label: Drupal 6 user pictures
+source:
+  plugin: d6_user_picture_file
+  constants:
+    is_public: true
+process:
+  filename: filename
+  uri:
+    plugin: file_uri
+    source:
+      - picture
+      - file_directory_path
+      - constants.is_public
+destination:
+  plugin: entity:file
+  source_path_property: picture
+migration_dependencies:
+  - d6_file: false

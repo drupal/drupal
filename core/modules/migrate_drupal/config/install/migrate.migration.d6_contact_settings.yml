@@ -1,4 +1,5 @@
 id: d6_contact_settings
+label: Drupal 6 contact configuration
 source:
   plugin: variable
   variables:

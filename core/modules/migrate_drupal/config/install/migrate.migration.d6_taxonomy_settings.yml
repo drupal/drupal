@@ -1,4 +1,5 @@
 id: d6_taxonomy_settings
+label: Drupal 6 taxonomy configuration
 source:
   plugin: variable
   variables:

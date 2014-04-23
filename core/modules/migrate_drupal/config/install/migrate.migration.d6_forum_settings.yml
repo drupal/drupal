@@ -1,4 +1,5 @@
 id: d6_forum_settings
+label: Drupal 6 forum configuration
 source:
   plugin: variable
   variables:

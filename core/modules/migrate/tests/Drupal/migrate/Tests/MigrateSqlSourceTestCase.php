@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\migrate\Tests;
+
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\migrate\Source;
 

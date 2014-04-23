@@ -64,9 +64,9 @@ class FilterFormatPermission extends ProcessPluginBase implements ContainerFacto
     $rid = $row->getSourceProperty('rid');
     if ($formats = $row->getSourceProperty("filter_permissions:$rid")) {
       foreach ($formats as $format) {
-        $new_id = $this->migrationPlugin->transform(array($format), $migrate_executable, $row, $destination_property);
+        $new_id = $this->migrationPlugin->transform($format, $migrate_executable, $row, $destination_property);
         if ($new_id) {
-          $value[] = 'use text format ' . $new_id[0];
+          $value[] = 'use text format ' . $new_id;
         }
       }
     }

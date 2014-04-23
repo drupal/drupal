@@ -1,0 +1,28 @@
+id: d6_user_profile_field
+label: Drupal 6 user profile field configuration
+source:
+  plugin: d6_profile_field
+  constants:
+    entity_type: user
+process:
+  entity_type: constants.entity_type
+  name: name
+  type:
+    plugin: static_map
+    source: type
+    map:
+      checkbox: list_integer
+      date: datetime
+      list: text
+      selection: list_text
+      textfield: text
+      textarea: text_long
+      url: link
+  cardinality:
+    plugin: static_map
+    default_value: 1
+    source: type
+    map:
+      list: -1
+destination:
+  plugin: entity:field_config

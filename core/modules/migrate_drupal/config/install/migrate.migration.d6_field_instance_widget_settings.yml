@@ -1,0 +1,57 @@
+id: d6_field_instance_widget_settings
+label: Drupal 6 field instance widget configuration
+source:
+  plugin: d6_field_instance_per_form_display
+  constants:
+    entity_type: node
+    form_mode: default
+
+process:
+  # We skip field types that don't exist because they weren't migrated by the
+  # field migration.
+  field_type_exists:
+    -
+      plugin: migration
+      migration: d6_field
+      source:
+        - field_name
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: skip_row_on_empty
+  bundle: type_name
+  form_mode: constants.form_mode
+  field_name: field_name
+  entity_type: constants.entity_type
+  "options.weight": weight
+  "options.type":
+    type:
+      plugin: static_map
+      bypass: true
+      source: widget_type
+      map:
+        text_textfield: text_textfield
+        number: number
+        link: link_default
+        email_textfield: email_default
+        date_select: datetime_default
+        date_text: datetime_default
+        filefield_widget: file_generic
+        imagefield_widget: image_image
+        phone_textfield: telephone_default
+        optionwidgets_onoff: options_onoff
+        optionwidgets_buttons: options_buttons
+        optionwidgets_select: options_select
+  "options.settings":
+    -
+      plugin: field_instance_widget_settings
+      source:
+        - widget_type
+        - widget_settings
+
+destination:
+  plugin: component_entity_form_display
+migration_dependencies:
+  - d6_field_instance

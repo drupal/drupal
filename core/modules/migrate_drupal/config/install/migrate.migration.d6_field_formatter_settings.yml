@@ -1,0 +1,298 @@
+id: d6_field_formatter_settings
+label: Drupal 6 field formatter configuration
+source:
+  plugin: d6_field_instance_per_view_mode
+  constants:
+    entity_type: node
+
+process:
+  # We skip field types that don't exist because they weren't migrated by the
+  # field migration.
+  field_type_exists:
+    -
+      plugin: migration
+      migration: d6_field
+      source:
+        - field_name
+    -
+      plugin: extract
+      index:
+        - 1
+    -
+      plugin: skip_row_on_empty
+  entity_type: constants.entity_type
+  bundle: type_name
+  view_mode:
+    -
+      plugin: migration
+      migration: d6_view_modes
+      source:
+        - view_mode
+    -
+      plugin: extract
+      index:
+        - 1
+  field_name: field_name
+  "options.label": label
+  "options.weight": weight
+  "options.type":
+      -
+        plugin: static_map
+        bypass: true
+        source:
+          - type
+          - "display_settings.format"
+        map:
+          text:
+            default: text_default
+            trimmed: text_trimmed
+          number_integer:
+            default: number_integer
+            us_0: number_integer
+            be_0: number_integer
+            fr_0: number_integer
+            unformatted: number_unformatted
+          number_float:
+            default: number_decimal
+            us_0: number_decimal
+            us_1: number_decimal
+            us_2: number_decimal
+            be_0: number_decimal
+            be_1: number_decimal
+            be_2: number_decimal
+            fr_0: number_decimal
+            fr_1: number_decimal
+            fr_2: number_decimal
+            unformatted: number_unformatted
+          number_decimal:
+            default: number_decimal
+            us_0: number_decimal
+            us_1: number_decimal
+            us_2: number_decimal
+            be_0: number_decimal
+            be_1: number_decimal
+            be_2: number_decimal
+            fr_0: number_decimal
+            fr_1: number_decimal
+            fr_2: number_decimal
+            unformatted: number_unformatted
+          email:
+            default: email_mailto
+            spamspan: email_mailto
+            contact: email_mailto
+            plain: string
+          link:
+            default: link
+            plain: link
+            absolute: link
+            title_plain: link
+            url: link
+            short: link
+            label: link
+            separate: link_separate
+          filefield:
+            default: file_default
+            url_plain: file_url_plain
+            path_plain: file_url_plan #unsure about this?
+            image_plain: image
+            image_nodelink: image
+            image_imagelink: image
+          fr_phone:
+            default: string
+          be_phone:
+            default: string
+          it_phone:
+            default: string
+          el_phone:
+            default: string
+          ch_phone:
+            default: string
+          ca_phone:
+            default: string
+          cr_phone:
+            default: string
+          pa_phone:
+            default: string
+          gb_phone:
+            default: string
+          ru_phone:
+            default: string
+          ua_phone:
+            default: string
+          es_phone:
+            default: string
+          au_phone:
+            default: string
+          cs_phone:
+            default: string
+          hu_phone:
+            default: string
+          pl_phone:
+            default: string
+          nl_phone:
+            default: string
+          se_phone:
+            default: string
+          za_phone:
+            default: string
+          il_phone:
+            default: string
+          nz_phone:
+            default: string
+          br_phone:
+            default: string
+          cl_phone:
+            default: string
+          cn_phone:
+            default: string
+          hk_phone:
+            default: string
+          mo_phone:
+            default: string
+          ph_phone:
+            default: string
+          sg_phone:
+            default: string
+          jo_phone:
+            default: string
+          eg_phone:
+            default: string
+          pk_phone:
+            default: string
+          int_phone:
+            default: string
+      -
+        plugin: field_type_defaults
+  "options.settings":
+    -
+      plugin: static_map
+      bypass: true
+      source:
+        - module
+        - "display_settings.format"
+      map:
+        number:
+          us_0:
+            scale: 0
+            decimal_separator: .
+            thousand_separator: ','
+            prefix_suffix: true
+          us_1:
+            scale: 1
+            decimal_separator: .
+            thousand_separator: ','
+            prefix_suffix: true
+          us_2:
+            scale: 2
+            decimal_separator: .
+            thousand_separator: ','
+            prefix_suffix: true
+          be_0:
+            scale: 0
+            decimal_separator: ','
+            thousand_separator: .
+            prefix_suffix: true
+          be_1:
+            scale: 1
+            decimal_separator: ','
+            thousand_separator: .
+            prefix_suffix: true
+          be_2:
+            scale: 2
+            decimal_separator: ','
+            thousand_separator: .
+            prefix_suffix: true
+          fr_0:
+            scale: 0
+            decimal_separator: ','
+            thousand_separator: ' '
+            prefix_suffix: true
+          fr_1:
+            scale: 1
+            decimal_separator: ','
+            thousand_separator: ' '
+            prefix_suffix: true
+          fr_2:
+            scale: 2
+            decimal_separator: ','
+            thousand_separator: ' '
+            prefix_suffix: true
+        link:
+          default:
+            trim_length: '80'
+            url_only: 0
+            url_plain: 0
+            rel: 0
+            target: 0
+          plain:
+            trim_length: '80'
+            url_only: 1
+            url_plain: 1
+            rel: 0
+            target: 0
+          absolute:
+            trim_length: '80'
+            url_only: 1
+            url_plain: 1
+            rel: 0
+            target: 0
+          title_plain: #can't support title as plain text.
+            trim_length: '80'
+            url_only: 1
+            url_plain: 1
+            rel: 0
+            target: 0
+          url:
+            trim_length: '80'
+            url_only: 1
+            url_plain: 0
+            rel: 0
+            target: 0
+          short: #can't support hardcoded link text?
+            trim_length: '80'
+            url_only: 0
+            url_plain: 0
+            rel: 0
+            target: 0
+          label: # can't support label as link text?
+            trim_length: '80'
+            url_only: 0
+            url_plain: 0
+            rel: 0
+            target: 0
+          separate:
+            trim_length: '80'
+            rel: 0
+            target: 0
+        filefield:
+          image_plain:
+            image_style: ''
+            image_link: ''
+          image_nodelink:
+            image_style: ''
+            image_link: content
+          image_imagelink:
+            image_style: ''
+            image_link: file
+        date:
+          default:
+            format_type: fallback
+          format_interval:
+            format_type: fallback
+          long:
+            format_type: long
+          medium:
+            format_type: medium
+          short:
+            format_type: short
+        text:
+          trimmed:
+            trim_length: 600
+    -
+      plugin: field_formatter_settings_defaults
+
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  - d6_field_instance
+  - d6_view_modes

@@ -1,0 +1,83 @@
+id: d6_field
+label: Drupal 6 field configuration
+source:
+  plugin: d6_field
+  constants:
+    entity_type: node
+    langcode: und
+process:
+  entity_type: constants.entity_type
+  status: active
+  langcode: constants.langcode
+  name: field_name
+  type:
+    -
+      plugin: static_map
+      bypass: true
+      source:
+        - type
+      map:
+        number_integer: integer
+        number_decimal: decimal
+        number_float: float
+        text: text
+        email: email
+        link: link
+        date: datetime
+        datestamp: datetime
+        datetime: datetime
+        fr_phone: telephone
+        be_phone: telephone
+        it_phone: telephone
+        el_phone: telephone
+        ch_phone: telephone
+        ca_phone: telephone
+        cr_phone: telephone
+        pa_phone: telephone
+        gb_phone: telephone
+        ru_phone: telephone
+        ua_phone: telephone
+        es_phone: telephone
+        au_phone: telephone
+        cs_phone: telephone
+        hu_phone: telephone
+        pl_phone: telephone
+        nl_phone: telephone
+        se_phone: telephone
+        za_phone: telephone
+        il_phone: telephone
+        nz_phone: telephone
+        br_phone: telephone
+        cl_phone: telephone
+        cn_phone: telephone
+        hk_phone: telephone
+        mo_phone: telephone
+        ph_phone: telephone
+        sg_phone: telephone
+        jo_phone: telephone
+        eg_phone: telephone
+        pk_phone: telephone
+        int_phone: telephone
+    -
+      plugin: file_image_handler
+  cardinality:
+    plugin: static_map
+    bypass: true
+    source: multiple
+    map:
+      0: 1
+      1: -1
+  settings:
+    plugin: field_settings
+    source:
+      - @type
+      - global_settings
+      - widget_settings
+
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  # It is not possible to make this a requirement as d6_field_settings has no
+  # source id. However it also has no requirements so it will always run so a
+  # dependency is enough.
+  - d6_field_settings: false

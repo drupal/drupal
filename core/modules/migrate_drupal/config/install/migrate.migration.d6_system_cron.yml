@@ -1,4 +1,5 @@
 id: d6_system_cron
+label: Drupal 6 cron settings
 source:
   plugin: variable
   variables:

@@ -1,4 +1,5 @@
 id: d6_locale_settings
+label: Drupal 6 locale configuration
 source:
   plugin: variable
   variables:

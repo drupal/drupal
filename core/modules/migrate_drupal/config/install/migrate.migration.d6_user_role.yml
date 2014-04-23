@@ -1,4 +1,5 @@
 id: d6_user_role
+label: Drupal 6 user roles
 source:
   plugin: d6_user_role
 process:

@@ -1,4 +1,5 @@
 id: d6_search_settings
+label: Drupal 6 search configuration
 source:
     plugin: variable
     variables:

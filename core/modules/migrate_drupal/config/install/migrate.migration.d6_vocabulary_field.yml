@@ -1,0 +1,23 @@
+id: d6_vocabulary_field
+label: Drupal 6 vocabulary field configuration
+source:
+  plugin: d6_taxonomy_vocabulary
+  constants:
+    entity_type: node
+    type: taxonomy_term_reference
+    parent: 0
+    cardinality: -1
+process:
+  entity_type: constants.entity_type
+  type: constants.type
+  name:
+    plugin: migration
+    migration: d6_taxonomy_vocabulary
+    source: vid
+  'settings.allowed_values.0.vocabulary': @name
+  'settings.allowed_values.0.parent': constants.parent
+  cardinality: constants.cardinality
+destination:
+  plugin: entity:field_config
+migration_dependencies:
+  - d6_taxonomy_vocabulary

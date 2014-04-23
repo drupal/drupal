@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\source\d6\Variable.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\source\Variable.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
@@ -10,7 +10,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source;
 use Drupal\migrate\Entity\MigrationInterface;
 
 /**
- * Drupal 6 variable source from database.
+ * Drupal variable source from database.
  *
  * This source class always returns a single row and as such is not a good
  * example for any normal source class returning multiple rows.
@@ -67,4 +67,5 @@ class Variable extends DrupalSqlBase {
   public function getIds() {
     return array();
   }
+
 }

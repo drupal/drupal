@@ -1,4 +1,5 @@
 id: d6_text_settings
+label: Drupal 6 teaser length configuration
 source:
   plugin: variable
   variables:

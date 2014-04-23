@@ -32,4 +32,5 @@ class UserUpdate8002 extends ProcessPluginBase {
     );
     return isset($map[$rid]) ? $map[$rid] : $value;
   }
+
 }

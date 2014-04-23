@@ -1,4 +1,5 @@
 id: d6_action_settings
+label: Drupal 6 action configuration
 source:
   plugin: variable
   variables:

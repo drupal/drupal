@@ -1,0 +1,32 @@
+id: d6_node_revision
+label: Drupal 6 node revisions
+source:
+  plugin: d6_node_revision
+process:
+  nid: nid
+  vid: vid
+  type: type
+  langcode: language
+  title: title
+  uid: uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  body.format:
+    plugin: migration
+    migration: d6_filter_format
+    source: format
+  body.value: body
+
+#  unmapped d6 fields.
+#  tnid
+#  translate
+#  moderate
+#  comment
+
+destination:
+  plugin: entity_revision:node
+migration_dependencies:
+  - d6_node

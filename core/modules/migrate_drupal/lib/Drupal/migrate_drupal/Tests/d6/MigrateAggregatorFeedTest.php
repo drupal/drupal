@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateAggregatorFeedTest.
+ */
+
+namespace Drupal\migrate_drupal\Tests\d6;
+
+use Drupal\aggregator\Entity\Feed;
+use Drupal\Core\Language\Language;
+use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
+
+class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
+
+  static $modules = array('aggregator');
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name'  => 'Migrate variables to aggregator_feed entities.',
+      'description'  => 'Upgrade variables to aggregator_feed entities',
+      'group' => 'Migrate Drupal',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $migration = entity_load('migration', 'd6_aggregator_feed');
+    $dumps = array(
+      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6AggregatorFeed.php',
+    );
+    $this->prepare($migration, $dumps);
+    $executable = new MigrateExecutable($migration, $this);
+    $executable->import();
+  }
+
+  /**
+   * Tests migration of aggregator feeds.
+   */
+  public function testAggregatorFeedImport() {
+    /** @var Feed $feed */
+    $feed = entity_load('aggregator_feed', 5);
+    $this->assertNotNull($feed->uuid());
+    $this->assertEqual($feed->title->value, 'Know Your Meme');
+    $this->assertEqual($feed->language()->id, Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertEqual($feed->url->value, 'http://knowyourmeme.com/newsfeed.rss');
+    $this->assertEqual($feed->refresh->value, 900);
+    $this->assertEqual($feed->checked->value, 1387659487);
+    $this->assertEqual($feed->queued->value, 0);
+    $this->assertEqual($feed->link->value, 'http://knowyourmeme.com');
+    $this->assertEqual($feed->description->value, 'New items added to the News Feed');
+    $this->assertEqual($feed->image->value, 'http://b.thumbs.redditmedia.com/harEHsUUZVajabtC.png');
+    $this->assertEqual($feed->hash->value, '');
+    $this->assertEqual($feed->etag->value, '"213cc1365b96c310e92053c5551f0504"');
+    $this->assertEqual($feed->modified->value, 0);
+  }
+}

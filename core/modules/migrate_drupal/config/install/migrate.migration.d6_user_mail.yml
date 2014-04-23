@@ -1,4 +1,5 @@
 id: d6_user_mail
+label: Drupal 6 user mail configuration
 source:
   plugin: variable
   variables:

@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\Dump\Drupal6UserRole.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6UserRole.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
+
 /**
  * Database dump for testing user role migration.
  */

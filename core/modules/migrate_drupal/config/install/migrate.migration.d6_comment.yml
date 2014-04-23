@@ -1,0 +1,51 @@
+id: d6_comment
+label: Drupal 6 comments
+source:
+  plugin: d6_comment
+  constants:
+    field_id: node__comment
+    entity_type: node
+process:
+  cid: cid
+  pid:
+    -
+      plugin: skip_process_on_empty
+      source: pid
+    -
+      plugin: migration
+      migration: d6_comment
+  entity_id:
+    plugin: migration
+    migration: d6_node
+    source: nid
+  entity_type: constants.entity_type
+  field_id: constants.field_id
+  subject: subject
+  uid:
+    -
+      plugin: skip_process_on_empty
+      source: uid
+    -
+      plugin: migration
+      migration: d6_user
+  name: name
+  mail: mail
+  homepage: homepage
+  hostname: hostname
+  created: timestamp
+  changed: timestamp
+  status: status #In D6, published=0. We reverse the value in prepareRow.
+  thread: thread
+  'comment_body.value': comment
+  'comment_body.format':
+    plugin: migration
+    migration: d6_filter_format
+    source: format
+destination:
+  plugin: entity:comment
+migration_dependencies:
+  - d6_node
+  - d6_user
+  - d6_comment_entity_display
+  - d6_comment_entity_form_display
+  - d6_filter_format

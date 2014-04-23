@@ -1,0 +1,12 @@
+id: d6_url_alias
+label: Drupal 6 URL aliases
+source:
+  plugin: d6_url_alias
+
+process:
+  source: src
+  alias: dst
+  langcode: language
+
+destination:
+  plugin: url_alias

@@ -2,11 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\migrate\source\d6\Role.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\source\d6\Role.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
-
 
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
@@ -89,4 +88,5 @@ class Role extends DrupalSqlBase {
     $ids['rid']['type'] = 'integer';
     return $ids;
   }
+
 }

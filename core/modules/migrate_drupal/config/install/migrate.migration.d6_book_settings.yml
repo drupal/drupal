@@ -1,4 +1,5 @@
 id: d6_book_settings
+label: Drupal 6 book configuration
 source:
   plugin: variable
   variables:

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Plugin\load\LoadEntity.
+ * Contains \Drupal\migrate_drupal\Plugin\migrate\load\LoadEntity.
  */
 
 namespace Drupal\migrate_drupal\Plugin\migrate\load;

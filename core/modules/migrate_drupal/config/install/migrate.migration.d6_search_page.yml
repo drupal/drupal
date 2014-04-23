@@ -1,0 +1,23 @@
+id: d6_search_page
+label: Drupal 6 search page configuration
+source:
+  plugin: variable
+  variables:
+    - node_rank_comments
+    - node_rank_promote
+    - node_rank_recent
+    - node_rank_relevance
+    - node_rank_sticky
+    - node_rank_views
+  constants:
+    id: node_search
+    path: node
+    plugin: node_search
+process:
+  id: constants.id
+  path: constants.path
+  plugin: constants.plugin
+  configuration.rankings:
+    plugin: d6_search_configuration_rankings
+destination:
+  plugin: entity:search_page

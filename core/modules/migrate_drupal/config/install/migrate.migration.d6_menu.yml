@@ -1,0 +1,10 @@
+id: d6_menu
+label: Drupal 6 menus
+source:
+  plugin: d6_menu
+process:
+  id: menu_name
+  label: title
+  description: description
+destination:
+  plugin: entity:menu

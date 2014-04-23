@@ -1,0 +1,25 @@
+id: d6_vocabulary_entity_display
+label: Drupal 6 vocabulary display configuration
+source:
+  plugin: d6_taxonomy_vocabulary_per_type
+  constants:
+    entity_type: node
+    view_mode: default
+    options:
+      label: hidden
+      type: taxonomy_term_reference_link
+      weight: 20
+
+process:
+  entity_type: constants.entity_type
+  view_mode: constants.view_mode
+  options: constants.options
+  bundle: type
+  field_name:
+    plugin: migration
+    migration: d6_taxonomy_vocabulary
+    source: vid
+destination:
+  plugin: component_entity_display
+migration_dependencies:
+  - d6_vocabulary_field_instance

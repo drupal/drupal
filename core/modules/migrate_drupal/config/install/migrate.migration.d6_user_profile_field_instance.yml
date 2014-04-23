@@ -1,0 +1,18 @@
+id: d6_user_profile_field_instance
+label: Drupal 6 user profile field instance configuration
+source:
+  plugin: d6_profile_field
+  constants:
+    entity_type: user
+    bundle: user
+process:
+  entity_type: constants.entity_type
+  bundle: constants.bundle
+  label: title
+  description: explanation
+  field_name: name
+  required: required
+destination:
+  plugin: entity:field_instance_config
+migration_dependencies:
+  - d6_user_profile_field
