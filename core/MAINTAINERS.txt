@@ -139,6 +139,7 @@ Path system
 Plugin system
 - Kris Vanderwater 'EclipseGc' http://drupal.org/user/61203
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 
 Queue system
 - James Gilliland 'neclimdul' http://drupal.org/user/48673
