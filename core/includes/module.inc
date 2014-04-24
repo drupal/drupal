@@ -205,35 +205,35 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
  * @} End of "defgroup hooks".
  */
 
- /**
-  * @defgroup callbacks Callbacks
-  * @{
-  * Callback function signatures.
-  *
-  * Drupal's API sometimes uses callback functions to allow you to define how
-  * some type of processing happens. A callback is a function with a defined
-  * signature, which you define in a module. Then you pass the function name as
-  * a parameter to a Drupal API function or return it as part of a hook
-  * implementation return value, and your function is called at an appropriate
-  * time. For instance, when setting up batch processing you might need to
-  * provide a callback function for each processing step and/or a callback for
-  * when processing is finished; you would do that by defining these functions
-  * and passing their names into the batch setup function.
-  *
-  * Callback function signatures, like hook definitions, are described by
-  * creating and documenting dummy functions in a *.api.php file; normally, the
-  * dummy callback function's name should start with "callback_", and you should
-  * document the parameters and return value and provide a sample function body.
-  * Then your API documentation can refer to this callback function in its
-  * documentation. A user of your API can usually name their callback function
-  * anything they want, although a standard name would be to replace "callback_"
-  * with the module name.
-  *
-  * @see hooks
-  * @see themeable
-  *
-  * @}
-  */
+/**
+ * @defgroup callbacks Callbacks
+ * @{
+ * Callback function signatures.
+ *
+ * Drupal's API sometimes uses callback functions to allow you to define how
+ * some type of processing happens. A callback is a function with a defined
+ * signature, which you define in a module. Then you pass the function name as
+ * a parameter to a Drupal API function or return it as part of a hook
+ * implementation return value, and your function is called at an appropriate
+ * time. For instance, when setting up batch processing you might need to
+ * provide a callback function for each processing step and/or a callback for
+ * when processing is finished; you would do that by defining these functions
+ * and passing their names into the batch setup function.
+ *
+ * Callback function signatures, like hook definitions, are described by
+ * creating and documenting dummy functions in a *.api.php file; normally, the
+ * dummy callback function's name should start with "callback_", and you should
+ * document the parameters and return value and provide a sample function body.
+ * Then your API documentation can refer to this callback function in its
+ * documentation. A user of your API can usually name their callback function
+ * anything they want, although a standard name would be to replace "callback_"
+ * with the module name.
+ *
+ * @see hooks
+ * @see themeable
+ *
+ * @}
+ */
 
 /**
  * Returns an array of modules required by core.

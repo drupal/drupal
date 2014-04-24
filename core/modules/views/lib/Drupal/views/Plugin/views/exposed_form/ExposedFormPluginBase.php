@@ -273,16 +273,16 @@ abstract class ExposedFormPluginBase extends PluginBase {
   }
 
   /**
-  * This function is executed when exposed form is submited.
-  *
-  * @param $form
-  *   Nested array of form elements that comprise the form.
-  * @param $form_state
-  *   A keyed array containing the current state of the form.
-  * @param $exclude
-  *   Nested array of keys to exclude of insert into
-  *   $view->exposed_raw_input
-  */
+   * This function is executed when exposed form is submited.
+   *
+   * @param $form
+   *   Nested array of form elements that comprise the form.
+   * @param $form_state
+   *   A keyed array containing the current state of the form.
+   * @param $exclude
+   *   Nested array of keys to exclude of insert into
+   *   $view->exposed_raw_input
+   */
   public function exposedFormSubmit(&$form, &$form_state, &$exclude) {
     if (!empty($form_state['values']['op']) && $form_state['values']['op'] == $this->options['reset_button_label']) {
       $this->resetForm($form, $form_state);

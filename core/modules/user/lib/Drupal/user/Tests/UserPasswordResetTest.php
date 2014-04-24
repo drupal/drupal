@@ -127,9 +127,9 @@ class UserPasswordResetTest extends WebTestBase {
     return $urls[0];
   }
 
- /**
-  * Prefill the text box on incorrect login via link to password reset page.
-  */
+  /**
+   * Prefill the text box on incorrect login via link to password reset page.
+   */
   public function testUserResetPasswordTextboxFilled() {
     $this->drupalGet('user/login');
     $edit = array(

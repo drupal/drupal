@@ -19,7 +19,7 @@ use Drupal\entity\Entity\EntityViewDisplay;
  */
 class MetadataGenerator implements MetadataGeneratorInterface {
 
-   /**
+  /**
    * An object that checks if a user has access to edit a given entity field.
    *
    * @var \Drupal\quickedit\Access\EditEntityFieldAccessCheckInterface

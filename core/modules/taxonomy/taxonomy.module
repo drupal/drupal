@@ -263,7 +263,7 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
   return entity_view($term, $view_mode, $langcode);
 }
 
- /**
+/**
  * Constructs a drupal_render() style array from an array of loaded terms.
  *
  * @param array $terms

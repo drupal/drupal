@@ -230,7 +230,7 @@ class ViewExecutable extends DependencySerialization {
    */
   public $row_index;
 
-   /**
+  /**
    * Allow to override the url of the current view.
    *
    * @var string

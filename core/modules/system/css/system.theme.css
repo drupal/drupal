@@ -266,7 +266,7 @@ body div.tabledrag-changed-warning {
  * TableSelect behavior.
  *
  * @see tableselect.js
-*/
+ */
 tr.selected td {
   background: #ffc;
 }

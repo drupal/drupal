@@ -1,8 +1,8 @@
 <?php
 /**
-* @file
-* Definition of Drupal\Core\Plugin\Exception\InvalidDecoratedMethod.
-*/
+ * @file
+ * Definition of Drupal\Core\Plugin\Exception\InvalidDecoratedMethod.
+ */
 
 namespace Drupal\Component\Plugin\Exception;
 

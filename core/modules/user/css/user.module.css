@@ -86,7 +86,7 @@ div.password-suggestions ul {
   clear: right;
 }
 
- /**
+/**
  * Password strength indicator on narrow viewport.
  */
 @media screen and (max-width: 600px) {

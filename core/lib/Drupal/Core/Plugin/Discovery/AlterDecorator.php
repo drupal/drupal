@@ -3,7 +3,7 @@
 /**
  * @file
  * Definition of Drupal\Core\Plugin\Discovery\AlterDiscoveryDecorator.
-*/
+ */
 
 namespace Drupal\Core\Plugin\Discovery;
 

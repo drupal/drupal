@@ -275,19 +275,19 @@ function template_preprocess_views_view_fields(&$variables) {
 }
 
 /**
-* Returns HTML for multiple views fields.
-*
-* @param $variables
-*   An associative array containing:
-*   - fields: An array of field objects. Each field object contains:
-*     - separator: A string that separates the fields.
-*     - wrapper_suffix: A string added to the beginning of the fields.
-*     - label_html: An HTML string that labels the fields.
-*     - content: The fields.
-*     - wrapper_suffix: A string added to the end of the fields.
-*
-* @see template_preprocess_views_view_fields()
-*/
+ * Returns HTML for multiple views fields.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - fields: An array of field objects. Each field object contains:
+ *     - separator: A string that separates the fields.
+ *     - wrapper_suffix: A string added to the beginning of the fields.
+ *     - label_html: An HTML string that labels the fields.
+ *     - content: The fields.
+ *     - wrapper_suffix: A string added to the end of the fields.
+ *
+ * @see template_preprocess_views_view_fields()
+ */
 function theme_views_view_fields($variables) {
   $fields = $variables['fields'];
   $output = '';
@@ -320,7 +320,7 @@ function theme_views_view_fields($variables) {
  *     grouping.
  *   - content: The content to be grouped.
  *   - title: The group heading.
-  */
+ */
 function template_preprocess_views_view_grouping(&$variables) {
   $variables['content'] = $variables['view']->style_plugin->renderGroupingSets($variables['rows'], $variables['grouping_level']);
 }

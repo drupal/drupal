@@ -28,10 +28,10 @@ class View extends AreaPluginBase {
   protected $isEmpty;
 
   /**
-    * The view storage.
-    *
-    * @var \Drupal\Core\Entity\EntityStorageInterface
-    */
+   * The view storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
    protected $viewStorage;
 
    /**

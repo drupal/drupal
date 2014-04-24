@@ -71,13 +71,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $usesFields = FALSE;
 
   /**
-    * Stores the rendered field values, keyed by the row index and field name.
-    *
-    * @see \Drupal\views\Plugin\views\style\StylePluginBase::renderFields()
-    * @see \Drupal\views\Plugin\views\style\StylePluginBase::getField()
-    *
-    * @var array|null
-    */
+   * Stores the rendered field values, keyed by the row index and field name.
+   *
+   * @see \Drupal\views\Plugin\views\style\StylePluginBase::renderFields()
+   * @see \Drupal\views\Plugin\views\style\StylePluginBase::getField()
+   *
+   * @var array|null
+   */
   protected $rendered_fields;
 
   /**
@@ -661,13 +661,13 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-  * Get the raw field value.
-  *
-  * @param $index
-  *   The index count of the row.
-  * @param $field
-  *    The id of the field.
-  */
+   * Get the raw field value.
+   *
+   * @param $index
+   *   The index count of the row.
+   * @param $field
+   *    The id of the field.
+   */
   protected function getFieldValue($index, $field) {
     $this->view->row_index = $index;
     $value = $this->view->field[$field]->getValue($this->view->result[$index]);

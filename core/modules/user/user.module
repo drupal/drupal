@@ -828,7 +828,7 @@ function user_pass_reset_url($account, $options = array()) {
  * @param array $options
  *   (optional) A keyed array of settings. Supported options are:
  *   - langcode: A language code to be used when generating locale-sensitive
-  *    URLs. If langcode is NULL the users preferred language is used.
+ *     URLs. If langcode is NULL the users preferred language is used.
  *
  * @return
  *   A unique URL that may be used to confirm the cancellation of the user

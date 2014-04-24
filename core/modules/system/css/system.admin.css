@@ -285,8 +285,8 @@ table.system-status-report .status-title {
 }
 
 /**
-* Theme display without vertical toolbar.
-*/
+ * Theme display without vertical toolbar.
+ */
 @media screen and (min-width: 45em) {
   body:not(.toolbar-vertical) .system-themes-list-enabled .screenshot,
   body:not(.toolbar-vertical) .system-themes-list-enabled .no-screenshot {
@@ -320,8 +320,8 @@ table.system-status-report .status-title {
 }
 
 /**
-* Theme display with vertical toolbar.
-*/
+ * Theme display with vertical toolbar.
+ */
 @media screen and (min-width: 60em) {
   .toolbar-vertical .system-themes-list-enabled .screenshot,
   .toolbar-vertical .system-themes-list-enabled .no-screenshot {

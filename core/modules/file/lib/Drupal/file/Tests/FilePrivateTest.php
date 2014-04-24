@@ -15,10 +15,10 @@ use Drupal\Core\Language\Language;
 class FilePrivateTest extends FileFieldTestBase {
 
   /**
-  * Modules to enable.
-  *
-  * @var array
-  */
+   * Modules to enable.
+   *
+   * @var array
+   */
   public static $modules = array('node_access_test', 'field_test');
 
   public static function getInfo() {

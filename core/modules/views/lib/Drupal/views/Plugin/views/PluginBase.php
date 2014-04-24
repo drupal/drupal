@@ -72,7 +72,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    */
   public $definition;
 
-   /**
+  /**
    * Denotes whether the plugin has an additional options form.
    *
    * @var bool

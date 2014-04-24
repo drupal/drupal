@@ -287,7 +287,7 @@ function _drupal_default_html_head() {
 
 /**
  * Retrieves output to be displayed in the HEAD tag of the HTML page.
-  */
+ */
 function drupal_get_html_head() {
   $elements = drupal_add_html_head();
   \Drupal::moduleHandler()->alter('html_head', $elements);

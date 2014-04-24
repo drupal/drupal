@@ -33,8 +33,8 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
   protected $testSummary = 'test_summary_value';
 
   /**
-  * {@inheritdoc}
-  */
+   * {@inheritdoc}
+   */
   public static $modules = array('text');
 
   public static function getInfo() {

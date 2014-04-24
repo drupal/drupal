@@ -66,7 +66,7 @@ interface TranslatableInterface {
    *
    * @return bool
    *   TRUE if the translation exists, FALSE otherwise.
-  */
+   */
   public function hasTranslation($langcode);
 
   /**

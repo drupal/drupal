@@ -279,8 +279,8 @@ class ContactSitewideTest extends WebTestBase {
   }
 
   /**
-  * Tests auto-reply on the site-wide contact form.
-  */
+   * Tests auto-reply on the site-wide contact form.
+   */
   function testAutoReply() {
     // Create and login administrative user.
     $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer contact forms', 'administer permissions', 'administer users'));

@@ -32,7 +32,7 @@ require_once __DIR__ . '/locale.translation.inc';
  *     Optional, defaults to TRUE.
  * @param array $context
  *   The batch context.
-*/
+ */
 function locale_translation_batch_status_check($project, $langcode, $options = array(), &$context) {
   $failure = $checked = FALSE;
   $options += array(

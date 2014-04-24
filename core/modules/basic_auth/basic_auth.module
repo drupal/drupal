@@ -5,7 +5,7 @@
  * Provides an HTTP Basic authentication provider.
  */
 
- /**
+/**
  * Implements hook_help().
  */
 function basic_auth_help($path, $arg) {

@@ -619,7 +619,7 @@ abstract class FilterPluginBase extends HandlerBase {
     }
   }
 
-   /**
+  /**
    * Validate the build group options form.
    */
   protected function buildGroupValidate($form, &$form_state) {
@@ -714,7 +714,7 @@ abstract class FilterPluginBase extends HandlerBase {
     );
   }
 
-   /**
+  /**
    * Provide default options for exposed filters.
    */
   protected function buildGroupOptions() {

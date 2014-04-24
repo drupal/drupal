@@ -27,10 +27,10 @@ class CountryManager implements CountryManagerInterface {
   protected $countries;
 
   /*
-  * Constructor.
-  *
-  * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-  */
+   * Constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   */
   public function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
   }

@@ -35,12 +35,12 @@ interface LocalActionInterface {
    */
   public function getRouteParameters(Request $request);
 
-   /**
-    * Returns the weight for the local action.
-    *
-    * @return int
-    */
-   public function getWeight();
+  /**
+   * Returns the weight for the local action.
+   *
+   * @return int
+   */
+  public function getWeight();
 
   /**
    * Returns options for rendering a link for the local action.

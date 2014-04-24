@@ -1764,7 +1764,7 @@ div.admin-panel .description {
 /* ----------- media queries ------------------------------- */
 
 @media all and (min-width: 461px) and (max-width: 900px) {
- /* ------------ Header and Menus -------------------------- */
+  /* ------------ Header and Menus -------------------------- */
 
  .region-header {
     margin: .5em 5px .75em;

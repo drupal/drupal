@@ -189,7 +189,7 @@ class HandlerTest extends ViewTestBase {
     $this->assertEqual('and', $handler->operator);
   }
 
-   /**
+  /**
    * Tests the order of handlers is the same before and after saving.
    */
   public function testHandlerWeights() {

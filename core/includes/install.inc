@@ -1,6 +1,6 @@
 <?php
 
- /**
+/**
  * @file
  * API functions for installing modules and themes.
  */

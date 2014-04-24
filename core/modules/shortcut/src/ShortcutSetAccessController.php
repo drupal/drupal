@@ -41,7 +41,7 @@ class ShortcutSetAccessController extends EntityAccessController {
   }
 
   /**
-  * {@inheritdoc}
+   * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     return $account->hasPermission('administer shortcuts') || $account->hasPermission('customize shortcut links');

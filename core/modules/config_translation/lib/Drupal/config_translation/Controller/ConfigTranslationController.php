@@ -40,7 +40,7 @@ class ConfigTranslationController extends ControllerBase {
    */
   protected $accessManager;
 
- /**
+  /**
    * The dynamic router service.
    *
    * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface

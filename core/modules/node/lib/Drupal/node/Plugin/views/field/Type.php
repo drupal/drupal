@@ -41,8 +41,8 @@ class Type extends Node {
   }
 
   /**
-    * Render node type as human readable name, unless using machine_name option.
-    */
+   * Render node type as human readable name, unless using machine_name option.
+   */
   function render_name($data, $values) {
     if ($this->options['machine_name'] != 1 && $data !== NULL && $data !== '') {
       $type = entity_load('node_type', $data);

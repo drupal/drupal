@@ -352,7 +352,7 @@ function theme_views_ui_rearrange_filter_form(&$variables) {
  * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
-*/
+ */
 function template_preprocess_views_ui_style_plugin_table(&$variables) {
   $form = $variables['form'];
 

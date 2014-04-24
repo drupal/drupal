@@ -38,6 +38,6 @@ function hook_image_style_flush($style) {
   \Drupal::cache('mymodule')->deleteAll();
 }
 
- /**
-  * @} End of "addtogroup hooks".
-  */
+/**
+ * @} End of "addtogroup hooks".
+ */

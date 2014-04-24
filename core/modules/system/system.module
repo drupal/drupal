@@ -29,7 +29,7 @@ const DRUPAL_USER_TIMEZONE_EMPTY = 1;
  */
 const DRUPAL_USER_TIMEZONE_SELECT = 2;
 
- /**
+/**
  * Disabled option on forms and settings
  */
 const DRUPAL_DISABLED = 0;

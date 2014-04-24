@@ -21,7 +21,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   public static $modules = array('node', 'options', 'entity_test', 'options_test', 'taxonomy', 'field_ui');
 
- /**
+  /**
    * A field with cardinality 1 to use in this test class.
    *
    * @var \Drupal\field\Entity\FieldConfig

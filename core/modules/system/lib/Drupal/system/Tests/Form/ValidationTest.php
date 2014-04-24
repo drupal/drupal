@@ -200,7 +200,7 @@ class ValidationTest extends WebTestBase {
     $this->assertNoRaw(t('%name field is not in the right format.', array('%name' => 'Client side validation')));
   }
 
-   /**
+  /**
    * Tests #required with custom validation errors.
    *
    * @see form_test_validate_required_form()

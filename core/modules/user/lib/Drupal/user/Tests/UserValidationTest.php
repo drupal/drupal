@@ -162,7 +162,7 @@ class UserValidationTest extends DrupalUnitTestBase {
    *   The field that violates the maximum length.
    * @param int $length
    *   Number of characters that was exceeded.
-  */
+   */
   protected function assertLengthViolation(EntityInterface $entity, $field_name, $length) {
     $violations = $entity->validate();
     $this->assertEqual(count($violations), 1, "Violation found when $field_name is too long.");

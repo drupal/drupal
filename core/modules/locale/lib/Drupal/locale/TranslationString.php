@@ -80,7 +80,7 @@ class TranslationString extends StringBase {
 
   /**
    * Implements Drupal\locale\StringInterface::isTranslation().
-  */
+   */
   public function isTranslation() {
     return !empty($this->lid) && !empty($this->language) && isset($this->translation);
   }

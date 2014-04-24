@@ -2346,33 +2346,33 @@ abstract class DisplayPluginBase extends PluginBase {
     return TRUE;
   }
 
- /**
-  * Is the output of the view empty.
-  *
-  * If a view has no result and neither the empty, nor the footer nor the header
-  * does show anything return FALSE.
-  *
-  * @return bool
-  *   Returns TRUE if the output is empty, else FALSE.
-  */
- public function outputIsEmpty() {
-   if (!empty($this->view->result)) {
-     return FALSE;
-   }
+  /**
+   * Is the output of the view empty.
+   *
+   * If a view has no result and neither the empty, nor the footer nor the header
+   * does show anything return FALSE.
+   *
+   * @return bool
+   *   Returns TRUE if the output is empty, else FALSE.
+   */
+  public function outputIsEmpty() {
+    if (!empty($this->view->result)) {
+      return FALSE;
+    }
 
-   // Check whether all of the area handlers are empty.
-   foreach (array('empty', 'footer', 'header') as $type) {
-     $handlers = $this->getHandlers($type);
-     foreach ($handlers as $handler) {
-       // If one is not empty, return FALSE now.
-       if (!$handler->isEmpty()) {
-         return FALSE;
-       }
-     }
-   }
+    // Check whether all of the area handlers are empty.
+    foreach (array('empty', 'footer', 'header') as $type) {
+      $handlers = $this->getHandlers($type);
+      foreach ($handlers as $handler) {
+        // If one is not empty, return FALSE now.
+        if (!$handler->isEmpty()) {
+          return FALSE;
+        }
+      }
+    }
 
-   return TRUE;
- }
+    return TRUE;
+  }
 
   /**
    * Provide the block system with any exposed widget blocks for this display.
