@@ -1453,7 +1453,7 @@ function system_get_module_admin_tasks($module, array $info) {
     if (isset($links[$machine_name])) {
       $task = $links[$machine_name];
       // The link description, either derived from 'description' in the default
-      // menu link or customized via menu module is used as title attribute.
+      // menu link or customized via Menu UI module is used as title attribute.
       if (!empty($task['localized_options']['attributes']['title'])) {
         $task['description'] = $task['localized_options']['attributes']['title'];
         unset($task['localized_options']['attributes']['title']);

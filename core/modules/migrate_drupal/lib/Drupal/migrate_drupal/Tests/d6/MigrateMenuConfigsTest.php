@@ -11,7 +11,7 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables for the Menu module.
+ * Tests migration of variables for the Menu UI module.
  */
 class MigrateMenuConfigsTest extends MigrateDrupalTestBase {
 
@@ -48,7 +48,7 @@ class MigrateMenuConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of variables for the menu module.
+   * Tests migration of variables for the Menu UI module.
    */
   public function testMenuSettings() {
     $config = \Drupal::config('menu_ui.settings');

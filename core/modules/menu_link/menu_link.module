@@ -15,7 +15,7 @@ function menu_link_help($path, $arg) {
     case 'admin/help#menu_link':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Menu Link module allows users to create menu links. It is required by the Menu module, which provides an interface for managing menus. See the <a href="!menu-help">Menu module help page</a> for more information.', array('!menu-help' => \Drupal::url('help.page', array('name' => 'menu_ui')))) . '</p>';
+      $output .= '<p>' . t('The Menu Link module allows users to create menu links. It is required by the Menu UI module, which provides an interface for managing menus. See the <a href="!menu-help">Menu UI module help page</a> for more information.', array('!menu-help' => \Drupal::url('help.page', array('name' => 'menu_ui')))) . '</p>';
       return $output;
   }
 }

@@ -216,7 +216,7 @@ class Page extends PathPluginBase {
           ),
         );
 
-        // Only display the menu selector if menu module is enabled.
+        // Only display the menu selector if Menu UI module is enabled.
         if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
           $form['menu']['name'] = array(
             '#title' => t('Menu'),
@@ -241,7 +241,7 @@ class Page extends PathPluginBase {
             '#value' => $menu['name'],
           );
           $form['menu']['markup'] = array(
-            '#markup' => t('Menu selection requires the activation of menu module.'),
+            '#markup' => t('Menu selection requires the activation of Menu UI module.'),
           );
         }
         $form['menu']['weight'] = array(
@@ -333,7 +333,7 @@ class Page extends PathPluginBase {
             ),
           ),
         );
-        // Only display the menu selector if menu module is enabled.
+        // Only display the menu selector if Menu UI module is enabled.
         if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
           $form['tab_options']['name'] = array(
             '#title' => t('Menu'),
@@ -354,7 +354,7 @@ class Page extends PathPluginBase {
             '#value' => $tab_options['name'],
           );
           $form['tab_options']['markup'] = array(
-            '#markup' => t('Menu selection requires the activation of menu module.'),
+            '#markup' => t('Menu selection requires the activation of Menu UI module.'),
           );
         }
         $form['tab_options']['weight'] = array(

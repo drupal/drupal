@@ -35,7 +35,7 @@ function menu_ui_help($path, $arg) {
     case 'admin/help#menu_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Menu module provides an interface for managing menus. A menu is a hierarchical collection of links, which can be within or external to the site, generally used for navigation. For more information, see the <a href="!menu">online documentation for the Menu module</a>.', array('!menu' => 'https://drupal.org/documentation/modules/menu/')) . '</p>';
+      $output .= '<p>' . t('The Menu UI module provides an interface for managing menus. A menu is a hierarchical collection of links, which can be within or external to the site, generally used for navigation. For more information, see the <a href="!menu">online documentation for the Menu UI module</a>.', array('!menu' => 'https://drupal.org/documentation/modules/menu/')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing menus') . '</dt>';
@@ -379,7 +379,7 @@ function menu_ui_node_save(EntityInterface $node) {
  * Implements hook_node_predelete().
  */
 function menu_ui_node_predelete(EntityInterface $node) {
-  // Delete all menu module links that point to this node.
+  // Delete all Menu UI module links that point to this node.
   $query = \Drupal::entityQuery('menu_link')
     ->condition('link_path', 'node/' . $node->id())
     ->condition('module', 'menu');

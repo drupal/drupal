@@ -324,7 +324,7 @@ Language module
 Link module
 - ?
 
-Menu module
+Menu UI module
 - ?
 
 Menu Link module

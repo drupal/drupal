@@ -52,7 +52,7 @@ class MenuTest extends MenuWebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Menu link creation/deletion',
-      'description' => 'Add a custom menu, add menu links to the custom menu and Tools menu, check their data, and delete them using the menu module UI.',
+      'description' => 'Add a custom menu, add menu links to the custom menu and Tools menu, check their data, and delete them using the UI.',
       'group' => 'Menu'
     );
   }
@@ -511,7 +511,7 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
-   * Adds a menu link using the menu module UI.
+   * Adds a menu link using the UI.
    *
    * @param integer $plid
    *   Optional parent menu link id.
@@ -578,7 +578,7 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
-   * Verifies a menu link using the menu module UI.
+   * Verifies a menu link using the UI.
    *
    * @param array $item
    *   Menu link.
@@ -617,7 +617,7 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
-   * Changes the parent of a menu link using the menu module UI.
+   * Changes the parent of a menu link using the UI.
    *
    * @param array $item
    *   The menu link item to move.
@@ -637,7 +637,7 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
-   * Modifies a menu link using the menu module UI.
+   * Modifies a menu link using the UI.
    *
    * @param array $item
    *   Menu link passed by reference.
@@ -660,7 +660,7 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
-   * Resets a standard menu link using the menu module UI.
+   * Resets a standard menu link using the UI.
    *
    * @param array $item
    *   Menu link.
@@ -683,7 +683,7 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
-   * Deletes a menu link using the menu module UI.
+   * Deletes a menu link using the UI.
    *
    * @param array $item
    *   Menu link.

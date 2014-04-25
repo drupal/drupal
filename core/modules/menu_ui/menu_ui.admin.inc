@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Administrative page callbacks for menu module.
+ * Administrative page callbacks for Menu UI module.
  */
 
 use Drupal\Core\Render\Element;

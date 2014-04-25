@@ -19,7 +19,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *
  * The Drupal routing system defines how Drupal responds to URLs passed to the
  * browser. The menu system, which depends on the routing system, is used for
- * navigation. The Menu module allows menus to be created in the user interface
+ * navigation. The Menu UI module allows menus to be created in the user interface
  * as hierarchical lists of links.
  *
  * @section registering_paths Registering router paths

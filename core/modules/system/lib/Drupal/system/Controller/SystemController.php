@@ -125,7 +125,7 @@ class SystemController extends ControllerBase {
             continue;
           }
           // The link description, either derived from 'description' in hook_menu()
-          // or customized via menu module is used as title attribute.
+          // or customized via Menu UI module is used as title attribute.
           if (!empty($item['localized_options']['attributes']['title'])) {
             $item['description'] = $item['localized_options']['attributes']['title'];
             unset($item['localized_options']['attributes']['title']);

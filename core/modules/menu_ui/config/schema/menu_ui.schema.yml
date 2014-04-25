@@ -1,4 +1,4 @@
-# Schema for configuration files of the Menu module.
+# Schema for configuration files of the Menu UI module.
 
 menu_ui.settings:
   type: mapping

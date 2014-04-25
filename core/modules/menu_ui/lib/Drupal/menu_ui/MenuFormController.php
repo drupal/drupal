@@ -334,7 +334,7 @@ class MenuFormController extends EntityFormController {
           'title' => t('Edit'),
           'href' => 'admin/structure/menu/item/' . $item['mlid'] . '/edit',
         );
-        // Only items created by the menu module can be deleted.
+        // Only items created by the Menu UI module can be deleted.
         if ($item->access('delete')) {
           $operations['delete'] = array(
             'title' => t('Delete'),

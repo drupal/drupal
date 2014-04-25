@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hooks provided by the Menu module.
+ * Hooks provided by the Menu UI module.
  */
 
 /**

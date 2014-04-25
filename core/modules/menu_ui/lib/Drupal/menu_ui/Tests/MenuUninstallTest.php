@@ -35,7 +35,7 @@ class MenuUninstallTest extends WebTestBase {
   public function testMenuUninstall() {
     \Drupal::moduleHandler()->uninstall(array('menu_ui'));
 
-    $this->assertTrue(entity_load('menu', 'admin', TRUE), 'The \'admin\' menu still exists after uninstalling menu module.');
+    $this->assertTrue(entity_load('menu', 'admin', TRUE), 'The \'admin\' menu still exists after uninstalling Menu UI module.');
   }
 
 }

@@ -1,4 +1,4 @@
-name: Menu Ui
+name: Menu UI
 type: module
 description: 'Allows administrators to customize the site navigation menu.'
 package: Core
