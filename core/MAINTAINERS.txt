@@ -181,8 +181,8 @@ Topic coordinators
 ------------------
 
 Accessibility
-- Brandon Bowersox-Johnson 'bowersox' http://drupal.org/user/186415
 - Mike Gifford 'mgifford' http://drupal.org/user/27930
+- Jesse Renée Beach 'jessebeach' http://drupal.org/user/748566
 
 Documentation
 - Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
