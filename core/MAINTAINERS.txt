@@ -210,7 +210,7 @@ Action module
 - ?
 
 Aggregator module
-- Paris Liakos 'rootatwc' http://drupal.org/user/1011436
+- Paris Liakos 'ParisLiakos' http://drupal.org/user/1011436
 
 Ban module
 - ?
