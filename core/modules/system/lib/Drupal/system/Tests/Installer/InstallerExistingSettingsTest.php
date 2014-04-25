@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Installer\InstallerEmptySettingsTest.
+ * Contains \Drupal\system\Tests\Installer\InstallerExistingSettingsTest.
  */
 
 namespace Drupal\system\Tests\Installer;
@@ -20,17 +20,27 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Installer Existing Settings Test',
-      'description' => 'Tests the installer with an existing settings file with database connection info.',
+      'name' => 'Installer existing settings',
+      'description' => 'Tests the installer with an existing settings file.',
       'group' => 'Installer',
     );
   }
 
   /**
    * {@inheritdoc}
+   *
+   * Fully configures a preexisting settings.php file before invoking the
+   * interactive installer.
    */
   protected function setUp() {
-    // Pre-configure database credentials in settings.php.
+    // Pre-configure hash salt.
+    // Any string is valid, so simply use the class name of this test.
+    $this->settings['settings']['hash_salt'] = (object) array(
+      'value' => __CLASS__,
+      'required' => TRUE,
+    );
+
+    // Pre-configure database credentials.
     $connection_info = Database::getConnectionInfo();
     unset($connection_info['default']['pdo']);
     unset($connection_info['default']['init_commands']);
@@ -39,29 +49,30 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
       'value' => $connection_info,
       'required' => TRUE,
     );
+
+    // Pre-configure config directories.
+    $this->settings['config_directories'] = array(
+      CONFIG_ACTIVE_DIRECTORY => (object) array(
+        'value' => conf_path() . '/files/config_active',
+        'required' => TRUE,
+      ),
+      CONFIG_STAGING_DIRECTORY => (object) array(
+        'value' => conf_path() . '/files/config_staging',
+        'required' => TRUE,
+      ),
+    );
+    mkdir($this->settings['config_directories'][CONFIG_ACTIVE_DIRECTORY]->value, 0777, TRUE);
+    mkdir($this->settings['config_directories'][CONFIG_STAGING_DIRECTORY]->value, 0777, TRUE);
+
     parent::setUp();
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @todo The database settings form is not supposed to appear if settings.php
-   *   contains a valid database connection already (but e.g. no config
-   *   directories yet).
    */
   protected function setUpSettings() {
-    // All database settings should be pre-configured, except password.
-    $values = $this->parameters['forms']['install_settings_form'];
-    $driver = $values['driver'];
-    $edit = array();
-    if (isset($values[$driver]['password']) && $values[$driver]['password'] !== '') {
-      $edit = $this->translatePostValues(array(
-        $driver => array(
-          'password' => $values[$driver]['password'],
-        ),
-      ));
-    }
-    $this->drupalPostForm(NULL, $edit, $this->translations['Save and continue']);
+    // This step should not appear, since settings.php is fully configured
+    // already.
   }
 
   /**

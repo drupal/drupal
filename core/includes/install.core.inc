@@ -3,6 +3,7 @@
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Install\TaskException;
@@ -433,10 +434,9 @@ function install_begin_request(&$install_state) {
     }
   }
 
-  // Ensure that the active configuration directory is empty before installation
-  // starts.
+  // Ensure that the active configuration is empty before installation starts.
   if ($install_state['config_verified'] && empty($task)) {
-    $config = \Drupal::service('config.storage')->listAll();
+    $config = BootstrapConfigStorageFactory::get()->listAll();
     if (!empty($config)) {
       $task = NULL;
       throw new AlreadyInstalledException($container->get('string_translation'));
