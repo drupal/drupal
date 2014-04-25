@@ -90,6 +90,14 @@ function views_views_data() {
     ),
   );
 
+  $data['views']['messages'] = array(
+    'title' => t('Messages'),
+    'help' => t('Displays messages in an area.'),
+    'area' => array(
+      'id' => 'messages',
+    ),
+  );
+
   $data['views']['http_status_code'] = array(
     'title' => t('Response status code'),
     'help' => t('Alter the HTTP response status code used by this view, mostly helpful for empty results.'),
