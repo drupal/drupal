@@ -64,12 +64,12 @@ class EntityFormBuilderTest extends UnitTestCase {
       ->with('the_form_id', $this->isType('array'))
       ->will($this->returnValue('the form contents'));
 
-    $form_controller = $this->getMock('Drupal\Core\Entity\EntityFormControllerInterface');
+    $form_controller = $this->getMock('Drupal\Core\Entity\EntityFormInterface');
     $form_controller->expects($this->any())
       ->method('getFormId')
       ->will($this->returnValue('the_form_id'));
     $this->entityManager->expects($this->any())
-      ->method('getFormController')
+      ->method('getFormObject')
       ->with('the_entity_type', 'default')
       ->will($this->returnValue($form_controller));
 

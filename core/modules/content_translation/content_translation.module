@@ -7,7 +7,7 @@
 
 use Drupal\content_translation\Plugin\Derivative\ContentTranslationLocalTasks;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityFormControllerInterface;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
@@ -360,19 +360,19 @@ function content_translation_controller($entity_type_id) {
 }
 
 /**
- * Returns the entity form controller for the given form.
+ * Returns the entity form for the given form.
  *
  * @param array $form_state
- *   The form state array holding the entity form controller.
+ *   The form state array holding the entity form.
  *
- * @return \Drupal\Core\Entity\EntityFormControllerInterface;
+ * @return \Drupal\Core\Entity\EntityFormInterface;
  *   An instance of the content translation form interface or FALSE if not an
  *   entity form.
  *
  * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */
 function content_translation_form_controller(array $form_state) {
-  return isset($form_state['controller']) && $form_state['controller'] instanceof EntityFormControllerInterface ? $form_state['controller'] : FALSE;
+  return isset($form_state['controller']) && $form_state['controller'] instanceof EntityFormInterface ? $form_state['controller'] : FALSE;
 }
 
 /**

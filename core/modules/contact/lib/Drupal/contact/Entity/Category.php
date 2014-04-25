@@ -21,8 +21,8 @@ use Drupal\contact\CategoryInterface;
  *     "access" = "Drupal\contact\CategoryAccessController",
  *     "list_builder" = "Drupal\contact\CategoryListBuilder",
  *     "form" = {
- *       "add" = "Drupal\contact\CategoryFormController",
- *       "edit" = "Drupal\contact\CategoryFormController",
+ *       "add" = "Drupal\contact\CategoryForm",
+ *       "edit" = "Drupal\contact\CategoryForm",
  *       "delete" = "Drupal\contact\Form\CategoryDeleteForm"
  *     }
  *   },

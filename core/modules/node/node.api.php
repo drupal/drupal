@@ -592,7 +592,7 @@ function hook_node_access(\Drupal\node\NodeInterface $node, $op, $account, $lang
 /**
  * Act on a node object about to be shown on the add/edit form.
  *
- * This hook is invoked from NodeFormController::prepareEntity().
+ * This hook is invoked from NodeForm::prepareEntity().
  *
  * @param \Drupal\node\NodeInterface $node
  *   The node that is about to be shown on the form.
@@ -711,7 +711,7 @@ function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
 /**
  * Perform node validation before a node is created or updated.
  *
- * This hook is invoked from NodeFormController::validate(), after a user has
+ * This hook is invoked from NodeForm::validate(), after a user has
  * finished editing the node and is previewing or submitting it. It is invoked
  * at the end of all the standard validation steps.
  *

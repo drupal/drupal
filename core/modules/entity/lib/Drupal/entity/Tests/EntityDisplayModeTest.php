@@ -92,7 +92,7 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->assertResponse(404);
 
     $this->drupalGet('admin/structure/display-modes/form/add');
-    $this->assertNoLink(t('Entity Test without label'), 'An entity type with no form controller cannot have form modes.');
+    $this->assertNoLink(t('Entity Test without label'), 'An entity type with no form cannot have form modes.');
 
     // Test adding a view mode including dots in machine_name.
     $this->clickLink(t('Test entity'));

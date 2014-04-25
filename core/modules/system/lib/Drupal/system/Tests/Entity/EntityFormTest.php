@@ -24,7 +24,7 @@ class EntityFormTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Entity form',
-      'description' => 'Tests the entity form controller.',
+      'description' => 'Tests the entity form.',
       'group' => 'Entity API',
     );
   }

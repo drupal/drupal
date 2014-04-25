@@ -44,11 +44,11 @@ function views_ui_help($path, $arg) {
 function views_ui_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['view']
-    ->setFormClass('edit', 'Drupal\views_ui\ViewEditFormController')
-    ->setFormClass('add', 'Drupal\views_ui\ViewAddFormController')
-    ->setFormClass('preview', 'Drupal\views_ui\ViewPreviewFormController')
-    ->setFormClass('clone', 'Drupal\views_ui\ViewCloneFormController')
-    ->setFormClass('delete', 'Drupal\views_ui\ViewDeleteFormController')
+    ->setFormClass('edit', 'Drupal\views_ui\ViewEditForm')
+    ->setFormClass('add', 'Drupal\views_ui\ViewAddForm')
+    ->setFormClass('preview', 'Drupal\views_ui\ViewPreviewForm')
+    ->setFormClass('clone', 'Drupal\views_ui\ViewCloneForm')
+    ->setFormClass('delete', 'Drupal\views_ui\ViewDeleteForm')
     ->setFormClass('break_lock', 'Drupal\views_ui\Form\BreakLockForm')
     ->setListBuilderClass('Drupal\views_ui\ViewListBuilder')
     ->setLinkTemplate('edit-form', 'views_ui.edit')

@@ -112,7 +112,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $form['label']['#default_value'] = '';
     $form['label']['#access'] = FALSE;
 
-    // Unset the machine_name provided by BlockFormController.
+    // Unset the machine_name provided by BlockForm.
     unset($form['id']['#machine_name']['source']);
     // Prevent users from changing the auto-generated block machine_name.
     $form['id']['#access'] = FALSE;

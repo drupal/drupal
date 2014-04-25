@@ -198,7 +198,7 @@ function contact_mail($key, &$message, $params) {
  *
  * Add the enable personal contact form to an individual user's account page.
  *
- * @see \Drupal\user\ProfileFormController::form()
+ * @see \Drupal\user\ProfileForm::form()
  */
 function contact_form_user_form_alter(&$form, &$form_state) {
   $form['contact'] = array(

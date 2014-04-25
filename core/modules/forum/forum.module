@@ -158,10 +158,10 @@ function forum_menu_local_tasks(&$data, $route_name) {
  */
 function forum_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
-  // Register forum specific form controllers.
+  // Register forum specific forms.
   $entity_types['taxonomy_term']
-    ->setFormClass('forum', 'Drupal\forum\Form\ForumFormController')
-    ->setFormClass('container', 'Drupal\forum\Form\ContainerFormController')
+    ->setFormClass('forum', 'Drupal\forum\Form\ForumForm')
+    ->setFormClass('container', 'Drupal\forum\Form\ContainerForm')
     ->setLinkTemplate('forum-delete-form', 'forum.delete')
     ->setLinkTemplate('forum-edit-form', 'forum.edit_forum');
 }

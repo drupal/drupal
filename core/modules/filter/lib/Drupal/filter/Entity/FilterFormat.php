@@ -22,12 +22,12 @@ use Drupal\filter\Plugin\FilterInterface;
  *   label = @Translation("Text format"),
  *   controllers = {
  *     "form" = {
- *       "add" = "Drupal\filter\FilterFormatAddFormController",
- *       "edit" = "Drupal\filter\FilterFormatEditFormController",
+ *       "add" = "Drupal\filter\FilterFormatAddForm",
+ *       "edit" = "Drupal\filter\FilterFormatEditForm",
  *       "disable" = "Drupal\filter\Form\FilterDisableForm"
  *     },
  *     "list_builder" = "Drupal\filter\FilterFormatListBuilder",
- *     "access" = "Drupal\filter\FilterFormatAccessController",
+ *     "access" = "Drupal\filter\FilterFormatAccess",
  *   },
  *   config_prefix = "format",
  *   admin_permission = "administer filters",

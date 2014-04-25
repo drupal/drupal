@@ -202,7 +202,7 @@ interface EntityTypeInterface {
    *     operations. The name of the operation is passed also to the form
    *     controller's constructor, so that one class can be used for multiple
    *     entity forms when the forms are similar. The classes must implement
-   *     \Drupal\Core\Entity\EntityFormControllerInterface.
+   *     \Drupal\Core\Entity\EntityFormInterface.
    *   - list: The name of the class that provides listings of the entities. The
    *     class must implement \Drupal\Core\Entity\EntityListBuilderInterface.
    *   - render: The name of the class that is used to render the entities. The
@@ -251,7 +251,7 @@ interface EntityTypeInterface {
    *   The operation to use this form class for.
    * @param string $class
    *   The form class implementing
-   *   \Drupal\Core\Entity\EntityFormControllerInterface.
+   *   \Drupal\Core\Entity\EntityFormInterface.
    *
    * @return static
    *

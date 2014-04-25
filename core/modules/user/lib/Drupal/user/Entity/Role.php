@@ -22,7 +22,7 @@ use Drupal\user\RoleInterface;
  *     "access" = "Drupal\user\RoleAccessController",
  *     "list_builder" = "Drupal\user\RoleListBuilder",
  *     "form" = {
- *       "default" = "Drupal\user\RoleFormController",
+ *       "default" = "Drupal\user\RoleForm",
  *       "delete" = "Drupal\user\Form\UserRoleDelete"
  *     }
  *   },

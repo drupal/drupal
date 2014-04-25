@@ -19,10 +19,10 @@ use Drupal\responsive_image\ResponsiveImageMappingInterface;
  *   controllers = {
  *     "list_builder" = "Drupal\responsive_image\ResponsiveImageMappingListBuilder",
  *     "form" = {
- *       "edit" = "Drupal\responsive_image\ResponsiveImageMappingFormController",
- *       "add" = "Drupal\responsive_image\ResponsiveImageMappingFormController",
+ *       "edit" = "Drupal\responsive_image\ResponsiveImageMappingForm",
+ *       "add" = "Drupal\responsive_image\ResponsiveImageMappingForm",
  *       "delete" = "Drupal\responsive_image\Form\ResponsiveImageMappingDeleteForm",
- *       "duplicate" = "Drupal\responsive_image\ResponsiveImageMappingFormController"
+ *       "duplicate" = "Drupal\responsive_image\ResponsiveImageMappingForm"
  *     }
  *   },
  *   list_path = "admin/config/media/responsive-image-mapping",

@@ -29,7 +29,7 @@ use Drupal\user\UserInterface;
  *     "access" = "Drupal\comment\CommentAccessController",
  *     "view_builder" = "Drupal\comment\CommentViewBuilder",
  *     "form" = {
- *       "default" = "Drupal\comment\CommentFormController",
+ *       "default" = "Drupal\comment\CommentForm",
  *       "delete" = "Drupal\comment\Form\DeleteForm"
  *     },
  *     "translation" = "Drupal\comment\CommentTranslationHandler"

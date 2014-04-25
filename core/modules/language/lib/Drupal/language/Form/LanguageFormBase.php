@@ -8,13 +8,13 @@
 namespace Drupal\language\Form;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Language\Language;
 
 /**
- * Base form controller for language add and edit forms.
+ * Base form for language add and edit forms.
  */
-abstract class LanguageFormBase extends EntityFormController {
+abstract class LanguageFormBase extends EntityForm {
 
   /**
    * Common elements of the language addition and editing form.

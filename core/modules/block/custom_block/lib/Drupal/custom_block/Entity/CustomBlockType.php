@@ -19,9 +19,9 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *   label = @Translation("Custom block type"),
  *   controllers = {
  *     "form" = {
- *       "default" = "Drupal\custom_block\CustomBlockTypeFormController",
- *       "add" = "Drupal\custom_block\CustomBlockTypeFormController",
- *       "edit" = "Drupal\custom_block\CustomBlockTypeFormController",
+ *       "default" = "Drupal\custom_block\CustomBlockTypeForm",
+ *       "add" = "Drupal\custom_block\CustomBlockTypeForm",
+ *       "edit" = "Drupal\custom_block\CustomBlockTypeForm",
  *       "delete" = "Drupal\custom_block\Form\CustomBlockTypeDeleteForm"
  *     },
  *     "list_builder" = "Drupal\custom_block\CustomBlockTypeListBuilder"

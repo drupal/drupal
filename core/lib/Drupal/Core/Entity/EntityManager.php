@@ -217,7 +217,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
   /**
    * {@inheritdoc}
    */
-  public function getFormController($entity_type, $operation) {
+  public function getFormObject($entity_type, $operation) {
     if (!isset($this->controllers['form'][$operation][$entity_type])) {
       if (!$class = $this->getDefinition($entity_type, TRUE)->getFormClass($operation)) {
         throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type, $operation));

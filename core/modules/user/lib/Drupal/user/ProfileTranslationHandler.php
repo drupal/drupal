@@ -28,7 +28,7 @@ class ProfileTranslationHandler extends ContentTranslationHandler {
    *
    * This handles the save action.
    *
-   * @see \Drupal\Core\Entity\EntityFormController::build().
+   * @see \Drupal\Core\Entity\EntityForm::build().
    */
   function entityFormSave(array $form, array &$form_state) {
     if ($this->getSourceLangcode($form_state)) {

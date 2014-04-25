@@ -527,7 +527,7 @@ function _user_language_selector_langcode_value($element, $input, &$form_state) 
 /**
  * Form validation handler for the current password on the user account form.
  *
- * @see AccountFormController::form()
+ * @see AccountForm::form()
  */
 function user_validate_current_pass(&$form, &$form_state) {
   $account = $form_state['user'];

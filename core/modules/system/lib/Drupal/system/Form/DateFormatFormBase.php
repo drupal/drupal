@@ -14,12 +14,12 @@ use Drupal\Core\Datetime\Date;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityForm;
 
 /**
- * Provides a base form controller for date formats.
+ * Provides a base form for date formats.
  */
-abstract class DateFormatFormBase extends EntityFormController {
+abstract class DateFormatFormBase extends EntityForm {
 
   /**
    * The date pattern type.

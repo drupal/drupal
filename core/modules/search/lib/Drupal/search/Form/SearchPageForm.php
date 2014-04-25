@@ -7,7 +7,7 @@
 
 namespace Drupal\search\Form;
 
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityForm;
 
 /**
  * Provides a search form for site wide search.
@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityFormController;
  * trigger the search being processed by the controller, and adding in any
  * additional query parameters they need to execute search.
  */
-class SearchPageForm extends EntityFormController {
+class SearchPageForm extends EntityForm {
 
   /**
    * {@inheritdoc}

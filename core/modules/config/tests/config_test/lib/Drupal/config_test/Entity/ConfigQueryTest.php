@@ -17,7 +17,7 @@ namespace Drupal\config_test\Entity;
  *     "storage" = "Drupal\config_test\ConfigTestStorage",
  *     "list_builder" = "Drupal\Core\Config\Entity\ConfigEntityListBuilder",
  *     "form" = {
- *       "default" = "Drupal\config_test\ConfigTestFormController"
+ *       "default" = "Drupal\config_test\ConfigTestForm"
  *     }
  *   },
  *   config_prefix = "query",

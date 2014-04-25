@@ -150,17 +150,17 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getListBuilder($entity_type);
 
   /**
-   * Creates a new form controller instance.
+   * Creates a new form instance.
    *
    * @param string $entity_type
-   *   The entity type for this form controller.
+   *   The entity type for this form.
    * @param string $operation
    *   The name of the operation to use, e.g., 'default'.
    *
-   * @return \Drupal\Core\Entity\EntityFormControllerInterface
-   *   A form controller instance.
+   * @return \Drupal\Core\Entity\EntityFormInterface
+   *   A form instance.
    */
-  public function getFormController($entity_type, $operation);
+  public function getFormObject($entity_type, $operation);
 
   /**
    * Clears static and persistent field definition caches.

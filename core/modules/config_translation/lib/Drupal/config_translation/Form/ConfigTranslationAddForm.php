@@ -10,7 +10,7 @@ namespace Drupal\config_translation\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Defines a form controller for adding configuration translations.
+ * Defines a form for adding configuration translations.
  */
 class ConfigTranslationAddForm extends ConfigTranslationFormBase {
 

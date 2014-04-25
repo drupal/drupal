@@ -21,8 +21,8 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestFormController",
- *       "delete" = "Drupal\entity_test\EntityTestDeleteFormController"
+ *       "default" = "Drupal\entity_test\EntityTestForm",
+ *       "delete" = "Drupal\entity_test\EntityTestDeleteForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },

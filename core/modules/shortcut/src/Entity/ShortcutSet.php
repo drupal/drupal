@@ -22,9 +22,9 @@ use Drupal\shortcut\ShortcutSetInterface;
  *     "access" = "Drupal\shortcut\ShortcutSetAccessController",
  *     "list_builder" = "Drupal\shortcut\ShortcutSetListBuilder",
  *     "form" = {
- *       "default" = "Drupal\shortcut\ShortcutSetFormController",
- *       "add" = "Drupal\shortcut\ShortcutSetFormController",
- *       "edit" = "Drupal\shortcut\ShortcutSetFormController",
+ *       "default" = "Drupal\shortcut\ShortcutSetForm",
+ *       "add" = "Drupal\shortcut\ShortcutSetForm",
+ *       "edit" = "Drupal\shortcut\ShortcutSetForm",
  *       "customize" = "Drupal\shortcut\Form\SetCustomize",
  *       "delete" = "Drupal\shortcut\Form\ShortcutSetDeleteForm"
  *     }

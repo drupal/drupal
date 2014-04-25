@@ -10,7 +10,7 @@ namespace Drupal\content_translation\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 
 /**
- * Temporary form controller for content_translation module.
+ * Delete translation form for content_translation module.
  */
 class ContentTranslationDeleteForm extends ConfirmFormBase {
 

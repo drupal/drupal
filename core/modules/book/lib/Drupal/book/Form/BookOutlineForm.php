@@ -8,14 +8,14 @@
 namespace Drupal\book\Form;
 
 use Drupal\book\BookManagerInterface;
-use Drupal\Core\Entity\ContentEntityFormController;
+use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays the book outline form.
  */
-class BookOutlineForm extends ContentEntityFormController {
+class BookOutlineForm extends ContentEntityForm {
 
   /**
    * The book being displayed.

@@ -25,10 +25,10 @@ use Drupal\custom_block\CustomBlockInterface;
  *     "list_builder" = "Drupal\custom_block\CustomBlockListBuilder",
  *     "view_builder" = "Drupal\custom_block\CustomBlockViewBuilder",
  *     "form" = {
- *       "add" = "Drupal\custom_block\CustomBlockFormController",
- *       "edit" = "Drupal\custom_block\CustomBlockFormController",
+ *       "add" = "Drupal\custom_block\CustomBlockForm",
+ *       "edit" = "Drupal\custom_block\CustomBlockForm",
  *       "delete" = "Drupal\custom_block\Form\CustomBlockDeleteForm",
- *       "default" = "Drupal\custom_block\CustomBlockFormController"
+ *       "default" = "Drupal\custom_block\CustomBlockForm"
  *     },
  *     "translation" = "Drupal\custom_block\CustomBlockTranslationHandler"
  *   },

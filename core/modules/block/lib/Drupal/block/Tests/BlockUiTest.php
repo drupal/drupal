@@ -158,7 +158,7 @@ class BlockUiTest extends WebTestBase {
   }
 
   /**
-   * Tests that the BlockFormController populates machine name correctly.
+   * Tests that the BlockForm populates machine name correctly.
    */
   public function testMachineNameSuggestion() {
     $url = 'admin/structure/block/add/test_block_instantiation/stark';

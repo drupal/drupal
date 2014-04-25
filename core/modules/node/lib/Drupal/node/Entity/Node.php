@@ -27,9 +27,9 @@ use Drupal\user\UserInterface;
  *     "view_builder" = "Drupal\node\NodeViewBuilder",
  *     "access" = "Drupal\node\NodeAccessController",
  *     "form" = {
- *       "default" = "Drupal\node\NodeFormController",
+ *       "default" = "Drupal\node\NodeForm",
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
- *       "edit" = "Drupal\node\NodeFormController"
+ *       "edit" = "Drupal\node\NodeForm"
  *     },
  *     "list_builder" = "Drupal\node\NodeListBuilder",
  *     "translation" = "Drupal\node\NodeTranslationHandler"

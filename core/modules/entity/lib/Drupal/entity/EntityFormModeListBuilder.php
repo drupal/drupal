@@ -21,7 +21,7 @@ class EntityFormModeListBuilder extends EntityDisplayModeListBuilder {
    *   The entity type of the entity that needs to be validated.
    *
    * @return bool
-   *   TRUE if the entity has any form controllers, FALSE otherwise.
+   *   TRUE if the entity has any forms, FALSE otherwise.
    */
   protected function isValidEntity($entity_type) {
     return $this->entityTypes[$entity_type]->hasFormClasses();

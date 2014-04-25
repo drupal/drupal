@@ -8,7 +8,7 @@
 namespace Drupal\system\Form;
 
 /**
- * Provides a form controller for adding a date format.
+ * Provides a form for adding a date format.
  */
 class DateFormatAddForm extends DateFormatFormBase {
 

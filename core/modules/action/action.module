@@ -50,8 +50,8 @@ function action_permission() {
 function action_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['action']
-    ->setFormClass('add', 'Drupal\action\ActionAddFormController')
-    ->setFormClass('edit', 'Drupal\action\ActionEditFormController')
+    ->setFormClass('add', 'Drupal\action\ActionAddForm')
+    ->setFormClass('edit', 'Drupal\action\ActionEditForm')
     ->setFormClass('delete', 'Drupal\action\Form\ActionDeleteForm')
     ->setListBuilderClass('Drupal\action\ActionListBuilder')
     ->setLinkTemplate('delete-form', 'action.delete')

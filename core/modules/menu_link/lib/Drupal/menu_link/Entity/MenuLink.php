@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Route;
  *     "storage" = "Drupal\menu_link\MenuLinkStorage",
  *     "access" = "Drupal\menu_link\MenuLinkAccessController",
  *     "form" = {
- *       "default" = "Drupal\menu_link\MenuLinkFormController"
+ *       "default" = "Drupal\menu_link\MenuLinkForm"
  *     }
  *   },
  *   admin_permission = "administer menu",

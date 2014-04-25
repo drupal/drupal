@@ -16,7 +16,7 @@ namespace Drupal\entity_test\Entity;
  *   controllers = {
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestFormController"
+ *       "default" = "Drupal\entity_test\EntityTestForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },

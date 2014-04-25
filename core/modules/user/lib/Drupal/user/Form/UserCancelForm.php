@@ -39,7 +39,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
   protected $entity;
 
   /**
-   * Constructs an EntityFormController object.
+   * Constructs an EntityForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.

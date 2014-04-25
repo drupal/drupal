@@ -195,7 +195,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    *     storage. The recommended way to ensure that the chosen key doesn't
    *     conflict with ones used by the Form API or other modules is to use the
    *     module name as the key name or a prefix for the key name. For example,
-   *     the entity form controller classes use $this->entity in entity forms,
+   *     the entity form classes use $this->entity in entity forms,
    *     or $form_state['controller']->getEntity() outside the controller, to
    *     store information about the entity being edited, and this information
    *     stays available across successive clicks of the "Preview" button (if

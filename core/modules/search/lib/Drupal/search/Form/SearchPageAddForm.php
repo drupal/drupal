@@ -8,7 +8,7 @@
 namespace Drupal\search\Form;
 
 /**
- * Provides a form controller for adding a search page.
+ * Provides a form for adding a search page.
  */
 class SearchPageAddForm extends SearchPageFormBase {
 

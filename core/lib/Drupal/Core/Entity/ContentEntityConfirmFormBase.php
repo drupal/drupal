@@ -13,7 +13,7 @@ use Drupal\Core\Form\ConfirmFormInterface;
 /**
  * Provides a generic base class for an entity-based confirmation form.
  */
-abstract class ContentEntityConfirmFormBase extends ContentEntityFormController implements ConfirmFormInterface {
+abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements ConfirmFormInterface {
 
   /**
    * {@inheritdoc}

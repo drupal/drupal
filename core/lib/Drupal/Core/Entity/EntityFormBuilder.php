@@ -45,14 +45,14 @@ class EntityFormBuilder implements EntityFormBuilderInterface {
    * {@inheritdoc}
    */
   public function getForm(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
-    $controller = $this->entityManager->getFormController($entity->getEntityTypeId(), $operation);
-    $controller->setEntity($entity);
+    $form_object = $this->entityManager->getFormObject($entity->getEntityTypeId(), $operation);
+    $form_object->setEntity($entity);
 
-    $form_state['build_info']['callback_object'] = $controller;
-    $form_state['build_info']['base_form_id'] = $controller->getBaseFormID();
+    $form_state['build_info']['callback_object'] = $form_object;
+    $form_state['build_info']['base_form_id'] = $form_object->getBaseFormID();
     $form_state['build_info'] += array('args' => array());
 
-    return $this->formBuilder->buildForm($controller->getFormId(), $form_state);
+    return $this->formBuilder->buildForm($form_object->getFormId(), $form_state);
   }
 
 }

@@ -70,8 +70,8 @@ function menu_ui_permission() {
 function menu_ui_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_types['menu']
-    ->setFormClass('add', 'Drupal\menu_ui\MenuFormController')
-    ->setFormClass('edit', 'Drupal\menu_ui\MenuFormController')
+    ->setFormClass('add', 'Drupal\menu_ui\MenuForm')
+    ->setFormClass('edit', 'Drupal\menu_ui\MenuForm')
     ->setFormClass('delete', 'Drupal\menu_ui\Form\MenuDeleteForm')
     ->setListBuilderClass('Drupal\menu_ui\MenuListBuilder')
     ->setLinkTemplate('add-form', 'menu_ui.link_add')
@@ -585,7 +585,7 @@ function menu_ui_node_submit(EntityInterface $node, $form, $form_state) {
  *
  * Adds menu options to the node type form.
  *
- * @see NodeTypeFormController::form().
+ * @see NodeTypeForm::form().
  * @see menu_ui_form_node_type_form_submit().
  */
 function menu_ui_form_node_type_form_alter(&$form, $form_state) {

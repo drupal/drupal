@@ -22,7 +22,7 @@ use Drupal\Core\Field\FieldDefinition;
  *     "storage" = "Drupal\Core\Entity\ContentEntityNullStorage",
  *     "view_builder" = "Drupal\contact\MessageViewBuilder",
  *     "form" = {
- *       "default" = "Drupal\contact\MessageFormController"
+ *       "default" = "Drupal\contact\MessageForm"
  *     }
  *   },
  *   entity_keys = {

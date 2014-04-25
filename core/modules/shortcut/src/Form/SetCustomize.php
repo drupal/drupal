@@ -7,7 +7,7 @@
 
 namespace Drupal\shortcut\Form;
 
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Builds the shortcut set customize form.
  */
-class SetCustomize extends EntityFormController {
+class SetCustomize extends EntityForm {
 
   /**
    * The entity being used by this form.

@@ -22,7 +22,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "storage" = "Drupal\config_test\ConfigTestStorage",
  *     "list_builder" = "Drupal\config_test\ConfigTestListBuilder",
  *     "form" = {
- *       "default" = "Drupal\config_test\ConfigTestFormController",
+ *       "default" = "Drupal\config_test\ConfigTestForm",
  *       "delete" = "Drupal\config_test\Form\ConfigTestDeleteForm"
  *     },
  *     "access" = "Drupal\config_test\ConfigTestAccessController"

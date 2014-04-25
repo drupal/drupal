@@ -53,8 +53,8 @@ class HtmlEntityFormController extends FormController {
    *   defaults:
    *     _entity_form: 'node.edit'
    * @endcode
-   * This means that the edit form controller for the node entity will used.
-   * If the entity type has a default form controller, only the name of the
+   * This means that the edit form for the node entity will used.
+   * If the entity type has a default form, only the name of the
    * entity {param} needs to be passed:
    * @code
    *   path: '/foo/{node}/baz'
@@ -74,7 +74,7 @@ class HtmlEntityFormController extends FormController {
       $entity = $this->manager->getStorage($entity_type)->create(array());
     }
 
-    return $this->manager->getFormController($entity_type, $operation)->setEntity($entity);
+    return $this->manager->getFormObject($entity_type, $operation)->setEntity($entity);
   }
 
 }

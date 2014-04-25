@@ -110,9 +110,9 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  */
 function hook_entity_type_build(array &$entity_types) {
   /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
-  // Add a form controller for a custom node form without overriding the default
+  // Add a form for a custom node form without overriding the default
   // node form. To override the default node form, use hook_entity_type_alter().
-  $entity_types['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooFormController');
+  $entity_types['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooForm');
 }
 
 /**
@@ -627,7 +627,7 @@ function hook_entity_display_build_alter(&$build, $context) {
  * @param array $form_state
  *   An associative array containing the current state of the form.
  *
- * @see \Drupal\Core\Entity\EntityFormController::prepareEntity()
+ * @see \Drupal\Core\Entity\EntityForm::prepareEntity()
  */
 function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
   if ($operation == 'edit') {

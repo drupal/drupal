@@ -77,7 +77,7 @@ function node_preview(NodeInterface $node, array &$form_state) {
  *   An associative array containing:
  *   - node: The node entity which is being previewed.
  *
- * @see NodeFormController::preview()
+ * @see NodeForm::preview()
  * @see node_preview()
  */
 function template_preprocess_node_preview(&$variables) {

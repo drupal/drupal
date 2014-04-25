@@ -23,8 +23,8 @@ use Drupal\shortcut\ShortcutInterface;
  *   controllers = {
  *     "access" = "Drupal\shortcut\ShortcutAccessController",
  *     "form" = {
- *       "default" = "Drupal\shortcut\ShortcutFormController",
- *       "add" = "Drupal\shortcut\ShortcutFormController",
+ *       "default" = "Drupal\shortcut\ShortcutForm",
+ *       "add" = "Drupal\shortcut\ShortcutForm",
  *       "delete" = "Drupal\shortcut\Form\ShortcutDeleteForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"

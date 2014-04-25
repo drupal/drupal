@@ -199,7 +199,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
           // The $user global is not a complete user entity, so load the full
           // entity.
           $account = $this->userStorage->load($uid);
-          $admin_form = $this->entityManager->getFormController('user', 'cancel');
+          $admin_form = $this->entityManager->getFormObject('user', 'cancel');
           $admin_form->setEntity($account);
           // Calling this directly required to init form object with $account.
           $admin_form->buildForm($admin_form_mock, $admin_form_state, $this->request);

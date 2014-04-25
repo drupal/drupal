@@ -27,9 +27,9 @@ use Drupal\user\UserInterface;
  *     "list_builder" = "Drupal\user\UserListBuilder",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "form" = {
- *       "default" = "Drupal\user\ProfileFormController",
+ *       "default" = "Drupal\user\ProfileForm",
  *       "cancel" = "Drupal\user\Form\UserCancelForm",
- *       "register" = "Drupal\user\RegisterFormController"
+ *       "register" = "Drupal\user\RegisterForm"
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationHandler"
  *   },

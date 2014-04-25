@@ -13,7 +13,7 @@ use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Temporary form controller for book module.
+ * Remove form for book module.
  */
 class BookRemoveForm extends ConfirmFormBase {
 

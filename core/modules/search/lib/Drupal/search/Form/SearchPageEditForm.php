@@ -8,7 +8,7 @@
 namespace Drupal\search\Form;
 
 /**
- * Provides a form controller for editing a search page.
+ * Provides a form for editing a search page.
  */
 class SearchPageEditForm extends SearchPageFormBase {
 

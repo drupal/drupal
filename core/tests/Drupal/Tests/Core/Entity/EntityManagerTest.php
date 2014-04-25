@@ -325,11 +325,11 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getFormController() method.
+   * Tests the getFormObject() method.
    *
-   * @covers ::getFormController()
+   * @covers ::getFormObject()
    */
-  public function testGetFormController() {
+  public function testGetFormObject() {
     $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $apple->expects($this->once())
       ->method('getFormClass')
@@ -345,25 +345,25 @@ class EntityManagerTest extends UnitTestCase {
       'banana' => $banana,
     ));
 
-    $apple_form = $this->entityManager->getFormController('apple', 'default');
+    $apple_form = $this->entityManager->getFormObject('apple', 'default');
     $this->assertInstanceOf('Drupal\Tests\Core\Entity\TestEntityForm', $apple_form);
     $this->assertAttributeInstanceOf('Drupal\Core\Extension\ModuleHandlerInterface', 'moduleHandler', $apple_form);
     $this->assertAttributeInstanceOf('Drupal\Core\StringTranslation\TranslationInterface', 'translationManager', $apple_form);
 
-    $banana_form = $this->entityManager->getFormController('banana', 'default');
+    $banana_form = $this->entityManager->getFormObject('banana', 'default');
     $this->assertInstanceOf('Drupal\Tests\Core\Entity\TestEntityFormInjected', $banana_form);
     $this->assertAttributeEquals('yellow', 'color', $banana_form);
 
   }
 
   /**
-   * Tests the getFormController() method with an invalid operation.
+   * Tests the getFormObject() method with an invalid operation.
    *
-   * @covers ::getFormController()
+   * @covers ::getFormObject()
    *
    * @expectedException \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function testGetFormControllerInvalidOperation() {
+  public function testGetFormObjectInvalidOperation() {
     $entity = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $entity->expects($this->once())
       ->method('getFormClass')
@@ -371,7 +371,7 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue(''));
     $this->setUpEntityManager(array('test_entity_type' => $entity));
 
-    $this->entityManager->getFormController('test_entity_type', 'edit');
+    $this->entityManager->getFormObject('test_entity_type', 'edit');
   }
 
   /**

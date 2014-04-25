@@ -7,14 +7,14 @@
 
 namespace Drupal\image\Form;
 
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base form controller for image style add and edit forms.
+ * Base form for image style add and edit forms.
  */
-abstract class ImageStyleFormBase extends EntityFormController {
+abstract class ImageStyleFormBase extends EntityForm {
 
   /**
    * The image style entity storage.

@@ -144,7 +144,7 @@ class BasicTest extends WizardTestBase {
   /**
    * Tests the actual wizard form.
    *
-   * @see \Drupal\views_ui\ViewAddFormController::form()
+   * @see \Drupal\views_ui\ViewAddForm::form()
    */
   protected function testWizardForm() {
     $this->drupalGet('admin/structure/views/add');
