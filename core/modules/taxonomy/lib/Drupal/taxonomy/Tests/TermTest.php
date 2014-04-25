@@ -202,11 +202,13 @@ class TermTest extends TaxonomyTestBase {
     }
 
     // Delete term 1 from the term edit page.
-    $this->drupalPostForm('taxonomy/term/' . $term_objects['term1']->id() . '/edit', array(), t('Delete'));
+    $this->drupalGet('taxonomy/term/' . $term_objects['term1']->id() . '/edit');
+    $this->clickLink(t('Delete'));
     $this->drupalPostForm(NULL, NULL, t('Delete'));
 
     // Delete term 2 from the term delete page.
-    $this->drupalPostForm('taxonomy/term/' . $term_objects['term2']->id() . '/delete', array(), t('Delete'));
+    $this->drupalGet('taxonomy/term/' . $term_objects['term2']->id() . '/delete');
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     $term_names = array($term_objects['term3']->getName(), $term_objects['term4']->getName());
 
     // Get the node.
@@ -366,7 +368,8 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
 
     // Delete the term.
-    $this->drupalPostForm('taxonomy/term/' . $term->id() . '/edit', array(), t('Delete'));
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
+    $this->clickLink(t('Delete'));
     $this->drupalPostForm(NULL, NULL, t('Delete'));
 
     // Assert that the term no longer exists.

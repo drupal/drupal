@@ -189,7 +189,6 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     $count = 0;
     foreach (Element::children($element) as $action) {
       $element[$action] += array(
-        '#type' => 'submit',
         '#weight' => ++$count * 5,
       );
     }
@@ -203,30 +202,42 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
 
   /**
    * Returns an array of supported actions for the current entity form.
+   *
+   * @todo Consider introducing a 'preview' action here, since it is used by
+   *   many entity types.
    */
   protected function actions(array $form, array &$form_state) {
-    return array(
-      // @todo Rename the action key from submit to save.
-      'submit' => array(
-        '#value' => $this->t('Save'),
-        '#validate' => array(
-          array($this, 'validate'),
-        ),
-        '#submit' => array(
-          array($this, 'submit'),
-          array($this, 'save'),
-        ),
+    // @todo Rename the action key from submit to save.
+    $actions['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+      '#validate' => array(
+        array($this, 'validate'),
       ),
-      'delete' => array(
-        '#value' => $this->t('Delete'),
-        // No need to validate the form when deleting the entity.
-        '#submit' => array(
-          array($this, 'delete'),
-        ),
+      '#submit' => array(
+        array($this, 'submit'),
+        array($this, 'save'),
       ),
-      // @todo Consider introducing a 'preview' action here, since it is used by
-      // many entity types.
     );
+
+    if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('delete-form')) {
+      $route_info = $this->entity->urlInfo('delete-form');
+      if ($this->getRequest()->query->has('destination')) {
+        $query = $route_info->getOption('query');
+        $query['destination'] = $this->getRequest()->query->get('destination');
+        $route_info->setOption('query', $query);
+      }
+      $actions['delete'] = array(
+        '#type' => 'link',
+        '#title' => $this->t('Delete'),
+        '#attributes' => array(
+          'class' => array('button', 'button--danger'),
+        ),
+      );
+      $actions['delete'] += $route_info->toRenderArray();
+    }
+
+    return $actions;
   }
 
   /**
@@ -271,28 +282,6 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
    */
   public function save(array $form, array &$form_state) {
     // @todo Perform common save operations.
-  }
-
-  /**
-   * Form submission handler for the 'delete' action.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
-   */
-  public function delete(array $form, array &$form_state) {
-    if ($this->entity->hasLinkTemplate('delete-form')) {
-      $form_state['redirect_route'] = $this->entity->urlInfo('delete-form');
-
-      $query = $this->getRequest()->query;
-      if ($query->has('destination')) {
-        $redirect_query = $form_state['redirect_route']->getOption('query') ?: array();
-        $redirect_query['destination'] = $query->get('destination');
-        $form_state['redirect_route']->setOption('query', $redirect_query);
-        $query->remove('destination');
-      }
-    }
   }
 
   /**

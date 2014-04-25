@@ -84,7 +84,9 @@ class EntityFormTest extends WebTestBase {
     $this->assertTrue($entity, format_string('%entity_type: Modified entity found in the database.', array('%entity_type' => $entity_type)));
     $this->assertNotEqual($entity->name->value, $name1, format_string('%entity_type: The entity name has been modified.', array('%entity_type' => $entity_type)));
 
-    $this->drupalPostForm($entity_type . '/manage/' . $entity->id(), array(), t('Delete'));
+    $this->drupalGet($entity_type . '/manage/' . $entity->id());
+    $this->clickLink(t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Confirm'));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertFalse($entity, format_string('%entity_type: Entity not found in the database.', array('%entity_type' => $entity_type)));
   }

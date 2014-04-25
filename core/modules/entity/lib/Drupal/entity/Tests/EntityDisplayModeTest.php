@@ -69,7 +69,7 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->drupalGet('admin/structure/display-modes/view/manage/entity_test.' . $edit['id']);
 
     // Test deleting the view mode.
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the %label view mode?', array('%label' => $edit['label'])));
     $this->drupalPostForm(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted the %label view mode.', array('%label' => $edit['label'])));
@@ -115,7 +115,7 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->drupalGet('admin/structure/display-modes/form/manage/entity_test.' . $edit['id']);
 
     // Test deleting the form mode.
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the %label form mode?', array('%label' => $edit['label'])));
     $this->drupalPostForm(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted the %label form mode.', array('%label' => $edit['label'])));

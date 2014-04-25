@@ -106,14 +106,4 @@ class EntityTestFormController extends ContentEntityFormController {
       $form_state['rebuild'] = TRUE;
     }
   }
-
-  /**
-   * Overrides Drupal\Core\Entity\EntityFormController::delete().
-   */
-  public function delete(array $form, array &$form_state) {
-    $entity = $this->entity;
-    $entity->delete();
-    drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId())));
-    $form_state['redirect_route']['route_name'] = '<front>';
-  }
 }

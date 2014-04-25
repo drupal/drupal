@@ -70,7 +70,7 @@ class PageEditTest extends CustomBlockTestBase {
 
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
-    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->clickLink(t('Delete'));
     $this->assertText(format_string('Are you sure you want to delete !label?', array('!label' => $revised_block->label())));
   }
 

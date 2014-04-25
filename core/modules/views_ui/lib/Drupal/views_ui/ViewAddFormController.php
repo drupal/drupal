@@ -150,6 +150,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     $actions['submit']['#value'] = $this->t('Save and edit');
 
     $actions['cancel'] = array(
+      '#type' => 'submit',
       '#value' => $this->t('Cancel'),
       '#submit' => array(
         array($this, 'cancel'),

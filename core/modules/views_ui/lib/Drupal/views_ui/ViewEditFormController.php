@@ -223,6 +223,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     unset($actions['delete']);
 
     $actions['cancel'] = array(
+      '#type' => 'submit',
       '#value' => $this->t('Cancel'),
       '#submit' => array(
         array($this, 'cancel'),

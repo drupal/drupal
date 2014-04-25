@@ -279,6 +279,7 @@ class NodeFormController extends ContentEntityFormController {
     }
 
     $element['preview'] = array(
+      '#type' => 'submit',
       '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
       '#value' => t('Preview'),
       '#weight' => 20,

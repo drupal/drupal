@@ -307,7 +307,7 @@ class ForumTest extends WebTestBase {
     // Test tags vocabulary form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags');
     $this->assertFieldByName('op', t('Save'), 'Save button found.');
-    $this->assertFieldByName('op', t('Delete'), 'Delete button found.');
+    $this->assertLink(t('Delete'));
     // Test tags vocabulary term form is not affected.
     $this->drupalGet('admin/structure/taxonomy/manage/tags/add');
     $this->assertField('parent[]', 'Parent field found.');
@@ -408,7 +408,8 @@ class ForumTest extends WebTestBase {
    */
   function deleteForum($tid) {
     // Delete the forum.
-    $this->drupalPostForm('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
+    $this->drupalGet('admin/structure/forum/edit/forum/' . $tid);
+    $this->clickLink(t('Delete'));
     $this->assertText('Are you sure you want to delete the forum');
     $this->assertNoText('Add forum');
     $this->assertNoText('Add forum container');

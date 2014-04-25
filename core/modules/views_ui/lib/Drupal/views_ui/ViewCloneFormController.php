@@ -54,6 +54,7 @@ class ViewCloneFormController extends ViewFormControllerBase {
    */
   protected function actions(array $form, array &$form_state) {
     $actions['submit'] = array(
+      '#type' => 'submit',
       '#value' => $this->t('Clone'),
       '#submit' => array(
         array($this, 'submit'),

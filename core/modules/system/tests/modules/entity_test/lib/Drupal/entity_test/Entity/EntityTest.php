@@ -25,7 +25,8 @@ use Drupal\user\UserInterface;
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestFormController"
+ *       "default" = "Drupal\entity_test\EntityTestFormController",
+ *       "delete" = "Drupal\entity_test\EntityTestDeleteFormController"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
@@ -41,6 +42,7 @@ use Drupal\user\UserInterface;
  *   links = {
  *     "canonical" = "entity_test.render",
  *     "edit-form" = "entity_test.edit_entity_test",
+ *     "delete-form" = "entity_test.delete_entity_test",
  *     "admin-form" = "entity_test.admin_entity_test"
  *   }
  * )

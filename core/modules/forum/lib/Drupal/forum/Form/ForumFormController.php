@@ -101,16 +101,20 @@ class ForumFormController extends TermFormController {
   /**
    * {@inheritdoc}
    */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = $this->entity->urlInfo('forum-delete-form');
+  protected function actions(array $form, array &$form_state) {
+    $actions = parent::actions($form, $form_state);
 
-    $query = $this->getRequest()->query;
-    if ($query->has('destination')) {
-      $redirect_query = $form_state['redirect_route']->getOption('query') ?: array();
-      $redirect_query['destination'] = $query->get('destination');
-      $form_state['redirect_route']->setOption('query', $redirect_query);
-      $query->remove('destination');
+    if (!$this->entity->isNew() && $this->entity->hasLinkTemplate('forum-delete-form')) {
+      $route_info = $this->entity->urlInfo('forum-delete-form');
+      $actions['delete']['#options'] = $route_info->getOptions();
+      $actions['delete']['#route_name'] = $route_info->getRouteName();
+      $actions['delete']['#route_parameters'] = $route_info->getRouteParameters();
     }
+    else {
+      unset($actions['delete']);
+    }
+
+    return $actions;
   }
 
   /**

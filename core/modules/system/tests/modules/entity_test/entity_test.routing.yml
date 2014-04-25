@@ -5,6 +5,34 @@ entity_test.render:
   requirements:
     _access: 'TRUE'
 
+entity_test.delete_entity_test:
+  path: '/entity_test/delete/entity_test/{entity_test}'
+  defaults:
+    _entity_form: entity_test.delete
+  requirements:
+    _access: 'TRUE'
+
+entity_test.delete_entity_test_mul:
+  path: '/entity_test/delete/entity_test_mul/{entity_test_mul}'
+  defaults:
+    _entity_form: entity_test_mul.delete
+  requirements:
+    _access: 'TRUE'
+
+entity_test.delete_entity_test_mulrev:
+  path: '/entity_test/delete/entity_test_mulrev/{entity_test_mulrev}'
+  defaults:
+    _entity_form: entity_test_mulrev.delete
+  requirements:
+    _access: 'TRUE'
+
+entity_test.delete_entity_test_rev:
+  path: '/entity_test/delete/entity_test_rev/{entity_test_rev}'
+  defaults:
+    _entity_form: entity_test_rev.delete
+  requirements:
+    _access: 'TRUE'
+
 entity_test.render_options:
   path: '/entity_test_converter/{foo}'
   options:

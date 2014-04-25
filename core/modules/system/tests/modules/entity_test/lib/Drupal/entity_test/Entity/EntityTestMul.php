@@ -21,7 +21,8 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestFormController"
+ *       "default" = "Drupal\entity_test\EntityTestFormController",
+ *       "delete" = "Drupal\entity_test\EntityTestDeleteFormController"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
  *   },
@@ -38,6 +39,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *   links = {
  *     "canonical" = "entity_test.edit_entity_test_mul",
  *     "edit-form" = "entity_test.edit_entity_test_mul",
+ *     "delete-form" = "entity_test.delete_entity_test_mul",
  *     "admin-form" = "entity_test.admin_entity_test_mul"
  *   }
  * )

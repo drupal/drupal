@@ -92,25 +92,6 @@ class ResponsiveImageMappingFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::actions().
-   */
-  protected function actions(array $form, array &$form_state) {
-    // Only includes a Save action for the entity, no direct Delete button.
-    return array(
-      'submit' => array(
-        '#value' => $this->t('Save'),
-        '#validate' => array(
-          array($this, 'validate'),
-        ),
-        '#submit' => array(
-          array($this, 'submit'),
-          array($this, 'save'),
-        ),
-      ),
-    );
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {

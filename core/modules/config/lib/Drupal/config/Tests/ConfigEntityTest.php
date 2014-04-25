@@ -272,7 +272,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Delete the configuration entity.
     $this->drupalGet("admin/structure/config_test/manage/$id");
-    $this->drupalPostForm(NULL, array(), 'Delete');
+    $this->clickLink(t('Delete'));
     $this->assertUrl("admin/structure/config_test/manage/$id/delete");
     $this->drupalPostForm(NULL, array(), 'Delete');
     $this->assertUrl('admin/structure/config_test');

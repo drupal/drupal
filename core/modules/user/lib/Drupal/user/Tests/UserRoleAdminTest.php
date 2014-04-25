@@ -68,7 +68,8 @@ class UserRoleAdminTest extends WebTestBase {
     $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
 
     // Test deleting a role.
-    $this->drupalPostForm("admin/people/roles/manage/{$role->id()}", array(), t('Delete'));
+    $this->drupalGet("admin/people/roles/manage/{$role->id()}");
+    $this->clickLink(t('Delete'));
     $this->drupalPostForm(NULL, array(), t('Delete'));
     $this->assertRaw(t('Role %label has been deleted.', array('%label' => $role_name)));
     $this->assertNoLinkByHref("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
