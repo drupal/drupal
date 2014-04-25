@@ -14,7 +14,7 @@ namespace Drupal\views\Tests;
  */
 class ViewsThemeIntegrationTest extends ViewTestBase {
 
- /**
+  /**
    * Views used by this test.
    *
    * @var array
