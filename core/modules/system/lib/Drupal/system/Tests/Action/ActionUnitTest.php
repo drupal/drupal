@@ -83,4 +83,31 @@ class ActionUnitTest extends DrupalUnitTestBase {
     $this->assertEqual($name, $account->label());
   }
 
+  /**
+   * Tests the dependency calculation of actions.
+   */
+  public function testDependencies() {
+    // Create a new action that depends on a user role.
+    $action = entity_create('action', array(
+      'id' => 'user_add_role_action.' . DRUPAL_ANONYMOUS_RID,
+      'type' => 'user',
+      'label' => t('Add the anonymous role to the selected users'),
+      'configuration' => array(
+        'rid' => DRUPAL_ANONYMOUS_RID,
+      ),
+      'plugin' => 'user_add_role_action',
+    ));
+    $action->save();
+
+    $expected = array(
+      'entity' => array(
+        'user.role.' . DRUPAL_ANONYMOUS_RID,
+      ),
+      'module' => array(
+        'user',
+      ),
+    );
+    $this->assertIdentical($expected, $action->calculateDependencies());
+  }
+
 }

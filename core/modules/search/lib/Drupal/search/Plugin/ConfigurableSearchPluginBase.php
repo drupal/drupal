@@ -60,6 +60,13 @@ abstract class ConfigurableSearchPluginBase extends SearchPluginBase implements 
   /**
    * {@inheritdoc}
    */
+  public function calculateDependencies() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setSearchPageId($search_page_id) {
     $this->searchPageId = $search_page_id;
     return $this;

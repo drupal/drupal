@@ -8,11 +8,41 @@
 namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for operations to change a user's role.
  */
-abstract class ChangeUserRoleBase extends ConfigurableActionBase {
+abstract class ChangeUserRoleBase extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The user role entity type.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeInterface
+   */
+  protected $entityType;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeInterface $entity_type) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityType = $entity_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')->getDefinition('user_role')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -44,6 +74,18 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase {
    */
   public function submitConfigurationForm(array &$form, array &$form_state) {
     $this->configuration['rid'] = $form_state['values']['rid'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $dependencies = array();
+    if (!empty($this->configuration['rid'])) {
+      $prefix = $this->entityType->getConfigPrefix() . '.';
+      $dependencies['entity'][] = $prefix . $this->configuration['rid'];
+    }
+    return $dependencies;
   }
 
 }

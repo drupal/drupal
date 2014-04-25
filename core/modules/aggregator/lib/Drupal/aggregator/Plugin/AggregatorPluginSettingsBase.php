@@ -29,4 +29,11 @@ abstract class AggregatorPluginSettingsBase extends PluginBase implements Plugin
   public function validateConfigurationForm(array &$form, array &$form_state) {
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return array();
+  }
+
 }

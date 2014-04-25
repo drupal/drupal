@@ -87,6 +87,13 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   /**
    * {@inheritdoc}
    */
+  public function calculateDependencies() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function access(AccountInterface $account) {
     // By default, the block is visible unless user-configured rules indicate
     // that it should be hidden.

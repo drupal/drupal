@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config\Entity;
 
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity;
@@ -307,11 +308,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
         $this->addDependency('module', $definition['provider']);
         // Plugins can declare additional dependencies in their definition.
         if (isset($definition['config_dependencies'])) {
-          foreach ($definition['config_dependencies'] as $type => $dependencies) {
-            foreach ($dependencies as $dependency) {
-              $this->addDependency($type, $dependency);
-            }
-          }
+          $this->addDependencies($definition['config_dependencies']);
+        }
+        // If a plugin is configurable, calculate its dependencies.
+        if ($instance instanceof ConfigurablePluginInterface && $plugin_dependencies = $instance->calculateDependencies()) {
+          $this->addDependencies($plugin_dependencies);
         }
       }
     }

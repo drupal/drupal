@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests\Plugin\Action;
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\Action\AddRoleUser;
 
 /**
@@ -15,33 +14,17 @@ use Drupal\user\Plugin\Action\AddRoleUser;
  *
  * @see \Drupal\user\Plugin\Action\AddRoleUser
  */
-class AddRoleUserTest extends UnitTestCase {
+class AddRoleUserTest extends RoleUserTestBase {
 
   /**
-   * The mocked account.
-   *
-   * @var \Drupal\user\UserInterface
+   * {@inheritdoc}
    */
-  protected $account;
-
   public static function getInfo() {
     return array(
       'name' => 'Add user plugin',
       'description' => 'Tests the role add plugin',
       'group' => 'User',
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    $this->account = $this
-      ->getMockBuilder('Drupal\user\Entity\User')
-      ->disableOriginalConstructor()
-      ->getMock();
   }
 
   /**
@@ -57,7 +40,7 @@ class AddRoleUserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $config = array('rid' => 'test_role_1');
-    $remove_role_plugin = new AddRoleUser($config, 'user_add_role_action', array('type' => 'user'));
+    $remove_role_plugin = new AddRoleUser($config, 'user_add_role_action', array('type' => 'user'), $this->userRoleEntityType);
 
     $remove_role_plugin->execute($this->account);
   }
@@ -75,7 +58,7 @@ class AddRoleUserTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
 
     $config = array('rid' => 'test_role_1');
-    $remove_role_plugin = new AddRoleUser($config, 'user_remove_role_action', array('type' => 'user'));
+    $remove_role_plugin = new AddRoleUser($config, 'user_remove_role_action', array('type' => 'user'), $this->userRoleEntityType);
 
     $remove_role_plugin->execute($this->account);
   }

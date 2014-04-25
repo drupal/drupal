@@ -116,4 +116,11 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
     return array();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return array();
+  }
+
 }
