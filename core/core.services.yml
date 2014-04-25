@@ -772,3 +772,6 @@ services:
     arguments: ['@cache.discovery', '@module_handler']
   info_parser:
     class: Drupal\Core\Extension\InfoParser
+  element_info:
+    class: Drupal\Core\Render\ElementInfo
+    arguments: ['@module_handler']

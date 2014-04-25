@@ -4178,25 +4178,12 @@ function drupal_render_cid_create($elements) {
  *
  * @param $type
  *   An element type as defined by hook_element_info().
+ *
+ * @deprecated As of Drupal 8.0, use \Drupal::service('element_info')->getInfo()
+ *   instead.
  */
 function element_info($type) {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['cache'] = &drupal_static(__FUNCTION__);
-  }
-  $cache = &$drupal_static_fast['cache'];
-
-  if (!isset($cache)) {
-    $cache = \Drupal::moduleHandler()->invokeAll('element_info');
-    foreach ($cache as $element_type => $info) {
-      $cache[$element_type]['#type'] = $element_type;
-    }
-    // Allow modules to alter the element type defaults.
-    \Drupal::moduleHandler()->alter('element_info', $cache);
-  }
-
-  return isset($cache[$type]) ? $cache[$type] : array();
+  return \Drupal::service('element_info')->getInfo($type);
 }
 
 /**
