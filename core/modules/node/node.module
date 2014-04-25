@@ -175,6 +175,7 @@ function node_theme() {
     ),
     'field__node__title' => array(
       'base hook' => 'field',
+      'template' => 'field--node--title',
     ),
   );
 }
@@ -703,23 +704,6 @@ function template_preprocess_node(&$variables) {
     $variables['attributes']['class'][] = 'preview';
   }
   $variables['content_attributes']['class'][] = 'content';
-}
-
-/**
- * Returns HTML for the node title field.
- *
- * This is an override of theme_field() for the node title field. See that
- * function for documentation about its details and overrides.
- *
- * @param array $variables
- *   An associative array. See theme_field() for details.
- *
- * @see theme_field()
- *
- * @ingroup themeable
- */
-function theme_field__node__title($variables) {
-  return '<span' . $variables['attributes'] . '>' . drupal_render($variables['items']) . '</span>';
 }
 
 /**
