@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator;
+use Drupal\Core\Site\Settings;
 
 /**
  * Discovers available extensions in the filesystem.

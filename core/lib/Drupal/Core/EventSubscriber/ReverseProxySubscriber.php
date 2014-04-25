@@ -7,10 +7,10 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\Component\Utility\Settings;
 
 /**
  * Reverse proxy subscriber for controller requests.
@@ -20,14 +20,14 @@ class ReverseProxySubscriber implements EventSubscriberInterface {
   /**
    * A settings object.
    *
-   * @var \Drupal\Component\Utility\Settings
+   * @var \Drupal\Core\Site\Settings
    */
   protected $settings;
 
   /**
    * Construct the ReverseProxySubscriber.
    *
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *   The read-only settings object of this request.
    */
   public function __construct(Settings $settings) {

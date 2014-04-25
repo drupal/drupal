@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\File;
 
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 
 /**
  * Unmanaged move related tests.

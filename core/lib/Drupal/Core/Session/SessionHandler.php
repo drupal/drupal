@@ -8,8 +8,8 @@
 namespace Drupal\Core\Session;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\RequestStack;
 

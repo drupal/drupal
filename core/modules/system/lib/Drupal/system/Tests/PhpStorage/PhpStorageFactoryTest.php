@@ -8,8 +8,8 @@
 namespace Drupal\system\Tests\PhpStorage;
 
 use Drupal\Component\PhpStorage\MTimeProtectedFileStorage;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\system\PhpStorage\MockPhpStorage;

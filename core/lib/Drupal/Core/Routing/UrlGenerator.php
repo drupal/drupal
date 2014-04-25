@@ -15,11 +15,11 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Generates URLs from route names and parameters.
@@ -86,7 +86,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    *   The route processor.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *    The config factory.
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *    The read only settings.
    * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
    *   An optional logger for recording errors.

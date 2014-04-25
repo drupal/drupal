@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 
 /**
  * Sets up the theming system for maintenance page.

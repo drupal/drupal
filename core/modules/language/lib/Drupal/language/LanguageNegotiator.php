@@ -8,10 +8,10 @@
 namespace Drupal\language;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -43,7 +43,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * The settings instance.
    *
-   * @return \Drupal\Component\Utility\Settings
+   * @return \Drupal\Core\Site\Settings
    */
   protected $settings;
 
@@ -84,7 +84,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    *   The language negotiation methods plugin manager
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
    */
   public function __construct(ConfigurableLanguageManagerInterface $language_manager, PluginManagerInterface $negotiator_manager, ConfigFactoryInterface $config_factory, Settings $settings) {

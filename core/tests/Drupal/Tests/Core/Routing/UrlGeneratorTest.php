@@ -7,10 +7,10 @@
 
 namespace Drupal\Tests\Core\Routing;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Routing\UrlGenerator;
+use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;

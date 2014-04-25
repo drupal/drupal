@@ -8,9 +8,9 @@
  * You may copy this code freely under the conditions of the GPL.
  */
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Site\Settings;
 
 define('USE_ASSERTS', FALSE);
 

@@ -9,7 +9,6 @@ namespace Drupal\simpletest;
 
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
@@ -20,6 +19,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Request;
@@ -1349,7 +1349,7 @@ abstract class TestBase {
    * @param $value
    *   The value of the setting.
    *
-   * @see \Drupal\Component\Utility\Settings::get()
+   * @see \Drupal\Core\Site\Settings::get()
    */
   protected function settingsSet($name, $value) {
     $settings = Settings::getAll();

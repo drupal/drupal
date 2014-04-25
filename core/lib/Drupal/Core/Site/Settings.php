@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Utility\Settings.
+ * Contains \Drupal\Core\Site\Settings.
  */
 
-namespace Drupal\Component\Utility;
+namespace Drupal\Core\Site;
 
 /**
  * Read only settings that are initialized with the class.
@@ -24,7 +24,7 @@ final class Settings {
   /**
    * Singleton instance.
    *
-   * @var \Drupal\Component\Utility\Settings
+   * @var \Drupal\Core\Site\Settings
    */
   private static $instance;
 
@@ -34,7 +34,7 @@ final class Settings {
    * A singleton is used because this class is used before the container is
    * available.
    *
-   * @return \Drupal\Component\Utility\Settings
+   * @return \Drupal\Core\Site\Settings
    */
   public static function getInstance() {
     return self::$instance;

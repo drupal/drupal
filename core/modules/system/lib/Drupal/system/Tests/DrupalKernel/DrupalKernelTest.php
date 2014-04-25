@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\DrupalKernel;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**

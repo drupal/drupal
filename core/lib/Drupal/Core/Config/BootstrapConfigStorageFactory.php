@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Database;
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 
 /**
  * Defines a factory for retrieving the config storage used pre-kernel.

@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Utility\SettingsTest.php
+ * Contains \Drupal\Tests\Core\Site\SettingsTest.
  */
 
-namespace Drupal\Tests\Component\Utility;
+namespace Drupal\Tests\Core\Site;
 
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests read only settings.
+ * Tests read-only settings.
  *
- * @see \Drupal\Component\Utility\Settings
+ * @coversDefaultClass \Drupal\Core\Site\Settings
  */
 class SettingsTest extends UnitTestCase {
 
@@ -25,34 +25,36 @@ class SettingsTest extends UnitTestCase {
   protected $config = array();
 
   /**
-   * The settings object to test.
+   * The class under test.
    *
-   * @var \Drupal\Component\Utility\Settings
+   * @var \Drupal\Core\Site\Settings
    */
   protected $settings;
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
-      'name' => 'Read-only settings test',
-      'description' => 'Confirm that \Drupal\Component\Utility\Settings is working.',
+      'name' => '\Drupal\Core\Site\Settings unit test',
+      'description' => '',
       'group' => 'Common',
     );
   }
 
   /**
-   * Setup a basic configuration array.
+   * @covers ::__construct
    */
   public function setUp(){
     $this->config = array(
       'one' => '1',
       'two' => '2',
     );
-
     $this->settings = new Settings($this->config);
   }
 
   /**
-   * Tests Settings::get().
+   * @covers ::get
    */
   public function testGet() {
     // Test stored settings.
@@ -65,16 +67,16 @@ class SettingsTest extends UnitTestCase {
   }
 
   /**
-   * Test Settings::getAll().
+   * @covers ::getAll
    */
   public function testGetAll() {
     $this->assertEquals($this->config, Settings::getAll());
   }
 
   /**
-   * Tests Settings::getInstance().
+   * @covers ::getInstance
    */
-  public function testGetSingleton() {
+  public function testGetInstance() {
     $singleton = $this->settings->getInstance();
     $this->assertEquals($singleton, $this->settings);
   }

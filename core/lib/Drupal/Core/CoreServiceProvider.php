@@ -8,7 +8,6 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Cache\CacheContextsPass;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\Config\ConfigFactoryOverridePass;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -28,6 +27,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterAuthenticationPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Drupal\Core\Http\HttpClientSubscriberPass;
 use Drupal\Core\Plugin\PluginManagerPass;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Theme\ThemeNegotiatorPass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;

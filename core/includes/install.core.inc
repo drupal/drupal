@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Database\Database;
@@ -13,6 +12,7 @@ use Drupal\Core\Installer\Exception\NoProfilesException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;

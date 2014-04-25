@@ -52,8 +52,8 @@ abstract class StorageTestBase extends UnitTestBase {
       ->register('service_container', 'Symfony\Component\DependencyInjection\ContainerBuilder')
       ->setSynthetic(TRUE);
     $this->container->set('service_container', $this->container);
-    $this->container->register('settings', 'Drupal\Component\Utility\Settings')
-      ->setFactoryClass('Drupal\Component\Utility\Settings')
+    $this->container->register('settings', 'Drupal\Core\Site\Settings')
+      ->setFactoryClass('Drupal\Core\Site\Settings')
       ->setFactoryMethod('getInstance');
     $this->container
       ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')

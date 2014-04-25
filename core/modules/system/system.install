@@ -8,8 +8,8 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\Component\Utility\Settings;
 
 /**
  * Implements hook_requirements().

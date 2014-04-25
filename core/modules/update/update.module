@@ -11,7 +11,7 @@
  * ability to install contributed modules and themes via an user interface.
  */
 
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 
 // These are internally used constants for this code, do not modify.
 

@@ -245,8 +245,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       // together here, it still might a keyvalue storage for anything using
       // \Drupal::state() -- that's why a memory service was added in the first
       // place.
-      $container->register('settings', 'Drupal\Component\Utility\Settings')
-        ->setFactoryClass('Drupal\Component\Utility\Settings')
+      $container->register('settings', 'Drupal\Core\Site\Settings')
+        ->setFactoryClass('Drupal\Core\Site\Settings')
         ->setFactoryMethod('getInstance');
 
       $container

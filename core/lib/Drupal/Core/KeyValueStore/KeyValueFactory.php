@@ -6,7 +6,8 @@
  */
 
 namespace Drupal\Core\KeyValueStore;
-use Drupal\Component\Utility\Settings;
+
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -52,14 +53,14 @@ class KeyValueFactory implements KeyValueFactoryInterface {
   /**
    * The read-only settings container.
    *
-   * @var \Drupal\Component\Utility\Settings
+   * @var \Drupal\Core\Site\Settings
    */
   protected $settings;
 
   /**
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container.
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *  The read-only settings container.
    */
   function __construct(ContainerInterface $container, Settings $settings) {

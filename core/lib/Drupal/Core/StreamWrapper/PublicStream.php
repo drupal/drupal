@@ -8,7 +8,7 @@
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 
 /**
  * Defines a Drupal public (public://) stream wrapper class.

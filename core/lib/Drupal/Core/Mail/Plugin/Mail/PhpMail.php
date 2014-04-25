@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Mail\Plugin\Mail;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Mail\MailInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Defines the default Drupal mail backend, using PHP's native mail() function.

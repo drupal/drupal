@@ -7,11 +7,11 @@
 
 namespace Drupal\language\HttpKernel;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\LanguageNegotiatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +69,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   A config factory object for retrieving configuration settings.
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
    *   The configurable language manager.

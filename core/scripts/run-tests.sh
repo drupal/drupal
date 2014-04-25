@@ -5,10 +5,10 @@
  * This script runs Drupal tests from command line.
  */
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__ . '/../vendor/autoload.php';

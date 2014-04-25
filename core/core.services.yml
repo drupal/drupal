@@ -145,8 +145,8 @@ services:
     class: Drupal\Component\Serialization\Yaml
 
   settings:
-    class: Drupal\Component\Utility\Settings
-    factory_class: Drupal\Component\Utility\Settings
+    class: Drupal\Core\Site\Settings
+    factory_class: Drupal\Core\Site\Settings
     factory_method: getInstance
   state:
     class: Drupal\Core\State\State

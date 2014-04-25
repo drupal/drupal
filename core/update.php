@@ -14,9 +14,9 @@
  * back to its original state!
  */
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Update\Form\UpdateScriptSelectionForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

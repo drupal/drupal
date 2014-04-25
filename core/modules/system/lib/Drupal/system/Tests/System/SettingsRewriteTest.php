@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\UnitTestBase;
-use Drupal\Component\Utility\Settings;
 
 /**
  * Tests the drupal_rewrite_settings() function.

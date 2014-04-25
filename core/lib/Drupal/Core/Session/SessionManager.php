@@ -8,10 +8,10 @@
 namespace Drupal\Core\Session;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\SessionHandler;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**

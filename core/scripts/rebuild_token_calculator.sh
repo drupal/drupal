@@ -11,7 +11,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once dirname(__DIR__) . '/includes/bootstrap.inc';
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 

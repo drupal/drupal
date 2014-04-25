@@ -8,8 +8,8 @@
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Component\PhpStorage\FileStorage;
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 
 /**

@@ -8,8 +8,8 @@
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Cache\CacheFactory;
+use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**

@@ -9,7 +9,6 @@ namespace Drupal\Core\Authentication\Provider;
 
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Session\SessionManagerInterface;
-use Drupal\Component\Utility\Settings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 

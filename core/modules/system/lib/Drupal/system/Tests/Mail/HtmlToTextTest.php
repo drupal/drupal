@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\Mail;
 
+use Drupal\Core\Site\Settings;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Utility\Settings;
 
 /**
  * Tests for drupal_html_to_text().

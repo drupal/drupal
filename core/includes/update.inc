@@ -9,7 +9,6 @@
  */
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;

@@ -1,8 +1,8 @@
 <?php
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Site\Settings;
 
 /**
  * @file

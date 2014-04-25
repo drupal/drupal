@@ -7,9 +7,9 @@
 
 namespace Drupal\update\Access;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,14 +21,14 @@ class UpdateManagerAccessCheck implements AccessInterface {
   /**
    * Settings Service.
    *
-   * @var \Drupal\Component\Utility\Settings
+   * @var \Drupal\Core\Site\Settings
    */
   protected $settings;
 
   /**
    * Constructs a UpdateManagerAccessCheck object.
    *
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *   The read-only settings container.
    */
   public function __construct(Settings $settings) {

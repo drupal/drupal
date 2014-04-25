@@ -6,8 +6,8 @@
  */
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Site\Settings;
 
 /**
  * Composes and optionally sends an e-mail message.

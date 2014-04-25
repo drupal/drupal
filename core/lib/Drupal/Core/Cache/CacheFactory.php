@@ -10,7 +10,7 @@ namespace Drupal\Core\Cache;
 /**
  * Defines the cache backend factory.
  */
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,14 +22,14 @@ class CacheFactory implements CacheFactoryInterface,  ContainerAwareInterface {
   /**
    * The settings array.
    *
-   * @var \Drupal\Component\Utility\Settings
+   * @var \Drupal\Core\Site\Settings
    */
   protected $settings;
 
   /**
    * Constructs CacheFactory object.
    *
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *   The settings array.
    */
   function __construct(Settings $settings) {

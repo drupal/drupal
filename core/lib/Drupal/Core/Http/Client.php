@@ -8,7 +8,7 @@
 namespace Drupal\Core\Http;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Event\SubscriberInterface;
 

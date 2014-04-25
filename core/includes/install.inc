@@ -8,11 +8,11 @@
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
-use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Site\Settings;
 
 /**
  * Requirement severity -- Informational message only.

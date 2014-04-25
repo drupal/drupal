@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\PhpStorage;
 
-use Drupal\Component\Utility\Settings;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 
 /**

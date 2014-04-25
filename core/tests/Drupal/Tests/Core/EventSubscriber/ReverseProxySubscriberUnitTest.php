@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\Core\EventSubscriber;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\EventSubscriber\ReverseProxySubscriber;
+use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -73,7 +73,7 @@ class ReverseProxySubscriberUnitTest extends UnitTestCase {
    * \Symfony\Component\HttpFoundation\Request::setTrustedProxies() should
    * always be called when reverse proxy settings are enabled.
    *
-   * @param \Drupal\Component\Utility\Settings $settings
+   * @param \Drupal\Core\Site\Settings $settings
    *   The settings object that holds reverse proxy configuration.
    */
   protected function trustedHeadersAreSet(Settings $settings) {
