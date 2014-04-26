@@ -11,7 +11,7 @@ use Drupal\simpletest\UnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests unicode handling features implemented in unicode.inc.
+ * Tests table sorting features implemented in tablesort.inc.
  */
 class TableSortExtenderUnitTest extends UnitTestBase {
 
