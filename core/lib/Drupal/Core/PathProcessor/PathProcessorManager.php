@@ -57,7 +57,6 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
    *
    * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $processor
    *   The processor object to add.
-   *
    * @param int $priority
    *   The priority of the processor being added.
    */
@@ -97,7 +96,6 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
    *
    * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $processor
    *   The processor object to add.
-   *
    * @param int $priority
    *   The priority of the processor being added.
    */

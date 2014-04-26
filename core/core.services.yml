@@ -81,6 +81,7 @@ services:
     class: Drupal\Core\Config\ConfigFactory
     tags:
       - { name: event_subscriber }
+      - { name: service_collector, tag: 'config.factory.override', call: addOverride }
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed']
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
@@ -169,6 +170,8 @@ services:
     arguments: ['@path.alias_storage', '@path.alias_whitelist', '@language_manager']
   http_client:
     class: Drupal\Core\Http\Client
+    tags:
+      - { name: service_collector, tag: http_client_subscriber, call: attach }
   http_client_simpletest_subscriber:
     class: Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
     tags:
@@ -176,6 +179,8 @@ services:
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
     arguments: ['@access_check.theme', '@request_stack']
+    tags:
+      - { name: service_collector, tag: theme_negotiator, call: addNegotiator }
   theme.negotiator.default:
     class: Drupal\Core\Theme\DefaultNegotiator
     arguments: ['@config.factory']
@@ -276,6 +281,8 @@ services:
     arguments: ['@language_manager']
     calls:
       - [initLanguageManager]
+    tags:
+      - { name: service_collector, tag: string_translator, call: addTranslator }
   database.slave:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database
@@ -321,6 +328,8 @@ services:
     arguments: ['@router.route_provider']
     calls:
       - [setFinalMatcher, ['@router.matcher.final_matcher']]
+    tags:
+      - { name: service_collector, tag: route_filter, call: addRouteFilter }
   url_generator:
     class: Drupal\Core\Routing\UrlGenerator
     arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@settings']
@@ -333,6 +342,8 @@ services:
   router.dynamic:
     class: Symfony\Cmf\Component\Routing\DynamicRouter
     arguments: ['@router.request_context', '@router.matcher', '@url_generator']
+    tags:
+      - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer }
   router:
     class: Symfony\Cmf\Component\Routing\ChainRouter
     calls:
@@ -595,8 +606,13 @@ services:
     arguments: [['@exception_controller', execute]]
   route_processor_manager:
     class: Drupal\Core\RouteProcessor\RouteProcessorManager
+    tags:
+      - { name: service_collector, tag: route_processor_outbound, call: addOutbound }
   path_processor_manager:
     class: Drupal\Core\PathProcessor\PathProcessorManager
+    tags:
+      - { name: service_collector, tag: path_processor_inbound, call: addInbound }
+      - { name: service_collector, tag: path_processor_outbound, call: addOutbound }
   path_processor_decode:
     class: Drupal\Core\PathProcessor\PathProcessorDecode
     tags:
@@ -648,6 +664,8 @@ services:
   breadcrumb:
     class: Drupal\Core\Breadcrumb\BreadcrumbManager
     arguments: ['@module_handler']
+    tags:
+      - { name: service_collector, tag: breadcrumb_builder, call: addBuilder }
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler', '@cache.discovery', '@language_manager']
