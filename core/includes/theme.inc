@@ -2407,16 +2407,6 @@ function template_preprocess_field(&$variables, $hook) {
   if (!isset($default_attributes)) {
     $default_attributes = new Attribute;
   }
-  // The default theme implementation for fields is a function.
-  // template_preprocess() (which initializes the attributes, title_attributes,
-  // and content_attributes arrays) does not run for theme function
-  // implementations. Additionally, Attribute objects for the three variables
-  // below only get instantiated for template file implementations, and we need
-  // Attribute objects for printing in both theme functions and template files.
-  // For best performance, we only instantiate Attribute objects when needed.
-  $variables['attributes'] = isset($variables['attributes']) ? new Attribute($variables['attributes']) : clone $default_attributes;
-  $variables['title_attributes'] = isset($variables['title_attributes']) ? new Attribute($variables['title_attributes']) : clone($default_attributes);
-  $variables['content_attributes'] = isset($variables['content_attributes']) ? new Attribute($variables['content_attributes']) : clone($default_attributes);
 
   // Modules (e.g., rdf.module) can add field item attributes (to
   // $item->_attributes) within hook_entity_prepare_view(). Some field
