@@ -15,7 +15,7 @@ interface MigrateLoadInterface {
    * Load an additional migration.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The migration storage controller.
+   *   The migration storage.
    * @param string $sub_id
    *   For example, when loading d6_node:article, this will be article.
    * @return \Drupal\migrate\Entity\MigrationInterface
@@ -26,7 +26,7 @@ interface MigrateLoadInterface {
    * Load additional migrations.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The migration storage controller.
+   *   The migration storage.
    * @param array $sub_ids
    *   For example, when loading d6_node:article, sub_id will be article.
    *   If NULL then load all sub-migrations.
