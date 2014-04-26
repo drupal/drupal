@@ -42,7 +42,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Create user.
     $this->admin_user = $this->drupalCreateUser(array(
-      'administer responsive image',
+      'administer responsive images',
       'access content',
       'access administration pages',
       'administer site configuration',

@@ -4,7 +4,7 @@ responsive_image.mapping_page:
     _entity_list: 'responsive_image_mapping'
     _title: 'Responsive image mappings'
   requirements:
-    _permission: 'administer responsive image'
+    _permission: 'administer responsive images'
 
 responsive_image.mapping_page_add:
   path: '/admin/config/media/responsive-image-mapping/add'
@@ -12,7 +12,7 @@ responsive_image.mapping_page_add:
     _entity_form: 'responsive_image_mapping.add'
     _title: 'Add responsive image mapping'
   requirements:
-    _permission: 'administer responsive image'
+    _permission: 'administer responsive images'
 
 responsive_image.mapping_page_edit:
   path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}'
@@ -20,7 +20,7 @@ responsive_image.mapping_page_edit:
     _entity_form: 'responsive_image_mapping.edit'
     _title: 'Edit responsive image mapping'
   requirements:
-    _permission: 'administer responsive image'
+    _permission: 'administer responsive images'
 
 responsive_image.mapping_page_duplicate:
   path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}/duplicate'
@@ -28,7 +28,7 @@ responsive_image.mapping_page_duplicate:
     _entity_form: 'responsive_image_mapping.duplicate'
     _title: 'Duplicate responsive image mapping'
   requirements:
-    _permission: 'administer responsive image'
+    _permission: 'administer responsive images'
 
 responsive_image.mapping_action_confirm:
   path: '/admin/config/media/responsive-image-mapping/{responsive_image_mapping}/delete'
@@ -36,4 +36,4 @@ responsive_image.mapping_action_confirm:
     _entity_form: 'responsive_image_mapping.delete'
     _title: 'Delete'
   requirements:
-    _permission: 'administer responsive image'
+    _permission: 'administer responsive images'

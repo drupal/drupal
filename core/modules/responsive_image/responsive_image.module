@@ -38,7 +38,7 @@ function responsive_image_help($path, $arg) {
  */
 function responsive_image_permission() {
   return array(
-    'administer responsive image' => array(
+    'administer responsive images' => array(
       'title' => t('Administer responsive images'),
     ),
   );

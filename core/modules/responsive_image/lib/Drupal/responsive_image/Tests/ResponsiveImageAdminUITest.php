@@ -28,7 +28,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Responsive Image administration functionality',
-      'description' => 'Thoroughly test the administrative interface of the responsive image module.',
+      'description' => 'Thoroughly test the administrative interface of the Responsive Image module.',
       'group' => 'Responsive Image',
     );
   }
@@ -41,7 +41,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
 
     // Create user.
     $this->admin_user = $this->drupalCreateUser(array(
-      'administer responsive image',
+      'administer responsive images',
     ));
 
     $this->drupalLogin($this->admin_user);
@@ -81,7 +81,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     $this->drupalGet('admin/config/media/responsive-image-mapping');
     $this->assertText('There is no Responsive image mapping yet.');
 
-    // Add a new responsive_image mapping, our breakpoint set should be selected.
+    // Add a new responsive image mapping, our breakpoint set should be selected.
     $this->drupalGet('admin/config/media/responsive-image-mapping/add');
     $this->assertFieldByName('breakpointGroup', 'atestset');
 

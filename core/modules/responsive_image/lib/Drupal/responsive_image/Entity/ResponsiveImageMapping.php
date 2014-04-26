@@ -26,7 +26,7 @@ use Drupal\responsive_image\ResponsiveImageMappingInterface;
  *     }
  *   },
  *   list_path = "admin/config/media/responsive-image-mapping",
- *   admin_permission = "administer responsive image",
+ *   admin_permission = "administer responsive images",
  *   config_prefix = "mappings",
  *   entity_keys = {
  *     "id" = "id",

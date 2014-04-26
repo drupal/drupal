@@ -73,7 +73,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
       'administer account settings',
       'administer languages',
       'administer image styles',
-      'administer responsive image',
+      'administer responsive images',
       'translate configuration',
     );
 
