@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Archiver\Zip.
+ * Definition of Drupal\Core\Archiver\Zip.
  */
 
-namespace Drupal\Component\Archiver;
+namespace Drupal\Core\Archiver;
 
 /**
  * Defines a archiver implementation for .zip files.
@@ -29,7 +29,7 @@ class Zip implements ArchiverInterface {
    *   are supported. If the file does not yet exist, it will be created if
    *   appropriate.
    *
-   * @throws \Drupal\Component\Archiver\ArchiverException
+   * @throws \Drupal\Core\Archiver\ArchiverException
    */
   public function __construct($file_path) {
     $this->zip = new \ZipArchive();
@@ -39,7 +39,7 @@ class Zip implements ArchiverInterface {
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::add().
+   * {@inheritdoc}
    */
   public function add($file_path) {
     $this->zip->addFile($file_path);
@@ -48,7 +48,7 @@ class Zip implements ArchiverInterface {
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::remove().
+   * {@inheritdoc}
    */
   public function remove($file_path) {
     $this->zip->deleteName($file_path);
@@ -57,7 +57,7 @@ class Zip implements ArchiverInterface {
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::extract().
+   * {@inheritdoc}
    */
   public function extract($path, Array $files = array()) {
     if ($files) {
@@ -71,7 +71,7 @@ class Zip implements ArchiverInterface {
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::listContents().
+   * {@inheritdoc}
    */
   public function listContents() {
     $files = array();

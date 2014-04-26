@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Archiver\Tar.
+ * Definition of Drupal\Core\Archiver\Tar.
  */
 
-namespace Drupal\Component\Archiver;
+namespace Drupal\Core\Archiver;
 
 /**
  * Defines a archiver implementation for .tar files.
@@ -15,7 +15,7 @@ class Tar implements ArchiverInterface {
   /**
    * The underlying ArchiveTar instance that does the heavy lifting.
    *
-   * @var \Drupal\Component\Archiver\ArchiveTar
+   * @var \Drupal\Core\Archiver\ArchiveTar
    */
   protected $tar;
 
@@ -27,14 +27,14 @@ class Tar implements ArchiverInterface {
    *   are supported. If the file does not yet exist, it will be created if
    *   appropriate.
    *
-   * @throws \Drupal\Component\Archiver\ArchiverException
+   * @throws \Drupal\Core\Archiver\ArchiverException
    */
   public function __construct($file_path) {
     $this->tar = new ArchiveTar($file_path);
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::add().
+   * {@inheritdoc}
    */
   public function add($file_path) {
     $this->tar->add($file_path);
@@ -43,7 +43,7 @@ class Tar implements ArchiverInterface {
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::remove().
+   * {@inheritdoc}
    */
   public function remove($file_path) {
     // @todo Archive_Tar doesn't have a remove operation
@@ -55,7 +55,7 @@ class Tar implements ArchiverInterface {
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::extract().
+   * {@inheritdoc}
    */
   public function extract($path, array $files = array()) {
     if ($files) {
@@ -69,7 +69,7 @@ class Tar implements ArchiverInterface {
   }
 
   /**
-   * Implements Drupal\Component\Archiver\ArchiveInterface::listContents().
+   * {@inheritdoc}
    */
   public function listContents() {
     $files = array();

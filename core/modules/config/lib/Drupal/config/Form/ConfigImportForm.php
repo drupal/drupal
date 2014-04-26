@@ -7,9 +7,9 @@
 
 namespace Drupal\config\Form;
 
+use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Form\FormBase;
-use Drupal\Component\Archiver\ArchiveTar;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

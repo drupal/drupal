@@ -7,7 +7,7 @@
 
 namespace Drupal\config\Controller;
 
-use Drupal\Component\Archiver\ArchiveTar;
+use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;

@@ -40,7 +40,7 @@
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
-namespace Drupal\Component\Archiver;
+namespace Drupal\Core\Archiver;
 
 //require_once 'PEAR.php';
 //

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Plugin\Archiver;
 
-use Drupal\Component\Archiver\Zip as BaseZip;
+use Drupal\Core\Archiver\Zip as BaseZip;
 
 /**
  * Defines an archiver implementation for .zip files.

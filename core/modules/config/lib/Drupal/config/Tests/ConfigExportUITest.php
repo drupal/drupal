@@ -7,8 +7,8 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Archiver\Tar;
 use Drupal\simpletest\WebTestBase;
-use Drupal\Component\Archiver\Tar;
 
 /**
  * Tests exporting configuration from active store in files.

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Plugin\Archiver;
 
-use Drupal\Component\Archiver\Tar as BaseTar;
+use Drupal\Core\Archiver\Tar as BaseTar;
 
 /**
  * Defines an archiver implementation for .tar files.
