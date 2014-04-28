@@ -7,46 +7,13 @@
 
 namespace Drupal\comment\Form;
 
-use Drupal\comment\CommentManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the comment delete confirmation form.
  */
 class DeleteForm extends ContentEntityConfirmFormBase {
-
-  /**
-   * The comment manager.
-   *
-   * @var \Drupal\comment\CommentManagerInterface
-   */
-  protected $commentManager;
-
-  /**
-   * Constructs a DeleteForm object.
-   *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\comment\CommentManagerInterface $comment_manager
-   *   The comment manager service.
-   */
-  public function __construct(EntityManagerInterface $entity_manager, CommentManagerInterface $comment_manager) {
-    parent::__construct($entity_manager);
-    $this->commentManager = $comment_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager'),
-      $container->get('comment.manager')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -58,19 +25,9 @@ class DeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
-    $actions = parent::actions($form, $form_state);
-
-    // @todo Convert to getCancelRoute() after http://drupal.org/node/1987778.
-    $actions['cancel'] += $this->commentManager->getParentEntityUri($this->entity)->toRenderArray();
-
-    return $actions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCancelRoute() {
+    // Point to the entity of which this comment is a reply.
+    return $this->entity->get('entity_id')->entity->urlInfo();
   }
 
   /**
@@ -98,7 +55,7 @@ class DeleteForm extends ContentEntityConfirmFormBase {
     // Clear the cache so an anonymous user sees that his comment was deleted.
     Cache::invalidateTags(array('content' => TRUE));
 
-    $form_state['redirect_route'] = $this->commentManager->getParentEntityUri($this->entity);
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

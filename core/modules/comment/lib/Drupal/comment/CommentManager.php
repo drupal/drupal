@@ -89,16 +89,6 @@ class CommentManager implements CommentManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getParentEntityUri(CommentInterface $comment) {
-    return $this->entityManager
-      ->getStorage($comment->getCommentedEntityTypeId())
-      ->load($comment->getCommentedEntityId())
-      ->urlInfo();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFields($entity_type_id) {
     $entity_type = $this->entityManager->getDefinition($entity_type_id);
     if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {

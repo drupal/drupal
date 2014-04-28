@@ -58,19 +58,8 @@ class NodeDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
-    $actions = parent::actions($form, $form_state);
-
-    // @todo Convert to getCancelRoute() after http://drupal.org/node/1987778.
-    $actions['cancel'] += $this->entity->urlInfo()->toRenderArray();
-
-    return $actions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCancelRoute() {
+    return $this->entity->urlInfo();
   }
 
   /**

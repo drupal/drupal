@@ -16,16 +16,6 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 interface CommentManagerInterface {
 
   /**
-   * Utility function to return URI of the comment's parent entity.
-   *
-   * @param \Drupal\comment\CommentInterface $comment
-   *   The comment entity.
-   *
-   * @return \Drupal\Core\Url
-   */
-  public function getParentEntityUri(CommentInterface $comment);
-
-  /**
    * Utility function to return an array of comment fields.
    *
    * @param string $entity_type_id
