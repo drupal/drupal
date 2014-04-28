@@ -115,9 +115,13 @@ class FieldEditForm extends FormBase {
       '#type' => 'item',
       // Reset #parents to 'field', so the additional container does not appear.
       '#parents' => array('field'),
-      '#field_prefix' => '<div class="container-inline">',
-      '#field_suffix' => '</div>',
+      '#type' => 'fieldset',
       '#title' => $this->t('Allowed number of values'),
+      '#attributes' => array('class' => array(
+        'container-inline',
+        'fieldgroup',
+        'form-composite'
+      )),
     );
     $form['field']['cardinality_container']['cardinality'] = array(
       '#type' => 'select',
