@@ -23,7 +23,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'system');
+  public static $modules = array('language', 'system', 'user');
 
   /**
    * Contains thw wizard plugin manager.

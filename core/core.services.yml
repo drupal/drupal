@@ -301,9 +301,6 @@ services:
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
     arguments: ['@database']
-  user.tempstore:
-    class: Drupal\user\TempStoreFactory
-    arguments: ['@serialization.phpserialize', '@database', '@lock']
   router.request_context:
     class: Symfony\Component\Routing\RequestContext
     tags:

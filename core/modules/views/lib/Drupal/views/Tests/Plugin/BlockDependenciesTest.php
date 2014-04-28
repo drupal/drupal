@@ -26,7 +26,7 @@ class BlockDependenciesTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block');
+  public static $modules = array('node', 'block', 'user');
 
   /**
    * {@inheritdoc}

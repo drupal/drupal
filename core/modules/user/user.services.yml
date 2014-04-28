@@ -46,3 +46,6 @@ services:
   user.auth:
     class: Drupal\user\UserAuth
     arguments: ['@entity.manager', '@password']
+  user.tempstore:
+    class: Drupal\user\TempStoreFactory
+    arguments: ['@serialization.phpserialize', '@database', '@lock']

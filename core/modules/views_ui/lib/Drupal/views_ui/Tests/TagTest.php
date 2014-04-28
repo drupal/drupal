@@ -20,7 +20,7 @@ class TagTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'views_ui');
+  public static $modules = array('views', 'views_ui', 'user');
 
   public static function getInfo() {
     return array(

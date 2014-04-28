@@ -24,6 +24,13 @@ class ModuleTest extends ViewUnitTestBase {
   public static $testViews = array('test_view_status', 'test_view');
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('user', 'block');
+
+  /**
    * Stores the last triggered error, for example via debug().
    *
    * @var string
