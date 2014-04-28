@@ -35,7 +35,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_user_profile_field');
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6UserProfileFields.php',
+      $this->getDumpDirectory() . '/Drupal6UserProfileFields.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

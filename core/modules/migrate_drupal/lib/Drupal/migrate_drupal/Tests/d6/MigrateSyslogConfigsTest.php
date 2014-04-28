@@ -40,7 +40,7 @@ class MigrateSyslogConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_syslog_settings');
     $dumps = array(
-      dirname(__DIR__) . '/Dump/Drupal6SyslogSettings.php',
+      $this->getDumpDirectory() . '/Drupal6SyslogSettings.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

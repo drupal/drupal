@@ -41,7 +41,7 @@ class MigrateDblogConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_dblog_settings');
     $dumps = array(
-      dirname(__DIR__) . '/Dump/Drupal6DblogSettings.php',
+      $this->getDumpDirectory() . '/Drupal6DblogSettings.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

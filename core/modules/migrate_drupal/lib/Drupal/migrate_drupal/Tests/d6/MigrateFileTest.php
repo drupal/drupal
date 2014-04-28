@@ -39,7 +39,7 @@ class MigrateFileTest extends MigrateDrupalTestBase {
   protected function setUp() {
     parent::setUp();
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6File.php',
+      $this->getDumpDirectory() . '/Drupal6File.php',
     );
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_file');
@@ -69,7 +69,7 @@ class MigrateFileTest extends MigrateDrupalTestBase {
     db_truncate(entity_load('migration', 'd6_file')->getIdMap()->mapTableName())->execute();
     $migration = entity_load_unchanged('migration', 'd6_file');
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6SystemFile.php',
+      $this->getDumpDirectory() . '/Drupal6SystemFile.php',
     );
     $this->loadDumps($dumps, 'loadMigrateFileStandalone');
     $executable = new MigrateExecutable($migration, $this);

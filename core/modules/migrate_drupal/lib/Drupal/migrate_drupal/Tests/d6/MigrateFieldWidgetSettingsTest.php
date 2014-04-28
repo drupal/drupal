@@ -72,7 +72,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupalTestBase {
     $this->prepareIdMappings($id_mappings);
     $migration = entity_load('migration', 'd6_field_instance_widget_settings');
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6FieldInstance.php',
+      $this->getDumpDirectory() . '/Drupal6FieldInstance.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

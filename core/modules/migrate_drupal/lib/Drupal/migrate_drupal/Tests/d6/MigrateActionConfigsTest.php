@@ -40,7 +40,7 @@ class MigrateActionConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_action_settings');
     $dumps = array(
-      dirname(__DIR__) . '/Dump/Drupal6ActionSettings.php',
+      $this->getDumpDirectory() . '/Drupal6ActionSettings.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

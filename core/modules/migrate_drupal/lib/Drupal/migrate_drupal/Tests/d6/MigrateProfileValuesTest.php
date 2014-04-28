@@ -123,10 +123,9 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     $this->prepareIdMappings($id_mappings);
 
     // Load database dumps to provide source data.
-    $path = drupal_get_path('module', 'migrate_drupal');
     $dumps = array(
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6UserProfileFields.php',
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6User.php',
+      $this->getDumpDirectory() . '/Drupal6UserProfileFields.php',
+      $this->getDumpDirectory() . '/Drupal6User.php',
     );
     $this->loadDumps($dumps);
 

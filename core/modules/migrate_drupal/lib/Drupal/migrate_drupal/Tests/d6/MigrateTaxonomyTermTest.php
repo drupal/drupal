@@ -42,10 +42,9 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
     )));
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_taxonomy_term');
-    $path = drupal_get_path('module', 'migrate_drupal');
     $dumps = array(
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6TaxonomyTerm.php',
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6TaxonomyVocabulary.php',
+      $this->getDumpDirectory() . '/Drupal6TaxonomyTerm.php',
+      $this->getDumpDirectory() . '/Drupal6TaxonomyVocabulary.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

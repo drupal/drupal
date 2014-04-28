@@ -33,7 +33,7 @@ class MigrateFieldConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_field_settings');
     $dumps = array(
-      dirname(__DIR__) . '/Dump/Drupal6FieldSettings.php',
+      $this->getDumpDirectory() . '/Drupal6FieldSettings.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

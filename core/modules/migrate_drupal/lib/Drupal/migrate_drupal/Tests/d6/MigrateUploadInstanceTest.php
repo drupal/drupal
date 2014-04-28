@@ -58,7 +58,7 @@ class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
 
     $migration = entity_load('migration', 'd6_upload_field_instance');
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6UploadInstance.php',
+      $this->getDumpDirectory() . '/Drupal6UploadInstance.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

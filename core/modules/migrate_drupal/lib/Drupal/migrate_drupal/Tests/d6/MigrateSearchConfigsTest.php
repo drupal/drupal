@@ -41,7 +41,7 @@ class MigrateSearchConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_search_settings');
     $dumps = array(
-      dirname(__DIR__) . '/Dump/Drupal6SearchSettings.php',
+      $this->getDumpDirectory() . '/Drupal6SearchSettings.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

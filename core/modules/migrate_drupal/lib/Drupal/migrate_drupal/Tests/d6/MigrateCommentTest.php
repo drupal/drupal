@@ -57,7 +57,7 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     $migration = entity_load('migration', 'd6_comment');
 
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6Comment.php',
+      $this->getDumpDirectory() . '/Drupal6Comment.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

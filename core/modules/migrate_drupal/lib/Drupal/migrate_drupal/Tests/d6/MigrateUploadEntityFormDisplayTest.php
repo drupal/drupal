@@ -52,7 +52,7 @@ class MigrateUploadEntityFormDisplayTest extends MigrateDrupalTestBase {
 
     $migration = entity_load('migration', 'd6_upload_entity_form_display');
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6UploadInstance.php',
+      $this->getDumpDirectory() . '/Drupal6UploadInstance.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

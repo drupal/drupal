@@ -46,7 +46,7 @@ class MigrateBookTest extends MigrateDrupalTestBase {
     $this->prepareIdMappings($id_mappings);
     // Load database dumps to provide source data.
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6Book.php',
+      $this->getDumpDirectory() . '/Drupal6Book.php',
     );
     $this->loadDumps($dumps);
     // Migrate books..

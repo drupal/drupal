@@ -34,7 +34,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_aggregator_feed');
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6AggregatorFeed.php',
+      $this->getDumpDirectory() . '/Drupal6AggregatorFeed.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

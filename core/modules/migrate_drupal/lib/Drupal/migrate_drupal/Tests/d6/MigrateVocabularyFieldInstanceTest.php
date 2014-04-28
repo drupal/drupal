@@ -69,7 +69,7 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupalTestBase {
 
     $migration = entity_load('migration', 'd6_vocabulary_field_instance');
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6VocabularyField.php',
+      $this->getDumpDirectory() . '/Drupal6VocabularyField.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

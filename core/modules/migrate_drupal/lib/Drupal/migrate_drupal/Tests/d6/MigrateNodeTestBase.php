@@ -43,11 +43,10 @@ class MigrateNodeTestBase extends MigrateDrupalTestBase {
     $node->save();
 
     // Load dumps.
-    $path = drupal_get_path('module', 'migrate_drupal');
     $dumps = array(
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6Node.php',
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6NodeType.php',
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6FieldInstance.php',
+      $this->getDumpDirectory() . '/Drupal6Node.php',
+      $this->getDumpDirectory() . '/Drupal6NodeType.php',
+      $this->getDumpDirectory() . '/Drupal6FieldInstance.php',
     );
     $this->loadDumps($dumps);
   }

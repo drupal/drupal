@@ -39,7 +39,7 @@ class MigrateUserPictureFileTest extends MigrateDrupalTestBase {
   public function setUp() {
     parent::setUp();
     $dumps = array(
-      drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6User.php',
+      $this->getDumpDirectory() . '/Drupal6User.php',
     );
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_user_picture_file');

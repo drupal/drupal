@@ -56,9 +56,8 @@ class MigrateDependenciesTest extends MigrateDrupalTestBase {
   public function testAggregatorMigrateDependencies() {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_aggregator_item');
-    $path = drupal_get_path('module', 'migrate_drupal');
     $dumps = array(
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6AggregatorItem.php',
+      $this->getDumpDirectory() . '/Drupal6AggregatorItem.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

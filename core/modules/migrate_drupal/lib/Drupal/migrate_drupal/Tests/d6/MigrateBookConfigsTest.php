@@ -41,7 +41,7 @@ class MigrateBookConfigsTest extends MigrateDrupalTestBase {
     parent::setUp();
     $migration = entity_load('migration', 'd6_book_settings');
     $dumps = array(
-      dirname(__DIR__) . '/Dump/Drupal6BookSettings.php',
+      $this->getDumpDirectory() . '/Drupal6BookSettings.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());

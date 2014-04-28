@@ -50,8 +50,8 @@ class MigrateUserRoleTest extends MigrateDrupalTestBase {
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_user_role');
     $dumps = array(
-      dirname(__DIR__) . '/Dump/Drupal6UserRole.php',
-      dirname(__DIR__) . '/Dump/Drupal6FilterFormat.php',
+      $this->getDumpDirectory() . '/Drupal6UserRole.php',
+      $this->getDumpDirectory() . '/Drupal6FilterFormat.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
