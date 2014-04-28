@@ -113,6 +113,14 @@ class ImageFormatter extends ImageFormatterBase {
     }
 
     $image_style_setting = $this->getSetting('image_style');
+
+    // Collect cache tags to be added for each item in the field.
+    $cache_tags = array();
+    if (!empty($image_style_setting)) {
+      $image_style = entity_load('image_style', $image_style_setting);
+      $cache_tags = $image_style->getCacheTag();
+    }
+
     foreach ($items as $delta => $item) {
       if ($item->entity) {
         if (isset($link_file)) {
@@ -134,6 +142,9 @@ class ImageFormatter extends ImageFormatterBase {
           '#item_attributes' => $item_attributes,
           '#image_style' => $image_style_setting,
           '#path' => isset($uri) ? $uri : '',
+          '#cache' => array(
+            'tags' => $cache_tags,
+          ),
         );
       }
     }

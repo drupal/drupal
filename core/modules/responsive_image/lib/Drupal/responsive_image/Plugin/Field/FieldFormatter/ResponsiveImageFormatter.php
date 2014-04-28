@@ -7,6 +7,7 @@
 
 namespace Drupal\responsive_image\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 
@@ -168,6 +169,23 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       $fallback_image_style = $this->getSetting('fallback_image_style');
     }
 
+    // Collect cache tags to be added for each item in the field.
+    $all_cache_tags = array();
+    if ($responsive_image_mapping) {
+      $all_cache_tags[] = $responsive_image_mapping->getCacheTag();
+      foreach ($breakpoint_styles as $breakpoint_name => $style_per_multiplier) {
+        foreach ($style_per_multiplier as $multiplier => $image_style_name) {
+          $image_style = entity_load('image_style', $image_style_name);
+          $all_cache_tags[] = $image_style->getCacheTag();
+        }
+      }
+    }
+    if ($fallback_image_style) {
+      $image_style = entity_load('image_style', $fallback_image_style);
+      $all_cache_tags[] = $image_style->getCacheTag();
+    }
+    $cache_tags = NestedArray::mergeDeepArray($all_cache_tags);
+
     foreach ($items as $delta => $item) {
       if (isset($link_file)) {
         $uri = array(
@@ -177,13 +195,18 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       }
       $elements[$delta] = array(
         '#theme' => 'responsive_image_formatter',
-        '#attached' => array('library' => array(
-          'core/picturefill',
-        )),
+        '#attached' => array(
+          'library' => array(
+            'core/picturefill',
+          )
+        ),
         '#item' => $item,
         '#image_style' => $fallback_image_style,
         '#breakpoints' => $breakpoint_styles,
         '#path' => isset($uri) ? $uri : '',
+        '#cache' => array(
+          'tags' => $cache_tags,
+        )
       );
     }
 

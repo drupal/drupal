@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -262,8 +263,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     field_info_cache_clear();
     drupal_theme_rebuild();
 
-    // Clear render cache when flushing.
-    \Drupal::cache('render')->deleteAll();
+    Cache::invalidateTags($this->getCacheTag());
 
     return $this;
   }
