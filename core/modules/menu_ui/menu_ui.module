@@ -300,12 +300,10 @@ function menu_ui_block_view_system_menu_block_alter(array &$build, BlockPluginIn
   // Add contextual links for system menu blocks.
   $menus = menu_list_system_menus();
   $menu_name = $block->getDerivativeId();
-  if (isset($menus[$menu_name]) && isset($build['content'])) {
-    foreach (Element::children($build['content']) as $key) {
-      $build['#contextual_links']['menu'] = array(
-        'route_parameters' => array('menu' => $build['content'][$key]['#original_link']['menu_name']),
-      );
-    }
+  if (isset($menus[$menu_name])) {
+    $build['#contextual_links']['menu'] = array(
+      'route_parameters' => array('menu' => $menu_name),
+    );
   }
 }
 
