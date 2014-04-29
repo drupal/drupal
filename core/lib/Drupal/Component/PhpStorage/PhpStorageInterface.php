@@ -78,4 +78,25 @@ interface PhpStorageInterface {
    * Removes all files in this bin.
    */
   public function deleteAll();
+
+  /**
+   * Gets the full file path.
+   *
+   * @param string $name
+   *   The virtual file name. Can be a relative path.
+   *
+   * @return string|FALSE
+   *   The full file path for the provided name. Return FALSE if the
+   *   implementation needs to prevent access to the file.
+   */
+  public function getFullPath($name);
+
+  /**
+   * Lists all the files in the storage.
+   *
+   * @return array
+   *   Array of filenames.
+   */
+  public function listAll();
+
 }

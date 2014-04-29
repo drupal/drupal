@@ -140,7 +140,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    * @return string
    *   The full path where the file is or should be stored.
    */
-  protected function getFullPath($name, &$directory = NULL, &$directory_mtime = NULL) {
+  public function getFullPath($name, &$directory = NULL, &$directory_mtime = NULL) {
     if (!isset($directory)) {
       $directory = $this->getContainingDirectoryFullPath($name);
     }
@@ -148,6 +148,17 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       $directory_mtime = file_exists($directory) ? filemtime($directory) : 0;
     }
     return $directory . '/' . hash_hmac('sha256', $name, $this->secret . $directory_mtime) . '.php';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete($name) {
+    $path = $this->getContainingDirectoryFullPath($name);
+    if (file_exists($path)) {
+      return $this->unlink($path);
+    }
+    return FALSE;
   }
 
   /**

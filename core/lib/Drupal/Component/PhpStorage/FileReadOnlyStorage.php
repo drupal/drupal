@@ -64,9 +64,9 @@ class FileReadOnlyStorage implements PhpStorageInterface {
   }
 
   /**
-   * Returns the full path where the file is or should be stored.
+   * {@inheritdoc}
    */
-  protected function getFullPath($name) {
+  public function getFullPath($name) {
     return $this->directory . '/' . $name;
   }
 
@@ -83,4 +83,23 @@ class FileReadOnlyStorage implements PhpStorageInterface {
   public function deleteAll() {
     return FALSE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listAll() {
+    $names = array();
+    if (file_exists($this->directory)) {
+      foreach (new \DirectoryIterator($this->directory) as $fileinfo) {
+        if (!$fileinfo->isDot()) {
+          $name = $fileinfo->getFilename();
+          if ($name != '.htaccess') {
+            $names[] = $name;
+          }
+        }
+      }
+    }
+    return $names;
+  }
+
 }
