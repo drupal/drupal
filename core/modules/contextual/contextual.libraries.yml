@@ -29,6 +29,11 @@ drupal.contextual-toolbar:
   version: VERSION
   js:
     js/contextual.toolbar.js: {}
+    # Models.
+    js/toolbar/models/StateModel.js: {}
+    # Views.
+    js/toolbar/views/AuralView.js: {}
+    js/toolbar/views/VisualView.js: {}
   css:
     component:
       css/contextual.toolbar.css: {}
