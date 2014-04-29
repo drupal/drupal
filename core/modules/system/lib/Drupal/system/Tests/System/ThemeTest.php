@@ -44,6 +44,12 @@ class ThemeTest extends WebTestBase {
    * Test the theme settings form.
    */
   function testThemeSettings() {
+    // Ensure invalid theme settings form URLs return a proper 404.
+    $this->drupalGet('admin/appearance/settings/bartik');
+    $this->assertResponse(404, 'The theme settings form URL for a disabled theme could not be found.');
+    $this->drupalGet('admin/appearance/settings/' . $this->randomName());
+    $this->assertResponse(404, 'The theme settings form URL for a non-existent theme could not be found.');
+
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
     $file_relative = strtr($file->uri, array('public:/' => PublicStream::basePath()));
