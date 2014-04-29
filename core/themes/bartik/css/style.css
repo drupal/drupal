@@ -9,9 +9,9 @@ body {
   border: 0;
   outline: 0;
 }
-a:link,
-a:visited {
+a {
   text-decoration: none;
+  border-bottom: 1px dotted;
 }
 a:hover,
 a:active,
@@ -19,7 +19,17 @@ a:focus,
 .link:hover,
 .link:active,
 .link:focus {
-  text-decoration: underline;
+  text-decoration: none;
+  border-bottom-style: solid;
+}
+.field-type-image a,
+h1 a,
+h2 a,
+[role*=banner] a,
+.feed-icon,
+.contextual-links a,
+.toolbar a {
+  border-bottom: none !important;
 }
 h1,
 h2,
@@ -977,7 +987,6 @@ ul.links {
 #footer-wrapper .block .content a:focus {
   color: #fefefe;
   color: rgba(255, 255, 255, 0.95);
-  text-decoration: underline;
 }
 #footer-wrapper .block {
   margin: 20px 0;
