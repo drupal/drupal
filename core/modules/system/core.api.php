@@ -19,7 +19,7 @@
  *
  * - @link architecture Drupal's architecture @endlink
  * - @link oo_conventions Object-oriented conventions used in Drupal @endlink
- * - @link extending Extending Drupal @endlink
+ * - @link extending Extending and altering Drupal @endlink
  * - @link best_practices Security and best practices @endlink
  *
  * @section interface User interface
@@ -452,15 +452,61 @@
  */
 
 /**
- * @defgroup extending Extending Drupal
+ * @defgroup extending Extending and altering Drupal
  * @{
- * Overview of hooks, plugins, annotations, event listeners, and services.
+ * Overview of add-ons and alteration methods for Drupal.
+ *
+ * Drupal's core behavior can be extended and altered via these three basic
+ * types of add-ons:
+ * - Themes: Themes alter the appearance of Drupal sites. They can include
+ *   template files, which alter the HTML markup and other raw output of the
+ *   site; CSS files, which alter the styling applied to the HTML; and
+ *   JavaScript, Flash, images, and other files. For more information, see the
+ *   @link theme_render Theme system and render API topic @endlink and
+ *   https://drupal.org/theme-guide/8
+ * - Modules: Modules add to or alter the behavior and functionality of Drupal,
+ *   by using one or more of the methods listed below. For more information
+ *   about creating modules, see https://drupal.org/developing/modules/8
+ * - Installation profiles: Installation profiles can be used to
+ *   create distributions, which are complete specific-purpose packages of
+ *   Drupal including additional modules, themes, and data. For more
+ *   information, see https://drupal.org/documentation/build/distributions.
+ *
+ * Here is a list of the ways that modules can alter or extend Drupal's core
+ * behavior, or the behavior of other modules:
+ * - Hooks: Specially-named functions that a module defines, which are
+ *   discovered and called at specific times, usually to alter behavior or data.
+ *   See the @link hooks Hooks topic @endlink for more information.
+ * - Plugins: Classes that a module defines, which are discovered and
+ *   instantiated at specific times to add functionality. See the
+ *   @link plugins Plugin API topic @endlink for more information.
+ * - Entities: Special plugins that define entity types for storing new types
+ *   of content or configuration in Drupal. See the
+ *   @link entity_api Entity API topic @endlink for more information.
+ * - Services: Classes that perform basic operations within Drupal, such as
+ *   accessing the database and sending e-mail. See the
+ *   @link container Dependency Injection Container and Services topic @endlink
+ *   for more information.
+ * - Routing: Providing or altering "routes", which are URLs that Drupal
+ *   responds to, or altering routing behavior with event listener classes.
+ *   See the @link menu Routing and menu topic @endlink for more information.
+ * @}
+ */
+
+/**
+ * @defgroup plugins Plugin API
+ * @{
+ * Overview of the Plugin API
  *
  * @todo write this
  *
  * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic. This should be
- * high-level and link to more detailed topics.
+ * classes, and interfaces need to be added to this topic.
+ *
+ * See https://drupal.org/developing/api/8/plugins and links therein for
+ * references. This should be an overview and link to details.
+ *
+ * @see annotation
  * @}
  */
 

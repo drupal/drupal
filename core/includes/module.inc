@@ -178,31 +178,58 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
 /**
  * @defgroup hooks Hooks
  * @{
- * Allow modules to interact with the Drupal core.
+ * Define functions that alter the behavior of Drupal core.
  *
- * Drupal's module system is based on the concept of "hooks". A hook is a PHP
- * function that is named foo_bar(), where "foo" is the name of the module
- * (whose filename is thus foo.module) and "bar" is the name of the hook. Each
- * hook has a defined set of parameters and a specified result type.
+ * One way for modules to alter the core behavior of Drupal (or another module)
+ * is to use hooks. Hooks are specially-named functions that a module defines
+ * (this is known as "implementing the hook"), which are discovered and called
+ * at specific times to alter or add to the base behavior or data (this is
+ * known as "invoking the hook"). Each hook has a name (example:
+ * hook_batch_alter()), a defined set of parameters, and a defined return value.
+ * Your modules can implement hooks that are defined by Drupal core or other
+ * modules that they interact with. Your modules can also define their own
+ * hooks, in order to let other modules interact with them.
  *
- * To extend Drupal, a module need simply implement a hook. When Drupal wishes
- * to allow intervention from modules, it determines which modules implement a
- * hook and calls that hook in all enabled modules that implement it.
+ * To implement a hook:
+ * - Locate the documentation for the hook. Hooks are documented in *.api.php
+ *   files, by defining functions whose name starts with "hook_" (these
+ *   files and their functions are never loaded by Drupal -- they exist solely
+ *   for documentation). The function should have a documentation header, as
+ *   well as a sample function body. For example, in the core file
+ *   system.api.php, you can find hooks such as hook_batch_alter(). Also, if
+ *   you are viewing this documentation on an API reference site, the Core
+ *   hooks will be listed in this topic.
+ * - Copy the function to your module's .module file.
+ * - Change the name of the function, substituting your module's short name
+ *   (name of the module's directory, and .info.yml file without the extension)
+ *   for the "hook" part of the sample function name. For instance, to implemnt
+ *   hook_batch_alter(), you would rename it to my_module_batch_alter().
+ * - Edit the documentation for the function (normally, your implementation
+ *   should just have one line saying "Implements hook_batch_alter().").
+ * - Edit the body of the function, substituting in what you need your module
+ *   to do.
  *
- * The available hooks to implement are explained here in the Hooks section of
- * the developer documentation. The string "hook" is used as a placeholder for
- * the module name in the hook definitions. For example, if the module file is
- * called example.module, then hook_help() as implemented by that module would
- * be defined as example_help().
+ * To define a hook:
+ * - Choose a unique name for your hook. It should start with "hook_", followed
+ *   by your module's short name.
+ * - Provide documentation in a *.api.php file in your module's main
+ *   directory. See the "implementing" section above for details of what this
+ *   should contain (parameters, return value, and sample function body).
+ * - Invoke the hook in your module's code.
  *
- * The example functions included are not part of the Drupal core, they are
- * just models that you can modify. Only the hooks implemented within modules
- * are executed when running Drupal.
+ * To invoke a hook, use methods on
+ * \Drupal\Core\Extension\ModuleHandlerInterface such as alter(), invoke(),
+ * and invokeAll(). You can obtain a module handler by calling
+ * \Drupal::moduleHandler(), or getting the 'module_handler' service on an
+ * injected container.
  *
+ * @see extending
  * @see themeable
  * @see callbacks
+ * @see \Drupal\Core\Extension\ModuleHandlerInterface
+ * @see \Drupal::moduleHandler()
  *
- * @} End of "defgroup hooks".
+ * @}
  */
 
 /**
