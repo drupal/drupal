@@ -193,9 +193,13 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
     // Test that forum node type could not be deleted while forum active.
     $this->container->get('module_handler')->install(array('forum'));
+    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->assertNoLink(t('Delete'));
     $this->drupalGet('admin/structure/types/manage/forum/delete');
     $this->assertResponse(403);
     $this->container->get('module_handler')->uninstall(array('forum'));
+    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->assertLink(t('Delete'));
     $this->drupalGet('admin/structure/types/manage/forum/delete');
     $this->assertResponse(200);
   }

@@ -163,7 +163,6 @@ class NodeTypeForm extends EntityForm {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Save content type');
     $actions['delete']['#value'] = t('Delete content type');
-    $actions['delete']['#access'] = $this->entity->access('delete');
     return $actions;
   }
 

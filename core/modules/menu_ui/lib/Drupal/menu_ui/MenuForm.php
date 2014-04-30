@@ -178,8 +178,6 @@ class MenuForm extends EntityForm {
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
 
-    $actions['delete']['#access'] = !$this->entity->isNew() && $this->entity->access('delete');
-
     // Add the language configuration submit handler. This is needed because the
     // submit button has custom submit handlers.
     if ($this->moduleHandler->moduleExists('language')) {

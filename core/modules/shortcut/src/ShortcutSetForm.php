@@ -50,16 +50,6 @@ class ShortcutSetForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
-    // Disable delete of default shortcut set.
-    $actions = parent::actions($form, $form_state);
-    $actions['delete']['#access'] = $this->entity->access('delete');
-    return $actions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
     $entity = $this->entity;

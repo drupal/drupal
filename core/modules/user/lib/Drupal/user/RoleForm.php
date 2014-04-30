@@ -51,16 +51,6 @@ class RoleForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
-    $actions = parent::actions($form, $form_state);
-    // Disable delete of new and built-in roles.
-    $actions['delete']['#access'] = !$this->entity->isNew() && !in_array($this->entity->id(), array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID));
-    return $actions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, array &$form_state) {
     $entity = $this->entity;
 

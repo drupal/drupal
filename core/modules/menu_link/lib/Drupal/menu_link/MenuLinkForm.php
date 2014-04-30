@@ -195,8 +195,6 @@ class MenuLinkForm extends EntityForm {
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
     $element['submit']['#button_type'] = 'primary';
-    $element['delete']['#access'] = $this->entity->access('delete');
-
     return $element;
   }
 

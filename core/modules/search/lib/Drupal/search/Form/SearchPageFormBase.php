@@ -181,15 +181,4 @@ abstract class SearchPageFormBase extends EntityForm {
     $form_state['redirect_route']['route_name'] = 'search.settings';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function actions(array $form, array &$form_state) {
-    $actions = parent::actions($form, $form_state);
-    if ($this->entity->isDefaultSearch()) {
-      unset($actions['delete']);
-    }
-    return $actions;
-  }
-
 }

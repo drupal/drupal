@@ -268,7 +268,6 @@ abstract class FilterFormatFormBase extends EntityForm {
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Save configuration');
-    unset($actions['delete']);
     return $actions;
   }
 

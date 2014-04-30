@@ -129,6 +129,9 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
    *   could not be determined.
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
+    if ($operation == 'delete' && $entity->isNew()) {
+      return FALSE;
+    }
     if ($admin_permission = $this->entityType->getAdminPermission()) {
       return $account->hasPermission($admin_permission);
     }

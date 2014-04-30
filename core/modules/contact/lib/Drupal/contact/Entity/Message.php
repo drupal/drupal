@@ -47,6 +47,13 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    */
+  public function uuid() {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isPersonal() {
     return $this->bundle() == 'personal';
   }

@@ -168,11 +168,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
   protected function actionsElement(array $form, array &$form_state) {
     $element = $this->actions($form, $form_state);
 
-    // We cannot delete an entity that has not been created yet.
-    if ($this->entity->isNew()) {
-      unset($element['delete']);
-    }
-    elseif (isset($element['delete'])) {
+    if (isset($element['delete'])) {
       // Move the delete action as last one, unless weights are explicitly
       // provided.
       $delete = $element['delete'];
@@ -230,6 +226,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
       $actions['delete'] = array(
         '#type' => 'link',
         '#title' => $this->t('Delete'),
+        '#access' => $this->entity->access('delete'),
         '#attributes' => array(
           'class' => array('button', 'button--danger'),
         ),

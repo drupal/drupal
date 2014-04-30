@@ -146,7 +146,6 @@ class MessageForm extends ContentEntityForm {
   public function actions(array $form, array &$form_state) {
     $elements = parent::actions($form, $form_state);
     $elements['submit']['#value'] = t('Send message');
-    $elements['delete']['#access'] = FALSE;
     $elements['preview'] = array(
       '#value' => t('Preview'),
       '#validate' => array(
