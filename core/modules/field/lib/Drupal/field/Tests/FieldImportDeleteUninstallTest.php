@@ -107,11 +107,10 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     $steps = $this->configImporter()->initialize();
     $this->assertIdentical($steps[0], array('\Drupal\field\ConfigImporterFieldPurger', 'process'), 'The additional process configuration synchronization step has been added.');
 
-    $this->configImporter()->import();
-
     // This will purge all the data, delete the field and uninstall the
     // Telephone module.
-    $this->rebuildContainer();
+    $this->configImporter()->import();
+
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
     $this->assertFalse(entity_load_by_uuid('field_config', $field_uuid), 'The test field has been deleted by the configuration synchronization');
     $deleted_fields = \Drupal::state()->get('field.field.deleted') ?: array();
@@ -169,11 +168,10 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
     $steps = $this->configImporter()->initialize();
     $this->assertIdentical($steps[0], array('\Drupal\field\ConfigImporterFieldPurger', 'process'), 'The additional process configuration synchronization step has been added.');
 
-    $this->configImporter()->import();
-
     // This will purge all the data, delete the field and uninstall the
     // Telephone module.
-    $this->rebuildContainer();
+    $this->configImporter()->import();
+
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
     $deleted_fields = \Drupal::state()->get('field.field.deleted') ?: array();
     $this->assertFalse(isset($deleted_fields[$field_uuid]), 'Field has been completed removed from the system.');

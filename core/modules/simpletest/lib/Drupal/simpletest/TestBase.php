@@ -1124,54 +1124,6 @@ abstract class TestBase {
   }
 
   /**
-   * Rebuild \Drupal::getContainer().
-   *
-   * Use this to build a new kernel and service container. For example, when the
-   * list of enabled modules is changed via the internal browser, in which case
-   * the test process still contains an old kernel and service container with an
-   * old module list.
-   *
-   * @see TestBase::prepareEnvironment()
-   * @see TestBase::restoreEnvironment()
-   *
-   * @todo Fix http://drupal.org/node/1708692 so that module enable/disable
-   *   changes are immediately reflected in \Drupal::getContainer(). Until then,
-   *   tests can invoke this workaround when requiring services from newly
-   *   enabled modules to be immediately available in the same request.
-   */
-  protected function rebuildContainer($environment = 'testing') {
-    // Preserve the request object after the container rebuild.
-    $request = \Drupal::request();
-    // When called from InstallerTestBase, the current container is the minimal
-    // container from TestBase::prepareEnvironment(), which does not contain a
-    // request stack.
-    if (\Drupal::getContainer()->initialized('request_stack')) {
-      $request_stack = \Drupal::service('request_stack');
-    }
-
-    $this->kernel = new DrupalKernel($environment, drupal_classloader(), FALSE);
-    $this->kernel->boot();
-    // DrupalKernel replaces the container in \Drupal::getContainer() with a
-    // different object, so we need to replace the instance on this test class.
-    $this->container = \Drupal::getContainer();
-    // The current user is set in TestBase::prepareEnvironment().
-    $this->container->set('request', $request);
-    if (isset($request_stack)) {
-      $this->container->set('request_stack', $request_stack);
-    }
-    else {
-      $this->container->get('request_stack')->push($request);
-    }
-    $this->container->get('current_user')->setAccount(\Drupal::currentUser());
-
-    // The request context is normally set by the router_listener from within
-    // its KernelEvents::REQUEST listener. In the simpletest parent site this
-    // event is not fired, therefore it is necessary to updated the request
-    // context manually here.
-    $this->container->get('router.request_context')->fromRequest($request);
-  }
-
-  /**
    * Performs cleanup tasks after each individual test method has been run.
    */
   protected function tearDown() {
