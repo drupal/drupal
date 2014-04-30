@@ -33,6 +33,7 @@ class ConfigTestForm extends EntityForm {
       '#required' => TRUE,
       '#machine_name' => array(
         'exists' => 'config_test_load',
+        'replace_pattern' => '[^a-z0-9_.]+',
       ),
     );
     $form['weight'] = array(

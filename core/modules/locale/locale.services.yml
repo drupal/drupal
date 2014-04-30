@@ -1,9 +1,4 @@
 services:
-  paramconverter.configentity_admin:
-    class: Drupal\locale\ParamConverter\LocaleAdminPathConfigEntityConverter
-    tags:
-      - { name: paramconverter, priority: 5 }
-    arguments: ['@entity.manager', '@config.factory', '@router.admin_context']
   locale.config.typed:
     class: Drupal\locale\LocaleConfigManager
     arguments: ['@config.storage', '@config.storage.schema', '@config.storage.installer', '@locale.storage', '@cache.config', '@config.factory', '@language_manager']

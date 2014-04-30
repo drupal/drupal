@@ -16,16 +16,16 @@ config_test.entity_add:
 config_test.entity:
   path: '/admin/structure/config_test/manage/{config_test}'
   defaults:
-    _content: '\Drupal\config_test\ConfigTestController::edit'
-    entity_type: 'config_test'
+    _entity_form: config_test
+    _title_callback: '\Drupal\config_test\ConfigTestController::editTitle'
   requirements:
     _access: 'TRUE'
 
 config_test.entity_config_test_no_status:
   path: '/admin/structure/config_test/manage/{config_test_no_status}'
   defaults:
-    _content: '\Drupal\config_test\ConfigTestController::edit'
-    entity_type: 'config_test_no_status'
+    _entity_form: config_test_no_status
+    _title_callback: '\Drupal\config_test\ConfigTestController::editTitle'
   requirements:
     _access: 'TRUE'
 

@@ -413,6 +413,12 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@entity.manager']
+  paramconverter.configentity_admin:
+    class: Drupal\Core\ParamConverter\AdminPathConfigEntityConverter
+    tags:
+      # Use a higher priority than EntityConverter, see the class for details.
+      - { name: paramconverter, priority: 5 }
+    arguments: ['@entity.manager', '@config.factory', '@router.admin_context']
   route_subscriber.module:
     class: Drupal\Core\EventSubscriber\ModuleRouteSubscriber
     tags:

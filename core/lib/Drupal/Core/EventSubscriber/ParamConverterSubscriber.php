@@ -49,7 +49,8 @@ class ParamConverterSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetParameterConverters', -200);
+    // Run after \Drupal\system\EventSubscriber\AdminRouteSubscriber.
+    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetParameterConverters', -210);
     return $events;
   }
 }

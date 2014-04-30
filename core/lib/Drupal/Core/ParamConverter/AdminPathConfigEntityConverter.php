@@ -2,25 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\locale\ParamConverter\LocaleAdminPathConfigEntityConverter.
+ * Contains \Drupal\Core\ParamConverter\AdminPathConfigEntityConverter.
  */
 
-namespace Drupal\locale\ParamConverter;
+namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Routing\AdminContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\ParamConverter\EntityConverter;
-use Drupal\Core\ParamConverter\ParamConverterInterface;
 
 /**
- * Makes sure the untranslated ConfigEntity is loaded on admin pages.
+ * Makes sure the unmodified ConfigEntity is loaded on admin pages.
  *
- * Converts entity route arguments to untranslated entities (in their original
- * submission language) as opposed to converting to entities with overrides in
- * the negotiated language.
+ * Converts entity route arguments to unmodified entities as opposed to
+ * converting to entities with overrides, such as the negotiated language.
  *
  * This converter applies only if the path is an admin path.
  *
@@ -29,7 +26,7 @@ use Drupal\Core\ParamConverter\ParamConverterInterface;
  * from EntityConverter. As we only allow a single converter per route
  * argument, EntityConverter is ignored when this converter applies.
  */
-class LocaleAdminPathConfigEntityConverter extends EntityConverter {
+class AdminPathConfigEntityConverter extends EntityConverter {
 
   /**
    * The config factory.
