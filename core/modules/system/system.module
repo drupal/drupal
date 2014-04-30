@@ -196,6 +196,7 @@ function system_theme() {
     'system_admin_index' => array(
       'variables' => array('menu_items' => NULL),
       'file' => 'system.admin.inc',
+      'template' => 'system-admin-index',
     ),
     'system_compact_link' => array(
       'variables' => array(),
