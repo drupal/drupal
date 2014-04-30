@@ -234,7 +234,7 @@ services:
     parent: default_plugin_manager
   plugin.manager.action:
     class: Drupal\Core\Action\ActionManager
-    arguments: ['@container.namespaces']
+    arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
     arguments: ['@controller_resolver', '@request_stack', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
