@@ -24,7 +24,7 @@ locale.translate_page:
 locale.translate_import:
   path: '/admin/config/regional/translate/import'
   defaults:
-    _content: '\Drupal\locale\Form\LocaleForm::import'
+    _form: '\Drupal\locale\Form\ImportForm'
     _title: 'Import'
   requirements:
     _permission: 'translate interface'

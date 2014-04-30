@@ -12,16 +12,6 @@ namespace Drupal\locale\Form;
 class LocaleForm {
 
   /**
-   * Wraps locale_translate_import_form().
-   *
-   * @todo Remove locale_translate_import_form().
-   */
-  public function import() {
-    module_load_include('bulk.inc', 'locale');
-    return \Drupal::formBuilder()->getForm('locale_translate_import_form');
-  }
-
-  /**
    * Wraps locale_translation_status_form().
    *
    * @todo Remove locale_translation_status_form().
