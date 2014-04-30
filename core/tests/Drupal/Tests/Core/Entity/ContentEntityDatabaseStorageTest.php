@@ -52,11 +52,11 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('getKey')
       ->will($this->returnValueMap(array(
         array('id', 'id'),
-        array('revision_id', 'revision_id'),
+        array('revision', 'revision'),
       )));
     $definition->expects($this->once())
       ->method('hasKey')
-      ->with('revision_id')
+      ->with('revision')
       ->will($this->returnValue(TRUE));
 
     $field_type_manager->expects($this->exactly(2))
@@ -68,8 +68,8 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
 
     $fields['id'] = FieldDefinition::create('string')
       ->setName('id');
-    $fields['revision_id'] = FieldDefinition::create('string')
-      ->setName('revision_id');
+    $fields['revision'] = FieldDefinition::create('string')
+      ->setName('revision');
 
     $entity_manager->expects($this->any())
       ->method('getDefinition')

@@ -1137,7 +1137,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
 
     // Define the revision ID schema, default to integer if there is no revision
     // ID.
-    $revision_id_definition = $entity_type->hasKey('revision_id') ? $definitions[$entity_type->getKey('revision_id')] : NULL;
+    $revision_id_definition = $entity_type->hasKey('revision') ? $definitions[$entity_type->getKey('revision')] : NULL;
     if (!$revision_id_definition || $revision_id_definition->getType() == 'integer') {
       $revision_id_schema = array(
         'type' => 'int',
