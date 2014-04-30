@@ -272,7 +272,7 @@ system.theme_enable:
 system.status:
   path: '/admin/reports/status'
   defaults:
-    _content: 'Drupal\system\Controller\SystemInfoController::status'
+    _content: '\Drupal\system\Controller\SystemInfoController::status'
     _title: 'Status report'
   requirements:
     _permission: 'administer site configuration'
@@ -291,7 +291,7 @@ system.php:
 system.admin_index:
   path: '/admin/index'
   defaults:
-    _content: 'Drupal\system\Controller\AdminController::index'
+    _content: '\Drupal\system\Controller\AdminController::index'
     _title: 'Administration'
   requirements:
     _permission: 'access administration pages'
