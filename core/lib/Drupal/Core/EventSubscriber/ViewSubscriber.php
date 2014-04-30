@@ -144,36 +144,6 @@ class ViewSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Processes a successful controller into an HTTP 200 response.
-   *
-   * Some controllers may not return a response object but simply the body of
-   * one. The VIEW event is called in that case, to allow us to mutate that
-   * body into a Response object. In particular we assume that the return from
-   * an HTML-type response is a render array from a legacy page callback and
-   * render it.
-   *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent $event
-   *   The Event to process.
-   */
-  public function onHtml(GetResponseForControllerResultEvent $event) {
-    $page_callback_result = $event->getControllerResult();
-    $request = $event->getRequest();
-
-    // Convert string content to a renderable array, so we can set a title.
-    if (!is_array($page_callback_result)) {
-      $page_callback_result = array(
-        '#markup' => $page_callback_result,
-      );
-    }
-    // If no title was returned fall back to one defined in the route.
-    if (!isset($page_callback_result['#title'])) {
-      $page_callback_result['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
-    }
-
-    return new Response(drupal_render_page($page_callback_result));
-  }
-
-  /**
    * Registers the methods in this class that should be listeners.
    *
    * @return array
