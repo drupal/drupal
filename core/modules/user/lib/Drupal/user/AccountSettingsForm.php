@@ -59,9 +59,9 @@ class AccountSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('user.settings');
-    $mail_config = $this->configFactory->get('user.mail');
-    $site_config = $this->configFactory->get('system.site');
+    $config = $this->config('user.settings');
+    $mail_config = $this->config('user.mail');
+    $site_config = $this->config('system.site');
 
     // Settings for anonymous users.
     $form['anonymous_settings'] = array(
@@ -410,7 +410,7 @@ class AccountSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     parent::submitForm($form, $form_state);
 
-    $this->configFactory->get('user.settings')
+    $this->config('user.settings')
       ->set('anonymous', $form_state['values']['anonymous'])
       ->set('admin_role', $form_state['values']['user_admin_role'])
       ->set('register', $form_state['values']['user_register'])
@@ -422,7 +422,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ->set('notify.status_blocked', $form_state['values']['user_mail_status_blocked_notify'])
       ->set('notify.status_canceled', $form_state['values']['user_mail_status_canceled_notify'])
       ->save();
-    $this->configFactory->get('user.mail')
+    $this->config('user.mail')
       ->set('cancel_confirm.body', $form_state['values']['user_mail_cancel_confirm_body'])
       ->set('cancel_confirm.subject', $form_state['values']['user_mail_cancel_confirm_subject'])
       ->set('password_reset.body', $form_state['values']['user_mail_password_reset_body'])
@@ -440,7 +440,7 @@ class AccountSettingsForm extends ConfigFormBase {
       ->set('status_canceled.body', $form_state['values']['user_mail_status_canceled_body'])
       ->set('status_canceled.subject', $form_state['values']['user_mail_status_canceled_subject'])
       ->save();
-    $this->configFactory->get('system.site')
+    $this->config('system.site')
       ->set('mail_notification', $form_state['values']['mail_notification_address'])
       ->save();
   }

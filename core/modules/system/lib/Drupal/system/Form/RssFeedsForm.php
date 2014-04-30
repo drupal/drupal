@@ -25,7 +25,7 @@ class RssFeedsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $rss_config = $this->configFactory->get('system.rss');
+    $rss_config = $this->config('system.rss');
     $form['feed_description'] = array(
       '#type' => 'textarea',
       '#title' => t('Feed description'),
@@ -59,7 +59,7 @@ class RssFeedsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('system.rss')
+    $this->config('system.rss')
       ->set('channel.description', $form_state['values']['feed_description'])
       ->set('items.limit', $form_state['values']['feed_default_items'])
       ->set('items.view_mode', $form_state['values']['feed_item_length'])

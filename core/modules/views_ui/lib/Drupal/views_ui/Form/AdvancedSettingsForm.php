@@ -28,7 +28,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
 
-    $config = $this->configFactory->get('views.settings');
+    $config = $this->config('views.settings');
     $form['cache'] = array(
       '#type' => 'details',
       '#title' => $this->t('Caching'),
@@ -91,7 +91,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('views.settings')
+    $this->config('views.settings')
       ->set('skip_cache', $form_state['values']['skip_cache'])
       ->set('sql_signature', $form_state['values']['sql_signature'])
       ->set('no_javascript', $form_state['values']['no_javascript'])

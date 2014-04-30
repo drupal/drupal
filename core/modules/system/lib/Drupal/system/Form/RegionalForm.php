@@ -59,7 +59,7 @@ class RegionalForm extends ConfigFormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     $countries = $this->countryManager->getList();
-    $system_date = $this->configFactory->get('system.date');
+    $system_date = $this->config('system.date');
 
     // Date settings:
     $zones = system_time_zones();
@@ -142,7 +142,7 @@ class RegionalForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('system.date')
+    $this->config('system.date')
       ->set('country.default', $form_state['values']['site_default_country'])
       ->set('first_day', $form_state['values']['date_first_day'])
       ->set('timezone.default', $form_state['values']['date_default_timezone'])

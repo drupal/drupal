@@ -26,7 +26,7 @@ class BookSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     $types = node_type_get_names();
-    $config = $this->configFactory->get('book.settings');
+    $config = $this->config('book.settings');
     $form['book_allowed_types'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('Content types allowed in book outlines'),
@@ -68,7 +68,7 @@ class BookSettingsForm extends ConfigFormBase {
     // that we can save them in the correct order if node type changes.
     // @see book_node_type_update().
     sort($allowed_types);
-    $this->configFactory->get('book.settings')
+    $this->config('book.settings')
     // Remove unchecked types.
       ->set('allowed_types', $allowed_types)
       ->set('child_type', $form_state['values']['book_child_type'])

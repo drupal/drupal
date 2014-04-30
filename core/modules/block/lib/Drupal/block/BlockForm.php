@@ -8,7 +8,6 @@
 namespace Drupal\block;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
@@ -43,26 +42,16 @@ class BlockForm extends EntityForm {
   protected $languageManager;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a BlockForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
     $this->storage = $entity_manager->getStorage('block');
     $this->languageManager = $language_manager;
-    $this->configFactory = $config_factory;
   }
 
   /**
@@ -71,8 +60,7 @@ class BlockForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('language_manager'),
-      $container->get('config.factory')
+      $container->get('language_manager')
     );
   }
 
@@ -84,7 +72,7 @@ class BlockForm extends EntityForm {
 
     // Store theme settings in $form_state for use below.
     if (!$theme = $entity->get('theme')) {
-      $theme = $this->configFactory->get('system.theme')->get('default');
+      $theme = $this->config('system.theme')->get('default');
     }
     $form_state['block_theme'] = $theme;
 

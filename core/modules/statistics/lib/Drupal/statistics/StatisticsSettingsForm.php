@@ -58,7 +58,7 @@ class StatisticsSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('statistics.settings');
+    $config = $this->config('statistics.settings');
 
     // Content counter settings.
     $form['content'] = array(
@@ -80,7 +80,7 @@ class StatisticsSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('statistics.settings')
+    $this->config('statistics.settings')
       ->set('count_content_views', $form_state['values']['statistics_count_content_views'])
       ->save();
 

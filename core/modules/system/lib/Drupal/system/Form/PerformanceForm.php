@@ -60,7 +60,7 @@ class PerformanceForm extends ConfigFormBase {
   public function buildForm(array $form, array &$form_state) {
     $form['#attached']['library'][] = 'system/drupal.system';
 
-    $config = $this->configFactory->get('system.performance');
+    $config = $this->config('system.performance');
 
     $form['clear_cache'] = array(
       '#type' => 'details',
@@ -152,7 +152,7 @@ class PerformanceForm extends ConfigFormBase {
     // form submit.
     $this->renderCache->deleteAll();
 
-    $this->configFactory->get('system.performance')
+    $this->config('system.performance')
       ->set('cache.page.use_internal', $form_state['values']['cache'])
       ->set('cache.page.max_age', $form_state['values']['page_cache_maximum_age'])
       ->set('response.gzip', $form_state['values']['page_compression'])

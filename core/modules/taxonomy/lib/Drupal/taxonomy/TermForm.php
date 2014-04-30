@@ -8,46 +8,13 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base for controller for taxonomy term edit forms.
  */
 class TermForm extends ContentEntityForm {
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * Constructs a new TermForm.
-   *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory) {
-    parent::__construct($entity_manager);
-    $this->configFactory = $config_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager'),
-      $container->get('config.factory')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -81,7 +48,7 @@ class TermForm extends ContentEntityForm {
     // numbers of items so we check for taxonomy.settings:override_selector
     // before loading the full vocabulary. Contrib modules can then intercept
     // before hook_form_alter to provide scalable alternatives.
-    if (!$this->configFactory->get('taxonomy.settings')->get('override_selector')) {
+    if (!$this->config('taxonomy.settings')->get('override_selector')) {
       $parent = array_keys(taxonomy_term_load_parents($term->id()));
       $children = taxonomy_get_tree($vocabulary->id(), $term->id());
 

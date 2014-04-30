@@ -71,7 +71,7 @@ class CronForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('system.cron');
+    $config = $this->config('system.cron');
 
     $form['description'] = array(
       '#markup' => '<p>' . t('Cron takes care of running periodic tasks like checking for updates and indexing content for search.') . '</p>',
@@ -112,7 +112,7 @@ class CronForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('system.cron')
+    $this->config('system.cron')
       ->set('threshold.autorun', $form_state['values']['cron_safe_threshold'])
       ->save();
 

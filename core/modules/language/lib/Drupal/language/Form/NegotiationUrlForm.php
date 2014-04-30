@@ -27,7 +27,7 @@ class NegotiationUrlForm extends ConfigFormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     global $base_url;
-    $config = $this->configFactory->get('language.negotiation');
+    $config = $this->config('language.negotiation');
 
     $form['language_negotiation_url_part'] = array(
       '#title' => t('Part of the URL that determines language'),
@@ -162,7 +162,7 @@ class NegotiationUrlForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     // Save selected format (prefix or domain).
-    $this->configFactory->get('language.negotiation')
+    $this->config('language.negotiation')
       ->set('url.source', $form_state['values']['language_negotiation_url_part'])
       ->save();
 

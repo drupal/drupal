@@ -7,10 +7,7 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form for cancelling user account.
@@ -25,41 +22,11 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
   protected $cancelMethods;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The user being cancelled.
    *
    * @var \Drupal\user\UserInterface
    */
   protected $entity;
-
-  /**
-   * Constructs an EntityForm object.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory) {
-    parent::__construct($entity_manager);
-    $this->configFactory = $config_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager'),
-      $container->get('config.factory')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -82,7 +49,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    */
   public function getDescription() {
     $description = '';
-    $default_method = $this->configFactory->get('user.settings')->get('cancel_method');
+    $default_method = $this->config('user.settings')->get('cancel_method');
     if ($this->currentUser()->hasPermission('administer users') || $this->currentUser()->hasPermission('select account cancellation method')) {
       $description = $this->t('Select the method to cancel the account above.');
     }
@@ -129,7 +96,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via e-mail.'),
     );
     // Also allow to send account canceled notification mail, if enabled.
-    $default_notify = $this->configFactory->get('user.settings')->get('notify.status_canceled');
+    $default_notify = $this->config('user.settings')->get('notify.status_canceled');
     $form['user_cancel_notify'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled.'),

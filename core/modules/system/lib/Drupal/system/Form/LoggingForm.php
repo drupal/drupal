@@ -25,7 +25,7 @@ class LoggingForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('system.logging');
+    $config = $this->config('system.logging');
     $form['error_level'] = array(
       '#type' => 'radios',
       '#title' => t('Error messages to display'),
@@ -46,7 +46,7 @@ class LoggingForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('system.logging')
+    $this->config('system.logging')
       ->set('error_level', $form_state['values']['error_level'])
       ->save();
 

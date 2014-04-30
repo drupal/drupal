@@ -8,7 +8,6 @@
 namespace Drupal\user\Form;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -30,13 +29,6 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   protected $tempStoreFactory;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The user storage.
    *
    * @var \Drupal\user\UserStorageInterface
@@ -55,16 +47,13 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
    *
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The temp store factory.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, ConfigFactoryInterface $config_factory, UserStorageInterface $user_storage, EntityManagerInterface $entity_manager) {
+  public function __construct(TempStoreFactory $temp_store_factory, UserStorageInterface $user_storage, EntityManagerInterface $entity_manager) {
     $this->tempStoreFactory = $temp_store_factory;
-    $this->configFactory = $config_factory;
     $this->userStorage = $user_storage;
     $this->entityManager = $entity_manager;
   }
@@ -75,7 +64,6 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('user.tempstore'),
-      $container->get('config.factory'),
       $container->get('entity.manager')->getStorage('user'),
       $container->get('entity.manager')
     );
@@ -166,7 +154,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled.'),
       '#default_value' => FALSE,
-      '#access' => $this->configFactory->get('user.settings')->get('notify.status_canceled'),
+      '#access' => $this->config('user.settings')->get('notify.status_canceled'),
       '#description' => $this->t('When enabled, the user will receive an e-mail notification after the account has been canceled.'),
     );
 

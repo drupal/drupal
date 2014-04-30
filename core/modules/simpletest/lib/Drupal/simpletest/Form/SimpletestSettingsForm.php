@@ -25,7 +25,7 @@ class SimpletestSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('simpletest.settings');
+    $config = $this->config('simpletest.settings');
     $form['general'] = array(
       '#type' => 'details',
       '#title' => $this->t('General'),
@@ -87,7 +87,7 @@ class SimpletestSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
-    $config = $this->configFactory->get('simpletest.settings');
+    $config = $this->config('simpletest.settings');
     // If a username was provided but a password wasn't, preserve the existing
     // password.
     if (!empty($form_state['values']['simpletest_httpauth_username']) && empty($form_state['values']['simpletest_httpauth_password'])) {
@@ -107,7 +107,7 @@ class SimpletestSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('simpletest.settings')
+    $this->config('simpletest.settings')
       ->set('clear_results', $form_state['values']['simpletest_clear_results'])
       ->set('verbose', $form_state['values']['simpletest_verbose'])
       ->set('httpauth.method', $form_state['values']['simpletest_httpauth_method'])

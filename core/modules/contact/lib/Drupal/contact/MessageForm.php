@@ -8,7 +8,6 @@
 namespace Drupal\contact;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
@@ -29,13 +28,6 @@ class MessageForm extends ContentEntityForm {
   protected $entity;
 
   /**
-   * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The flood control mechanism.
    *
    * @var \Drupal\Core\Flood\FloodInterface
@@ -45,17 +37,14 @@ class MessageForm extends ContentEntityForm {
   /**
    * Constructs a MessageForm object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood control mechanism.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, FloodInterface $flood) {
+  public function __construct(EntityManagerInterface $entity_manager, FloodInterface $flood) {
     parent::__construct($entity_manager);
 
-    $this->configFactory = $config_factory;
     $this->flood = $flood;
   }
 
@@ -64,7 +53,6 @@ class MessageForm extends ContentEntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory'),
       $container->get('entity.manager'),
       $container->get('flood')
     );
@@ -241,7 +229,7 @@ class MessageForm extends ContentEntityForm {
       drupal_mail('contact', 'page_autoreply', $sender->getEmail(), $language_interface->id, $params);
     }
 
-    $config = $this->configFactory->get('contact.settings');
+    $config = $this->config('contact.settings');
     $this->flood->register('contact', $config->get('flood.interval'));
     if (!$message->isPersonal()) {
       watchdog('contact', '%sender-name (@sender-from) sent an e-mail regarding %category.', array(

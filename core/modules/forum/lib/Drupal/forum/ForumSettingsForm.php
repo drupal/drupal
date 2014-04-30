@@ -25,7 +25,7 @@ class ForumSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('forum.settings');
+    $config = $this->config('forum.settings');
 
     $options = array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500);
     $form['forum_hot_topic'] = array(
@@ -64,7 +64,7 @@ class ForumSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('forum.settings')
+    $this->config('forum.settings')
       ->set('topics.hot_threshold', $form_state['values']['forum_hot_topic'])
       ->set('topics.page_limit', $form_state['values']['forum_per_page'])
       ->set('topics.order', $form_state['values']['forum_order'])

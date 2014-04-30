@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class FilterFormatFormBase extends EntityForm {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The entity query factory.
    *
    * @var \Drupal\Core\Entity\Query\QueryFactory
@@ -35,13 +28,10 @@ abstract class FilterFormatFormBase extends EntityForm {
   /**
    * Constructs a new FilterFormatFormBase.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, QueryFactory $query_factory) {
-    $this->configFactory = $config_factory;
+  public function __construct(QueryFactory $query_factory) {
     $this->queryFactory = $query_factory;
   }
 
@@ -50,7 +40,6 @@ abstract class FilterFormatFormBase extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory'),
       $container->get('entity.query')
     );
   }
@@ -60,7 +49,7 @@ abstract class FilterFormatFormBase extends EntityForm {
    */
   public function form(array $form, array &$form_state) {
     $format = $this->entity;
-    $is_fallback = ($format->id() == $this->configFactory->get('filter.settings')->get('fallback_format'));
+    $is_fallback = ($format->id() == $this->config('filter.settings')->get('fallback_format'));
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'filter/drupal.filter.admin';
@@ -100,7 +89,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       // If editing an existing text format, pre-select its current permissions.
       $form['roles']['#default_value'] = array_keys(filter_get_roles_by_format($format));
     }
-    elseif ($admin_role = $this->configFactory->get('user.settings')->get('admin_role')) {
+    elseif ($admin_role = $this->config('user.settings')->get('admin_role')) {
       // If adding a new text format and the site has an administrative role,
       // pre-select that role so as to grant administrators access to the new
       // text format permission by default.

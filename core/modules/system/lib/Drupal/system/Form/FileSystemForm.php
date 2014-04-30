@@ -26,7 +26,7 @@ class FileSystemForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('system.file');
+    $config = $this->config('system.file');
     $form['file_public_path'] = array(
       '#type' => 'item',
       '#title' => t('Public file system path'),
@@ -86,7 +86,7 @@ class FileSystemForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $config = $this->configFactory->get('system.file')
+    $config = $this->config('system.file')
       ->set('path.private', $form_state['values']['file_private_path'])
       ->set('path.temporary', $form_state['values']['file_temporary_path'])
       ->set('temporary_maximum_age', $form_state['values']['temporary_maximum_age']);

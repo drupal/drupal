@@ -59,7 +59,7 @@ class SiteInformationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $site_config = $this->configFactory->get('system.site');
+    $site_config = $this->config('system.site');
     $site_mail = $site_config->get('mail');
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
@@ -168,7 +168,7 @@ class SiteInformationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('system.site')
+    $this->config('system.site')
       ->set('name', $form_state['values']['site_name'])
       ->set('mail', $form_state['values']['site_mail'])
       ->set('slogan', $form_state['values']['site_slogan'])

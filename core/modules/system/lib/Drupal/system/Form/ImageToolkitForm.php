@@ -61,7 +61,7 @@ class ImageToolkitForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $current_toolkit = $this->configFactory->get('system.image')->get('toolkit');
+    $current_toolkit = $this->config('system.image')->get('toolkit');
 
     $form['image_toolkit'] = array(
       '#type' => 'radios',
@@ -96,7 +96,7 @@ class ImageToolkitForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('system.image')
+    $this->config('system.image')
       ->set('toolkit', $form_state['values']['image_toolkit'])
       ->save();
 

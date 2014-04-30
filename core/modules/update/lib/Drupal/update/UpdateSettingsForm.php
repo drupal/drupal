@@ -25,7 +25,7 @@ class UpdateSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('update.settings');
+    $config = $this->config('update.settings');
 
     $form['update_check_frequency'] = array(
       '#type' => 'radios',
@@ -104,7 +104,7 @@ class UpdateSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $config = $this->configFactory->get('update.settings');
+    $config = $this->config('update.settings');
      // See if the update_check_disabled setting is being changed, and if so,
     // invalidate all update status data.
     if ($form_state['values']['update_check_disabled'] != $config->get('check.disabled_extensions')) {

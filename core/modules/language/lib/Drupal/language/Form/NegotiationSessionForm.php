@@ -25,7 +25,7 @@ class NegotiationSessionForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('language.negotiation');
+    $config = $this->config('language.negotiation');
     $form['language_negotiation_session_param'] = array(
       '#title' => t('Request/session parameter'),
       '#type' => 'textfield',
@@ -42,7 +42,7 @@ class NegotiationSessionForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('language.settings')
+    $this->config('language.settings')
       ->set('session.parameter', $form_state['values']['language_negotiation_session_param'])
       ->save();
 

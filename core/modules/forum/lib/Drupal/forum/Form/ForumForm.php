@@ -139,7 +139,7 @@ class ForumForm extends TermForm {
       $parent = 0;
     }
 
-    $vid = $this->configFactory->get('forum.settings')->get('vocabulary');
+    $vid = $this->config('forum.settings')->get('vocabulary');
     // @todo Inject a taxonomy service when one exists.
     $children = taxonomy_get_tree($vid, $tid, NULL, TRUE);
 

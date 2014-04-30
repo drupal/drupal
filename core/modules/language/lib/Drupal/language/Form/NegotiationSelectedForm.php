@@ -26,7 +26,7 @@ class NegotiationSelectedForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('language.negotiation');
+    $config = $this->config('language.negotiation');
     $form['selected_langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),
@@ -41,7 +41,7 @@ class NegotiationSelectedForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('language.negotiation')
+    $this->config('language.negotiation')
       ->set('selected_langcode', $form_state['values']['selected_langcode'])
       ->save();
 

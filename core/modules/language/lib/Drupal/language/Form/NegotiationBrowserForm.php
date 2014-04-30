@@ -171,7 +171,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $mappings = $form_state['mappings'];
     if (!empty($mappings)) {
-      $config = $this->configFactory->get('language.mappings');
+      $config = $this->config('language.mappings');
       $config->setData($mappings);
       $config->save();
     }
@@ -187,7 +187,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
    *   The browser's langcode mapping configuration array.
    */
   protected function language_get_browser_drupal_langcode_mappings() {
-    $config = $this->configFactory->get('language.mappings');
+    $config = $this->config('language.mappings');
     if ($config->isNew()) {
       return array();
     }

@@ -44,9 +44,14 @@ abstract class FormBase extends DependencySerialization implements FormInterface
   /**
    * The config factory.
    *
+   * This is marked private in order to force subclasses to use the
+   * self::config() method, which may be overridden to address specific needs
+   * when loading config. See \Drupal\Core\Form\ConfigFormBase::config() for an
+   * example of this.
+   *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $configFactory;
+  private $configFactory;
 
   /**
    * The form error handler.
@@ -121,10 +126,22 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    *   A configuration object.
    */
   protected function config($name) {
+    return $this->configFactory()->get($name);
+  }
+
+  /**
+   * Gets the config factory for this form.
+   *
+   * When accessing configuration values, use $this->config(). Only use this
+   * when the config factory needs to be manipulated directly.
+   *
+   * @return \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected function configFactory() {
     if (!$this->configFactory) {
       $this->configFactory = $this->container()->get('config.factory');
     }
-    return $this->configFactory->get($name);
+    return $this->configFactory;
   }
 
   /**

@@ -160,7 +160,7 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $config = $this->configFactory->get('language.settings');
+    $config = $this->config('language.settings');
     foreach ($form_state['values']['settings'] as $entity_type => $entity_settings) {
       foreach ($entity_settings as $bundle => $bundle_settings) {
           $config->set(language_get_default_configuration_settings_key($entity_type, $bundle),

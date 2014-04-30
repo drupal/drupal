@@ -57,7 +57,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('system.maintenance');
+    $config = $this->config('system.maintenance');
     $form['maintenance_mode'] = array(
       '#type' => 'checkbox',
       '#title' => t('Put site into maintenance mode'),
@@ -77,7 +77,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('system.maintenance')
+    $this->config('system.maintenance')
       ->set('message', $form_state['values']['maintenance_mode_message'])
       ->save();
 

@@ -27,7 +27,7 @@ class BasicSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
 
-    $config = $this->configFactory->get('views.settings');
+    $config = $this->config('views.settings');
     $options = array();
     foreach (list_themes() as $name => $theme) {
       if ($theme->status) {
@@ -127,7 +127,7 @@ class BasicSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('views.settings')
+    $this->config('views.settings')
       ->set('ui.show.master_display', $form_state['values']['ui_show_master_display'])
       ->set('ui.show.advanced_column', $form_state['values']['ui_show_advanced_column'])
       ->set('ui.show.display_embed', $form_state['values']['ui_show_display_embed'])

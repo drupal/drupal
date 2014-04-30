@@ -376,7 +376,7 @@ class ThemeSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     parent::submitForm($form, $form_state);
 
-    $config = $this->configFactory->get($form_state['values']['config_key']);
+    $config = $this->config($form_state['values']['config_key']);
 
     // Exclude unnecessary elements before saving.
     form_state_values_clean($form_state);

@@ -99,7 +99,7 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('aggregator.settings');
+    $config = $this->config('aggregator.settings');
 
     // Global aggregator settings.
     $form['aggregator_allowed_html_tags'] = array(
@@ -200,7 +200,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     parent::submitForm($form, $form_state);
-    $config = $this->configFactory->get('aggregator.settings');
+    $config = $this->config('aggregator.settings');
     // Let active plugins save their settings.
     foreach ($this->configurableInstances as $instance) {
       $instance->submitConfigurationForm($form, $form_state);

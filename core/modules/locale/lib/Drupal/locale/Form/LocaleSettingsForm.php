@@ -24,7 +24,7 @@ class LocaleSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('locale.settings');
+    $config = $this->config('locale.settings');
 
     $form['update_interval_days'] = array(
       '#type' => 'radios',
@@ -97,7 +97,7 @@ class LocaleSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $values = $form_state['values'];
 
-    $config = $this->configFactory->get('locale.settings');
+    $config = $this->config('locale.settings');
     $config->set('translation.update_interval_days', $values['update_interval_days'])->save();
     $config->set('translation.use_source', $values['use_source'])->save();
 
