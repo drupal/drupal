@@ -13,6 +13,8 @@ use Drupal\Core\Render\Element;
 
 /**
  * Base class for entity forms.
+ *
+ * @ingroup entity_api
  */
 class EntityForm extends FormBase implements EntityFormInterface {
 

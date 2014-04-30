@@ -9,6 +9,8 @@ namespace Drupal\Core\State;
 
 /**
  * Defines the interface for the state system.
+ *
+ * @ingroup state_api
  */
 interface StateInterface {
 

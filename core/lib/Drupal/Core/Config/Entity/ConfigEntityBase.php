@@ -17,6 +17,8 @@ use Drupal\Core\Language\Language;
 
 /**
  * Defines a base configuration entity class.
+ *
+ * @ingroup entity_api
  */
 abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface {
 

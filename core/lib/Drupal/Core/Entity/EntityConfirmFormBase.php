@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a generic base class for an entity-based confirmation form.
+ *
+ * @ingroup entity_api
  */
 abstract class EntityConfirmFormBase extends EntityForm implements ConfirmFormInterface {
 

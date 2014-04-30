@@ -11,6 +11,9 @@ use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Defines the interface common for all configuration entities.
+ *
+ * @ingroup config_api
+ * @ingroup entity_api
  */
 interface ConfigEntityInterface extends EntityInterface {
 

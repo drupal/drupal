@@ -12,6 +12,8 @@ use Drupal\Core\Entity\EntityListBuilder;
 
 /**
  * Defines the default class to build a listing of configuration entities.
+ *
+ * @ingroup entity_api
  */
 class ConfigEntityListBuilder extends EntityListBuilder {
 

@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * specific configuration object, including support for runtime overrides. The
  * overrides are handled on top of the stored configuration so they are not
  * saved back to storage.
+ *
+ * @ingroup config_api
  */
 class Config extends StorableConfigBase {
 
