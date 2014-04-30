@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Session;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\String;
 
 /**
  * Ensure that when running under HTTPS two session cookies are generated.
@@ -212,6 +213,75 @@ class SessionHttpsTest extends WebTestBase {
     // Test that the user is also authenticated on the insecure site.
     $this->drupalGet("user/" . $user->id() . "/edit");
     $this->assertResponse(200);
+  }
+
+  /**
+   * Ensure that a CSRF form token is shared in SSL mixed mode.
+   */
+  protected function testCsrfTokenWithMixedModeSsl() {
+    if ($this->request->isSecure()) {
+      $secure_session_name = session_name();
+      $insecure_session_name = substr(session_name(), 1);
+    }
+    else {
+      $secure_session_name = 'S' . session_name();
+      $insecure_session_name = session_name();
+    }
+
+    // Enable mixed mode SSL.
+    $this->settingsSet('mixed_mode_sessions', TRUE);
+    // Write that value also into the test settings.php file.
+    $settings['settings']['mixed_mode_sessions'] = (object) array(
+      'value' => TRUE,
+      'required' => TRUE,
+    );
+    $this->writeSettings($settings);
+
+    $user = $this->drupalCreateUser(array('access administration pages'));
+
+    // Login using the HTTPS user-login form.
+    $this->drupalGet('user');
+    $form = $this->xpath('//form[@id="user-login-form"]');
+    $form[0]['action'] = $this->httpsUrl('user');
+    $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
+    $this->drupalPostForm(NULL, $edit, t('Log in'));
+
+    // Collect session id cookies.
+    $sid = $this->cookies[$insecure_session_name]['value'];
+    $ssid = $this->cookies[$secure_session_name]['value'];
+    $this->assertSessionIds($sid, $ssid, 'Session has both secure and insecure SIDs');
+
+    // Retrieve the form via HTTP.
+    $this->curlClose();
+    $this->drupalGet($this->httpUrl('session-test/form'), array(), array('Cookie: ' . $insecure_session_name . '=' . $sid));
+    $http_token = $this->getFormToken();
+
+    // Verify that submitting form values via HTTPS to a form originally
+    // retrieved over HTTP works.
+    $form = $this->xpath('//form[@id="session-test-form"]');
+    $form[0]['action'] = $this->httpsUrl('session-test/form');
+    $edit = array('input' => $this->randomName(32));
+    $this->curlClose();
+    $this->drupalPostForm(NULL, $edit, 'Save', array('Cookie: ' . $secure_session_name . '=' . $ssid));
+    $this->assertText(String::format('Ok: @input', array('@input' => $edit['input'])));
+
+    // Retrieve the same form via HTTPS.
+    $this->curlClose();
+    $this->drupalGet($this->httpsUrl('session-test/form'), array(), array('Cookie: ' . $secure_session_name . '=' . $ssid));
+    $https_token = $this->getFormToken();
+
+    // Verify that CSRF token values are the same for a form regardless of
+    // whether it was accessed via HTTP or HTTPS when SSL mixed mode is enabled.
+    $this->assertEqual($http_token, $https_token, 'Form token is the same on HTTP as well as HTTPS form');
+  }
+
+  /**
+   * Return the token of the current form.
+   */
+  protected function getFormToken() {
+    $token_fields = $this->xpath('//input[@name="form_token"]');
+    $this->assertEqual(count($token_fields), 1, 'One form token field on the page');
+    return (string) $token_fields[0]['value'];
   }
 
   /**

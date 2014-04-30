@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Contains Drupal\session_test\Form\SessionTestForm
+ */
+
+namespace Drupal\session_test\Form;
+
+use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormBase;
+
+/**
+ * Form controller for the test config edit forms.
+ */
+class SessionTestForm extends FormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormID() {
+    return 'session_test_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, array &$form_state) {
+    $form['input'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Input',
+      '#required' => TRUE,
+    );
+
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => 'Save',
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, array &$form_state) {
+    drupal_set_message(String::format('Ok: @input', array('@input' => $form_state['values']['input'])));
+  }
+
+}

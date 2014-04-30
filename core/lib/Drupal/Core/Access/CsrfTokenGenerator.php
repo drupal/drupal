@@ -38,7 +38,7 @@ class CsrfTokenGenerator {
   /**
    * Generates a token based on $value, the user session, and the private key.
    *
-   * The generated token is based on the session ID of the current user. Normally,
+   * The generated token is based on the session of the current user. Normally,
    * anonymous users do not have a session, so the generated token will be
    * different on every page request. To generate a token for users without a
    * session, manually start a session prior to calling this function.
@@ -47,15 +47,19 @@ class CsrfTokenGenerator {
    *   (optional) An additional value to base the token on.
    *
    * @return string
-   *   A 43-character URL-safe token for validation, based on the user session
-   *   ID, the hash salt provided by drupal_get_hash_salt(), and the
+   *   A 43-character URL-safe token for validation, based on the token seed,
+   *   the hash salt provided by drupal_get_hash_salt(), and the
    *   'drupal_private_key' configuration variable.
    *
    * @see drupal_get_hash_salt()
    * @see \Drupal\Core\Session\SessionManager::start()
    */
   public function get($value = '') {
-    return Crypt::hmacBase64($value, session_id() . $this->privateKey->get() . drupal_get_hash_salt());
+    if (empty($_SESSION['csrf_token_seed'])) {
+      $_SESSION['csrf_token_seed'] = Crypt::randomBytesBase64();
+    }
+
+    return $this->computeToken($_SESSION['csrf_token_seed'], $value);
   }
 
   /**
@@ -70,7 +74,28 @@ class CsrfTokenGenerator {
    *   TRUE for a valid token, FALSE for an invalid token.
    */
   public function validate($token, $value = '') {
-    return $token === $this->get($value);
+    if (empty($_SESSION['csrf_token_seed'])) {
+      return FALSE;
+    }
+
+    return $token === $this->computeToken($_SESSION['csrf_token_seed'], $value);
+  }
+
+  /**
+   * Generates a token based on $value, the token seed, and the private key.
+   *
+   * @param string $seed
+   *   The per-session token seed.
+   * @param string $value
+   *   (optional) An additional value to base the token on.
+   *
+   * @return string
+   *   A 43-character URL-safe token for validation, based on the token seed,
+   *   the hash salt provided by drupal_get_hash_salt(), and the
+   *   'drupal_private_key' configuration variable.
+   */
+  protected function computeToken($seed, $value = '') {
+    return Crypt::hmacBase64($value, $seed . $this->privateKey->get() . drupal_get_hash_salt());
   }
 
 }

@@ -83,7 +83,7 @@ class SessionManager implements SessionManagerInterface {
       // anonymous users not use a session cookie unless something is stored in
       // $_SESSION. This allows HTTP proxies to cache anonymous pageviews.
       $this->start();
-      if ($user->isAuthenticated() || !empty($_SESSION)) {
+      if ($user->isAuthenticated() || !$this->isSessionObsolete()) {
         drupal_page_is_cacheable(FALSE);
       }
     }
@@ -138,7 +138,7 @@ class SessionManager implements SessionManagerInterface {
       return;
     }
 
-    if ($user->isAnonymous() && empty($_SESSION)) {
+    if ($user->isAnonymous() && $this->isSessionObsolete()) {
       // There is no session data to store, destroy the session if it was
       // previously started.
       if ($this->isStarted()) {
@@ -203,6 +203,14 @@ class SessionManager implements SessionManagerInterface {
       $old_session_id = session_id();
     }
     session_id(Crypt::randomBytesBase64());
+
+    // @todo As soon as https://drupal.org/node/2238087 lands, the token seed
+    //   can be moved onto Drupal\Core\Session\MetadataBag. The session manager
+    //   then needs to notify the metadata bag when the token should be
+    //   regenerated.
+    if (!empty($_SESSION)) {
+      unset($_SESSION['csrf_token_seed']);
+    }
 
     if (isset($old_session_id)) {
       $params = session_get_cookie_params();
@@ -287,6 +295,32 @@ class SessionManager implements SessionManagerInterface {
    */
   protected function isCli() {
     return PHP_SAPI === 'cli';
+  }
+
+  /**
+   * Determines whether the session contains user data.
+   *
+   * @return bool
+   *   TRUE when the session does not contain any values and therefore can be
+   *   destroyed.
+   */
+  protected function isSessionObsolete() {
+    // Return early when $_SESSION is empty or not initialized.
+    if (empty($_SESSION)) {
+      return TRUE;
+    }
+
+    // Ignore the CSRF token seed.
+    //
+    // @todo Anonymous users should not get a CSRF token at any time, or if they
+    //   do, then the originating code is responsible for cleaning up the
+    //   session once obsolete. Since that is not guaranteed to be the case,
+    //   this check force-ignores the CSRF token, so as to avoid performance
+    //   regressions.
+    //   As soon as https://drupal.org/node/2238087 lands, the token seed can be
+    //   moved onto \Drupal\Core\Session\MetadataBag. This will result in the
+    //   CSRF token to be ignored automatically.
+    return count(array_diff_key($_SESSION, array('csrf_token_seed' => TRUE))) == 0;
   }
 
 }

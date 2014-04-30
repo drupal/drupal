@@ -75,3 +75,11 @@ session_test.is_logged_in:
     _content: '\Drupal\session_test\Controller\SessionTestController::isLoggedIn'
   requirements:
     _user_is_logged_in: 'TRUE'
+
+session_test.form:
+  path: '/session-test/form'
+  defaults:
+    _form: '\Drupal\session_test\Form\SessionTestForm'
+    _title: 'Test form'
+  requirements:
+    _access: 'TRUE'
