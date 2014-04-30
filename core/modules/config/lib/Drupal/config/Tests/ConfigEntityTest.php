@@ -21,6 +21,11 @@ use Drupal\simpletest\WebTestBase;
 class ConfigEntityTest extends WebTestBase {
 
   /**
+   * The maximum length for the entity storage used in this test.
+   */
+  const MAX_ID_LENGTH = ConfigEntityStorage::MAX_ID_LENGTH;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -164,7 +169,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Test with an ID of the maximum allowed length.
     $id_length_config_test = entity_create('config_test', array(
-      'id' => $this->randomName(ConfigEntityStorage::MAX_ID_LENGTH),
+      'id' => $this->randomName(static::MAX_ID_LENGTH),
     ));
     try {
       $id_length_config_test->save();
@@ -178,19 +183,19 @@ class ConfigEntityTest extends WebTestBase {
 
     // Test with an ID exeeding the maximum allowed length.
     $id_length_config_test = entity_create('config_test', array(
-      'id' => $this->randomName(ConfigEntityStorage::MAX_ID_LENGTH + 1),
+      'id' => $this->randomName(static::MAX_ID_LENGTH + 1),
     ));
     try {
       $status = $id_length_config_test->save();
       $this->fail(String::format("config_test entity with ID length @length exceeding the maximum allowed length of @max saved successfully", array(
         '@length' => strlen($id_length_config_test->id),
-        '@max' => ConfigEntityStorage::MAX_ID_LENGTH,
+        '@max' => static::MAX_ID_LENGTH,
       )));
     }
     catch (ConfigEntityIdLengthException $e) {
       $this->pass(String::format("config_test entity with ID length @length exceeding the maximum allowed length of @max failed to save", array(
         '@length' => strlen($id_length_config_test->id),
-        '@max' => ConfigEntityStorage::MAX_ID_LENGTH,
+        '@max' => static::MAX_ID_LENGTH,
       )));
     }
 

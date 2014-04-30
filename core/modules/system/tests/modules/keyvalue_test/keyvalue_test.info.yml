@@ -1,0 +1,10 @@
+name: 'KeyValue tests'
+type: module
+description: 'A support module to test key value storage.'
+core: 8.x
+package: Testing
+version: VERSION
+hidden: true
+dependencies:
+  - config_test
+  - entity_test

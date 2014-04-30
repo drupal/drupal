@@ -364,6 +364,9 @@ services:
   entity.query.sql:
     class: Drupal\Core\Entity\Query\Sql\QueryFactory
     arguments: ['@database']
+  entity.query.keyvalue:
+    class: Drupal\Core\Entity\KeyValueStore\Query\QueryFactory
+    arguments: ['@keyvalue']
   router.dumper:
     class: Drupal\Core\Routing\MatcherDumper
     arguments: ['@database', '@state']
