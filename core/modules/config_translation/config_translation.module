@@ -121,6 +121,9 @@ function config_translation_config_translation_info(&$info) {
         $base_route = $route_provider->getRouteByName('field_ui.instance_edit_' . $entity_type_id);
       }
       catch (RouteNotFoundException $e) {
+        if ($collection = \Drupal::service('router.builder')->getCollectionDuringRebuild()) {
+          $base_route = $collection->get('field_ui.instance_edit_' . $entity_type_id);
+        }
         // Ignore non-existent routes.
       }
 

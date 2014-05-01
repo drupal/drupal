@@ -45,4 +45,8 @@ class RouteBuilderStatic implements RouteBuilderInterface {
     $this->rebuildNeeded = TRUE;
   }
 
+  public function getCollectionDuringRebuild() {
+    return FALSE;
+  }
+
 }

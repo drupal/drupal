@@ -87,80 +87,66 @@ class MatcherDumper implements MatcherDumperInterface {
    *   An array of options.
    */
   public function dump(array $options = array()) {
-    $options += array(
-      'provider' => '',
-    );
-
-    // If there are no new routes, just delete any previously existing of this
-    // provider.
-    if (empty($this->routes) || !count($this->routes)) {
-      $this->connection->delete($this->tableName)
-        ->condition('provider', $options['provider'])
-        ->execute();
-    }
     // Convert all of the routes into database records.
-    else {
-      // Accumulate the menu masks on top of any we found before.
-      $masks = array_flip($this->state->get('routing.menu_masks.' . $this->tableName, array()));
-      $insert = $this->connection->insert($this->tableName)->fields(array(
-        'name',
-        'provider',
-        'fit',
-        'path',
-        'pattern_outline',
-        'number_parts',
-        'route',
-      ));
-      $names = array();
-      foreach ($this->routes as $name => $route) {
-        $route->setOption('compiler_class', '\Drupal\Core\Routing\RouteCompiler');
-        $compiled = $route->compile();
-        // The fit value is a binary number which has 1 at every fixed path
-        // position and 0 where there is a wildcard. We keep track of all such
-        // patterns that exist so that we can minimize the the number of path
-        // patterns we need to check in the RouteProvider.
-        $masks[$compiled->getFit()] = 1;
-        $names[] = $name;
-        $values = array(
-          'name' => $name,
-          'provider' => $options['provider'],
-          'fit' => $compiled->getFit(),
-          'path' => $compiled->getPath(),
-          'pattern_outline' => $compiled->getPatternOutline(),
-          'number_parts' => $compiled->getNumParts(),
-          'route' => serialize($route),
-        );
-        $insert->values($values);
-      }
+    // Accumulate the menu masks on top of any we found before.
+    $masks = array_flip($this->state->get('routing.menu_masks.' . $this->tableName, array()));
+    // Delete any old records first, then insert the new ones. That avoids
+    // stale data. The transaction makes it atomic to avoid unstable router
+    // states due to random failures.
+    $transaction = $this->connection->startTransaction();
+    try {
+      // We don't use truncate, because it is not guaranteed to be transaction
+      // safe.
+      $this->connection->delete($this->tableName)->execute();
 
-      // Delete any old records of this provider first, then insert the new ones.
-      // That avoids stale data. The transaction makes it atomic to avoid
-      // unstable router states due to random failures.
-      $transaction = $this->connection->startTransaction();
-      try {
-        // Previously existing routes might have been moved to a new provider,
-        // so ensure that none of the names to insert exists. Also delete any
-        // old records of this provider (which may no longer exist).
-        $delete = $this->connection->delete($this->tableName);
-        $or = $delete->orConditionGroup()
-          ->condition('provider', $options['provider'])
-          ->condition('name', $names);
-        $delete->condition($or);
-        $delete->execute();
+      // Split the routes into chunks to avoid big INSERT queries.
+      $route_chunks = array_chunk($this->routes->all(), 50, TRUE);
+      foreach ($route_chunks as $routes) {
+        $insert = $this->connection->insert($this->tableName)->fields(array(
+          'name',
+          'fit',
+          'path',
+          'pattern_outline',
+          'number_parts',
+          'route',
+        ));
+        $names = array();
+        foreach ($routes as $name => $route) {
+          /** @var \Symfony\Component\Routing\Route $route */
+          $route->setOption('compiler_class', '\Drupal\Core\Routing\RouteCompiler');
+          $compiled = $route->compile();
+          // The fit value is a binary number which has 1 at every fixed path
+          // position and 0 where there is a wildcard. We keep track of all such
+          // patterns that exist so that we can minimize the the number of path
+          // patterns we need to check in the RouteProvider.
+          $masks[$compiled->getFit()] = 1;
+          $names[] = $name;
+          $values = array(
+            'name' => $name,
+            'fit' => $compiled->getFit(),
+            'path' => $compiled->getPath(),
+            'pattern_outline' => $compiled->getPatternOutline(),
+            'number_parts' => $compiled->getNumParts(),
+            'route' => serialize($route),
+          );
+          $insert->values($values);
+        }
 
         // Insert all new routes.
         $insert->execute();
-      } catch (\Exception $e) {
-        $transaction->rollback();
-        watchdog_exception('Routing', $e);
-        throw $e;
       }
-      // Sort the masks so they are in order of descending fit.
-      $masks = array_keys($masks);
-      rsort($masks);
-      $this->state->set('routing.menu_masks.' . $this->tableName, $masks);
+
+
+    } catch (\Exception $e) {
+      $transaction->rollback();
+      watchdog_exception('Routing', $e);
+      throw $e;
     }
-    // The dumper is reused for multiple providers, so reset the queued routes.
+    // Sort the masks so they are in order of descending fit.
+    $masks = array_keys($masks);
+    rsort($masks);
+    $this->state->set('routing.menu_masks.' . $this->tableName, $masks);
+
     $this->routes = NULL;
   }
 

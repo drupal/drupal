@@ -21,11 +21,8 @@ abstract class RouteSubscriberBase implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The route collection for adding routes.
-   * @param string $provider
-   *   The provider these routes belong to. For dynamically added routes, the
-   *   provider name will be 'dynamic_routes'.
    */
-  abstract protected function alterRoutes(RouteCollection $collection, $provider);
+  abstract protected function alterRoutes(RouteCollection $collection);
 
   /**
    * {@inheritdoc}
@@ -43,7 +40,7 @@ abstract class RouteSubscriberBase implements EventSubscriberInterface {
    */
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
-    $this->alterRoutes($collection, $event->getProvider());
+    $this->alterRoutes($collection);
   }
 
 }

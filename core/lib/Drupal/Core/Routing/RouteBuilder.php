@@ -20,16 +20,13 @@ use Drupal\Core\Lock\LockBackendInterface;
 
 /**
  * Managing class for rebuilding the router table.
- *
- * Because this class makes use of the modules system, it cannot currently
- * be unit tested.
  */
 class RouteBuilder implements RouteBuilderInterface {
 
   /**
    * The dumper to which we should send collected routes.
    *
-   * @var \Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface
+   * @var \Drupal\Core\Routing\MatcherDumperInterface
    */
   protected $dumper;
 
@@ -69,6 +66,13 @@ class RouteBuilder implements RouteBuilderInterface {
   protected $controllerResolver;
 
   /**
+   * The route collection during the rebuild.
+   *
+   * @var \Symfony\Component\Routing\RouteCollection
+   */
+  protected $routeCollection;
+
+  /**
    * Constructs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
@@ -81,6 +85,8 @@ class RouteBuilder implements RouteBuilderInterface {
    *   The module handler.
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
+   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   *   The state.
    */
   public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, StateInterface $state = NULL) {
     $this->dumper = $dumper;
@@ -103,9 +109,9 @@ class RouteBuilder implements RouteBuilderInterface {
       return FALSE;
     }
 
-    foreach ($this->getRouteDefinitions() as $provider => $routes) {
-      $collection = new RouteCollection();
-
+    $collection = new RouteCollection();
+    $this->routeCollection = $collection;
+    foreach ($this->getRouteDefinitions() as $routes) {
       // The top-level 'routes_callback' is a list of methods in controller
       // syntax, see \Drupal\Core\Controller\ControllerResolver. These methods
       // should return a set of \Symfony\Component\Routing\Route objects, either
@@ -142,22 +148,34 @@ class RouteBuilder implements RouteBuilderInterface {
         $collection->add($name, $route);
       }
 
-      $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection, $provider));
-      $this->dumper->addRoutes($collection);
-      $this->dumper->dump(array('provider' => $provider));
     }
 
-    // Now allow modules to register additional, dynamic routes.
-    // @todo Either remove this alter or the per-provider alter.
-    $collection = new RouteCollection();
-    $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection, 'dynamic_routes'));
+    // DYNAMIC is supposed to be used to add new routes based upon all the
+    // static defined ones.
+    $this->dispatcher->dispatch(RoutingEvents::DYNAMIC, new RouteBuildEvent($collection));
+
+    // ALTER is the final step to alter all the existing routes. We cannot stop
+    // people from adding new routes here, but we define two separate steps to
+    // make it clear.
+    $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection));
+
     $this->dumper->addRoutes($collection);
-    $this->dumper->dump(array('provider' => 'dynamic_routes'));
+    $this->dumper->dump();
 
     $this->state->delete(static::REBUILD_NEEDED);
     $this->lock->release('router_rebuild');
     $this->dispatcher->dispatch(RoutingEvents::FINISHED, new Event());
+
+    $this->routeCollection = NULL;
+
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCollectionDuringRebuild() {
+    return $this->routeCollection ?: FALSE;
   }
 
   /**

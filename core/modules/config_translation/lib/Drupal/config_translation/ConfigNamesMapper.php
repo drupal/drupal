@@ -17,6 +17,7 @@ use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Configuration mapper base implementation.
@@ -50,6 +51,13 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * @return \Symfony\Component\Routing\Route
    */
   protected $baseRoute;
+
+  /**
+   * The available routes.
+   *
+   * @var \Symfony\Component\Routing\RouteCollection
+   */
+  protected $routeCollection;
 
   /**
    * The language code of the language this mapper, if any.
@@ -91,14 +99,13 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager) {
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
+    $this->routeProvider = $route_provider;
 
     $this->configFactory = $config_factory;
     $this->localeConfigManager = $locale_config_manager;
     $this->configMapperManager = $config_mapper_manager;
 
     $this->setTranslationManager($translation_manager);
-
-    $this->baseRoute = $route_provider->getRouteByName($this->getBaseRouteName());
   }
 
   /**
@@ -116,6 +123,13 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
       $container->get('router.route_provider'),
       $container->get('string_translation')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRouteCollection(RouteCollection $collection) {
+    $this->routeCollection = $collection;
   }
 
   /**
@@ -145,7 +159,12 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * {@inheritdoc}
    */
   public function getBaseRoute() {
-    return $this->baseRoute;
+    if ($this->routeCollection) {
+      return $this->routeCollection->get($this->getBaseRouteName());
+    }
+    else {
+      return $this->routeProvider->getRouteByName($this->getBaseRouteName());
+    }
   }
 
   /**

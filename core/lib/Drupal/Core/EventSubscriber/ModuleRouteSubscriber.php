@@ -36,7 +36,7 @@ class ModuleRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $module) {
+  protected function alterRoutes(RouteCollection $collection) {
     foreach ($collection as $name => $route) {
       if ($route->hasRequirement('_module_dependencies')) {
         $modules = $route->getRequirement('_module_dependencies');

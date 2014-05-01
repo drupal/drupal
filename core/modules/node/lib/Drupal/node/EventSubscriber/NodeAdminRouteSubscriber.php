@@ -36,7 +36,7 @@ class NodeAdminRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {
+  protected function alterRoutes(RouteCollection $collection) {
     if ($this->configFactory->get('node.settings')->get('use_admin_theme')) {
       foreach ($collection->all() as $route) {
         if ($route->hasOption('_node_operation_route')) {

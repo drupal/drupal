@@ -155,7 +155,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {
+  protected function alterRoutes(RouteCollection $collection) {
     foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
       list($view_id, $display_id) = explode('.', $pair);
       $view = $this->viewStorage->load($view_id);

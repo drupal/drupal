@@ -38,7 +38,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {
+  protected function alterRoutes(RouteCollection $collection) {
     foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
       // Try to get the route from the current collection.
       if (!$entity_route = $collection->get($entity_type->getLinkTemplate('canonical'))) {

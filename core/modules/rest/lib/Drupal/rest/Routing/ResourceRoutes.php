@@ -9,13 +9,16 @@ namespace Drupal\rest\Routing;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Subscriber for REST-style routes.
  */
-class ResourceRoutes implements ContainerInjectionInterface {
+class ResourceRoutes extends RouteSubscriberBase{
 
   /**
    * The plugin manager for REST plugins.
@@ -45,22 +48,13 @@ class ResourceRoutes implements ContainerInjectionInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.rest'),
-      $container->get('config.factory')
-    );
-  }
-
-  /**
-   * Returns an array of route objects.
+   * Alters existing routes for a specific collection.
    *
-   * @return \Symfony\Component\Routing\Route[]
-   *   An array of route objects.
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection for adding routes.
+   * @return array
    */
-  public function routes() {
+  protected function alterRoutes(RouteCollection $collection) {
     $routes = array();
     $enabled_resources = $this->config->get('rest.settings')->get('resources') ?: array();
 
@@ -97,10 +91,10 @@ class ResourceRoutes implements ContainerInjectionInterface {
           // authentication provider and add the route.
           $route->setOption('_auth', $enabled_methods[$method]['supported_auth']);
           $routes["rest.$name"] = $route;
+          $collection->add("rest.$name", $route);
         }
       }
     }
-    return $routes;
   }
 
 }

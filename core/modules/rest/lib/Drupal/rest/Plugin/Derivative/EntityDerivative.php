@@ -9,6 +9,8 @@ namespace Drupal\rest\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Routing\RouteBuilder;
+use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -40,16 +42,26 @@ class EntityDerivative implements ContainerDerivativeInterface {
   protected $routeProvider;
 
   /**
+   * The route builder.
+   *
+   * @var \Drupal\Core\Routing\RouteBuilderInterface
+   */
+  protected $routeBuilder;
+
+  /**
    * Constructs an EntityDerivative object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   *   The route builder.
    */
-  public function __construct(EntityManagerInterface $entity_manager, RouteProviderInterface $route_provider) {
+  public function __construct(EntityManagerInterface $entity_manager, RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder) {
     $this->entityManager = $entity_manager;
     $this->routeProvider = $route_provider;
+    $this->routeBuilder = $route_builder;
   }
 
   /**
@@ -58,7 +70,8 @@ class EntityDerivative implements ContainerDerivativeInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('router.route_provider')
+      $container->get('router.route_provider'),
+      $container->get('router.builder')
     );
   }
 
@@ -104,12 +117,17 @@ class EntityDerivative implements ContainerDerivativeInterface {
               $this->derivatives[$entity_type_id]['uri_paths'][$link_relation] = $route->getPath();
             }
             catch (RouteNotFoundException $e) {
-              // If the route does not exist it means we are in a brittle state
-              // of module enabling/disabling, so we simply exclude this entity
-              // type.
-              unset($this->derivatives[$entity_type_id]);
-              // Continue with the next entity type;
-              continue 2;
+              if (($collection = $this->routeBuilder->getCollectionDuringRebuild()) && $route = $collection->get($route_name)) {
+                $this->derivatives[$entity_type_id]['uri_paths'][$link_relation] = $route->getPath();
+              }
+              else {
+                // If the route does not exist it means we are in a brittle state
+                // of module enabling/disabling, so we simply exclude this entity
+                // type.
+                unset($this->derivatives[$entity_type_id]);
+                // Continue with the next entity type;
+                continue 2;
+              }
             }
           }
           else {

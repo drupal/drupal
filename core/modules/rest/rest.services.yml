@@ -22,3 +22,8 @@ services:
   rest.link_manager.relation:
     class: Drupal\rest\LinkManager\RelationLinkManager
     arguments: ['@cache.default', '@entity.manager']
+  rest.resource_routes:
+    class: Drupal\rest\Routing\ResourceRoutes
+    arguments: ['@plugin.manager.rest', '@config.factory']
+    tags:
+      - { name: 'event_subscriber' }

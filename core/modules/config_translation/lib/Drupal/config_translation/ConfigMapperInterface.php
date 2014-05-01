@@ -9,6 +9,7 @@ namespace Drupal\config_translation;
 
 use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Defines an interface for configuration mapper.
@@ -22,6 +23,14 @@ interface ConfigMapperInterface {
    *   The page title.
    */
   public function getTitle();
+
+  /**
+   * Sets the route collection.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection.
+   */
+  public function setRouteCollection(RouteCollection $collection);
 
   /**
    * Returns the name of the base route the mapper is attached to.

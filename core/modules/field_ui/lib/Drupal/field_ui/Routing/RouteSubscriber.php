@@ -38,7 +38,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {
+  protected function alterRoutes(RouteCollection $collection) {
     foreach ($this->manager->getDefinitions() as $entity_type_id => $entity_type) {
       $defaults = array();
       if ($entity_type->isFieldable() && $entity_type->hasLinkTemplate('admin-form')) {

@@ -17,12 +17,10 @@ class RouteTestSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {
-    if ($provider == 'router_test') {
-      $route = $collection->get('router_test.6');
-      // Change controller method from test1 to test5.
-      $route->setDefault('_content', '\Drupal\router_test\TestControllers::test5');
-    }
+  protected function alterRoutes(RouteCollection $collection) {
+    $route = $collection->get('router_test.6');
+    // Change controller method from test1 to test5.
+    $route->setDefault('_content', '\Drupal\router_test\TestControllers::test5');
   }
 
 }

@@ -21,7 +21,7 @@ class SpecialAttributesRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $module) {
+  protected function alterRoutes(RouteCollection $collection) {
     $special_variables = array(
       'system_path',
       '_maintenance',
@@ -57,7 +57,7 @@ class SpecialAttributesRouteSubscriber extends RouteSubscriberBase {
    */
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
-    return $this->alterRoutes($collection, $event->getProvider());
+    return $this->alterRoutes($collection);
   }
 
 }

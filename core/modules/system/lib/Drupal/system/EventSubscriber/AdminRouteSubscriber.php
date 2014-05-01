@@ -19,7 +19,7 @@ class AdminRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {
+  protected function alterRoutes(RouteCollection $collection) {
     foreach ($collection->all() as $route) {
       if (strpos($route->getPath(), '/admin') === 0 && !$route->hasOption('_admin_route')) {
         $route->setOption('_admin_route', TRUE);

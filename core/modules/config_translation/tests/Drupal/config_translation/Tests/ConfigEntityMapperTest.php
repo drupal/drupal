@@ -66,7 +66,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
 
     $this->routeProvider
-      ->expects($this->once())
+      ->expects($this->any())
       ->method('getRouteByName')
       ->with('language.edit')
       ->will($this->returnValue(new Route('/admin/config/regional/language/edit/{language_entity}')));

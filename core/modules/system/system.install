@@ -790,13 +790,6 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'provider' => array(
-        'description' => 'The provider grouping to which a route belongs.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'fit' => array(
         'description' => 'A numeric representation of how specific the path is.',
         'type' => 'int',
@@ -818,7 +811,6 @@ function system_schema() {
     ),
     'indexes' => array(
       'pattern_outline_fit' => array('pattern_outline', 'fit'),
-      'provider' => array('provider'),
     ),
     'primary key' => array('name'),
   );

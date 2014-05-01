@@ -15,4 +15,8 @@ class NullRouteBuilder implements RouteBuilderInterface {
   public function setRebuildNeeded() {
   }
 
+  public function getCollectionDuringRebuild() {
+    return FALSE;
+  }
+
 }

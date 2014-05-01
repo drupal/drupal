@@ -929,9 +929,6 @@ class ModuleHandler implements ModuleHandlerInterface {
       watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
 
       $schema_store->delete($module);
-
-      // Make sure any route data is also removed for this module.
-      \Drupal::service('router.dumper')->dump(array('provider' => $module));
     }
     drupal_get_installed_schema_version(NULL, TRUE);
 

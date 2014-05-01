@@ -97,7 +97,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $this->baseRoute = new Route('/admin/config/system/site-information');
 
     $this->routeProvider
-      ->expects($this->once())
+      ->expects($this->any())
       ->method('getRouteByName')
       ->with('system.site_information_settings')
       ->will($this->returnValue($this->baseRoute));

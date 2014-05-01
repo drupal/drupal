@@ -21,6 +21,7 @@ use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Manages plugins for configuration translation mappers.
@@ -102,10 +103,13 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   /**
    * {@inheritdoc}
    */
-  public function getMappers() {
+  public function getMappers(RouteCollection $collection = NULL) {
     $mappers = array();
     foreach($this->getDefinitions() as $id => $definition) {
       $mappers[$id] = $this->createInstance($id);
+      if ($collection) {
+        $mappers[$id]->setRouteCollection($collection);
+      }
     }
 
     return $mappers;
