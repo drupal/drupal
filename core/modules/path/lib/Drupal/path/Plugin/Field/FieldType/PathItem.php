@@ -18,7 +18,9 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "path",
  *   label = @Translation("Path"),
  *   description = @Translation("An entity field containing a path alias and related data."),
- *   no_ui = TRUE
+ *   no_ui = TRUE,
+ *   default_widget = "path",
+ *   list_class = "\Drupal\path\Plugin\Field\FieldType\PathFieldItemList"
  * )
  */
 class PathItem extends FieldItemBase {
@@ -28,9 +30,9 @@ class PathItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['alias'] = DataDefinition::create('string')
-        ->setLabel(t('Path alias'));
+      ->setLabel(t('Path alias'));
     $properties['pid'] = DataDefinition::create('string')
-        ->setLabel(t('Path id'));
+      ->setLabel(t('Path id'));
     return $properties;
   }
 
@@ -55,10 +57,7 @@ class PathItem extends FieldItemBase {
     if ($this->alias) {
       $entity = $this->getEntity();
 
-      // Ensure fields for programmatic executions.
-      $langcode = $entity->language()->id;
-
-      if ($path = \Drupal::service('path.alias_storage')->save($entity->getSystemPath(), $this->alias, $langcode)) {
+      if ($path = \Drupal::service('path.alias_storage')->save($entity->getSystemPath(), $this->alias, $this->getLangcode())) {
         $this->pid = $path['pid'];
       }
     }
@@ -76,10 +75,7 @@ class PathItem extends FieldItemBase {
     elseif ($this->alias) {
       $entity = $this->getEntity();
 
-      // Ensure fields for programmatic executions.
-      $langcode = $entity->language()->id;
-
-      \Drupal::service('path.alias_storage')->save($entity->getSystemPath(), $this->alias, $langcode, $this->pid);
+      \Drupal::service('path.alias_storage')->save($entity->getSystemPath(), $this->alias, $this->getLangcode(), $this->pid);
     }
   }
 

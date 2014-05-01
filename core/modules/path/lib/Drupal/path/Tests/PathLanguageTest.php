@@ -61,7 +61,11 @@ class PathLanguageTest extends PathTestBase {
     // Enable translation for page node.
     $edit = array(
       'entity_types[node]' => 1,
+      'settings[node][article][translatable]' => 1,
+      'settings[node][article][fields][path]' => 1,
+      'settings[node][article][fields][body]' => 1,
       'settings[node][page][translatable]' => 1,
+      'settings[node][page][fields][path]' => 1,
       'settings[node][page][fields][body]' => 1,
       'settings[node][page][settings][language][language_show]' => 1,
     );
@@ -83,7 +87,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Edit the node to set language and path.
     $edit = array();
-    $edit['path[alias]'] = $english_alias;
+    $edit['path[0][alias]'] = $english_alias;
     $this->drupalPostForm('node/' . $english_node->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
@@ -98,7 +102,7 @@ class PathLanguageTest extends PathTestBase {
     $edit['title[0][value]'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
     $french_alias = $this->randomName();
-    $edit['path[alias]'] = $french_alias;
+    $edit['path[0][alias]'] = $french_alias;
     $this->drupalPostForm(NULL, $edit, t('Save') . ' ' . ($translatable ? t('(this translation)') : t('(all translations)')));
 
     // Clear the path lookup cache.
@@ -112,10 +116,10 @@ class PathLanguageTest extends PathTestBase {
     // Ensure the node was created.
     $english_node = node_load($english_node->id(), TRUE);
     $french_node = $english_node->getTranslation('fr');
-    $this->assertTrue(($french_node), 'Node found in database.');
+    $this->assertTrue($english_node->hasTranslation('fr'), 'Node found in database.');
 
     // Confirm that the alias works.
-    $this->drupalGet('fr/' . $edit['path[alias]']);
+    $this->drupalGet('fr/' . $edit['path[0][alias]']);
     $this->assertText($french_node->body->value, 'Alias for French translation works.');
 
     // Confirm that the alias is returned by url(). Languages are cached on
@@ -124,7 +128,7 @@ class PathLanguageTest extends PathTestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
     $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->id(), array('language' => $languages['fr']));
 
-    $this->assertTrue(strpos($url, $edit['path[alias]']), 'URL contains the path alias.');
+    $this->assertTrue(strpos($url, $edit['path[0][alias]']), 'URL contains the path alias.');
 
     // Confirm that the alias works even when changing language negotiation
     // options. Enable User language detection and selection over URL one.

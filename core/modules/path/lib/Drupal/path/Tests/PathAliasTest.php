@@ -146,29 +146,29 @@ class PathAliasTest extends PathTestBase {
 
     // Create alias.
     $edit = array();
-    $edit['path[alias]'] = $this->randomName(8);
+    $edit['path[0][alias]'] = $this->randomName(8);
     $this->drupalPostForm('node/' . $node1->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path[alias]']);
+    $this->drupalGet($edit['path[0][alias]']);
     $this->assertText($node1->label(), 'Alias works.');
     $this->assertResponse(200);
 
     // Confirm the 'canonical' and 'shortlink' URLs.
-    $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[alias]'] . "')]");
+    $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[0][alias]'] . "')]");
     $this->assertTrue(!empty($elements), 'Page contains canonical link URL.');
     $elements = $this->xpath("//link[contains(@rel, 'shortlink') and contains(@href, 'node/" . $node1->id() . "')]");
     $this->assertTrue(!empty($elements), 'Page contains shortlink URL.');
 
     // Change alias to one containing "exotic" characters.
-    $previous = $edit['path[alias]'];
-    $edit['path[alias]'] = "- ._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
+    $previous = $edit['path[0][alias]'];
+    $edit['path[0][alias]'] = "- ._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
       "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
       "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
     $this->drupalPostForm('node/' . $node1->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path[alias]']);
+    $this->drupalGet($edit['path[0][alias]']);
     $this->assertText($node1->label(), 'Changed alias works.');
     $this->assertResponse(200);
 
@@ -181,17 +181,17 @@ class PathAliasTest extends PathTestBase {
     $node2 = $this->drupalCreateNode();
 
     // Set alias to second test node.
-    // Leave $edit['path[alias]'] the same.
+    // Leave $edit['path[0][alias]'] the same.
     $this->drupalPostForm('node/' . $node2->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias didn't make a duplicate.
     $this->assertText(t('The alias is already in use.'), 'Attempt to moved alias was rejected.');
 
     // Delete alias.
-    $this->drupalPostForm('node/' . $node1->id() . '/edit', array('path[alias]' => ''), t('Save'));
+    $this->drupalPostForm('node/' . $node1->id() . '/edit', array('path[0][alias]' => ''), t('Save'));
 
     // Confirm that the alias no longer works.
-    $this->drupalGet($edit['path[alias]']);
+    $this->drupalGet($edit['path[0][alias]']);
     $this->assertNoText($node1->label(), 'Alias was successfully deleted.');
     $this->assertResponse(404);
   }
@@ -216,13 +216,13 @@ class PathAliasTest extends PathTestBase {
     // Create one node with a random alias.
     $node_one = $this->drupalCreateNode();
     $edit = array();
-    $edit['path[alias]'] = $this->randomName();
+    $edit['path[0][alias]'] = $this->randomName();
     $this->drupalPostForm('node/' . $node_one->id() . '/edit', $edit, t('Save'));
 
     // Now create another node and try to set the same alias.
     $node_two = $this->drupalCreateNode();
     $this->drupalPostForm('node/' . $node_two->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('The alias is already in use.'));
-    $this->assertFieldByXPath("//input[@name='path[alias]' and contains(@class, 'error')]", $edit['path[alias]'], 'Textfield exists and has the error class.');
+    $this->assertFieldByXPath("//input[@name='path[0][alias]' and contains(@class, 'error')]", $edit['path[0][alias]'], 'Textfield exists and has the error class.');
   }
 }

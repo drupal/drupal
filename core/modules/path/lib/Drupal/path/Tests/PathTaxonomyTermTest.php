@@ -52,42 +52,42 @@ class PathTaxonomyTermTest extends PathTestBase {
     $edit = array(
       'name[0][value]' => $this->randomName(),
       'description[0][value]' => $description,
-      'path[alias]' => $this->randomName(),
+      'path[0][alias]' => $this->randomName(),
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add', $edit, t('Save'));
     $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name[0][value]']))->fetchField();
 
     // Confirm that the alias works.
-    $this->drupalGet($edit['path[alias]']);
+    $this->drupalGet($edit['path[0][alias]']);
     $this->assertText($description, 'Term can be accessed on URL alias.');
 
     // Confirm the 'canonical' and 'shortlink' URLs.
-    $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[alias]'] . "')]");
+    $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[0][alias]'] . "')]");
     $this->assertTrue(!empty($elements), 'Term page contains canonical link URL.');
     $elements = $this->xpath("//link[contains(@rel, 'shortlink') and contains(@href, 'taxonomy/term/" . $tid . "')]");
     $this->assertTrue(!empty($elements), 'Term page contains shortlink URL.');
 
     // Change the term's URL alias.
     $edit2 = array();
-    $edit2['path[alias]'] = $this->randomName();
+    $edit2['path[0][alias]'] = $this->randomName();
     $this->drupalPostForm('taxonomy/term/' . $tid . '/edit', $edit2, t('Save'));
 
     // Confirm that the changed alias works.
-    $this->drupalGet($edit2['path[alias]']);
+    $this->drupalGet($edit2['path[0][alias]']);
     $this->assertText($description, 'Term can be accessed on changed URL alias.');
 
     // Confirm that the old alias no longer works.
-    $this->drupalGet($edit['path[alias]']);
+    $this->drupalGet($edit['path[0][alias]']);
     $this->assertNoText($description, 'Old URL alias has been removed after altering.');
     $this->assertResponse(404, 'Old URL alias returns 404.');
 
     // Remove the term's URL alias.
     $edit3 = array();
-    $edit3['path[alias]'] = '';
+    $edit3['path[0][alias]'] = '';
     $this->drupalPostForm('taxonomy/term/' . $tid . '/edit', $edit3, t('Save'));
 
     // Confirm that the alias no longer works.
-    $this->drupalGet($edit2['path[alias]']);
+    $this->drupalGet($edit2['path[0][alias]']);
     $this->assertNoText($description, 'Old URL alias has been removed after altering.');
     $this->assertResponse(404, 'Old URL alias returns 404.');
   }

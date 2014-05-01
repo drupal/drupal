@@ -56,121 +56,24 @@ function path_permission() {
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
- *
- * @see path_form_element_validate()
  */
 function path_form_node_form_alter(&$form, $form_state) {
   $node = $form_state['controller']->getEntity();
-  $path = array();
-  if (!$node->isNew()) {
-    $conditions = array('source' => 'node/' . $node->id());
-    if ($node->language()->id != Language::LANGCODE_NOT_SPECIFIED) {
-      $conditions['langcode'] = $node->language()->id;
-    }
-    $path = \Drupal::service('path.alias_storage')->load($conditions);
-    if ($path === FALSE) {
-      $path = array();
-    }
-  }
-  $path += array(
-    'pid' => NULL,
-    'source' => $node->id() ? 'node/' . $node->id() : NULL,
-    'alias' => '',
-    'langcode' => $node->language()->id,
-  );
-
-  $account = \Drupal::currentUser();
-  $form['path'] = array(
-    '#type' => 'details',
-    '#title' => t('URL path settings'),
-    '#open' => !empty($path['alias']),
-    '#group' => 'advanced',
-    '#attributes' => array(
-      'class' => array('path-form'),
-    ),
-    '#attached' => array(
-      'library' => array('path/drupal.path'),
-    ),
-    '#access' => $account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'),
-    '#weight' => 30,
-    '#tree' => TRUE,
-    '#element_validate' => array('path_form_element_validate'),
-  );
-  $form['path']['alias'] = array(
-    '#type' => 'textfield',
-    '#title' => t('URL alias'),
-    '#default_value' => $path['alias'],
-    '#maxlength' => 255,
-    '#description' => t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter "about" for the about page.'),
-  );
-  $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
-  $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-  $form['path']['langcode'] = array('#type' => 'value', '#value' => $path['langcode']);
-}
-
-/**
- * Form element validation handler for URL alias form element.
- *
- * @see path_form_node_form_alter()
- */
-function path_form_element_validate($element, &$form_state, $complete_form) {
-  if (!empty($form_state['values']['path']['alias'])) {
-    // Trim the submitted value.
-    $alias = trim($form_state['values']['path']['alias']);
-    form_set_value($element['alias'], $alias, $form_state);
-    // Node language needs special care. Since the language of the URL alias
-    // depends on the node language, and the node language can be switched
-    // right within the same form, we need to conditionally overload the
-    // originally assigned URL alias language.
-    // @todo Remove this after converting Path module to a field, and, after
-    //   stopping Locale module from abusing the content language system.
-    if (isset($form_state['values']['langcode'])) {
-      form_set_value($element['langcode'], $form_state['values']['langcode'], $form_state);
-    }
-
-    $path = $form_state['values']['path'];
-
-    // Ensure that the submitted alias does not exist yet.
-    if (\Drupal::service('path.alias_storage')->aliasExists($path['alias'], $path['langcode'], $path['source'])) {
-      form_error($element, $form_state, t('The alias is already in use.'));
-    }
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
- */
-function path_form_taxonomy_term_form_alter(&$form, $form_state) {
-  $account = \Drupal::currentUser();
-  // Make sure this does not show up on the delete confirmation form.
-  if (empty($form_state['confirm_delete'])) {
-    $term = $form_state['controller']->getEntity();
-    $path = ($term->id() ? \Drupal::service('path.alias_storage')->load(array('source' => 'taxonomy/term/' . $term->id())) : array());
-    if ($path === FALSE) {
-      $path = array();
-    }
-    $path += array(
-      'pid' => NULL,
-      'source' => $term->id() ? 'taxonomy/term/' . $term->id() : NULL,
-      'alias' => '',
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+  if ($node->hasField('path') && $node->get('path')->access('edit')) {
+    $form['path_settings'] = array(
+      '#type' => 'details',
+      '#title' => t('URL path settings'),
+      '#open' => !empty($form['path']['widget'][0]['alias']['#value']),
+      '#group' => 'advanced',
+      '#attributes' => array(
+        'class' => array('path-form'),
+      ),
+      '#attached' => array(
+        'library' => array('path/drupal.path'),
+      ),
+      '#weight' => 30,
     );
-    $form['path'] = array(
-      '#access' => $account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'),
-      '#tree' => TRUE,
-      '#element_validate' => array('path_form_element_validate'),
-    );
-    $form['path']['alias'] = array(
-      '#type' => 'textfield',
-      '#title' => t('URL alias'),
-      '#default_value' => $path['alias'],
-      '#maxlength' => 255,
-      '#weight' => 0,
-      '#description' => t("Optionally specify an alternative URL by which this term can be accessed. Use a relative path and don't add a trailing slash or the URL alias won't work."),
-    );
-    $form['path']['pid'] = array('#type' => 'value', '#value' => $path['pid']);
-    $form['path']['source'] = array('#type' => 'value', '#value' => $path['source']);
-    $form['path']['langcode'] = array('#type' => 'value', '#value' => $path['langcode']);
+    $form['path']['#group'] = 'path_settings';
   }
 }
 
@@ -180,8 +83,13 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
 function path_entity_base_field_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() === 'taxonomy_term' || $entity_type->id() === 'node') {
     $fields['path'] = FieldDefinition::create('path')
-      ->setLabel(t('The path alias'))
-      ->setComputed(TRUE);
+      ->setLabel(t('URL alias'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'path',
+        'weight' => 30,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
     return $fields;
   }
