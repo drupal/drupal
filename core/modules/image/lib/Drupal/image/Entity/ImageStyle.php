@@ -310,21 +310,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   }
 
   /**
-   * Generates a token to protect an image style derivative.
-   *
-   * This prevents unauthorized generation of an image style derivative,
-   * which can be costly both in CPU time and disk space.
-   *
-   * @param string $uri
-   *   The URI of the original image of this style.
-   *
-   * @return string
-   *   An eight-character token which can be used to protect image style
-   *   derivatives against denial-of-service attacks.
+   * {@inheritdoc}
    */
   public function getPathToken($uri) {
-    // Return the first eight characters.
-    return substr(Crypt::hmacBase64($this->id() . ':' . $uri, drupal_get_private_key() . drupal_get_hash_salt()), 0, 8);
+    // Return the first 8 characters.
+    return substr(Crypt::hmacBase64($this->id() . ':' . $uri, \Drupal::service('private_key')->get() . drupal_get_hash_salt()), 0, 8);
   }
 
   /**

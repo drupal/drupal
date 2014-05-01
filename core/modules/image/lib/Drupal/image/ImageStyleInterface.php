@@ -8,7 +8,6 @@
 namespace Drupal\image;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\image\ImageEffectInterface;
 
 /**
  * Provides an interface defining an image style entity.
@@ -70,9 +69,24 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   The absolute URL where a style image can be downloaded, suitable for use
    *   in an <img> tag. Requesting the URL will cause the image to be created.
    *
-   * @see \Drupal\image\ImageStyleInterface::deliver()
+   * @see \Drupal\image\Controller\ImageStyleDownloadController::deliver()
    */
   public function buildUrl($path, $clean_urls = NULL);
+
+  /**
+   * Generates a token to protect an image style derivative.
+   *
+   * This prevents unauthorized generation of an image style derivative,
+   * which can be costly both in CPU time and disk space.
+   *
+   * @param string $uri
+   *   The URI of the original image of this style.
+   *
+   * @return string
+   *   An eight-character token which can be used to protect image style
+   *   derivatives against denial-of-service attacks.
+   */
+  public function getPathToken($uri);
 
   /**
    * Flushes cached media for this style.
