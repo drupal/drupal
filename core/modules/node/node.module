@@ -230,8 +230,8 @@ function node_entity_form_display_alter(EntityFormDisplayInterface $form_display
  * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  *
- * @return array
- *   An array with 'path' as the key and the path to the node as its value.
+ * @return \Drupal\core\Url
+ *   A Url object that provides a URL to the view page for $node.
  */
 function node_uri(NodeInterface $node) {
   return new Url('node.view', array(
