@@ -165,13 +165,15 @@ function user_uri($user) {
 /**
  * Populates $entity->account for each prepared entity.
  *
- * Called by Drupal\Core\Entity\EntityViewBuilderInterface::buildContent()
+ * Called by Drupal\Core\Entity\EntityViewBuilderInterface::buildComponents()
  * implementations.
  *
+ * @param array &$build
+ *   A renderable array representing the entity content.
  * @param \Drupal\user\EntityOwnerInterface[] $entities
  *   The entities keyed by entity ID.
  */
-function user_attach_accounts(array $entities) {
+function user_attach_accounts(array &$build, array $entities) {
   $uids = array();
   foreach ($entities as $entity) {
     $uids[] = $entity->getOwnerId();
@@ -503,9 +505,9 @@ function user_permission() {
 /**
  * Implements hook_user_view().
  */
-function user_user_view(UserInterface $account, EntityViewDisplayInterface $display) {
+function user_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
   if ($display->getComponent('member_for')) {
-    $account->content['member_for'] = array(
+    $build['member_for'] = array(
       '#type' => 'item',
       '#title' => t('Member for'),
       '#markup' => format_interval(REQUEST_TIME - $account->getCreatedTime()),

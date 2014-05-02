@@ -131,7 +131,7 @@ function history_cron() {
 /**
  * Implements hook_node_view_alter().
  */
-function history_node_view_alter(&$build, EntityInterface $node, EntityViewDisplayInterface $display) {
+function history_node_view_alter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
   // Update the history table, stating that this user viewed this node.
   if (($display->originalMode === 'full') && \Drupal::currentUser()->isAuthenticated()) {
     $build['#attached'] = array(

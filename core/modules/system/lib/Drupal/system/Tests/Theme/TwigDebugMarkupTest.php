@@ -48,7 +48,8 @@ class TwigDebugMarkupTest extends WebTestBase {
 
     // Create a node and test different features of the debug markup.
     $node = $this->drupalCreateNode();
-    $output = _theme('node', node_view($node));
+    $build = node_view($node);
+    $output = drupal_render($build);
     $this->assertTrue(strpos($output, '<!-- THEME DEBUG -->') !== FALSE, 'Twig debug markup found in theme output when debug is enabled.');
     $this->assertTrue(strpos($output, "CALL: _theme('node')") !== FALSE, 'Theme call information found.');
     $this->assertTrue(strpos($output, 'x node--1' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node' . $extension) !== FALSE, 'Suggested template files found in order and node ID specific template shown as current template.');
@@ -58,7 +59,8 @@ class TwigDebugMarkupTest extends WebTestBase {
     // Create another node and make sure the template suggestions shown in the
     // debug markup are correct.
     $node2 = $this->drupalCreateNode();
-    $output = _theme('node', node_view($node2));
+    $build = node_view($node2);
+    $output = drupal_render($build);
     $this->assertTrue(strpos($output, '* node--2' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   x node' . $extension) !== FALSE, 'Suggested template files found in order and base template shown as current template.');
 
     // Create another node and make sure the template suggestions shown in the
@@ -75,7 +77,8 @@ class TwigDebugMarkupTest extends WebTestBase {
     $this->rebuildContainer();
     $this->resetAll();
 
-    $output = _theme('node', node_view($node));
+    $build = node_view($node);
+    $output = drupal_render($build);
     $this->assertFalse(strpos($output, '<!-- THEME DEBUG -->') !== FALSE, 'Twig debug markup not found in theme output when debug is disabled.');
   }
 

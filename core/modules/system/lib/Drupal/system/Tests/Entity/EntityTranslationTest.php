@@ -490,19 +490,31 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Check that if the entity has no translation no fallback is applied.
     $entity2 = $controller->create(array('langcode' => $default_langcode));
+    // Get an view builder.
+    $controller = $this->entityManager->getViewBuilder($entity_type);
+    $entity2_build = $controller->view($entity2);
+    $entity2_output = drupal_render($entity2_build);
     $translation = $this->entityManager->getTranslationFromContext($entity2, $default_langcode);
-    $this->assertIdentical($entity2, $translation, 'When the entity has no translation no fallback is applied.');
+    $translation_build = $controller->view($translation);
+    $translation_output = drupal_render($translation_build);
+    $this->assertIdentical($entity2_output, $translation_output, 'When the entity has no translation no fallback is applied.');
 
     // Checks that entity translations are rendered properly.
     $controller = $this->entityManager->getViewBuilder($entity_type);
     $build = $controller->view($entity);
+    drupal_render($build);
     $this->assertEqual($build['label']['#markup'], $values[$current_langcode]['name'], 'By default the entity is rendered in the current language.');
+
     $langcodes = array_combine($this->langcodes, $this->langcodes);
     // We have no translation for the $langcode2 langauge, hence the expected
     // result is the topmost existing translation, that is $langcode.
     $langcodes[$langcode2] = $langcode;
     foreach ($langcodes as $desired => $expected) {
       $build = $controller->view($entity, 'full', $desired);
+      // Unset the #cache key so that a fresh render is produced with each pass,
+      // making the renderable array keys available to compare.
+      unset($build['#cache']);
+      drupal_render($build);
       $this->assertEqual($build['label']['#markup'], $values[$expected]['name'], 'The entity is rendered in the expected language.');
     }
   }

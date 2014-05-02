@@ -7,6 +7,7 @@
 
 namespace Drupal\custom_block\Tests;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 
 /**
@@ -34,11 +35,23 @@ class CustomBlockCacheTagsTest extends EntityCacheTagsTestBase {
     $custom_block = entity_create('custom_block', array(
       'info' => 'Llama',
       'type' => 'basic',
-      'body' => 'The name "llama" was adopted by European settlers from native Peruvians.',
+      'body' => array(
+        'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
+        'format' => 'plain_text',
+      ),
     ));
     $custom_block->save();
 
     return $custom_block;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Each comment must have a comment body, which always has a text format.
+   */
+  protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
+    return array('filter_format:plain_text');
   }
 
 }

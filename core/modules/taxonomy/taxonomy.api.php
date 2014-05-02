@@ -243,10 +243,11 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
 /**
  * Act on a taxonomy term that is being assembled before rendering.
  *
- * The module may add elements to $term->content prior to rendering. The
- * structure of $term->content is a renderable array as expected by
- * drupal_render().
- *
+ * The module may add elements to a taxonomy term's renderable array array prior
+ * to rendering.
+
+ * @param array &$build
+ *   A renderable array representing the taxonomy term content.
  * @param \Drupal\taxonomy\Entity\Term $term
  *   The term that is being assembled for rendering.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
@@ -259,12 +260,12 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
  *
  * @see hook_entity_view()
  */
-function hook_taxonomy_term_view(\Drupal\taxonomy\Entity\Term $term, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function hook_taxonomy_term_view(array &$build, \Drupal\taxonomy\Entity\Term $term, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // vocabulary in hook_entity_extra_field_info().
   if ($display->getComponent('mymodule_addition')) {
-    $term->content['mymodule_addition'] = array(
+    $build['mymodule_addition'] = array(
       '#markup' => mymodule_addition($term),
       '#theme' => 'mymodule_my_additional_field',
     );
@@ -284,7 +285,7 @@ function hook_taxonomy_term_view(\Drupal\taxonomy\Entity\Term $term, \Drupal\Cor
  * hook_preprocess_HOOK() for taxonomy-term.html.twig. See drupal_render() and
  * _theme() documentation respectively for details.
  *
- * @param $build
+ * @param array &$build
  *   A renderable array representing the taxonomy term content.
  * @param \Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term being rendered.
@@ -294,7 +295,7 @@ function hook_taxonomy_term_view(\Drupal\taxonomy\Entity\Term $term, \Drupal\Cor
  *
  * @see hook_entity_view_alter()
  */
-function hook_taxonomy_term_view_alter(&$build, \Drupal\taxonomy\Entity\Term $term, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function hook_taxonomy_term_view_alter(array &$build, \Drupal\taxonomy\Entity\Term $term, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

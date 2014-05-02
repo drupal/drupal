@@ -209,9 +209,9 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    * {@inheritdoc}
    */
   public function buildMultiple(array $entities) {
-    $build = array();
+    $build_list = array();
     foreach ($entities as $key => $entity) {
-      $build[$key] = array();
+      $build_list[$key] = array();
     }
 
     // Run field formatters.
@@ -230,8 +230,8 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         // Then let the formatter build the output for each entity.
         foreach ($entities as $key => $entity) {
           $items = $entity->get($field_name);
-          $build[$key][$field_name] = $formatter->view($items);
-          $build[$key][$field_name]['#access'] = $items->access('view');
+          $build_list[$key][$field_name] = $formatter->view($items);
+          $build_list[$key][$field_name]['#access'] = $items->access('view');
         }
       }
     }
@@ -239,8 +239,8 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     foreach ($entities as $key => $entity) {
       // Assign the configured weights.
       foreach ($this->getComponents() as $name => $options) {
-        if (isset($build[$key][$name])) {
-          $build[$key][$name]['#weight'] = $options['weight'];
+        if (isset($build_list[$key][$name])) {
+          $build_list[$key][$name]['#weight'] = $options['weight'];
         }
       }
 
@@ -250,10 +250,10 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         'view_mode' => $this->originalMode,
         'display' => $this,
       );
-      \Drupal::moduleHandler()->alter('entity_display_build', $build[$key], $context);
+      \Drupal::moduleHandler()->alter('entity_display_build', $build_list[$key], $context);
     }
 
-    return $build;
+    return $build_list;
   }
 
 }

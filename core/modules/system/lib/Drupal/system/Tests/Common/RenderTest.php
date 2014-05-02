@@ -472,7 +472,6 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
     $this->assertIdentical($settings['common_test'], $context, '#attached is modified; JavaScript setting is added to page.');
@@ -490,7 +489,6 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
     $this->assertIdentical($settings['common_test'], $context, '#attached is modified; JavaScript setting is added to page.');
@@ -514,7 +512,6 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
     $this->assertIdentical($settings['common_test'], $context, '#attached is modified; JavaScript setting is added to page.');
@@ -532,7 +529,6 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
     $this->assertIdentical($settings['common_test'], $context, '#attached is modified; JavaScript setting is added to page.');
@@ -596,7 +592,6 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $expected_settings = $context_1 + $context_2 + $context_3;
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
@@ -642,7 +637,6 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
     $this->assertIdentical($settings['common_test'], $expected_settings, '#attached is modified; JavaScript settings for each #post_render_cache callback are added to page.');
@@ -655,7 +649,6 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $expected_settings = $context_1 + $context_2 + $context_3;
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
@@ -677,7 +670,6 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
     $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $expected_settings = $context_1 + $context_2 + $context_3;
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
@@ -752,7 +744,6 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
     $this->assertIdentical($settings['common_test'], $expected_settings, '#attached is modified; JavaScript settings for each #post_render_cache callback are added to page.');
@@ -765,7 +756,6 @@ class RenderTest extends DrupalUnitTestBase {
     $output = drupal_render($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
-    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
     $settings = $this->parseDrupalSettings(drupal_get_js());
     $expected_settings = $context_2 + $context_3;
     $this->assertTrue(!isset($settings['foo']), 'Parent JavaScript setting is not added to the page.');
@@ -775,16 +765,22 @@ class RenderTest extends DrupalUnitTestBase {
     \Drupal::request()->setMethod($request_method);
   }
 
-
   /**
    * Tests post-render cache-integrated 'render_cache_placeholder' element.
    */
   function testDrupalRenderRenderCachePlaceholder() {
-    $context = array('bar' => $this->randomContextValue());
+    $context = array(
+      'bar' => $this->randomContextValue(),
+      'token' => drupal_render_cache_generate_token(),
+    );
+    $callback = 'common_test_post_render_cache_placeholder';
     $test_element = array(
-      '#type' => 'render_cache_placeholder',
-      '#context' => $context,
-      '#callback' => 'common_test_post_render_cache_placeholder',
+      '#post_render_cache' => array(
+        $callback => array(
+          $context
+        ),
+      ),
+      '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
       '#prefix' => '<foo>',
       '#suffix' => '</foo>'
     );
@@ -814,8 +810,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($settings['common_test'], $context, '#attached is modified; JavaScript setting is added to page.');
 
     // GET request: validate cached data.
-    $tokens = array_keys($element['#post_render_cache']['common_test_post_render_cache_placeholder']);
-    $expected_token = $tokens[0];
+    $expected_token = $element['#post_render_cache']['common_test_post_render_cache_placeholder'][0]['token'];
     $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_GET'));
     $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     // Parse unique token out of the cached markup.
@@ -830,10 +825,10 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] .';" token="'. $expected_token . '" /></foo>',
+      '#markup' => '<foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] . ';token:' . $expected_token . ';" token="'. $expected_token . '" /></foo>',
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(
-          $expected_token => $context,
+          $context
         ),
       ),
       '#cache' => array('tags' => array()),
@@ -860,14 +855,21 @@ class RenderTest extends DrupalUnitTestBase {
    * element.
    */
   function testDrupalRenderChildElementRenderCachePlaceholder() {
-    $context = array('bar' => $this->randomContextValue());
     $container = array(
       '#type' => 'container',
     );
+    $context = array(
+      'bar' => $this->randomContextValue(),
+      'token' => drupal_render_cache_generate_token(),
+    );
+    $callback = 'common_test_post_render_cache_placeholder';
     $test_element = array(
-      '#type' => 'render_cache_placeholder',
-      '#context' => $context,
-      '#callback' => 'common_test_post_render_cache_placeholder',
+      '#post_render_cache' => array(
+        $callback => array(
+          $context
+        ),
+      ),
+      '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
       '#prefix' => '<foo>',
       '#suffix' => '</foo>'
     );
@@ -904,9 +906,9 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($settings['common_test'], $context, '#attached is modified; JavaScript setting is added to page.');
 
     // GET request: validate cached data for child element.
-    $child_tokens = array_keys($element['test_element']['#post_render_cache']['common_test_post_render_cache_placeholder']);
-    $parent_tokens = array_keys($element['#post_render_cache']['common_test_post_render_cache_placeholder']);
-    $expected_token = $child_tokens[0];
+    $child_tokens = $element['test_element']['#post_render_cache']['common_test_post_render_cache_placeholder'][0]['token'];
+    $parent_tokens = $element['#post_render_cache']['common_test_post_render_cache_placeholder'][0]['token'];
+    $expected_token = $child_tokens;
     $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_child_GET'));
     $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     // Parse unique token out of the cached markup.
@@ -921,10 +923,10 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical for the child element');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] .';" token="'. $expected_token . '" /></foo>',
+      '#markup' => '<foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] . ';token:' . $expected_token . ';" token="'. $expected_token . '" /></foo>',
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(
-          $expected_token => $context,
+          $context,
         ),
       ),
       '#cache' => array('tags' => array()),
@@ -946,10 +948,10 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical for the parent element');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<div><foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] .';" token="'. $expected_token . '" /></foo></div>' . "\n",
+      '#markup' => '<div><foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] . ';token:' . $expected_token . ';" token="'. $expected_token . '" /></foo></div>' . "\n",
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(
-          $expected_token => $context,
+          $context,
         ),
       ),
       '#cache' => array('tags' => array()),
@@ -963,7 +965,7 @@ class RenderTest extends DrupalUnitTestBase {
     $cached_element = \Drupal::cache('render')->get(drupal_render_cid_create($element))->data;
     // Verify that the child element contains the correct
     // render_cache_placeholder markup.
-    $expected_token = $child_tokens[0];
+    $expected_token = $child_tokens;
     $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
     $nodes = $xpath->query('//*[@token]');
@@ -975,10 +977,10 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($token, $expected_token, 'The tokens are identical for the child element');
     // Verify the token is in the cached element.
     $expected_element = array(
-      '#markup' => '<foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] .';" token="'. $expected_token . '" /></foo>',
+      '#markup' => '<foo><drupal:render-cache-placeholder callback="common_test_post_render_cache_placeholder" context="bar:' . $context['bar'] . ';token:' . $expected_token . ';" token="'. $expected_token . '" /></foo>',
       '#post_render_cache' => array(
         'common_test_post_render_cache_placeholder' => array(
-          $expected_token => $context,
+          $context,
         ),
       ),
       '#cache' => array('tags' => array()),

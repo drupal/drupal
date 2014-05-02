@@ -247,11 +247,11 @@ function book_node_load($nodes) {
 /**
  * Implements hook_node_view().
  */
-function book_node_view(EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $book_navigation = array( '#theme' => 'book_navigation', '#book_link' => $node->book);
-      $node->content['book_navigation'] = array(
+      $build['book_navigation'] = array(
         '#markup' => drupal_render($book_navigation),
         '#weight' => 100,
         '#attached' => array(

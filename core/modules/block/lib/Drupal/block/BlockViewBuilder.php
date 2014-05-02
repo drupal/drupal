@@ -22,8 +22,7 @@ class BlockViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
-    return array();
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
   }
 
   /**

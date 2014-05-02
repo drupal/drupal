@@ -27,7 +27,7 @@
  * is hook_block_view_BASE_BLOCK_ID_alter(), which can be used to target a
  * specific block or set of similar blocks.
  *
- * @param array $build
+ * @param array &$build
  *   A renderable array of data, as returned from the build() implementation of
  *   the plugin that defined the block:
  *   - #title: The default localized title of the block.

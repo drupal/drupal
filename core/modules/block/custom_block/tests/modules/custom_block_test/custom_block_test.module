@@ -13,9 +13,9 @@ use Drupal\custom_block\Entity\CustomBlock;
 /**
  * Implements hook_custom_block_view().
  */
-function custom_block_test_custom_block_view(CustomBlock $custom_block, $view_mode) {
+function custom_block_test_custom_block_view(array &$build, CustomBlock $custom_block, $view_mode) {
   // Add extra content.
-  $custom_block->content['extra_content'] = array(
+  $build['extra_content'] = array(
     '#markup' => '<blink>Yowser</blink>',
   );
 }

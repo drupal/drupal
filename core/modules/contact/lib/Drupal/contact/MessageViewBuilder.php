@@ -20,14 +20,14 @@ class MessageViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
-    parent::buildContent($entities, $displays, $view_mode, $langcode);
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
+    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
 
-    foreach ($entities as $entity) {
+    foreach ($entities as $id => $entity) {
       // Add the message extra field, if enabled.
       $display = $displays[$entity->bundle()];
       if ($entity->getMessage() && $display->getComponent('message')) {
-        $entity->content['message'] = array(
+        $build[$id]['message'] = array(
           '#type' => 'item',
           '#title' => t('Message'),
           '#markup' => String::checkPlain($entity->getMessage()),

@@ -197,6 +197,8 @@ function common_test_post_render_cache(array $element, array $context) {
 /**
  * #post_render_cache callback; replaces placeholder, extends #attached.
  *
+ * @param array $element
+ *   The renderable array that contains the to be replaced placeholder.
  * @param array $context
  *  An array with the following keys:
  *    - bar: contains a random string.
@@ -204,8 +206,9 @@ function common_test_post_render_cache(array $element, array $context) {
  * @return array
  *   A render array.
  */
-function common_test_post_render_cache_placeholder(array $context) {
-  $element = array(
+function common_test_post_render_cache_placeholder(array $element, array $context) {
+  $placeholder = drupal_render_cache_generate_placeholder(__FUNCTION__, $context, $context['token']);
+  $replace_element = array(
     '#markup' => '<bar>' . $context['bar'] . '</bar>',
     '#attached' => array(
       'js' => array(
@@ -218,6 +221,8 @@ function common_test_post_render_cache_placeholder(array $context) {
       ),
     ),
   );
+  $markup = drupal_render($replace_element);
+  $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
 
   return $element;
 }

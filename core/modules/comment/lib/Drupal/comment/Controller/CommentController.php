@@ -251,11 +251,11 @@ class CommentController extends ControllerBase {
       elseif ($entity->access('view', $account)) {
         // We make sure the field value isn't set so we don't end up with a
         // redirect loop.
+        $entity = clone $entity;
         $entity->{$field_name}->status = CommentItemInterface::HIDDEN;
         // Render array of the entity full view mode.
         $build['commented_entity'] = $this->entityManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, 'full');
         unset($build['commented_entity']['#cache']);
-        $entity->{$field_name}->status = $status;
       }
     }
     else {

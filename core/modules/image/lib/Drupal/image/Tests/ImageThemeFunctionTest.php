@@ -86,9 +86,9 @@ class ImageThemeFunctionTest extends WebTestBase {
     $image = $this->imageFactory->get('public://example.jpg');
     $entity->save();
 
-    // Test using theme_image_formatter() with a NULL value for the alt option.
+    // Create the base element that we'll use in the tests below.
     $path = $this->randomName();
-    $element = array(
+    $base_element = array(
       '#theme' => 'image_formatter',
       '#image_style' => 'test',
       '#item' => $entity->image_test,
@@ -96,25 +96,30 @@ class ImageThemeFunctionTest extends WebTestBase {
         'path' => $path,
       ),
     );
-    $this->drupalSetContent(render($element));
+
+    // Test using theme_image_formatter() with a NULL value for the alt option.
+    $element = $base_element;
+    $this->drupalSetContent(drupal_render($element));
     $elements = $this->xpath('//a[@href=:path]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height]', array(':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()));
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders with a NULL value for the alt option.');
 
     // Test using theme_image_formatter() without an image title, alt text, or
     // link options.
+    $element = $base_element;
     $element['#item']->alt = '';
-    $this->drupalSetContent(render($element));
+    $this->drupalSetContent(drupal_render($element));
     $elements = $this->xpath('//a[@href=:path]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height and @alt=""]', array(':path' => base_path() . $path, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()));
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders without title, alt, or path options.');
 
     // Link the image to a fragment on the page, and not a full URL.
     $fragment = $this->randomName();
+    $element = $base_element;
     $element['#path']['path'] = '';
     $element['#path']['options'] = array(
       'external' => TRUE,
       'fragment' => $fragment,
     );
-    $this->drupalSetContent(render($element));
+    $this->drupalSetContent(drupal_render($element));
     $elements = $this->xpath('//a[@href=:fragment]/img[@class="image-style-test" and @src=:url and @width=:width and @height=:height and @alt=""]', array(':fragment' => '#' . $fragment, ':url' => $url, ':width' => $image->getWidth(), ':height' => $image->getHeight()));
     $this->assertEqual(count($elements), 1, 'theme_image_formatter() correctly renders a link fragment.');
   }
@@ -133,18 +138,22 @@ class ImageThemeFunctionTest extends WebTestBase {
     $style->save();
     $url = $style->buildUrl($original_uri);
 
-    $element = array(
+    // Create the base element that we'll use in the tests below.
+    $base_element = array(
       '#theme' => 'image_style',
       '#style_name' => 'image_test',
       '#uri' => $original_uri,
     );
-    $this->drupalSetContent(render($element));
+
+    $element = $base_element;
+    $this->drupalSetContent(drupal_render($element));
     $elements = $this->xpath('//img[@class="image-style-image-test" and @src=:url and @alt=""]', array(':url' => $url));
     $this->assertEqual(count($elements), 1, 'theme_image_style() renders an image correctly.');
 
     // Test using theme_image_style() with a NULL value for the alt option.
+    $element = $base_element;
     $element['#alt'] = NULL;
-    $this->drupalSetContent(render($element));
+    $this->drupalSetContent(drupal_render($element));
     $elements = $this->xpath('//img[@class="image-style-image-test" and @src=:url]', array(':url' => $url));
     $this->assertEqual(count($elements), 1, 'theme_image_style() renders an image correctly with a NULL value for the alt option.');
   }

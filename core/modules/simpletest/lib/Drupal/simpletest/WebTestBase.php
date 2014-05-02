@@ -15,6 +15,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -339,6 +340,53 @@ abstract class WebTestBase extends TestBase {
     $this->checkPermissions(array(), TRUE);
 
     return $type;
+  }
+
+  /**
+   * Builds the renderable view of an entity.
+   *
+   * Entities postpone the composition of their renderable arrays to #pre_render
+   * functions in order to maximize cache efficacy. This means that the full
+   * rendable array for an entity is constructed in drupal_render(). Some tests
+   * require the complete renderable array for an entity outside of the
+   * drupal_render process in order to verify the presence of specific values.
+   * This method isolates the steps in the render process that produce an
+   * entity's renderable array.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to prepare a renderable array for.
+   * @param string $view_mode
+   *   (optional) The view mode that should be used to build the entity.
+   * @param null $langcode
+   *   (optional) For which language the entity should be prepared, defaults to
+   *   the current content language.
+   * @param bool $reset
+   *   (optional) Whether to clear the cache for this entity.
+   * @return array
+   *
+   * @see drupal_render()
+   */
+  protected function drupalBuildEntityView(EntityInterface $entity, $view_mode = 'full', $langcode = NULL, $reset = FALSE) {
+    $render_controller = $this->container->get('entity.manager')->getViewBuilder($entity->getEntityTypeId());
+    if ($reset) {
+      $render_controller->resetCache(array($entity->id()));
+    }
+    $elements = $render_controller->view($entity, $view_mode, $langcode);
+    // If the default values for this element have not been loaded yet, populate
+    // them.
+    if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
+      $elements += element_info($elements['#type']);
+    }
+
+    // Make any final changes to the element before it is rendered. This means
+    // that the $element or the children can be altered or corrected before the
+    // element is rendered into the final text.
+    if (isset($elements['#pre_render'])) {
+      foreach ($elements['#pre_render'] as $callable) {
+        $elements = call_user_func($callable, $elements);
+      }
+    }
+    return $elements;
   }
 
   /**

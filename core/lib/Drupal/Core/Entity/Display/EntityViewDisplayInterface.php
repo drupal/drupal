@@ -34,7 +34,7 @@ interface EntityViewDisplayInterface extends EntityDisplayInterface {
    *
    * This only includes the components handled by the Display object, but
    * excludes 'extra fields', that are typically rendered through specific,
-   * ad-hoc code in EntityViewBuilderInterface::buildContent() or in
+   * ad-hoc code in EntityViewBuilderInterface::buildComponents() or in
    * hook_entity_view() implementations.
    *
    * hook_entity_display_build_alter() is invoked on each entity, allowing 3rd

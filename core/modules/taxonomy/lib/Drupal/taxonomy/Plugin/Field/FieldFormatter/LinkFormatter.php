@@ -51,6 +51,8 @@ class LinkFormatter extends TaxonomyFormatterBase {
           // formatter output and should not be rendered in the field template.
           unset($item->_attributes);
         }
+
+        $elements[$delta]['#cache']['tags'] = $item->entity->getCacheTag();
       }
     }
 

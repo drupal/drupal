@@ -770,15 +770,16 @@ function hook_node_submit(\Drupal\node\NodeInterface $node, $form, &$form_state)
 /**
  * Act on a node that is being assembled before rendering.
  *
- * The module may add elements to $node->content prior to rendering.
- * The structure of $node->content is a renderable array as expected by
- * drupal_render().
+ * The module may add elements to a node's renderable array array prior to
+ * rendering.
  *
  * When $view_mode is 'rss', modules can also add extra RSS elements and
  * namespaces to $node->rss_elements and $node->rss_namespaces respectively for
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
+ * @param array &$build
+ *   A renderable array representing the node content.
  * @param \Drupal\node\NodeInterface $node
  *   The node that is being assembled for rendering.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
@@ -794,12 +795,12 @@ function hook_node_submit(\Drupal\node\NodeInterface $node, $form, &$form_state)
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view(\Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function hook_node_view(array &$build, \Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // node type in hook_entity_extra_field_info().
   if ($display->getComponent('mymodule_addition')) {
-    $node->content['mymodule_addition'] = array(
+    $build['mymodule_addition'] = array(
       '#markup' => mymodule_addition($node),
       '#theme' => 'mymodule_my_additional_field',
     );
@@ -819,7 +820,7 @@ function hook_node_view(\Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Di
  * node.html.twig. See drupal_render() and _theme() documentation respectively
  * for details.
  *
- * @param $build
+ * @param &$build
  *   A renderable array representing the node content.
  * @param \Drupal\node\NodeInterface $node
  *   The node being rendered.
@@ -832,7 +833,7 @@ function hook_node_view(\Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Di
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view_alter(&$build, \Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function hook_node_view_alter(array &$build, \Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

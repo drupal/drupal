@@ -13,6 +13,7 @@
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -359,20 +360,22 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
 }
 
 /**
- * Implements hook_entity_view_alter().
+ * Implements hook_entity_build_defaults_alter().
  */
-function comment_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+function comment_entity_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+  // Get the corresponding display settings.
+  $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
   // Add the comment page number to the cache key if render caching is enabled.
   if (isset($build['#cache']) && isset($build['#cache']['keys']) && \Drupal::request()->query->has('page')) {
     foreach ($entity->getFieldDefinitions() as $field_name => $definition) {
-      if (isset($build[$field_name]) && $definition->getType() === 'comment') {
-        $display_options = $display->getComponent($field_name);
+      if ($definition->getType() === 'comment' && ($display_options = $display->getComponent($field_name))) {
         $pager_id = $display_options['settings']['pager_id'];
         $page = pager_find_page($pager_id);
         $build['#cache']['keys'][] = $field_name . '-pager-' . $page;
       }
     }
   }
+  return $build;
 }
 
 /**
@@ -534,7 +537,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
 /**
  * Implements hook_node_view_alter().
  */
-function comment_node_view_alter(&$build, EntityInterface $node, EntityViewDisplayInterface $display) {
+function comment_node_view_alter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
   if (\Drupal::moduleHandler()->moduleExists('history')) {
     $build['#attributes']['data-history-node-id'] = $node->id();
   }
@@ -1242,16 +1245,13 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
     // therefore the rendered parent entity. This results in an infinite loop of
     // parent entity output rendering the comment form and the comment form
     // rendering the parent entity. To prevent this infinite loop we temporarily
-    // set the value of the comment field on the rendered entity to hidden
+    // set the value of the comment field on a clone of the entity to hidden
     // before calling entity_view(). That way when the output of the commented
-    // entity is rendered, it excludes the comment field output. As objects are
-    // always addressed by reference we ensure changes are not lost by setting
-    // the value back to its original state after the call to entity_view().
+    // entity is rendered, it excludes the comment field output.
     $field_name = $comment->getFieldName();
-    $original_status = $entity->get($field_name)->status;
-    $entity->get($field_name)->status = CommentItemInterface::HIDDEN;
+    $entity = clone $entity;
+    $entity->$field_name->status = CommentItemInterface::HIDDEN;
     $build = entity_view($entity, 'full');
-    $entity->get($field_name)->status = $original_status;
   }
 
   $preview_build['comment_output_below'] = $build;
@@ -1282,7 +1282,7 @@ function comment_preprocess_block(&$variables) {
  *   A user account, for use with theme_username() or the user_picture template.
  */
 function comment_prepare_author(CommentInterface $comment) {
-  // The account has been pre-loaded by CommentViewBuilder::buildContent().
+  // The account has been pre-loaded by CommentViewBuilder::buildComponents().
   $account = $comment->getOwner();
   if (empty($account->uid->value)) {
     // @todo Avoid creating a new entity by just creating a new instance

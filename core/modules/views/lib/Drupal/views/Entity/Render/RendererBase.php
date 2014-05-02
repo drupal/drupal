@@ -67,18 +67,14 @@ abstract class RendererBase {
    *   The full array of results from the query.
    */
   public function preRender(array $result) {
-    /** @var \Drupal\Core\Entity\ContentEntityInterface[] $entities */
-    $entities = array();
+    $view_builder = $this->view->rowPlugin->entityManager->getViewBuilder($this->entityType->id());
 
     /** @var \Drupal\views\ResultRow $row */
     foreach ($result as $row) {
       $entity = $row->_entity;
       $entity->view = $this->view;
-      $entities[$entity->id()] = $entity;
+      $this->build[$entity->id()] = $view_builder->view($entity, $this->view->rowPlugin->options['view_mode'], $this->getLangcode($row));
     }
-
-    $view_builder = $this->view->rowPlugin->entityManager->getViewBuilder($this->entityType->id());
-    $this->build = $view_builder->viewMultiple($entities, $this->view->rowPlugin->options['view_mode']);
   }
 
   /**

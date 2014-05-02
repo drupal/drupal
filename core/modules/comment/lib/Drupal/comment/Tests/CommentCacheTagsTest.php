@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
@@ -57,10 +58,13 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     ));
     $entity_test->save();
 
-    // Create a "Llama" taxonomy term.
+    // Create a "Llama" comment.
     $comment = entity_create('comment', array(
       'subject' => 'Llama',
-      'comment_body' => 'The name "llama" was adopted by European settlers from native Peruvians.',
+      'comment_body' => array(
+        'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
+        'format' => 'plain_text',
+      ),
       'entity_id' => $entity_test->id(),
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
@@ -69,6 +73,15 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     $comment->save();
 
     return $comment;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Each comment must have a comment body, which always has a text format.
+   */
+  protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
+    return array('filter_format:plain_text');
   }
 
 }

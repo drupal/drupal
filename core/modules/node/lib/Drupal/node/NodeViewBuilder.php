@@ -19,35 +19,43 @@ class NodeViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
-    $return = array();
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
+    /** @var \Drupal\node\NodeInterface[] $entities */
     if (empty($entities)) {
-      return $return;
+      return;
     }
 
     // Attach user account.
-    user_attach_accounts($entities);
+    user_attach_accounts($build, $entities);
 
-    parent::buildContent($entities, $displays, $view_mode, $langcode);
+    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
 
-    foreach ($entities as $entity) {
+    foreach ($entities as $id => $entity) {
       $bundle = $entity->bundle();
       $display = $displays[$bundle];
 
-      $entity->content['links'] = array(
-        '#type' => 'render_cache_placeholder',
-        '#callback' => '\Drupal\node\NodeViewBuilder::renderLinks',
-        '#context' => array(
-          'node_entity_id' => $entity->id(),
-          'view_mode' => $view_mode,
-          'langcode' => $langcode,
-          'in_preview' => !empty($entity->in_preview),
-        ),
+      $callback = '\Drupal\node\NodeViewBuilder::renderLinks';
+      $context = array(
+        'node_entity_id' => $entity->id(),
+        'view_mode' => $view_mode,
+        'langcode' => $langcode,
+        'in_preview' => !empty($entity->in_preview),
+        'token' => drupal_render_cache_generate_token(),
       );
+
+      $build[$id]['links'] = array(
+        '#post_render_cache' => array(
+          $callback => array(
+            $context,
+          ),
+        ),
+        '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
+      );
+
 
       // Add Language field text element to node render array.
       if ($display->getComponent('langcode')) {
-        $entity->content['langcode'] = array(
+        $build[$id]['langcode'] = array(
           '#type' => 'item',
           '#title' => t('Language'),
           '#markup' => $entity->language()->name,
@@ -68,6 +76,12 @@ class NodeViewBuilder extends EntityViewBuilder {
     if (isset($defaults['#cache']) && isset($entity->in_preview)) {
       unset($defaults['#cache']);
     }
+    else {
+      // The node 'submitted' info is not rendered in a standard way (renderable
+      // array) so we have to add a cache tag manually.
+      // @todo Delete this once https://drupal.org/node/2226493 lands.
+      $defaults['#cache']['tags']['user'][] = $entity->getOwnerId();
+    }
 
     return $defaults;
   }
@@ -77,6 +91,8 @@ class NodeViewBuilder extends EntityViewBuilder {
    *
    * Renders the links on a node.
    *
+   * @param array $element
+   *   The renderable array that contains the to be replaced placeholder.
    * @param array $context
    *   An array with the following keys:
    *   - node_entity_id: a node entity ID
@@ -87,7 +103,10 @@ class NodeViewBuilder extends EntityViewBuilder {
    * @return array
    *   A renderable array representing the node links.
    */
-  public static function renderLinks(array $context) {
+  public static function renderLinks(array $element, array $context) {
+    $callback = '\Drupal\node\NodeViewBuilder::renderLinks';
+    $placeholder = drupal_render_cache_generate_placeholder($callback, $context, $context['token']);
+
     $links = array(
       '#theme' => 'links__node',
       '#pre_render' => array('drupal_pre_render_links'),
@@ -105,8 +124,10 @@ class NodeViewBuilder extends EntityViewBuilder {
       );
       \Drupal::moduleHandler()->alter('node_links', $links, $entity, $hook_context);
     }
+    $markup = drupal_render($links);
+    $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
 
-    return $links;
+    return $element;
   }
 
   /**
@@ -160,10 +181,6 @@ class NodeViewBuilder extends EntityViewBuilder {
         'metadata' => array('changed' => $entity->getChangedTime()),
       );
     }
-
-    // The node 'submitted' info is not rendered in a standard way (renderable
-    // array) so we have to add a cache tag manually.
-    $build['#cache']['tags']['user'][] = $entity->getOwnerId();
   }
 
 }

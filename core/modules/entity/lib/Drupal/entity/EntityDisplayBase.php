@@ -365,16 +365,23 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
 
     if (!isset($this->fieldDefinitions)) {
       $definitions = \Drupal::entityManager()->getFieldDefinitions($this->targetEntityType, $this->bundle);
-
-      // The display only cares about fields that specify display options.
-      // Discard base fields that are not rendered through formatters / widgets.
-      $display_context = $this->displayContext;
-      $this->fieldDefinitions = array_filter($definitions, function (FieldDefinitionInterface $definition) use ($display_context) {
-        return $definition->getDisplayOptions($display_context);
-      });
+      $this->fieldDefinitions = array_filter($definitions, array($this, 'fieldHasDisplayOptions'));
     }
 
     return $this->fieldDefinitions;
+  }
+
+  /**
+   * Determines if a field has options for a given display.
+   *
+   * @param FieldDefinitionInterface $definition
+   *   A field instance definition.
+   * @return array|null
+   */
+  private function fieldHasDisplayOptions(FieldDefinitionInterface $definition) {
+    // The display only cares about fields that specify display options.
+    // Discard base fields that are not rendered through formatters / widgets.
+    return $definition->getDisplayOptions($this->displayContext);
   }
 
 }

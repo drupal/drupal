@@ -16,8 +16,10 @@ use Drupal\Core\Field\FieldItemListInterface;
 interface EntityViewBuilderInterface {
 
   /**
-   * Build the structured $content property on the entity.
+   * Builds the component fields and properties of a set of entities.
    *
+   * @param &$build
+   *   The renderable array representing the entity content.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   The entities whose content is being built.
    * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface[] $displays
@@ -28,11 +30,8 @@ interface EntityViewBuilderInterface {
    * @param string $langcode
    *   (optional) For which language the entity should be build, defaults to
    *   the current content language.
-   *
-   * @return array
-   *   The content array.
    */
-  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL);
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL);
 
   /**
    * Returns the render array for the provided entity.

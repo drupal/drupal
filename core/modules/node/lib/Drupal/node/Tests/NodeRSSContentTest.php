@@ -11,8 +11,8 @@ namespace Drupal\node\Tests;
  * Ensures that data added to nodes by other modules appears in RSS feeds.
  *
  * Create a node, enable the node_test module to ensure that extra data is
- * added to the node->content array, then verify that the data appears on the
- * sitewide RSS feed at rss.xml.
+ * added to the node's renderable array, then verify that the data appears on
+ * the site-wide RSS feed at rss.xml.
  */
 class NodeRSSContentTest extends NodeTestBase {
 

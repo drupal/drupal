@@ -145,6 +145,20 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           if ($this->getSetting('pager_id')) {
             $build['pager']['#element'] = $this->getSetting('pager_id');
           }
+          // The viewElements() method of entity field formatters is run
+          // during the #pre_render phase of rendering an entity. A formatter
+          // builds the content of the field in preparation for theming.
+          // All entity cache tags must be available after the #pre_render phase.
+          // This field formatter is highly exceptional: it renders *another*
+          // entity and this referenced entity has its own #pre_render
+          // callbacks. In order collect the cache tags associated with the
+          // referenced entity it must be passed to drupal_render() so that its
+          // #pre_render callbacks are invoked and its full build array is
+          // assembled. Rendering the referenced entity in place here will allow
+          // its cache tags to be bubbled up and included with those of the
+          // main entity when cache tags are collected for a renderable array
+          // in drupal_render().
+          drupal_render($build, TRUE);
           $output['comments'] = $build;
         }
       }
@@ -162,14 +176,20 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           // All other users need a user-specific form, which would break the
           // render cache: hence use a #post_render_cache callback.
           else {
+            $callback = '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm';
+            $context = array(
+              'entity_type' => $entity->getEntityTypeId(),
+              'entity_id' => $entity->id(),
+              'field_name' => $field_name,
+              'token' => drupal_render_cache_generate_token(),
+            );
             $output['comment_form'] = array(
-              '#type' => 'render_cache_placeholder',
-              '#callback' => '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm',
-              '#context' => array(
-                'entity_type' => $entity->getEntityTypeId(),
-                'entity_id' => $entity->id(),
-                'field_name' => $field_name,
+              '#post_render_cache' => array(
+                $callback => array(
+                  $context,
+                ),
               ),
+              '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
             );
           }
         }
@@ -190,6 +210,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
   /**
    * #post_render_cache callback; replaces placeholder with comment form.
    *
+   * @param array $element
+   *   The renderable array that contains the to be replaced placeholder.
    * @param array $context
    *   An array with the following keys:
    *   - entity_type: an entity type
@@ -199,9 +221,17 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    * @return array
    *   A renderable array containing the comment form.
    */
-  public static function renderForm(array $context) {
+  public static function renderForm(array $element, array $context) {
+    $callback = '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm';
+    $placeholder = drupal_render_cache_generate_placeholder($callback, $context, $context['token']);
     $entity = entity_load($context['entity_type'], $context['entity_id']);
-    return comment_add($entity, $context['field_name']);
+    $form = comment_add($entity, $context['field_name']);
+    // @todo: This only works as long as assets are still tracked in a global
+    //   static variable, see https://drupal.org/node/2238835
+    $markup = drupal_render($form, TRUE);
+    $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
+
+    return $element;
   }
 
   /**

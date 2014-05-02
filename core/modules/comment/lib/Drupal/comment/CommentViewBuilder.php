@@ -14,6 +14,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -78,7 +80,7 @@ class CommentViewBuilder extends EntityViewBuilder {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityViewBuilder::buildContent().
+   * Overrides Drupal\Core\Entity\EntityViewBuilder::buildComponents().
    *
    * In addition to modifying the content key on entities, this implementation
    * will also set the comment entity key which all comments carry.
@@ -86,11 +88,10 @@ class CommentViewBuilder extends EntityViewBuilder {
    * @throws \InvalidArgumentException
    *   Thrown when a comment is attached to an entity that no longer exists.
    */
-  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
+  public function buildComponents(array &$build, array $entities, array $displays, $view_mode, $langcode = NULL) {
     /** @var \Drupal\comment\CommentInterface[] $entities */
-    $return = array();
     if (empty($entities)) {
-      return $return;
+      return;
     }
 
     // Pre-load associated users into cache to leverage multiple loading.
@@ -100,7 +101,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     }
     $this->entityManager->getStorage('user')->loadMultiple(array_unique($uids));
 
-    parent::buildContent($entities, $displays, $view_mode, $langcode);
+    parent::buildComponents($build, $entities, $displays, $view_mode, $langcode);
 
     // Load all the entities that have comments attached.
     $commented_entity_ids = array();
@@ -114,37 +115,43 @@ class CommentViewBuilder extends EntityViewBuilder {
       $commented_entities[$entity_type] = $this->entityManager->getStorage($entity_type)->loadMultiple($entity_ids);
     }
 
-    foreach ($entities as $entity) {
+    foreach ($entities as $id => $entity) {
       if (isset($commented_entities[$entity->getCommentedEntityTypeId()][$entity->getCommentedEntityId()])) {
         $commented_entity = $commented_entities[$entity->getCommentedEntityTypeId()][$entity->getCommentedEntityId()];
       }
       else {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));
       }
-      $entity->content['#entity'] = $entity;
-      $entity->content['#theme'] = 'comment__' . $entity->getFieldId() . '__' . $commented_entity->bundle();
-      $entity->content['links'] = array(
-        '#type' => 'render_cache_placeholder',
-        '#callback' => '\Drupal\comment\CommentViewBuilder::renderLinks',
-        '#context' => array(
-          'comment_entity_id' => $entity->id(),
-          'view_mode' => $view_mode,
-          'langcode' => $langcode,
-          'commented_entity_type' => $commented_entity->getEntityTypeId(),
-          'commented_entity_id' => $commented_entity->id(),
-          'in_preview' => !empty($entity->in_preview),
+      $build[$id]['#entity'] = $entity;
+      $build[$id]['#theme'] = 'comment__' . $entity->getFieldId() . '__' . $commented_entity->bundle();
+      $callback = '\Drupal\comment\CommentViewBuilder::renderLinks';
+      $context = array(
+        'comment_entity_id' => $entity->id(),
+        'view_mode' => $view_mode,
+        'langcode' => $langcode,
+        'commented_entity_type' => $commented_entity->getEntityTypeId(),
+        'commented_entity_id' => $commented_entity->id(),
+        'in_preview' => !empty($entity->in_preview),
+        'token' => drupal_render_cache_generate_token(),
+      );
+      $build[$id]['links'] = array(
+        '#post_render_cache' => array(
+          $callback => array(
+            $context,
+          ),
         ),
+        '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
       );
 
-      if (!isset($entity->content['#attached'])) {
-        $entity->content['#attached'] = array();
+      if (!isset($build[$id]['#attached'])) {
+        $build[$id]['#attached'] = array();
       }
-      $entity->content['#attached']['library'][] = 'comment/drupal.comment-by-viewer';
+      $build[$id]['#attached']['library'][] = 'comment/drupal.comment-by-viewer';
       if ($this->moduleHandler->moduleExists('history') &&  \Drupal::currentUser()->isAuthenticated()) {
-        $entity->content['#attached']['library'][] = 'comment/drupal.comment-new-indicator';
+        $build[$id]['#attached']['library'][] = 'comment/drupal.comment-new-indicator';
 
         // Embed the metadata for the comment "new" indicators on this node.
-        $entity->content['#post_render_cache']['history_attach_timestamp'] = array(
+        $build[$id]['#post_render_cache']['history_attach_timestamp'] = array(
           array('node_id' => $commented_entity->id()),
         );
       }
@@ -156,6 +163,8 @@ class CommentViewBuilder extends EntityViewBuilder {
    *
    * Renders the links on a comment.
    *
+   * @param array $element
+   *   The renderable array that contains the to be replaced placeholder.
    * @param array $context
    *   An array with the following keys:
    *   - comment_entity_id: a comment entity ID
@@ -168,7 +177,9 @@ class CommentViewBuilder extends EntityViewBuilder {
    * @return array
    *   A renderable array representing the comment links.
    */
-  public static function renderLinks(array $context) {
+  public static function renderLinks(array $element, array $context) {
+    $callback = '\Drupal\comment\CommentViewBuilder::renderLinks';
+    $placeholder = drupal_render_cache_generate_placeholder($callback, $context, $context['token']);
     $links = array(
       '#theme' => 'links__comment',
       '#pre_render' => array('drupal_pre_render_links'),
@@ -189,8 +200,10 @@ class CommentViewBuilder extends EntityViewBuilder {
       );
       \Drupal::moduleHandler()->alter('comment_links', $links, $entity, $hook_context);
     }
+    $markup = drupal_render($links);
+    $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
 
-    return $links;
+    return $element;
   }
 
   /**

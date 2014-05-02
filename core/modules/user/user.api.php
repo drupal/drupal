@@ -306,8 +306,10 @@ function hook_user_logout($account) {
  * The user's account information is being displayed.
  *
  * The module should format its custom additions for display and add them to the
- * $account->content array.
+ * $build array.
  *
+ * @param array &$build
+ *   A renderable array representing the user content.
  * @param \Drupal\user\UserInterface $account
  *   The user object on which the operation is being performed.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
@@ -321,12 +323,12 @@ function hook_user_logout($account) {
  * @see hook_user_view_alter()
  * @see hook_entity_view()
  */
-function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function hook_user_view(array &$build, \Drupal\user\UserInterface $account, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // user entity type in hook_entity_extra_field_info().
   if ($display->getComponent('mymodule_addition')) {
-    $account->content['mymodule_addition'] = array(
+    $build['mymodule_addition'] = array(
       '#markup' => mymodule_addition($account),
       '#theme' => 'mymodule_my_additional_field',
     );
@@ -346,7 +348,7 @@ function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\Core\Entity
  * user.html.twig. See drupal_render() and _theme() documentation
  * respectively for details.
  *
- * @param $build
+ * @param array &$build
  *   A renderable array representing the user.
  * @param \Drupal\user\UserInterface $account
  *   The user account being rendered.
@@ -357,7 +359,7 @@ function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\Core\Entity
  * @see user_view()
  * @see hook_entity_view_alter()
  */
-function hook_user_view_alter(&$build, \Drupal\user\UserInterface $account, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function hook_user_view_alter(array &$build, \Drupal\user\UserInterface $account, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   // Check for the existence of a field added by another module.
   if (isset($build['an_additional_field'])) {
     // Change its weight.

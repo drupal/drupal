@@ -60,6 +60,9 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
     $this->installSchema('user', array('users'));
     $this->installConfig(array('node', 'language'));
 
+    // The node.view route must exist when nodes are rendered.
+    $this->container->get('router.builder')->rebuild();
+
     $this->langcodes = array(\Drupal::languageManager()->getDefaultLanguage()->id);
     for ($i = 0; $i < 2; $i++) {
       $langcode = 'l' . $i;
@@ -168,7 +171,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
     $result = TRUE;
     foreach ($view->result as $index => $row) {
       $build = $view->rowPlugin->render($row);
-      $output = drupal_render($build['title']);
+      $output = drupal_render($build);
       $result = strpos($output, $expected[$index]) !== FALSE;
       if (!$result) {
         break;

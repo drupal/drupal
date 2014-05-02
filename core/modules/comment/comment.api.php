@@ -84,6 +84,8 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
 /**
  * Act on a comment that is being assembled before rendering.
  *
+ * @param array &$build
+ *   A renderable array representing the comment content.
  * @param \Drupal\comment\Entity\Comment $comment $comment
  *   Passes in the comment the action is being performed on.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
@@ -96,12 +98,12 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
  *
  * @see hook_entity_view()
  */
-function hook_comment_view(\Drupal\comment\Entity\Comment $comment, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function hook_comment_view(array &$build, \Drupal\comment\Entity\Comment $comment, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // node type in hook_entity_extra_field_info().
   if ($display->getComponent('mymodule_addition')) {
-    $comment->content['mymodule_addition'] = array(
+    $build['mymodule_addition'] = array(
       '#markup' => mymodule_addition($comment),
       '#theme' => 'mymodule_my_additional_field',
     );
@@ -120,7 +122,7 @@ function hook_comment_view(\Drupal\comment\Entity\Comment $comment, \Drupal\Core
  * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
  * comment.html.twig. See drupal_render() documentation for details.
  *
- * @param $build
+ * @param array &$build
  *   A renderable array representing the comment.
  * @param \Drupal\comment\Entity\Comment $comment
  *   The comment being rendered.
@@ -131,7 +133,7 @@ function hook_comment_view(\Drupal\comment\Entity\Comment $comment, \Drupal\Core
  * @see comment_view()
  * @see hook_entity_view_alter()
  */
-function hook_comment_view_alter(&$build, \Drupal\comment\Entity\Comment $comment, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function hook_comment_view_alter(array &$build, \Drupal\comment\Entity\Comment $comment, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   // Check for the existence of a field added by another module.
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.

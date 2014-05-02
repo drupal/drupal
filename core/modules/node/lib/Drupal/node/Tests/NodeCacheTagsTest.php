@@ -61,6 +61,8 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Each node must have an author.
    */
   protected function getAdditionalCacheTagsForEntity(EntityInterface $node) {
     return array('user:' . $node->getOwnerId());

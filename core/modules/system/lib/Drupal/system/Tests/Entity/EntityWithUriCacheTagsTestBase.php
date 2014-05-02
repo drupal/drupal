@@ -8,27 +8,12 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 
 /**
  * Provides helper methods for Entity cache tags tests; for entities with URIs.
  */
 abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
-
-  /**
-   * Returns the additional (non-standard) cache tags for the tested entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to be tested, as created by createEntity().
-   * @return array
-   *   An array of the additional cache tags.
-   *
-   * @see \Drupal\system\Tests\Entity\EntityCacheTagsTestBase::createEntity()
-   */
-  protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
-    return array();
-  }
 
   /**
    * Tests cache tags presence and invalidation of the entity at its URI.

@@ -35,7 +35,16 @@ class TextDefaultFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = array('#markup' => $item->processed);
+      $elements[$delta] = array(
+        '#markup' => $item->processed, 
+        '#cache' => array(
+          'tags' => array(
+            'filter_format' => array(
+              $item->format,
+            ),
+          ),
+        ),
+      );
     }
 
     return $elements;

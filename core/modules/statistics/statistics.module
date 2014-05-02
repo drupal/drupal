@@ -48,11 +48,11 @@ function statistics_permission() {
 /**
  * Implements hook_node_view().
  */
-function statistics_node_view(EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+function statistics_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if (!$node->isNew() && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
-    $node->content['statistics_content_counter']['#attached']['library'][] = 'statistics/drupal.statistics';
+    $build['statistics_content_counter']['#attached']['library'][] = 'statistics/drupal.statistics';
     $settings = array('data' => array('nid' => $node->id()), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));
-    $node->content['statistics_content_counter']['#attached']['js'][] = array(
+    $build['statistics_content_counter']['#attached']['js'][] = array(
       'data' => array('statistics' => $settings),
       'type' => 'setting',
     );

@@ -627,12 +627,6 @@ function system_element_info() {
     '#theme' => 'table',
   );
 
-  // Other elements.
-  $types['render_cache_placeholder'] = array(
-    '#callback' => '',
-    '#context' => array(),
-  );
-
   return $types;
 }
 

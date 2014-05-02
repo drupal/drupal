@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
 
@@ -125,6 +126,20 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   abstract protected function createEntity();
 
   /**
+   * Returns the additional (non-standard) cache tags for the tested entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be tested, as created by createEntity().
+   * @return array
+   *   An array of the additional cache tags.
+   *
+   * @see \Drupal\system\Tests\Entity\EntityCacheTagsTestBase::createEntity()
+   */
+  protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
+    return array();
+  }
+
+  /**
    * Creates a referencing and a non-referencing entity for testing purposes.
    *
    * @param \Drupal\Core\Entity\EntityInterface $referenced_entity
@@ -168,7 +183,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       ),
     ))->save();
     entity_get_display($entity_type, $bundle, 'full')
-      ->setComponent($field_name, array('type' => 'entity_reference_label'))
+      ->setComponent($field_name, array('type' => 'entity_reference_entity_view'))
       ->save();
 
     // Create an entity that does reference the entity being tested.
@@ -221,9 +236,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       'entity_test_view:1',
       'entity_test:' . $this->referencing_entity->id(),
       // Includes the main entity's cache tags, since this entity references it.
-      $cache_tag,
       $view_cache_tag,
+      $cache_tag,
     );
+    $referencing_entity_cache_tags = array_merge($referencing_entity_cache_tags, $this->getAdditionalCacheTagsForEntity($this->entity));
     $non_referencing_entity_cache_tags = array(
       'entity_test_view:1',
       'entity_test:' . $this->non_referencing_entity->id(),

@@ -93,9 +93,22 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       }
 
       if (!empty($item->target_id)) {
-        $entity = clone $item->entity;
-        unset($entity->content);
-        $elements[$delta] = entity_view($entity, $view_mode, $item->getLangcode());
+        // The viewElements() method of entity field formatters is run
+        // during the #pre_render phase of rendering an entity. A formatter
+        // builds the content of the field in preparation for theming.
+        // All entity cache tags must be available after the #pre_render phase.
+        // This field formatter is highly exceptional: it renders *another*
+        // entity and this referenced entity has its own #pre_render
+        // callbacks. In order collect the cache tags associated with the
+        // referenced entity it must be passed to drupal_render() so that its
+        // #pre_render callbacks are invoked and its full build array is
+        // assembled. Rendering the referenced entity in place here will allow
+        // its cache tags to be bubbled up and included with those of the
+        // main entity when cache tags are collected for a renderable array
+        // in drupal_render().
+        $referenced_entity_build = entity_view($item->entity, $view_mode, $item->getLangcode());
+        drupal_render($referenced_entity_build, TRUE);
+        $elements[$delta] = $referenced_entity_build;
 
         if (empty($links) && isset($result[$delta][$target_type][$item->target_id]['links'])) {
           // Hide the element links.
