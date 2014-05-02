@@ -132,7 +132,7 @@ class EntityListBuilderTest extends UnitTestCase {
       ->will($this->returnValue($url));
 
     $list = new EntityListBuilder($this->entityType, $this->roleStorage, $this->moduleHandler);
-    $list->setTranslationManager($this->translationManager);
+    $list->setStringTranslation($this->translationManager);
 
     $operations = $list->getOperations($this->role);
     $this->assertInternalType('array', $operations);

@@ -56,12 +56,12 @@ class SettingsForm extends ConfigFormBase {
    *   The aggregator parser plugin manager.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $processor_manager
    *   The aggregator processor plugin manager.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $translation_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $string_translation) {
     parent::__construct($config_factory);
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
     $this->managers = array(
       'fetcher' => $fetcher_manager,
       'parser' => $parser_manager,

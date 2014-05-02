@@ -87,7 +87,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
     $this->localTaskBase = new TestLocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition);
     $this->localTaskBase
       ->setRouteProvider($this->routeProvider)
-      ->setTranslationManager($this->stringTranslation);
+      ->setStringTranslation($this->stringTranslation);
 
   }
 

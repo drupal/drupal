@@ -7,10 +7,13 @@
 
 namespace Drupal\Core\Installer\Exception;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Base class for exceptions thrown by installer.
  */
 class InstallerException extends \RuntimeException {
+  use StringTranslationTrait;
 
   /**
    * The page title to output.
@@ -18,13 +21,6 @@ class InstallerException extends \RuntimeException {
    * @var string
    */
   protected $title;
-
-  /**
-   * The string translation manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $stringTranslation;
 
   /**
    * Constructs a new installer exception.
@@ -50,15 +46,6 @@ class InstallerException extends \RuntimeException {
    */
   public function getTitle() {
     return $this->title;
-  }
-
-  /**
-   * Translates a string using StringTranslation.
-   *
-   * @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->stringTranslation->translate($string, $args, $options);
   }
 
 }

@@ -11,7 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,13 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Provides a base class for forms.
  */
 abstract class FormBase extends DependencySerialization implements FormInterface, ContainerInjectionInterface {
-
-  /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
+  use StringTranslationTrait;
 
   /**
    * The current request.
@@ -75,15 +69,6 @@ abstract class FormBase extends DependencySerialization implements FormInterface
   }
 
   /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager()->translate($string, $args, $options);
-  }
-
-  /**
    * Generates a URL or path for a specific route based on the given parameters.
    *
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
@@ -94,19 +79,6 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    */
   public function url($route_name, $route_parameters = array(), $options = array()) {
     return $this->urlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
-  }
-
-  /**
-   * Gets the translation manager.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslationInterface
-   *   The translation manager.
-   */
-  protected function translationManager() {
-    if (!$this->translationManager) {
-      $this->translationManager = $this->container()->get('string_translation');
-    }
-    return $this->translationManager;
   }
 
   /**
@@ -142,19 +114,6 @@ abstract class FormBase extends DependencySerialization implements FormInterface
       $this->configFactory = $this->container()->get('config.factory');
     }
     return $this->configFactory;
-  }
-
-  /**
-   * Sets the translation manager for this form.
-   *
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
-   *   The translation manager.
-   *
-   * @return $this
-   */
-  public function setTranslationManager(TranslationInterface $translation_manager) {
-    $this->translationManager = $translation_manager;
-    return $this;
   }
 
   /**

@@ -83,7 +83,7 @@ class LocalActionDefaultTest extends UnitTestCase {
    */
   protected function setupLocalActionDefault() {
     $this->localActionDefault = new LocalActionDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider);
-    $this->localActionDefault->setTranslationManager($this->stringTranslation);
+    $this->localActionDefault->setStringTranslation($this->stringTranslation);
   }
 
   /**

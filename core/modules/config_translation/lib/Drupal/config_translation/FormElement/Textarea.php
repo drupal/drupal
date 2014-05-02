@@ -8,11 +8,13 @@
 namespace Drupal\config_translation\FormElement;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines the textarea element for the configuration translation interface.
  */
-class Textarea extends Element {
+class Textarea implements ElementInterface {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

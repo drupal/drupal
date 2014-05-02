@@ -89,14 +89,14 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    *   The mapper plugin discovery service.
    * @param \Drupal\Core\Routing\RouteProviderInterface
    *   The route provider.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation manager.
    *
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
    *   Throws an exception if the route specified by the 'base_route_name' in
    *   the plugin definition could not be found by the route provider.
    */
-  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager) {
+  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $string_translation) {
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
     $this->routeProvider = $route_provider;
@@ -105,7 +105,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
     $this->localeConfigManager = $locale_config_manager;
     $this->configMapperManager = $config_mapper_manager;
 
-    $this->setTranslationManager($translation_manager);
+    $this->stringTranslation = $string_translation;
   }
 
   /**

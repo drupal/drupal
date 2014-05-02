@@ -83,7 +83,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     $plugin = new $plugin_class($this->migrationConfiguration['source'], $this->migrationConfiguration['source']['plugin'], array(), $migration);
     $plugin->setDatabase($this->getDatabase($this->databaseContents + array('test_map' => array())));
     $plugin->setModuleHandler($module_handler);
-    $plugin->setTranslationManager($this->getStringTranslationStub());
+    $plugin->setStringTranslation($this->getStringTranslationStub());
     $migration->expects($this->any())
       ->method('getSourcePlugin')
       ->will($this->returnValue($plugin));

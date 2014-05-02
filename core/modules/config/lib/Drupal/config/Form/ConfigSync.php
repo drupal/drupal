@@ -264,7 +264,7 @@ class ConfigSync extends FormBase {
       $this->typedConfigManager,
       $this->moduleHandler,
       $this->themeHandler,
-      $this->translationManager()
+      $this->getStringTranslation()
     );
     if ($config_importer->alreadyImporting()) {
       drupal_set_message($this->t('Another request may be synchronizing configuration already.'));

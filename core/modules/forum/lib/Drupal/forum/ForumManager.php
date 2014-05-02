@@ -13,6 +13,7 @@ use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\comment\CommentInterface;
 use Drupal\field\FieldInfo;
 use Drupal\node\NodeInterface;
@@ -21,6 +22,7 @@ use Drupal\node\NodeInterface;
  * Provides forum manager service.
  */
 class ForumManager extends DependencySerialization implements ForumManagerInterface {
+  use StringTranslationTrait;
 
   /**
    * Forum sort order, newest first.
@@ -106,13 +108,6 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
   protected $fieldInfo;
 
   /**
-   * Translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
-
-  /**
    * Constructs the forum manager service.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -123,15 +118,15 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
    *   The current database connection.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Connection $connection, FieldInfo $field_info, TranslationInterface $translation_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Connection $connection, FieldInfo $field_info, TranslationInterface $string_translation) {
     $this->configFactory = $config_factory;
     $this->entityManager = $entity_manager;
     $this->connection = $connection;
     $this->fieldInfo = $field_info;
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -548,15 +543,6 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
         ->condition('nid', $nid)
         ->execute();
     }
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager->translate($string, $args, $options);
   }
 
   /**

@@ -10,6 +10,7 @@ namespace Drupal\views\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\views\Plugin\views\argument_validator\Entity
  */
 class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDerivativeInterface {
+  use StringTranslationTrait;
+
   /**
    * The base plugin ID this derivative is for.
    *
@@ -36,13 +39,6 @@ class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDe
   protected $entityManager;
 
   /**
-   * The string translation.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
-
-  /**
    * List of derivative definitions.
    *
    * @var array
@@ -56,13 +52,13 @@ class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDe
    *   The base plugin ID.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
    */
-  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, TranslationInterface $translation_manager) {
+  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, TranslationInterface $string_translation) {
     $this->basePluginId = $base_plugin_id;
     $this->entityManager = $entity_manager;
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -94,15 +90,6 @@ class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDe
     }
 
     return $this->derivatives;
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager->translate($string, $args, $options);
   }
 
 }

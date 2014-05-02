@@ -10,12 +10,14 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\ProjectInfo;
 
 /**
  * Default implementation of UpdateManagerInterface.
  */
 class UpdateManager implements UpdateManagerInterface {
+  use StringTranslationTrait;
 
   /**
    * The update settings
@@ -60,13 +62,6 @@ class UpdateManager implements UpdateManagerInterface {
   protected $availableReleasesTempStore;
 
   /**
-   * The translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translation;
-
-  /**
    * Constructs a UpdateManager.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -84,7 +79,7 @@ class UpdateManager implements UpdateManagerInterface {
     $this->updateSettings = $config_factory->get('update.settings');
     $this->moduleHandler = $module_handler;
     $this->updateProcessor = $update_processor;
-    $this->translation = $translation;
+    $this->stringTranslation = $translation;
     $this->keyValueStore = $key_value_expirable_factory->get('update');
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->projects = array();
@@ -213,15 +208,6 @@ class UpdateManager implements UpdateManagerInterface {
         return;
       }
     }
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translation->translate($string, $args, $options);
   }
 
 }

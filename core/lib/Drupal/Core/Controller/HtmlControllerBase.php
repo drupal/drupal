@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Controller;
 
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Page\HtmlFragment;
 use Drupal\Core\Utility\Title;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -20,13 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 class HtmlControllerBase {
 
   /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
-
-  /**
    * The title resolver.
    *
    * @var \Drupal\Core\Controller\TitleResolver
@@ -36,13 +28,10 @@ class HtmlControllerBase {
   /**
    * Constructs a new HtmlControllerBase object.
    *
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
-   *   The translation manager.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
    */
-  public function __construct(TranslationInterface $translation_manager, TitleResolverInterface $title_resolver) {
-    $this->translationManager = $translation_manager;
+  public function __construct(TitleResolverInterface $title_resolver) {
     $this->titleResolver = $title_resolver;
   }
 

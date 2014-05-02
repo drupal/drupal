@@ -8,6 +8,7 @@
 namespace Drupal\migrate;
 
 use Drupal\Core\Utility\Error;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 
@@ -15,6 +16,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  * Defines a migrate executable class.
  */
 class MigrateExecutable {
+  use StringTranslationTrait;
 
   /**
    * The configuration of the migration to do.
@@ -125,13 +127,6 @@ class MigrateExecutable {
    * @var int
    */
   protected $memoryLimit;
-
-  /**
-   * The translation manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
 
   /**
    * The rollback action to be saved for the current row.
@@ -643,28 +638,6 @@ class MigrateExecutable {
       $this->saveMessage($message);
     }
     $this->message->display($message, 'error');
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager()->translate($string, $args, $options);
-  }
-
-  /**
-   * Gets the translation manager.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslationInterface
-   *   The translation manager.
-   */
-  protected function translationManager() {
-    if (!$this->translationManager) {
-      $this->translationManager = \Drupal::translation();
-    }
-    return $this->translationManager;
   }
 
 }

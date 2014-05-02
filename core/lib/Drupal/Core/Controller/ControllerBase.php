@@ -8,6 +8,7 @@
 namespace Drupal\Core\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -31,6 +32,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
  */
 abstract class ControllerBase implements ContainerInjectionInterface {
+  use StringTranslationTrait;
 
   /**
    * The entity manager.
@@ -52,13 +54,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * @var \Drupal\Core\Language\LanguageManager
    */
   protected $languageManager;
-
-  /**
-   * The translation manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
 
   /**
    * The configuration factory.
@@ -273,28 +268,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
       $this->currentUser = $this->container()->get('current_user');
     }
     return $this->currentUser;
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager()->translate($string, $args, $options);
-  }
-
-  /**
-   * Returns the translation manager.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslationInterface
-   *   The translation manager.
-   */
-  protected function translationManager() {
-    if (!$this->translationManager) {
-      $this->translationManager = $this->container()->get('string_translation');
-    }
-    return $this->translationManager;
   }
 
   /**

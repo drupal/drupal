@@ -37,13 +37,13 @@ class TestMigrateExecutable extends MigrateExecutable {
   protected $clearedMemoryUsage;
 
   /**
-   * Sets the translation manager.
+   * Sets the string translation service.
    *
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
    */
-  public function setTranslationManager(TranslationInterface $translation_manager) {
-    $this->translationManager = $translation_manager;
+  public function setStringTranslation(TranslationInterface $string_translation) {
+    $this->stringTranslation = $string_translation;
   }
 
   /**

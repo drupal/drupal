@@ -125,7 +125,7 @@ class ViewListBuilderTest extends UnitTestCase {
     // because t() is called on there.
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
     $view_list_builder = new TestViewListBuilder($entity_type, $storage, $display_manager);
-    $view_list_builder->setTranslationManager($this->getStringTranslationStub());
+    $view_list_builder->setStringTranslation($this->getStringTranslationStub());
 
     $view = new View($values, 'view');
 

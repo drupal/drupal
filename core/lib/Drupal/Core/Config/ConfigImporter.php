@@ -15,7 +15,8 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\StringTranslation\TranslationManager;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -38,6 +39,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @see \Drupal\Core\Config\ConfigImporterEvent
  */
 class ConfigImporter extends DependencySerialization {
+  use StringTranslationTrait;
 
   /**
    * The name used to identify the lock.
@@ -122,13 +124,6 @@ class ConfigImporter extends DependencySerialization {
   protected $themeHandler;
 
   /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $translationManager;
-
-  /**
    * Flag set to import system.theme during processing theme enable and disables.
    *
    * @var bool
@@ -178,10 +173,10 @@ class ConfigImporter extends DependencySerialization {
    *   The module handler
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler
-   * @param \Drupal\Core\StringTranslation\TranslationManager $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, TranslationManager $translation_manager) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation) {
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
     $this->configManager = $config_manager;
@@ -189,7 +184,7 @@ class ConfigImporter extends DependencySerialization {
     $this->typedConfigManager = $typed_config;
     $this->moduleHandler = $module_handler;
     $this->themeHandler = $theme_handler;
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
     $this->processedConfiguration = $this->storageComparer->getEmptyChangelist();
     $this->processedExtensions = $this->getEmptyExtensionsProcessedList();
   }
@@ -835,7 +830,7 @@ class ConfigImporter extends DependencySerialization {
             $entity_type = $this->configManager->getEntityManager()->getDefinition($entity_type_id);
             $entity = $entity_storage->load($entity_storage->getIDFromConfigName($name, $entity_type->getConfigPrefix()));
             $entity->delete();
-            $this->logError($this->translationManager->translate('Deleted and replaced configuration entity "@name"', array('@name' => $name)));
+            $this->logError($this->t('Deleted and replaced configuration entity "@name"', array('@name' => $name)));
           }
           else {
             $this->storageComparer->getTargetStorage()->delete($name);
@@ -1008,31 +1003,7 @@ class ConfigImporter extends DependencySerialization {
     $this->typedConfigManager = \Drupal::service('config.typed');
     $this->moduleHandler = \Drupal::moduleHandler();
     $this->themeHandler = \Drupal::service('theme_handler');
-    $this->translationManager = \Drupal::service('string_translation');
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * @param string $string
-   *   A string containing the English string to translate.
-   * @param array $args
-   *   An associative array of replacements to make after translation. Based
-   *   on the first character of the key, the value is escaped and/or themed.
-   *   See \Drupal\Component\Utility\String::format() for details.
-   * @param array $options
-   *   An associative array of additional options, with the following elements:
-   *   - 'langcode': The language code to translate to a language other than
-   *      what is used to display the page.
-   *   - 'context': The context the source string belongs to.
-   *
-   * @return string
-   *   The translated string.
-   *
-   * @see \Drupal\Core\StringTranslation\TranslationManager::translate()
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager->translate($string, $args, $options);
+    $this->stringTranslation = \Drupal::service('string_translation');
   }
 
 }

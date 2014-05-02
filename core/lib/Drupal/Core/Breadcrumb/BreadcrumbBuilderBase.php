@@ -7,12 +7,15 @@
 
 namespace Drupal\Core\Breadcrumb;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines a common base class for breadcrumb builders adding a link generator.
  *
  * @todo Use traits once we have a PHP 5.4 requirement.
  */
 abstract class BreadcrumbBuilderBase implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
 
   /**
    * The link generator.
@@ -20,13 +23,6 @@ abstract class BreadcrumbBuilderBase implements BreadcrumbBuilderInterface {
    * @var \Drupal\Core\Utility\LinkGeneratorInterface
    */
   protected $linkGenerator;
-
-  /**
-   * The translation manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
 
   /**
    * Returns the service container.
@@ -62,28 +58,6 @@ abstract class BreadcrumbBuilderBase implements BreadcrumbBuilderInterface {
       $this->linkGenerator = $this->container()->get('link_generator');
     }
     return $this->linkGenerator;
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager()->translate($string, $args, $options);
-  }
-
-  /**
-   * Returns the translation manager.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslationInterface
-   *   The translation manager.
-   */
-  protected function translationManager() {
-    if (!$this->translationManager) {
-      $this->translationManager = $this->container()->get('string_translation');
-    }
-    return $this->translationManager;
   }
 
 }

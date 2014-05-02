@@ -268,7 +268,7 @@ class BulkForm extends FieldPluginBase {
 
       $count = count(array_filter($form_state['values'][$this->options['id']]));
       if ($count) {
-        drupal_set_message($this->translationManager()->formatPlural($count, '%action was applied to @count item.', '%action was applied to @count items.', array(
+        drupal_set_message($this->formatPlural($count, '%action was applied to @count item.', '%action was applied to @count items.', array(
           '%action' => $action->label(),
         )));
       }

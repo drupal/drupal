@@ -187,7 +187,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
 
     // Add a translation manager for t().
     $translation_manager = $this->getStringTranslationStub();
-    $property = new \ReflectionProperty('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', 'translationManager');
+    $property = new \ReflectionProperty('Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder', 'stringTranslation');
     $property->setAccessible(TRUE);
     $property->setValue($breadcrumb_builder, $translation_manager);
 

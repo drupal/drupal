@@ -13,6 +13,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\node\NodeInterface;
 
@@ -20,6 +21,7 @@ use Drupal\node\NodeInterface;
  * Defines a book manager.
  */
 class BookManager implements BookManagerInterface {
+  use StringTranslationTrait;
 
   /**
    * Defines the maximum supported depth of the book tree.
@@ -39,13 +41,6 @@ class BookManager implements BookManagerInterface {
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
-
-  /**
-   * The translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translation;
 
   /**
    * Config Factory Service Object.
@@ -74,7 +69,7 @@ class BookManager implements BookManagerInterface {
   public function __construct(Connection $connection, EntityManagerInterface $entity_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory) {
     $this->connection = $connection;
     $this->entityManager = $entity_manager;
-    $this->translation = $translation;
+    $this->stringTranslation = $translation;
     $this->configFactory = $config_factory;
   }
 
@@ -321,15 +316,6 @@ class BookManager implements BookManagerInterface {
       }
     }
     return $book;
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translation->translate($string, $args, $options);
   }
 
   /**

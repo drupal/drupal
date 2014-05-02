@@ -129,14 +129,14 @@ interface EntityFormInterface extends BaseFormIdInterface {
   public function submit(array $form, array &$form_state);
 
   /**
-   * Sets the translation manager for this form.
+   * Sets the string translation service for this form.
    *
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
    *
    * @return $this
    */
-  public function setTranslationManager(TranslationInterface $translation_manager);
+  public function setStringTranslation(TranslationInterface $string_translation);
 
   /**
    * Sets the module handler for this form.

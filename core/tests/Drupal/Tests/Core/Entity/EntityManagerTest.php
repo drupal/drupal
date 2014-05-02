@@ -348,7 +348,7 @@ class EntityManagerTest extends UnitTestCase {
     $apple_form = $this->entityManager->getFormObject('apple', 'default');
     $this->assertInstanceOf('Drupal\Tests\Core\Entity\TestEntityForm', $apple_form);
     $this->assertAttributeInstanceOf('Drupal\Core\Extension\ModuleHandlerInterface', 'moduleHandler', $apple_form);
-    $this->assertAttributeInstanceOf('Drupal\Core\StringTranslation\TranslationInterface', 'translationManager', $apple_form);
+    $this->assertAttributeInstanceOf('Drupal\Core\StringTranslation\TranslationInterface', 'stringTranslation', $apple_form);
 
     $banana_form = $this->entityManager->getFormObject('banana', 'default');
     $this->assertInstanceOf('Drupal\Tests\Core\Entity\TestEntityFormInjected', $banana_form);
@@ -398,7 +398,7 @@ class EntityManagerTest extends UnitTestCase {
     $apple_controller = $this->entityManager->getController('apple', 'storage');
     $this->assertInstanceOf($class, $apple_controller);
     $this->assertAttributeInstanceOf('Drupal\Core\Extension\ModuleHandlerInterface', 'moduleHandler', $apple_controller);
-    $this->assertAttributeInstanceOf('Drupal\Core\StringTranslation\TranslationInterface', 'translationManager', $apple_controller);
+    $this->assertAttributeInstanceOf('Drupal\Core\StringTranslation\TranslationInterface', 'stringTranslation', $apple_controller);
 
     $banana_controller = $this->entityManager->getController('banana', 'storage', 'getStorageClass');
     $this->assertInstanceOf('Drupal\Tests\Core\Entity\TestEntityControllerInjected', $banana_controller);

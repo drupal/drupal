@@ -124,7 +124,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       $this->currentUser
     );
 
-    $this->builder->setTranslationManager($this->getStringTranslationStub());
+    $this->builder->setStringTranslation($this->getStringTranslationStub());
 
     $this->linkGenerator = $this->getMock('Drupal\Core\Utility\LinkGeneratorInterface');
     $this->builder->setLinkGenerator($this->linkGenerator);
@@ -415,8 +415,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
  */
 class TestPathBasedBreadcrumbBuilder extends PathBasedBreadcrumbBuilder {
 
-  public function setTranslationManager(TranslationInterface $translation_manager) {
-    $this->translationManager = $translation_manager;
+  public function setStringTranslation(TranslationInterface $string_translation) {
+    $this->stringTranslation = $string_translation;
   }
 
   public function setLinkGenerator(LinkGeneratorInterface $link_generator) {

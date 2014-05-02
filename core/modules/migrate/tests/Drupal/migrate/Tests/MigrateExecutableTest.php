@@ -67,7 +67,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $this->message = $this->getMock('Drupal\migrate\MigrateMessageInterface');
 
     $this->executable = new TestMigrateExecutable($this->migration, $this->message);
-    $this->executable->setTranslationManager($this->getStringTranslationStub());
+    $this->executable->setStringTranslation($this->getStringTranslationStub());
     $this->executable->setTimeThreshold(0.1);
     $this->executable->limit = array('unit' => 'second', 'value' => 1);
   }

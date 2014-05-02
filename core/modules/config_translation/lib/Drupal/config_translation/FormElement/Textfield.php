@@ -8,11 +8,13 @@
 namespace Drupal\config_translation\FormElement;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines the textfield element for the configuration translation interface.
  */
-class Textfield extends Element {
+class Textfield implements ElementInterface {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

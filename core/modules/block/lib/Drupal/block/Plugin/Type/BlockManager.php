@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Manages discovery and instantiation of block plugins.
@@ -21,6 +22,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * @see \Drupal\block\BlockPluginInterface
  */
 class BlockManager extends DefaultPluginManager {
+  use StringTranslationTrait;
 
   /**
    * An array of all available modules and their data.
@@ -28,13 +30,6 @@ class BlockManager extends DefaultPluginManager {
    * @var array
    */
   protected $moduleData;
-
-  /**
-   * The translation manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
 
   /**
    * Constructs a new \Drupal\block\Plugin\Type\BlockManager object.
@@ -48,15 +43,15 @@ class BlockManager extends DefaultPluginManager {
    *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation) {
     parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\block\Annotation\Block');
 
     $this->alterInfo('block');
     $this->setCacheBackend($cache_backend, $language_manager, 'block_plugins');
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -92,15 +87,6 @@ class BlockManager extends DefaultPluginManager {
     }
     // Otherwise, return the machine name.
     return $module;
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager->translate($string, $args, $options);
   }
 
   /**

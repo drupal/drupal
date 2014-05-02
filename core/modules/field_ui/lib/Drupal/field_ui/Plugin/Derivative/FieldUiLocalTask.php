@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides local task definitions for all entity bundles.
  */
 class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInterface {
+  use StringTranslationTrait;
 
   /**
    * The route provider.
@@ -34,26 +36,19 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
   protected $entityManager;
 
   /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
-
-  /**
    * Creates an FieldUiLocalTask object.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
    */
-  public function __construct(RouteProviderInterface $route_provider, EntityManagerInterface $entity_manager, TranslationInterface $translation_manager) {
+  public function __construct(RouteProviderInterface $route_provider, EntityManagerInterface $entity_manager, TranslationInterface $string_translation) {
     $this->routeProvider = $route_provider;
     $this->entityManager = $entity_manager;
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -194,15 +189,6 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
         }
       }
     }
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager->translate($string, $args, $options);
   }
 
 }

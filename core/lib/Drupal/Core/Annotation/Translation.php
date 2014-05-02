@@ -8,6 +8,7 @@
 namespace Drupal\Core\Annotation;
 
 use Drupal\Component\Annotation\AnnotationBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * @defgroup plugin_translatable Translatable plugin metadata
@@ -51,6 +52,7 @@ use Drupal\Component\Annotation\AnnotationBase;
  * @ingroup plugin_translatable
  */
 class Translation extends AnnotationBase {
+  use StringTranslationTrait;
 
   /**
    * The translation of the value passed to the constructor of the class.
@@ -58,13 +60,6 @@ class Translation extends AnnotationBase {
    * @var string
    */
   protected $translation;
-
-  /**
-   * The translation manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
 
   /**
    * Constructs a new class instance.
@@ -88,7 +83,7 @@ class Translation extends AnnotationBase {
         'context' => $values['context'],
       );
     }
-    $this->translation = $this->getTranslationManager()->translate($string, $arguments, $options);
+    $this->translation = $this->t($string, $arguments, $options);
   }
 
   /**
@@ -96,20 +91,6 @@ class Translation extends AnnotationBase {
    */
   public function get() {
     return $this->translation;
-  }
-
-  /**
-   * Returns the translation manager.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslationInterface
-   *   The translation manager.
-   */
-  protected function getTranslationManager() {
-    if (!$this->translationManager) {
-      $this->translationManager = \Drupal::translation();
-    }
-
-    return $this->translationManager;
   }
 
 }

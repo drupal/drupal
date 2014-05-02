@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\field\FieldInfo;
 
@@ -21,6 +22,7 @@ use Drupal\field\FieldInfo;
  * Comment manager contains common functions to manage comment fields.
  */
 class CommentManager implements CommentManagerInterface {
+  use StringTranslationTrait;
 
   /**
    * The field info service.
@@ -51,13 +53,6 @@ class CommentManager implements CommentManagerInterface {
   protected $userConfig;
 
   /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
-
-  /**
    * The url generator service.
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
@@ -73,16 +68,16 @@ class CommentManager implements CommentManagerInterface {
    *   The entity manager service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(FieldInfo $field_info, EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $translation_manager, UrlGeneratorInterface $url_generator) {
+  public function __construct(FieldInfo $field_info, EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator) {
     $this->fieldInfo = $field_info;
     $this->entityManager = $entity_manager;
     $this->userConfig = $config_factory->get('user.settings');
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
   }
 
@@ -291,15 +286,6 @@ class CommentManager implements CommentManagerInterface {
       }
     }
     return '';
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translationManager->translate($string, $args, $options);
   }
 
 }

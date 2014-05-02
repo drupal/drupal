@@ -14,11 +14,13 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a service to handler various date related functionality.
  */
 class Date {
+  use StringTranslationTrait;
 
   /**
    * The list of loaded timezones.
@@ -181,7 +183,7 @@ class Date {
     foreach ($this->units as $key => $value) {
       $key = explode('|', $key);
       if ($interval >= $value) {
-        $output .= ($output ? ' ' : '') . $this->stringTranslation->formatPlural(floor($interval / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
+        $output .= ($output ? ' ' : '') . $this->formatPlural(floor($interval / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
         $interval %= $value;
         $granularity--;
       }
@@ -191,15 +193,6 @@ class Date {
       }
     }
     return $output ? $output : $this->t('0 sec', array(), array('langcode' => $langcode));
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->stringTranslation->translate($string, $args, $options);
   }
 
   /**

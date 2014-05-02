@@ -73,7 +73,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
 
   protected function setupContextualLinkDefault() {
     $this->contextualLinkDefault = new ContextualLinkDefault($this->config, $this->pluginId, $this->pluginDefinition);
-    $this->contextualLinkDefault->setTranslationManager($this->stringTranslation);
+    $this->contextualLinkDefault->setStringTranslation($this->stringTranslation);
   }
 
   /**

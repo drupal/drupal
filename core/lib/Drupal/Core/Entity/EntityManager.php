@@ -230,7 +230,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
       }
 
       $controller
-        ->setTranslationManager($this->translationManager)
+        ->setStringTranslation($this->translationManager)
         ->setModuleHandler($this->moduleHandler)
         ->setOperation($operation);
       $this->controllers['form'][$operation][$entity_type] = $controller;
@@ -288,8 +288,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
       if (method_exists($controller, 'setModuleHandler')) {
         $controller->setModuleHandler($this->moduleHandler);
       }
-      if (method_exists($controller, 'setTranslationManager')) {
-        $controller->setTranslationManager($this->translationManager);
+      if (method_exists($controller, 'setStringTranslation')) {
+        $controller->setStringTranslation($this->translationManager);
       }
       $this->controllers[$controller_type][$entity_type] = $controller;
     }

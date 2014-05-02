@@ -9,7 +9,6 @@ namespace Drupal\Core\Controller;
 
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Page\HtmlPageRendererInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,8 +59,6 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    * @param \Drupal\Core\ContentNegotiation $negotiation
    *   The content negotiation library to use to determine the correct response
    *   format.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
-   *   The translation manager.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
    * @param \Drupal\Core\Page\HtmlPageRendererInterface $renderer
@@ -69,8 +66,8 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    * @param \Drupal\Core\Page\HtmlFragmentRendererInterface $fragment_renderer
    *   The fragment rendering service.
    */
-  public function __construct(ContentNegotiation $negotiation, TranslationInterface $translation_manager, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer, $fragment_renderer) {
-    parent::__construct($translation_manager, $title_resolver);
+  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer, $fragment_renderer) {
+    parent::__construct($title_resolver);
     $this->negotiation = $negotiation;
     $this->htmlPageRenderer = $renderer;
     $this->fragmentRenderer = $fragment_renderer;

@@ -302,10 +302,10 @@ class SystemController extends ControllerBase {
 
     // There are two possible theme groups.
     $theme_group_titles = array(
-      'enabled' => $this->translationManager()->formatPlural(count($theme_groups['enabled']), 'Enabled theme', 'Enabled themes'),
+      'enabled' => $this->formatPlural(count($theme_groups['enabled']), 'Enabled theme', 'Enabled themes'),
     );
     if (!empty($theme_groups['disabled'])) {
-      $theme_group_titles['disabled'] = $this->translationManager()->formatPlural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
+      $theme_group_titles['disabled'] = $this->formatPlural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
     }
 
     uasort($theme_groups['enabled'], 'system_sort_themes');

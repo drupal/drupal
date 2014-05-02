@@ -11,11 +11,13 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Language\Language;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines the date format element for the configuration translation interface.
  */
-class DateFormat extends Element {
+class DateFormat implements ElementInterface {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

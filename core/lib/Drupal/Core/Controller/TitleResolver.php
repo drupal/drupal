@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Route;
  * Provides the default implementation of the title resolver interface.
  */
 class TitleResolver implements TitleResolverInterface {
+  use StringTranslationTrait;
 
   /**
    * The controller resolver.
@@ -24,23 +26,16 @@ class TitleResolver implements TitleResolverInterface {
   protected $controllerResolver;
 
   /**
-   * The translation manager.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
-
-  /**
    * Constructs a TitleResolver instance.
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, TranslationInterface $translation_manager) {
+  public function __construct(ControllerResolverInterface $controller_resolver, TranslationInterface $string_translation) {
     $this->controllerResolver = $controller_resolver;
-    $this->translationManager = $translation_manager;
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -74,7 +69,7 @@ class TitleResolver implements TitleResolverInterface {
       }
 
       // Fall back to a static string from the route.
-      $route_title = $this->translationManager->translate($title, $args, $options);
+      $route_title = $this->t($title, $args, $options);
     }
     return $route_title;
   }
