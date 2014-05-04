@@ -1,0 +1,8 @@
+id: aggregator_item.summary
+label: Summary
+status: true
+cache: true
+targetEntityType: aggregator_item
+dependencies:
+  module:
+    - aggregator
