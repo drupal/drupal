@@ -269,10 +269,6 @@ DateTime module
 E-mail module
 - Nils Destoop 'zuuperman' https://drupal.org/user/361625
 
-Edit module
-- Wim Leers 'Wim Leers' http://drupal.org/user/99777
-- Théodore Biadala 'nod_' http://drupal.org/user/598310
-
 Editor module
 - Wim Leers 'Wim Leers' http://drupal.org/user/99777
 
@@ -352,6 +348,10 @@ Path module
 
 Phone module
 - Dave Reid 'davereid' http://drupal.org/user/53892
+
+Quick Edit module
+- Wim Leers 'Wim Leers' http://drupal.org/user/99777
+- Théodore Biadala 'nod_' http://drupal.org/user/598310
 
 RDF module
 - Stéphane Corlosquet 'scor' http://drupal.org/user/52142
