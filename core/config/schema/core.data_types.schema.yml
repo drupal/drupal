@@ -194,6 +194,11 @@ route:
         - type: string
           label: 'Param'
 
+# HTML color value.
+color_hex:
+  type: string
+  label: 'Color'
+
 # Config dependencies.
 config_dependencies:
   type: mapping

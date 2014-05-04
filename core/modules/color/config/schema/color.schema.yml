@@ -1,0 +1,20 @@
+color.theme.*:
+  type: mapping
+  label: 'Color theme settings'
+  mapping:
+    palette:
+      type: sequence
+      label: 'Palette settings'
+      sequence:
+        - type: color_hex
+    logo:
+      type: path
+      label: 'Logo path'
+    stylesheets:
+      type: sequence
+      sequence:
+        - type: path
+    files:
+      type: sequence
+      sequence:
+        - type: path
