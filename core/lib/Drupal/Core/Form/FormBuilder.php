@@ -24,6 +24,7 @@ use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -64,11 +65,11 @@ class FormBuilder implements FormBuilderInterface {
   protected $urlGenerator;
 
   /**
-   * The current request.
+   * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The CSRF token generator to validate the form token.
@@ -120,17 +121,20 @@ class FormBuilder implements FormBuilderInterface {
    *   The URL generator.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
    * @param \Drupal\Core\HttpKernel $http_kernel
    *   The HTTP kernel.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, UrlGeneratorInterface $url_generator, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, UrlGeneratorInterface $url_generator, TranslationInterface $string_translation, RequestStack $request_stack, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->eventDispatcher = $event_dispatcher;
     $this->urlGenerator = $url_generator;
     $this->stringTranslation = $string_translation;
+    $this->requestStack = $request_stack;
     $this->csrfToken = $csrf_token;
     $this->httpKernel = $http_kernel;
   }
@@ -188,7 +192,8 @@ class FormBuilder implements FormBuilderInterface {
     $form_id = $this->getFormId($form_id, $form_state);
 
     if (!isset($form_state['input'])) {
-      $form_state['input'] = $form_state['method'] == 'get' ? $this->request->query->all() : $this->request->request->all();
+      $request = $this->requestStack->getCurrentRequest();
+      $form_state['input'] = $form_state['method'] == 'get' ? $request->query->all() : $request->request->all();
     }
 
     if (isset($_SESSION['batch_form_state'])) {
@@ -811,8 +816,9 @@ class FormBuilder implements FormBuilderInterface {
     // matches the current user's session.
     if (isset($form['#token'])) {
       if (!$this->csrfToken->validate($form_state['values']['form_token'], $form['#token'])) {
-        $path = $this->request->attributes->get('_system_path');
-        $query = UrlHelper::filterQueryParameters($this->request->query->all());
+        $request = $this->requestStack->getCurrentRequest();
+        $path = $request->attributes->get('_system_path');
+        $query = UrlHelper::filterQueryParameters($request->query->all());
         $url = $this->urlGenerator->generateFromPath($path, array('query' => $query));
 
         // Setting this error will cause the form to fail validation.
@@ -957,8 +963,9 @@ class FormBuilder implements FormBuilderInterface {
           }
         }
       }
-      $url = $this->urlGenerator->generateFromPath($this->request->attributes->get('_system_path'), array(
-        'query' => $this->request->query->all(),
+      $request = $this->requestStack->getCurrentRequest();
+      $url = $this->urlGenerator->generateFromPath($request->attributes->get('_system_path'), array(
+        'query' => $request->query->all(),
         'absolute' => TRUE,
       ));
       return new RedirectResponse($url);
@@ -1226,7 +1233,8 @@ class FormBuilder implements FormBuilderInterface {
       }
       if ($record) {
         $form_state['errors'][$name] = $message;
-        $this->request->attributes->set('_form_errors', TRUE);
+        $request = $this->requestStack->getCurrentRequest();
+        $request->attributes->set('_form_errors', TRUE);
         if ($message) {
           $this->drupalSetMessage($message, 'error');
         }
@@ -1241,7 +1249,8 @@ class FormBuilder implements FormBuilderInterface {
    */
   public function clearErrors(array &$form_state) {
     $form_state['errors'] = array();
-    $this->request->attributes->set('_form_errors', FALSE);
+    $request = $this->requestStack->getCurrentRequest();
+    $request->attributes->set('_form_errors', FALSE);
   }
 
   /**
@@ -1255,7 +1264,8 @@ class FormBuilder implements FormBuilderInterface {
    * {@inheritdoc}
    */
   public function getAnyErrors() {
-    return (bool) $this->request->attributes->get('_form_errors');
+    $request = $this->requestStack->getCurrentRequest();
+    return (bool) $request->attributes->get('_form_errors');
   }
 
   /**
@@ -1721,14 +1731,15 @@ class FormBuilder implements FormBuilderInterface {
    *   A response object.
    */
   protected function sendResponse(Response $response) {
-    $event = new FilterResponseEvent($this->httpKernel, $this->request, HttpKernelInterface::MASTER_REQUEST, $response);
+    $request = $this->requestStack->getCurrentRequest();
+    $event = new FilterResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
 
     $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
     // Prepare and send the response.
     $event->getResponse()
-      ->prepare($this->request)
+      ->prepare($request)
       ->send();
-    $this->httpKernel->terminate($this->request, $response);
+    $this->httpKernel->terminate($request, $response);
   }
 
   /**
@@ -1806,13 +1817,6 @@ class FormBuilder implements FormBuilderInterface {
       }
     }
     return $this->currentUser;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setRequest(Request $request) {
-    $this->request = $request;
   }
 
   /**

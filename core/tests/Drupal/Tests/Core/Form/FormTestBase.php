@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -142,8 +143,9 @@ abstract class FormTestBase extends UnitTestCase {
    * Sets up a new form builder object to test.
    */
   protected function setupFormBuilder() {
-    $this->formBuilder = new TestFormBuilder($this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->urlGenerator, $this->translationManager, $this->csrfToken, $this->httpKernel);
-    $this->formBuilder->setRequest($this->request);
+    $request_stack = new RequestStack();
+    $request_stack->push($this->request);
+    $this->formBuilder = new TestFormBuilder($this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->urlGenerator, $this->translationManager, $request_stack, $this->csrfToken, $this->httpKernel);
     $this->formBuilder->setCurrentUser($this->account);
   }
 

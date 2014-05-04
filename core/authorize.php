@@ -62,6 +62,7 @@ require_once __DIR__ . '/includes/ajax.inc';
 // Prepare a minimal bootstrap.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
 $request = \Drupal::request();
+\Drupal::service('request_stack')->push($request);
 
 // We have to enable the user and system modules, even to check access and
 // display errors via the maintenance theme.

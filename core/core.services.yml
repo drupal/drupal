@@ -122,9 +122,7 @@ services:
     arguments: [default]
   form_builder:
     class: Drupal\Core\Form\FormBuilder
-    arguments: ['@module_handler', '@keyvalue.expirable', '@event_dispatcher', '@url_generator', '@string_translation', '@?csrf_token', '@?http_kernel']
-    calls:
-      - [setRequest, ['@?request=']]
+    arguments: ['@module_handler', '@keyvalue.expirable', '@event_dispatcher', '@url_generator', '@string_translation', '@request_stack', '@?csrf_token', '@?http_kernel']
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
     arguments: ['@service_container', '@settings']

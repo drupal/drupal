@@ -36,10 +36,7 @@ class UserController extends ControllerBase {
       $response = $this->redirect('user.view', array('user' => $user->id()));
     }
     else {
-      // Sets the proper request.
-      // @todo Remove when the request object is synchronized.
       $form_builder = $this->formBuilder();
-      $form_builder->setRequest($request);
       $response = $form_builder->getForm('Drupal\user\Form\UserLoginForm');
     }
     return $response;

@@ -635,12 +635,4 @@ interface FormBuilderInterface extends FormErrorInterface {
    */
   public function flattenOptions(array $array);
 
-  /**
-   * Sets the request object to use.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function setRequest(Request $request);
-
 }
