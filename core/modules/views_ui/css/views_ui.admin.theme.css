@@ -474,6 +474,11 @@ td.group-title {
   border-top: 0;
 }
 
+.views-displays .tabs.secondary li.tabs__tab:hover {
+  border: 0;
+  padding-left: 0;
+}
+
 .views-displays .tabs.secondary a {
   border: 1px solid #cbcbcb;
   border-radius: 7px;
