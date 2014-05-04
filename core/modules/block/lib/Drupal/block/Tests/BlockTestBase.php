@@ -47,7 +47,6 @@ abstract class BlockTestBase extends WebTestBase {
       'name' => 'Full HTML',
     ));
     $full_html_format->save();
-    $this->checkPermissions(array(), TRUE);
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.

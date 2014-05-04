@@ -61,8 +61,6 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     content_translation_set_config('comment', 'node__comment_article', 'enabled', TRUE);
     // Refresh entity info.
     entity_info_cache_clear();
-    // Flush the permissions after adding the translatable comment bundle.
-    $this->checkPermissions(array(), TRUE);
   }
 
   /**

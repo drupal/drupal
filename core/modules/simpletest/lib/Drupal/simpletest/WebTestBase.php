@@ -335,10 +335,6 @@ abstract class WebTestBase extends TestBase {
 
     $this->assertEqual($status, SAVED_NEW, String::format('Created content type %type.', array('%type' => $type->id())));
 
-    // Reset permissions so that permissions for this content type are
-    // available.
-    $this->checkPermissions(array(), TRUE);
-
     return $type;
   }
 
@@ -663,23 +659,16 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Check to make sure that the array of permissions are valid.
+   * Checks whether a given list of permission names is valid.
    *
-   * @param $permissions
-   *   Permissions to check.
-   * @param $reset
-   *   Reset cached available permissions.
+   * @param array $permissions
+   *   The permission names to check.
    *
-   * @return
-   *   TRUE or FALSE depending on whether the permissions are valid.
+   * @return bool
+   *   TRUE if the permissions are valid, FALSE otherwise.
    */
-  protected function checkPermissions(array $permissions, $reset = FALSE) {
-    $available = &drupal_static(__FUNCTION__);
-
-    if (!isset($available) || $reset) {
-      $available = array_keys(\Drupal::moduleHandler()->invokeAll('permission'));
-    }
-
+  protected function checkPermissions(array $permissions) {
+    $available = array_keys(\Drupal::moduleHandler()->invokeAll('permission'));
     $valid = TRUE;
     foreach ($permissions as $permission) {
       if (!in_array($permission, $available)) {
@@ -1132,7 +1121,6 @@ abstract class WebTestBase extends TestBase {
 
     // Reset static variables and reload permissions.
     $this->refreshVariables();
-    $this->checkPermissions(array(), TRUE);
   }
 
   /**

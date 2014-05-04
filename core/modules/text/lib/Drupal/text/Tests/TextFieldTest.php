@@ -226,7 +226,6 @@ class TextFieldTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     filter_formats_reset();
-    $this->checkPermissions(array(), TRUE);
     $format = entity_load('filter_format', $edit['format']);
     $format_id = $format->format;
     $permission = $format->getPermissionName();

@@ -55,7 +55,6 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     $filtered_html_format->save();
 
     // Setup users.
-    $this->checkPermissions(array(), TRUE);
     $this->web_user = $this->drupalCreateUser(array(
       'access content',
       'access comments',

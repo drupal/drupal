@@ -64,7 +64,6 @@ abstract class ViewTestBase extends WebTestBase {
       $query->values($record);
     }
     $query->execute();
-    $this->checkPermissions(array(), TRUE);
   }
 
   /**

@@ -27,9 +27,6 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     // Vocabulary used for creating, removing and editing terms.
     $vocabulary = $this->createVocabulary();
 
-    // Reset to permission static cache to get proper permissions.
-    $this->checkPermissions(array(), TRUE);
-
     // Test as admin user.
     $user = $this->drupalCreateUser(array('administer taxonomy'));
     $this->drupalLogin($user);

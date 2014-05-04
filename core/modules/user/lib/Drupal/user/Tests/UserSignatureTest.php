@@ -64,7 +64,6 @@ class UserSignatureTest extends WebTestBase {
     $this->full_html_format->save();
 
     user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array($this->filtered_html_format->getPermissionName()));
-    $this->checkPermissions(array(), TRUE);
 
     // Create regular and administrative users.
     $this->web_user = $this->drupalCreateUser(array('post comments'));
