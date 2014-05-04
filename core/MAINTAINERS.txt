@@ -92,6 +92,11 @@ Entity system
 Extension system
 - ?
 
+Field system
+- Yves Chedemois 'yched' http://drupal.org/user/39567
+- Kristof De Jaeger 'swentel' http://drupal.org/user/107403
+- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
+
 File system
 - Andrew Morton 'drewish' http://drupal.org/user/34869
 - Aaron Winborn 'aaron' http://drupal.org/user/33420
@@ -287,11 +292,6 @@ Entity module
 
 Entity Reference module
 - Amitai Burstein 'Amitaibu' http://drupal.org/user/57511
-- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
-
-Field module
-- Yves Chedemois 'yched' http://drupal.org/user/39567
-- Kristof De Jaeger 'swentel' http://drupal.org/user/107403
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 
 Field UI module
