@@ -108,6 +108,8 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
       $old_id = ConfigEntityStorage::getIDFromConfigName($names['old_name'], $entity_type->getConfigPrefix());
       $new_id = ConfigEntityStorage::getIDFromConfigName($names['new_name'], $entity_type->getConfigPrefix());
 
+      // Because table columns can be on multiple lines, need to assert a regex
+      // pattern rather than normal text.
       $id_key = $entity_type->getKey('id');
       $text = "$id_key: $old_id";
       $this->assertTextPattern('/\-\s+' . preg_quote($text, '/') . '/', "'-$text' found.");
