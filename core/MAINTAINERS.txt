@@ -205,7 +205,7 @@ Security team
 
 To report a security issue, see: https://drupal.org/security-team/report-issue
 
-The Drupal security team provives Security Advisories for vulnerabilities,
+The Drupal security team provides Security Advisories for vulnerabilities,
 assists developers in resolving security issues, and provides security
 documentation. See http://drupal.org/security-team for more information. The
 security team lead is:
