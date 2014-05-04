@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Installer\InstallerTranslationTest.
+ * Contains \Drupal\system\Tests\Installer\InstallerLanguageDirectionTest.
  */
 
 namespace Drupal\system\Tests\Installer;
@@ -10,34 +10,37 @@ namespace Drupal\system\Tests\Installer;
 use Drupal\simpletest\InstallerTestBase;
 
 /**
- * Tests the installer translation detection.
+ * Tests the installer switches to RTL when installing in a RTL language.
  */
-class InstallerTranslationTest extends InstallerTestBase {
+class InstallerLanguageDirectionTest extends InstallerTestBase {
 
   /**
-   * Overrides the language code in which to install Drupal.
+   * Overrides the language code the installer should use.
    *
    * @var string
    */
-  protected $langcode = 'de';
+  protected $langcode = 'ar';
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
-      'name' => 'Installer translation test',
-      'description' => 'Selects German as the installation language and verifies the following page is not in English.',
+      'name' => 'Installer language direction test',
+      'description' => 'Verifies that the early installer uses the correct language direction.',
       'group' => 'Installer',
     );
   }
 
   /**
-   * Overrides InstallerTest::setUpLanguage().
+   * {@inheritdoc}
    */
   protected function setUpLanguage() {
     parent::setUpLanguage();
     // After selecting a different language than English, all following screens
     // should be translated already.
     // @todo Instead of actually downloading random translations that cannot be
-    //   asserted, write and supply a German translation file. Until then, take
+    //   asserted, write and supply a translation file. Until then, take
     //   over whichever string happens to be there, but ensure that the English
     //   string no longer appears.
     $elements = $this->xpath('//input[@type="submit"]/@value');
@@ -45,20 +48,16 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->assertNotEqual($string, 'Save and continue');
     $this->translations['Save and continue'] = $string;
 
-    // Check the language direction.
+    // Verify that language direction is right-to-left.
     $direction = (string) current($this->xpath('/html/@dir'));
-    $this->assertEqual($direction, 'ltr');
+    $this->assertEqual($direction, 'rtl');
   }
 
   /**
-   * Verifies that installation succeeded.
+   * Confirms that the installation succeeded.
    */
-  public function testInstaller() {
+  public function testInstalled() {
     $this->assertUrl('user/1');
-    $this->assertResponse(200);
-
-    // Ensure that we can enable basic_auth on a non-english site.
-    $this->drupalPostForm('admin/modules', array('modules[Web services][basic_auth][enable]' => TRUE), t('Save configuration'));
     $this->assertResponse(200);
   }
 
