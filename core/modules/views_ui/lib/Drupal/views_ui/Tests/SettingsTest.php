@@ -37,6 +37,10 @@ class SettingsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertLinkByHref('admin/structure/views/settings');
 
+    // Test the confirmation message.
+    $this->drupalPostForm('admin/structure/views/settings', array(), t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'));
+
     // Configure to always show the master display.
     $edit = array(
       'ui_show_master_display' => TRUE,
@@ -117,6 +121,27 @@ class SettingsTest extends UITestBase {
     $this->assertEqual(count($xpath), 1, 'The views sql is shown.');
     $this->assertFalse(strpos($xpath[0], 'db_condition_placeholder') !== FALSE, 'No placeholders are shown in the views sql.');
     $this->assertTrue(strpos($xpath[0], "node_field_data.status = '1'") !== FALSE, 'The placeholders in the views sql is replace by the actual value.');
+
+    // Test the advanced settings form.
+
+    // Test the confirmation message.
+    $this->drupalPostForm('admin/structure/views/settings/advanced', array(), t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'));
+
+    $edit = array(
+      'skip_cache' => TRUE,
+      'sql_signature' => TRUE,
+      'no_javascript' => TRUE,
+    );
+    $this->drupalPostForm('admin/structure/views/settings/advanced', $edit, t('Save configuration'));
+
+    $this->assertFieldChecked('edit-skip-cache', 'The skip_cache option is checked.');
+    $this->assertFieldChecked('edit-sql-signature', 'The sql_signature option is checked.');
+    $this->assertFieldChecked('edit-no-javascript', 'The no_javascript option is checked.');
+
+    // Test the "Clear Views' cache" button.
+    $this->drupalPostForm('admin/structure/views/settings/advanced', array(), t("Clear Views' cache"));
+    $this->assertText(t('The cache has been cleared.'));
   }
 
 }

@@ -139,6 +139,8 @@ class BasicSettingsForm extends ConfigFormBase {
       ->set('ui.show.performance_statistics', $form_state['values']['ui_show_performance_statistics'])
       ->set('ui.show.additional_queries', $form_state['values']['ui_show_additional_queries'])
       ->save();
+
+    parent::submitForm($form, $form_state);
   }
 
 }

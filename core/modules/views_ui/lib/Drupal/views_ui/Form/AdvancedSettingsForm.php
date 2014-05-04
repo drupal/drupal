@@ -97,6 +97,8 @@ class AdvancedSettingsForm extends ConfigFormBase {
       ->set('no_javascript', $form_state['values']['no_javascript'])
       ->set('display_extenders', isset($form_state['values']['display_extenders']) ? $form_state['values']['display_extenders'] : array())
       ->save();
+
+    parent::submitForm($form, $form_state);
   }
 
   /**
