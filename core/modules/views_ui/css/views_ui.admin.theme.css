@@ -470,6 +470,10 @@ td.group-title {
   margin: 0 5px 0 6px;
 }
 
+.views-displays .tabs.secondary .tabs__tab + .tabs__tab {
+  border-top: 0;
+}
+
 .views-displays .tabs.secondary a {
   border: 1px solid #cbcbcb;
   border-radius: 7px;
