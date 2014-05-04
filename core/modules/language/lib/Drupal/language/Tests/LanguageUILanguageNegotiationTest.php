@@ -32,7 +32,7 @@ use Drupal\language\LanguageNegotiatorInterface;
  * 2. URL (PATH) > BROWSER > DEFAULT
  *        admin/config
  *          UI in user's browser language preference if the site has that
- *          language enabled, if not, the default language
+ *          language added, if not, the default language
  *        zh-hans/admin/config
  *          UI in Chinese
  *        blah-blah/admin/config

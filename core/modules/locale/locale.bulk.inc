@@ -45,7 +45,7 @@ function locale_translate_batch_import_files($options, $force = FALSE) {
   }
   else {
     // If langcode was not provided, make sure to only import files for the
-    // languages we have enabled.
+    // languages we have added.
     $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
   }
 

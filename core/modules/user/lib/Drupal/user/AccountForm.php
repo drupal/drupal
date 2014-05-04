@@ -237,11 +237,11 @@ abstract class AccountForm extends ContentEntityForm {
 
     $user_preferred_admin_langcode = $register ? $language_interface->id : $account->getPreferredAdminLangcode();
 
-    // Is the user preferred language enabled?
-    $user_language_enabled = FALSE;
+    // Is the user preferred language added?
+    $user_language_added = FALSE;
     if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
       $negotiator = $this->languageManager->getNegotiator();
-      $user_language_enabled = $negotiator && $negotiator->isNegotiationMethodEnabled(LanguageNegotiationUser::METHOD_ID, Language::TYPE_INTERFACE);
+      $user_language_added = $negotiator && $negotiator->isNegotiationMethodEnabled(LanguageNegotiationUser::METHOD_ID, Language::TYPE_INTERFACE);
     }
     $form['language'] = array(
       '#type' => $this->languageManager->isMultilingual() ? 'details' : 'container',
@@ -257,7 +257,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#title' => $this->t('Site language'),
       '#languages' => Language::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_langcode,
-      '#description' => $user_language_enabled ? $this->t("This account's preferred language for e-mails and site presentation.") : $this->t("This account's preferred language for e-mails."),
+      '#description' => $user_language_added ? $this->t("This account's preferred language for e-mails and site presentation.") : $this->t("This account's preferred language for e-mails."),
     );
 
     // Only show the account setting for Administration pages language to users

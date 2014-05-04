@@ -41,7 +41,7 @@ class LocalePluralFormatTest extends WebTestBase {
    */
   function testGetPluralFormat() {
     // Import some .po files with formulas to set up the environment.
-    // These will also add the languages to the system and enable them.
+    // These will also add the languages to the system.
     $this->importPoFile($this->getPoFileWithSimplePlural(), array(
       'langcode' => 'fr',
     ));
@@ -142,7 +142,7 @@ class LocalePluralFormatTest extends WebTestBase {
    */
   function testPluralEditExport() {
     // Import some .po files with formulas to set up the environment.
-    // These will also add the languages to the system and enable them.
+    // These will also add the languages to the system.
     $this->importPoFile($this->getPoFileWithSimplePlural(), array(
       'langcode' => 'fr',
     ));

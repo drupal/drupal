@@ -60,7 +60,7 @@ function language_help($path, $arg) {
     case 'admin/structure/block/manage/%':
     case 'admin/structure/block/add/%/%':
       if ($arg[4] == 'language' && $arg[5] == 'language_interface') {
-        return '<p>' . t('With multiple languages enabled, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
+        return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;
 

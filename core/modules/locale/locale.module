@@ -4,7 +4,7 @@
  * @file
  * Enables the translation of the user interface to languages other than English.
  *
- * When enabled, multiple languages can be set up. The site interface can be
+ * When enabled, multiple languages can be added. The site interface can be
  * displayed in different languages, and nodes can have languages assigned. The
  * setup of languages and translations is completely web based. Gettext portable
  * object files are supported.

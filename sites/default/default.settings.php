@@ -491,7 +491,7 @@ $settings['update_free_access'] = FALSE;
  * Remove the leading hash signs to enable.
  *
  * The "en" part of the variable name, is dynamic and can be any langcode of
- * any enabled language. (eg locale_custom_strings_de for german).
+ * any added language. (eg locale_custom_strings_de for german).
  */
 # $settings['locale_custom_strings_en'][''] = array(
 #   'forum'      => 'Discussion board',

@@ -101,7 +101,7 @@ class ViewEditTest extends UITestBase {
     $langcode_url = 'admin/structure/views/nojs/display/test_view/default/field_langcode';
     $this->assertLinkByHref($langcode_url);
     $this->assertLink(t("Current user's language"));
-    // Click the link and check the form before language is enabled.
+    // Click the link and check the form before language is added.
     $this->drupalGet($langcode_url);
     $this->assertResponse(200);
     $this->assertText(t("You don't have translatable entity types."));

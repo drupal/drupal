@@ -61,7 +61,7 @@ class NodeListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    // Enable language column and filter if multiple languages are enabled.
+    // Enable language column and filter if multiple languages are added.
     $header = array(
       'title' => $this->t('Title'),
       'type' => array(

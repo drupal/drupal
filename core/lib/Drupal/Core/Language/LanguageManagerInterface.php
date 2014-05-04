@@ -28,10 +28,10 @@ interface LanguageManagerInterface {
   public function init();
 
   /**
-   * Returns whether or not the site has more than one language enabled.
+   * Returns whether or not the site has more than one language added.
    *
    * @return bool
-   *   TRUE if more than one language is enabled, FALSE otherwise.
+   *   TRUE if more than one language is added, FALSE otherwise.
    */
   public function isMultilingual();
 

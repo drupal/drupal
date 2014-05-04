@@ -130,21 +130,21 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
 
     // Check that every translation has the correct "outdated" status.
-    foreach ($this->langcodes as $enabled_langcode) {
-      $prefix = $enabled_langcode != $default_langcode ? $enabled_langcode . '/' : '';
+    foreach ($this->langcodes as $added_langcode) {
+      $prefix = $added_langcode != $default_langcode ? $added_langcode . '/' : '';
       $path = $prefix . $edit_path;
       $this->drupalGet($path);
-      if ($enabled_langcode == $langcode) {
+      if ($added_langcode == $langcode) {
         $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is not checked by default.');
       }
       else {
         $this->assertFieldByXPath('//input[@name="content_translation[outdated]"]', TRUE, 'The translate flag is checked by default.');
         $edit = array('content_translation[outdated]' => FALSE);
-        $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $enabled_langcode));
+        $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity, $added_langcode));
         $this->drupalGet($path);
         $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is now shown.');
         $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
-        $this->assertFalse($entity->translation[$enabled_langcode]['outdated'], 'The "outdated" status has been correctly stored.');
+        $this->assertFalse($entity->translation[$added_langcode]['outdated'], 'The "outdated" status has been correctly stored.');
       }
     }
   }

@@ -50,7 +50,7 @@ class LocaleExportTest extends WebTestBase {
    */
   function testExportTranslation() {
     // First import some known translations.
-    // This will also automatically enable the 'fr' language.
+    // This will also automatically add the 'fr' language.
     $name = tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $this->getPoFile());
     $this->drupalPostForm('admin/config/regional/translate/import', array(

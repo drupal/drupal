@@ -59,7 +59,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
           $path_args = explode('/', $request_path);
           $prefix = array_shift($path_args);
 
-          // Search prefix within enabled languages.
+          // Search prefix within added languages.
           $negotiated_language = FALSE;
           foreach ($languages as $language) {
             if (isset($config['prefixes'][$language->id]) && $config['prefixes'][$language->id] == $prefix) {
@@ -104,7 +104,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
     $parts = explode('/', $path);
     $prefix = array_shift($parts);
 
-    // Search prefix within enabled languages.
+    // Search prefix within added languages.
     foreach ($this->languageManager->getLanguages() as $language) {
       if (isset($config['prefixes'][$language->id]) && $config['prefixes'][$language->id] == $prefix) {
         // Rebuild $path with the language removed.
@@ -132,7 +132,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
       $language_url = $this->languageManager->getCurrentLanguage(Language::TYPE_URL);
       $options['language'] = $language_url;
     }
-    // We allow only enabled languages here.
+    // We allow only added languages here.
     elseif (!is_object($options['language']) || !isset($languages[$options['language']->id])) {
       return $path;
     }

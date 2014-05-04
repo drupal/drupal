@@ -106,7 +106,7 @@ class UserAgent {
       }
     }
 
-    // Find the enabled language with the greatest qvalue, following the rules
+    // Find the added language with the greatest qvalue, following the rules
     // of RFC 2616 (section 14.4). If several languages have the same qvalue,
     // prefer the one with the greatest weight.
     $best_match_langcode = FALSE;

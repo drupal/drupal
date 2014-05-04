@@ -342,7 +342,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   }
 
   /**
-   * Tests automatic translation import when a langauge is enabled.
+   * Tests automatic translation import when a langauge is added.
    *
    * When a language is added, the system will check for translations files of
    * enabled modules and will import them. When a language is removed the system
@@ -390,7 +390,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   }
 
   /**
-   * Tests automatic translation import when a custom langauge is enabled.
+   * Tests automatic translation import when a custom langauge is added.
    */
   function testEnableCustomLanguage() {
     // Make the hidden test modules look like a normal custom module.
@@ -402,7 +402,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     );
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
 
-    // Create and enable a custom language with language code 'xx' and a random
+    // Create a custom language with language code 'xx' and a random
     // name.
     $langcode = 'xx';
     $name = $this->randomName(16);

@@ -33,7 +33,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
   public static $testViews = array('test_entity_row_renderers');
 
   /**
-   * An array of enabled languages.
+   * An array of added languages.
    *
    * @var array
    */

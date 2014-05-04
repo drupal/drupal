@@ -38,7 +38,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
   protected $bundle;
 
   /**
-   * The enabled languages.
+   * The added languages.
    *
    * @var array
    */
@@ -96,7 +96,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
   }
 
   /**
-   * Enables additional languages.
+   * Adds additional languages.
    */
   protected function setupLanguages() {
     $this->langcodes = array('it', 'fr');

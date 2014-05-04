@@ -25,7 +25,7 @@ class SearchLanguageTest extends SearchTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Search language selection',
-      'description' => 'Tests advanced search with different languages enabled.',
+      'description' => 'Tests advanced search with different languages added.',
       'group' => 'Search',
     );
   }

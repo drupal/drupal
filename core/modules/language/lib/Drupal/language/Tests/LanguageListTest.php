@@ -126,7 +126,7 @@ class LanguageListTest extends WebTestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
     // We need raw here because %language and %langcode will add HTML.
     $t_args = array('%language' => 'French', '%langcode' => 'fr');
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), 'Disabled language has been removed.');
+    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), 'The French language has been removed.');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
     // Verify that language is no longer found.
     $this->drupalGet('admin/config/regional/language/delete/fr');
