@@ -118,6 +118,7 @@ class ColorTest extends WebTestBase {
     $this->drupalLogin($this->big_user);
     $this->drupalGet($settings_path);
     $this->assertResponse(200);
+    $this->assertUniqueText('Color set');
     $edit['scheme'] = '';
     $edit[$test_values['palette_input']] = '#123456';
     $this->drupalPostForm($settings_path, $edit, t('Save configuration'));

@@ -20,7 +20,7 @@
   <div id="palette" class="clearfix">
     {{ form.palette }}
   </div>
-  {{ form }}
+  {{ form|without('scheme', 'palette') }}
   <h2>{{ 'Preview'|t }}</h2>
   {{ html_preview }}
 </div>
