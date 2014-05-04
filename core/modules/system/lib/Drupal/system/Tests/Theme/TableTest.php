@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -41,10 +42,10 @@ class TableTest extends DrupalUnitTestBase {
       '#rows' => $rows,
       '#sticky' => TRUE,
     );
-    $this->content = drupal_render($table);
+    $this->render($table);
     $js = _drupal_add_js();
-    $this->assertTrue(isset($js['core/misc/tableheader.js']), 'tableheader.js was included when $sticky = TRUE.');
-    $this->assertRaw('sticky-enabled',  'Table has a class of sticky-enabled when $sticky = TRUE.');
+    $this->assertTrue(isset($js['core/misc/tableheader.js']), 'tableheader.js found.');
+    $this->assertRaw('sticky-enabled');
     drupal_static_reset('_drupal_add_js');
   }
 
@@ -66,10 +67,10 @@ class TableTest extends DrupalUnitTestBase {
       '#colgroups' => $colgroups,
       '#sticky' => FALSE,
     );
-    $this->content = drupal_render($table);
+    $this->render($table);
     $js = _drupal_add_js();
-    $this->assertFalse(isset($js['core/misc/tableheader.js']), 'tableheader.js was not included because $sticky = FALSE.');
-    $this->assertNoRaw('sticky-enabled',  'Table does not have a class of sticky-enabled because $sticky = FALSE.');
+    $this->assertFalse(isset($js['core/misc/tableheader.js']), 'tableheader.js not found.');
+    $this->assertNoRaw('sticky-enabled');
     drupal_static_reset('_drupal_add_js');
   }
 
@@ -79,9 +80,9 @@ class TableTest extends DrupalUnitTestBase {
    */
   function testThemeTableWithEmptyMessage() {
     $header = array(
-      t('Header 1'),
+      'Header 1',
       array(
-        'data' => t('Header 2'),
+        'data' => 'Header 2',
         'colspan' => 2,
       ),
     );
@@ -89,11 +90,12 @@ class TableTest extends DrupalUnitTestBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => array(),
-      '#empty' => t('No strings available.'),
+      '#empty' => 'Empty row.',
     );
-    $this->content = drupal_render($table);
-    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">No strings available.</td>', 'Correct colspan was set on empty message.');
-    $this->assertRaw('<thead><tr><th>Header 1</th>', 'Table header was printed.');
+    $this->render($table);
+    $this->removeWhiteSpace();
+    $this->assertRaw('<thead><tr><th>Header 1</th><th colspan="2">Header 2</th></tr>', 'Table header found.');
+    $this->assertRaw('<tr class="odd"><td colspan="3" class="empty message">Empty row.</td>', 'Colspan on #empty row found.');
   }
 
   /**
@@ -110,7 +112,7 @@ class TableTest extends DrupalUnitTestBase {
       '#type' => 'table',
       '#rows' => $rows,
     );
-    $this->content = drupal_render($table);
+    $this->render($table);
     $this->assertNoRaw('class="odd"', 'Odd/even classes were not added because $no_striping = TRUE.');
     $this->assertNoRaw('no_striping', 'No invalid no_striping HTML attribute was printed.');
   }
@@ -130,8 +132,30 @@ class TableTest extends DrupalUnitTestBase {
       '#type' => 'table',
       '#rows' => $rows,
     );
-    $this->content = drupal_render($table);
+    $this->render($table);
+    $this->removeWhiteSpace();
     $this->assertRaw('<th>1</th><td>1</td><td>1</td>', 'The th and td tags was printed correctly.');
+  }
+
+  /**
+   * Renders a given render array.
+   *
+   * @param array $elements
+   *   The render array elements to render.
+   *
+   * @return string
+   *   The rendered HTML.
+   */
+  protected function render(array $elements) {
+    $this->content = drupal_render($elements);
+    $this->verbose('<pre>' . String::checkPlain($this->content));
+  }
+
+  /**
+   * Removes all white-space between HTML tags from $this->content.
+   */
+  protected function removeWhiteSpace() {
+    $this->content = preg_replace('@>\s+<@', '><', $this->content);
   }
 
   /**

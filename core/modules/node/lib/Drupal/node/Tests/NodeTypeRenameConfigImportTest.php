@@ -9,6 +9,7 @@ namespace Drupal\node\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -106,8 +107,12 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
       $entity_type = \Drupal::entityManager()->getDefinition($config_entity_type);
       $old_id = ConfigEntityStorage::getIDFromConfigName($names['old_name'], $entity_type->getConfigPrefix());
       $new_id = ConfigEntityStorage::getIDFromConfigName($names['new_name'], $entity_type->getConfigPrefix());
-      $this->assertText('-' . $entity_type->getKey('id') . ': ' . $old_id);
-      $this->assertText('+' . $entity_type->getKey('id') . ': ' . $new_id);
+
+      $id_key = $entity_type->getKey('id');
+      $text = "$id_key: $old_id";
+      $this->assertTextPattern('/\-\s+' . preg_quote($text, '/') . '/', "'-$text' found.");
+      $text = "$id_key: $new_id";
+      $this->assertTextPattern('/\+\s+' . preg_quote($text, '/') . '/', "'+$text' found.");
     }
 
     // Run the import.
@@ -117,6 +122,29 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $this->assertFalse(entity_load('node_type', $active_type), 'The content no longer exists with the old name.');
     $content_type = entity_load('node_type', $staged_type);
     $this->assertIdentical($staged_type, $content_type->type);
+  }
+
+  /**
+   * Asserts that a Perl regex pattern is found in the text content.
+   *
+   * @param string $pattern
+   *   Perl regex to look for including the regex delimiters.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
+   *
+   * @return bool
+   *   TRUE on pass, FALSE on failure.
+   */
+  protected function assertTextPattern($pattern, $message = NULL) {
+    // @see WebTestBase::assertTextHelper()
+    if ($this->plainTextContent === FALSE) {
+      $this->plainTextContent = Xss::filter($this->drupalGetContent(), array());
+    }
+    // @see WebTestBase::assertPattern()
+    if (!$message) {
+      $message = String::format('Pattern "@pattern" found', array('@pattern' => $pattern));
+    }
+    return $this->assert((bool) preg_match($pattern, $this->plainTextContent), $message);
   }
 
 }
