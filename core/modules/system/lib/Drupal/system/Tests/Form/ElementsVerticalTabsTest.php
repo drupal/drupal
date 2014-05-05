@@ -43,6 +43,11 @@ class ElementsVerticalTabsTest extends WebTestBase {
    * Otherwise, collapse.js adds "SHOW" or "HIDE" labels to the tabs.
    */
   function testJavaScriptOrdering() {
+    // Turn off JS aggregation.
+    \Drupal::config('system.performance')
+      ->set('js.preprocess', FALSE)
+      ->save();
+
     $this->drupalGet('form_test/vertical-tabs');
     $position1 = strpos($this->content, 'core/misc/vertical-tabs.js');
     $position2 = strpos($this->content, 'core/misc/collapse.js');

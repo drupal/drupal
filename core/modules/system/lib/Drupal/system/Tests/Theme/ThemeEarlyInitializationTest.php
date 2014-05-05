@@ -30,6 +30,18 @@ class ThemeEarlyInitializationTest extends WebTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Turn off CSS aggregation.
+    \Drupal::config('system.performance')
+      ->set('css.preprocess', FALSE)
+      ->save();
+  }
+
+  /**
    * Test that the theme system can generate output in a request listener.
    */
   function testRequestListener() {

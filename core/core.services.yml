@@ -27,6 +27,10 @@ services:
     arguments: ['@database']
   cache.backend.php:
     class: Drupal\Core\Cache\PhpBackendFactory
+  cache.backend.memory:
+    class: Drupal\Core\Cache\MemoryBackendFactory
+  cache.backend.null:
+    class: Drupal\Core\Cache\NullBackendFactory
   cache.bootstrap:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

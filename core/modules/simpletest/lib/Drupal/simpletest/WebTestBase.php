@@ -887,6 +887,11 @@ abstract class WebTestBase extends TestBase {
       ->set('interface.default', 'test_mail_collector')
       ->save();
 
+    // Ensure errors are displayed.
+    \Drupal::config('system.logging')
+      ->set('error_level', 'all')
+      ->save();
+
     // Restore the original Simpletest batch.
     $batch = &batch_get();
     $batch = $this->originalBatch;

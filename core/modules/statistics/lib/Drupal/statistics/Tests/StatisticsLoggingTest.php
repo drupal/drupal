@@ -72,7 +72,7 @@ class StatisticsLoggingTest extends WebTestBase {
     $path = 'node/' . $this->node->id();
     $module_path = drupal_get_path('module', 'statistics');
     $stats_path = $base_url . '/' . $module_path . '/statistics.php';
-    $expected_library = $module_path . '/statistics.js';
+    $expected_library = str_replace('/', '\/', $module_path . '/statistics.js');
     $expected_settings = '"statistics":{"data":{"nid":"' . $this->node->id() . '"}';
 
     // Verify that logging scripts are not found on a non-node page.

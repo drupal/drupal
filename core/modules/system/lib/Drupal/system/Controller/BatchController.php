@@ -88,6 +88,14 @@ class BatchController implements ContainerInjectionInterface {
       $page = element_info('page');
       $page['#show_messages'] = FALSE;
 
+      // @todo For some reason, _drupal_bootstrap_code()'s call to
+      //   file_get_stream_wrappers() to register all stream wrappers is
+      //   insufficient in the case of the no-JS version of the batch page:
+      //   checking if a needed CSS aggregate already exists in the file system
+      //   will fail unless we re-register the stream wrappers here! This may be
+      //   a PHP bug.
+      file_get_stream_wrappers();
+
       $page = $this->render($page);
 
       return $page;

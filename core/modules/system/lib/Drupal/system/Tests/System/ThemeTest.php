@@ -186,6 +186,11 @@ class ThemeTest extends WebTestBase {
   function testAdministrationTheme() {
     $this->container->get('theme_handler')->enable(array('seven'));
 
+    // Turn off CSS aggregation.
+    \Drupal::config('system.performance')
+      ->set('css.preprocess', FALSE)
+      ->save();
+
     // Enable an administration theme and show it on the node admin pages.
     $edit = array(
       'admin_theme' => 'seven',

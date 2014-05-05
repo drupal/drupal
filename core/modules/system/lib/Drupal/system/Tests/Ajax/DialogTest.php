@@ -143,12 +143,9 @@ class DialogTest extends AjaxTestBase {
     $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button1');
 
     // Check that CSS and JavaScript are "added" to the page dynamically.
-    $dialog_css_exists = strpos($ajax_result[1]['data'], 'jquery.ui.dialog.css') !== FALSE;
-    $this->assertTrue($dialog_css_exists, 'jQuery UI dialog CSS added to the page.');
-    $dialog_js_exists = strpos($ajax_result[2]['data'], 'jquery.ui.dialog.js') !== FALSE;
-    $this->assertTrue($dialog_js_exists, 'jQuery UI dialog JS added to the page.');
-    $dialog_js_exists = strpos($ajax_result[2]['data'], 'dialog.ajax.js') !== FALSE;
-    $this->assertTrue($dialog_js_exists, 'Drupal dialog JS added to the page.');
+    $this->assertTrue(in_array('jquery.ui.dialog.css', array_keys($ajax_result[0]['settings']['ajaxPageState']['css'])), 'jQuery UI dialog CSS added to the page.');
+    $this->assertTrue(in_array('core/assets/vendor/jquery.ui/ui/jquery.ui.dialog.js', array_keys($ajax_result[0]['settings']['ajaxPageState']['js'])), 'jQuery UI dialog JS added to the page.');
+    $this->assertTrue(in_array('core/misc/dialog.ajax.js', array_keys($ajax_result[0]['settings']['ajaxPageState']['js'])), 'Drupal dialog JS added to the page.');
 
     // Check that the response matches the expected value.
     $this->assertEqual($modal_expected_response, $ajax_result[3], 'POST request modal dialog JSON response matches.');
