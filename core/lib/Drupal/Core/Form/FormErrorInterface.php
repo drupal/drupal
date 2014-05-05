@@ -15,13 +15,13 @@ interface FormErrorInterface {
   /**
    * Files an error against a form element.
    *
-   * When a validation error is detected, the validator calls form_set_error()
-   * to indicate which element needs to be changed and provide an error message.
+   * When a validation error is detected, the validator calls this method to
+   * indicate which element needs to be changed and provide an error message.
    * This causes the Form API to not execute the form submit handlers, and
    * instead to re-display the form to the user with the corresponding elements
    * rendered with an 'error' CSS class (shown as red by default).
    *
-   * The standard form_set_error() behavior can be changed if a button provides
+   * The standard behavior of this method can be changed if a button provides
    * the #limit_validation_errors property. Multistep forms not wanting to
    * validate the whole form can set #limit_validation_errors on buttons to
    * limit validation errors to only certain elements. For example, pressing the
@@ -70,14 +70,16 @@ interface FormErrorInterface {
    *
    * This will require $form_state['values']['step1'] and everything within it
    * (for example, $form_state['values']['step1']['choice']) to be valid, so
-   * calls to form_set_error('step1', $form_state, $message) or
-   * form_set_error('step1][choice', $form_state, $message) will prevent the
-   * submit handlers from running, and result in the error message being
-   * displayed to the user. However, calls to
-   * form_set_error('step2', $form_state, $message) and
-   * form_set_error('step2][groupX][choiceY', $form_state, $message) will be
-   * suppressed, resulting in the message not being displayed to the user, and
-   * the submitdoCheckErrors handlers will run despite $form_state['values']['step2'] and
+   * calls to FormErrorInterface::setErrorByName('step1', $form_state, $message)
+   * or
+   * FormErrorInterface::setErrorByName('step1][choice', $form_state, $message)
+   * will prevent the submit handlers from running, and result in the error
+   * message being displayed to the user. However, calls to
+   * FormErrorInterface::setErrorByName('step2', $form_state, $message) and
+   * FormErrorInterface::setErrorByName('step2][groupX][choiceY', $form_state, $message)
+   * will be suppressed, resulting in the message not being displayed to the
+   * user, and the submit handlers will run despite
+   * $form_state['values']['step2'] and
    * $form_state['values']['step2']['groupX']['choiceY'] containing invalid
    * values. Errors for an invalid $form_state['values']['foo'] will be
    * suppressed, but errors flagging invalid values for
@@ -104,15 +106,12 @@ interface FormErrorInterface {
    *
    * @return mixed
    *   Return value is for internal use only. To get a list of errors, use
-   *   form_get_errors() or form_get_error().
-   *
-   * @see http://drupal.org/node/370537
-   * @see http://drupal.org/node/763376
+   *   FormErrorInterface::getErrors() or FormErrorInterface::getError().
    */
   public function setErrorByName($name, array &$form_state, $message = '');
 
   /**
-   * Clears all errors against all form elements made by form_set_error().
+   * Clears all errors against all form elements made by FormErrorInterface::setErrorByName().
    *
    * @param array $form_state
    *   An associative array containing the current state of the form.
