@@ -1,6 +1,9 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Improved screen reader support by adding an aria-live HTML attribute to file
+  upload fields when there is an error uploading the file (minor markup
+  change).
 - Made the pager on the Tracker module listing pages show the same number of
   items as other pagers throughout Drupal core (minor UI change).
 - Fixed a bug which caused caches not to be properly cleared when a file entity
