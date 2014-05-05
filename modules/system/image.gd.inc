@@ -56,13 +56,8 @@ function image_gd_settings_validate($form, &$form_state) {
  *   A boolean indicating if the GD toolkit is available on this machine.
  */
 function image_gd_check_settings() {
-  if ($check = get_extension_funcs('gd')) {
-    if (in_array('imagegd2', $check)) {
-      // GD2 support is available.
-      return TRUE;
-    }
-  }
-  return FALSE;
+  // GD2 support is available.
+  return function_exists('imagegd2');
 }
 
 /**
