@@ -52,7 +52,7 @@ abstract class Database {
    *
    * @var array
    */
-  static protected $databaseInfo = NULL;
+  static protected $databaseInfo = array();
 
   /**
    * A list of key/target credentials to simply ignore.
@@ -85,9 +85,9 @@ abstract class Database {
   /**
    * Starts logging a given logging key on the specified connection.
    *
-   * @param $logging_key
+   * @param string $logging_key
    *   The logging key to log.
-   * @param $key
+   * @param string $key
    *   The database connection key for which we want to log.
    *
    * @return \Drupal\Core\Database\Log
@@ -122,9 +122,9 @@ abstract class Database {
    * it again (which does nothing to an open log key) and call methods on it as
    * desired.
    *
-   * @param $logging_key
+   * @param string $logging_key
    *   The logging key to log.
-   * @param $key
+   * @param string $key
    *   The database connection key for which we want to log.
    *
    * @return array
@@ -144,9 +144,9 @@ abstract class Database {
   /**
    * Gets the connection object for the specified database key and target.
    *
-   * @param $target
+   * @param string $target
    *   The database target name.
-   * @param $key
+   * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.
    *
    * @return \Drupal\Core\Database\Connection
@@ -179,7 +179,7 @@ abstract class Database {
    * Note that this method will return FALSE if no connection has been
    * established yet, even if one could be.
    *
-   * @return
+   * @return bool
    *   TRUE if there is at least one database connection established, FALSE
    *   otherwise.
    */
@@ -190,14 +190,10 @@ abstract class Database {
   /**
    * Sets the active connection to the specified key.
    *
-   * @return
+   * @return string|null
    *   The previous database connection key.
    */
   final public static function setActiveConnection($key = 'default') {
-    if (empty(self::$databaseInfo)) {
-      self::parseConnectionInfo();
-    }
-
     if (!empty(self::$databaseInfo[$key])) {
       $old_key = self::$activeKey;
       self::$activeKey = $key;
@@ -207,56 +203,40 @@ abstract class Database {
 
   /**
    * Process the configuration file for database information.
+   *
+   * @param array $info
+   *   The database connection information, as defined in settings.php. The
+   *   structure of this array depends on the database driver it is connecting
+   *   to.
    */
-  final public static function parseConnectionInfo() {
-    global $databases;
-
-    $database_info = is_array($databases) ? $databases : array();
-    foreach ($database_info as $index => $info) {
-      foreach ($database_info[$index] as $target => $value) {
-        // If there is no "driver" property, then we assume it's an array of
-        // possible connections for this target. Pick one at random. That allows
-        //  us to have, for example, multiple slave servers.
-        if (empty($value['driver'])) {
-          $database_info[$index][$target] = $database_info[$index][$target][mt_rand(0, count($database_info[$index][$target]) - 1)];
-        }
-
-        // Parse the prefix information.
-        if (!isset($database_info[$index][$target]['prefix'])) {
-          // Default to an empty prefix.
-          $database_info[$index][$target]['prefix'] = array(
-            'default' => '',
-          );
-        }
-        elseif (!is_array($database_info[$index][$target]['prefix'])) {
-          // Transform the flat form into an array form.
-          $database_info[$index][$target]['prefix'] = array(
-            'default' => $database_info[$index][$target]['prefix'],
-          );
-        }
-      }
+  final public static function parseConnectionInfo(array $info) {
+    // If there is no "driver" property, then we assume it's an array of
+    // possible connections for this target. Pick one at random. That allows
+    // us to have, for example, multiple slave servers.
+    if (empty($info['driver'])) {
+      $info = $info[mt_rand(0, count($info) - 1)];
     }
-
-    if (!is_array(self::$databaseInfo)) {
-      self::$databaseInfo = $database_info;
+    // Parse the prefix information.
+    if (!isset($info['prefix'])) {
+      // Default to an empty prefix.
+      $info['prefix'] = array(
+        'default' => '',
+      );
     }
-
-    // Merge the new $database_info into the existing.
-    // array_merge_recursive() cannot be used, as it would make multiple
-    // database, user, and password keys in the same database array.
-    else {
-      foreach ($database_info as $database_key => $database_values) {
-        foreach ($database_values as $target => $target_values) {
-          self::$databaseInfo[$database_key][$target] = $target_values;
-        }
-      }
+    elseif (!is_array($info['prefix'])) {
+      // Transform the flat form into an array form.
+      $info['prefix'] = array(
+        'default' => $info['prefix'],
+      );
     }
+    return $info;
   }
 
   /**
    * Adds database connection information for a given key/target.
    *
-   * This method allows the addition of new connection credentials at runtime.
+   * This method allows to add new connections at runtime.
+   *
    * Under normal circumstances the preferred way to specify database
    * credentials is via settings.php. However, this method allows them to be
    * added at arbitrary times, such as during unit tests, when connecting to
@@ -264,52 +244,71 @@ abstract class Database {
    *
    * If the given key/target pair already exists, this method will be ignored.
    *
-   * @param $key
+   * @param string $key
    *   The database key.
-   * @param $target
+   * @param string $target
    *   The database target name.
-   * @param $info
-   *   The database connection information, as it would be defined in
-   *   settings.php. Note that the structure of this array will depend on the
-   *   database driver it is connecting to.
+   * @param array $info
+   *   The database connection information, as defined in settings.php. The
+   *   structure of this array depends on the database driver it is connecting
+   *   to.
    */
-  public static function addConnectionInfo($key, $target, $info) {
+  final public static function addConnectionInfo($key, $target, array $info) {
     if (empty(self::$databaseInfo[$key][$target])) {
-      self::$databaseInfo[$key][$target] = $info;
+      self::$databaseInfo[$key][$target] = self::parseConnectionInfo($info);
     }
   }
 
   /**
    * Gets information on the specified database connection.
    *
-   * @param $connection
-   *   The connection key for which we want information.
+   * @param string $key
+   *   (optional) The connection key for which to return information.
+   *
+   * @return array|null
    */
   final public static function getConnectionInfo($key = 'default') {
-    if (empty(self::$databaseInfo)) {
-      self::parseConnectionInfo();
-    }
-
     if (!empty(self::$databaseInfo[$key])) {
       return self::$databaseInfo[$key];
     }
   }
 
   /**
+   * Gets connection information for all available databases.
+   *
+   * @return array
+   */
+  final public static function getAllConnectionInfo() {
+    return self::$databaseInfo;
+  }
+
+  /**
+   * Sets connection information for multiple databases.
+   *
+   * @param array $databases
+   *   A multi-dimensional array specifying database connection parameters, as
+   *   defined in settings.php.
+   */
+  final public static function setMultipleConnectionInfo(array $databases) {
+    foreach ($databases as $key => $targets) {
+      foreach ($targets as $target => $info) {
+        self::addConnectionInfo($key, $target, $info);
+      }
+    }
+  }
+
+  /**
    * Rename a connection and its corresponding connection information.
    *
-   * @param $old_key
+   * @param string $old_key
    *   The old connection key.
-   * @param $new_key
+   * @param string $new_key
    *   The new connection key.
-   * @return
+   *
+   * @return bool
    *   TRUE in case of success, FALSE otherwise.
    */
   final public static function renameConnection($old_key, $new_key) {
-    if (empty(self::$databaseInfo)) {
-      self::parseConnectionInfo();
-    }
-
     if (!empty(self::$databaseInfo[$old_key]) && empty(self::$databaseInfo[$new_key])) {
       // Migrate the database connection information.
       self::$databaseInfo[$new_key] = self::$databaseInfo[$old_key];
@@ -331,9 +330,10 @@ abstract class Database {
   /**
    * Remove a connection and its corresponding connection information.
    *
-   * @param $key
+   * @param string $key
    *   The connection key.
-   * @return
+   *
+   * @return bool
    *   TRUE in case of success, FALSE otherwise.
    */
   final public static function removeConnection($key) {
@@ -350,20 +350,16 @@ abstract class Database {
   /**
    * Opens a connection to the server specified by the given key and target.
    *
-   * @param $key
+   * @param string $key
    *   The database connection key, as specified in settings.php. The default is
    *   "default".
-   * @param $target
+   * @param string $target
    *   The database target to open.
    *
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
    */
   final protected static function openConnection($key, $target) {
-    if (empty(self::$databaseInfo)) {
-      self::parseConnectionInfo();
-    }
-
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
@@ -399,10 +395,10 @@ abstract class Database {
   /**
    * Closes a connection to the server specified by the given key and target.
    *
-   * @param $target
+   * @param string $target
    *   The database target name.  Defaults to NULL meaning that all target
    *   connections will be closed.
-   * @param $key
+   * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.
    */
   public static function closeConnection($target = NULL, $key = NULL) {
@@ -439,9 +435,9 @@ abstract class Database {
    * method with the database key and the target to disable. That database key
    * will then always fall back to 'default' for that key, even if it's defined.
    *
-   * @param $key
+   * @param string $key
    *   The database connection key.
-   * @param $target
+   * @param string $target
    *   The target of the specified key to ignore.
    */
   public static function ignoreTarget($key, $target) {

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 
 /**
@@ -26,8 +27,6 @@ class SiteSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    global $databases;
-
     $conf_path = './' . conf_path(FALSE);
     $settings_file = $conf_path . '/settings.php';
 
@@ -36,25 +35,33 @@ class SiteSettingsForm extends FormBase {
     $drivers = drupal_get_database_types();
     $drivers_keys = array_keys($drivers);
 
-    // If database connection settings have been prepared in settings.php already,
-    // then the existing values need to be taken over.
+    // Unless there is input for this form (for a non-interactive installation,
+    // input originates from the $settings array passed into install_drupal()),
+    // check whether database connection settings have been prepared in
+    // settings.php already.
     // Note: The installer even executes this form if there is a valid database
     // connection already, since the submit handler of this form is responsible
     // for writing all $settings to settings.php (not limited to $databases).
-    if (isset($databases['default']['default'])) {
-      $default_driver = $databases['default']['default']['driver'];
-      $default_options = $databases['default']['default'];
+    if (!isset($form_state['input']['driver']) && $database = Database::getConnectionInfo()) {
+      $form_state['input']['driver'] = $database['default']['driver'];
+      $form_state['input'][$database['default']['driver']] = $database['default'];
     }
-    // Otherwise, use the database connection settings from the form input.
-    // For a non-interactive installation, this is derived from the original
-    // $settings array passed into install_drupal().
-    elseif (isset($form_state['input']['driver'])) {
+
+    if (isset($form_state['input']['driver'])) {
       $default_driver = $form_state['input']['driver'];
+      // In case of database connection info from settings.php, as well as for a
+      // programmed form submission (non-interactive installer), the table prefix
+      // information is usually normalized into an array already, but the form
+      // element only allows to configure one default prefix for all tables.
+      $prefix = &$form_state['input'][$default_driver]['prefix'];
+      if (isset($prefix) && is_array($prefix)) {
+        $prefix = $prefix['default'];
+      }
       $default_options = $form_state['input'][$default_driver];
     }
-    // If there is no database information at all yet, just suggest the first
-    // available driver as default value, so that its settings form is made
-    // visible via #states when JavaScript is enabled (see below).
+    // If there is no database information yet, suggest the first available driver
+    // as default value, so that its settings form is made visible via #states
+    // when JavaScript is enabled (see below).
     else {
       $default_driver = current($drivers_keys);
       $default_options = array();

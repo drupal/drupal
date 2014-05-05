@@ -131,11 +131,13 @@ All arguments are long options.
               sub-processes. However, you may use e.g. '/tmpfs/test.sqlite'
 
   --dburl     A URI denoting the database driver, credentials, server hostname,
-              and database name to use in tests. For example:
-                mysql://username:password@localhost/databasename#table_prefix
-              Only used if specified.
+              and database name to use in tests.
               Required when running tests without a Drupal installation that
               contains default database connection info in settings.php.
+              Examples:
+                mysql://username:password@localhost/databasename#table_prefix
+                sqlite://localhost/relative/path/db.sqlite
+                sqlite://localhost//absolute/path/db.sqlite
 
   --php       The absolute path to the PHP executable. Usually not needed.
 
@@ -431,7 +433,7 @@ function simpletest_script_bootstrap() {
  *   connections are prepared only.
  */
 function simpletest_script_setup_database($new = FALSE) {
-  global $args, $databases;
+  global $args;
 
   // If there is an existing Drupal installation that contains a database
   // connection info in settings.php, then $databases['default']['default'] will
@@ -443,7 +445,6 @@ function simpletest_script_setup_database($new = FALSE) {
   // connection can be set and/or overridden with the --dburl parameter.
   if (!empty($args['dburl'])) {
     // Remove a possibly existing default connection (from settings.php).
-    unset($databases['default']);
     Database::removeConnection('default');
 
     $info = parse_url($args['dburl']);
@@ -456,25 +457,26 @@ function simpletest_script_setup_database($new = FALSE) {
       'pass' => '',
       'fragment' => '',
     );
+    if ($info['path'][0] === '/') {
+      $info['path'] = substr($info['path'], 1);
+    }
+    if ($info['scheme'] === 'sqlite' && $info['path'][0] !== '/') {
+      $info['path'] = DRUPAL_ROOT . '/' . $info['path'];
+    }
     $databases['default']['default'] = array(
       'driver' => $info['scheme'],
       'username' => $info['user'],
       'password' => $info['pass'],
       'host' => $info['host'],
-      'database' => ltrim($info['path'], '/'),
+      'database' => $info['path'],
       'prefix' => array(
         'default' => $info['fragment'],
       ),
     );
   }
-  // Otherwise, ensure that database table prefix info is an array.
-  // @see https://drupal.org/node/2176621
-  elseif (isset($databases['default']['default'])) {
-    if (!is_array($databases['default']['default']['prefix'])) {
-      $databases['default']['default']['prefix'] = array(
-        'default' => $databases['default']['default']['prefix'],
-      );
-    }
+  // Otherwise, use the default database connection from settings.php.
+  else {
+    $databases['default'] = Database::getConnectionInfo('default');
   }
 
   // If there is no default database connection for tests, we cannot continue.

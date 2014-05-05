@@ -405,7 +405,8 @@ function drupal_valid_http_host($host) {
  */
 function drupal_settings_initialize() {
   // Export these settings.php variables to the global namespace.
-  global $base_url, $databases, $cookie_domain, $config_directories, $config;
+  global $base_url, $cookie_domain, $config_directories, $config;
+  $databases = array();
   $settings = array();
   $config = array();
 
@@ -414,6 +415,8 @@ function drupal_settings_initialize() {
   if (is_readable(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
     require DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
   }
+  // Initialize Database.
+  Database::setMultipleConnectionInfo($databases);
   // Initialize Settings.
   new Settings($settings);
 }
@@ -1598,7 +1601,7 @@ function _drupal_bootstrap_configuration() {
   // Redirect the user to the installation script if Drupal has not been
   // installed yet (i.e., if no $databases array has been defined in the
   // settings.php file) and we are not already installing.
-  if (empty($GLOBALS['databases']) && !drupal_installation_attempted() && !drupal_is_cli()) {
+  if (!Database::getConnectionInfo() && !drupal_installation_attempted() && !drupal_is_cli()) {
     include_once __DIR__ . '/install.inc';
     install_goto('core/install.php');
   }
