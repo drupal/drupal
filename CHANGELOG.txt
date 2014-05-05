@@ -1,6 +1,8 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Added a "node_admin_filter" tag to the database query used to build the list
+  of nodes on the content administration page, to make it easier to alter.
 - Made the cron queue system log any exceptions that are thrown while an item
   in the queue is being processed, rather than stopping the entire PHP request.
 - Improved screen reader support by adding an aria-live HTML attribute to file
