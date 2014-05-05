@@ -96,6 +96,7 @@ class BreakpointConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependenciesModule() {
     $values = array(
+      'name' => 'test',
       'source' => 'test_module',
       'sourceType' => Breakpoint::SOURCE_TYPE_MODULE,
     );
@@ -111,6 +112,7 @@ class BreakpointConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependenciesTheme() {
     $values = array(
+      'name' => 'test',
       'source' => 'test_theme',
       'sourceType' => Breakpoint::SOURCE_TYPE_THEME,
     );
@@ -119,6 +121,17 @@ class BreakpointConfigEntityUnitTest extends UnitTestCase {
     $dependencies = $entity->calculateDependencies();
     $this->assertArrayNotHasKey('module', $dependencies);
     $this->assertContains('test_theme', $dependencies['theme']);
+  }
+
+  /**
+   * @expectedException \Drupal\breakpoint\InvalidBreakpointNameException
+   */
+  public function testNameException () {
+    new Breakpoint(array(
+      'label' => $this->randomName(),
+      'source' => 'custom_module',
+      'sourceType' => 'oops',
+    ));
   }
 
 }

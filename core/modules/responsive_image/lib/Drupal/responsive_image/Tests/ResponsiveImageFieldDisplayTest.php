@@ -60,7 +60,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Add breakpoint_group and breakpoints.
     $breakpoint_group = entity_create('breakpoint_group', array(
-      'id' => 'atestset',
+      'name' => 'atestset',
       'label' => 'A test set',
       'sourceType' => Breakpoint::SOURCE_TYPE_USER_DEFINED,
     ));
@@ -87,7 +87,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $responsive_image_mapping = entity_create('responsive_image_mapping', array(
       'id' => 'mapping_one',
       'label' => 'Mapping One',
-      'breakpointGroup' => 'atestset',
+      'breakpointGroup' => $breakpoint_group->id(),
     ));
     $responsive_image_mapping->save();
     $mappings = array();

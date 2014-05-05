@@ -16,6 +16,13 @@ use Drupal\breakpoint\Entity\Breakpoint;
 class ResponsiveImageAdminUITest extends WebTestBase {
 
   /**
+   * The breakpoint group for testing.
+   *
+   * @var \Drupal\breakpoint\Entity\BreakpointGroupInterface
+   */
+  protected $breakpointGroup;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -47,8 +54,8 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Add breakpoint_group and breakpoints.
-    $breakpoint_group = entity_create('breakpoint_group', array(
-      'id' => 'atestset',
+    $this->breakpointGroup = entity_create('breakpoint_group', array(
+      'name' => 'atestset',
       'label' => 'A test set',
       'sourceType' => Breakpoint::SOURCE_TYPE_USER_DEFINED,
     ));
@@ -67,9 +74,9 @@ class ResponsiveImageAdminUITest extends WebTestBase {
         ),
       ));
       $breakpoint->save();
-      $breakpoint_group->addBreakpoints(array($breakpoint));
+      $this->breakpointGroup->addBreakpoints(array($breakpoint));
     }
-    $breakpoint_group->save();
+    $this->breakpointGroup->save();
 
   }
 
@@ -83,13 +90,13 @@ class ResponsiveImageAdminUITest extends WebTestBase {
 
     // Add a new responsive image mapping, our breakpoint set should be selected.
     $this->drupalGet('admin/config/media/responsive-image-mapping/add');
-    $this->assertFieldByName('breakpointGroup', 'atestset');
+    $this->assertFieldByName('breakpointGroup', $this->breakpointGroup->id());
 
     // Create a new group.
     $edit = array(
       'label' => 'Mapping One',
       'id' => 'mapping_one',
-      'breakpointGroup' => 'atestset',
+      'breakpointGroup' => $this->breakpointGroup->id(),
     );
     $this->drupalPostForm('admin/config/media/responsive-image-mapping/add', $edit, t('Save'));
 
@@ -103,7 +110,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     // Edit the group.
     $this->drupalGet('admin/config/media/responsive-image-mapping/mapping_one');
     $this->assertFieldByName('label', 'Mapping One');
-    $this->assertFieldByName('breakpointGroup', 'atestset');
+    $this->assertFieldByName('breakpointGroup', $this->breakpointGroup->id());
 
     // Check if the dropdows are present for the mappings.
     $this->assertFieldByName('mappings[custom.user.small][1x]', '');
@@ -116,7 +123,7 @@ class ResponsiveImageAdminUITest extends WebTestBase {
     // Save mappings for 1x variant only.
     $edit = array(
       'label' => 'Mapping One',
-      'breakpointGroup' => 'atestset',
+      'breakpointGroup' => $this->breakpointGroup->id(),
       'mappings[custom.user.small][1x]' => 'thumbnail',
       'mappings[custom.user.medium][1x]' => 'medium',
       'mappings[custom.user.large][1x]' => 'large',

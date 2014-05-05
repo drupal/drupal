@@ -11,6 +11,7 @@ use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Tests for general breakpoint API functions.
@@ -30,8 +31,10 @@ class BreakpointAPITest extends BreakpointTestBase {
    */
   public function testConfigName() {
     // Try an invalid sourceType.
+    $label = $this->randomName();
     $breakpoint = entity_create('breakpoint', array(
-      'label' => drupal_strtolower($this->randomName()),
+      'label' => $label,
+      'name' => Unicode::strtolower($label),
       'source' => 'custom_module',
       'sourceType' => 'oops',
     ));

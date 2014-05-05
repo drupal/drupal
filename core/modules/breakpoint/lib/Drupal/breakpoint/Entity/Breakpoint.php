@@ -107,6 +107,20 @@ class Breakpoint extends ConfigEntityBase implements BreakpointInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\breakpoint\InvalidBreakpointNameException
+   *   Exception thrown if $values['name'] is empty.
+   */
+  public function __construct(array $values, $entity_type = 'breakpoint') {
+    // Check required properties.
+    if (empty($values['name'])) {
+      throw new InvalidBreakpointNameException('Attempt to create an unnamed breakpoint.');
+    }
+    parent::__construct($values, $entity_type);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function id() {
     // If no ID is specified, build one from the properties that uniquely define

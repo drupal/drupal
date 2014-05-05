@@ -8,6 +8,7 @@
 namespace Drupal\breakpoint\Tests;
 
 use Drupal\breakpoint\Entity\Breakpoint;
+use Drupal\breakpoint\Entity\BreakpointGroup;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
@@ -109,6 +110,7 @@ class BreakpointGroupConfigEntityUnitTest extends UnitTestCase {
   public function testCalculateDependenciesModule() {
     $this->setUpEntity(
       array(
+        'name' => 'test',
         'source' => 'test_module',
         'sourceType' => Breakpoint::SOURCE_TYPE_MODULE,
       )
@@ -134,6 +136,7 @@ class BreakpointGroupConfigEntityUnitTest extends UnitTestCase {
   public function testCalculateDependenciesTheme() {
     $this->setUpEntity(
       array(
+        'name' => 'test',
         'source' => 'test_theme',
         'sourceType' => Breakpoint::SOURCE_TYPE_THEME,
       )
@@ -153,6 +156,17 @@ class BreakpointGroupConfigEntityUnitTest extends UnitTestCase {
     $this->assertArrayNotHasKey('module', $dependencies);
     $this->assertContains('test_theme', $dependencies['theme']);
     $this->assertContains('breakpoint.breakpoint.test', $dependencies['entity']);
+  }
+
+  /**
+   * @expectedException \Drupal\breakpoint\InvalidBreakpointNameException
+   */
+  public function testNameException () {
+    new BreakpointGroup(array(
+      'label' => $this->randomName(),
+      'source' => 'custom_module',
+      'sourceType' => 'oops',
+    ));
   }
 
 }

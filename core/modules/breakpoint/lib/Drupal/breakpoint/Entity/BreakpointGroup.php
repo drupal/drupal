@@ -7,6 +7,7 @@
 
 namespace Drupal\breakpoint\Entity;
 
+use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\breakpoint\BreakpointGroupInterface;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
@@ -90,9 +91,16 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
   public $sourceType = Breakpoint::SOURCE_TYPE_USER_DEFINED;
 
   /**
-   * Overrides Drupal\config\ConfigEntityBase::__construct().
+   * {@inheritdoc}
+   *
+   * @throws \Drupal\breakpoint\InvalidBreakpointNameException
+   *   Exception thrown if $values['name'] is empty.
    */
   public function __construct(array $values, $entity_type = 'breakpoint_group') {
+    // Check required properties.
+    if (empty($values['name'])) {
+      throw new InvalidBreakpointNameException('Attempt to create an unnamed breakpoint group.');
+    }
     parent::__construct($values, $entity_type);
   }
 
