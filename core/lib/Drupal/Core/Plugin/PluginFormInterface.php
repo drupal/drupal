@@ -38,11 +38,6 @@ interface PluginFormInterface {
   /**
    * Form submission handler.
    *
-   * To properly store submitted form values store them in $this->configuration.
-   * @code
-   *   $this->configuration['some_value'] = $form_state['values']['some_value'];
-   * @endcode
-   *
    * @param array $form
    *   An associative array containing the structure of the form.
    * @param array $form_state
