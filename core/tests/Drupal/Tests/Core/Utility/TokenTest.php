@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Utility\TokenUnitTest.
+ * Contains \Drupal\Tests\Core\Utility\TokenTest.
  */
 
 namespace Drupal\Tests\Core\Utility;
@@ -12,9 +12,9 @@ use Drupal\Core\Utility\Token;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Tests\Core\Utility\Token
+ * @coversDefaultClass \Drupal\Core\Utility\Token
  */
-class TokenUnitTest extends UnitTestCase {
+class TokenTest extends UnitTestCase {
 
   /**
    * The cache used for testing.
@@ -71,7 +71,7 @@ class TokenUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers getInfo
+   * @covers ::getInfo
    */
   public function testGetInfo() {
     $token_info = array(
