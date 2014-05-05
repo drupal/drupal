@@ -1,6 +1,8 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which caused caches not to be properly cleared when a file entity
+  was saved or deleted.
 - Added several missing countries to the default list returned by
   country_get_list() (string change).
 - Replaced the term "weight" with "influence" in the content ranking settings
