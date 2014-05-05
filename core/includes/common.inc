@@ -17,7 +17,6 @@ use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
@@ -479,73 +478,6 @@ function valid_email_address($mail) {
  */
 function check_url($uri) {
   return String::checkPlain(UrlHelper::stripDangerousProtocols($uri));
-}
-
-/**
- * Applies a very permissive XSS/HTML filter for admin-only use.
- *
- * Use only for fields where it is impractical to use the
- * whole filter system, but where some (mainly inline) mark-up
- * is desired (so \Drupal\Component\Utility\String::checkPlain() is not
- * acceptable).
- *
- * Allows all tags that can be used inside an HTML body, save
- * for scripts and styles.
- *
- * @param string $string
- *   The string to apply the filter to.
- *
- * @return string
- *   The filtered string.
- *
- * @see \Drupal\Component\Utility\Xss::filterAdmin()
- */
-function filter_xss_admin($string) {
-  return Xss::filterAdmin($string);
-}
-
-/**
- * Filters HTML to prevent cross-site-scripting (XSS) vulnerabilities.
- *
- * Based on kses by Ulf Harnhammar, see http://sourceforge.net/projects/kses.
- * For examples of various XSS attacks, see: http://ha.ckers.org/xss.html.
- *
- * This code does four things:
- * - Removes characters and constructs that can trick browsers.
- * - Makes sure all HTML entities are well-formed.
- * - Makes sure all HTML tags and attributes are well-formed.
- * - Makes sure no HTML tags contain URLs with a disallowed protocol (e.g.
- *   javascript:).
- *
- * @param $string
- *   The string with raw HTML in it. It will be stripped of everything that can
- *   cause an XSS attack.
- * @param $allowed_tags
- *   An array of allowed tags.
- *
- * @return
- *   An XSS safe version of $string, or an empty string if $string is not
- *   valid UTF-8.
- *
- * @see \Drupal\Component\Utility\Xss::filter()
- */
-function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
-  return Xss::filter($string, $allowed_tags);
-}
-
-/**
- * Processes an HTML attribute value and strips dangerous protocols from URLs.
- *
- * @param string $string
- *   The string with the attribute value.
- *
- * @return string
- *   Cleaned up and HTML-escaped version of $string.
- *
- * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
- */
-function filter_xss_bad_protocol($string) {
-  return UrlHelper::filterBadProtocol($string);
 }
 
 /**

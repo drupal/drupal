@@ -63,10 +63,6 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
     $backtrace = debug_backtrace();
     $caller = Error::getLastCaller($backtrace);
 
-    if (!function_exists('filter_xss_admin')) {
-      require_once __DIR__ . '/common.inc';
-    }
-
     // We treat recoverable errors as fatal.
     _drupal_log_error(array(
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
