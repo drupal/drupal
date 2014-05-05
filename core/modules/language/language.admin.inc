@@ -6,25 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Render\Element;
-
-/**
- * Prepare a language code list for unused predefined languages.
- */
-function language_admin_predefined_list() {
-  $languages = \Drupal::languageManager()->getLanguages();
-  $predefined = LanguageManager::getStandardLanguageList();
-  foreach ($predefined as $key => $value) {
-    if (isset($languages[$key])) {
-      unset($predefined[$key]);
-      continue;
-    }
-    $predefined[$key] = t($value[0]);
-  }
-  asort($predefined);
-  return $predefined;
-}
 
 /**
  * Returns HTML for the language negotiation configuration form.

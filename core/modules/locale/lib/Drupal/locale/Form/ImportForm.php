@@ -8,16 +8,15 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form constructor for the translation import screen.
  */
-class ImportForm extends FormBase implements ContainerInjectionInterface {
+class ImportForm extends FormBase {
 
   /**
    * Uploaded file entity.
@@ -25,6 +24,7 @@ class ImportForm extends FormBase implements ContainerInjectionInterface {
    * @var \Drupal\file\Entity\File
    */
   protected $file;
+
   /**
    * The module handler service.
    *
@@ -33,9 +33,9 @@ class ImportForm extends FormBase implements ContainerInjectionInterface {
   protected $moduleHandler;
 
   /**
-   * The language manager.
+   * The configurable language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
+   * @var \Drupal\language\ConfigurableLanguageManagerInterface
    */
   protected $languageManager;
 
@@ -53,10 +53,10 @@ class ImportForm extends FormBase implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   *   The configurable language manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigurableLanguageManagerInterface $language_manager) {
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
   }
@@ -88,16 +88,15 @@ class ImportForm extends FormBase implements ContainerInjectionInterface {
     // If we have no languages available, present the list of predefined
     // languages only. If we do have already added languages, set up two option
     // groups with the list of existing and then predefined languages.
-    form_load_include($form_state, 'inc', 'language', 'language.admin');
     if (empty($existing_languages)) {
-      $language_options = language_admin_predefined_list();
+      $language_options = $this->languageManager->getUnusedPredefinedList();
       $default = key($language_options);
     }
     else {
       $default = key($existing_languages);
       $language_options = array(
         $this->t('Existing languages') => $existing_languages,
-        $this->t('Languages not yet added') => language_admin_predefined_list()
+        $this->t('Languages not yet added') => $this->languageManager->getUnusedPredefinedList()
       );
     }
 

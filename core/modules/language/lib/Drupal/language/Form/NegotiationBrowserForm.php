@@ -8,8 +8,8 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,11 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NegotiationBrowserForm extends ConfigFormBase {
 
   /**
-   * The module handler.
+   * The configurable language manager.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\language\ConfigurableLanguageManagerInterface
    */
-  protected $moduleHandler;
+  protected $languageManager;
 
   /**
    * {@inheritdoc}
@@ -30,9 +30,9 @@ class NegotiationBrowserForm extends ConfigFormBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager ) {
     parent::__construct($config_factory);
-    $this->moduleHandler = $module_handler;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -41,7 +41,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('module_handler')
+      $container->get('language_manager')
     );
   }
 
@@ -56,7 +56,6 @@ class NegotiationBrowserForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $this->moduleHandler->loadInclude('language', 'inc', 'language.admin');
     $form = array();
 
     // Initialize a language list to the ones available, including English.
@@ -71,12 +70,12 @@ class NegotiationBrowserForm extends ConfigFormBase {
     // only. If we do have already added languages, set up two option groups with
     // the list of existing and then predefined languages.
     if (empty($existing_languages)) {
-      $language_options = language_admin_predefined_list();
+      $language_options = $this->languageManager->getUnusedPredefinedList();
     }
     else {
       $language_options = array(
         $this->t('Existing languages') => $existing_languages,
-        $this->t('Languages not yet added') => language_admin_predefined_list()
+        $this->t('Languages not yet added') => $this->languageManager->getUnusedPredefinedList()
       );
     }
 

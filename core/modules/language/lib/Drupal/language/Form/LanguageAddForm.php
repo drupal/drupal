@@ -29,8 +29,7 @@ class LanguageAddForm extends LanguageFormBase {
   public function form(array $form, array &$form_state) {
     $form['#title'] = $this->t('Add language');
 
-    $this->moduleHandler->loadInclude('language', 'inc', 'language.admin');
-    $predefined_languages = language_admin_predefined_list();
+    $predefined_languages = $this->languageManager->getUnusedPredefinedList();
 
     $predefined_languages['custom'] = $this->t('Custom language...');
     $predefined_default = !empty($form_state['values']['predefined_langcode']) ? $form_state['values']['predefined_langcode'] : key($predefined_languages);

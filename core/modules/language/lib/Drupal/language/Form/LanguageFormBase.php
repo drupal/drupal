@@ -10,11 +10,39 @@ namespace Drupal\language\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Language\Language;
+use Drupal\language\ConfigurableLanguageManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for language add and edit forms.
  */
 abstract class LanguageFormBase extends EntityForm {
+
+  /**
+   * The configurable language manager.
+   *
+   * @var \Drupal\language\ConfigurableLanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * Constructs a ContentEntityForm object.
+   *
+   * @param  \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   *   The configurable language manager.
+   */
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager) {
+    $this->languageManager = $language_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('language_manager')
+    );
+  }
 
   /**
    * Common elements of the language addition and editing form.

@@ -407,4 +407,21 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     return $this->configFactoryOverride->getOverride($langcode, $name);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getUnusedPredefinedList() {
+    $languages = $this->getLanguages();
+    $predefined = $this->getStandardLanguageList();
+    foreach ($predefined as $key => $value) {
+      if (isset($languages[$key])) {
+        unset($predefined[$key]);
+        continue;
+      }
+      $predefined[$key] = $this->t($value[0]);
+    }
+    asort($predefined);
+    return $predefined;
+  }
+
 }
