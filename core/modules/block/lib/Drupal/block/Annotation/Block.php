@@ -32,4 +32,20 @@ class Block extends Plugin {
    */
   public $admin_label = '';
 
+  /**
+   * The category in the admin UI where the block will be listed.
+   *
+   * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
+   */
+  public $category = '';
+
+  /**
+   * Class used to retrieve derivative definitions of the block.
+   *
+   * @var string
+   */
+  public $derivative = '';
+
 }

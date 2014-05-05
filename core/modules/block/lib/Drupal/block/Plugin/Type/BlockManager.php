@@ -61,7 +61,7 @@ class BlockManager extends DefaultPluginManager {
     parent::processDefinition($definition, $plugin_id);
 
     // Ensure that every block has a category.
-    if (!isset($definition['category'])) {
+    if (empty($definition['category'])) {
       $definition['category'] = $this->getModuleName($definition['provider']);
     }
   }
