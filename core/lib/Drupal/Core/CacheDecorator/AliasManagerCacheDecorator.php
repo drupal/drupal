@@ -83,25 +83,25 @@ class AliasManagerCacheDecorator implements CacheDecoratorInterface, AliasManage
   /**
    * {@inheritdoc}
    */
-  public function getSystemPath($path, $path_language = NULL) {
-    $system_path = $this->aliasManager->getSystemPath($path, $path_language);
+  public function getPathByAlias($alias, $langcode = NULL) {
+    $path = $this->aliasManager->getPathByAlias($alias, $langcode);
     // We need to pass on the list of previously cached system paths for this
     // key to the alias manager for use in subsequent lookups.
-    $cached = $this->cache->get($system_path);
+    $cached = $this->cache->get($path);
     $cached_paths = array();
     if ($cached) {
       $cached_paths = $cached->data;
       $this->cacheNeedsWriting = FALSE;
     }
     $this->preloadPathLookups($cached_paths);
-    return $system_path;
+    return $path;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPathAlias($path, $path_language = NULL) {
-    return $this->aliasManager->getPathAlias($path, $path_language);
+  public function getAliasByPath($path, $langcode = NULL) {
+    return $this->aliasManager->getAliasByPath($path, $langcode);
   }
 
   /**

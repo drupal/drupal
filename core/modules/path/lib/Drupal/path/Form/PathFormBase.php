@@ -137,7 +137,7 @@ abstract class PathFormBase extends FormBase {
    */
   public function validateForm(array &$form, array &$form_state) {
     $source = &$form_state['values']['source'];
-    $source = $this->aliasManager->getSystemPath($source);
+    $source = $this->aliasManager->getPathByAlias($source);
     $alias = $form_state['values']['alias'];
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.
@@ -160,7 +160,7 @@ abstract class PathFormBase extends FormBase {
 
     $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
     $source = &$form_state['values']['source'];
-    $source = $this->aliasManager->getSystemPath($source);
+    $source = $this->aliasManager->getPathByAlias($source);
     $alias = $form_state['values']['alias'];
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.

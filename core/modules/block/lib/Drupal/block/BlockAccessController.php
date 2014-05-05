@@ -98,7 +98,7 @@ class BlockAccessController extends EntityAccessController implements EntityCont
       if ($visibility['path']['visibility'] < BLOCK_VISIBILITY_PHP) {
         // Compare the lowercase path alias (if any) and internal path.
         $path = current_path();
-        $path_alias = Unicode::strtolower($this->aliasManager->getPathAlias($path));
+        $path_alias = Unicode::strtolower($this->aliasManager->getAliasByPath($path));
         $page_match = drupal_match_path($path_alias, $pages) || (($path != $path_alias) && drupal_match_path($path, $pages));
         // When $block->visibility has a value of 0
         // (BLOCK_VISIBILITY_NOTLISTED), the block is displayed on all pages

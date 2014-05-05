@@ -251,9 +251,9 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getSystemPath() method.
+   * Tests the getPathByAlias() method.
    *
-   * @covers ::getSystemPath()
+   * @covers ::getPathByAlias()
    */
   public function testGetSystemPath() {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');

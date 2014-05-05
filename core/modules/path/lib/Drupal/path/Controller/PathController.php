@@ -110,7 +110,7 @@ class PathController extends ControllerBase {
 
       // If the system path maps to a different URL alias, highlight this table
       // row to let the user know of old aliases.
-      if ($data->alias != $this->aliasManager->getPathAlias($data->source, $data->langcode)) {
+      if ($data->alias != $this->aliasManager->getAliasByPath($data->source, $data->langcode)) {
         $row['class'] = array('warning');
       }
 

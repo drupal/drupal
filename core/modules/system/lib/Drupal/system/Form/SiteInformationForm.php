@@ -94,7 +94,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#title' => t('Front page'),
       '#open' => TRUE,
     );
-    $front_page = $site_config->get('page.front') != 'user' ? $this->aliasManager->getPathAlias($site_config->get('page.front')) : '';
+    $front_page = $site_config->get('page.front') != 'user' ? $this->aliasManager->getAliasByPath($site_config->get('page.front')) : '';
     $form['front_page']['site_frontpage'] = array(
       '#type' => 'textfield',
       '#title' => t('Default front page'),
@@ -139,7 +139,7 @@ class SiteInformationForm extends ConfigFormBase {
     }
     else {
       // Get the normal path of the front page.
-      form_set_value($form['front_page']['site_frontpage'], $this->aliasManager->getSystemPath($form_state['values']['site_frontpage']), $form_state);
+      form_set_value($form['front_page']['site_frontpage'], $this->aliasManager->getPathByAlias($form_state['values']['site_frontpage']), $form_state);
     }
     // Validate front page path.
     if (!drupal_valid_path($form_state['values']['site_frontpage'])) {
@@ -147,10 +147,10 @@ class SiteInformationForm extends ConfigFormBase {
     }
     // Get the normal paths of both error pages.
     if (!empty($form_state['values']['site_403'])) {
-      form_set_value($form['error_page']['site_403'], $this->aliasManager->getSystemPath($form_state['values']['site_403']), $form_state);
+      form_set_value($form['error_page']['site_403'], $this->aliasManager->getPathByAlias($form_state['values']['site_403']), $form_state);
     }
     if (!empty($form_state['values']['site_404'])) {
-      form_set_value($form['error_page']['site_404'], $this->aliasManager->getSystemPath($form_state['values']['site_404']), $form_state);
+      form_set_value($form['error_page']['site_404'], $this->aliasManager->getPathByAlias($form_state['values']['site_404']), $form_state);
     }
     // Validate 403 error path.
     if (!empty($form_state['values']['site_403']) && !drupal_valid_path($form_state['values']['site_403'])) {

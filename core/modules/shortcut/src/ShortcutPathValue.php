@@ -40,7 +40,7 @@ class ShortcutPathValue extends TypedData {
    */
   public function setValue($value, $notify = TRUE) {
     // Normalize the path in case it is an alias.
-    $value = \Drupal::service('path.alias_manager')->getSystemPath($value);
+    $value = \Drupal::service('path.alias_manager')->getPathByAlias($value);
     if (empty($value)) {
       $value = '<front>';
     }

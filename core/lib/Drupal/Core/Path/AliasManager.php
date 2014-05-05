@@ -34,11 +34,11 @@ class AliasManager implements AliasManagerInterface {
   protected $lookupMap = array();
 
   /**
-   * Holds an array of path alias for which no source was found.
+   * Holds an array of aliases for which no path was found.
    *
    * @var array
    */
-  protected $noSource = array();
+  protected $noPath = array();
 
   /**
    * Holds the array of whitelisted path aliases.
@@ -48,18 +48,18 @@ class AliasManager implements AliasManagerInterface {
   protected $whitelist;
 
   /**
-   * Holds an array of system paths that have no aliases.
+   * Holds an array of paths that have no alias.
    *
    * @var array
    */
-  protected $noAliases = array();
+  protected $noAlias = array();
 
   /**
-   * Whether lookupPath() has not yet been called.
+   * Whether preloaded path lookups has already been loaded.
    *
-   * @var boolean
+   * @var array
    */
-  protected $firstLookup = TRUE;
+  protected $langcodePreloaded = array();
 
   /**
    * Holds an array of previously looked up paths for the current request path.
@@ -88,36 +88,87 @@ class AliasManager implements AliasManagerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getSystemPath().
+   * {@inheritdoc}
    */
-  public function getSystemPath($path, $path_language = NULL) {
+  public function getPathByAlias($alias, $langcode = NULL) {
     // If no language is explicitly specified we default to the current URL
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
     // alias matching the URL path.
-    $path_language = $path_language ?: $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id;
-    // Lookup the path alias first.
-    if (!empty($path) && $source = $this->lookupPathSource($path, $path_language)) {
-      $path = $source;
+    $langcode = $langcode ?: $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id;
+
+    // If we already know that there are no paths for this alias simply return.
+    if (empty($alias) || !empty($this->noPath[$langcode][$alias])) {
+      return $alias;
     }
 
-    return $path;
+    // Look for the alias within the cached map.
+    if (isset($this->lookupMap[$langcode]) && ($path = array_search($alias, $this->lookupMap[$langcode]))) {
+      return $path;
+    }
+
+    // Look for path in storage.
+    if ($path = $this->storage->lookupPathSource($alias, $langcode)) {
+      $this->lookupMap[$langcode][$path] = $alias;
+      return $path;
+    }
+
+    // We can't record anything into $this->lookupMap because we didn't find any
+    // paths for this alias. Thus cache to $this->noPath.
+    $this->noPath[$langcode][$alias] = TRUE;
+    return $alias;
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getPathAlias().
+   * {@inheritdoc}
    */
-  public function getPathAlias($path, $path_language = NULL) {
+  public function getAliasByPath($path, $langcode = NULL) {
     // If no language is explicitly specified we default to the current URL
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
     // alias matching the URL path.
-    $path_language = $path_language ?: $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id;
-    $result = $path;
-    if (!empty($path) && $alias = $this->lookupPathAlias($path, $path_language)) {
-      $result = $alias;
+    $langcode = $langcode ?: $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id;
+
+    // Check the path whitelist, if the top-level part before the first /
+    // is not in the list, then there is no need to do anything further,
+    // it is not in the database.
+    if (empty($path) || !$this->whitelist->get(strtok($path, '/'))) {
+      return $path;
     }
-    return $result;
+
+    // During the first call to this method per language, load the expected
+    // paths for the page from cache.
+    if (empty($this->langcodePreloaded[$langcode])) {
+      $this->langcodePreloaded[$langcode] = TRUE;
+      $this->lookupMap[$langcode] = array();
+      // Load paths from cache.
+      if (!empty($this->preloadedPathLookups)) {
+        $this->lookupMap[$langcode] = $this->storage->preloadPathAlias($this->preloadedPathLookups, $langcode);
+        // Keep a record of paths with no alias to avoid querying twice.
+        $this->noAlias[$langcode] = array_flip(array_diff_key($this->preloadedPathLookups, array_keys($this->lookupMap[$langcode])));
+      }
+    }
+
+    // If we already know that there are no aliases for this path simply return.
+    if (!empty($this->noAlias[$langcode][$path])) {
+      return $path;
+    }
+
+    // If the alias has already been loaded, return it from static cache.
+    if (isset($this->lookupMap[$langcode][$path])) {
+      return $this->lookupMap[$langcode][$path];
+    }
+
+    // Try to load alias from storage.
+    if ($alias = $this->storage->lookupPathAlias($path, $langcode)) {
+      $this->lookupMap[$langcode][$path] = $alias;
+      return $alias;
+    }
+
+    // We can't record anything into $this->lookupMap because we didn't find any
+    // aliases for this path. Thus cache to $this->noAlias.
+    $this->noAlias[$langcode][$path] = TRUE;
+    return $path;
   }
 
   /**
@@ -132,9 +183,9 @@ class AliasManager implements AliasManagerInterface {
     else {
       $this->lookupMap = array();
     }
-    $this->noSource = array();
-    $this->no_aliases = array();
-    $this->firstCall = TRUE;
+    $this->noPath = array();
+    $this->noAlias = array();
+    $this->langcodePreloaded = array();
     $this->preloadedPathLookups = array();
     $this->pathAliasWhitelistRebuild($source);
   }
@@ -155,86 +206,6 @@ class AliasManager implements AliasManagerInterface {
    */
   public function preloadPathLookups(array $path_list) {
     $this->preloadedPathLookups = $path_list;
-  }
-
-  /**
-   * Given a Drupal system URL return one of its aliases if such a one exists.
-   * Otherwise, return FALSE.
-   *
-   * @param $path
-   *   The path to investigate for corresponding aliases.
-   * @param $langcode
-   *   Optional language code to search the path with. Defaults to the page language.
-   *   If there's no path defined for that language it will search paths without
-   *   language.
-   *
-   * @return
-   *   An aliased path, or FALSE if no path was found.
-   */
-  protected function lookupPathAlias($path, $langcode) {
-    // During the first call to this method per language, load the expected
-    // system paths for the page from cache.
-    if (!empty($this->firstLookup)) {
-      $this->firstLookup = FALSE;
-      $this->lookupMap[$langcode] = array();
-      // Load system paths from cache.
-      if (!empty($this->preloadedPathLookups)) {
-        // Now fetch the aliases corresponding to these system paths.
-        $this->lookupMap[$langcode] = $this->storage->preloadPathAlias($this->preloadedPathLookups, $langcode);
-        // Keep a record of paths with no alias to avoid querying twice.
-        $this->noAliases[$langcode] = array_flip(array_diff_key($this->preloadedPathLookups, array_keys($this->lookupMap[$langcode])));
-      }
-    }
-    // If the alias has already been loaded, return it.
-    if (isset($this->lookupMap[$langcode][$path])) {
-      return $this->lookupMap[$langcode][$path];
-    }
-    // Check the path whitelist, if the top-level part before the first /
-    // is not in the list, then there is no need to do anything further,
-    // it is not in the database.
-    elseif (!$this->whitelist->get(strtok($path, '/'))) {
-      return FALSE;
-    }
-    // For system paths which were not cached, query aliases individually.
-    elseif (!isset($this->noAliases[$langcode][$path])) {
-      $this->lookupMap[$langcode][$path] = $this->storage->lookupPathAlias($path, $langcode);
-      return $this->lookupMap[$langcode][$path];
-    }
-    return FALSE;
-  }
-
-  /**
-   * Given an alias, return its Drupal system URL if one exists. Otherwise,
-   * return FALSE.
-   *
-   * @param $path
-   *   The path to investigate for corresponding system URLs.
-   * @param $langcode
-   *   Optional language code to search the path with. Defaults to the page language.
-   *   If there's no path defined for that language it will search paths without
-   *   language.
-   *
-   * @return
-   *   A Drupal system path, or FALSE if no path was found.
-   */
-  protected function lookupPathSource($path, $langcode) {
-    if ($this->whitelist && !isset($this->noSource[$langcode][$path])) {
-      // Look for the value $path within the cached $map
-      $source = isset($this->lookupMap[$langcode]) ? array_search($path, $this->lookupMap[$langcode]) : FALSE;
-      if (!$source) {
-        if ($source = $this->storage->lookupPathSource($path, $langcode)) {
-          $this->lookupMap[$langcode][$source] = $path;
-        }
-        else {
-          // We can't record anything into $map because we do not have a valid
-          // index and there is no need because we have not learned anything
-          // about any Drupal path. Thus cache to $no_source.
-          $this->noSource[$langcode][$path] = TRUE;
-        }
-      }
-      return $source;
-    }
-    return FALSE;
   }
 
   /**

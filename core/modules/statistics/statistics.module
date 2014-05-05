@@ -169,7 +169,7 @@ function statistics_get($nid) {
  *   A string as a link, truncated to the width, linked to the given $path.
  */
 function _statistics_link($path, $width = 35) {
-  $title = \Drupal::service('path.alias_manager')->getPathAlias($path);
+  $title = \Drupal::service('path.alias_manager')->getAliasByPath($path);
   $title = truncate_utf8($title, $width, FALSE, TRUE);
   return l($title, $path);
 }

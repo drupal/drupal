@@ -1230,7 +1230,7 @@ function template_preprocess_links(&$variables) {
 
           // Add a "data-drupal-link-system-path" attribute to let the
           // drupal.active-link library know the path in a standardized manner.
-          $li_attributes['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager.cached')->getSystemPath($path);
+          $li_attributes['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager.cached')->getPathByAlias($path);
         }
 
         $item['link'] = $link_element;

@@ -210,7 +210,7 @@ class LinkWidget extends WidgetBase {
           // If internal links are supported, look up whether the given value is
           // a path alias and store the system path instead.
           if ($this->supportsInternalLinks() && !UrlHelper::isExternal($value['url'])) {
-            $parsed_url['path'] = \Drupal::service('path.alias_manager.cached')->getSystemPath($parsed_url['path']);
+            $parsed_url['path'] = \Drupal::service('path.alias_manager.cached')->getPathByAlias($parsed_url['path']);
           }
 
           $url = Url::createFromPath($parsed_url['path']);

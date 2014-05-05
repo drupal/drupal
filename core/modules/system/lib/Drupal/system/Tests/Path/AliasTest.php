@@ -95,8 +95,8 @@ class AliasTest extends PathUnitTestBase {
     );
 
     $aliasStorage->save($path['source'], $path['alias']);
-    $this->assertEqual($aliasManager->getPathAlias($path['source']), $path['alias'], 'Basic alias lookup works.');
-    $this->assertEqual($aliasManager->getSystemPath($path['alias']), $path['source'], 'Basic source lookup works.');
+    $this->assertEqual($aliasManager->getAliasByPath($path['source']), $path['alias'], 'Basic alias lookup works.');
+    $this->assertEqual($aliasManager->getPathByAlias($path['alias']), $path['source'], 'Basic source lookup works.');
 
     // Create a language specific alias for the default language (English).
     $path = array(
@@ -107,8 +107,8 @@ class AliasTest extends PathUnitTestBase {
     $aliasStorage->save($path['source'], $path['alias'], $path['langcode']);
     // Hook that clears cache is not executed with unit tests.
     \Drupal::service('path.alias_manager.cached')->cacheClear();
-    $this->assertEqual($aliasManager->getPathAlias($path['source']), $path['alias'], 'English alias overrides language-neutral alias.');
-    $this->assertEqual($aliasManager->getSystemPath($path['alias']), $path['source'], 'English source overrides language-neutral source.');
+    $this->assertEqual($aliasManager->getAliasByPath($path['source']), $path['alias'], 'English alias overrides language-neutral alias.');
+    $this->assertEqual($aliasManager->getPathByAlias($path['alias']), $path['source'], 'English source overrides language-neutral source.');
 
     // Create a language-neutral alias for the same path, again.
     $path = array(
@@ -116,7 +116,7 @@ class AliasTest extends PathUnitTestBase {
       'alias' => 'bar',
     );
     $aliasStorage->save($path['source'], $path['alias']);
-    $this->assertEqual($aliasManager->getPathAlias($path['source']), "users/Dries", 'English alias still returned after entering a language-neutral alias.');
+    $this->assertEqual($aliasManager->getAliasByPath($path['source']), "users/Dries", 'English alias still returned after entering a language-neutral alias.');
 
     // Create a language-specific (xx-lolspeak) alias for the same path.
     $path = array(
@@ -125,9 +125,9 @@ class AliasTest extends PathUnitTestBase {
       'langcode' => 'xx-lolspeak',
     );
     $aliasStorage->save($path['source'], $path['alias'], $path['langcode']);
-    $this->assertEqual($aliasManager->getPathAlias($path['source']), "users/Dries", 'English alias still returned after entering a LOLspeak alias.');
+    $this->assertEqual($aliasManager->getAliasByPath($path['source']), "users/Dries", 'English alias still returned after entering a LOLspeak alias.');
     // The LOLspeak alias should be returned if we really want LOLspeak.
-    $this->assertEqual($aliasManager->getPathAlias($path['source'], 'xx-lolspeak'), 'LOL', 'LOLspeak alias returned if we specify xx-lolspeak to the alias manager.');
+    $this->assertEqual($aliasManager->getAliasByPath($path['source'], 'xx-lolspeak'), 'LOL', 'LOLspeak alias returned if we specify xx-lolspeak to the alias manager.');
 
     // Create a new alias for this path in English, which should override the
     // previous alias for "user/1".
@@ -139,22 +139,22 @@ class AliasTest extends PathUnitTestBase {
     $aliasStorage->save($path['source'], $path['alias'], $path['langcode']);
     // Hook that clears cache is not executed with unit tests.
     $aliasManager->cacheClear();
-    $this->assertEqual($aliasManager->getPathAlias($path['source']), $path['alias'], 'Recently created English alias returned.');
-    $this->assertEqual($aliasManager->getSystemPath($path['alias']), $path['source'], 'Recently created English source returned.');
+    $this->assertEqual($aliasManager->getAliasByPath($path['source']), $path['alias'], 'Recently created English alias returned.');
+    $this->assertEqual($aliasManager->getPathByAlias($path['alias']), $path['source'], 'Recently created English source returned.');
 
     // Remove the English aliases, which should cause a fallback to the most
     // recently created language-neutral alias, 'bar'.
     $aliasStorage->delete(array('langcode' => 'en'));
     // Hook that clears cache is not executed with unit tests.
     $aliasManager->cacheClear();
-    $this->assertEqual($aliasManager->getPathAlias($path['source']), 'bar', 'Path lookup falls back to recently created language-neutral alias.');
+    $this->assertEqual($aliasManager->getAliasByPath($path['source']), 'bar', 'Path lookup falls back to recently created language-neutral alias.');
 
     // Test the situation where the alias and language are the same, but
     // the source differs. The newer alias record should be returned.
     $aliasStorage->save('user/2', 'bar');
     // Hook that clears cache is not executed with unit tests.
     $aliasManager->cacheClear();
-    $this->assertEqual($aliasManager->getSystemPath('bar'), 'user/2', 'Newer alias record is returned when comparing two Language::LANGCODE_NOT_SPECIFIED paths with the same alias.');
+    $this->assertEqual($aliasManager->getPathByAlias('bar'), 'user/2', 'Newer alias record is returned when comparing two Language::LANGCODE_NOT_SPECIFIED paths with the same alias.');
   }
 
   /**

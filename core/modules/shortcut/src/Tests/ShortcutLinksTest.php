@@ -62,7 +62,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertResponse(200);
       $saved_set = shortcut_set_load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'path');
-      $this->assertTrue(in_array($this->container->get('path.alias_manager')->getSystemPath($test['path']), $paths), 'Shortcut created: ' . $test['path']);
+      $this->assertTrue(in_array($this->container->get('path.alias_manager')->getPathByAlias($test['path']), $paths), 'Shortcut created: ' . $test['path']);
       $this->assertLink($title, 0, 'Shortcut link found on the page.');
     }
   }

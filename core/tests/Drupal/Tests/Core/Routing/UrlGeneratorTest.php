@@ -115,7 +115,7 @@ class UrlGeneratorTest extends UnitTestCase {
       ->getMock();
 
     $alias_manager->expects($this->any())
-      ->method('getPathAlias')
+      ->method('getAliasByPath')
       ->will($this->returnCallback(array($this, 'aliasManagerCallback')));
 
     $this->aliasManager = $alias_manager;
@@ -144,11 +144,12 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Return value callback for the getPathAlias() method on the mock alias manager.
+   * Return value callback for the getAliasByPath() method on the mock alias
+   * manager.
    *
-   * Ensures that by default the call to getPathAlias() will return the first argument
-   * that was passed in. We special-case the paths for which we wish it to return an
-   * actual alias.
+   * Ensures that by default the call to getAliasByPath() will return the first
+   * argument that was passed in. We special-case the paths for which we wish it
+   * to return an actual alias.
    *
    * @return string
    */

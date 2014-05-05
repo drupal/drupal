@@ -109,10 +109,10 @@ class LocalePathTest extends WebTestBase {
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
-    $lookup_path = $this->container->get('path.alias_manager')->getPathAlias('node/' . $node->id(), 'en');
+    $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $node->id(), 'en');
     $this->assertEqual($english_path, $lookup_path, 'English language alias has priority.');
     // Same check for language 'xx'.
-    $lookup_path = $this->container->get('path.alias_manager')->getPathAlias('node/' . $node->id(), $prefix);
+    $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $node->id(), $prefix);
     $this->assertEqual($custom_language_path, $lookup_path, 'Custom language alias has priority.');
     $this->container->get('path.alias_storage')->delete($edit);
 

@@ -110,7 +110,7 @@ class PathProcessorTest extends UnitTestCase {
     );
 
     $alias_manager->expects($this->any())
-      ->method('getSystemPath')
+      ->method('getPathByAlias')
       ->will($this->returnValueMap($system_path_map));
 
     // Create a stub config factory with all config settings that will be checked

@@ -1058,7 +1058,7 @@ function l($text, $path, array $options = array()) {
     // Add a "data-drupal-link-system-path" attribute to let the
     // drupal.active-link library know the path in a standardized manner.
     if (!isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
-      $variables['options']['attributes']['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager.cached')->getSystemPath($path);
+      $variables['options']['attributes']['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager.cached')->getPathByAlias($path);
     }
   }
 

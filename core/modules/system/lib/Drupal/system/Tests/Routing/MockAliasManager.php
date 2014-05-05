@@ -62,18 +62,21 @@ class MockAliasManager implements AliasManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSystemPath($path, $path_language = NULL) {
-    $language = $path_language ?: $this->defaultLanguage;
-    return $this->systemPaths[$path][$language];
+  public function getPathByAlias($alias, $langcode = NULL) {
+    $langcode = $langcode ?: $this->defaultLanguage;
+    return $this->systemPaths[$alias][$langcode];
   }
 
   /**
    * {@inheritdoc}
+   * @param $path
+   * @param null $langcode
+   * @return
    */
-  public function getPathAlias($path, $path_language = NULL) {
-    $language = $path_language ?: $this->defaultLanguage;
+  public function getAliasByPath($path, $langcode = NULL) {
+    $langcode = $langcode ?: $this->defaultLanguage;
     $this->lookedUp[$path] = 1;
-    return $this->aliases[$path][$language];
+    return $this->aliases[$path][$langcode];
   }
 
   /**

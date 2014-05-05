@@ -204,7 +204,7 @@ class MenuLinkForm extends EntityForm {
   public function validate(array $form, array &$form_state) {
     $menu_link = $this->buildEntity($form, $form_state);
 
-    $normal_path = $this->pathAliasManager->getSystemPath($menu_link->link_path);
+    $normal_path = $this->pathAliasManager->getPathByAlias($menu_link->link_path);
     if ($menu_link->link_path != $normal_path) {
       drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $menu_link->link_path, '%normal_path' => $normal_path)));
       $menu_link->link_path = $normal_path;

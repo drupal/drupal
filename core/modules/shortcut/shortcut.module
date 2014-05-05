@@ -273,7 +273,7 @@ function shortcut_set_title_exists($title) {
  */
 function shortcut_valid_link($path) {
   // Do not use URL aliases.
-  $normal_path = \Drupal::service('path.alias_manager')->getSystemPath($path);
+  $normal_path = \Drupal::service('path.alias_manager')->getPathByAlias($path);
   if ($path != $normal_path) {
     $path = $normal_path;
   }
