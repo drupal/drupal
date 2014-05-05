@@ -1,6 +1,8 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Made the pager on the Tracker module listing pages show the same number of
+  items as other pagers throughout Drupal core (minor UI change).
 - Fixed a bug which caused caches not to be properly cleared when a file entity
   was saved or deleted.
 - Added several missing countries to the default list returned by
