@@ -79,12 +79,12 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->createCustomBlockType('other');
 
     $instance = field_info_instance('custom_block', 'body', 'basic');
-    $this->assertEqual($instance->getLabel(), 'Block body', 'Body field was found.');
+    $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('block/add/basic');
     $this->assertRaw('Block description', 'Block info field was found.');
-    $this->assertRaw('Block body', 'Body field was found.');
+    $this->assertRaw('Body', 'Body field was found.');
 
     // Change the block type name.
     $edit = array(
@@ -104,7 +104,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic', array(), t('Save'));
     // Check that the body field doesn't exist.
     $this->drupalGet('block/add/basic');
-    $this->assertNoRaw('Block body', 'Body field was not found.');
+    $this->assertNoRaw('Body', 'Body field was not found.');
   }
 
   /**

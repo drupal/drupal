@@ -107,12 +107,12 @@ function custom_block_entity_bundle_info() {
  * @param string $block_type_id
  *   Id of the block type.
  * @param string $label
- *   (optional) The label for the body instance. Defaults to 'Block body'
+ *   (optional) The label for the body instance. Defaults to 'Body'
  *
  * @return array()
  *   Body field instance.
  */
-function custom_block_add_body_field($block_type_id, $label = 'Block body') {
+function custom_block_add_body_field($block_type_id, $label = 'Body') {
   // Add or remove the body field, as needed.
   $field = field_info_field('custom_block', 'body');
   $instance = field_info_instance('custom_block', 'body', $block_type_id);
