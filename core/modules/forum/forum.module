@@ -48,7 +48,8 @@ function forum_help($path, $arg) {
       $output = '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
       $more_help_link = array(
         '#type' => 'link',
-        '#href' => 'admin/help/forum',
+        '#route_name' => 'help.page',
+        '#route_parameters' => array('name' => 'forum'),
         '#title' => t('More help'),
       );
       $container = array(
