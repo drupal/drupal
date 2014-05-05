@@ -8,6 +8,7 @@
 namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 
@@ -32,7 +33,7 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
   public function getPossibleValues(AccountInterface $account = NULL) {
     // Flatten options firstly, because Possible Options may contain group
     // arrays.
-    $flatten_options = \Drupal::formBuilder()->flattenOptions($this->getPossibleOptions($account));
+    $flatten_options = OptGroup::flattenOptions($this->getPossibleOptions($account));
     return array_keys($flatten_options);
   }
 
@@ -49,7 +50,7 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
   public function getSettableValues(AccountInterface $account = NULL) {
     // Flatten options firstly, because Settable Options may contain group
     // arrays.
-    $flatten_options = \Drupal::formBuilder()->flattenOptions($this->getSettableOptions($account));
+    $flatten_options = OptGroup::flattenOptions($this->getSettableOptions($account));
     return array_keys($flatten_options);
   }
 

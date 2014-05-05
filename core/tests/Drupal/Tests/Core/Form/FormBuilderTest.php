@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Form {
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -218,34 +219,6 @@ class FormBuilderTest extends FormTestBase {
       $this->assertSame('exit', $e->getMessage());
     }
     $this->assertSame($response, $form_state['response']);
-  }
-
-  /**
-   * Tests that form errors during submission throw an exception.
-   *
-   * @covers ::setErrorByName
-   *
-   * @expectedException \LogicException
-   * @expectedExceptionMessage Form errors cannot be set after form validation has finished.
-   */
-  public function testFormErrorsDuringSubmission() {
-    $form_id = 'test_form_id';
-    $expected_form = $form_id();
-
-    $form_arg = $this->getMockForm($form_id, $expected_form);
-    $form_builder = $this->formBuilder;
-    $form_arg->expects($this->any())
-      ->method('submitForm')
-      ->will($this->returnCallback(function ($form, &$form_state) use ($form_builder) {
-        $form_builder->setErrorByName('test', $form_state, 'Hello');
-      }));
-
-    $form_state = array();
-    $this->formBuilder->getFormId($form_arg, $form_state);
-
-    $form_state['values'] = array();
-    $form_state['input']['form_id'] = $form_id;
-    $this->simulateFormSubmission($form_id, $form_arg, $form_state, FALSE);
   }
 
   /**
@@ -500,123 +473,12 @@ class FormBuilderTest extends FormTestBase {
   }
 
   /**
-   * Tests the submitForm() method.
-   */
-  public function testSubmitForm() {
-    $form_id = 'test_form_id';
-    $expected_form = $form_id();
-    $expected_form['test']['#required'] = TRUE;
-    $expected_form['options']['#required'] = TRUE;
-    $expected_form['value']['#required'] = TRUE;
-
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->exactly(5))
-      ->method('getFormId')
-      ->will($this->returnValue($form_id));
-    $form_arg->expects($this->exactly(5))
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
-
-    $form_state = array();
-    $form_state['values']['test'] = $this->randomName();
-    $form_state['values']['op'] = 'Submit';
-    $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertNotEmpty($errors['options']);
-
-    $form_state = array();
-    $form_state['values']['test'] = $this->randomName();
-    $form_state['values']['options'] = 'foo';
-    $form_state['values']['op'] = 'Submit';
-    $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertEmpty($errors);
-
-    $form_state = array();
-    $form_state['values']['test'] = $this->randomName();
-    $form_state['values']['options'] = array('foo');
-    $form_state['values']['op'] = 'Submit';
-    $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertEmpty($errors);
-
-    $form_state = array();
-    $form_state['values']['test'] = $this->randomName();
-    $form_state['values']['options'] = array('foo', 'baz');
-    $form_state['values']['op'] = 'Submit';
-    $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertNotEmpty($errors['options']);
-
-    $form_state = array();
-    $form_state['values']['test'] = $this->randomName();
-    $form_state['values']['options'] = $this->randomName();
-    $form_state['values']['op'] = 'Submit';
-    $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertNotEmpty($errors['options']);
-  }
-
-  /**
-   * Tests the 'must_validate' $form_state flag.
-   *
-   * @covers ::validateForm
-   */
-  public function testMustValidate() {
-    $form_id = 'test_form_id';
-    $expected_form = $form_id();
-
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->any())
-      ->method('getFormId')
-      ->will($this->returnValue($form_id));
-    $form_arg->expects($this->any())
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
-    $form_builder = $this->formBuilder;
-    $form_arg->expects($this->exactly(2))
-      ->method('validateForm')
-      ->will($this->returnCallback(function (&$form, &$form_state) use ($form_builder) {
-        $form_builder->setErrorByName('test', $form_state, 'foo');
-      }));
-
-    $form_state = array();
-    // This submission will trigger validation.
-    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertNotEmpty($errors['test']);
-
-    // This submission will not re-trigger validation.
-    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertNotEmpty($errors['test']);
-
-    // The must_validate flag will re-trigger validation.
-    $form_state['must_validate'] = TRUE;
-    $this->simulateFormSubmission($form_id, $form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertNotEmpty($errors['test']);
-  }
-
-  /**
    * Tests the flattenOptions() method.
    *
    * @dataProvider providerTestFlattenOptions
    */
   public function testFlattenOptions($options) {
-    $form_id = 'test_form_id';
-    $expected_form = $form_id();
-    $expected_form['select']['#required'] = TRUE;
-    $expected_form['select']['#options'] = $options;
-
-    $form_arg = $this->getMockForm($form_id, $expected_form);
-
-    $form_state = array();
-    $form_state['values']['select'] = 'foo';
-    $form_state['values']['op'] = 'Submit';
-    $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertEmpty($errors);
+    $this->assertSame(array('foo' => 1), OptGroup::flattenOptions($options));
   }
 
   /**
@@ -625,100 +487,15 @@ class FormBuilderTest extends FormTestBase {
    * @return array
    */
   public function providerTestFlattenOptions() {
-    $object = new \stdClass();
-    $object->option = array('foo' => 'foo');
+    $object1 = new \stdClass();
+    $object1->option = array('foo' => 'foo');
+    $object2 = new \stdClass();
+    $object2->option = array(array('foo' => 'foo'), array('foo' => 'foo'));
     return array(
       array(array('foo' => 'foo')),
       array(array(array('foo' => 'foo'))),
-      array(array($object)),
-    );
-  }
-
-  /**
-   * Tests the setErrorByName() method.
-   *
-   * @param array|null $limit_validation_errors
-   *   The errors to limit validation for, NULL will run all validation.
-   * @param array $expected_errors
-   *   The errors expected to be set.
-   *
-   * @dataProvider providerTestSetErrorByName
-   */
-  public function testSetErrorByName($limit_validation_errors, $expected_errors) {
-    $form_id = 'test_form_id';
-    $expected_form = $form_id();
-    $expected_form['actions']['submit']['#submit'][] = 'test_form_id_custom_submit';
-    $expected_form['actions']['submit']['#limit_validation_errors'] = $limit_validation_errors;
-
-    $form_arg = $this->getMockForm($form_id, $expected_form);
-    $form_builder = $this->formBuilder;
-    $form_arg->expects($this->once())
-      ->method('validateForm')
-      ->will($this->returnCallback(function (array &$form, array &$form_state) use ($form_builder) {
-        $form_builder->setErrorByName('test', $form_state, 'Fail 1');
-        $form_builder->setErrorByName('test', $form_state, 'Fail 2');
-        $form_builder->setErrorByName('options', $form_state);
-      }));
-
-    $form_state = array();
-    $form_state['values']['test'] = $this->randomName();
-    $form_state['values']['options'] = 'foo';
-    $form_state['values']['op'] = 'Submit';
-    $this->formBuilder->submitForm($form_arg, $form_state);
-
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertSame($expected_errors, $errors);
-  }
-
-  /**
-   * Provides test data for testing the setErrorByName() method.
-   *
-   * @return array
-   *   Returns some test data.
-   */
-  public function providerTestSetErrorByName() {
-    return array(
-      // Only validate the 'options' element.
-      array(array(array('options')), array('options' => '')),
-      // Do not limit an validation, and, ensuring the first error is returned
-      // for the 'test' element.
-      array(NULL, array('test' => 'Fail 1', 'options' => '')),
-      // Limit all validation.
-      array(array(), array()),
-    );
-  }
-
-  /**
-   * Tests the getError() method.
-   *
-   * @dataProvider providerTestGetError
-   */
-  public function testGetError($parents, $expected = NULL) {
-    $form_state = array();
-    // Set errors on a top level and a child element, and a nested element.
-    $this->formBuilder->setErrorByName('foo', $form_state, 'Fail 1');
-    $this->formBuilder->setErrorByName('foo][bar', $form_state, 'Fail 2');
-    $this->formBuilder->setErrorByName('baz][bim', $form_state, 'Fail 3');
-
-    $element['#parents'] = $parents;
-    $error = $this->formBuilder->getError($element, $form_state);
-    $this->assertSame($expected, $error);
-  }
-
-  /**
-   * Provides test data for testing the getError() method.
-   *
-   * @return array
-   *   Returns some test data.
-   */
-  public function providerTestGetError() {
-    return array(
-      array(array('foo'), 'Fail 1'),
-      array(array('foo', 'bar'), 'Fail 1'),
-      array(array('baz')),
-      array(array('baz', 'bim'), 'Fail 3'),
-      array(array($this->randomName())),
-      array(array()),
+      array(array($object1)),
+      array(array($object2)),
     );
   }
 
@@ -774,8 +551,7 @@ class FormBuilderTest extends FormTestBase {
     $form_state['input']['form_id'] = $form_id;
     $form_state['input']['form_build_id'] = $form['#build_id'];
     $this->formBuilder->buildForm($form_id, $form_state);
-    $errors = $this->formBuilder->getErrors($form_state);
-    $this->assertEmpty($errors);
+    $this->assertEmpty($form_state['errors']);
   }
 
   /**
@@ -797,6 +573,32 @@ class FormBuilderTest extends FormTestBase {
     // Do an initial build of the form and track the build ID.
     $form_state = array();
     $this->formBuilder->buildForm($form_arg, $form_state);
+  }
+
+  /**
+   * Tests that HTML IDs are unique when rebuilding a form with errors.
+   */
+  public function testUniqueHtmlId() {
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
+    $expected_form['test']['#required'] = TRUE;
+    $this->formValidator->expects($this->exactly(4))
+      ->method('getAnyErrors')
+      ->will($this->returnValue(TRUE));
+
+    // Mock a form object that will be built two times.
+    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->exactly(2))
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
+
+    $form_state = array();
+    $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
+    $this->assertSame($form_id, $form['#id']);
+
+    $form_state = array();
+    $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
+    $this->assertSame("$form_id--2", $form['#id']);
   }
 
 }

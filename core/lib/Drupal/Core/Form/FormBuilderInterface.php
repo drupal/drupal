@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Form;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Provides an interface for form building and processing.
  */
@@ -388,33 +386,6 @@ interface FormBuilderInterface extends FormErrorInterface {
   public function prepareForm($form_id, &$form, &$form_state);
 
   /**
-   * Validates user-submitted form data in the $form_state array.
-   *
-   * @param $form_id
-   *   A unique string identifying the form for validation, submission,
-   *   theming, and hook_form_alter functions.
-   * @param $form
-   *   An associative array containing the structure of the form, which is
-   *   passed by reference. Form validation handlers are able to alter the form
-   *   structure (like #process and #after_build callbacks during form building)
-   *   in case of a validation error. If a validation handler alters the form
-   *   structure, it is responsible for validating the values of changed form
-   *   elements in $form_state['values'] to prevent form submit handlers from
-   *   receiving unvalidated values.
-   * @param $form_state
-   *   A keyed array containing the current state of the form. The current
-   *   user-submitted data is stored in $form_state['values'], though
-   *   form validation functions are passed an explicit copy of the
-   *   values for the sake of simplicity. Validation handlers can also use
-   *   $form_state to pass information on to submit handlers. For example:
-   *     $form_state['data_for_submission'] = $data;
-   *   This technique is useful when validation requires file parsing,
-   *   web service requests, or other expensive requests that should
-   *   not be repeated in the submission step.
-   */
-  public function validateForm($form_id, &$form, &$form_state);
-
-  /**
    * Redirects the user to a URL after a form has been processed.
    *
    * After a form is submitted and processed, normally the user should be
@@ -477,14 +448,11 @@ interface FormBuilderInterface extends FormErrorInterface {
   public function redirectForm($form_state);
 
   /**
-   * Executes custom validation and submission handlers for a given form.
+   * Executes custom submission handlers for a given form.
    *
    * Button-specific handlers are checked first. If none exist, the function
    * falls back to form-level handlers.
    *
-   * @param $type
-   *   The type of handler to execute. 'validate' or 'submit' are the
-   *   defaults used by Form API.
    * @param $form
    *   An associative array containing the structure of the form.
    * @param $form_state
@@ -492,7 +460,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   submitted the form by clicking a button with custom handler functions
    *   defined, those handlers will be stored here.
    */
-  public function executeHandlers($type, &$form, &$form_state);
+  public function executeSubmitHandlers(&$form, &$form_state);
 
   /**
    * Builds and processes all elements in the structured form array.
@@ -619,20 +587,5 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   Form state array where the value change should be recorded.
    */
   public function setValue($element, $value, &$form_state);
-
-  /**
-   * Allows PHP array processing of multiple select options with the same value.
-   *
-   * Used for form select elements which need to validate HTML option groups
-   * and multiple options which may return the same value. Associative PHP
-   * arrays cannot handle these structures, since they share a common key.
-   *
-   * @param array $array
-   *   The form options array to process.
-   *
-   * @return array
-   *   An array with all hierarchical elements flattened to a single array.
-   */
-  public function flattenOptions(array $array);
 
 }

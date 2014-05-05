@@ -30,6 +30,11 @@ abstract class FormTestBase extends UnitTestCase {
   protected $formBuilder;
 
   /**
+   * @var \Drupal\Core\Form\FormValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $formValidator;
+
+  /**
    * The mocked URL generator.
    *
    * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Routing\UrlGeneratorInterface
@@ -93,11 +98,6 @@ abstract class FormTestBase extends UnitTestCase {
   protected $keyValueExpirableFactory;
 
   /**
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $translationManager;
-
-  /**
    * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\HttpKernel
    */
   protected $httpKernel;
@@ -118,8 +118,8 @@ abstract class FormTestBase extends UnitTestCase {
       )));
 
     $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->formValidator = $this->getMock('Drupal\Core\Form\FormValidatorInterface');
     $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $this->translationManager = $this->getStringTranslationStub();
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();
@@ -145,7 +145,7 @@ abstract class FormTestBase extends UnitTestCase {
   protected function setupFormBuilder() {
     $request_stack = new RequestStack();
     $request_stack->push($this->request);
-    $this->formBuilder = new TestFormBuilder($this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->urlGenerator, $this->translationManager, $request_stack, $this->csrfToken, $this->httpKernel);
+    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->urlGenerator, $request_stack, $this->csrfToken, $this->httpKernel);
     $this->formBuilder->setCurrentUser($this->account);
   }
 
@@ -281,18 +281,6 @@ class TestFormBuilder extends FormBuilder {
    */
   protected function drupalInstallationAttempted() {
     return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG_NOTICE, $link = NULL) {
   }
 
   /**

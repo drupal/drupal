@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
@@ -323,7 +324,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::formBuilder()->validateForm().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::validateForm().
+ * @see \Drupal\Core\Form\FormValidatorInterface::validateForm().
  */
 function drupal_validate_form($form_id, &$form, &$form_state) {
   \Drupal::formBuilder()->validateForm($form_id, $form, $form_state);
@@ -345,12 +346,19 @@ function drupal_redirect_form($form_state) {
  * Executes custom validation and submission handlers for a given form.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->executeHandlers().
+ *   Use either \Drupal::formBuilder()->executeSubmitHandlers() or
+ *   \Drupal::service('form_validator')->executeValidateHandlers().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::executeHandlers().
+ * @see \Drupal\Core\Form\FormBuilderInterface::executeSubmitHandlers()
+ * @see \Drupal\Core\Form\FormValidatorInterface::executeValidateHandlers()
  */
 function form_execute_handlers($type, &$form, &$form_state) {
-  \Drupal::formBuilder()->executeHandlers($type, $form, $form_state);
+  if ($type == 'submit') {
+    \Drupal::formBuilder()->executeSubmitHandlers($form, $form_state);
+  }
+  elseif ($type == 'validate') {
+    \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);
+  }
 }
 
 /**
@@ -359,7 +367,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::formBuilder()->setErrorByName().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::setErrorByName().
+ * @see \Drupal\Core\Form\FormErrorInterface::setErrorByName().
  */
 function form_set_error($name, array &$form_state, $message = '') {
   \Drupal::formBuilder()->setErrorByName($name, $form_state, $message);
@@ -383,7 +391,7 @@ function form_clear_error(array &$form_state) {
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::formBuilder()->getErrors().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::getErrors().
+ * @see \Drupal\Core\Form\FormErrorInterface::getErrors()
  */
 function form_get_errors(array &$form_state) {
   return \Drupal::formBuilder()->getErrors($form_state);
@@ -395,7 +403,7 @@ function form_get_errors(array &$form_state) {
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::formBuilder()->getError().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::getError().
+ * @see \Drupal\Core\Form\FormErrorInterface::getError().
  */
 function form_get_error($element, array &$form_state) {
   return \Drupal::formBuilder()->getError($element, $form_state);
@@ -407,7 +415,7 @@ function form_get_error($element, array &$form_state) {
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::formBuilder()->setError().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::setError().
+ * @see \Drupal\Core\Form\FormErrorInterface::setError().
  */
 function form_error(&$element, array &$form_state, $message = '') {
   \Drupal::formBuilder()->setError($element, $form_state, $message);
@@ -844,12 +852,10 @@ function form_set_value($element, $value, &$form_state) {
  *   An array with all hierarchical elements flattened to a single array.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->flattenOptions().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::flattenOptions().
+ *   Use \Drupal\Core\Form\OptGroup::flattenOptions().
  */
 function form_options_flatten($array) {
-  return \Drupal::formBuilder()->flattenOptions($array);
+  return OptGroup::flattenOptions($array);
 }
 
 /**
