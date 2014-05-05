@@ -5294,8 +5294,15 @@ function drupal_cron_run() {
     $end = time() + (isset($info['time']) ? $info['time'] : 15);
     $queue = DrupalQueue::get($queue_name);
     while (time() < $end && ($item = $queue->claimItem())) {
-      $function($item->data);
-      $queue->deleteItem($item);
+      try {
+        $function($item->data);
+        $queue->deleteItem($item);
+      }
+      catch (Exception $e) {
+        // In case of exception log it and leave the item in the queue
+        // to be processed again later.
+        watchdog_exception('cron', $e);
+      }
     }
   }
   // Restore the user.

@@ -1,6 +1,8 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Made the cron queue system log any exceptions that are thrown while an item
+  in the queue is being processed, rather than stopping the entire PHP request.
 - Improved screen reader support by adding an aria-live HTML attribute to file
   upload fields when there is an error uploading the file (minor markup
   change).
