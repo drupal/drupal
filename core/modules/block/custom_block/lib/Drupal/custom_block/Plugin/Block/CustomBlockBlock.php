@@ -8,12 +8,12 @@
 namespace Drupal\custom_block\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\block\Plugin\Type\BlockManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,7 +31,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
   /**
    * The Plugin Block Manager.
    *
-   * @var \Drupal\block\Plugin\Type\BlockManager.
+   * @var \Drupal\block\BlockManagerInterface.
    */
   protected $blockManager;
 
@@ -65,7 +65,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\block\Plugin\Type\BlockManager
+   * @param \Drupal\block\BlockManagerInterface
    *   The Plugin Block Manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
@@ -74,7 +74,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account for which view access should be checked.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockManager $block_manager, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $account) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockManagerInterface $block_manager, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, AccountInterface $account) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->blockManager = $block_manager;

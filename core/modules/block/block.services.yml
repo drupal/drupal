@@ -1,6 +1,6 @@
 services:
   plugin.manager.block:
-    class: Drupal\block\Plugin\Type\BlockManager
+    class: Drupal\block\BlockManager
     arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler', '@string_translation']
   theme.negotiator.block.admin_demo:
     class: Drupal\block\Theme\AdminDemoNegotiator

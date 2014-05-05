@@ -99,6 +99,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
       'region' => '-1',
       'plugin' => 'test_html',
       'settings' => array(
+        'id' => 'test_html',
         'label' => '',
         'provider' => 'block_test',
         'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,

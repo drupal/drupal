@@ -24,6 +24,17 @@ use Drupal\Core\Session\AccountInterface;
 interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableInterface {
 
   /**
+   * Returns the user-facing block label.
+   *
+   * @todo Provide other specific label-related methods in
+   *   https://drupal.org/node/2025649.
+   *
+   * @return string
+   *   The block label.
+   */
+  public function label();
+
+  /**
    * Indicates whether the block should be shown.
    *
    * This method allows base implementations to add general access restrictions

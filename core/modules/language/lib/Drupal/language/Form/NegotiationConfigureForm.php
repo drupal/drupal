@@ -7,7 +7,7 @@
 
 namespace Drupal\language\Form;
 
-use Drupal\block\Plugin\Type\BlockManager;
+use Drupal\block\BlockManagerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
@@ -48,7 +48,7 @@ class NegotiationConfigureForm extends FormBase {
   /**
    * The block manager.
    *
-   * @var \Drupal\block\Plugin\Type\BlockManager
+   * @var \Drupal\block\BlockManagerInterface
    */
   protected $blockManager;
 
@@ -61,10 +61,10 @@ class NegotiationConfigureForm extends FormBase {
    *   The language manager.
    * @param \Drupal\language\LanguageNegotiatorInterface $negotiator
    *   The language negotiation methods manager.
-   * @param \Drupal\block\Plugin\Type\BlockManager $block_manager
+   * @param \Drupal\block\BlockManagerInterface $block_manager
    *   The block manager, or NULL if not available.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManager $block_manager = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManagerInterface $block_manager = NULL) {
     $this->languageTypes = $config_factory->get('language.types');
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;

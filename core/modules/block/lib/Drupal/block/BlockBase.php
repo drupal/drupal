@@ -28,6 +28,18 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   /**
    * {@inheritdoc}
    */
+  public function label() {
+    if (!empty($this->configuration['label'])) {
+      return $this->configuration['label'];
+    }
+
+    $definition = $this->getPluginDefinition();
+    return $definition['admin_label'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
@@ -60,6 +72,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    */
   protected function baseConfigurationDefaults() {
     return array(
+      'id' => $this->getPluginId(),
       'label' => '',
       'provider' => $this->pluginDefinition['provider'],
       'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
@@ -126,7 +139,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
       '#type' => 'textfield',
       '#title' => $this->t('Title'),
       '#maxlength' => 255,
-      '#default_value' => !empty($this->configuration['label']) ? $this->configuration['label'] : $definition['admin_label'],
+      '#default_value' => $this->label(),
       '#required' => TRUE,
     );
     $form['label_display'] = array(

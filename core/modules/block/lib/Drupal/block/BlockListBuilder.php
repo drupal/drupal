@@ -7,7 +7,7 @@
 
 namespace Drupal\block;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\block\BlockManagerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
@@ -50,7 +50,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   /**
    * The block manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   * @var \Drupal\block\BlockManagerInterface
    */
   protected $blockManager;
 
@@ -61,10 +61,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $block_manager
+   * @param \Drupal\block\BlockManagerInterface $block_manager
    *   The block manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, PluginManagerInterface $block_manager) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, BlockManagerInterface $block_manager) {
     parent::__construct($entity_type, $storage);
 
     $this->blockManager = $block_manager;
@@ -334,13 +334,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $form['place_blocks']['list']['#attributes']['class'][] = 'entity-meta';
 
     // Sort the plugins first by category, then by label.
-    $plugins = $this->blockManager->getDefinitions();
-    uasort($plugins, function ($a, $b) {
-      if ($a['category'] != $b['category']) {
-        return strnatcasecmp($a['category'], $b['category']);
-      }
-      return strnatcasecmp($a['admin_label'], $b['admin_label']);
-    });
+    $plugins = $this->blockManager->getSortedDefinitions();
     foreach ($plugins as $plugin_id => $plugin_definition) {
       $category = String::checkPlain($plugin_definition['category']);
       $category_key = 'category-' . $category;

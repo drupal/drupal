@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\block\Plugin\Type\BlockManager.
+ * Contains \Drupal\block\BlockManager.
  */
 
-namespace Drupal\block\Plugin\Type;
+namespace Drupal\block;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -21,7 +21,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @see \Drupal\block\BlockPluginInterface
  */
-class BlockManager extends DefaultPluginManager {
+class BlockManager extends DefaultPluginManager implements BlockManagerInterface {
+
   use StringTranslationTrait;
 
   /**
@@ -32,7 +33,7 @@ class BlockManager extends DefaultPluginManager {
   protected $moduleData;
 
   /**
-   * Constructs a new \Drupal\block\Plugin\Type\BlockManager object.
+   * Constructs a new \Drupal\block\BlockManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -90,10 +91,7 @@ class BlockManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the names of all block categories.
-   *
-   * @return array
-   *   An array of translated categories, sorted alphabetically.
+   * {@inheritdoc}
    */
   public function getCategories() {
     $categories = array_unique(array_values(array_map(function ($definition) {
@@ -101,6 +99,21 @@ class BlockManager extends DefaultPluginManager {
     }, $this->getDefinitions())));
     natcasesort($categories);
     return $categories;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortedDefinitions() {
+    // Sort the plugins first by category, then by label.
+    $definitions = $this->getDefinitions();
+    uasort($definitions, function ($a, $b) {
+      if ($a['category'] != $b['category']) {
+        return strnatcasecmp($a['category'], $b['category']);
+      }
+      return strnatcasecmp($a['admin_label'], $b['admin_label']);
+    });
+    return $definitions;
   }
 
 }
