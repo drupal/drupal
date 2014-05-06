@@ -1,6 +1,10 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Changed the behavior of db_query_temporary() so that it works on SELECT
+  queries even when they have leading comments/whitespace. A side effect of
+  this fix is that db_query_temporary() will now fail with an error if it is
+  ever used on non-SELECT queries.
 - Added a "node_admin_filter" tag to the database query used to build the list
   of nodes on the content administration page, to make it easier to alter.
 - Made the cron queue system log any exceptions that are thrown while an item
