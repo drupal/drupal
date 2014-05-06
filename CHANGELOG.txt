@@ -1,6 +1,13 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Increased the timeout used by the Update Manager module when it fetches data
+  from drupal.org (from 5 seconds to 30 seconds), to work around a problem
+  which causes incomplete information about security updates to be presented to
+  site administrators. This fix may lead to a performance slowdown on the
+  Update Manager administration pages, when installing Drupal distributions,
+  and (for sites that use the automated cron feature) on occasional page loads
+  by site visitors.
 - Fixed the behavior of the token system's "[node:summary]" token when the body
   field does not have a manual summary.
 - Changed the behavior of db_query_temporary() so that it works on SELECT

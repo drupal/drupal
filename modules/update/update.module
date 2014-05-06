@@ -71,7 +71,7 @@ define('UPDATE_MAX_FETCH_ATTEMPTS', 2);
 /**
  * Maximum number of seconds to try fetching available update data at a time.
  */
-define('UPDATE_MAX_FETCH_TIME', 5);
+define('UPDATE_MAX_FETCH_TIME', 30);
 
 /**
  * Implements hook_help().
