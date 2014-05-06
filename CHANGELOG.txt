@@ -1,6 +1,8 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Fixed the behavior of the token system's "[node:summary]" token when the body
+  field does not have a manual summary.
 - Changed the behavior of db_query_temporary() so that it works on SELECT
   queries even when they have leading comments/whitespace. A side effect of
   this fix is that db_query_temporary() will now fail with an error if it is

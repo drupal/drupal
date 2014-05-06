@@ -2444,6 +2444,35 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
       $output = token_replace($input, array('node' => $node), array('language' => $language, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
+
+    // Repeat for a node without a summary.
+    $settings['body'] = array(LANGUAGE_NONE => array(array('value' => $this->randomName(32), 'summary' => '')));
+    $node = $this->drupalCreateNode($settings);
+
+    // Load node (without summary) so that the body and summary fields are
+    // structured properly.
+    $node = node_load($node->nid);
+    $instance = field_info_instance('node', 'body', $node->type);
+
+    // Generate and test sanitized token - use full body as expected value.
+    $tests = array();
+    $tests['[node:summary]'] = _text_sanitize($instance, $langcode, $node->body[$langcode][0], 'value');
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated for node without a summary.');
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('node' => $node), array('language' => $language));
+      $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced for node without a summary.', array('%token' => $input)));
+    }
+
+    // Generate and test unsanitized tokens.
+    $tests['[node:summary]'] = $node->body[$langcode][0]['value'];
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('node' => $node), array('language' => $language, 'sanitize' => FALSE));
+      $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced for node without a summary.', array('%token' => $input)));
+    }
   }
 }
 
