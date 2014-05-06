@@ -477,8 +477,12 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
       $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getType());
       $class = $definition['class'];
       $schema = $class::schema($this);
-      // Fill in default values for optional entries.
-      $schema += array('indexes' => array(), 'foreign keys' => array());
+      // Fill in default values.
+      $schema += array(
+        'columns' => array(),
+        'indexes' => array(),
+        'foreign keys' => array(),
+      );
 
       // Check that the schema does not include forbidden column names.
       if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {

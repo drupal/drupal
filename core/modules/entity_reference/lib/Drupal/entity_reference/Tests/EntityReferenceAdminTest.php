@@ -17,9 +17,12 @@ class EntityReferenceAdminTest extends WebTestBase {
   /**
    * Modules to enable.
    *
+   * Enable path module to ensure that the selection handler does not fail for
+   * entities with a path field.
+   *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'entity_reference');
+  public static $modules = array('node', 'field_ui', 'entity_reference', 'path');
 
   /**
    * {@inheritdoc}
