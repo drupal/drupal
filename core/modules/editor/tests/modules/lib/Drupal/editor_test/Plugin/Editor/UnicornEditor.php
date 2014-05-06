@@ -46,11 +46,12 @@ class UnicornEditor extends EditorBase {
    * {@inheritdoc}
    */
   function getJSSettings(EditorEntity $editor) {
-    $settings = array();
-    if ($editor->settings['ponies too']) {
-      $settings['ponyModeEnabled'] = TRUE;
+    $js_settings = array();
+    $settings = $editor->getSettings();
+    if ($settings['ponies too']) {
+      $js_settings['ponyModeEnabled'] = TRUE;
     }
-    return $settings;
+    return $js_settings;
   }
 
   /**

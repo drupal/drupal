@@ -109,8 +109,10 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->container->get('plugin.manager.editor')->clearCachedDefinitions();
     $this->ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Format';
+    $settings = $editor->getSettings();
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Format';
+    $editor->setSettings($settings);
     $editor->save();
     $expected_config['toolbar'][0]['items'][] = 'Strike';
     $expected_config['toolbar'][0]['items'][] = 'Format';
@@ -210,7 +212,9 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for default toolbar.');
 
     // Customize the configuration.
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
+    $settings = $editor->getSettings();
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
+    $editor->setSettings($settings);
     $editor->save();
     $expected[0]['items'][] = 'Strike';
     $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for customized toolbar.');
@@ -219,8 +223,9 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->enableModules(array('ckeditor_test'));
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     // Override the label of a toolbar component.
-    $editor->settings['toolbar']['rows'][0][0]['name'] = 'JunkScience';
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
+    $settings['toolbar']['rows'][0][0]['name'] = 'JunkScience';
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
+    $editor->setSettings($settings);
     $editor->save();
     $expected[0]['name'] = 'JunkScience';
     $expected[0]['items'][] = 'Llama';
@@ -258,7 +263,9 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->assertIdentical($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for default toolbar.');
 
     // Format dropdown/button enabled: new setting should be present.
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Format';
+    $settings = $editor->getSettings();
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Format';
+    $editor->setSettings($settings);
     $expected['format_tags'] = 'p;h4;h5;h6';
     $this->assertIdentical($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for customized toolbar.');
   }
@@ -271,23 +278,28 @@ class CKEditorTest extends DrupalUnitTestBase {
     $stylescombo_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('stylescombo');
 
     // Styles dropdown/button enabled: new setting should be present.
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Styles';
-    $editor->settings['plugins']['stylescombo']['styles'] = '';
+    $settings = $editor->getSettings();
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Styles';
+    $settings['plugins']['stylescombo']['styles'] = '';
+    $editor->setSettings($settings);
     $editor->save();
     $expected['stylesSet'] = array();
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
     // Configure the optional "styles" setting in odd ways that shouldn't affect
     // the end result.
-    $editor->settings['plugins']['stylescombo']['styles'] = "   \n";
+    $settings['plugins']['stylescombo']['styles'] = "   \n";
+    $editor->setSettings($settings);
     $editor->save();
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor));
-    $editor->settings['plugins']['stylescombo']['styles'] = "\r\n  \n  \r  \n ";
+    $settings['plugins']['stylescombo']['styles'] = "\r\n  \n  \r  \n ";
+    $editor->setSettings($settings);
     $editor->save();
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
     // Now configure it properly, the end result should change.
-    $editor->settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.mAgical.Callout|Callout";
+    $settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.mAgical.Callout|Callout";
+    $editor->setSettings($settings);
     $editor->save();
     $expected['stylesSet'] = array(
       array('name' => 'Title', 'element' => 'h1', 'attributes' => array('class' => 'title')),
@@ -297,18 +309,21 @@ class CKEditorTest extends DrupalUnitTestBase {
 
     // Same configuration, but now interspersed with nonsense. Should yield the
     // same result.
-    $editor->settings['plugins']['stylescombo']['styles'] = "  h1 .title   |  Title \r \n\r  \np.mAgical  .Callout|Callout\r";
+    $settings['plugins']['stylescombo']['styles'] = "  h1 .title   |  Title \r \n\r  \np.mAgical  .Callout|Callout\r";
+    $editor->setSettings($settings);
     $editor->save();
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
     // Slightly different configuration: class names are optional.
-    $editor->settings['plugins']['stylescombo']['styles'] = "      h1 |  Title ";
+    $settings['plugins']['stylescombo']['styles'] = "      h1 |  Title ";
+    $editor->setSettings($settings);
     $editor->save();
     $expected['stylesSet'] = array(array('name' => 'Title', 'element' => 'h1'));
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');
 
     // Invalid syntax should cause stylesSet to be set to FALSE.
-    $editor->settings['plugins']['stylescombo']['styles'] = "h1";
+    $settings['plugins']['stylescombo']['styles'] = "h1";
+    $editor->setSettings($settings);
     $editor->save();
     $expected['stylesSet'] = FALSE;
     $this->assertIdentical($expected, $stylescombo_plugin->getConfig($editor), '"StylesCombo" plugin configuration built correctly for customized toolbar.');

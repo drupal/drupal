@@ -129,6 +129,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
+    $settings = $editor->getSettings();
+
     $ckeditor_settings_toolbar = array(
       '#theme' => 'ckeditor_settings_toolbar',
       '#editor' => $editor,
@@ -153,7 +155,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $form['toolbar']['button_groups'] = array(
       '#type' => 'textarea',
       '#title' => t('Toolbar buttons'),
-      '#default_value' => json_encode($editor->settings['toolbar']['rows']),
+      '#default_value' => json_encode($settings['toolbar']['rows']),
       '#attributes' => array('class' => array('ckeditor-toolbar-textarea')),
     );
 
@@ -206,7 +208,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
            )
          ),
         ),
-        'plugins' => $editor->settings['plugins'],
+        'plugins' => $settings['plugins'],
       ),
     ));
     $config = $this->getJSSettings($fake_editor);
@@ -380,7 +382,9 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    */
   public function buildToolbarJSSetting(EditorEntity $editor) {
     $toolbar = array();
-    foreach ($editor->settings['toolbar']['rows'] as $row) {
+
+    $settings = $editor->getSettings();
+    foreach ($settings['toolbar']['rows'] as $row) {
       foreach ($row as $group) {
         $toolbar[] = $group;
       }

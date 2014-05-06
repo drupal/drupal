@@ -42,10 +42,11 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getConfig(Editor $editor) {
     $config = array();
-    if (!isset($editor->settings['plugins']['stylescombo']['styles'])) {
+    $settings = $editor->getSettings();
+    if (!isset($settings['plugins']['stylescombo']['styles'])) {
       return $config;
     }
-    $styles = $editor->settings['plugins']['stylescombo']['styles'];
+    $styles = $settings['plugins']['stylescombo']['styles'];
     $config['stylesSet'] = $this->generateStylesSetSetting($styles);
     return $config;
   }
@@ -68,8 +69,9 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
   public function settingsForm(array $form, array &$form_state, Editor $editor) {
     // Defaults.
     $config = array('styles' => '');
-    if (isset($editor->settings['plugins']['stylescombo'])) {
-      $config = $editor->settings['plugins']['stylescombo'];
+    $settings = $editor->getSettings();
+    if (isset($settings['plugins']['stylescombo'])) {
+      $config = $settings['plugins']['stylescombo'];
     }
 
     $form['styles'] = array(

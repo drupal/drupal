@@ -26,7 +26,8 @@ class LlamaContextual extends Llama implements CKEditorPluginContextualInterface
    */
   function isEnabled(Editor $editor) {
     // Automatically enable this plugin if the Underline button is enabled.
-    foreach ($editor->settings['toolbar']['rows'] as $row) {
+    $settings = $editor->getSettings();
+    foreach ($settings['toolbar']['rows'] as $row) {
       foreach ($row as $group) {
         if (in_array('Strike', $group['items'])) {
           return TRUE;

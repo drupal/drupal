@@ -48,13 +48,14 @@ class EditorImageDialog extends FormBase {
     $editor = editor_load($filter_format->format);
 
     // Construct strings to use in the upload validators.
-    if (!empty($editor->image_upload['dimensions'])) {
-      $max_dimensions = $editor->image_upload['dimensions']['max_width'] . 'x' . $editor->image_upload['dimensions']['max_height'];
+    $image_upload = $editor->getImageUploadSettings();
+    if (!empty($image_upload['dimensions'])) {
+      $max_dimensions = $image_upload['dimensions']['max_width'] . 'x' . $image_upload['dimensions']['max_height'];
     }
     else {
       $max_dimensions = 0;
     }
-    $max_filesize = min(parse_size($editor->image_upload['max_size']), file_upload_max_size());
+    $max_filesize = min(parse_size($image_upload['max_size']), file_upload_max_size());
 
     $existing_file = isset($image_element['data-editor-file-uuid']) ? entity_load_by_uuid('file', $image_element['data-editor-file-uuid']) : NULL;
     $fid = $existing_file ? $existing_file->id() : NULL;
@@ -62,7 +63,7 @@ class EditorImageDialog extends FormBase {
     $form['fid'] = array(
       '#title' => $this->t('Image'),
       '#type' => 'managed_file',
-      '#upload_location' => $editor->image_upload['scheme'] . '://' .$editor->image_upload['directory'],
+      '#upload_location' => $image_upload['scheme'] . '://' . $image_upload['directory'],
       '#default_value' => $fid ? array($fid) : NULL,
       '#upload_validators' => array(
         'file_validate_extensions' => array('gif png jpg jpeg'),
@@ -82,7 +83,7 @@ class EditorImageDialog extends FormBase {
 
     // If the editor has image uploads enabled, show a managed_file form item,
     // otherwise show a (file URL) text form item.
-    if ($editor->image_upload['status']) {
+    if ($image_upload['status']) {
       $form['attributes']['src']['#access'] = FALSE;
       $form['attributes']['src']['#required'] = FALSE;
     }

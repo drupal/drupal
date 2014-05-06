@@ -27,7 +27,7 @@ interface CKEditorPluginContextualInterface extends CKEditorPluginInterface {
   /**
    * Checks if this plugin should be enabled based on the editor configuration.
    *
-   * The editor's settings can be found in $editor->settings.
+   * The editor's settings can be retrieved via $editor->getSettings().
    *
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.

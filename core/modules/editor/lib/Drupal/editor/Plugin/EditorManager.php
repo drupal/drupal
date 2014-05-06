@@ -71,7 +71,7 @@ class EditorManager extends DefaultPluginManager {
         continue;
       }
 
-      $plugin = $this->createInstance($editor->editor);
+      $plugin = $this->createInstance($editor->getEditor());
       $plugin_definition = $plugin->getPluginDefinition();
 
       // Libraries.
@@ -80,7 +80,7 @@ class EditorManager extends DefaultPluginManager {
       // Format-specific JavaScript settings.
       $settings['editor']['formats'][$format_id] = array(
         'format' => $format_id,
-        'editor' => $editor->editor,
+        'editor' => $editor->getEditor(),
         'editorSettings' => $plugin->getJSSettings($editor),
         'editorSupportsContentFiltering' => $plugin_definition['supports_content_filtering'],
         'isXssSafe' => $plugin_definition['is_xss_safe'],

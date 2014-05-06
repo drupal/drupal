@@ -79,7 +79,7 @@ function editor_form_filter_admin_overview_alter(&$form, $form_state) {
   $editors = \Drupal::service('plugin.manager.editor')->getDefinitions();
   foreach (Element::children($form['formats']) as $format_id) {
     $editor = editor_load($format_id);
-    $editor_name = ($editor && isset($editors[$editor->editor])) ? $editors[$editor->editor]['label'] : drupal_placeholder('—');
+    $editor_name = ($editor && isset($editors[$editor->getEditor()])) ? $editors[$editor->getEditor()]['label'] : drupal_placeholder('—');
     $editor_column['editor'] = array('#markup' => $editor_name);
     $position = array_search('name', array_keys($form['formats'][$format_id])) + 1;
     $start = array_splice($form['formats'][$format_id], 0, $position, $editor_column);
@@ -110,7 +110,7 @@ function editor_form_filter_format_form_alter(&$form, &$form_state) {
     '#title' => t('Text editor'),
     '#options' => $editor_options,
     '#empty_option' => t('None'),
-    '#default_value' => $editor ? $editor->editor : '',
+    '#default_value' => $editor ? $editor->getEditor() : '',
     '#ajax' => array(
       'trigger_as' => array('name' => 'editor_configure'),
       'callback' => 'editor_form_filter_admin_form_ajax',
@@ -152,7 +152,7 @@ function editor_form_filter_format_form_alter(&$form, &$form_state) {
 
   // Add editor-specific validation and submit handlers.
   if ($editor) {
-    $plugin = $manager->createInstance($editor->editor);
+    $plugin = $manager->createInstance($editor->getEditor());
     $settings_form = array();
     $settings_form['#element_validate'][] = array($plugin, 'settingsFormValidate');
     $form['editor']['settings']['subform'] = $plugin->settingsForm($settings_form, $form_state, $editor);
@@ -173,7 +173,7 @@ function editor_form_filter_admin_format_editor_configure($form, &$form_state) {
     if ($form_state['values']['editor']['editor'] === '') {
       $form_state['editor'] = FALSE;
     }
-    elseif (empty($editor) || $form_state['values']['editor']['editor'] !== $editor->editor) {
+    elseif (empty($editor) || $form_state['values']['editor']['editor'] !== $editor->getEditor()) {
       $editor = entity_create('editor', array(
         'format' => $form_state['controller']->getEntity()->id(),
         'editor' => $form_state['values']['editor']['editor'],
@@ -216,7 +216,7 @@ function editor_form_filter_admin_format_submit($form, &$form_state) {
   // Delete the existing editor if disabling or switching between editors.
   $format_id = $form_state['controller']->getEntity()->id();
   $original_editor = editor_load($format_id);
-  if ($original_editor && $original_editor->editor != $form_state['values']['editor']) {
+  if ($original_editor && $original_editor->getEditor() != $form_state['values']['editor']) {
     $original_editor->delete();
   }
 
@@ -224,8 +224,8 @@ function editor_form_filter_admin_format_submit($form, &$form_state) {
   if (!empty($form_state['editor'])) {
     // Ensure the text format is set: when creating a new text format, this
     // would equal the empty string.
-    $form_state['editor']->format = $format_id;
-    $form_state['editor']->settings = $form_state['values']['editor']['settings'];
+    $form_state['editor']->set('format', $format_id);
+    $form_state['editor']->setSettings($form_state['values']['editor']['settings']);
     $form_state['editor']->save();
   }
 }
@@ -359,7 +359,7 @@ function editor_filter_xss($html, FilterFormatInterface $format, FilterFormatInt
 
   // If the text editor associated with this text format guarantees security,
   // then we also don't need text editor XSS filtering.
-  $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->editor);
+  $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->getEditor());
   if ($definition['is_xss_safe'] === TRUE) {
     return FALSE;
   }

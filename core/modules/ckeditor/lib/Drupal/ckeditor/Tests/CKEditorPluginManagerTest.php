@@ -104,8 +104,10 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
     // cause the LlamaContextual and LlamaContextualAndButton plugins to be
     // enabled. Finally, we will add the "Strike" button back again, which would
     // cause all three plugins to be enabled.
-    $original_toolbar = $editor->settings['toolbar'];
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
+    $settings = $editor->getSettings();
+    $original_toolbar = $settings['toolbar'];
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
+    $editor->setSettings($settings);
     $editor->save();
     $file = array();
     $file['b'] = 'core/modules/ckeditor/tests/modules/js/llama_button.js';
@@ -114,13 +116,15 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
     $expected = $enabled_plugins + array('llama_button' => $file['b'], 'llama_contextual_and_button' => $file['cb']);
     $this->assertIdentical($expected, $this->manager->getEnabledPluginFiles($editor), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
     $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPluginFiles($editor, TRUE), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
-    $editor->settings['toolbar'] = $original_toolbar;
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
+    $settings['toolbar'] = $original_toolbar;
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
+    $editor->setSettings($settings);
     $editor->save();
     $expected = $enabled_plugins + array('llama_contextual' => $file['c'], 'llama_contextual_and_button' => $file['cb']);
     $this->assertIdentical($expected, $this->manager->getEnabledPluginFiles($editor), 'The  LLamaContextual and LlamaContextualAndButton plugins are enabled.');
     $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPluginFiles($editor, TRUE), 'The LlamaContextual and LlamaContextualAndButton plugins are enabled.');
-    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
+    $settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
+    $editor->setSettings($settings);
     $editor->save();
     $expected = $enabled_plugins + array('llama_button' => $file['b'], 'llama_contextual' => $file['c'], 'llama_contextual_and_button' => $file['cb']);
     $this->assertIdentical($expected, $this->manager->getEnabledPluginFiles($editor), 'The LlamaButton, LlamaContextual and LlamaContextualAndButton plugins are enabled.');

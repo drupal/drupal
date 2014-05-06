@@ -55,8 +55,9 @@ class Internal extends CKEditorPluginBase {
 
     // Add the format_tags setting, if its button is enabled.
     $toolbar_rows = array();
-    foreach ($editor->settings['toolbar']['rows'] as $row_number => $row) {
-      $toolbar_rows[] = array_reduce($editor->settings['toolbar']['rows'][$row_number], function (&$result, $button_group) {
+    $settings = $editor->getSettings();
+    foreach ($settings['toolbar']['rows'] as $row_number => $row) {
+      $toolbar_rows[] = array_reduce($settings['toolbar']['rows'][$row_number], function (&$result, $button_group) {
         return array_merge($result, $button_group['items']);
       }, array());
     }
@@ -259,7 +260,7 @@ class Internal extends CKEditorPluginBase {
     $possible_format_tags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre');
     foreach ($possible_format_tags as $tag) {
       $input = '<' . $tag . '>TEST</' . $tag . '>';
-      $output = trim(check_markup($input, $editor->format, '', TRUE));
+      $output = trim(check_markup($input, $editor->id(), '', TRUE));
       if ($input == $output) {
         $format_tags[] = $tag;
       }

@@ -37,7 +37,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     // associated editor and that editor supports inline editing.
     elseif ($field_definition->getSetting('text_processing')) {
       if ($editor = editor_load($items[0]->format)) {
-        $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->editor);
+        $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->getEditor());
         if ($definition['supports_inline_editing'] === TRUE) {
           return TRUE;
         }
@@ -79,7 +79,8 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     $formats = array();
     foreach ($user_format_ids as $format_id) {
       $editor = editor_load($format_id);
-      if ($editor && isset($definitions[$editor->editor]) && isset($definitions[$editor->editor]['supports_inline_editing']) && $definitions[$editor->editor]['supports_inline_editing'] === TRUE) {
+      $editor_id = $editor->getEditor();
+      if ($editor && isset($definitions[$editor_id]) && isset($definitions[$editor_id]['supports_inline_editing']) && $definitions[$editor_id]['supports_inline_editing'] === TRUE) {
         $formats[] = $format_id;
       }
     }

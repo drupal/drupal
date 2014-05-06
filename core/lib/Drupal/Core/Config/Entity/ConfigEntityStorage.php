@@ -220,9 +220,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     // @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
     // @todo Consider moving this to a protected method on the parent class, and
     //   abstracting it for all entity types.
-    if (strlen($entity->{$this->idKey}) > self::MAX_ID_LENGTH) {
+    if (strlen($entity->get($this->idKey)) > self::MAX_ID_LENGTH) {
       throw new ConfigEntityIdLengthException(String::format('Configuration entity ID @id exceeds maximum allowed length of @length characters.', array(
-        '@id' => $entity->{$this->idKey},
+        '@id' => $entity->get($this->idKey),
         '@length' => self::MAX_ID_LENGTH,
       )));
     }

@@ -130,7 +130,7 @@ class CKEditorAdminTest extends WebTestBase {
     $expected_settings['plugins']['stylescombo']['styles'] = '';
     $editor = entity_load('editor', 'filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists now.');
-    $this->assertIdentical($expected_settings, $editor->settings, 'The Editor config entity has the correct settings.');
+    $this->assertIdentical($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Configure the Styles plugin, and ensure the updated settings are saved.
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
@@ -141,7 +141,7 @@ class CKEditorAdminTest extends WebTestBase {
     $expected_settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.callout|Callout\n\n";
     $editor = entity_load('editor', 'filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
-    $this->assertIdentical($expected_settings, $editor->settings, 'The Editor config entity has the correct settings.');
+    $this->assertIdentical($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Change the buttons that appear on the toolbar (in JavaScript, this is
     // done via drag and drop, but here we can only emulate the end result of
@@ -158,7 +158,7 @@ class CKEditorAdminTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $editor = entity_load('editor', 'filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
-    $this->assertIdentical($expected_settings, $editor->settings, 'The Editor config entity has the correct settings.');
+    $this->assertIdentical($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Now enable the ckeditor_test module, which provides one configurable
     // CKEditor plugin — this should not affect the Editor config entity.
@@ -170,7 +170,7 @@ class CKEditorAdminTest extends WebTestBase {
     $this->assertTrue(count($ultra_llama_mode_checkbox) === 1, 'The "Ultra llama mode" checkbox exists and is not checked.');
     $editor = entity_load('editor', 'filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
-    $this->assertIdentical($expected_settings, $editor->settings, 'The Editor config entity has the correct settings.');
+    $this->assertIdentical($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Finally, check the "Ultra llama mode" checkbox.
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
@@ -184,7 +184,7 @@ class CKEditorAdminTest extends WebTestBase {
     $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = 1;
     $editor = entity_load('editor', 'filtered_html');
     $this->assertTrue($editor instanceof Editor, 'An Editor config entity exists.');
-    $this->assertIdentical($expected_settings, $editor->settings);
+    $this->assertIdentical($expected_settings, $editor->getSettings());
   }
 
 }

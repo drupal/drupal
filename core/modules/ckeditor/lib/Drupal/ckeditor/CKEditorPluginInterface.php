@@ -79,11 +79,15 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
   /**
    * Returns the additions to CKEDITOR.config for a specific CKEditor instance.
    *
-   * The editor's settings can be found in $editor->settings, but be aware that
-   * it may not yet contain plugin-specific settings, because the user may not
-   * yet have configured the form.
+   * The editor's settings can be retrieved via $editor->getSettings(), but be
+   * aware that it may not yet contain plugin-specific settings, because the
+   * user may not yet have configured the form.
    * If there are plugin-specific settings (verify with isset()), they can be
-   * found at $editor->settings['plugins'][$plugin_id].
+   * found at
+   * @code
+   * $settings = $editor->getSettings();
+   * $plugin_specific_settings = $settings['plugins'][$plugin_id];
+   * @endcode
    *
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.

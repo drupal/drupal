@@ -69,7 +69,8 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
     // enabled.
     if ($editor->getFilterFormat()->filters('filter_caption')->status) {
       $enabled = FALSE;
-      foreach ($editor->settings['toolbar']['rows'] as $row) {
+      $settings = $editor->getSettings();
+      foreach ($settings['toolbar']['rows'] as $row) {
         foreach ($row as $group) {
           foreach ($group['items'] as $button) {
             if ($button === 'DrupalImage') {
