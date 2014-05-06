@@ -460,7 +460,8 @@ function node_uninstall() {
   foreach ($types as $config_name) {
     $type = \Drupal::config($config_name)->get('type');
     if (\Drupal::moduleHandler()->moduleExists('language')) {
-      \Drupal::config('language.settings')->clear('node. ' . $type . '.language.default_configuration')->save();
+      $key = language_get_default_configuration_settings_key('node', $type);
+      \Drupal::config('language.settings')->clear($key)->save();
     }
   }
 

@@ -106,3 +106,32 @@ language.entity.*:
     langcode:
       type: string
       label: 'Default language'
+
+language.settings:
+  type: mapping
+  label: 'Language settings'
+  mapping:
+    entities:
+      type: sequence
+      label: 'Entity type'
+      sequence:
+        - type: sequence
+          label: 'Bundle'
+          sequence:
+            - type: mapping
+              label: 'Custom language settings'
+              mapping:
+                language:
+                  type: mapping
+                  label: 'Custom language settings'
+                  mapping:
+                    default_configuration:
+                      type: mapping
+                      label: 'Default language'
+                      mapping:
+                        langcode:
+                          type: string
+                          label: 'Default language'
+                        language_show:
+                          type: boolean
+                          label: 'Show language selector on create and edit pages'
