@@ -22,6 +22,8 @@ use Drupal\Core\Session\AccountInterface;
  * This abstract class provides the generic block configuration form, default
  * block settings, and handling for general user-defined block visibility
  * settings.
+ *
+ * @ingroup block_api
  */
 abstract class BlockBase extends PluginBase implements BlockPluginInterface {
 

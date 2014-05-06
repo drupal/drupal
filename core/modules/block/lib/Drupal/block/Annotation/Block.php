@@ -12,6 +12,8 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a Block annotation object.
  *
+ * @ingroup block_api
+ *
  * @Annotation
  */
 class Block extends Plugin {

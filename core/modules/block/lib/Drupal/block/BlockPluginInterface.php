@@ -20,6 +20,8 @@ use Drupal\Core\Session\AccountInterface;
  *   architecture and the relationships between the various objects, including
  *   brif references to the important components that are not coupled to the
  *   interface.
+ *
+ * @ingroup block_api
  */
 interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface, CacheableInterface {
 
