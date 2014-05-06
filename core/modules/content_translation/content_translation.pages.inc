@@ -30,11 +30,10 @@ function content_translation_overview(EntityInterface $entity) {
     $rel[$name] = $entity->getSystemPath($name);
   }
 
-  $header = array(t('Language'), t('Translation'), t('Source language'), t('Status'), t('Operations'));
   $rows = array();
+  $show_source_column = FALSE;
 
   if (\Drupal::languageManager()->isMultilingual()) {
-
     // Determine whether the current entity is translatable.
     $translatable = FALSE;
     foreach (\Drupal::entityManager()->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {
@@ -43,6 +42,12 @@ function content_translation_overview(EntityInterface $entity) {
         break;
       }
     }
+
+    // Show source-language column if there are non-original source langcodes.
+    $additional_source_langcodes = array_filter($entity->translation, function ($translation) use ($original) {
+      return !empty($translation['source']) && $translation['source'] != $original;
+    });
+    $show_source_column = !empty($additional_source_langcodes);
 
     foreach ($languages as $language) {
       $language_name = $language->name;
@@ -125,7 +130,12 @@ function content_translation_overview(EntityInterface $entity) {
         $status = t('Not translated');
       }
 
-      $rows[] = array($language_name, $row_title, $source_name, $status, $operations);
+      if ($show_source_column) {
+        $rows[] = array($language_name, $row_title, $source_name, $status, $operations);
+      }
+      else {
+        $rows[] = array($language_name, $row_title, $status, $operations);
+      }
     }
   }
 
@@ -134,6 +144,13 @@ function content_translation_overview(EntityInterface $entity) {
   // Add metadata to the build render array to let other modules know about
   // which entity this is.
   $build['#entity'] = $entity;
+
+  if ($show_source_column) {
+    $header = array(t('Language'), t('Translation'), t('Source language'), t('Status'), t('Operations'));
+  }
+  else {
+    $header = array(t('Language'), t('Translation'), t('Status'), t('Operations'));
+  }
 
   $build['content_translation_overview'] = array(
     '#type' => 'table',
