@@ -1,6 +1,9 @@
 
 Drupal 7.28, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a regression introduced in Drupal 7.27 that caused JavaScript to break
+  on older browsers (such as Internet Explorer 8 and earlier) when Ajax was
+  used.
 - Increased the timeout used by the Update Manager module when it fetches data
   from drupal.org (from 5 seconds to 30 seconds), to work around a problem
   which causes incomplete information about security updates to be presented to
