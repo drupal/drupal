@@ -7,7 +7,7 @@
 
 namespace Drupal\rest\Plugin\views\display;
 
-
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\ContentNegotiation;
@@ -99,13 +99,15 @@ class RestExport extends PathPluginBase {
    *   The route provider
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_error
+   *   The form builder.
    * @param \Drupal\Core\ContentNegotiation $content_negotiation
    *   The content negotiation library.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, ContentNegotiation $content_negotiation, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, FormBuilderInterface $form_error, ContentNegotiation $content_negotiation, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state, $form_error);
     $this->contentNegotiation = $content_negotiation;
     $this->request = $request;
   }
@@ -120,6 +122,7 @@ class RestExport extends PathPluginBase {
       $plugin_definition,
       $container->get('router.route_provider'),
       $container->get('state'),
+      $container->get('form_builder'),
       $container->get('content_negotiation'),
       $container->get('request')
     );

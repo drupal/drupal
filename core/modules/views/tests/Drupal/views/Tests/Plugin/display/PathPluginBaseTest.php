@@ -47,6 +47,13 @@ class PathPluginBaseTest extends UnitTestCase {
    */
   protected $state;
 
+  /**
+   * The mocked form error.
+   *
+   * @var \Drupal\Core\Form\FormErrorInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $formError;
+
   public static function getInfo() {
     return array(
       'name' => 'Display: Path plugin base.',
@@ -63,8 +70,9 @@ class PathPluginBaseTest extends UnitTestCase {
 
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->state = $this->getMock('\Drupal\Core\State\StateInterface');
+    $this->formError = $this->getMock('Drupal\Core\Form\FormErrorInterface');
     $this->pathPlugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
-      ->setConstructorArgs(array(array(), 'path_base', array(), $this->routeProvider, $this->state))
+      ->setConstructorArgs(array(array(), 'path_base', array(), $this->routeProvider, $this->state, $this->formError))
       ->setMethods(NULL)
       ->getMock();
     $this->setupContainer();

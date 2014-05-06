@@ -30,6 +30,14 @@ class DisplayPath extends UITestBase {
   }
 
   public function testPathUI() {
+    $this->doBasicPathUITest();
+    $this->doAdvancedPathsValidationTest();
+  }
+
+  /**
+   * Tests basic functionality in configuring a view.
+   */
+  protected function doBasicPathUITest() {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.
@@ -42,6 +50,21 @@ class DisplayPath extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_path), t('Apply'));
     $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
     $this->assertLink(t('View @display', array('@display' => 'Page')), 0, 'view page link found on the page.');
+  }
+
+  /**
+   * Tests a couple of invalid path patterns.
+   */
+  protected function doAdvancedPathsValidationTest() {
+    $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
+
+    $this->drupalPostForm($url, array('path' => '%/magrathea'), t('Apply'));
+    $this->assertUrl($url);
+    $this->assertText('"%" may not be used for the first segment of a path.');
+
+    $this->drupalPostForm($url, array('path' => 'user/%1/example'), t('Apply'));
+    $this->assertUrl($url);
+    $this->assertText("Numeric placeholders may not be used. Please use plain placeholders (%).");
   }
 
   /**
