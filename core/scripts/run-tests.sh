@@ -7,8 +7,8 @@
 
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Database\Database;
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Test\TestKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -364,9 +364,6 @@ function simpletest_script_bootstrap() {
     require_once $include;
   }
 
-  // Replace services with in-memory and null implementations.
-  $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\InstallerServiceProvider';
-
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
   // Remove Drupal's error/exception handlers; they are designed for HTML
@@ -384,7 +381,7 @@ function simpletest_script_bootstrap() {
     ));
   }
 
-  $kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
+  $kernel = new TestKernel(drupal_classloader());
   $kernel->boot();
 
   $request = Request::createFromGlobals();
@@ -394,14 +391,7 @@ function simpletest_script_bootstrap() {
   $container->get('request_stack')->push($request);
 
   $module_handler = $container->get('module_handler');
-  // @todo Remove System module. Only needed because \Drupal\Core\Datetime\Date
-  //   has a (needless) dependency on the 'date_format' entity, so calls to
-  //   format_date()/format_interval() cause a plugin not found exception.
-  $module_handler->addModule('system', 'core/modules/system');
-  $module_handler->addModule('simpletest', 'core/modules/simpletest');
   $module_handler->loadAll();
-  $module_filenames = $module_handler->getModuleList();
-  $kernel->updateModules($module_filenames, $module_filenames);
 
   simpletest_classloader_register();
 }
