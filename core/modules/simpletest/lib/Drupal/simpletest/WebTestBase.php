@@ -887,9 +887,16 @@ abstract class WebTestBase extends TestBase {
       ->set('interface.default', 'test_mail_collector')
       ->save();
 
-    // Ensure errors are displayed.
+    // By default, verbosely display all errors and disable all production
+    // environment optimizations for all tests to avoid needless overhead and
+    // ensure a sane default experience for test authors.
+    // @see https://drupal.org/node/2259167
     \Drupal::config('system.logging')
-      ->set('error_level', 'all')
+      ->set('error_level', 'verbose')
+      ->save();
+    \Drupal::config('system.performance')
+      ->set('css.preprocess', FALSE)
+      ->set('js.preprocess', FALSE)
       ->save();
 
     // Restore the original Simpletest batch.

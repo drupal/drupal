@@ -89,11 +89,6 @@ class ColorTest extends WebTestBase {
       '123456' => FALSE,
       '#00000g' => FALSE,
     );
-
-    // Turn off CSS aggregation.
-    \Drupal::config('system.performance')
-      ->set('css.preprocess', FALSE)
-      ->save();
   }
 
   /**

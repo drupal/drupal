@@ -29,11 +29,6 @@ class NoJavaScriptAnonymousTest extends WebTestBase {
 
     // Grant the anonymous user the permission to look at user profiles.
     user_role_grant_permissions('anonymous', array('access user profiles'));
-
-    // Turn off JS aggregation.
-    \Drupal::config('system.performance')
-      ->set('js.preprocess', FALSE)
-      ->save();
   }
 
   /**

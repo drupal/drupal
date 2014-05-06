@@ -30,18 +30,6 @@ class ThemeInfoStylesTest extends WebTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    // Turn off CSS aggregation.
-    \Drupal::config('system.performance')
-      ->set('css.preprocess', FALSE)
-      ->save();
-  }
-
-  /**
    * Tests stylesheets-override and stylesheets-remove.
    */
   function testStylesheets() {

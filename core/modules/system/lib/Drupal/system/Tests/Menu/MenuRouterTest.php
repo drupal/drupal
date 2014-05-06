@@ -47,11 +47,6 @@ class MenuRouterTest extends WebTestBase {
     // Enable dummy module that implements hook_menu.
     parent::setUp();
 
-    // Turn off CSS aggregation.
-    \Drupal::config('system.performance')
-      ->set('css.preprocess', FALSE)
-      ->save();
-
     $this->drupalPlaceBlock('system_menu_block:tools');
   }
 

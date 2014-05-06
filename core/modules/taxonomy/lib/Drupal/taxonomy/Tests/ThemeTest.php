@@ -31,11 +31,6 @@ class ThemeTest extends TaxonomyTestBase {
       ->set('admin', 'seven')
       ->save();
 
-    // Turn off CSS aggregation.
-    \Drupal::config('system.performance')
-      ->set('css.preprocess', FALSE)
-      ->save();
-
     // Create and log in as a user who has permission to add and edit taxonomy
     // terms and view the administrative theme.
     $admin_user = $this->drupalCreateUser(array('administer taxonomy', 'view the administration theme'));
