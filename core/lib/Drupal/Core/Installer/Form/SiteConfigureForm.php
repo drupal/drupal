@@ -147,26 +147,23 @@ class SiteConfigureForm extends FormBase {
       '#title' => $this->t('Site maintenance account'),
     );
     $form['admin_account']['account']['#tree'] = TRUE;
+    $form['admin_account']['account']['mail'] = array(
+      '#type' => 'email',
+      '#title' => $this->t('E-mail address'),
+      '#required' => TRUE,
+    );
     $form['admin_account']['account']['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Username'),
       '#maxlength' => USERNAME_MAX_LENGTH,
       '#description' => $this->t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, and underscores.'),
       '#required' => TRUE,
-      '#weight' => -10,
       '#attributes' => array('class' => array('username')),
-    );
-    $form['admin_account']['account']['mail'] = array(
-      '#type' => 'email',
-      '#title' => $this->t('E-mail address'),
-      '#required' => TRUE,
-      '#weight' => -5,
     );
     $form['admin_account']['account']['pass'] = array(
       '#type' => 'password_confirm',
       '#required' => TRUE,
       '#size' => 25,
-      '#weight' => 0,
     );
 
     $form['regional_settings'] = array(

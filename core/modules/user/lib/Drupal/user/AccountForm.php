@@ -82,20 +82,6 @@ abstract class AccountForm extends ContentEntityForm {
       '#weight' => -10,
     );
 
-    // Only show name field on registration form or user can change own username.
-    $form['account']['name'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Username'),
-      '#maxlength' => USERNAME_MAX_LENGTH,
-      '#description' => $this->t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
-      '#required' => TRUE,
-      '#attributes' => array('class' => array('username'), 'autocorrect' => 'off', 'autocomplete' => 'off', 'autocapitalize' => 'off',
-      'spellcheck' => 'false'),
-      '#default_value' => (!$register ? $account->getUsername() : ''),
-      '#access' => ($register || ($user->id() == $account->id() && $user->hasPermission('change own username')) || $admin),
-      '#weight' => -10,
-    );
-
     // The mail field is NOT required if account originally had no mail set
     // and the user performing the edit has 'administer users' permission.
     // This allows users without e-mail address to be edited and deleted.
@@ -105,7 +91,23 @@ abstract class AccountForm extends ContentEntityForm {
       '#description' => $this->t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
       '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
       '#default_value' => (!$register ? $account->getEmail() : ''),
-      '#attributes' => array('autocomplete' => 'off'),
+    );
+
+    // Only show name field on registration form or user can change own username.
+    $form['account']['name'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Username'),
+      '#maxlength' => USERNAME_MAX_LENGTH,
+      '#description' => $this->t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
+      '#required' => TRUE,
+      '#attributes' => array(
+        'class' => array('username'),
+        'autocorrect' => 'off',
+        'autocapitalize' => 'off',
+        'spellcheck' => 'false',
+      ),
+      '#default_value' => (!$register ? $account->getUsername() : ''),
+      '#access' => ($register || ($user->id() == $account->id() && $user->hasPermission('change own username')) || $admin),
     );
 
     // Display password field only for existing users or when user is allowed to
@@ -164,6 +166,16 @@ abstract class AccountForm extends ContentEntityForm {
         '#description' => $this->t('Provide a password for the new account in both fields.'),
         '#required' => TRUE,
       );
+    }
+
+    // When not building the user registration form, prevent web browsers from
+    // autofilling/prefilling the email, username, and password fields.
+    if ($this->getOperation() != 'register') {
+      foreach (array('mail', 'name', 'pass') as $key) {
+        if (isset($form['account'][$key])) {
+          $form['account'][$key]['#attributes']['autocomplete'] = 'off';
+        }
+      }
     }
 
     if ($admin) {
