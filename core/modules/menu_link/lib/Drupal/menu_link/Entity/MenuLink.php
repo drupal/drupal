@@ -524,7 +524,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     }
 
     // Find the route_name.
-    if (!isset($this->route_name)) {
+    if (!$this->external && !isset($this->route_name)) {
       $url = Url::createFromPath($this->link_path);
       $this->route_name = $url->getRouteName();
       $this->route_parameters = $url->getRouteParameters();

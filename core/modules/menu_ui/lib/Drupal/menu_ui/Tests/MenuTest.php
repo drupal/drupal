@@ -395,6 +395,19 @@ class MenuTest extends MenuWebTestBase {
     // Verify in the database.
     $this->assertMenuLink($item1['mlid'], array('hidden' => 0));
 
+    // Add an external link.
+    $item7 = $this->addMenuLink(0, 'http://drupal.org', $menu_name);
+    $this->assertMenuLink($item7['mlid'], array('link_path' => 'http://drupal.org', 'external' => 1));
+
+    // Add <front> menu item.
+    $item8 = $this->addMenuLink(0, '<front>', $menu_name);
+    $this->assertMenuLink($item8['mlid'], array('link_path' => '<front>', 'external' => 1));
+    $this->drupalGet('');
+    $this->assertResponse(200);
+    // Make sure we get routed correctly.
+    $this->clickLink($item8['link_title']);
+    $this->assertResponse(200);
+
     // Save menu links for later tests.
     $this->items[] = $item1;
     $this->items[] = $item2;
