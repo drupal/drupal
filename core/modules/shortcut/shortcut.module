@@ -341,7 +341,6 @@ function shortcut_preprocess_page(&$variables) {
   $request = \Drupal::request();
   $item = array();
   if ($route = $request->attributes->get(RouteObjectInterface::ROUTE_NAME)) {
-    $item['href'] = $request->attributes->get('_system_path');
     // @todo What should be done on a 404/403 page?
     $item['access'] = TRUE;
   }
