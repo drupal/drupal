@@ -110,9 +110,6 @@ class FieldEditForm extends FormBase {
     // Build the configurable field values.
     $cardinality = $field->getCardinality();
     $form['field']['cardinality_container'] = array(
-      // We can't use the container element because it doesn't support the title
-      // or description properties.
-      '#type' => 'item',
       // Reset #parents to 'field', so the additional container does not appear.
       '#parents' => array('field'),
       '#type' => 'fieldset',
