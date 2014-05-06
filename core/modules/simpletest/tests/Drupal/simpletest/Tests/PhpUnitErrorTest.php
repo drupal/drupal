@@ -6,6 +6,9 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Test PHPUnit errors are getting converted to Simpletest errors.
+ *
+ * @group Drupal
+ * @group simpletest
  */
 class PhpUnitErrorTest extends UnitTestCase {
 
@@ -20,6 +23,8 @@ class PhpUnitErrorTest extends UnitTestCase {
 
   /**
    * Test errors reported.
+   *
+   * @covers ::simpletest_phpunit_xml_to_rows
    */
   public function testPhpUnitXmlParsing() {
     // This test class could be either in tests/Drupal/simpletest/Tests/, or in

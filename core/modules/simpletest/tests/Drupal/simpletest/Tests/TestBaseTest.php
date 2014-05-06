@@ -11,6 +11,10 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests helper methods provided by the abstract TestBase class.
+ *
+ * @coversDefaultClass \Drupal\simpletest\TestBase
+ * @group Drupal
+ * @group simpletest
  */
 class TestBaseTest extends UnitTestCase {
 
@@ -64,6 +68,7 @@ class TestBaseTest extends UnitTestCase {
    * @see \Drupal\simpletest\TestBase::randomStringValidate().
    *
    * @dataProvider randomStringValidateProvider
+   * @covers ::randomStringValidate
    */
   public function testRandomStringValidate($string, $expected) {
     $actual = $this->stub->randomStringValidate($string);

@@ -11,6 +11,9 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Test PHPUnit autoloader works correctly.
+ *
+ * @group Drupal
+ * @group simpletest
  */
 class PhpUnitAutoloaderTest extends UnitTestCase {
 

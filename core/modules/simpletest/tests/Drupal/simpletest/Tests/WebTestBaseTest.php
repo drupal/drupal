@@ -13,7 +13,8 @@ use Drupal\Tests\UnitTestCase;
  * Tests helper methods provided by the abstract WebTestBase class.
  *
  * @group Drupal
- * @group Simpletest
+ * @group simpletest
+ * @coversDefaultClass \Drupal\simpletest\WebTestBase
  */
 class WebTestBaseTest extends UnitTestCase {
 
@@ -60,6 +61,7 @@ class WebTestBaseTest extends UnitTestCase {
    * @see \Drupal\simpletest\WebTestBase::assertFieldByName()
    *
    * @dataProvider providerAssertFieldByName
+   * @covers ::assertFieldByName
    */
   public function testAssertFieldByName($filename, $name, $value, $expected) {
     $content = file_get_contents(__DIR__ . '/Fixtures/' . $filename . '.html');
