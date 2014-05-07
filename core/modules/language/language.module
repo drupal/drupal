@@ -14,13 +14,14 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
 use Drupal\node\NodeTypeInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function language_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#language':
+function language_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.language':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Language module allows you to maintain a list of languages used on your Drupal site for providing language information for content and for interface translation (using the Locale module). For more information, see the online handbook entry for <a href="@language">Language module</a>.', array('@language' => 'http://drupal.org/documentation/modules/language')) . '</p>';
@@ -33,38 +34,43 @@ function language_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/regional/language':
+    case 'language.admin_overview':
       return '<p>' . t('Reorder the added languages to set their order in the language switcher block and, when editing content, in the list of selectable languages. This ordering does not impact <a href="@detection">detection and selection</a>.', array('@detection' => url('admin/config/regional/language/detection'))) . '</p>';
 
-    case 'admin/config/regional/language/add':
+    case 'language.add':
       return '<p>' . t('Add a language to be supported by your site. If your desired language is not available, pick <em>Custom language...</em> at the end and provide a language code and other details manually.') . '</p>';
 
-    case 'admin/config/regional/language/detection':
+    case 'language.negotiation':
       $output = '<p>' . t('Define how to decide which language is used to display page elements (primarily text provided by Drupal and modules, such as field labels and help text). This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used for that type of text. Be aware that some language negotiation methods are unreliable under certain conditions, such as browser detection when page-caching is enabled and a user is not currently logged in. Define the order of evaluation of language detection methods on this page. Default language can be changed at the <a href="@region-settings">Regional settings</a> page.', array('@region-settings' => url('admin/config/regional/settings'))) . '</p>';
       return $output;
 
-    case 'admin/config/regional/language/detection/session':
+    case 'language.negotiation_session':
       $output = '<p>' . t('Determine the language from a request/session parameter. Example: "http://example.com?language=de" sets language to German based on the use of "de" within the "language" parameter.') . '</p>';
       return $output;
 
-    case 'admin/config/regional/language/detection/browser':
+    case 'language.negotiation_browser':
       $output = '<p>' . t('Browsers use different language codes to refer to the same languages. You can add and edit mappings from browser language codes to the <a href="@configure-languages">languages used by Drupal</a>.', array('@configure-languages' => url('admin/config/regional/language'))) . '</p>';
       return $output;
 
-    case 'admin/config/regional/language/detection/selected':
+    case 'language.negotiation_selected':
       $output = '<p>' . t('Changing the selected language here (and leaving this option as the last among the detection and selection options) is the easiest way to change the fallback language for the website, if you need to change how your site works by default (eg. when using an empty path prefix or using the default domain). <a href="@admin-change-language">Changing the site\'s default language</a> itself might have other undesired side effects.
 ', array('@admin-change-language' => url('admin/config/regional/language'))) . '</p>';
 
       return $output;
 
-    case 'admin/structure/block/manage/%':
-    case 'admin/structure/block/add/%/%':
-      if ($arg[4] == 'language' && $arg[5] == 'language_interface') {
+    case 'block.admin_edit':
+      if (($block = $request->attributes->get('block')) && $block->get('plugin') == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;
 
-    case 'admin/config/regional/content-language':
+    case 'block.admin_add':
+      if ($request->attributes->get('plugin_id') == 'language_block:language_interface') {
+        return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
+      }
+      break;
+
+    case 'language.content_settings_page':
       return t('Change language settings for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>user profiles</em>, or any other supported element on your site. By default, language settings hide the language selector and the language is the site\'s default language.');
   }
 }

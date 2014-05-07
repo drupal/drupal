@@ -10,13 +10,14 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinition;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function path_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#path':
+function path_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.path':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Path module allows you to specify an alias, or custom URL, for any existing internal system path. Aliases should not be confused with URL redirects, which allow you to forward a changed or inactive URL to a new URL. In addition to making URLs more readable, aliases also help search engines index content more effectively. Multiple aliases may be used for a single internal system path. To automate the aliasing of paths, you can install the contributed module <a href="@pathauto">Pathauto</a>. For more information, see the online handbook entry for the <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/documentation/modules/path', '@pathauto' => 'http://drupal.org/project/pathauto')) . '</p>';
@@ -32,10 +33,10 @@ function path_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/search/path':
+    case 'path.admin_overview':
       return '<p>' . t("An alias defines a different name for an existing URL path - for example, the alias 'about' for the URL path 'node/1'. A URL path can have multiple aliases.") . '</p>';
 
-    case 'admin/config/search/path/add':
+    case 'path.admin_add':
       return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
   }
 }

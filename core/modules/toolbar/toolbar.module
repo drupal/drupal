@@ -10,6 +10,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\menu_link\MenuLinkInterface;
 use Drupal\user\RoleInterface;
@@ -18,9 +19,9 @@ use Drupal\user\UserInterface;
 /**
  * Implements hook_help().
  */
-function toolbar_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#toolbar':
+function toolbar_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.toolbar':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Toolbar module displays links to top-level administration menu items and links from other modules at the top of the screen. For more information, see the online handbook entry for <a href="@toolbar">Toolbar module</a>.', array('@toolbar' => 'http://drupal.org/documentation/modules/toolbar')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';

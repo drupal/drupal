@@ -7,13 +7,14 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function text_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#text':
+function text_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.text':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Text module allows you to create short and long text fields with optional summaries. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!text_documentation">online documentation for the Text module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')), '!text_documentation' => 'https://drupal.org/documentation/modules/text')) . '</p>';

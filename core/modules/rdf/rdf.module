@@ -7,13 +7,14 @@
 
 use Drupal\Core\Template\Attribute;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function rdf_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#rdf':
+function rdf_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.rdf':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The RDF module enriches your content with metadata to let other applications (e.g., search engines, aggregators, and so on) better understand its relationships and attributes. This semantically enriched, machine-readable output for Drupal sites uses the <a href="!rdfa">RDFa specification</a>, which allows RDF data to be embedded in HTML markup. Other modules can define mappings of their data to RDF terms, and the RDF module makes this RDF data available to the theme. The core Drupal modules define RDF mappings for their data model, and the core Drupal themes output this RDF metadata information along with the human-readable visual information. For more information, see the <a href="!rdf">online documentation for the RDF module</a>.', array('!rdfa' => 'http://www.w3.org/TR/xhtml-rdfa-primer/', '!rdf' => 'https://drupal.org/documentation/modules/rdf')) . '</p>';

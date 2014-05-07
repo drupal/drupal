@@ -8,13 +8,14 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function statistics_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#statistics':
+function statistics_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.statistics':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Statistics module shows you how often content is viewed. This is useful in determining which pages of your site are most popular. For more information, see <a href="!statistics_do">the online documentation for the Statistics module</a>.', array('!statistics_do' => 'https://drupal.org/documentation/modules/statistics/')) . '</p>';
@@ -26,7 +27,8 @@ function statistics_help($path, $arg) {
       $output .= '<dd>' . t('The Statistics module includes a counter for each page that increases whenever the page is viewed. To use the counter, enable <em>Count content views</em> on the <a href="!statistics-settings">statistics settings page</a>, and set the necessary <a href="!permissions">permissions</a> (<em>View content hits</em>) so that the counter is visible to the users.', array('!statistics-settings' => \Drupal::url('statistics.settings'), '!permissions' => \Drupal::url('user.admin_permissions', array(), array('fragment' => 'module-statistics')))) . '</dd>';
       $output .= '</dl>';
       return $output;
-    case 'admin/config/system/statistics':
+
+    case 'statistics.settings':
       return '<p>' . t('Settings for the statistical information that Drupal will keep about the site.') . '</p>';
   }
 }

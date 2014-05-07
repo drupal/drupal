@@ -6,13 +6,14 @@
 
 use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Component\Utility\String;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function color_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#color':
+function color_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.color':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Color module allows users with the <em>Administer site configuration</em> permission to change the color scheme (color of links, backgrounds, text, and other theme elements) of themes that are compatible with it. For more information, see <a href="!color_do">the online documentation for the Color module</a>.', array('!color_do' => 'https://drupal.org/documentation/modules/color')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';

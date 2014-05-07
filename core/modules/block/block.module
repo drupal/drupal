@@ -10,6 +10,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\language\Entity\Language;
 use Drupal\system\Entity\Menu;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Shows this block on every page except the listed pages.
@@ -30,9 +31,9 @@ const BLOCK_VISIBILITY_PHP = 2;
 /**
  * Implements hook_help().
  */
-function block_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#block':
+function block_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.block':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Block module allows you to place blocks in regions and to configure their settings. For more information, see <a href="!blocks-documentation">the online documentation for the Blocks module</a>.', array('!blocks-documentation' => 'https://drupal.org/documentation/modules/block/')) . '</p>';
@@ -53,13 +54,8 @@ function block_help($path, $arg) {
       $output .= '</dl>';
       return $output;
   }
-  if ($arg[0] == 'admin' && $arg[1] == 'structure' && $arg['2'] == 'block' && (empty($arg[3]) || $arg[3] == 'list') && empty($arg[5])) {
-    if (!empty($arg[4])) {
-      $demo_theme = $arg[4];
-    }
-    else {
-      $demo_theme = \Drupal::config('system.theme')->get('default');
-    }
+  if ($route_name == 'block.admin_display' || $route_name == 'block.admin_display_theme') {
+    $demo_theme = $request->attributes->get('theme', \Drupal::config('system.theme')->get('default'));
     $themes = list_themes();
     $output = '<p>' . t('This page provides a drag-and-drop interface for adding a block to a region, and for controlling the order of blocks within regions. To add a block to a region, or to configure its specific title and visibility settings, click the block title under <em>Place blocks</em>. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
     $output .= '<p>' . l(t('Demonstrate block regions (!theme)', array('!theme' => $themes[$demo_theme]->info['name'])), 'admin/structure/block/demo/' . $demo_theme) . '</p>';

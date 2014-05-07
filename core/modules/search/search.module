@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Unicode;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -65,9 +66,9 @@ define('PREG_CLASS_CJK', '\x{1100}-\x{11FF}\x{3040}-\x{309F}\x{30A1}-\x{318E}' .
 /**
  * Implements hook_help().
  */
-function search_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#search':
+function search_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.search':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Search module provides the ability to index and search for content by exact keywords, and for users by username or e-mail. For more information, see the online handbook entry for <a href="@search-module">Search module</a>.', array('@search-module' => 'http://drupal.org/documentation/modules/search', '@search' => url('search'))) . '</p>';
@@ -87,14 +88,9 @@ function search_help($path, $arg) {
       $output .= '<dd>' . t('By default, the Search module only supports exact keyword matching in content searches. You can modify this behavior by installing a language-specific stemming module for your language (such as <a href="@porterstemmer_url">Porter Stemmer</a> for American English), which allows words such as walk, walking, and walked to be matched in the Search module. Another approach is to use a third-party search technology with stemming or partial word matching features built in, such as <a href="@solr_url">Apache Solr</a> or <a href="@sphinx_url">Sphinx</a>. These and other <a href="@contrib-search">search-related contributed modules</a> can be downloaded by visiting Drupal.org.', array('@contrib-search' => 'http://drupal.org/project/modules?filters=tid%3A105', '@porterstemmer_url' => 'http://drupal.org/project/porterstemmer', '@solr_url' => 'http://drupal.org/project/apachesolr', '@sphinx_url' => 'http://drupal.org/project/sphinx')) . '</dd>';
       $output .= '</dl>';
       return $output;
-    case 'admin/config/search/pages':
+
+    case 'search.settings':
       return '<p>' . t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('@cron' => url('admin/reports/status'))) . '</p>';
-    case 'search#noresults':
-      return t('<ul>
-<li>Check if your spelling is correct.</li>
-<li>Remove quotes around phrases to search for each word individually. <em>bike shed</em> will often show more results than <em>&quot;bike shed&quot;</em>.</li>
-<li>Consider loosening your query with <em>OR</em>. <em>bike OR shed</em> will often show more results than <em>bike shed</em>.</li>
-</ul>');
   }
 }
 

@@ -5,6 +5,8 @@
  * RESTful web services module.
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Implements hook_permission().
  */
@@ -24,10 +26,9 @@ function rest_permission() {
 /**
  * Implements hook_help().
  */
-function rest_help($path, $arg) {
-  switch ($path) {
-    // Main module help for the REST module.
-    case 'admin/help#rest':
+function rest_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.rest':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The REST module provides a framework for exposing Drupal\'s data structures as RESTful web services. It can be used to read and write resources remotely, such as entity types like nodes or users. For more information, see the online handbook entry for the <a href="@rest">RESTful web services module</a>.', array('@rest' => 'http://drupal.org/documentation/modules/rest')) . '</p>';

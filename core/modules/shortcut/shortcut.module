@@ -15,11 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Implements hook_help().
  */
-function shortcut_help($path, $arg) {
-  $user = \Drupal::currentUser();
-
-  switch ($path) {
-    case 'admin/help#shortcut':
+function shortcut_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.shortcut':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>. Each user with <em>Select any shortcut set</em> permission can select a shortcut set created by anyone at the site. For more information, see the online handbook entry for <a href="!shortcut">Shortcut module</a>.', array('!shortcut' => 'http://drupal.org/documentation/modules/shortcut')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
@@ -34,8 +32,10 @@ function shortcut_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/user-interface/shortcut':
-    case 'admin/config/user-interface/shortcut/%':
+    case 'shortcut.set_admin':
+    case 'shortcut.set_add':
+    case 'shortcut.set_edit':
+      $user = \Drupal::currentUser();
       if ($user->hasPermission('switch shortcut sets')) {
         $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->id()}/shortcuts"))) . '</p>';
         return $output;

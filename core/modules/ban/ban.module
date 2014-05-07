@@ -5,12 +5,14 @@
  * Allows to ban individual IP addresses.
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Implements hook_help().
  */
-function ban_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#ban':
+function ban_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.ban':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Ban module allows administrators to ban visits to their site from individual IP addresses. For more information, see <a href="!url">the online documentation for the Ban module</a>.', array('!url' => 'https://drupal.org/documentation/modules/ban')) . '</p>';
@@ -21,7 +23,7 @@ function ban_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/people/ban':
+    case 'ban.admin_page':
       return '<p>' . t('IP addresses listed here are banned from your site. Banned addresses are completely forbidden from accessing the site and instead see a brief message explaining the situation.') . '</p>';
   }
 }

@@ -10,13 +10,14 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\String;
 use Drupal\field\Field;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function forum_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#forum':
+function forum_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.forum':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. In a forum, users post topics and threads in nested hierarchies, allowing discussions to be categorized and grouped. The forum hierarchy consists of:') . '</p>';
@@ -44,7 +45,8 @@ function forum_help($path, $arg) {
       $output .= '<dd>' . t('Selecting <em>Closed</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments on) the thread. Selecting <em>Hidden</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</dd>';
       $output .= '</dl>';
       return $output;
-    case 'admin/structure/forum':
+
+    case 'forum.overview':
       $output = '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
       $more_help_link = array(
         '#type' => 'link',
@@ -61,11 +63,14 @@ function forum_help($path, $arg) {
       );
       $output .= drupal_render($container);
       return $output;
-    case 'admin/structure/forum/add/container':
+
+    case 'forum.add_container':
       return '<p>' . t('Use containers to group related forums.') . '</p>';
-    case 'admin/structure/forum/add/forum':
+
+    case 'forum.add_forum':
       return '<p>' . t('A forum holds related forum topics.') . '</p>';
-    case 'admin/structure/forum/settings':
+
+    case 'forum.settings':
       return '<p>' . t('Adjust the display of your forum topics. Organize the forums on the <a href="!forum-structure">forum structure page</a>.', array('!forum-structure' => \Drupal::url('forum.overview'))) . '</p>';
   }
 }

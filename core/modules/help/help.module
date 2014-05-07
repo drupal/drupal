@@ -5,12 +5,14 @@
  * Manages displaying online help.
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Implements hook_help().
  */
-function help_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help':
+function help_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.main':
       $output = '<h2>' . t('Getting Started') . '</h2>';
       $output .= '<p>' . t('Follow these steps to set up and start using your website:') . '</p>';
       $output .= '<ol>';
@@ -24,7 +26,8 @@ function help_help($path, $arg) {
       $output .= '</ol>';
       $output .= '<p>' . t('For more information, refer to the subjects listed in the Help Topics section or to the <a href="!docs">online documentation</a> and <a href="!support">support</a> pages at <a href="!drupal">drupal.org</a>.', array('!docs' => 'https://drupal.org/documentation', '!support' => 'https://drupal.org/support', '!drupal' => 'https://drupal.org')) . '</p>';
       return $output;
-    case 'admin/help#help':
+
+    case 'help.page.help':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Help module provides <a href="!help-page">Help reference pages</a> and context-sensitive advice to guide you through the use and configuration of modules. It is a starting point for <a href="!handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href="!help">online documentation for the Help module</a>.', array('!help' => 'https://drupal.org/documentation/modules/help/', '!handbook' => 'https://drupal.org/documentation', '!help-page' => \Drupal::url('help.main'))) . '</p>';

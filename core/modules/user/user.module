@@ -14,6 +14,7 @@ use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\TypedData\DataDefinition;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\menu_link\Entity\MenuLink;
 
@@ -46,9 +47,9 @@ const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval'
 /**
  * Implement hook_help().
  */
-function user_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#user':
+function user_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.user':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The User module allows users to register, log in, and log out. It also allows users with proper permissions to manage user roles and permissions. For more information, see the <a href="!user_docs">online documentation for the User module</a>.', array('!user_docs' => 'https://drupal.org/documentation/modules/user')) . '</p>';
@@ -66,11 +67,14 @@ function user_help($path, $arg) {
       $output .= '<dd>' . t('Because User accounts are an <a href="!entity_help">entity type</a>, you can extend them by adding <a href="!field_help">fields</a> through the Manage fields tab on the <a href="!accounts">Account settings page</a>. By adding fields for e.g., a picture, a biography, or address, you can a create a custom profile for the users of the website.', array('!entity_help' => \Drupal::url('help.page', array('name' => 'entity')),'!field_help'=>\Drupal::url('help.page', array('name' => 'field')), '!accounts' => \Drupal::url('user.account_settings'))) . '</dd>';
       $output .= '</dl>';
       return $output;
-    case 'admin/people/create':
+
+    case 'user.admin_create':
       return '<p>' . t("This web page allows administrators to register new users. Users' e-mail addresses and usernames must be unique.") . '</p>';
-    case 'admin/people/permissions':
+
+    case 'user.admin_permissions':
       return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href="@role">Roles</a> page to create a role). Two important roles to consider are Authenticated Users and Administrators. Any permissions granted to the Authenticated Users role will be given to any user who can log into your site. You can make any role the Administrator role for the site, meaning this will be granted all new permissions automatically. You can do this on the <a href="@settings">User Settings</a> page. You should be careful to ensure that only trusted users are given this access and level of control of your site.', array('@role' => url('admin/people/roles'), '@settings' => url('admin/config/people/accounts'))) . '</p>';
-    case 'admin/people/roles':
+
+    case 'user.role_list':
       $output = '<p>' . t('Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined on the <a href="@permissions">permissions page</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the names and order of the roles on your site. It is recommended to order your roles from least permissive (anonymous user) to most permissive (administrator). To delete a role choose "edit role".', array('@permissions' => url('admin/people/permissions'))) . '</p>';
       $output .= '<p>' . t('Drupal has three special user roles:') . '</p>';
       $output .= '<ul>';
@@ -79,14 +83,15 @@ function user_help($path, $arg) {
       $output .= '<li>' . t('Administrator role: this role is automatically granted all new permissions when you install a new module. Configure which role is the administrator role on the <a href="@account_settings">Account settings page</a>.', array('@account_settings' => url('admin/config/people/accounts'))) . '</li>';
       $output .= '</ul>';
       return $output;
-    case 'admin/config/people/accounts/fields':
+
+    case 'field_ui.overview_user':
       return '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
-    case 'admin/config/people/accounts/form-display':
+
+    case 'field_ui.form_display_overview_user':
       return '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
-    case 'admin/config/people/accounts/display':
+
+    case 'field_ui.display_overview_user':
       return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
-    case 'admin/people/search':
-      return '<p>' . t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username or e-mail address. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda@example.com".') . '</p>';
   }
 }
 

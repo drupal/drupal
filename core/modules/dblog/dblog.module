@@ -12,13 +12,14 @@
  */
 
 use Drupal\Core\Database\Database;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function dblog_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#dblog':
+function dblog_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.dblog':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Database Logging module logs system events in the Drupal database. For more information, see the online handbook entry for the <a href="!dblog">Database Logging module</a>.', array('!dblog' => 'http://drupal.org/documentation/modules/dblog')) . '</p>';
@@ -30,7 +31,8 @@ function dblog_help($path, $arg) {
       $output .= '<dd>' . t('In case of errors or problems with the site, the <a href="!dblog">Recent log messages</a> page can be useful for debugging, since it shows the sequence of events. The log messages include usage information, warnings, and errors.', array('!dblog' => \Drupal::url('dblog.overview'))) . '</dd>';
       $output .= '</dl>';
       return $output;
-    case 'admin/reports/dblog':
+
+    case 'dblog.overview':
       return '<p>' . t('The Database Logging module monitors your website, capturing system events in a log (shown here) to be reviewed by an authorized individual at a later time. This log is a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the Recent log messages report on a regular basis, as it is often the only way to tell what is going on.') . '</p>';
   }
 }

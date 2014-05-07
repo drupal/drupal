@@ -15,13 +15,14 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function filter_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#filter':
+function filter_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.filter':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Filter module allows administrators to configure text formats. Text formats define the HTML tags, codes, and other input allowed in text entered in the site and they defend your web site against potentially damaging input from malicious users. A visual text editor can be associated with the text formats by using the <a href="!editor_help">Text Editor module</a>. For more information, see <a href="!filter_do">the online documentation for the Filter module</a>.', array('!filter_do' => 'https://drupal.org/documentation/modules/filter/','!editor_help' => \Drupal::url('help.page', array('name' => 'editor')))) . '</p>';
@@ -41,12 +42,12 @@ function filter_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/content/formats':
+    case 'filter.admin_overview':
       $output = '<p>' . t('Text formats define the HTML tags, code, and other formatting that can be used when entering text. <strong>Improper text format configuration is a security risk</strong>. Learn more on the <a href="@filterhelp">Filter module help page</a>.', array('@filterhelp' => url('admin/help/filter'))) . '</p>';
       $output .= '<p>' . t('Text formats are presented on content editing pages in the order defined on this page. The first format available to a user will be selected by default.') . '</p>';
       return $output;
 
-    case 'admin/config/content/formats/manage/%':
+    case 'filter.format_edit':
       $output = '<p>' . t('A text format contains filters that change the user input, for example stripping out malicious HTML or making URLs clickable. Filters are executed from top to bottom and the order is important, since one filter may prevent another filter from doing its job. For example, when URLs are converted into links before disallowed HTML tags are removed, all links may be removed. When this happens, the order of filters may need to be re-arranged.') . '</p>';
       return $output;
   }

@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\file\Entity\File;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Image style constant for user presets in the database.
@@ -49,9 +50,9 @@ require_once __DIR__ . '/image.field.inc';
 /**
  * Implements hook_help().
  */
-function image_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#image':
+function image_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.image':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Image module allows you to manipulate images on your website. It exposes a setting for using the <em>Image toolkit</em>, allows you to configure <em>Image styles</em> that can be used for resizing or adjusting images on display, and provides an <em>Image</em> field for attaching images to content. For more information, see the online handbook entry for <a href="@image">Image module</a>.', array('@image' => 'http://drupal.org/documentation/modules/image')) . '</p>';
@@ -66,18 +67,16 @@ function image_help($path, $arg) {
       $output .= '<dd>' . t("Image module also allows you to attach images to content as fields. To add an image field to a <a href='@content-type'>content type</a>, go to the content type's <em>manage fields</em> page, and add a new field of type <em>Image</em>. Attaching images to content this way allows image styles to be applied and maintained, and also allows you more flexibility when theming.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
       $output .= '</dl>';
       return $output;
-    case 'admin/config/media/image-styles':
+
+    case 'image.style_list':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
-    case 'admin/config/media/image-styles/manage/%/add/%':
-      $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($arg[7]);
+
+    case 'image.effect_add_form':
+      $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($request->attributes->get('image_effect'));
       return isset($effect['description']) ? ('<p>' . $effect['description'] . '</p>') : NULL;
-    case 'admin/config/media/image-styles/manage/%/effects/%':
-      try {
-        $effect = entity_load('image_style', $arg[5])->getEffect($arg[7]);
-      }
-      catch (PluginNotFoundException $e) {
-        return NULL;
-      }
+
+    case 'image.effect_edit_form':
+      $effect = $request->attributes->get('image_style')->getEffect($request->attributes->get('image_effect'));
       $effect_definition = $effect->getPluginDefinition();
       return isset($effect_definition['description']) ? ('<p>' . $effect_definition['description'] . '</p>') : NULL;
   }

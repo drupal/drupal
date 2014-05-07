@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorage;
 use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Maximum length of menu name as entered by the user. Database length is 32
@@ -30,9 +31,9 @@ const MENU_MAX_MENU_NAME_LENGTH_UI = 27;
 /**
  * Implements hook_help().
  */
-function menu_ui_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#menu_ui':
+function menu_ui_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.menu_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Menu UI module provides an interface for managing menus. A menu is a hierarchical collection of links, which can be within or external to the site, generally used for navigation. For more information, see the <a href="!menu">online documentation for the Menu UI module</a>.', array('!menu' => 'https://drupal.org/documentation/modules/menu/')) . '</p>';
@@ -45,10 +46,10 @@ function menu_ui_help($path, $arg) {
       $output .= '</dl>';
       return $output;
   }
-  if ($path == 'admin/structure/menu/add' && \Drupal::moduleHandler()->moduleExists('block')) {
-      return '<p>' . t('You can enable the newly-created block for this menu on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
+  if ($route_name == 'menu_ui.menu_add' && \Drupal::moduleHandler()->moduleExists('block')) {
+    return '<p>' . t('You can enable the newly-created block for this menu on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
   }
-  elseif ($path == 'admin/structure/menu' && \Drupal::moduleHandler()->moduleExists('block')) {
+  elseif ($route_name == 'menu_ui.overview_page' && \Drupal::moduleHandler()->moduleExists('block')) {
     return '<p>' . t('Each menu has a corresponding block that is managed on the <a href="!blocks">Block layout page</a>.', array('!blocks' => \Drupal::url('block.admin_display'))) . '</p>';
   }
 }

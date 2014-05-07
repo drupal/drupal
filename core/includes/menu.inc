@@ -365,14 +365,6 @@ function theme_menu_local_action($variables) {
 }
 
 /**
- * Generates elements for the $arg array in the help hook.
- */
-function drupal_help_arg($arg = array()) {
-  // Note - the number of empty elements should be > MENU_MAX_PARTS.
-  return $arg + array('', '', '', '', '', '', '', '', '', '', '', '');
-}
-
-/**
  * Returns an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {

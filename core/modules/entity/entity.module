@@ -9,13 +9,14 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function entity_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#entity':
+function entity_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.entity':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Entity module manages various types of content and configuration for the website. This information is collectively know as "entities", which are grouped into "entity types" (such as the main site content, comments, custom blocks, taxonomy terms, user accounts, and views configuration). Some entity types are further grouped into sub-types (for example, you could have article and page content types within the main site content entity type, and tag and category vocabularies within the taxonomy term entity type); other entity types, such as user accounts, do not have sub-types.') . '</p>';

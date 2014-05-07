@@ -13,13 +13,14 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function editor_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#editor':
+function editor_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.editor':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Text Editor module provides a framework that other modules (such as <a href="!ckeditor">CKEditor module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href="!documentation">online documentation for the Text Editor module</a>.', array('!documentation' => 'https://drupal.org/documentation/modules/editor', '!ckeditor' => \Drupal::url('help.page', array('name' => 'ckeditor')))) . '</p>';

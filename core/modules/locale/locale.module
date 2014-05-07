@@ -17,6 +17,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\language\Entity\Language as LanguageEntity;
 use Drupal\Component\Utility\Crypt;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -134,9 +135,9 @@ const LOCALE_TRANSLATION_CURRENT = 'current';
 /**
  * Implements hook_help().
  */
-function locale_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#locale':
+function locale_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.locale':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Interface Translation module allows you to translate interface text (<em>strings</em>) into different languages, and to switch between them for the display of interface text. It uses the functionality provided by the <a href="!language">Language module</a>. For more information, see the <a href="!doc-url">online documentation for the Interface Translation module</a>.', array('!doc-url' => 'https://drupal.org/documentation/modules/locale/', '!language' => \Drupal::url('help.page', array('name' => 'language')))) . '</p>';
@@ -151,20 +152,20 @@ function locale_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/regional/language':
+    case 'language.admin_overview':
       return '<p>' . t('Interface translations are automatically imported when a language is added, or when new modules or themes are enabled. The report, <a href="@update">Available translation updates</a>, shows the status. Interface text can be <a href="@translate">customized</a>.', array('@update' => url('admin/reports/translations'), '@translate' => url('admin/config/regional/translate'))) . '</p>';
 
-    case 'admin/config/regional/translate':
+    case 'locale.translate_page':
       $output = '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: Because translation tasks involves many strings, it may be more convenient to <a href="@export">export</a> strings for offline editing in a desktop Gettext translation editor). Searches may be limited to strings in a specific language.', array('@export' => url('admin/config/regional/translate/export'))) . '</p>';
       return $output;
 
-    case 'admin/config/regional/translate/import':
+    case 'locale.translate_import':
       $output = '<p>' . t('Translation files are automatically downloaded and imported when <a href="@language">languages</a> are added, or when modules or themes are enabled.', array('@language' => url('admin/config/regional/language'))). '</p>';
       $output .= '<p>' . t('This page allows translators to manually import translated strings contained in a Gettext Portable Object (.po) file. Manual import may be used for customized translations or for the translation of custom modules and themes. To customize translations you can download a translation file from the <a href="@url">Drupal translation server</a> or <a href="@export">export</a> translations from the site, customize the translations using a Gettext translation editor, and import the result using this page.', array('@url' => 'http://localize.drupal.org', '@export' => url('admin/config/regional/translate/export'))) . '</p>';
       $output .= '<p>' . t('Note that importing large .po files may take several minutes.') . '</p>';
       return $output;
 
-    case 'admin/config/regional/translate/export':
+    case 'locale.translate_export':
       return '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
   }
 }

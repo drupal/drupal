@@ -21,13 +21,14 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\field\FieldInstanceConfigInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function views_help($path, $arg) {
-  switch($path) {
-    case 'admin/help#views':
+function views_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.views':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Views module provides a back end to fetch information from content, user accounts, taxonomy terms, and other entities from the database and present it to the user as a grid, HTML list, table, unformatted list, etc. The resulting displays are known generally as <em>views</em>.') . '</p>';

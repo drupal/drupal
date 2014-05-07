@@ -7,14 +7,15 @@
 
 use Drupal\responsive_image\Entity\ResponsiveImageMapping;
 use \Drupal\Core\Template\Attribute;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function responsive_image_help($path, $arg) {
+function responsive_image_help($route_name, Request $request) {
   $output = '';
-  switch ($path) {
-    case 'admin/help#responsive_image':
+  switch ($route_name) {
+    case 'help.page.responsive_image':
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Responsive Image module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!responsive_image">online documentation for the Responsive Image module</a>.', array( '!responsive_image' => 'https://drupal.org/documentation/modules/responsive_image')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
@@ -25,7 +26,8 @@ function responsive_image_help($path, $arg) {
       $output .= '<dd>' . t('After defining responsive image mappings, you can use them in the display settings for your Image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Responsive image</em>, click the Edit icon, and select one of the responsive image mappings that you have created. For general information on how to manage fields and their display see the <a href="!field_ui">help page of the Field UI module</a>. For information about entities see the <a href="!entity_help">help page of the Entity module</a>.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')),'!entity_help' => \Drupal::url('help.page', array('name' => 'entity')))) . '</dd>';
       $output .= '</dl>';
       break;
-    case 'admin/config/media/responsive-image-mapping':
+
+    case 'responsive_image.mapping_page':
       $output .= '<p>' . t('A responsive image mapping associates an image style with each breakpoint defined by your theme.') . '</p>';
       break;
 

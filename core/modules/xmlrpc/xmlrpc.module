@@ -5,12 +5,14 @@
  * Enables XML-RPC functionality.
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Implements hook_help().
  */
-function xmlrpc_help($path, $args) {
-  switch ($path) {
-    case 'admin/help#xmlrpc':
+function xmlrpc_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.xmlrpc':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The XML-RPC module gives external systems the opportunity to communicate with the site through the <a href="http://en.wikipedia.org/wiki/XML-RPC">XML-RPC protocol</a>. An XML-RPC client can communicate with the site by making a request to <a href="!xrphp">xmlrpc.php</a>. For more information, see <a href="!xrdocs">the online documentation for the XML-RPC module</a>.', array('!xrphp' => \Drupal::url('xmlrpc.php'),'!xrdocs' => 'https://drupal.org/documentation/modules/xmlrpc')) . '</p>';

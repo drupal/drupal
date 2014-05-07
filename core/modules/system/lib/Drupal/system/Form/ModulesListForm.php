@@ -207,14 +207,10 @@ class ModulesListForm extends FormBase {
     $row['description']['#markup'] = $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 
-    // Add links for each module.
-    // Used when checking if a module implements a help page.
-    $help = $this->moduleHandler->moduleExists('help') ? drupal_help_arg() : FALSE;
-
     // Generate link for module's help page, if there is one.
     $row['links']['help'] = array();
-    if ($help && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
-      if ($this->moduleHandler->invoke($module->getName(), 'help', array('admin/help#' . $module->getName(), $help))) {
+    if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
+      if ($this->moduleHandler->invoke($module->getName(), 'help', array('help.page.' . $module->getName(), $this->getRequest()))) {
         $row['links']['help'] = array(
           '#type' => 'link',
           '#title' => $this->t('Help'),

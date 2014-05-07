@@ -22,6 +22,7 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Comments are displayed in a flat list - expanded.
@@ -72,9 +73,9 @@ define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 /**
  * Implements hook_help().
  */
-function comment_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#comment':
+function comment_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.comment':
       $output = '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Comment module allows users to comment on site content, set commenting defaults and permissions, and moderate comments. For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/documentation/modules/comment')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
@@ -86,7 +87,7 @@ function comment_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/structure/comments':
+    case 'comment.bundle_list':
       $output = '<p>' . t('This page provides a list of all comment forms on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
       return $output;
   }

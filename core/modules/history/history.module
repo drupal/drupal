@@ -11,6 +11,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Entities changed before this time are always shown as read.
@@ -23,9 +24,9 @@ define('HISTORY_READ_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 /**
  * Implements hook_help().
  */
-function history_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#history':
+function history_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.history':
       $output  = '<h3>' . t('About') . '</h3>';
       $output .= '<p>'  . t('The History module keeps track of which content a user has read. It marks content as <em>new</em> or <em>updated</em> depending on the last time the user viewed it. History records that are older than one month are removed during cron, which means that content older than one month is always considered <em>read</em>. The History module does not have a user interface but it provides a filter to <a href="!views-help">Views</a> to show new or updated content. For more information, see the <a href="!url">online documentation for the History module</a>.', array('!views-help' => \Drupal::url('help.page', array ('name' => 'views')), '!url' => 'https://drupal.org/documentation/modules/history')) . '</p>';
       return $output;

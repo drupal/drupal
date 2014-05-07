@@ -12,14 +12,14 @@ use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function views_ui_help($path, $arg) {
-
-  switch ($path) {
-    case 'admin/help#views_ui':
+function views_ui_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.views_ui':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Views UI module provides an interface for managing views for the <a href="@views">Views module</a>. For more information, see the <a href="@handbook">online documentation for the Views UI module</a>.', array('@views' => \Drupal::url('help.page', array('name' => 'views')), '@handbook' => 'https://drupal.org/documentation/modules/views_ui')) . '</p>';

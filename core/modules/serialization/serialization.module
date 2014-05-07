@@ -1,11 +1,18 @@
 <?php
 
 /**
+ * @file
+ * Provides a service for (de)serializing data to/from formats such as JSON and XML.
+ */
+
+use Symfony\Component\HttpFoundation\Request;
+
+/**
  * Implements hook_help().
  */
-function serialization_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#serialization':
+function serialization_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.serialization':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Serialization module provides a service for serializing and deserializing data to and from formats such as JSON and XML.') . '</p>';

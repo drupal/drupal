@@ -8,13 +8,14 @@
 use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\breakpoint\Entity\BreakpointGroup;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function breakpoint_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#breakpoint':
+function breakpoint_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.breakpoint':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Breakpoint module keeps track of the height, width, and resolution breakpoints where a responsive design needs to change in order to respond to different devices being used to view the site. This module does not have a user interface, but contributed modules such as <a href="!breakpoint_ui">Breakpoint UI</a> may provide one. For more information, see the <a href="!docs">online documentation for the Breakpoint module</a>.', array('!docs' => 'https://drupal.org/documentation/modules/breakpoint', '!breakpoint_ui' => 'https://drupal.org/project/breakpoint_ui')) . '</p>';

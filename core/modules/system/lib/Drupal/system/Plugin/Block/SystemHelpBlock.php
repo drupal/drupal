@@ -11,6 +11,7 @@ use Drupal\block\BlockBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -89,23 +90,14 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
    *   The current request.
    */
   protected function getActiveHelp(Request $request) {
-    $output = '';
-    $router_path = $request->attributes->get('_system_path');
     // Do not show on a 403 or 404 page.
     if ($request->attributes->has('exception')) {
       return '';
     }
 
-    $arg = drupal_help_arg(explode('/', $router_path));
-
-    foreach ($this->moduleHandler->getImplementations('help') as $module) {
-      $function = $module . '_help';
-      // Lookup help for this path.
-      if ($help = $function($router_path, $arg)) {
-        $output .= $help . "\n";
-      }
-    }
-    return $output;
+    $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+    $help = $this->moduleHandler->invokeAll('help', array($route_name, $request));
+    return $help ? implode("\n", $help) : '';
   }
 
   /**

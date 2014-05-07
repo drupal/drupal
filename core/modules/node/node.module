@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -85,13 +86,13 @@ const NODE_ACCESS_IGNORE = NULL;
 /**
  * Implements hook_help().
  */
-function node_help($path, $arg) {
+function node_help($route_name, Request $request) {
   // Remind site administrators about the {node_access} table being flagged
   // for rebuild. We don't need to issue the message on the confirm form, or
   // while the rebuild is being processed.
-  if ($path != 'admin/reports/status/rebuild' && $path != 'batch' && strpos($path, '#') === FALSE
-      && user_access('access administration pages') && node_access_needs_rebuild()) {
-    if ($path == 'admin/reports/status') {
+  if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.normal' && $route_name != 'help.page.node' && $route_name != 'help.main'
+    && user_access('access administration pages') && node_access_needs_rebuild()) {
+    if ($route_name == 'system.status') {
       $message = t('The content access permissions need to be rebuilt.');
     }
     else {
@@ -100,8 +101,8 @@ function node_help($path, $arg) {
     drupal_set_message($message, 'error');
   }
 
-  switch ($path) {
-    case 'admin/help#node':
+  switch ($route_name) {
+    case 'help.page.node':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href="!field">Field module</a>). For more information, see <a href="!node">the online documentation for the Node module</a>.', array('!node' => 'https://drupal.org/documentation/modules/node', '!field' => \Drupal::url('help.page', array('name' => 'field')))) . '</p>';
@@ -120,30 +121,31 @@ function node_help($path, $arg) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/structure/types/add':
+    case 'node.type_add':
       return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
-    case 'admin/structure/types/manage/%/form-display':
-      $type = entity_load('node_type', $arg[4]);
+    case 'field_ui.form_display_overview_node':
+    case 'field_ui.form_display_overview_form_mode_node':
+      $type = $request->attributes->get('node_type');
       return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', array('%type' => $type->label())) . '</p>' ;
 
-    case 'admin/structure/types/manage/%/display':
-      $type =  entity_load('node_type', $arg[4]);
+    case 'field_ui.display_overview_node':
+    case 'field_ui.display_overview_view_mode_node':
+      $type = $request->attributes->get('node_type');
       return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .
         '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => $type->label())) . '</p>';
 
-    case 'node/%/revisions':
+    case 'node.revision_overview':
       return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
 
-    case 'node/%/edit':
-      $node = node_load($arg[1]);
-      $type = node_type_load($node->bundle());
+    case 'node.page_edit':
+      $node = $request->attributes->get('node');
+      $type = $node->getType();
       return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
-  }
 
-  if ($arg[0] == 'node' && $arg[1] == 'add' && $arg[2]) {
-    $type = node_type_load($arg[2]);
-    return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
+    case 'node.add':
+      $type = $request->attributes->get('node_type');
+      return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
   }
 }
 

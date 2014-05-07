@@ -7,14 +7,15 @@
 
 use Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks;
 use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Implements hook_help().
  */
-function config_translation_help($path) {
-  switch ($path) {
-    case 'admin/help#config_translation':
+function config_translation_help($route_name, Request $request) {
+  switch ($route_name) {
+    case 'help.page.config_translation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Configuration Translation module allows configurations to be translated into different languages. Views, your site name, contact module categories, vocabularies, menus, blocks, and so on are all stored within the unified configuration system and can be translated with this module. Content, such as nodes, taxonomy terms, custom blocks, and so on are translatable with the Content Translation module in Drupal core, while the built-in user interface (such as registration forms, content submission and administration interfaces) are translated with the Interface Translation module. Use these three modules effectively together to translate your whole site to different languages.') . '</p>';
@@ -25,7 +26,7 @@ function config_translation_help($path) {
       $output .= '</dl>';
       return $output;
 
-    case 'admin/config/regional/config-translation':
+    case 'config_translation.mapper_list':
       $output = '<p>' . t('This page lists all configuration items on your site which have translatable text, like your site name, role names, etc.') . '</p>';
       return $output;
   }
