@@ -81,7 +81,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       $plugin_definition,
       $container->get('router.route_provider'),
       $container->get('state'),
-      $container->get('form_builder')
+      $container->get('form_validator')
     );
   }
 

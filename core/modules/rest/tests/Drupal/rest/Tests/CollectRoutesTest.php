@@ -90,8 +90,8 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
     $container->set('plugin.manager.views.style', $style_manager);
 
-    $form_builder = $this->getMock('Drupal\Core\Form\FormBuilderInterface');
-    $container->set('form_builder', $form_builder);
+    $form_error = $this->getMock('Drupal\Core\Form\FormErrorInterface');
+    $container->set('form_validator', $form_error);
 
     \Drupal::setContainer($container);
 
