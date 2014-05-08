@@ -679,15 +679,6 @@ function template_preprocess_views_view_table(&$variables) {
   $count = 0;
   foreach ($variables['rows'] as $num => $row) {
     $variables['rows'][$num]['attributes'] = array();
-    if ($row_class_special) {
-      $variables['rows'][$num]['attributes']['class'][] = ($count++ % 2 == 0) ? 'odd' : 'even';
-      if ($num === 0) {
-        $variables['rows'][$num]['attributes']['class'][] = 'views-row-first';
-      }
-      elseif ($num === (count($variables['rows']) - 1)) {
-        $variables['rows'][$num]['attributes']['class'][] = 'views-row-last';
-      }
-    }
     if ($row_class = $handler->getRowClass($num)) {
       $variables['rows'][$num]['attributes']['class'][] = $row_class;
     }
@@ -889,16 +880,6 @@ function template_preprocess_views_view_unformatted(&$variables) {
     $count++;
     if ($default_row_class) {
       $variables['rows'][$id]['attributes']['class'][] = 'views-row';
-      $variables['rows'][$id]['attributes']['class'][] = 'views-row-' . $count;
-    }
-    if ($row_class_special) {
-      $variables['rows'][$id]['attributes']['class'][] = 'views-row-' . ($count % 2 ? 'odd' : 'even');
-      if ($count == 1) {
-        $variables['rows'][$id]['attributes']['class'][] = 'views-row-first';
-      }
-      if ($count == $max) {
-        $variables['rows'][$id]['attributes']['class'][] = 'views-row-last';
-      }
     }
     if ($row_class = $view->style_plugin->getRowClass($id)) {
       $variables['rows'][$id]['attributes']['class'][] = $row_class;
