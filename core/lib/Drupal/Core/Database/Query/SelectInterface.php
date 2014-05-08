@@ -479,6 +479,14 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function preExecute(SelectInterface $query = NULL);
 
   /**
+   * Runs the query against the database.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|null
+   *   A prepared statement, or NULL if the query is not valid.
+   */
+  public function execute();
+
+  /**
    * Helper function to build most common HAVING conditional clauses.
    *
    * This method can take a variable number of parameters. If called with two
