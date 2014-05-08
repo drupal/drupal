@@ -7,13 +7,14 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Core\Session\UserSession;
 use Drupal\comment\CommentInterface;
-use Drupal\simpletest\WebTestBase;
+use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests CommentDefaultFormatter's cache tag bubbling.
  */
-class CommentDefaultFormatterCacheTagsTest extends WebTestBase {
+class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
 
   /**
    * Modules to enable.
@@ -39,9 +40,18 @@ class CommentDefaultFormatterCacheTagsTest extends WebTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser(array(
-      'access comments',
-    )));
+    // Set the current user to one that can access comments. Specifically, this
+    // user does not have access to the 'administer comments' permission, to
+    // ensure only published comments are visible to the end user.
+    $this->container->set('current_user', $this->createUser(array(), array('access comments')));
+
+    // Install tables and config needed to render comments.
+    $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
+    $this->installConfig(array('system', 'filter'));
+
+    // Comment rendering generates links, so build the router.
+    $this->installSchema('system', array('router'));
+    $this->container->get('router.builder')->rebuild();
 
     // Set up a field, so that the entity that'll be referenced bubbles up a
     // cache tag when rendering it entirely.
@@ -85,7 +95,10 @@ class CommentDefaultFormatterCacheTagsTest extends WebTestBase {
     );
     $this->assertEqual($build['#cache']['tags'], $expected_cache_tags, 'The test entity has the expected cache tags before it has comments.');
 
-    // Create a comment on that entity..
+    // Create a comment on that entity. Comment loading requires that the uid
+    // also exists in the {users} table.
+    $user = $this->createUser();
+    $user->save();
     $comment = entity_create('comment', array(
       'subject' => 'Llama',
       'comment_body' => array(
@@ -96,6 +109,7 @@ class CommentDefaultFormatterCacheTagsTest extends WebTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
       'status' => CommentInterface::PUBLISHED,
+      'uid' => $user->id(),
     ));
     $comment->save();
 
