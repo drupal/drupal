@@ -31,6 +31,19 @@ class LinksTest extends WebTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    entity_create('menu', array(
+      'id' => 'menu_test',
+      'label' => 'Test menu',
+      'description' => 'Description text',
+    ))->save();
+  }
+
+  /**
    * Create a simple hierarchy of links.
    */
   function createLinkHierarchy($module = 'menu_test') {
