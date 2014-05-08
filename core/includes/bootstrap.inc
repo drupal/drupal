@@ -1499,15 +1499,12 @@ function drupal_get_user_timezone() {
  *
  * @return
  *   A salt based on information in settings.php, not in the database.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
+ *   \Drupal\Core\Site\Settings::getHashSalt() instead.
  */
 function drupal_get_hash_salt() {
-  $hash_salt = Settings::get('hash_salt');
-  // This should never happen, as it breaks user logins and many other services.
-  // Therefore, explicitly notify the user (developer) by throwing an exception.
-  if (empty($hash_salt)) {
-    throw new \RuntimeException('Missing $settings[\'hash_salt\'] in settings.php.');
-  }
-  return $hash_salt;
+  return Settings::getHashSalt();
 }
 
 /**

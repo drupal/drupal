@@ -80,4 +80,24 @@ final class Settings {
     return self::$instance->storage;
   }
 
+  /**
+   * Gets a salt useful for hardening against SQL injection.
+   *
+   * @return string
+   *   A salt based on information in settings.php, not in the database.
+   *
+   * @throws \RuntimeException
+   */
+  public static function getHashSalt() {
+    $hash_salt = self::$instance->get('hash_salt');
+    // This should never happen, as it breaks user logins and many other
+    // services. Therefore, explicitly notify the user (developer) by throwing
+    // an exception.
+    if (empty($hash_salt)) {
+      throw new \RuntimeException('Missing $settings[\'hash_salt\'] in settings.php.');
+    }
+
+    return $hash_salt;
+  }
+
 }

@@ -13,6 +13,8 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests read-only settings.
  *
+ * @group Drupal
+ *
  * @coversDefaultClass \Drupal\Core\Site\Settings
  */
 class SettingsTest extends UnitTestCase {
@@ -49,6 +51,7 @@ class SettingsTest extends UnitTestCase {
     $this->config = array(
       'one' => '1',
       'two' => '2',
+      'hash_salt' => $this->randomName(),
     );
     $this->settings = new Settings($this->config);
   }
@@ -58,7 +61,7 @@ class SettingsTest extends UnitTestCase {
    */
   public function testGet() {
     // Test stored settings.
-    $this->assertEquals($this->config['one'], Settings::get('one'), 'The correect setting was not returned.');
+    $this->assertEquals($this->config['one'], Settings::get('one'), 'The correct setting was not returned.');
     $this->assertEquals($this->config['two'], Settings::get('two'), 'The correct setting was not returned.');
 
     // Test setting that isn't stored with default.
@@ -79,6 +82,43 @@ class SettingsTest extends UnitTestCase {
   public function testGetInstance() {
     $singleton = $this->settings->getInstance();
     $this->assertEquals($singleton, $this->settings);
+  }
+
+  /**
+   * Tests Settings::getHashSalt();
+   *
+   * @covers ::getHashSalt
+   */
+  public function testGetHashSalt() {
+    $this->assertSame($this->config['hash_salt'], $this->settings->getHashSalt());
+  }
+
+  /**
+   * Tests Settings::getHashSalt() with no hash salt value.
+   *
+   * @covers ::getHashSalt
+   *
+   * @dataProvider providerTestGetHashSaltEmpty
+   *
+   * @expectedException \RuntimeException
+   */
+  public function testGetHashSaltEmpty(array $config) {
+    // Re-create settings with no 'hash_salt' key.
+    $settings = new Settings($config);
+    $settings->getHashSalt();
+  }
+
+  /**
+   * Data provider for testGetHashSaltEmpty.
+   *
+   * @return array
+   */
+  public function providerTestGetHashSaltEmpty() {
+   return array(
+     array(array()),
+     array(array('hash_salt' => '')),
+     array(array('hash_salt' => NULL)),
+   );
   }
 
 }

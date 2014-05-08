@@ -5,8 +5,9 @@
  * Contains \Drupal\Tests\Core\Access\CsrfTokenGeneratorTest.
  */
 
-namespace Drupal\Tests\Core\Access {
+namespace Drupal\Tests\Core\Access;
 
+use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Component\Utility\Crypt;
@@ -24,6 +25,13 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    */
   protected $generator;
 
+  /**
+   * The mock private key instance.
+   *
+   * @var \Drupal\Core\PrivateKey|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $privateKey;
+
   public static function getInfo() {
     return array(
       'name' => 'CsrfTokenGenerator test',
@@ -39,16 +47,22 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
     parent::setUp();
     $this->key = Crypt::randomBytesBase64(55);
 
-    $private_key = $this->getMockBuilder('Drupal\Core\PrivateKey')
+    $this->privateKey = $this->getMockBuilder('Drupal\Core\PrivateKey')
       ->disableOriginalConstructor()
       ->setMethods(array('get'))
       ->getMock();
 
-    $private_key->expects($this->any())
+    $this->privateKey->expects($this->any())
       ->method('get')
       ->will($this->returnValue($this->key));
 
-    $this->generator = new CsrfTokenGenerator($private_key);
+    $settings = array(
+      'hash_salt' => $this->randomName(),
+    );
+
+    new Settings($settings);
+
+    $this->generator = new CsrfTokenGenerator($this->privateKey);
   }
 
   /**
@@ -141,17 +155,16 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
     );
   }
 
-}
-
-}
-
-/**
- * @todo Remove this when https://drupal.org/node/2036259 is resolved.
- */
-namespace {
-  if (!function_exists('drupal_get_hash_salt')) {
-    function drupal_get_hash_salt() {
-      return hash('sha256', 'test_hash_salt');
-    }
+  /**
+   * Tests the exception thrown when no 'hash_salt' is provided in settings.
+   *
+   * @expectedException \RuntimeException
+   */
+  public function testGetWithNoHashSalt() {
+    // Update settings with no hash salt.
+    new Settings(array());
+    $generator = new CsrfTokenGenerator($this->privateKey);
+    $generator->get();
   }
+
 }

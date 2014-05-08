@@ -10,6 +10,7 @@ namespace Drupal\Core\Access;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Generates and validates CSRF tokens.
@@ -95,7 +96,7 @@ class CsrfTokenGenerator {
    *   'drupal_private_key' configuration variable.
    */
   protected function computeToken($seed, $value = '') {
-    return Crypt::hmacBase64($value, $seed . $this->privateKey->get() . drupal_get_hash_salt());
+    return Crypt::hmacBase64($value, $seed . $this->privateKey->get() . Settings::getHashSalt());
   }
 
 }
