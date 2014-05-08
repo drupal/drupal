@@ -25,7 +25,7 @@
 <fieldset{{ attributes }}>
   {% if legend.title is not empty or required -%}
     {#  Always wrap fieldset legends in a SPAN for CSS positioning. #}
-    <legend{{ legend.attributes }}><span class="fieldset-legend">{{ legend.title }}{{ required }}</span></legend>
+    <legend{{ legend.attributes }}><span class="{{ legend_span.attributes.class }}">{{ legend.title }}{{ required }}</span></legend>
   {%- endif %}
   <div class="fieldset-wrapper">
     {% if prefix %}

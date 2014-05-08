@@ -2662,9 +2662,6 @@ function drupal_common_theme() {
       'render element' => 'element',
       'template' => 'form-element',
     ),
-    'form_required_marker' => array(
-      'render element' => 'element',
-    ),
     'form_element_label' => array(
       'render element' => 'element',
     ),

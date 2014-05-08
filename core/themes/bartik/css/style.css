@@ -440,7 +440,7 @@ h1.site-name {
   background: #fff;
   background: rgba(255, 255, 255, 0.8);
 }
-.region-header .form-required {
+.region-header .form-required:after {
   color: #eee;
   color: rgba(255, 255, 255, 0.7);
 }

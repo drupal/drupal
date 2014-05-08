@@ -522,12 +522,12 @@
       if (e.value) {
         var $label = $(e.target).attr({ 'required': 'required', 'aria-required': 'aria-required' }).closest('.form-item, .form-wrapper').find('label');
         // Avoids duplicate required markers on initialization.
-        if (!$label.find('.form-required').length) {
-          $label.append(Drupal.theme('requiredMarker'));
+        if (!$label.hasClass('form-required').length) {
+          $label.addClass('form-required');
         }
       }
       else {
-        $(e.target).removeAttr('required aria-required').closest('.form-item, .form-wrapper').find('label .form-required').remove();
+        $(e.target).removeAttr('required aria-required').closest('.form-item, .form-wrapper').find('label.form-required').removeClass('form-required');
       }
     }
   });
@@ -572,11 +572,5 @@
   function compare(a, b) {
     return (a === b) ? (typeof a === 'undefined' ? a : true) : (typeof a === 'undefined' || typeof b === 'undefined');
   }
-
-  $.extend(Drupal.theme, {
-    requiredMarker: function () {
-      return '<abbr class="form-required" title="' + Drupal.t('This field is required.') + '">*</abbr>';
-    }
-  });
 
 })(jQuery);

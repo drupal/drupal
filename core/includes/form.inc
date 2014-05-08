@@ -1068,31 +1068,20 @@ function template_preprocess_fieldset(&$variables) {
   _form_set_attributes($element, array('form-wrapper'));
   $variables['attributes'] = $element['#attributes'];
   $variables['attributes']['class'][] = 'form-item';
-
-  // If the element is required, a required marker is appended to the label.
-  $variables['required'] = '';
-  if (!empty($element['#required'])) {
-    $variables['required'] = array(
-      '#theme' => 'form_required_marker',
-      '#element' => $element,
-    );
-  }
-
   $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
   $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
   $variables['children'] = $element['#children'];
-
-  // Build legend properties.
-  $variables['legend'] = array();
   $legend_attributes = array();
   if (isset($element['#title_display']) && $element['#title_display'] == 'invisible') {
     $legend_attributes['class'][] = 'visually-hidden';
   }
   $variables['legend']['attributes'] = new Attribute($legend_attributes);
   $variables['legend']['title'] = (isset($element['#title']) && $element['#title'] !== '') ? Xss::filterAdmin($element['#title']) : '';
-
-  // Build description properties.
-  $variables['description'] = array();
+  $legend_span_attributes = array('class' => array('fieldset-legend'));
+  if (!empty($element['#required'])) {
+    $legend_span_attributes['class'][] = 'form-required';
+    $variables['legend_span']['attributes'] = new Attribute($legend_span_attributes);
+  }
   if (!empty($element['#description'])) {
     $description_id = $element['#attributes']['id'] . '--description';
     $description_attributes = array(
@@ -2932,7 +2921,7 @@ function template_preprocess_form_element(&$variables) {
     $variables['attributes']['class'][] = 'form-disabled';
   }
 
-  // If #title is not set, we don't display any label or required marker.
+  // If #title is not set, we don't display any label.
   if (!isset($element['#title'])) {
     $element['#title_display'] = 'none';
   }
@@ -2955,23 +2944,6 @@ function template_preprocess_form_element(&$variables) {
   $variables['label'] += array_intersect_key($element, array_flip(array('#id', '#required', '#title', '#title_display')));
 
   $variables['children'] = $element['#children'];
-}
-
-/**
- * Returns HTML for a marker for required form elements.
- *
- * @param $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *
- * @ingroup themeable
- */
-function theme_form_required_marker($variables) {
-  $attributes = array(
-    'class' => 'form-required',
-    'aria-hidden' => 'true',
-  );
-  return '<span' . new Attribute($attributes) . '>*</span>';
 }
 
 /**
@@ -3004,26 +2976,16 @@ function theme_form_element_label($variables) {
     return '';
   }
 
-  // If the element is required, a required marker is appended to the label.
-  $required = '';
-  if (!empty($element['#required'])) {
-    $marker = array(
-      '#theme' => 'form_required_marker',
-      '#element' => $element,
-    );
-    $required = drupal_render($marker);
-  }
-
   $title = Xss::filterAdmin($element['#title']);
 
   $attributes = array();
   // Style the label as class option to display inline with the element.
   if ($element['#title_display'] == 'after') {
-    $attributes['class'] = 'option';
+    $attributes['class'][] = 'option';
   }
   // Show label only to screen readers to avoid disruption in visual flows.
   elseif ($element['#title_display'] == 'invisible') {
-    $attributes['class'] = 'visually-hidden';
+    $attributes['class'][] = 'visually-hidden';
   }
 
   // A #for property of a dedicated #type 'label' element as precedence.
@@ -3040,7 +3002,13 @@ function theme_form_element_label($variables) {
     $attributes['for'] = $element['#id'];
   }
 
-  return '<label' . new Attribute($attributes) . '>' . t('!title!required', array('!title' => $title, '!required' => $required)) . '</label>';
+  // For required elements a 'form-required' class is appended to the
+  // label attributes.
+  if (!empty($element['#required'])) {
+    $attributes['class'][] = 'form-required';
+  }
+
+  return '<label' . new Attribute($attributes) . '>' . $title . '</label>';
 }
 
 /**

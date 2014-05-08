@@ -79,11 +79,20 @@ h4.label {
 .form-type-checkbox .description {
   margin-left: 2.4em;
 }
-.marker,
-.form-required {
+.marker {
   color: #e00;
 }
-abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
+
+.form-required:after {
+  color: #e00;
+  /* Use a Unicode symbol to prevent screen-readers from announcing the text. */
+  content: " \204E ";
+  line-height: 1;
+  vertical-align: super;
+}
+
+abbr.tabledrag-changed,
+abbr.ajax-changed {
   border-bottom: none;
 }
 .form-item input.error,
