@@ -345,44 +345,6 @@ function drupal_get_feeds($delimiter = "\n") {
  */
 
 /**
- * Processes a URL query parameter array to remove unwanted elements.
- *
- * @param $query
- *   (optional) An array to be processed. Defaults to \Drupal::request()->query
- *   parameters.
- * @param $exclude
- *   (optional) A list of $query array keys to remove. Use "parent[child]" to
- *   exclude nested items.
- * @param $parent
- *   Internal use only. Used to build the $query array key for nested items.
- *
- * @return
- *   An array containing query parameters, which can be used for url().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\UrlHelper::filterQueryParameters().
- */
-function drupal_get_query_parameters(array $query = NULL, array $exclude = array(), $parent = '') {
-  if (!isset($query)) {
-    $query = \Drupal::request()->query->all();
-  }
-  return UrlHelper::filterQueryParameters($query, $exclude, $parent);
-}
-
-/**
- * Parses an array into a valid, rawurlencoded query string.
- *
- * @see drupal_get_query_parameters()
- * @ingroup php_wrappers
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\UrlHelper::buildQuery().
- */
-function drupal_http_build_query(array $query, $parent = '') {
-  return UrlHelper::buildQuery($query, $parent);
-}
-
-/**
  * Prepares a 'destination' URL query parameter for use with url().
  *
  * Used to direct the user back to the referring page after completing a form.
@@ -846,23 +808,6 @@ function url($path = NULL, array $options = array()) {
     $url = $generator->generateFromPath($path, $options);
   }
   return $url;
-}
-
-/**
- * Returns TRUE if a path is external to Drupal (e.g. http://example.com).
- *
- * If a path cannot be assessed by Drupal's menu handler, then we must
- * treat it as potentially insecure.
- *
- * @param $path
- *   The internal path or external URL being linked to, such as "node/34" or
- *   "http://example.com/foo".
- *
- * @return
- *   Boolean TRUE or FALSE, where TRUE indicates an external path.
- */
-function url_is_external($path) {
-  return UrlHelper::isExternal($path);
 }
 
 /**

@@ -907,7 +907,7 @@ function install_goto($path) {
  */
 function drupal_current_script_url($query = array()) {
   $uri = $_SERVER['SCRIPT_NAME'];
-  $query = array_merge(drupal_get_query_parameters(), $query);
+  $query = array_merge(UrlHelper::filterQueryParameters(\Drupal::request()->query->all()), $query);
   if (!empty($query)) {
     $uri .= '?' . UrlHelper::buildQuery($query);
   }
