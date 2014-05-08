@@ -20,9 +20,7 @@ class SearchCommentTest extends SearchTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment');
-
-  protected $profile = 'standard';
+  public static $modules = array('filter', 'node', 'comment');
 
   protected $admin_user;
 
@@ -37,14 +35,22 @@ class SearchCommentTest extends SearchTestBase {
   function setUp() {
     parent::setUp();
 
+    $full_html_format = entity_create('filter_format', array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+      'weight' => 1,
+      'filters' => array(),
+    ));
+    $full_html_format->save();
+
     // Create and log in an administrative user having access to the Full HTML
     // text format.
-    $full_html_format = entity_load('filter_format', 'full_html');
     $permissions = array(
       'administer filters',
       $full_html_format->getPermissionName(),
       'administer permissions',
       'create page content',
+      'post comments',
       'skip comment approval',
       'access comments',
     );
@@ -58,18 +64,25 @@ class SearchCommentTest extends SearchTestBase {
    * Verify that comments are rendered using proper format in search results.
    */
   function testSearchResultsComment() {
+    // Create basic_html format that escapes all HTML.
+    $basic_html_format = entity_create('filter_format', array(
+      'format' => 'basic_html',
+      'name' => 'Basic HTML',
+      'weight' => 1,
+      'filters' => array(
+        'filter_html_escape' => array('status' => 1),
+      ),
+      'roles' => array(DRUPAL_AUTHENTICATED_RID),
+    ));
+    $basic_html_format->save();
+
     $comment_body = 'Test comment body';
 
     // Make preview optional.
     $instance = Field::fieldInfo()->getInstance('node', 'article', 'comment');
     $instance->settings['preview'] = DRUPAL_OPTIONAL;
     $instance->save();
-    // Enable check_plain() for 'Basic HTML' text format.
-    $basic_html_format_id = 'basic_html';
-    $edit = array(
-      'filters[filter_html_escape][status]' => TRUE,
-    );
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $basic_html_format_id, $edit, t('Save configuration'));
+
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,
@@ -96,7 +109,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'keys' => "'" . $edit_comment['subject'] . "'",
     );
-    $this->submitGetForm('', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
     $node2 = node_load($node->id(), TRUE);
     $this->assertText($node2->label(), 'Node found in search results.');
     $this->assertText($edit_comment['subject'], 'Comment subject found in search results.');
@@ -105,7 +118,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'keys' => "'" . $comment_body . "'",
     );
-    $this->submitGetForm('', $edit, t('Search'));
+    $this->drupalPostForm(NULL, $edit, t('Search'));
     $this->assertText($node2->label(), 'Node found in search results.');
 
     // Verify that comment is rendered using proper format.
@@ -123,7 +136,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->cronRun();
 
     // Search for $title.
-    $this->submitGetForm('', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertNoText($comment_body, 'Comment body text not found in search results.');
   }
 
@@ -211,7 +224,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'keys' => "'" . $this->comment_subject . "'",
     );
-    $this->submitGetForm('', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
 
     if ($assume_access) {
       $expected_node_result = $this->assertText($this->node->label());
@@ -235,14 +248,20 @@ class SearchCommentTest extends SearchTestBase {
       'body' => array(array('value' => 'short body text')),
     );
 
-    $user = $this->drupalCreateUser(array('search content', 'create article content', 'access content'));
+    $user = $this->drupalCreateUser(array(
+      'search content',
+      'create article content',
+      'access content',
+      'post comments',
+      'access comments',
+    ));
     $this->drupalLogin($user);
 
     $node = $this->drupalCreateNode($settings);
     // Verify that if you view the node on its own page, 'add new comment'
     // is there.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText(t('Add new comment'), 'Add new comment appears on node page');
+    $this->assertText(t('Add new comment'));
 
     // Run cron to index this page.
     $this->drupalLogout();
@@ -251,12 +270,12 @@ class SearchCommentTest extends SearchTestBase {
     // Search for 'comment'. Should be no results.
     $this->drupalLogin($user);
     $this->drupalPostForm('search/node', array('keys' => 'comment'), t('Search'));
-    $this->assertText(t('Your search yielded no results'), 'No results searching for the word comment');
+    $this->assertText(t('Your search yielded no results'));
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
     $this->drupalPostForm('search/node', array('keys' => 'short'), t('Search'));
     $this->assertText($node->label(), 'Search for keyword worked');
-    $this->assertNoText(t('Add new comment'), 'Add new comment does not appear on search results page');
+    $this->assertNoText(t('Add new comment'));
   }
 }
