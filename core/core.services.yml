@@ -179,10 +179,6 @@ services:
     class: Drupal\Core\Http\Client
     tags:
       - { name: service_collector, tag: http_client_subscriber, call: attach }
-  http_client_simpletest_subscriber:
-    class: Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
-    tags:
-      - { name: http_client_subscriber }
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
     arguments: ['@access_check.theme', '@request_stack']

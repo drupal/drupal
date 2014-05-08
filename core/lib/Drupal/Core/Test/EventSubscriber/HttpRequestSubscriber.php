@@ -2,26 +2,25 @@
 
 /**
  * @file
- * Contains Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
+ * Contains \Drupal\Core\Test\EventSubscriber\HttpRequestSubscriber.
  */
 
-namespace Drupal\Core\Http\Plugin;
+namespace Drupal\Core\Test\EventSubscriber;
 
 use GuzzleHttp\Event\BeforeEvent;
 use GuzzleHttp\Event\SubscriberInterface;
 
 /**
- * Subscribe to HTTP requests and override the User-Agent header if the request
- * is being dispatched from inside a simpletest.
+ * Overrides the User-Agent HTTP header for outbound HTTP requests.
  */
-class SimpletestHttpRequestSubscriber implements SubscriberInterface {
+class HttpRequestSubscriber implements SubscriberInterface {
 
   /**
    * {@inheritdoc}
    */
   public function getEvents() {
     return array(
-      'before'   => array('onBeforeSendRequest'),
+      'before' => array('onBeforeSendRequest'),
     );
   }
 
@@ -39,4 +38,5 @@ class SimpletestHttpRequestSubscriber implements SubscriberInterface {
       $event->getRequest()->setHeader('User-Agent', drupal_generate_test_ua($test_prefix));
     }
   }
+
 }

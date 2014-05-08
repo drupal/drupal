@@ -48,6 +48,7 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addScope(new Scope('request'));
     $this->registerTwig($container);
     $this->registerUuid($container);
+    $this->registerTest($container);
 
     // Add the compiler pass that lets service providers modify existing
     // service definitions. This pass must come first so that later
@@ -141,6 +142,20 @@ class CoreServiceProvider implements ServiceProviderInterface  {
 
     $container->register('uuid', $uuid_class);
     return $uuid_class;
+  }
+
+  /**
+   * Registers services and event subscribers for a site under test.
+   */
+  protected function registerTest(ContainerBuilder $container) {
+    // Do nothing if we are not in a test environment.
+    if (!drupal_valid_test_ua()) {
+      return;
+    }
+    // Add the HTTP request subscriber to Guzzle.
+    $container
+      ->register('test.http_client.request_subscriber', 'Drupal\Core\Test\EventSubscriber\HttpRequestSubscriber')
+      ->addTag('http_client_subscriber');
   }
 
 }
