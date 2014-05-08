@@ -203,9 +203,19 @@
             delay = 250;
             break;
           default:
-            // Position against the entity, or as a last resort, the body element.
-            of = this.$entity || 'body';
-            delay = 750;
+            var fieldModels = this.model.get('fields').models;
+            var topMostPosition = 1000000;
+            var topMostField = null;
+            // Position against the topmost field.
+            for (var i = 0; i < fieldModels.length; i++) {
+              var pos = fieldModels[i].get('el').getBoundingClientRect().top;
+              if (pos < topMostPosition) {
+                topMostPosition = pos;
+                topMostField = fieldModels[i];
+              }
+            }
+            of = topMostField.get('el');
+            delay = 50;
             break;
         }
         // Prepare to check the next possible element to position against.

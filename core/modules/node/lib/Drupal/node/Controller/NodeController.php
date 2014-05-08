@@ -9,6 +9,7 @@ namespace Drupal\node\Controller;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\node\Controller\NodeViewController;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
 
@@ -88,9 +89,9 @@ class NodeController extends ControllerBase {
    */
   public function revisionShow($node_revision) {
     $node = $this->entityManager()->getStorage('node')->loadRevision($node_revision);
-    $page = $this->buildPage($node);
+    $node_view_controller = new NodeViewController($this->entityManager);
+    $page = $node_view_controller->view($node);
     unset($page['nodes'][$node->id()]['#cache']);
-
     return $page;
   }
 
@@ -114,67 +115,6 @@ class NodeController extends ControllerBase {
   public function revisionOverview(NodeInterface $node) {
     module_load_include('pages.inc', 'node');
     return node_revision_overview($node);
-  }
-
-  /**
-   * Displays a node.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node we are displaying.
-   *
-   * @return array
-   *   An array suitable for drupal_render().
-   */
-  public function page(NodeInterface $node) {
-    $build = $this->buildPage($node);
-
-    foreach ($node->uriRelationships() as $rel) {
-      // Set the node path as the canonical URL to prevent duplicate content.
-      $build['#attached']['drupal_add_html_head_link'][] = array(
-        array(
-        'rel' => $rel,
-        'href' => $node->url($rel),
-        )
-        , TRUE);
-
-      if ($rel == 'canonical') {
-        // Set the non-aliased canonical path as a default shortlink.
-        $build['#attached']['drupal_add_html_head_link'][] = array(
-          array(
-            'rel' => 'shortlink',
-            'href' => $node->url($rel, array('alias' => TRUE)),
-          )
-        , TRUE);
-      }
-    }
-
-    return $build;
-  }
-
-  /**
-   * The _title_callback for the node.view route.
-   *
-   * @param NodeInterface $node
-   *   The current node.
-   *
-   * @return string
-   *   The page title.
-   */
-  public function pageTitle(NodeInterface $node) {
-    return String::checkPlain($this->entityManager()->getTranslationFromContext($node)->label());
-  }
-
-  /**
-   * Builds a node page render array.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node we are displaying.
-   *
-   * @return array
-   *   An array suitable for drupal_render().
-   */
-  protected function buildPage(NodeInterface $node) {
-    return array('nodes' => $this->entityManager()->getViewBuilder('node')->view($node));
   }
 
   /**

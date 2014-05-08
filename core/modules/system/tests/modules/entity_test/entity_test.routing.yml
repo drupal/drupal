@@ -2,6 +2,7 @@ entity_test.render:
   path: '/entity_test/{entity_test}'
   defaults:
     _entity_view: 'entity_test.full'
+    _title: 'Test full view mode'
   requirements:
     _access: 'TRUE'
 

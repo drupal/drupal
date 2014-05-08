@@ -171,6 +171,12 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $items = $referencing_entity->get($field_name);
     $build = $items->view(array('type' => $formatter));
 
+    $expected_rendered_name_field = '<div class="field field-entity-test--name field-name-name field-type-string field-label-hidden">
+    <div class="field-items">
+          <div class="field-item">' . $this->referencedEntity->label() . '</div>
+      </div>
+</div>
+';
     $expected_rendered_body_field = '<div class="field field-entity-test--body field-name-body field-type-text field-label-above">
       <div class="field-label">Body:&nbsp;</div>
     <div class="field-items">
@@ -178,7 +184,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
       </div>
 </div>
 ';
-    $this->assertEqual($build[0]['#markup'], 'default | ' . $this->referencedEntity->label() .  $expected_rendered_body_field, format_string('The markup returned by the @formatter formatter is correct.', array('@formatter' => $formatter)));
+    $this->assertEqual($build[0]['#markup'], 'default | ' . $this->referencedEntity->label() .  $expected_rendered_name_field . $expected_rendered_body_field, format_string('The markup returned by the @formatter formatter is correct.', array('@formatter' => $formatter)));
     $expected_cache_tags = array(
       $this->entityType . '_view' => TRUE,
       $this->entityType => array($this->referencedEntity->id() => $this->referencedEntity->id()),

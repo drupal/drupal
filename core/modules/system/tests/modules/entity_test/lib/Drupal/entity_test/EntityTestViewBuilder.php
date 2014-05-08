@@ -24,12 +24,15 @@ class EntityTestViewBuilder extends EntityViewBuilder {
 
     foreach ($entities as $id => $entity) {
       $build[$id]['label'] = array(
+        '#weight' => -100,
         '#markup' => check_plain($entity->label()),
       );
       $build[$id]['separator'] = array(
+        '#weight' => -150,
         '#markup' => ' | ',
       );
       $build[$id]['view_mode'] = array(
+        '#weight' => -200,
         '#markup' => check_plain($view_mode),
       );
     }

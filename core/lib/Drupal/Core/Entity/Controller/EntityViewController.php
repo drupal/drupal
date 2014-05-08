@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -61,9 +62,28 @@ class EntityViewController implements ContainerInjectionInterface {
    *   A render array as expected by drupal_render().
    */
   public function view(EntityInterface $_entity, $view_mode = 'full', $langcode = NULL) {
-    return $this->entityManager
+    $page = $this->entityManager
       ->getViewBuilder($_entity->getEntityTypeId())
       ->view($_entity, $view_mode, $langcode);
+
+    // If the entity's label is rendered using a field formatter, set the
+    // rendered title field formatter as the page title instead of the default
+    // plain text title. This allows attributes set on the field to propagate
+    // correctly (e.g. RDFa, in-place editing).
+    if ($_entity instanceof ContentEntityInterface) {
+      $label_field = $_entity->getEntityType()->getKey('label');
+      if ($label_field && $_entity->getFieldDefinition($label_field)->getDisplayOptions('view')) {
+        // We must render the label field, because rendering the entity may be
+        // a cache hit, in which case we can't extract the rendered label field
+        // from the $page renderable array.
+        $build = $this->entityManager->getTranslationFromContext($_entity)
+          ->get($label_field)
+          ->view($view_mode);
+        $page['#title'] = drupal_render($build, TRUE);
+      }
+    }
+
+    return $page;
   }
 
 }
