@@ -895,13 +895,6 @@ function drupal_serve_page_from_cache(stdClass $cache, Response $response, Reque
   // max-age > 0, allowing the page to be cached by external proxies, when a
   // session cookie is present unless the Vary header has been replaced.
   $max_age = !$request->cookies->has(session_name()) || isset($boot_headers['vary']) ? $config->get('cache.page.max_age') : 0;
-  // RFC 2616, section 14.21 says: 'To mark a response as "never expires," an
-  // origin server sends an Expires date approximately one year from the time
-  // the response is sent. HTTP/1.1 servers SHOULD NOT send Expires dates more
-  // than one year in the future.'
-  if ($max_age > 31536000 || $max_age === \Drupal\Core\Cache\Cache::PERMANENT) {
-    $max_age = 31536000;
-  }
   $response->headers->set('Cache-Control', 'public, max-age=' . $max_age);
 
   // Entity tag should change if the output changes.
