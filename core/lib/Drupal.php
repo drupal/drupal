@@ -618,7 +618,7 @@ class Drupal {
    * @return bool
    *   Returns TRUE is syncing flag set.
    */
-  public function isConfigSyncing() {
+  public static function isConfigSyncing() {
     return static::$container->get('config.installer')->isSyncing();
   }
 
