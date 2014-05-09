@@ -4,7 +4,7 @@
  * Contains \Drupal\tour\Tests\Entity\TourTest.
  */
 
-namespace Drupal\tour\Tests\Entity\TourTest;
+namespace Drupal\tour\Tests\Entity;
 
 use Drupal\Tests\UnitTestCase;
 

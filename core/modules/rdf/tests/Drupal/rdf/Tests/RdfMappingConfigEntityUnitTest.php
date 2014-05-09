@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\rdf\Tests\RdfMappingEntityUnitTest.
+ * Contains \Drupal\rdf\Tests\RdfMappingConfigEntityUnitTest.
  */
 
 namespace Drupal\rdf\Tests;
@@ -17,7 +17,7 @@ use Drupal\rdf\Entity\RdfMapping;
  * @group Drupal
  * @group Config
  */
-class RdfMappingEntityUnitTest extends UnitTestCase {
+class RdfMappingConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * The entity type used for testing.
