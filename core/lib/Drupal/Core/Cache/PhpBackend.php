@@ -255,11 +255,22 @@ class PhpBackend implements CacheBackendInterface {
    */
   protected function writeItem($cid, \stdClass $item) {
     $data = str_replace('\\', '\\\\', serialize($item));
-    $content = "<?php return unserialize(<<<EOF
+
+    // Data can contain 'EOF' or 'EOF;', either of which cause a fatal PHP
+    // error when the cache item is read back from disk. To guard against this,
+    // dynamically generate a heredoc EOF string that is not contained in $data.
+    $suffix = '';
+    do {
+      $EOF = 'EOF' . $suffix;
+    } while ($suffix++ < 1000 && ($unsafe_eof_in_data = preg_match('/^' . $EOF . ';?$/m', $data)));
+
+    if (!$unsafe_eof_in_data) {
+      $content = "<?php return unserialize(<<<$EOF
 $data
-EOF
+$EOF
 );";
-    $this->storage()->save($cid, $content);
+      $this->storage()->save($cid, $content);
+    }
   }
 
   /**

@@ -161,6 +161,26 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $this->assertFalse($cached->valid, 'Item is marked as valid.');
     $this->assertEqual($cached->created, REQUEST_TIME, 'Created time is correct.');
     $this->assertEqual($cached->expire, REQUEST_TIME - 3, 'Expire time is correct.');
+
+    $this->assertIdentical(FALSE, $backend->get('test4'), "Backend does not contain data for cache id test4.");
+    $with_eof = array('foo' => "\nEOF\ndata");
+    $backend->set('test4', $with_eof);
+    $cached = $backend->get('test4');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test4.");
+    $this->assertIdentical($with_eof, $cached->data);
+    $this->assertTrue($cached->valid, 'Item is marked as valid.');
+    $this->assertEqual($cached->created, REQUEST_TIME, 'Created time is correct.');
+    $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
+
+    $this->assertIdentical(FALSE, $backend->get('test5'), "Backend does not contain data for cache id test5.");
+    $with_eof_and_semicolon = array('foo' => "\nEOF;\ndata");
+    $backend->set('test5', $with_eof_and_semicolon);
+    $cached = $backend->get('test5');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test5.");
+    $this->assertIdentical($with_eof_and_semicolon, $cached->data);
+    $this->assertTrue($cached->valid, 'Item is marked as valid.');
+    $this->assertEqual($cached->created, REQUEST_TIME, 'Created time is correct.');
+    $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
   }
 
   /**
