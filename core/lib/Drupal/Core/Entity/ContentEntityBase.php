@@ -933,7 +933,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
 
     // Check whether the entity type supports revisions and initialize it if so.
-    if ($entity_type->hasKey('revision')) {
+    if ($entity_type->isRevisionable()) {
       $duplicate->{$entity_type->getKey('revision')}->value = NULL;
     }
 

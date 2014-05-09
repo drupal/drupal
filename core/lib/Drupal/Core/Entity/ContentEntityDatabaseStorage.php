@@ -102,8 +102,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
     // Check if the entity type supports UUIDs.
     $this->uuidKey = $this->entityType->getKey('uuid');
 
-    // Check if the entity type supports revisions.
-    if ($this->entityType->hasKey('revision')) {
+    if ($this->entityType->isRevisionable()) {
       $this->revisionKey = $this->entityType->getKey('revision');
       $this->revisionTable = $this->entityType->getRevisionTable();
     }

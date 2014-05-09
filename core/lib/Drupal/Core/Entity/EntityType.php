@@ -548,6 +548,14 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function isRevisionable() {
+    // Entity types are revisionable if a revision key has been specified.
+    return $this->hasKey('revision');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConfigPrefix() {
     return FALSE;
   }

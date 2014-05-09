@@ -142,10 +142,8 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('getKeys')
       ->will($this->returnValue(array('id' => 'id')));
     $entity_type->expects($this->atLeastOnce())
-      ->method('hasKey')
-      ->will($this->returnCallback(function ($key) {
-        return $key == 'id';
-      }));
+      ->method('isRevisionable')
+      ->will($this->returnValue(FALSE));
     $entity_manager->expects($this->atLeastOnce())
       ->method('getDefinition')
       ->with('test_entity_type')

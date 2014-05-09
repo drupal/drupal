@@ -89,6 +89,18 @@ class EntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * Tests the isRevisionable() method.
+   */
+  public function testIsRevisionable() {
+    $entity_type = $this->setUpEntityType(array('entity_keys' => array('id' => 'id')));
+    $this->assertFalse($entity_type->isRevisionable());
+    $entity_type = $this->setUpEntityType(array('entity_keys' => array('id' => 'id', 'revision' => FALSE)));
+    $this->assertFalse($entity_type->isRevisionable());
+    $entity_type = $this->setUpEntityType(array('entity_keys' => array('id' => 'id', 'revision' => TRUE)));
+    $this->assertTrue($entity_type->isRevisionable());
+  }
+
+  /**
    * Tests the getController() method.
    */
   public function testGetController() {
