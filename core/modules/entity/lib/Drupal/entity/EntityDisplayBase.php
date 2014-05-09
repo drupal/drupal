@@ -161,6 +161,10 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
       $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
     }
+    else {
+      // Depend on the provider of the entity type.
+      $this->addDependency('module', $target_entity_type->getProvider());
+    }
     // Create dependencies on both hidden and visible fields.
     $fields = $this->content + $this->hidden;
     foreach ($fields as $field_name => $component) {

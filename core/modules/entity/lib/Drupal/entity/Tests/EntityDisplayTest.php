@@ -88,7 +88,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $new_display->save();
     $new_display = entity_load('entity_view_display', $new_display->id());
     $dependencies = $new_display->calculateDependencies();
-    $this->assertEqual(array('entity' => array('entity.view_mode.entity_test.other_view_mode')), $dependencies);
+    $this->assertEqual(array('entity' => array('entity.view_mode.entity_test.other_view_mode'), 'module' => array('entity_test')), $dependencies);
     $this->assertEqual($new_display->targetEntityType, $display->targetEntityType);
     $this->assertEqual($new_display->bundle, $display->bundle);
     $this->assertEqual($new_display->mode, 'other_view_mode');
@@ -201,7 +201,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     // Check that the display has dependencies on the field and the module that
     // provides the formatter.
     $dependencies = $display->calculateDependencies();
-    $this->assertEqual(array('entity' => array('field.instance.entity_test.entity_test.test_field'), 'module' => array('field_test')), $dependencies);
+    $this->assertEqual(array('entity' => array('field.instance.entity_test.entity_test.test_field'), 'module' => array('entity_test', 'field_test')), $dependencies);
   }
 
   /**

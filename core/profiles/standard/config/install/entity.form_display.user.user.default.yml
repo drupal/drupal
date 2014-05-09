@@ -13,3 +13,4 @@ status: true
 dependencies:
   module:
     - image
+    - user

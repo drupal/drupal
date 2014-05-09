@@ -18,3 +18,4 @@ dependencies:
     - entity.view_mode.user.compact
   module:
     - image
+    - user
