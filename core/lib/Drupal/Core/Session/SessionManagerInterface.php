@@ -7,10 +7,12 @@
 
 namespace Drupal\Core\Session;
 
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
+
 /**
  * Defines the session manager interface.
  */
-interface SessionManagerInterface {
+interface SessionManagerInterface extends SessionStorageInterface {
 
   /**
    * Initializes the session handler, starting a session if needed.
@@ -18,28 +20,6 @@ interface SessionManagerInterface {
    * @return $this
    */
   public function initialize();
-
-  /**
-   * Starts a session forcefully, preserving already set session data.
-   */
-  public function start();
-
-  /**
-   * Commits the current session, if necessary.
-   *
-   * If an anonymous user already have an empty session, destroy it.
-   */
-  public function save();
-
-  /**
-   * Returns whether a session has been started.
-   */
-  public function isStarted();
-
-  /**
-   * Called when an anonymous user becomes authenticated or vice-versa.
-   */
-  public function regenerate();
 
   /**
    * Ends a specific user's session(s).
@@ -76,5 +56,29 @@ interface SessionManagerInterface {
    * @return $this
    */
   public function enable();
+
+  /**
+   * Returns whether mixed mode SSL sessions are enabled in the session manager.
+   *
+   * @return bool
+   *   Value of the mixed mode SSL sessions flag.
+   */
+  public function isMixedMode();
+
+  /**
+   * Enables or disables mixed mode SSL sessions in the session manager.
+   *
+   * @param bool $mixed_mode
+   *   New value for the mixed mode SSL sessions flag.
+   */
+  public function setMixedMode($mixed_mode);
+
+  /**
+   * Returns the name of the insecure session when operating in mixed mode SSL.
+   *
+   * @return string
+   *   The name of the insecure session.
+   */
+  public function getInsecureName();
 
 }

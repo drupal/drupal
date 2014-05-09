@@ -12,11 +12,12 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 
 /**
  * Default session handler.
  */
-class SessionHandler implements \SessionHandlerInterface {
+class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
 
   /**
    * The session manager.
@@ -38,13 +39,6 @@ class SessionHandler implements \SessionHandlerInterface {
    * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
-
-  /**
-   * An array containing the sid and data from last read.
-   *
-   * @var array
-   */
-  protected $lastRead;
 
   /**
    * Constructs a new SessionHandler instance.
@@ -77,9 +71,9 @@ class SessionHandler implements \SessionHandlerInterface {
 
     // Handle the case of first time visitors and clients that don't store
     // cookies (eg. web crawlers).
-    $insecure_session_name = substr(session_name(), 1);
+    $insecure_session_name = $this->sessionManager->getInsecureName();
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    if (!$cookies->has(session_name()) && !$cookies->has($insecure_session_name)) {
+    if (!$cookies->has($this->getName()) && !$cookies->has($insecure_session_name)) {
       $user = new UserSession();
       return '';
     }
@@ -136,11 +130,6 @@ class SessionHandler implements \SessionHandlerInterface {
       $user = new UserSession();
     }
 
-    // Store the session that was read for comparison in self::write().
-    $this->lastRead = array(
-      'sid' => $sid,
-      'value' => $user->session,
-    );
     return $user->session;
   }
 
@@ -158,48 +147,40 @@ class SessionHandler implements \SessionHandlerInterface {
         // session.
         return TRUE;
       }
-      // Check whether $_SESSION has been changed in this request.
-      $is_changed = empty($this->lastRead) || $this->lastRead['sid'] != $sid || $this->lastRead['value'] !== $value;
 
-      // For performance reasons, do not update the sessions table, unless
-      // $_SESSION has changed or more than 180 has passed since the last
-      // update.
-      $needs_update = !$user->getLastAccessedTime() || REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180);
-
-      if ($is_changed || $needs_update) {
-        // Either ssid or sid or both will be added from $key below.
-        $fields = array(
-          'uid' => $user->id(),
-          'hostname' => $this->requestStack->getCurrentRequest()->getClientIP(),
-          'session' => $value,
-          'timestamp' => REQUEST_TIME,
-        );
-        // Use the session ID as 'sid' and an empty string as 'ssid' by default.
-        // read() does not allow empty strings so that's a safe default.
-        $key = array('sid' => Crypt::hashBase64($sid), 'ssid' => '');
-        // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
-        if ($this->requestStack->getCurrentRequest()->isSecure()) {
-          $key['ssid'] = Crypt::hashBase64($sid);
-          $cookies = $this->requestStack->getCurrentRequest()->cookies;
-          // The "secure pages" setting allows a site to simultaneously use both
-          // secure and insecure session cookies. If enabled and both cookies
-          // are presented then use both keys. The session ID from the cookie is
-          // hashed before being stored in the database as a security measure.
-          if (Settings::get('mixed_mode_sessions', FALSE)) {
-            $insecure_session_name = substr(session_name(), 1);
-            if ($cookies->has($insecure_session_name)) {
-              $key['sid'] = Crypt::hashBase64($cookies->get($insecure_session_name));
-            }
+      // Either ssid or sid or both will be added from $key below.
+      $fields = array(
+        'uid' => $user->id(),
+        'hostname' => $this->requestStack->getCurrentRequest()->getClientIP(),
+        'session' => $value,
+        'timestamp' => REQUEST_TIME,
+      );
+      // Use the session ID as 'sid' and an empty string as 'ssid' by default.
+      // read() does not allow empty strings so that's a safe default.
+      $key = array('sid' => Crypt::hashBase64($sid), 'ssid' => '');
+      // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
+      if ($this->requestStack->getCurrentRequest()->isSecure()) {
+        $key['ssid'] = Crypt::hashBase64($sid);
+        $cookies = $this->requestStack->getCurrentRequest()->cookies;
+        // The "secure pages" setting allows a site to simultaneously use both
+        // secure and insecure session cookies. If enabled and both cookies
+        // are presented then use both keys. The session ID from the cookie is
+        // hashed before being stored in the database as a security measure.
+        if ($this->sessionManager->isMixedMode()) {
+          $insecure_session_name = $this->sessionManager->getInsecureName();
+          if ($cookies->has($insecure_session_name)) {
+            $key['sid'] = Crypt::hashBase64($cookies->get($insecure_session_name));
           }
         }
-        elseif (Settings::get('mixed_mode_sessions', FALSE)) {
-          unset($key['ssid']);
-        }
-        $this->connection->merge('sessions')
-          ->keys($key)
-          ->fields($fields)
-          ->execute();
       }
+      elseif ($this->sessionManager->isMixedMode()) {
+        unset($key['ssid']);
+      }
+      $this->connection->merge('sessions')
+        ->keys($key)
+        ->fields($fields)
+        ->execute();
+
       // Likewise, do not update access time more than once per 180 seconds.
       if ($user->isAuthenticated() && REQUEST_TIME - $user->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
         $this->connection->update('users')
@@ -252,12 +233,12 @@ class SessionHandler implements \SessionHandlerInterface {
     $user = new AnonymousUserSession();
 
     // Unset the session cookies.
-    $this->deleteCookie(session_name());
+    $this->deleteCookie($this->getName());
     if ($is_https) {
-      $this->deleteCookie(substr(session_name(), 1), FALSE);
+      $this->deleteCookie($this->sessionManager->getInsecureName(), FALSE);
     }
-    elseif (Settings::get('mixed_mode_sessions', FALSE)) {
-      $this->deleteCookie('S' . session_name(), TRUE);
+    elseif ($this->sessionManager->isMixedMode()) {
+      $this->deleteCookie('S' . $this->getName(), TRUE);
     }
     return TRUE;
   }

@@ -13,11 +13,36 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\SessionHandler;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag as SymfonyMetadataBag;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 /**
  * Manages user sessions.
+ *
+ * This class implements the custom session management code inherited from
+ * Drupal 7 on top of the corresponding Symfony component. Regrettably the name
+ * NativeSessionStorage is not quite accurate. In fact the responsibility for
+ * storing and retrieving session data has been extracted from it in Symfony 2.1
+ * but the class name was not changed.
+ *
+ * @todo
+ *   In fact the NativeSessionStorage class already implements all of the
+ *   functionality required by a typical Symfony application. Normally it is not
+ *   necessary to subclass it at all. In order to reach the point where Drupal
+ *   can use the Symfony session management unmodified, the code implemented
+ *   here needs to be extracted either into a dedicated session handler proxy
+ *   (e.g. mixed mode SSL, sid-hashing) or relocated to the authentication
+ *   subsystem.
  */
-class SessionManager implements SessionManagerInterface {
+class SessionManager extends NativeSessionStorage implements SessionManagerInterface {
+
+  /**
+   * Whether or not the session manager is operating in mixed mode SSL.
+   *
+   * @var bool
+   */
+  protected $mixedMode;
 
   /**
    * The request stack.
@@ -54,14 +79,30 @@ class SessionManager implements SessionManagerInterface {
   /**
    * Constructs a new session manager instance.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
+   * @param \Symfony\Component\HttpFoundation\Session\Storage\MetadataBag $metadata_bag
+   *   The session metadata bag.
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The settings instance.
    */
-  public function __construct(RequestStack $request_stack, Connection $connection) {
+  public function __construct(RequestStack $request_stack, Connection $connection, SymfonyMetadataBag $metadata_bag, Settings $settings) {
+    parent::__construct();
     $this->requestStack = $request_stack;
     $this->connection = $connection;
+    $this->setMetadataBag($metadata_bag);
+
+    $this->setMixedMode($settings->get('mixed_mode_sessions', FALSE));
+
+    // @todo When not using the Symfony Session object, the list of bags in the
+    //   NativeSessionStorage will remain uninitialized. This will lead to
+    //   errors in NativeSessionHandler::loadSession. Remove this after
+    //   https://drupal.org/node/2229145, when we will be using the Symfony
+    //   session object (which registers an attribute bag with the
+    //   manager upon instantiation).
+    $this->bags = array();
   }
 
   /**
@@ -72,12 +113,14 @@ class SessionManager implements SessionManagerInterface {
 
     // Register the default session handler.
     // @todo Extract session storage from session handler into a service.
-    $handler = new SessionHandler($this, $this->requestStack, $this->connection);
-    session_set_save_handler($handler, TRUE);
+    $save_handler = new SessionHandler($this, $this->requestStack, $this->connection);
+    $write_check_handler = new WriteCheckSessionHandler($save_handler);
+    $this->setSaveHandler($write_check_handler);
 
     $is_https = $this->requestStack->getCurrentRequest()->isSecure();
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
-    if (($cookies->has(session_name()) && ($session_name = $cookies->get(session_name()))) || ($is_https && Settings::get('mixed_mode_sessions', FALSE) && ($cookies->has(substr(session_name(), 1))) && ($session_name = $cookies->get(substr(session_name(), 1))))) {
+    $insecure_session_name = $this->getInsecureName();
+    if (($cookies->has($this->getName()) && ($session_name = $cookies->get($this->getName()))) || ($is_https && $this->isMixedMode() && ($cookies->has($insecure_session_name) && ($session_name = $cookies->get($insecure_session_name))))) {
       // If a session cookie exists, initialize the session. Otherwise the
       // session is only started on demand in save(), making
       // anonymous users not use a session cookie unless something is stored in
@@ -94,12 +137,8 @@ class SessionManager implements SessionManagerInterface {
       // session ID in advance.
       $this->lazySession = TRUE;
       $user = new AnonymousUserSession();
-      // Less random sessions (which are much faster to generate) are used for
-      // anonymous users than are generated in regenerate() when
-      // a user becomes authenticated.
-      session_id(Crypt::randomBytesBase64());
-      if ($is_https && Settings::get('mixed_mode_sessions', FALSE)) {
-        $insecure_session_name = substr(session_name(), 1);
+      $this->setId(Crypt::randomBytesBase64());
+      if ($is_https && $this->isMixedMode()) {
         $session_id = Crypt::randomBytesBase64();
         $cookies->set($insecure_session_name, $session_id);
       }
@@ -113,18 +152,20 @@ class SessionManager implements SessionManagerInterface {
    * {@inheritdoc}
    */
   public function start() {
-    if ($this->isCli() || $this->isStarted()) {
+    if (!$this->isEnabled() || $this->isCli()) {
       return;
     }
     // Save current session data before starting it, as PHP will destroy it.
     $session_data = isset($_SESSION) ? $_SESSION : NULL;
 
-    session_start();
+    $result = parent::start();
 
     // Restore session data.
     if (!empty($session_data)) {
       $_SESSION += $session_data;
     }
+
+    return $result;
   }
 
   /**
@@ -141,7 +182,7 @@ class SessionManager implements SessionManagerInterface {
     if ($user->isAnonymous() && $this->isSessionObsolete()) {
       // There is no session data to store, destroy the session if it was
       // previously started.
-      if ($this->isStarted()) {
+      if ($this->getSaveHandler()->isActive()) {
         session_destroy();
       }
     }
@@ -150,8 +191,8 @@ class SessionManager implements SessionManagerInterface {
       // started.
       if (!$this->isStarted()) {
         $this->start();
-        if ($this->requestStack->getCurrentRequest()->isSecure() && Settings::get('mixed_mode_sessions', FALSE)) {
-          $insecure_session_name = substr(session_name(), 1);
+        if ($this->requestStack->getCurrentRequest()->isSecure() && $this->isMixedMode()) {
+          $insecure_session_name = $this->getInsecureName();
           $params = session_get_cookie_params();
           $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
           $cookie_params = $this->requestStack->getCurrentRequest()->cookies;
@@ -159,21 +200,14 @@ class SessionManager implements SessionManagerInterface {
         }
       }
       // Write the session data.
-      session_write_close();
+      parent::save();
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isStarted() {
-    return session_status() === \PHP_SESSION_ACTIVE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function regenerate() {
+  public function regenerate($destroy = FALSE, $lifetime = NULL) {
     global $user;
 
     // Nothing to do if we are not allowed to change the session.
@@ -181,11 +215,17 @@ class SessionManager implements SessionManagerInterface {
       return;
     }
 
+    // We do not support the optional $destroy and $lifetime parameters as long
+    // as #2238561 remains open.
+    if ($destroy || isset($lifetime)) {
+      throw new \InvalidArgumentException('The optional parameters $destroy and $lifetime of SessionManager::regenerate() are not supported currently');
+    }
+
     $is_https = $this->requestStack->getCurrentRequest()->isSecure();
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
 
-    if ($is_https && Settings::get('mixed_mode_sessions', FALSE)) {
-      $insecure_session_name = substr(session_name(), 1);
+    if ($is_https && $this->isMixedMode()) {
+      $insecure_session_name = $this->getInsecureName();
       if (!isset($this->lazySession) && $cookies->has($insecure_session_name)) {
         $old_insecure_session_id = $cookies->get($insecure_session_name);
       }
@@ -200,14 +240,13 @@ class SessionManager implements SessionManagerInterface {
     }
 
     if ($this->isStarted()) {
-      $old_session_id = session_id();
+      $old_session_id = $this->getId();
     }
     session_id(Crypt::randomBytesBase64());
 
-    // @todo As soon as https://drupal.org/node/2238087 lands, the token seed
-    //   can be moved onto Drupal\Core\Session\MetadataBag. The session manager
-    //   then needs to notify the metadata bag when the token should be
-    //   regenerated.
+    // @todo The token seed can be moved onto \Drupal\Core\Session\MetadataBag.
+    //   The session manager then needs to notify the metadata bag when the
+    //   token should be regenerated. https://drupal.org/node/2256257
     if (!empty($_SESSION)) {
       unset($_SESSION['csrf_token_seed']);
     }
@@ -215,13 +254,13 @@ class SessionManager implements SessionManagerInterface {
     if (isset($old_session_id)) {
       $params = session_get_cookie_params();
       $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
-      setcookie(session_name(), session_id(), $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-      $fields = array('sid' => Crypt::hashBase64(session_id()));
+      setcookie($this->getName(), $this->getId(), $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+      $fields = array('sid' => Crypt::hashBase64($this->getId()));
       if ($is_https) {
-        $fields['ssid'] = Crypt::hashBase64(session_id());
+        $fields['ssid'] = Crypt::hashBase64($this->getId());
         // If the "secure pages" setting is enabled, use the newly-created
         // insecure session identifier as the regenerated sid.
-        if (Settings::get('mixed_mode_sessions', FALSE)) {
+        if ($this->isMixedMode()) {
           $fields['sid'] = Crypt::hashBase64($session_id);
         }
       }
@@ -235,7 +274,7 @@ class SessionManager implements SessionManagerInterface {
       // the secure site but a session was active on the insecure site, update
       // the insecure session with the new session identifiers.
       $this->connection->update('sessions')
-        ->fields(array('sid' => Crypt::hashBase64($session_id), 'ssid' => Crypt::hashBase64(session_id())))
+        ->fields(array('sid' => Crypt::hashBase64($session_id), 'ssid' => Crypt::hashBase64($this->getId())))
         ->condition('sid', Crypt::hashBase64($old_insecure_session_id))
         ->execute();
     }
@@ -287,6 +326,27 @@ class SessionManager implements SessionManagerInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function isMixedMode() {
+    return $this->mixedMode;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMixedMode($mixed_mode) {
+    $this->mixedMode = (bool) $mixed_mode;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInsecureName() {
+    return substr($this->getName(), 1);
+  }
+
+  /**
    * Returns whether the current PHP process runs on CLI.
    *
    * Command line clients do not support cookies nor sessions.
@@ -305,10 +365,28 @@ class SessionManager implements SessionManagerInterface {
    *   destroyed.
    */
   protected function isSessionObsolete() {
-    // Return early when $_SESSION is empty or not initialized.
+    $used_session_keys = array_filter($this->getSessionDataMask());
+    return empty($used_session_keys);
+  }
+
+  /**
+   * Returns a map specifying which session key is containing user data.
+   *
+   * @return array
+   *   An array where keys correspond to the session keys and the values are
+   *   booleans specifying whether the corresponding session key contains any
+   *   user data.
+   */
+  protected function getSessionDataMask() {
     if (empty($_SESSION)) {
-      return TRUE;
+      return array();
     }
+
+    // Start out with a completely filled mask.
+    $mask = array_fill_keys(array_keys($_SESSION), TRUE);
+
+    // Ignore the metadata bag, it does not contain any user data.
+    $mask[$this->metadataBag->getStorageKey()] = FALSE;
 
     // Ignore the CSRF token seed.
     //
@@ -317,10 +395,18 @@ class SessionManager implements SessionManagerInterface {
     //   session once obsolete. Since that is not guaranteed to be the case,
     //   this check force-ignores the CSRF token, so as to avoid performance
     //   regressions.
-    //   As soon as https://drupal.org/node/2238087 lands, the token seed can be
-    //   moved onto \Drupal\Core\Session\MetadataBag. This will result in the
-    //   CSRF token to be ignored automatically.
-    return count(array_diff_key($_SESSION, array('csrf_token_seed' => TRUE))) == 0;
+    //   The token seed can be moved onto \Drupal\Core\Session\MetadataBag. This
+    //   will result in the CSRF token being ignored automatically.
+    //   https://drupal.org/node/2256257
+    $mask['csrf_token_seed'] = FALSE;
+
+    // Ignore attribute bags when they do not contain any data.
+    foreach ($this->bags as $bag) {
+      $key = $bag->getStorageKey();
+      $mask[$key] = empty($_SESSION[$key]);
+    }
+
+    return array_intersect_key($mask, $_SESSION);
   }
 
 }
