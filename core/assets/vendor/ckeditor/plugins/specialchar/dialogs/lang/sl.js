@@ -1,6 +1,6 @@
 ﻿/*
- Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
- For licensing, see LICENSE.html or http://ckeditor.com/license
+ Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 CKEDITOR.plugins.setLang("specialchar","sl",{euro:"Evro znak",lsquo:"Levi enojni narekovaj",rsquo:"Desni enojni narekovaj",ldquo:"Levi dvojni narekovaj",rdquo:"Desni dvojni narekovaj",ndash:"En pomišljaj",mdash:"Em pomišljaj",iexcl:"Obrnjen klicaj",cent:"Cent znak",pound:"Funt znak",curren:"Znak valute",yen:"Jen znak",brvbar:"Zlomljena črta",sect:"Znak oddelka",uml:"Diaeresis",copy:"Znak avtorskih pravic",ordf:"Ženski zaporedni kazalnik",laquo:"Levi obrnjen dvojni kotni narekovaj",not:"Ne znak",reg:"Registrirani znak",
 macr:"Macron",deg:"Znak stopinj",sup2:"Nadpisano dva",sup3:"Nadpisano tri",acute:"Ostrivec",micro:"Mikro znak",para:"Pilcrow znak",middot:"Sredinska pika",cedil:"Cedilla",sup1:"Nadpisano ena",ordm:"Moški zaporedni kazalnik",raquo:"Desno obrnjen dvojni kotni narekovaj",frac14:"Ena četrtina",frac12:"Ena polovica",frac34:"Tri četrtine",iquest:"Obrnjen vprašaj",Agrave:"Velika latinska črka A s krativcem",Aacute:"Velika latinska črka A z ostrivcem",Acirc:"Velika latinska črka A s strešico",Atilde:"Velika latinska črka A z tildo",

@@ -41,9 +41,10 @@ class FilterCaption extends FilterBase {
         if ($node->hasAttribute('data-caption')) {
           $caption = String::checkPlain($node->getAttribute('data-caption'));
           $node->removeAttribute('data-caption');
-          // Sanitize caption: decode HTML encoding, limit allowed HTML tags.
+          // Sanitize caption: decode HTML encoding, limit allowed HTML tags;
+          // only allow inline tags that are allowed by default, plus <br>.
           $caption = String::decodeEntities($caption);
-          $caption = Xss::filter($caption);
+          $caption = Xss::filter($caption, array('a', 'em', 'strong', 'cite', 'code', 'br'));
           // The caption must be non-empty.
           if (Unicode::strlen($caption) === 0) {
             $caption = NULL;

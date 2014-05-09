@@ -90,6 +90,7 @@ class CKEditorTest extends DrupalUnitTestBase {
       'drupalLink_dialogTitleAdd' => 'Add Link',
       'drupalLink_dialogTitleEdit' => 'Edit Link',
       'allowedContent' => $this->getDefaultAllowedContentConfig(),
+      'disallowedContent' => $this->getDefaultDisallowedContentConfig(),
       'toolbar' => $this->getDefaultToolbarConfig(),
       'contentsCss' => $this->getDefaultContentsCssConfig(),
       'extraPlugins' => 'drupalimage,drupallink',
@@ -140,6 +141,7 @@ class CKEditorTest extends DrupalUnitTestBase {
     $format->save();
 
     $expected_config['allowedContent'] = TRUE;
+    $expected_config['disallowedContent'] = FALSE;
     $expected_config['format_tags'] = 'p;h1;h2;h3;h4;h5;h6;pre';
     $this->assertIdentical($expected_config, $this->ckeditor->getJSSettings($editor), 'Generated JS settings are correct for customized configuration.');
 
@@ -160,14 +162,16 @@ class CKEditorTest extends DrupalUnitTestBase {
               'class' => array('dodo' => FALSE),
               'property' => array('dc:*' => TRUE),
               'rel' => array('foaf:*' => FALSE),
+              'style' => array('underline' => FALSE, 'color' => FALSE, 'font-size' => TRUE),
             ),
             '*' => array(
               'style' => FALSE,
+              'on*' => FALSE,
               'class' => array('is-a-hipster-llama' => TRUE, 'and-more' => TRUE),
               'data-*' => TRUE,
             ),
             'del' => FALSE,
-          )
+          ),
         ),
       ),
     ));
@@ -184,7 +188,8 @@ class CKEditorTest extends DrupalUnitTestBase {
         'classes' => 'external',
       ),
       'span' => array(
-        'attributes' => 'class,property,rel',
+        'attributes' => 'class,property,rel,style',
+        'styles' => 'font-size',
       ),
       '*' => array(
         'attributes' => 'class,data-*',
@@ -194,6 +199,15 @@ class CKEditorTest extends DrupalUnitTestBase {
         'attributes' => FALSE,
         'styles' => FALSE,
         'classes' => FALSE,
+      ),
+    );
+    $expected_config['disallowedContent'] = array(
+      'span' => array(
+        'styles' => 'underline,color',
+        'classes' => 'dodo',
+      ),
+      '*' => array(
+        'attributes' => 'on*',
       ),
     );
     $expected_config['format_tags'] = 'p';
@@ -259,6 +273,7 @@ class CKEditorTest extends DrupalUnitTestBase {
 
     // Default toolbar.
     $expected = $this->getDefaultInternalConfig();
+    $expected['disallowedContent'] = $this->getDefaultDisallowedContentConfig();
     $expected['allowedContent'] = $this->getDefaultAllowedContentConfig();
     $this->assertIdentical($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for default toolbar.');
 
@@ -382,6 +397,12 @@ class CKEditorTest extends DrupalUnitTestBase {
       'br' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
       'strong' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
       'a' => array('attributes' => TRUE, 'styles' => FALSE, 'classes' => TRUE),
+    );
+  }
+
+  protected function getDefaultDisallowedContentConfig() {
+    return array(
+      '*' => array('attributes' => 'on*'),
     );
   }
 

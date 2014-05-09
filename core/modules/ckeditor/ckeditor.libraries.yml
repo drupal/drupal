@@ -11,6 +11,15 @@ drupal.ckeditor:
     - core/drupal.debounce
     - core/ckeditor
     - editor/drupal.editor
+
+drupal.ckeditor.plugins.drupalimagecaption:
+  version: VERSION
+  css:
+    component:
+      css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css: {}
+  dependencies:
+    - filter/caption
+
 drupal.ckeditor.admin:
   version: VERSION
   js:
@@ -56,10 +65,3 @@ drupal.ckeditor.stylescombo.admin:
     - core/jquery.once
     - core/drupal.vertical-tabs
     - core/drupalSettings
-
-drupal.ckeditor.drupalimagecaption-theme:
-  version: VERSION
-  js:
-    js/plugins/drupalimagecaption/theme.js: {}
-  dependencies:
-    - core/ckeditor

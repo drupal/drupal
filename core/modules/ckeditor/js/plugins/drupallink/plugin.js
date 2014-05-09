@@ -132,12 +132,12 @@
         editor.ui.addButton('DrupalLink', {
           label: Drupal.t('Link'),
           command: 'drupallink',
-          icon: this.path.replace(/plugin\.js.*/, 'link.png')
+          icon: this.path + '/link.png'
         });
         editor.ui.addButton('DrupalUnlink', {
           label: Drupal.t('Unlink'),
           command: 'drupalunlink',
-          icon: this.path.replace(/plugin\.js.*/, 'unlink.png')
+          icon: this.path + '/unlink.png'
         });
       }
 

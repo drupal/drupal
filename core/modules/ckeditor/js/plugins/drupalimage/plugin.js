@@ -1,135 +1,190 @@
 /**
  * @file
  * Drupal Image plugin.
+ *
+ * This alters the existing CKEditor image2 widget plugin to:
+ * - require a data-editor-file-uuid attribute (which Drupal uses to track where
+ *   images are being used)
+ * - use a Drupal-native dialog (that is in fact just an alterable Drupal form
+ *   like any other) instead of CKEditor's own dialogs.
+ *   @see \Drupal\editor\Form\EditorImageDialog
  */
-
-(function ($, Drupal, drupalSettings, CKEDITOR) {
+(function ($, Drupal, CKEDITOR) {
 
   "use strict";
 
   CKEDITOR.plugins.add('drupalimage', {
-    init: function (editor) {
-      // Register the image command.
-      editor.addCommand('drupalimage', {
-        allowedContent: 'img[alt,!src,width,height]',
-        requiredContent: 'img[alt,src,width,height]',
-        modes: { wysiwyg: 1 },
-        canUndo: true,
-        exec: function (editor, override) {
-          var imageDOMElement = null;
-          var existingValues = {};
-          var dialogTitle;
-          var saveCallback = function (returnValues) {
-            var selection = editor.getSelection();
-            var imageElement = selection.getSelectedElement();
+    requires: 'image2',
+
+    beforeInit: function (editor) {
+      // Override the image2 widget definition to require and handle the
+      // additional data-editor-file-uuid attribute.
+      editor.on('widgetDefinition', function (event) {
+        var widgetDefinition = event.data;
+        if (widgetDefinition.name !== 'image') {
+          return;
+        }
+
+        // Override requiredContent & allowedContent.
+        widgetDefinition.requiredContent = 'img[alt,src,width,height,data-editor-file-uuid]';
+        widgetDefinition.allowedContent.img.attributes += ',!data-editor-file-uuid';
+        // We don't allow <figure>, <figcaption>, <div> or <p>  in our downcast.
+        delete widgetDefinition.allowedContent.figure;
+        delete widgetDefinition.allowedContent.figcaption;
+        delete widgetDefinition.allowedContent.div;
+        delete widgetDefinition.allowedContent.p;
+
+        // Override the 'link' part, to completely disable image2's link
+        // support: http://dev.ckeditor.com/ticket/11341.
+        widgetDefinition.parts.link = 'This is a nonsensical selector to disable this functionality completely';
+
+        // Override downcast(): since we only accept <img> in our upcast method,
+        // the element is already correct. We only need to update the element's
+        // data-editor-file-uuid attribute.
+        widgetDefinition.downcast = function (element) {
+          element.attributes['data-editor-file-uuid'] = this.data['data-editor-file-uuid'];
+        };
+
+        // We want to upcast <img> elements to a DOM structure required by the
+        // image2 widget; we only accept an <img> tag, and that <img> tag MAY
+        // have a data-editor-file-uuid attribute.
+        widgetDefinition.upcast = function (element, data) {
+          if (element.name !== 'img') {
+            return;
+          }
+          // Don't initialize on pasted fake objects.
+          else if (element.attributes['data-cke-realelement']) {
+            return;
+          }
+
+          // Parse the data-editor-file-uuid attribute.
+          data['data-editor-file-uuid'] = element.attributes['data-editor-file-uuid'];
+
+          return element;
+        };
+
+        // Protected; keys of the widget data to be sent to the Drupal dialog.
+        // Keys in the hash are the keys for image2's data, values are the keys
+        // that the Drupal dialog uses.
+        widgetDefinition._mapDataToDialog = {
+          'src': 'src',
+          'alt': 'alt',
+          'width': 'width',
+          'height': 'height',
+          'data-editor-file-uuid': 'data-editor-file-uuid',
+        };
+
+        // Protected; transforms widget's data object to the format used by the
+        // \Drupal\editor\Form\EditorImageDialog dialog, keeping only the data
+        // listed in widgetDefinition._dataForDialog.
+        widgetDefinition._dataToDialogValues = function (data) {
+          var dialogValues = {};
+          var map = widgetDefinition._mapDataToDialog;
+          Object.keys(widgetDefinition._mapDataToDialog).forEach(function(key) {
+            dialogValues[map[key]] = data[key];
+          });
+          return dialogValues;
+        };
+
+        // Protected; the inverse of _dataToDialogValues.
+        widgetDefinition._dialogValuesToData = function (dialogReturnValues) {
+          var data = {};
+          var map = widgetDefinition._mapDataToDialog;
+          Object.keys(widgetDefinition._mapDataToDialog).forEach(function(key) {
+            if (dialogReturnValues.hasOwnProperty(map[key])) {
+              data[key] = dialogReturnValues[map[key]];
+            }
+          });
+          return data;
+        };
+
+        // Protected; creates Drupal dialog save callback.
+        widgetDefinition._createDialogSaveCallback = function (editor, widget) {
+          return function (dialogReturnValues) {
+            var firstEdit = !widget.ready;
+
+            // Dialog may have blurred the widget. Re-focus it first.
+            if (!firstEdit) {
+              widget.focus();
+            }
 
             editor.fire('saveSnapshot');
 
-            // Create a new image element if needed.
-            if (!imageElement && returnValues.attributes.src) {
-              imageElement = editor.document.createElement('img');
-              imageElement.setAttribute('alt', '');
-              editor.insertElement(imageElement);
-            }
-            // Delete the image if the src was removed.
-            if (imageElement && !returnValues.attributes.src) {
-              imageElement.remove();
-            }
-            // Update the image properties.
-            else {
-              for (var key in returnValues.attributes) {
-                if (returnValues.attributes.hasOwnProperty(key)) {
-                  // Update the property if a value is specified.
-                  if (returnValues.attributes[key].length > 0) {
-                    var value = returnValues.attributes[key];
-                    imageElement.data('cke-saved-' + key, value);
-                    imageElement.setAttribute(key, value);
-                  }
-                  // Delete the property if set to an empty string.
-                  else {
-                    imageElement.removeAttribute(key);
-                  }
-                }
-              }
+            // Pass `true` so DocumentFragment will also be returned.
+            var container = widget.wrapper.getParent(true),
+              image = widget.parts.image;
+
+            // Set the updated widget data, after the necessary conversions from
+            // the dialog's return values.
+            // Note: on widget#setData this widget instance might be destroyed.
+            var data = widgetDefinition._dialogValuesToData(dialogReturnValues.attributes);
+            widget.setData(data);
+
+            // Retrieve the widget once again. It could've been destroyed
+            // when shifting state, so might deal with a new instance.
+            widget = editor.widgets.getByElement(image);
+
+            // It's first edit, just after widget instance creation, but before it was
+            // inserted into DOM. So we need to retrieve the widget wrapper from
+            // inside the DocumentFragment which we cached above and finalize other
+            // things (like ready event and flag).
+            if (firstEdit) {
+              editor.widgets.finalizeCreation(container);
             }
 
-            // Save snapshot for undo support.
-            editor.fire('saveSnapshot');
+            setTimeout(function () {
+              // (Re-)focus the widget.
+              widget.focus();
+              // Save snapshot for undo support.
+              editor.fire('saveSnapshot');
+            });
+
+            return widget;
           };
+        };
+      });
 
-          // Allow CKEditor Widget plugins to execute DrupalImage's 'drupalimage'
-          // command. In this case, they need to provide the DOM element for the
-          // image (because this plugin wouldn't know where to find it), its
-          // existing values (because they're stored within the Widget in whatever
-          // way it sees fit) and a save callback (again because the Widget may
-          // store the returned values in whatever way it sees fit).
-          if (override) {
-            imageDOMElement = override.imageDOMElement;
-            existingValues = override.existingValues;
-            dialogTitle = override.dialogTitle;
-            if (override.saveCallback) {
-              saveCallback = override.saveCallback;
-            }
-          }
-          // Otherwise, retrieve the selected image and allow it to be edited, or
-          // if no image is selected: insert a new one.
-          else {
-            var selection = editor.getSelection();
-            var imageElement = selection.getSelectedElement();
+      // Add a widget#edit listener to every instance of image2 widget in order
+      // to handle its editing with a Drupal-native dialog.
+      // This includes also a case just after the image was created
+      // and dialog should be opened for it for the first time.
+      editor.widgets.on('instanceCreated', function (event) {
+        var widget = event.data;
 
-            // If the 'drupalimage' command is being applied to a CKEditor widget,
-            // then edit that Widget instead.
-            if (imageElement && imageElement.type === CKEDITOR.NODE_ELEMENT && imageElement.hasAttribute('data-widget-wrapper')) {
-              editor.widgets.focused.edit();
-              return;
-            }
-            // Otherwise, check if the 'drupalimage' command is being applied to
-            // an existing image tag, and then open a dialog to edit it.
-            else if (isImage(imageElement) && imageElement.$) {
-              imageDOMElement = imageElement.$;
+        if (widget.name !== 'image') {
+          return;
+        }
 
-              // Width and height are populated by actual dimensions.
-              existingValues.width = imageDOMElement ? imageDOMElement.naturalWidth : '';
-              existingValues.height = imageDOMElement ? imageDOMElement.naturalHeight : '';
-              // Populate all other attributes by their specified attribute values.
-              var attribute = null, attributeName;
-              for (var key = 0; key < imageDOMElement.attributes.length; key++) {
-                attribute = imageDOMElement.attributes.item(key);
-                attributeName = attribute.nodeName.toLowerCase();
-                // Don't consider data-cke-saved- attributes; they're just there to
-                // work around browser quirks.
-                if (attributeName.substring(0, 15) === 'data-cke-saved-') {
-                  continue;
-                }
-                // Store the value for this attribute, unless there's a
-                // data-cke-saved- alternative for it, which will contain the quirk-
-                // free, original value.
-                existingValues[attributeName] = imageElement.data('cke-saved-' + attributeName) || attribute.nodeValue;
-              }
+        widget.on('edit', function (event) {
+          // Cancel edit event to break image2's dialog binding
+          // (and also to prevent automatic insertion before opening dialog).
+          event.cancel();
 
-              dialogTitle = editor.config.drupalImage_dialogTitleEdit;
-            }
-            // The 'drupalimage' command is being executed to add a new image.
-            else {
-              dialogTitle = editor.config.drupalImage_dialogTitleAdd;
-              // Allow other plugins to override the image insertion: they must
-              // listen to this event and cancel the event to do so.
-              if (!editor.fire('drupalimageinsert')) {
-                return;
-              }
-            }
-          }
+          // Open drupalimage dialog.
+          editor.execCommand('editdrupalimage', {
+            existingValues: widget.definition._dataToDialogValues(widget.data),
+            saveCallback: widget.definition._createDialogSaveCallback(editor, widget),
+            // Drupal.t() will not work inside CKEditor plugins because CKEditor
+            // loads the JavaScript file instead of Drupal. Pull translated
+            // strings from the plugin settings that are translated server-side.
+            dialogTitle: widget.data.src ? editor.config.drupalImage_dialogTitleEdit : editor.config.drupalImage_dialogTitleAdd
+          });
+        });
+      });
 
-          // Drupal.t() will not work inside CKEditor plugins because CKEditor
-          // loads the JavaScript file instead of Drupal. Pull translated strings
-          // from the plugin settings that are translated server-side.
+      // Register the "editdrupalimage" command, which essentially just replaces
+      // the "image" command's CKEditor dialog with a Drupal-native dialog.
+      editor.addCommand('editdrupalimage', {
+        allowedContent: 'img[alt,!src,width,height,!data-editor-file-uuid]',
+        requiredContent: 'img[alt,src,width,height,data-editor-file-uuid]',
+        modes: { wysiwyg : 1 },
+        canUndo: true,
+        exec: function (editor, data) {
           var dialogSettings = {
-            title: dialogTitle,
+            title: data.dialogTitle,
             dialogClass: 'editor-image-dialog'
           };
-
-          // Open the dialog for the edit form.
-          Drupal.ckeditor.openDialog(editor, Drupal.url('editor/dialog/image/' + editor.config.drupal.format), existingValues, saveCallback, dialogSettings);
+          Drupal.ckeditor.openDialog(editor, Drupal.url('editor/dialog/image/' + editor.config.drupal.format), data.existingValues, data.saveCallback, dialogSettings);
         }
       });
 
@@ -137,43 +192,51 @@
       if (editor.ui.addButton) {
         editor.ui.addButton('DrupalImage', {
           label: Drupal.t('Image'),
-          command: 'drupalimage',
-          icon: this.path.replace(/plugin\.js.*/, 'image.png')
+          // Note that we use the original image2 command!
+          command: 'image',
+          icon: this.path + '/image.png'
         });
       }
 
-      // Double clicking an image opens its properties.
-      editor.on('doubleclick', function (event) {
-        var element = event.data.element;
-        if (element.is('img') && !element.data('cke-realelement') && !element.isReadOnly()) {
-          editor.getCommand('drupalimage').exec();
-        }
-      });
-
-      // If the "menu" plugin is loaded, register the menu items.
-      if (editor.addMenuItems) {
-        editor.addMenuItems({
-          image: {
-            label: Drupal.t('Image Properties'),
-            command: 'drupalimage',
-            group: 'image'
+      // Register context menu option for editing widget.
+      if (editor.contextMenu) {
+        editor.addMenuItem('drupalimage', {
+          label: Drupal.t('Image Properties'),
+          command: 'editdrupalimage',
+          group: 'image'
+        });
+        editor.contextMenu.addListener(function (element, selection) {
+          if (isImageWidget(editor, element)) {
+            return { drupalimage: CKEDITOR.TRISTATE_OFF };
           }
         });
       }
+    },
 
-      // If the "contextmenu" plugin is loaded, register the listeners.
-      if (editor.contextMenu) {
-        editor.contextMenu.addListener(function (element, selection) {
-          if (isImage(element)) {
-            return { image: CKEDITOR.TRISTATE_OFF };
+    // Disable image2's integration with the link/drupallink plugins: don't
+    // allow the widget itself to become a link. Support for that may be added
+    // by an text filter that adds a data- attribute specifically for that.
+    afterInit: function (editor) {
+      if (editor.plugins.drupallink) {
+        var cmd = editor.getCommand('drupallink');
+        // Needs to be refreshed on selection changes.
+        cmd.contextSensitive = 1;
+        // Disable command and cancel event when the image widget is selected.
+        cmd.on('refresh', function (evt) {
+          var widget = editor.widgets.focused;
+          if (widget && widget.name === 'image') {
+            this.setState(CKEDITOR.TRISTATE_DISABLED);
+            evt.cancel();
           }
         });
       }
     }
+
   });
 
-  function isImage(element) {
-    return element && element.is('img') && !element.data('cke-realelement') && !element.isReadOnly();
+  function isImageWidget (editor, element) {
+    var widget = editor.widgets.getByElement(element.getChild(0), true);
+    return widget && widget.name === 'image';
   }
 
-})(jQuery, Drupal, drupalSettings, CKEDITOR);
+})(jQuery, Drupal, CKEDITOR);

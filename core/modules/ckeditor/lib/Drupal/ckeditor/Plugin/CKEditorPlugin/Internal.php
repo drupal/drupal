@@ -51,7 +51,7 @@ class Internal extends CKEditorPluginBase {
 
     // Add the allowedContent setting, which ensures CKEditor only allows tags
     // and attributes that are allowed by the text format for this text editor.
-    $config['allowedContent'] = $this->generateAllowedContentSetting($editor);
+    list($config['allowedContent'], $config['disallowedContent']) = $this->generateACFSettings($editor);
 
     // Add the format_tags setting, if its button is enabled.
     $toolbar_rows = array();
@@ -270,7 +270,7 @@ class Internal extends CKEditorPluginBase {
   }
 
   /**
-   * Builds the "allowedContent" configuration part of the CKEditor JS settings.
+   * Builds the ACF part of the CKEditor JS settings.
    *
    * This ensures that CKEditor obeys the HTML restrictions defined by Drupal's
    * filter system, by enabling CKEditor's Advanced Content Filter (ACF)
@@ -281,22 +281,30 @@ class Internal extends CKEditorPluginBase {
    * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
-   * @return string|TRUE
-   *   The "allowedContent" configuration: a well-formatted string or TRUE. The
-   *   latter indicates that anything is allowed.
+   * @return array
+   *   An array with two values:
+   *   - the first value is the "allowedContent" setting: a well-formatted array
+   *     or TRUE. The latter indicates that anything is allowed.
+   *   - the second value is the "disallowedContent" setting: a well-formatted
+   *     array or FALSE. The latter indicates that nothing is disallowed.
    */
-  protected function generateAllowedContentSetting(Editor $editor) {
+  protected function generateACFSettings(Editor $editor) {
     // When nothing is disallowed, set allowedContent to true.
     $format = $editor->getFilterFormat();
     $filter_types = $format->getFilterTypes();
     if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $filter_types)) {
-      return TRUE;
+      return array(TRUE, FALSE);
     }
     // Generate setting that accurately reflects allowed tags and attributes.
     else {
-      $get_allowed_attribute_values = function($attribute_values) {
-        $values = array_keys(array_filter($attribute_values, function($value) {
-         return $value !== FALSE;
+      $get_attribute_values = function($attribute_values, $allowed_values) {
+        $values = array_keys(array_filter($attribute_values, function($value) use ($allowed_values) {
+          if ($allowed_values) {
+            return $value !== FALSE;
+          }
+          else {
+            return $value === FALSE;
+          }
         }));
         if (count($values)) {
           return implode(',', $values);
@@ -307,15 +315,22 @@ class Internal extends CKEditorPluginBase {
       };
 
       $html_restrictions = $format->getHtmlRestrictions();
-      // When all HTML is allowed, also set allowedContent to true.
+      // When all HTML is allowed, also set allowedContent to true and
+      // disallowedContent to false.
       if ($html_restrictions === FALSE) {
-        return TRUE;
+        return array(TRUE, FALSE);
       }
-      $setting = array();
+      $allowed = array();
+      $disallowed = array();
+      if (isset($html_restrictions['forbidden_tags'])) {
+        foreach ($html_restrictions['forbidden_tags'] as $tag) {
+          $disallowed[$tag] = TRUE;
+        }
+      }
       foreach ($html_restrictions['allowed'] as $tag => $attributes) {
         // Tell CKEditor the tag is allowed, but no attributes.
         if ($attributes === FALSE) {
-          $setting[$tag] = array(
+          $allowed[$tag] = array(
             'attributes' => FALSE,
             'styles' => FALSE,
             'classes' => FALSE,
@@ -327,7 +342,7 @@ class Internal extends CKEditorPluginBase {
         // attributes, unless you state specific values for them that are
         // allowed. Or, in this case: any value for them is allowed.
         elseif ($attributes === TRUE) {
-          $setting[$tag] = array(
+          $allowed[$tag] = array(
             'attributes' => TRUE,
             'styles' => TRUE,
             'classes' => TRUE,
@@ -348,29 +363,29 @@ class Internal extends CKEditorPluginBase {
             $wildcard = $html_restrictions['allowed']['*'];
             if (isset($wildcard['style'])) {
               if (!is_array($wildcard['style'])) {
-                $setting[$tag]['styles'] = $wildcard['style'];
+                $allowed[$tag]['styles'] = $wildcard['style'];
               }
               else {
-                $allowed_styles = $get_allowed_attribute_values($wildcard['style']);
+                $allowed_styles = $get_attribute_values($wildcard['style'], TRUE);
                 if (isset($allowed_styles)) {
-                  $setting[$tag]['styles'] = $allowed_styles;
+                  $allowed[$tag]['styles'] = $allowed_styles;
                 }
                 else {
-                  unset($setting[$tag]['styles']);
+                  unset($allowed[$tag]['styles']);
                 }
               }
             }
             if (isset($wildcard['class'])) {
               if (!is_array($wildcard['class'])) {
-                $setting[$tag]['classes'] = $wildcard['class'];
+                $allowed[$tag]['classes'] = $wildcard['class'];
               }
               else {
-                $allowed_classes = $get_allowed_attribute_values($wildcard['class']);
+                $allowed_classes = $get_attribute_values($wildcard['class'], TRUE);
                 if (isset($allowed_classes)) {
-                  $setting[$tag]['classes'] = $allowed_classes;
+                  $allowed[$tag]['classes'] = $allowed_classes;
                 }
                 else {
-                  unset($setting[$tag]['classes']);
+                  unset($allowed[$tag]['classes']);
                 }
               }
             }
@@ -378,12 +393,6 @@ class Internal extends CKEditorPluginBase {
         }
         // Tell CKEditor the tag is allowed, along with some tags.
         elseif (is_array($attributes)) {
-          // CKEditor does not yet support blacklisting, so ignore those.
-          // @todo Update this once http://dev.ckeditor.com/ticket/10276 lands.
-          $attributes = array_filter($attributes, function($value) {
-            return $value !== FALSE;
-          });
-
           // Configure allowed attributes, allowed "style" attribute values and
           // allowed "class" attribute values.
           // CKEditor only allows specific values for the "class" and "style"
@@ -393,25 +402,62 @@ class Internal extends CKEditorPluginBase {
           // getConfig() method, and override the JavaScript at
           // Drupal.editors.ckeditor to somehow make validation of values for
           // attributes other than "class" and "style" work.
-          if (count($attributes)) {
-            $setting[$tag]['attributes'] = implode(',', array_keys($attributes));
+          $allowed_attributes = array_filter($attributes, function($value) {
+            return $value !== FALSE;
+          });
+          if (count($allowed_attributes)) {
+            $allowed[$tag]['attributes'] = implode(',', array_keys($allowed_attributes));
           }
-          if (isset($attributes['style']) && is_array($attributes['style'])) {
-            $allowed_styles = $get_allowed_attribute_values($attributes['style']);
-            if (isset($allowed_values)) {
-              $setting[$tag]['styles'] = $allowed_styles;
+          if (isset($allowed_attributes['style']) && is_array($allowed_attributes['style'])) {
+            $allowed_styles = $get_attribute_values($allowed_attributes['style'], TRUE);
+            if (isset($allowed_styles)) {
+              $allowed[$tag]['styles'] = $allowed_styles;
             }
           }
-          if (isset($attributes['class']) && is_array($attributes['class'])) {
-            $allowed_classes = $get_allowed_attribute_values($attributes['class']);
+          if (isset($allowed_attributes['class']) && is_array($allowed_attributes['class'])) {
+            $allowed_classes = $get_attribute_values($allowed_attributes['class'], TRUE);
             if (isset($allowed_classes)) {
-              $setting[$tag]['classes'] = $allowed_classes;
+              $allowed[$tag]['classes'] = $allowed_classes;
+            }
+          }
+
+          // Handle disallowed attributes analogously. However, to handle *dis-
+          // allowed* attribute values, we must look at *allowed* attributes'
+          // disallowed attribute values! After all, a disallowed attribute
+          // implies that all of its possible attribute values are disallowed,
+          // thus we must look at the disallowed attribute values on allowed
+          // attributes.
+          $disallowed_attributes = array_filter($attributes, function($value) {
+            return $value === FALSE;
+          });
+          if (count($disallowed_attributes)) {
+            // No need to blacklist the 'class' or 'style' attributes; CKEditor
+            // handles them separately (if no specific class or style attribute
+            // values are allowed, then those attributes are disallowed).
+            if (isset($disallowed_attributes['class'])) {
+              unset($disallowed_attributes['class']);
+            }
+            if (isset($disallowed_attributes['style'])) {
+              unset($disallowed_attributes['style']);
+            }
+            $disallowed[$tag]['attributes'] = implode(',', array_keys($disallowed_attributes));
+          }
+          if (isset($allowed_attributes['style']) && is_array($allowed_attributes['style'])) {
+            $disallowed_styles = $get_attribute_values($allowed_attributes['style'], FALSE);
+            if (isset($disallowed_styles)) {
+              $disallowed[$tag]['styles'] = $disallowed_styles;
+            }
+          }
+          if (isset($allowed_attributes['class']) && is_array($allowed_attributes['class'])) {
+            $disallowed_classes = $get_attribute_values($allowed_attributes['class'], FALSE);
+            if (isset($disallowed_classes)) {
+              $disallowed[$tag]['classes'] = $disallowed_classes;
             }
           }
         }
       }
 
-      return $setting;
+      return array($allowed, $disallowed);
     }
   }
 

@@ -54,6 +54,7 @@ function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
   // CKEditor DrupalImageCaption plugin.
   if ($editor->getFilterFormat()->filters('filter_caption')->status) {
     $css[] = drupal_get_path('module', 'filter') . '/css/filter.caption.css';
+    $css[] = drupal_get_path('module', 'ckeditor') . '/css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css';
   }
 }
 

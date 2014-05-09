@@ -6,7 +6,6 @@
 
     attach: function (element, format) {
       this._loadExternalPlugins(format);
-      this._ACF_HACK_to_support_blacklisted_attributes(element, format);
       // Also pass settings that are Drupal-specific.
       format.editorSettings.drupal = {
         format: format.format
@@ -40,7 +39,6 @@
 
     attachInlineEditor: function (element, format, mainToolbarId, floatedToolbarId) {
       this._loadExternalPlugins(format);
-      this._ACF_HACK_to_support_blacklisted_attributes(element, format);
       // Also pass settings that are Drupal-specific.
       format.editorSettings.drupal = {
         format: format.format
@@ -101,80 +99,6 @@
         }
         delete format.editorSettings.drupalExternalPlugins;
       }
-    },
-
-    /**
-     * This is a huge hack to do ONE thing: to allow Drupal to fully mandate what
-     * CKEditor should allow by setting CKEditor's allowedContent setting. The
-     * problem is that allowedContent only allows for whitelisting, whereas
-     * Drupal's default HTML filtering (the filter_html filter) also blacklists
-     * the "style" and "on*" ("onClick" etc.) attributes.
-     *
-     * So this function hacks in explicit support for Drupal's filter_html's need
-     * to blacklist specifically those attributes, until ACF supports blacklisting
-     * of properties: http://dev.ckeditor.com/ticket/10276.
-     *
-     * Limitations:
-     *   - This does not support blacklisting of other attributes, it's only
-     *     intended to implement filter_html's blacklisted attributes.
-     *   - This is only a temporary work-around; it assumes the filter_html
-     *     filter is being used whenever *any* restriction exists. This is a valid
-     *     assumption for the default text formats in Drupal 8 core, but obviously
-     *     won't work for release.
-     *
-     * This is the only way we could get https://drupal.org/node/1936392 committed
-     * before Drupal 8 code freeze on July 1, 2013. CKEditor has committed to
-     * explicitly supporting this in some way.
-     *
-     * @todo D8 remove this once http://dev.ckeditor.com/ticket/10276 is done.
-     */
-    _ACF_HACK_to_support_blacklisted_attributes: function (element, format) {
-      function override(rule) {
-        var oldValue = rule.attributes;
-        function filter_html_override_attributes(attribute) {
-          // Disallow the "style" and "on*" attributes on any tag.
-          if (attribute === 'style' || attribute.substr(0, 2) === 'on') {
-            return false;
-          }
-
-          // Ensure the original logic still runs, if any.
-          if (typeof oldValue === 'function') {
-            return oldValue(attribute);
-          }
-          else if (typeof oldValue === 'boolean') {
-            return oldValue;
-          }
-
-          // Otherwise, accept this attribute.
-          return true;
-        }
-        rule.attributes = filter_html_override_attributes;
-      }
-
-      CKEDITOR.once('instanceLoaded', function (e) {
-        if (e.editor.name === element.id) {
-          // If everything is allowed, everything is allowed.
-          if (format.editorSettings.allowedContent === true) {
-            return;
-          }
-          // Otherwise, assume Drupal's filter_html filter is being used.
-          else {
-            // Get the filter object (ACF).
-            var filter = e.editor.filter;
-            // Find the "config" rule (the one caused by the allowedContent
-            // setting) for each HTML tag, and override its "attributes" value.
-            for (var el in filter._.rules.elements) {
-              if (filter._.rules.elements.hasOwnProperty(el)) {
-                for (var i = 0; i < filter._.rules.elements[el].length; i++) {
-                  if (filter._.rules.elements[el][i].featureName === 'config') {
-                    override(filter._.rules.elements[el][i]);
-                  }
-                }
-              }
-            }
-          }
-        }
-      });
     }
 
   };

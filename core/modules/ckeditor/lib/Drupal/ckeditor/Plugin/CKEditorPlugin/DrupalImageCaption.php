@@ -42,7 +42,7 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
    */
   public function getLibraries(Editor $editor) {
     return array(
-      'ckeditor/drupal.ckeditor.drupalimagecaption-theme',
+      'ckeditor/drupal.ckeditor.plugins.drupalimagecaption',
     );
   }
 
@@ -57,7 +57,11 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
    * {@inheritdoc}
    */
   public function getConfig(Editor $editor) {
-    return array();
+    return array(
+      'image2_captionedClass' => 'caption caption-img',
+      'image2_alignClasses' => array('align-left', 'align-center', 'align-right'),
+      'drupalImageCaption_captionPlaceholderText' => t('Enter caption here'),
+    );
   }
 
   /**

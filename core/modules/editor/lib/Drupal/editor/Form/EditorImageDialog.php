@@ -133,7 +133,7 @@ class EditorImageDialog extends FormBase {
 
     // When Drupal core's filter_caption is being used, the text editor may
     // offer the ability to change the alignment.
-    if (isset($image_element['data_align'])) {
+    if (isset($image_element['data-align'])) {
       $form['align'] = array(
         '#title' => $this->t('Align'),
         '#type' => 'radios',
@@ -143,10 +143,10 @@ class EditorImageDialog extends FormBase {
           'center' => $this->t('Center'),
           'right' => $this->t('Right'),
         ),
-        '#default_value' => $image_element['data_align'] === '' ? 'none' : $image_element['data_align'],
+        '#default_value' => $image_element['data-align'] === '' ? 'none' : $image_element['data-align'],
         '#wrapper_attributes' => array('class' => array('container-inline')),
         '#attributes' => array('class' => array('container-inline')),
-        '#parents' => array('attributes', 'data_align'),
+        '#parents' => array('attributes', 'data-align'),
       );
     }
 
@@ -157,20 +157,8 @@ class EditorImageDialog extends FormBase {
         '#title' => $this->t('Caption'),
         '#type' => 'checkbox',
         '#default_value' => $image_element['hasCaption'] === 'true',
-        '#parents' => array('hasCaption'),
+        '#parents' => array('attributes', 'hasCaption'),
       );
-    }
-
-    $has_align_or_caption = isset($image_element['data_align']) || isset($image_element['hasCaption']);
-    if ($has_align_or_caption && isset($image_element['isInline']) && $image_element['isInline'] === 'true') {
-      $form['align']['#type'] = 'item';
-      $form['align']['#description'] = t('Inline images cannot be aligned.');
-      unset($form['align']['#default_value']);
-
-      $form['caption']['#type'] = 'item';
-      $form['caption']['#description'] = $this->t('Inline images cannot be captioned.');
-      $form['caption']['#wrapper_attributes'] = array('class' => array('container-inline'));
-      $form['caption']['#attributes'] = array('class' => array('container-inline'));
     }
 
     $form['actions'] = array(

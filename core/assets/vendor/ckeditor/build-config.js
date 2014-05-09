@@ -66,6 +66,7 @@ var CKBUILDER_CONFIG = {
 		'tableresize' : 1,
 		'sharedspace' : 1,
 		'sourcedialog' : 1,
-		'widget' : 1
+		'widget' : 1,
+		'image2' : 1
 	}
 };
