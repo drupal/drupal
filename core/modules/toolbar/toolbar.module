@@ -584,14 +584,11 @@ function _toolbar_get_user_cid($uid, $langcode) {
  *   (optional) The user ID whose toolbar cache entry to clear.
  */
 function _toolbar_clear_user_cache($uid = NULL) {
-  $cache = \Drupal::cache('toolbar');
-  if (!$cache->isEmpty()) {
-    // Clear by the 'user' tag in order to delete all caches, in any language,
-    // associated with this user.
-    if (isset($uid)) {
-      Cache::deleteTags(array('user' => array($uid)));
-    } else {
-      $cache->deleteAll();
-    }
+  // Clear by the 'user' tag in order to delete all caches, in any language,
+  // associated with this user.
+  if (isset($uid)) {
+    Cache::deleteTags(array('user' => array($uid)));
+  } else {
+    \Drupal::cache('toolbar')->deleteAll();
   }
 }

@@ -204,20 +204,6 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that the chain is not empty when at least one backend has data.
-   */
-  public function testNotEmptyIfOneBackendHasTheKey() {
-    $this->assertFalse($this->chain->isEmpty(), 'Chain is not empty');
-
-    // This is the only test that needs to start with an empty chain.
-    $this->chain->deleteAll();
-    $this->assertTrue($this->chain->isEmpty(), 'Chain have been emptied by the deleteAll() call');
-
-    $this->secondBackend->set('test', 5);
-    $this->assertFalse($this->chain->isEmpty(), 'Chain is not empty anymore now that the second backend has something');
-  }
-
-  /**
    * Test that the delete all operation is propagated to all backends in the chain.
    */
   public function testDeleteAllPropagation() {
@@ -226,9 +212,12 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
     $this->chain->set('test2', 3, time() + 1000);
     $this->chain->deleteAll();
 
-    $this->assertTrue($this->firstBackend->isEmpty(), 'First backend is empty after delete all.');
-    $this->assertTrue($this->secondBackend->isEmpty(), 'Second backend is empty after delete all.');
-    $this->assertTrue($this->thirdBackend->isEmpty(), 'Third backend is empty after delete all.');
+    $this->assertFalse($this->firstBackend->get('test1'), 'First key has been deleted in first backend.');
+    $this->assertFalse($this->firstBackend->get('test2'), 'Second key has been deleted in first backend.');
+    $this->assertFalse($this->secondBackend->get('test1'), 'First key has been deleted in second backend.');
+    $this->assertFalse($this->secondBackend->get('test2'), 'Second key has been deleted in second backend.');
+    $this->assertFalse($this->thirdBackend->get('test1'), 'First key has been deleted in third backend.');
+    $this->assertFalse($this->thirdBackend->get('test2'), 'Second key has been deleted in third backend.');
   }
 
   /**

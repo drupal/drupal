@@ -234,14 +234,6 @@ class PhpBackend implements CacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function isEmpty() {
-    $names = $this->storage()->listAll();
-    return empty($names);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function garbageCollection() {
   }
 

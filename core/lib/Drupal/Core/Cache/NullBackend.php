@@ -100,13 +100,6 @@ class NullBackend implements CacheBackendInterface {
   public function garbageCollection() {}
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
-   */
-  public function isEmpty() {
-    return TRUE;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function removeBin() {}

@@ -222,19 +222,6 @@ class BackendChain implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
-   */
-  public function isEmpty() {
-    foreach ($this->backends as $backend) {
-      if (!$backend->isEmpty()) {
-        return FALSE;
-      }
-    }
-
-    return TRUE;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function removeBin() {

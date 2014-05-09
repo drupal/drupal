@@ -494,24 +494,6 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Implements Drupal\Core\Cache\CacheBackendInterface::isEmpty().
-   */
-  public function isEmpty() {
-    $this->garbageCollection();
-    $query = $this->connection->select($this->bin);
-    $query->addExpression('1');
-    try {
-      $result = $query->range(0, 1)
-        ->execute()
-        ->fetchField();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
-    return empty($result);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function removeBin() {

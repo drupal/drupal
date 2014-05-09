@@ -35,7 +35,6 @@ class NullBackendTest extends UnitTestCase {
     $value = $this->randomName();
 
     $null_cache->set($key, $value);
-    $this->assertTrue($null_cache->isEmpty());
     $this->assertFalse($null_cache->get($key));
   }
 }

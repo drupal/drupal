@@ -257,15 +257,4 @@ interface CacheBackendInterface {
    * Remove a cache bin.
    */
   public function removeBin();
-
-  /**
-   * Checks if a cache bin is empty.
-   *
-   * A cache bin is considered empty if it does not contain any valid data for
-   * any cache ID.
-   *
-   * @return
-   *   TRUE if the cache bin specified is empty.
-   */
-  public function isEmpty();
 }

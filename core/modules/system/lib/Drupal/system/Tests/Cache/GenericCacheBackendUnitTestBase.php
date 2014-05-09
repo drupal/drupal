@@ -335,21 +335,6 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests Drupal\Core\Cache\CacheBackendInterface::isEmpty().
-   */
-  public function testIsEmpty() {
-    $backend = $this->getCacheBackend();
-
-    $this->assertTrue($backend->isEmpty(), "Backend is empty.");
-
-    $backend->set('pony', "Shetland");
-    $this->assertFalse($backend->isEmpty(), "Backend is not empty.");
-
-    $backend->delete('pony');
-    $this->assertTrue($backend->isEmpty(), "Backend is empty.");
-  }
-
-  /**
    * Test Drupal\Core\Cache\CacheBackendInterface::delete() and
    * Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
@@ -456,17 +441,18 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
    */
   public function testDeleteAll() {
     $backend = $this->getCacheBackend();
+    $unrelated = $this->getCacheBackend('bootstrap');
 
     // Set both expiring and permanent keys.
     $backend->set('test1', 1, Cache::PERMANENT);
     $backend->set('test2', 3, time() + 1000);
+    $unrelated->set('test3', 4, Cache::PERMANENT);
 
     $backend->deleteAll();
 
-    $this->assertTrue($backend->isEmpty(), "Backend is empty after deleteAll().");
-
     $this->assertFalse($backend->get('test1'), 'First key has been deleted.');
     $this->assertFalse($backend->get('test2'), 'Second key has been deleted.');
+    $this->assertTrue($unrelated->get('test3'), 'Item in other bin is preserved.');
   }
 
   /**
@@ -563,15 +549,18 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
    */
   public function testInvalidateAll() {
     $backend = $this->getCacheBackend();
+    $unrelated = $this->getCacheBackend('bootstrap');
 
     // Set both expiring and permanent keys.
     $backend->set('test1', 1, Cache::PERMANENT);
     $backend->set('test2', 3, time() + 1000);
+    $unrelated->set('test3', 4, Cache::PERMANENT);
 
     $backend->invalidateAll();
 
     $this->assertFalse($backend->get('test1'), 'First key has been invalidated.');
     $this->assertFalse($backend->get('test2'), 'Second key has been invalidated.');
+    $this->assertTrue($unrelated->get('test3'), 'Item in other bin is preserved.');
     $this->assertTrue($backend->get('test1', TRUE), 'First key has not been deleted.');
     $this->assertTrue($backend->get('test2', TRUE), 'Second key has not been deleted.');
   }
