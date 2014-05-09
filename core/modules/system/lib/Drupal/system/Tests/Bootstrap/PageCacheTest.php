@@ -196,15 +196,31 @@ class PageCacheTest extends WebTestBase {
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'must-revalidate, no-cache, post-check=0, pre-check=0, private', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
+  }
 
-    // Check the omit_vary_cookie setting.
-    $this->drupalLogout();
+  /**
+   * Tests the omit_vary_cookie setting.
+   */
+  public function testPageCacheWithoutVaryCookie() {
+    $config = \Drupal::config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
     $settings['settings']['omit_vary_cookie'] = (object) array(
       'value' => TRUE,
       'required' => TRUE,
     );
     $this->writeSettings($settings);
-    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+
+    // Fill the cache.
+    $this->drupalGet('');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
+    $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
+
+    // Check cache.
+    $this->drupalGet('');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Page was cached.');
     $this->assertTrue(strpos($this->drupalGetHeader('Vary'), 'Cookie') === FALSE, 'Vary: Cookie header was not sent.');
   }
 
