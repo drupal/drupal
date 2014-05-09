@@ -57,13 +57,9 @@ class DefaultConfigTest extends ConfigSchemaTestBase {
         continue;
       }
 
-      // 1. config_test.noschema has to be skipped as it tests
-      // TypedConfigManagerInterface::hasConfigSchema() method.
-      // 2. config.someschema has to be skipped as it tests schema default data
-      // type fallback.
-      // 3. config_test.schema_in_install is testing that schema are used during
-      // configuration installation.
-      if ($config_name == 'config_test.noschema' || $config_name == 'config_test.someschema' || $config_name == 'config_test.schema_in_install') {
+      // Skip files provided by the config_schema_test module since that module
+      // is explicitly for testing schema.
+      if (strpos($config_name, 'config_schema_test') === 0) {
         continue;
       }
 

@@ -145,8 +145,12 @@ user.role.*:
       label: 'Default language'
 
 action.configuration.user_add_role_action:
-  type: action_configuration_default
-  label: 'Add a role to the selected users configuration'
+  type: mapping
+  label: 'Configuration for the add role action'
+  mapping:
+    rid:
+      type: string
+      label: 'The ID of the role to add'
 
 action.configuration.user_block_user_action:
   type: action_configuration_default
@@ -158,14 +162,11 @@ action.configuration.user_cancel_user_action:
 
 action.configuration.user_remove_role_action:
   type: mapping
-  label: 'Remove a role from the selected users configuration'
+  label: 'Configuration for the remove role action'
   mapping:
     rid:
-      type: sequence
-      label: 'Roles'
-      sequence:
-        - type: sequence
-          label: 'Role'
+      type: string
+      label: 'The ID of the role to remove'
 
 action.configuration.user_unblock_user_action:
   type: action_configuration_default

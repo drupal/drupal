@@ -44,14 +44,14 @@ class ConfigInstallTest extends DrupalUnitTestBase {
 
     // Ensure that schema provided by modules that are not installed is not
     // available.
-    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_test.schema_in_install'), 'Configuration schema for config_test.schema_in_install does not exist.');
+    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.schema_in_install'), 'Configuration schema for config_schema_test.schema_in_install does not exist.');
 
     // Install the test module.
-    $this->enableModules(array('config_test'));
-    $this->installConfig(array('config_test'));
+    $this->enableModules(array('config_test', 'config_schema_test'));
+    $this->installConfig(array('config_test', 'config_schema_test'));
 
     // After module installation the new schema should exist.
-    $this->assertTrue(\Drupal::service('config.typed')->hasConfigSchema('config_test.schema_in_install'), 'Configuration schema for config_test.schema_in_install exists.');
+    $this->assertTrue(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.schema_in_install'), 'Configuration schema for config_schema_test.schema_in_install exists.');
 
     // Verify that default module config exists.
     \Drupal::configFactory()->reset($default_config);
@@ -71,13 +71,13 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
 
     // Ensure that data type casting is applied during config installation.
-    $config = \Drupal::config('config_test.schema_in_install');
+    $config = \Drupal::config('config_schema_test.schema_in_install');
     $this->assertIdentical($config->get('integer'), 1);
 
     // Test that uninstalling configuration removes configuration schema.
     \Drupal::config('core.extension')->set('module', array())->save();
     \Drupal::service('config.manager')->uninstall('module', 'config_test');
-    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_test.schema_in_install'), 'Configuration schema for config_test.schema_in_install does not exist.');
+    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.schema_in_install'), 'Configuration schema for config_schema_test.schema_in_install does not exist.');
 
   }
 }

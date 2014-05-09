@@ -330,7 +330,7 @@ system.action.*:
       type: string
       label: 'Plugin'
     configuration:
-      type: action.configuration.[plugin]
+      type: action.configuration.[%parent.plugin]
     dependencies:
       type: config_dependencies
       label: 'Dependencies'

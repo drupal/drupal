@@ -215,8 +215,11 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
    *   definition in below order:
    *     breakpoint.breakpoint.module.toolbar.*
    *     breakpoint.breakpoint.module.*.*
+   *     breakpoint.breakpoint.module.*
    *     breakpoint.breakpoint.*.*.*
+   *     breakpoint.breakpoint.*
    *     breakpoint.*.*.*.*
+   *     breakpoint.*
    *   Returns null, if no matching element.
    */
   protected function getFallbackName($name) {
@@ -227,8 +230,16 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
         return $replaced;
       }
       else {
-        // No definition for this level(for example, breakpoint.breakpoint.*),
-        // check for next level (which is, breakpoint.*.*).
+        // No definition for this level. Collapse multiple wildcards to a single
+        // wildcard to see if there is a greedy match. For example,
+        // breakpoint.breakpoint.*.* becomes
+        // breakpoint.breakpoint.*
+        $one_star = preg_replace('/\.([\.\*]*)$/', '.*', $replaced);
+        if ($one_star != $replaced && isset($this->definitions[$one_star])) {
+          return $one_star;
+        }
+        // Check for next level. For example, if breakpoint.breakpoint.* has
+        // been checked and no match found then check breakpoint.*.*
         return $this->getFallbackName($replaced);
       }
     }
