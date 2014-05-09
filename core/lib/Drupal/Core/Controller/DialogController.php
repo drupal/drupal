@@ -93,7 +93,7 @@ class DialogController {
     }
 
     $content = drupal_render($page_content);
-    $title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
+    $title = isset($page_content['#title']) ? $page_content['#title'] : $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
     $response = new AjaxResponse();
     // Fetch any modal options passed in from data-dialog-options.
     $options = $request->request->get('dialogOptions', array());

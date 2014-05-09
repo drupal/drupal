@@ -95,6 +95,7 @@ function ajax_test_error() {
 function ajax_test_dialog_contents() {
   // This is a regular render array; the keys do not have special meaning.
   $content = array(
+    '#title' => 'AJAX Dialog contents',
     'content' => array(
       '#markup' => 'Example message',
     ),
