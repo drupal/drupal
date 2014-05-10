@@ -1,6 +1,11 @@
 <?php
 
-namespace Drupal\Tests\Core\Config;
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Config\Entity\ConfigEntityDependencyTest.
+ */
+
+namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Entity\ConfigEntityDependency;
