@@ -133,10 +133,8 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function setDefault($name) {
-    if (!isset($this->list)) {
-      $this->listInfo();
-    }
-    if (!isset($this->list[$name])) {
+    $list = $this->listInfo();
+    if (!isset($list[$name])) {
       throw new \InvalidArgumentException("$name theme is not enabled.");
     }
     $this->configFactory->get('system.theme')
@@ -275,10 +273,11 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function disable(array $theme_list) {
+    $list = $this->listInfo();
     $theme_config = $this->configFactory->get('system.theme');
 
     foreach ($theme_list as $key) {
-      if (!isset($this->list[$key])) {
+      if (!isset($list[$key])) {
         throw new \InvalidArgumentException("Unknown theme: $key.");
       }
       if ($key === $theme_config->get('default')) {
@@ -289,9 +288,9 @@ class ThemeHandler implements ThemeHandlerInterface {
       }
       // Base themes cannot be disabled if sub themes are enabled, and if they
       // are not disabled at the same time.
-      if (!empty($this->list[$key]->sub_themes)) {
-        foreach ($this->list[$key]->sub_themes as $sub_key => $sub_label) {
-          if (isset($this->list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
+      if (!empty($list[$key]->sub_themes)) {
+        foreach ($list[$key]->sub_themes as $sub_key => $sub_label) {
+          if (isset($list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
             throw new \InvalidArgumentException("The base theme $key cannot be disabled, because theme $sub_key depends on it.");
           }
         }
