@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\VocabularyUnitTest.
+ * Contains \Drupal\taxonomy\Tests\VocabularyCrudTest.
  */
 
 namespace Drupal\taxonomy\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\taxonomy\Tests;
 /**
  * Tests for taxonomy vocabulary functions.
  */
-class VocabularyUnitTest extends TaxonomyTestBase {
+class VocabularyCrudTest extends TaxonomyTestBase {
 
   /**
    * Modules to enable.

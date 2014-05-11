@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\Tests\VocabularyTest.
+ * Contains \Drupal\taxonomy\Tests\VocabularyUiTest.
  */
 
 namespace Drupal\taxonomy\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\taxonomy\Tests;
 /**
  * Tests the taxonomy vocabulary interface.
  */
-class VocabularyTest extends TaxonomyTestBase {
+class VocabularyUiTest extends TaxonomyTestBase {
 
   public static function getInfo() {
     return array(
