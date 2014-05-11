@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines an Entity type annotation object.
@@ -24,6 +25,8 @@ use Drupal\Component\Annotation\Plugin;
  */
 class EntityType extends Plugin {
 
+  use StringTranslationTrait;
+
   /**
    * The class used to represent the entity type.
    *
@@ -32,6 +35,20 @@ class EntityType extends Plugin {
    * @var string
    */
   public $entity_type_class = 'Drupal\Core\Entity\EntityType';
+
+  /**
+   * The group machine name.
+   */
+  public $group = 'default';
+
+  /**
+   * The group label.
+   *
+   * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
+   */
+  public $group_label = '';
 
   /**
    * {@inheritdoc}

@@ -22,6 +22,7 @@ use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -44,6 +45,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 class EntityManager extends PluginManagerBase implements EntityManagerInterface, ContainerAwareInterface  {
 
   use ContainerAwareTrait;
+  use StringTranslationTrait;
 
   /**
    * Extra fields by bundle.
@@ -638,10 +640,28 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
   /**
    * {@inheritdoc}
    */
-  public function getEntityTypeLabels() {
+  public function getEntityTypeLabels($group = FALSE) {
     $options = array();
-    foreach ($this->getDefinitions() as $entity_type => $definition) {
-      $options[$entity_type] = $definition->getLabel();
+    $definitions = $this->getDefinitions();
+
+    foreach ($definitions as $entity_type_id => $definition) {
+      if ($group) {
+        $options[$definition->getGroupLabel()][$entity_type_id] = $definition->getLabel();
+      }
+      else {
+        $options[$entity_type_id] = $definition->getLabel();
+      }
+    }
+
+    if ($group) {
+      foreach ($options as &$group_options) {
+        // Sort the list alphabetically by group label.
+        array_multisort($group_options, SORT_ASC, SORT_NATURAL);
+      }
+
+      // Make sure that the 'Content' group is situated at the top.
+      $content = $this->t('Content', array(), array('context' => 'Entity type group'));
+      $options = array($content => $options[$content]) + $options;
     }
 
     return $options;

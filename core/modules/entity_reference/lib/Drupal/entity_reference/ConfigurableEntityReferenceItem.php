@@ -163,7 +163,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
     $element['target_type'] = array(
       '#type' => 'select',
       '#title' => t('Type of item to reference'),
-      '#options' => \Drupal::entityManager()->getEntityTypeLabels(),
+      '#options' => \Drupal::entityManager()->getEntityTypeLabels(TRUE),
       '#default_value' => $this->getSetting('target_type'),
       '#required' => TRUE,
       '#disabled' => $has_data,

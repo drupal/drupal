@@ -19,4 +19,18 @@ class ConfigEntityType extends EntityType {
    */
   public $entity_type_class = 'Drupal\Core\Config\Entity\ConfigEntityType';
 
+  /**
+   * {@inheritdoc}
+   */
+  public $group = 'configuration';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function get() {
+    $this->definition['group_label'] = $this->t('Configuration', array(), array('context' => 'Entity type group'));
+
+    return parent::get();
+  }
+
 }

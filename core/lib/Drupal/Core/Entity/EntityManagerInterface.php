@@ -17,10 +17,14 @@ interface EntityManagerInterface extends PluginManagerInterface {
   /**
    * Builds a list of entity type labels suitable for a Form API options list.
    *
+   * @param bool $group
+   *   (optional) Whether to group entity types by plugin group (e.g. 'content',
+   *   'config'). Defaults to FALSE.
+   *
    * @return array
    *   An array of entity type labels, keyed by entity type name.
    */
-  public function getEntityTypeLabels();
+  public function getEntityTypeLabels($group = FALSE);
 
   /**
    * Gets the base field definitions for a content entity type.

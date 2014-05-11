@@ -127,7 +127,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     if ($fields) {
       $field = $fields[0];
       $options = $this->getAllOptionsList($field);
-      return $this->assertIdentical($options, $expected_options);
+      return $this->assertIdentical(sort($options), sort($expected_options));
     }
     else {
       return $this->fail('Unable to find field ' . $name);
