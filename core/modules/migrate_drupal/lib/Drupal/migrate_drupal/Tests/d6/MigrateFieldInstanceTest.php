@@ -28,7 +28,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
     'image',
     'datetime',
     'node',
-    'field'
+    'field',
   );
 
   /**
@@ -53,6 +53,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
         array(array('field_test'), array('node', 'field_test')),
         array(array('field_test_two'), array('node', 'field_test_two')),
         array(array('field_test_three'), array('node', 'field_test_three')),
+        array(array('field_test_four'), array('node', 'field_test_four')),
         array(array('field_test_email'), array('node', 'field_test_email')),
         array(array('field_test_link'), array('node', 'field_test_link')),
         array(array('field_test_filefield'), array('node', 'field_test_filefield')),
@@ -85,7 +86,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
 
   }
 
-  /*
+  /**
    * Tests migration of file variables to file.settings.yml.
    */
   public function testFieldInstanceSettings() {
@@ -106,6 +107,16 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
       'prefix' => 'pref',
       'suffix' => 'suf',
       'unsigned' => '',
+    );
+    $this->assertEqual($field->getSettings(), $expected);
+
+    $field = entity_load('field_instance_config', 'node.story.field_test_four');
+    $this->assertEqual($field->label(), 'Float Field');
+    $expected = array(
+      'min' => 100,
+      'max' => 200,
+      'prefix' => 'id-',
+      'suffix' => '',
     );
     $this->assertEqual($field->getSettings(), $expected);
 
@@ -151,6 +162,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
       'field_test' => 'text',
       'field_test_two' => 'integer',
       'field_test_three' => 'decimal',
+      'field_test_four' => 'float',
       'field_test_email' => 'email',
       'field_test_link' => 'link',
       'field_test_filefield' => 'file',

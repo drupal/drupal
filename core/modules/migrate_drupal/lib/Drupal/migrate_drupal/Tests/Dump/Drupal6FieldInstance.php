@@ -215,6 +215,46 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'field_name' => 'field_test_three',
       'type_name' => 'story',
       'weight' => 3,
+      'label' => 'Decimal Field',
+      'widget_type' => 'number',
+      'widget_settings' => serialize(array(
+        'default_value' => array(
+          0 => array(
+            'value' => '101',
+            '_error_element' => 'default_value_widget][field_decimal][0][value',
+          ),
+        ),
+        'default_value_php' => NULL,
+      )),
+      'display_settings' => serialize(array(
+        'weight' => 3,
+        'parent' => '',
+        'label' => array(
+          'format' => 'above',
+        ),
+        'teaser' => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        'full' => array(
+          'format' => 'us_2',
+          'exclude' => 0,
+        ),
+        4 => array(
+          'format' => 'unformatted',
+          'exclude' => 0,
+        ),
+        5 => array(
+          'format' => 'default',
+          'exclude' => 1,
+        ),
+      )),
+      'description' => 'An example decimal field.',
+    ))
+    ->values(array(
+      'field_name' => 'field_test_four',
+      'type_name' => 'story',
+      'weight' => 3,
       'label' => 'Float Field',
       'widget_type' => 'number',
       'widget_settings' => serialize(array(
@@ -702,6 +742,23 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'multiple' => 0,
       'db_storage' => 1,
       'db_columns' => 'a:0:{}',
+      'active' => 1,
+    ))
+    ->values(array(
+      'field_name' => 'field_test_four',
+      'module' => 'number',
+      'type' => 'number_float',
+      'global_settings' => serialize(array(
+        'prefix' => 'id-',
+        'suffix' => '',
+        'min' => '100',
+        'max' => '200',
+        'allowed_values' => '',
+        'allowed_values_php' => '',
+       )),
+      'multiple' => 0,
+      'db_storage' => 1,
+      'db_columns' => '',
       'active' => 1,
     ))
     ->values(array(
