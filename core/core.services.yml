@@ -38,13 +38,6 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [bootstrap]
-  cache.config:
-    class: Drupal\Core\Cache\CacheBackendInterface
-    tags:
-      - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
-    arguments: [config]
   cache.default:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -115,7 +108,7 @@ services:
     class: Drupal\Core\Config\InstallStorage
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
-    arguments: ['@config.storage', '@config.storage.schema', '@cache.config']
+    arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery']
   cron:
     class: Drupal\Core\Cron
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user', '@session_manager']

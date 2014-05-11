@@ -43,7 +43,7 @@ class DefaultConfigTest extends ConfigSchemaTestBase {
     $typed_config = new TypedConfigManager(
       \Drupal::service('config.storage'),
       new TestInstallStorage(InstallStorage::CONFIG_SCHEMA_DIRECTORY),
-      \Drupal::service('cache.config')
+      \Drupal::service('cache.discovery')
     );
 
     // Create a configuration storage with access to default configuration in
