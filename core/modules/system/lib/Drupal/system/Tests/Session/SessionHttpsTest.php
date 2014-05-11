@@ -113,10 +113,19 @@ class SessionHttpsTest extends WebTestBase {
 
     // Clear browser cookie jar.
     $this->cookies = array();
+  }
 
+  /**
+   * Tests sessions in SSL mixed mode.
+   */
+  protected function testMixedModeSslSession() {
     if ($this->request->isSecure()) {
       // The functionality does not make sense when running on HTTPS.
       return;
+    }
+    else {
+      $secure_session_name = 'S' . session_name();
+      $insecure_session_name = session_name();
     }
 
     // Enable secure pages.
@@ -127,6 +136,8 @@ class SessionHttpsTest extends WebTestBase {
       'required' => TRUE,
     );
     $this->writeSettings($settings);
+
+    $user = $this->drupalCreateUser(array('access administration pages'));
 
     $this->curlClose();
     // Start an anonymous session on the insecure site.
