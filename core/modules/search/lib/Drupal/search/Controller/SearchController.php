@@ -112,6 +112,9 @@ class SearchController extends ControllerBase {
           $plugin->getPluginId() . '-results',
         ),
       ),
+      '#cache' => array(
+        'tags' => $entity->getCacheTag(),
+      ),
     );
 
     $build['pager'] = array(
