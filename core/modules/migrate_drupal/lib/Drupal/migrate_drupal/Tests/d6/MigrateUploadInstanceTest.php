@@ -43,6 +43,10 @@ class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
       'd6_upload_field' => array(
         array(array(1), array('node', 'upload')),
       ),
+      'd6_node_type' => array(
+        array(array('page'), array('page')),
+        array(array('story'), array('story')),
+      ),
     );
     $this->prepareIdMappings($id_mappings);
 

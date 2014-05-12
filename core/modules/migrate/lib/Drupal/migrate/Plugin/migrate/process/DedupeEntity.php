@@ -7,6 +7,11 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Entity\MigrationInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Ensures value is not duplicated against an entity field.
  *
@@ -14,30 +19,45 @@ namespace Drupal\migrate\Plugin\migrate\process;
  *   id = "dedupe_entity"
  * )
  */
-class DedupeEntity extends DedupeBase {
+class DedupeEntity extends DedupeBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var \Drupal\Core\Entity\Query\QueryInterface
+   * @var \Drupal\Core\Entity\Query\QueryFactoryInterface
    */
-  protected $entityQuery;
+  protected $entityQueryFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, QueryFactory $entity_query_factory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityQueryFactory = $entity_query_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration,
+      $container->get('entity.query')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   protected function exists($value) {
-    return $this->getEntityQuery()->condition($this->configuration['field'], $value)->count()->execute();
+    // Plugins are cached so for every run we need a new query object.
+    return $this
+      ->entityQueryFactory
+      ->get($this->configuration['entity_type'], 'AND')
+      ->condition($this->configuration['field'], $value)
+      ->count()
+      ->execute();
   }
 
-  /**
-   * Returns an entity query object.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   The entity query object for the configured entity type.
-   */
-  protected function getEntityQuery() {
-    if (!isset($this->entityQuery)) {
-      $this->entityQuery = \Drupal::entityQuery($this->configuration['entity_type']);
-    }
-    return $this->entityQuery;
-  }
 }

@@ -18,3 +18,4 @@ destination:
   plugin: entity:field_instance_config
 migration_dependencies:
   - d6_upload_field
+  - d6_node_type

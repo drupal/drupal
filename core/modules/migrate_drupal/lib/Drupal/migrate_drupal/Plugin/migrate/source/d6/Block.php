@@ -108,6 +108,7 @@ class Block extends DrupalSqlBase {
   public function getIds() {
     $ids['module']['type'] = 'string';
     $ids['delta']['type'] = 'string';
+    $ids['theme']['type'] = 'string';
     return $ids;
   }
 

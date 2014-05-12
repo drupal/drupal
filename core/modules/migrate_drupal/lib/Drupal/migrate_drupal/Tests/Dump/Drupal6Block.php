@@ -306,6 +306,21 @@ class Drupal6Block extends Drupal6DumpBase {
       'title' => 'Static Block',
       'cache' => '-1'
     ))
+    ->values(array(
+      'bid' => '11',
+      'module' => 'block',
+      'delta' => '2',
+      'theme' => 'bluemarine',
+      'status' => '1',
+      'weight' => '-4',
+      'region' => 'right',
+      'custom' => '0',
+      'throttle' => '0',
+      'visibility' => '1',
+      'pages' => 'node',
+      'title' => 'Another Static Block',
+      'cache' => '-1'
+    ))
     ->execute();
   }
 }

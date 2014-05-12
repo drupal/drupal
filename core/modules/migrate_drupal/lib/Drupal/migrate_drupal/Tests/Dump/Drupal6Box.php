@@ -55,8 +55,14 @@ class Drupal6Box extends Drupal6DumpBase {
     ))
     ->values(array(
       'bid' => '1',
-      'body' => '<h3>My custom block body</h3>',
+      'body' => '<h3>My first custom block body</h3>',
       'info' => 'My block 1',
+      'format' => 2,
+    ))
+    ->values(array(
+      'bid' => '2',
+      'body' => '<h3>My second custom block body</h3>',
+      'info' => 'My block 2',
       'format' => 2,
     ))
     ->execute();
