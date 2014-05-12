@@ -24,6 +24,7 @@ use Drupal\user\UserInterface;
  *   label = @Translation("Content"),
  *   bundle_label = @Translation("Content type"),
  *   controllers = {
+ *     "storage" = "Drupal\node\NodeStorage",
  *     "view_builder" = "Drupal\node\NodeViewBuilder",
  *     "access" = "Drupal\node\NodeAccessController",
  *     "form" = {

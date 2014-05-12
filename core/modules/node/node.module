@@ -494,10 +494,7 @@ function node_entity_extra_field_info() {
  *   The number of nodes whose node type field was modified.
  */
 function node_type_update_nodes($old_id, $new_id) {
-  return db_update('node')
-    ->fields(array('type' => $new_id))
-    ->condition('type', $old_id)
-    ->execute();
+  return \Drupal::entityManager()->getStorage('node')->updateType($old_id, $new_id);
 }
 
 /**
@@ -801,31 +798,18 @@ function node_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
-      module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node_field_data', 'n')
-        ->distinct()
-        ->fields('n', array('nid'))
+      $nids = \Drupal::entityQuery('node')
         ->condition('uid', $account->id())
-        ->execute()
-        ->fetchCol();
-      node_mass_update($nodes, array('status' => 0), NULL, TRUE);
+        ->execute();
+      module_load_include('inc', 'node', 'node.admin');
+      node_mass_update($nids, array('status' => 0), NULL, TRUE);
       break;
 
     case 'user_cancel_reassign':
-      // Anonymize nodes (current revisions).
+      // Anonymize all of the nodes for this old account.
       module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node_field_data', 'n')
-        ->distinct()
-        ->fields('n', array('nid'))
-        ->condition('uid', $account->id())
-        ->execute()
-        ->fetchCol();
-      node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
-      // Anonymize old revisions.
-      db_update('node_field_revision')
-        ->fields(array('uid' => 0))
-        ->condition('uid', $account->id())
-        ->execute();
+      $vids = \Drupal::entityManager()->getStorage('node')->userRevisionIds($account);
+      node_mass_update($vids, array('uid' => 0), NULL, TRUE, TRUE);
       break;
   }
 }
@@ -836,15 +820,13 @@ function node_user_cancel($edit, $account, $method) {
 function node_user_predelete($account) {
   // Delete nodes (current revisions).
   // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
-  $nodes = db_select('node_field_data', 'n')
-    ->distinct()
-    ->fields('n', array('nid'))
+  $nids = \Drupal::entityQuery('node')
     ->condition('uid', $account->id())
-    ->execute()
-    ->fetchCol();
-  entity_delete_multiple('node', $nodes);
+    ->execute();
+  entity_delete_multiple('node', $nids);
   // Delete old revisions.
-  $revisions = db_query('SELECT DISTINCT vid FROM {node_field_revision} WHERE uid = :uid', array(':uid' => $account->id()))->fetchCol();
+  $storage_controller = \Drupal::entityManager()->getStorage('node');
+  $revisions = $storage_controller->userRevisionIds($account);
   foreach ($revisions as $revision) {
     node_revision_delete($revision);
   }
@@ -910,34 +892,13 @@ function node_page_title(NodeInterface $node) {
  *
  * @return string
  *   A unix timestamp indicating the last time the node was changed.
+ *
+ * @todo Remove once https://drupal.org/node/2002180 is resolved. It's only used
+ *       for validation, which will be done by EntityChangedConstraintValidator.
  */
 function node_last_changed($nid, $langcode = NULL) {
-  if (isset($langcode)) {
-    $result = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND langcode = :langcode', array(':nid' => $nid, ':langcode' => $langcode))->fetch();
-  }
-  else {
-    $result = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = :default_langcode', array(':nid' => $nid, ':default_langcode' => 1))->fetch();
-  }
-  return is_object($result) ? $result->changed : FALSE;
-}
-
-/**
- * Returns a list of all the existing revision numbers for the node passed in.
- *
- * @param \Drupal\node\NodeInterface $node
- *   The node entity.
- *
- * @return
- *   An associative array keyed by node revision number.
- */
-function node_revision_list(NodeInterface $node) {
-  $revisions = array();
-  $result = db_query('SELECT nr.vid, nfr.title, nr.log, nr.revision_uid AS uid, n.vid AS current_vid, nr.revision_timestamp, u.name FROM {node_field_revision} nfr JOIN {node_revision} nr ON nr.vid = nfr.vid LEFT JOIN {node} n ON n.vid = nfr.vid INNER JOIN {users} u ON u.uid = nr.revision_uid WHERE nfr.nid = :nid AND nfr.default_langcode = 1 ORDER BY nfr.vid DESC', array(':nid' => $node->id()));
-  foreach ($result as $revision) {
-    $revisions[$revision->vid] = $revision;
-  }
-
-  return $revisions;
+  $changed = \Drupal::entityManager()->getStorage('node')->loadUnchanged($nid)->getChangedTime();
+  return $changed ? $changed : FALSE;
 }
 
 /**
@@ -951,31 +912,31 @@ function node_revision_list(NodeInterface $node) {
  *   visible to the current user.
  */
 function node_get_recent($number = 10) {
-  $query = db_select('node_field_data', 'n');
+  $account = \Drupal::currentUser();
+  $query = \Drupal::entityQuery('node');
 
-  if (!user_access('bypass node access')) {
+  if (!$account->hasPermission('bypass node access')) {
     // If the user is able to view their own unpublished nodes, allow them
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
-    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => \Drupal::currentUser()->id(), ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
-      $query->condition(db_or()
-        ->condition('n.status', NODE_PUBLISHED)
-        ->condition('n.nid', $own_unpublished, 'IN')
-      );
+    $access_query =  \Drupal::entityQuery('node')
+      ->condition('uid', $account->id())
+      ->condition('status', NODE_NOT_PUBLISHED);
+    if ($account->hasPermission('view own unpublished content') && ($own_unpublished = $access_query->execute())) {
+      $query->orConditionGroup()
+        ->condition('status', NODE_PUBLISHED)
+        ->condition('nid', $own_unpublished, 'IN');
     }
     else {
       // If not, restrict the query to published nodes.
-      $query->condition('n.status', NODE_PUBLISHED);
+      $query->condition('status', NODE_PUBLISHED);
     }
-  }
+   }
   $nids = $query
-    ->distinct()
-    ->fields('n', array('nid'))
-    ->orderBy('n.changed', 'DESC')
+    ->sort('changed', 'DESC')
     ->range(0, $number)
     ->addTag('node_access')
-    ->execute()
-    ->fetchCol();
+    ->execute();
 
   $nodes = node_load_multiple($nids);
 
@@ -1078,16 +1039,13 @@ function node_feed($nids = FALSE, $channel = array()) {
   $rss_config = \Drupal::config('system.rss');
 
   if ($nids === FALSE) {
-    $nids = db_select('node_field_data', 'n')
-      ->distinct()
-      ->fields('n', array('nid'))
-      ->condition('n.promote', 1)
-      ->condition('n.status', 1)
-      ->orderBy('n.created', 'DESC')
+    $nids = \Drupal::entityQuery('node')
+      ->condition('status', 1)
+      ->condition('promote', 1)
+      ->sort('created', 'DESC')
       ->range(0, $rss_config->get('items.limit'))
       ->addTag('node_access')
-      ->execute()
-      ->fetchCol();
+      ->execute();
   }
 
   $item_length = $rss_config->get('items.view_mode');
@@ -1272,9 +1230,9 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * the process above is followed except that hook_node_access() is not called on
  * each node for performance reasons and for proper functioning of the pager
  * system. When adding a node listing to your module, be sure to use a dynamic
- * query created by db_select() and add a tag of "node_access". This will allow
- * modules dealing with node access to ensure only nodes to which the user has
- * access are retrieved, through the use of hook_query_TAG_alter().
+ * entity query and add a tag of "node_access". This will allow modules dealing
+ * with node access to ensure only nodes to which the user has access are
+ * retrieved, through the use of hook_query_TAG_alter().
  *
  * Note: Even a single module returning NODE_ACCESS_DENY from hook_node_access()
  * will block access to the node. Therefore, implementers should take care to
@@ -1749,10 +1707,7 @@ function node_file_download_access($field, EntityInterface $entity, File $file) 
  */
 function node_language_entity_delete(LanguageEntity $language) {
   // On nodes with this language, unset the language.
-  db_update('node_revision')
-    ->fields(array('langcode' => ''))
-    ->condition('langcode', $language->id())
-    ->execute();
+  \Drupal::entityManager()->getStorage('node')->clearRevisionsLanguage($language);
 }
 
 /**

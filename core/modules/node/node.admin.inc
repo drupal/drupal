@@ -26,14 +26,17 @@ use Drupal\node\NodeInterface;
  * @param bool $load
  *   (optional) TRUE if $nodes contains an array of node IDs to be loaded, FALSE
  *   if it contains fully loaded nodes. Defaults to FALSE.
+ * @param bool $revisions
+ *   (optional) TRUE if $nodes contains an array of revision IDs instead of
+ *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  */
-function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE) {
+function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE) {
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
   if (count($nodes) > 10) {
     $batch = array(
       'operations' => array(
-        array('_node_mass_update_batch_process', array($nodes, $updates, $langcode, $load))
+        array('_node_mass_update_batch_process', array($nodes, $updates, $langcode, $load, $revisions))
       ),
       'finished' => '_node_mass_update_batch_finished',
       'title' => t('Processing'),
@@ -48,10 +51,13 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
     batch_set($batch);
   }
   else {
-    if ($load) {
+    if ($load && !$revisions) {
       $nodes = entity_load_multiple('node', $nodes);
     }
     foreach ($nodes as $node) {
+      if ($load && $revisions) {
+        $node = entity_revision_load('node', $node);
+      }
       _node_mass_update_helper($node, $updates, $langcode);
     }
     drupal_set_message(t('The update has been performed.'));
@@ -97,10 +103,13 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
  * @param bool $load
  *   TRUE if $nodes contains an array of node IDs to be loaded, FALSE if it
  *   contains fully loaded nodes.
+ * @param bool $revisions
+ *   (optional) TRUE if $nodes contains an array of revision IDs instead of
+ *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  * @param array $context
  *   An array of contextual key/values.
  */
-function _node_mass_update_batch_process(array $nodes, array $updates, $load, array &$context) {
+function _node_mass_update_batch_process(array $nodes, array $updates, $load, $revisions, array &$context) {
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($nodes);
@@ -113,7 +122,8 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $load, ar
     // For each nid, load the node, reset the values, and save it.
     $node = array_shift($context['sandbox']['nodes']);
     if ($load) {
-      $node = entity_load('node', $node);
+      $node = $revisions ?
+        entity_revision_load('node', $node) : entity_load('node', $node);
     }
     $node = _node_mass_update_helper($node, $updates);
 

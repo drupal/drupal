@@ -121,8 +121,6 @@ function node_revision_overview($node) {
 
   $header = array(t('Revision'), t('Operations'));
 
-  $revisions = node_revision_list($node);
-
   $rows = array();
   $type = $node->getType();
 
@@ -134,45 +132,49 @@ function node_revision_overview($node) {
   if ((user_access("delete $type revisions") || user_access('delete all revisions') || user_access('administer nodes')) && $node->access('delete')) {
     $delete_permission = TRUE;
   }
-  foreach ($revisions as $revision) {
-    $row = array();
-    if ($revision->current_vid > 0) {
-      $username = array(
-        '#theme' => 'username',
-        '#account' => user_load($revision->uid),
-      );
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), 'node/' . $node->id()), '!username' => drupal_render($username)))
-                               . (($revision->log != '') ? '<p class="revision-log">' . Xss::filter($revision->log) . '</p>' : ''),
-                     'class' => array('revision-current'));
-      $row[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'));
-    }
-    else {
-      $username = array(
-        '#theme' => 'username',
-        '#account' => user_load($revision->uid),
-      );
-      $row[] = t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/" . $node->id() . "/revisions/" . $revision->vid . "/view"), '!username' => drupal_render($username)))
-               . (($revision->log != '') ? '<p class="revision-log">' . Xss::filter($revision->log) . '</p>' : '');
-      if ($revert_permission) {
-        $links['revert'] = array(
-          'title' => t('Revert'),
-          'href' => "node/" . $node->id() . "/revisions/" . $revision->vid . "/revert",
+  $vids = \Drupal::entityManager()->getStorage('node')->revisionIds($node);
+  foreach (array_reverse($vids) as $vid) {
+    if ($revision = node_revision_load($vid)) {
+
+      $row = array();
+      if ($vid == $node->getRevisionId()) {
+        $username = array(
+          '#theme' => 'username',
+          '#account' => $revision->getOwner(),
+        );
+        $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->getRevisionCreationTime(), 'short'), 'node/' . $node->id()), '!username' => drupal_render($username)))
+                                 . (($revision->log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->log->value) . '</p>' : ''),
+                       'class' => array('revision-current'));
+        $row[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'));
+      }
+      else {
+        $username = array(
+          '#theme' => 'username',
+          '#account' => $revision->getOwner(),
+        );
+        $row[] = t('!date by !username', array('!date' => l(format_date($revision->getRevisionCreationTime(), 'short'), "node/" . $node->id() . "/revisions/" . $vid . "/view"), '!username' => drupal_render($username)))
+                 . (($revision->log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->log->value) . '</p>' : '');
+        if ($revert_permission) {
+          $links['revert'] = array(
+            'title' => t('Revert'),
+            'href' => "node/" . $node->id() . "/revisions/" . $vid . "/revert",
+          );
+        }
+        if ($delete_permission) {
+          $links['delete'] = array(
+            'title' => t('Delete'),
+            'href' => "node/" . $node->id() . "/revisions/" . $vid . "/delete",
+          );
+        }
+        $row[] = array(
+          'data' => array(
+            '#type' => 'operations',
+            '#links' => $links,
+          ),
         );
       }
-      if ($delete_permission) {
-        $links['delete'] = array(
-          'title' => t('Delete'),
-          'href' => "node/" . $node->id() . "/revisions/" . $revision->vid . "/delete",
-        );
-      }
-      $row[] = array(
-        'data' => array(
-          '#type' => 'operations',
-          '#links' => $links,
-        ),
-      );
+      $rows[] = $row;
     }
-    $rows[] = $row;
   }
 
   $build['node_revisions_table'] = array(
