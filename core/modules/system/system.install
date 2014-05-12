@@ -956,25 +956,5 @@ function system_schema() {
     ),
   );
 
-  $schema['config_snapshot'] = array(
-    'description' => 'Stores a snapshot of the last imported configuration.',
-    'fields' => array(
-      'name' => array(
-        'description' => 'The identifier for the config object (the name of the file, minus the file extension).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'data' => array(
-        'description' => 'The raw data for this configuration object.',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-    ),
-    'primary key' => array('name'),
-  );
-
   return $schema;
 }

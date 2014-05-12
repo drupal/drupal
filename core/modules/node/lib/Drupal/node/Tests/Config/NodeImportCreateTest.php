@@ -26,8 +26,6 @@ class NodeImportCreateTest extends DrupalUnitTestBase {
    */
   public function setUp() {
     parent::setUp();
-
-    $this->installSchema('system', array('config_snapshot'));
     $this->installSchema('user', array('users'));
 
     // Set default storage backend.

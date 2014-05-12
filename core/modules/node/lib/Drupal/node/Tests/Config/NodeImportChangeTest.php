@@ -27,8 +27,6 @@ class NodeImportChangeTest extends DrupalUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', array('config_snapshot'));
-
     // Set default storage backend.
     $this->installConfig(array('field', 'node_test_config'));
   }

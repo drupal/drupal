@@ -32,7 +32,6 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->installSchema('system', 'config_snapshot');
     // Update the config snapshot. This allows the parent::setUp() to write
     // configuration files.
     \Drupal::service('config.manager')->createSnapshot(\Drupal::service('config.storage'), \Drupal::service('config.storage.snapshot'));

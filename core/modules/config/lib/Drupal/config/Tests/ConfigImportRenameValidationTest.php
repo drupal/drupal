@@ -51,7 +51,6 @@ class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'config_snapshot');
     $this->installSchema('node', 'node');
 
     // Set up the ConfigImporter object for testing.

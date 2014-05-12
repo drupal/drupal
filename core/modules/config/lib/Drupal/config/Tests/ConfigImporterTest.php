@@ -43,8 +43,6 @@ class ConfigImporterTest extends DrupalUnitTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'config_snapshot');
-
     $this->installConfig(array('config_test'));
     // Installing config_test's default configuration pollutes the global
     // variable being used for recording hook invocations by this test already,

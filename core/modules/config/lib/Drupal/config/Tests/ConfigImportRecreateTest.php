@@ -42,7 +42,6 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'config_snapshot');
     $this->installSchema('node', 'node');
 
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
