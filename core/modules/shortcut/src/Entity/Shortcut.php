@@ -7,6 +7,7 @@
 
 namespace Drupal\shortcut\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -25,6 +26,7 @@ use Drupal\shortcut\ShortcutInterface;
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutForm",
  *       "add" = "Drupal\shortcut\ShortcutForm",
+ *       "edit" = "Drupal\shortcut\ShortcutForm",
  *       "delete" = "Drupal\shortcut\Form\ShortcutDeleteForm"
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler"
@@ -39,9 +41,12 @@ use Drupal\shortcut\ShortcutInterface;
  *     "label" = "title"
  *   },
  *   links = {
+ *     "canonical" = "shortcut.link_edit",
  *     "delete-form" = "shortcut.link_delete",
- *     "edit-form" = "shortcut.link_edit"
- *   }
+ *     "edit-form" = "shortcut.link_edit",
+ *     "admin-form" = "shortcut.link_edit"
+ *   },
+ *   bundle_entity_type = "shortcut_set"
  * )
  */
 class Shortcut extends ContentEntityBase implements ShortcutInterface {
@@ -132,6 +137,21 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   /**
    * {@inheritdoc}
    */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
+    // Entity::postSave() calls Entity::invalidateTagsOnSave(), which only
+    // handles the regular cases. The Shortcut entity has one special case: a
+    // newly created shortcut is *also* added to a shortcut set, so we must
+    // invalidate the associated shortcut set's cache tag.
+    if (!$update) {
+      Cache::invalidateTags($this->getCacheTag());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['id'] = FieldDefinition::create('integer')
       ->setLabel(t('ID'))
@@ -197,6 +217,20 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
     $fields['path']->setItemDefinition($item_definition);
 
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTag() {
+    return $this->shortcut_set->entity->getCacheTag();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListCacheTags() {
+    return $this->shortcut_set->entity->getListCacheTags();
   }
 
 }
