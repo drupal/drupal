@@ -10,9 +10,9 @@ namespace Drupal\menu_ui\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Defines a base class for menu web tests.
+ * Base class for menu web tests.
  */
-class MenuWebTestBase extends WebTestBase {
+abstract class MenuWebTestBase extends WebTestBase {
 
   /**
    * Modules to enable.

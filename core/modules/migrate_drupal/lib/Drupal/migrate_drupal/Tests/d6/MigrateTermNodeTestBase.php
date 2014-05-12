@@ -9,7 +9,10 @@ namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
-class MigrateTermNodeTestBase extends MigrateDrupalTestBase {
+/**
+ * Base class for Taxonomy/Node migration tests.
+ */
+abstract class MigrateTermNodeTestBase extends MigrateDrupalTestBase {
 
   /**
    * {@inheritdoc}

@@ -10,9 +10,9 @@ namespace Drupal\system\Tests\Plugin\Discovery;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests that plugins are correctly discovered.
+ * Base class for plugin discovery tests.
  */
-class DiscoveryTestBase extends UnitTestBase {
+abstract class DiscoveryTestBase extends UnitTestBase {
 
   /**
    * The discovery component to test.

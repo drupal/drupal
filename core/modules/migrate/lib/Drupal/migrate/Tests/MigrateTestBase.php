@@ -13,7 +13,10 @@ use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Row;
 use Drupal\simpletest\WebTestBase;
 
-class MigrateTestBase extends WebTestBase implements MigrateMessageInterface {
+/**
+ * Base class for migration tests.
+ */
+abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInterface {
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.

@@ -10,7 +10,7 @@ namespace Drupal\options\Tests;
 /**
  * Tests an options select with a dynamic allowed values function.
  */
-class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTest {
+class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Options select dynamic values',

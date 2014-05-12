@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\options\Tests\OptionsDynamicValuesTest.
+ * Contains \Drupal\options\Tests\OptionsDynamicValuesTestBase.
  */
 
 namespace Drupal\options\Tests;
@@ -10,9 +10,9 @@ namespace Drupal\options\Tests;
 use Drupal\field\Tests\FieldTestBase;
 
 /**
- * Sets up a Options field for testing allowed values functions.
+ * Base class for testing allowed values of options fields.
  */
-class OptionsDynamicValuesTest extends FieldTestBase {
+abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
 
   /**
    * Modules to enable.

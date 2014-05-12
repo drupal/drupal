@@ -11,9 +11,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Defines a base class for path unit testing.
+ * Base class for Path/URL alias integration tests.
  */
-class PathUnitTestBase extends DrupalUnitTestBase {
+abstract class PathUnitTestBase extends DrupalUnitTestBase {
 
   public function setUp() {
     parent::setUp();

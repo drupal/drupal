@@ -12,9 +12,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
 /**
- * Tests for update translations.
+ * Base class for testing updates to string translations.
  */
-class LocaleUpdateBase extends WebTestBase {
+abstract class LocaleUpdateBase extends WebTestBase {
 
   /**
    * Timestamp for an old translation.

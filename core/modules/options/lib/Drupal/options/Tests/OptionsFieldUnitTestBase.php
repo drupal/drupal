@@ -11,9 +11,9 @@ namespace Drupal\options\Tests;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
- * Defines a common base test class for unit tests of the options module.
+ * Base class for Options module integration tests.
  */
-class OptionsFieldUnitTestBase extends FieldUnitTestBase {
+abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
 
   /**
    * Modules to enable.
