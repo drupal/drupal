@@ -51,7 +51,6 @@ display:
           grouping: {  }
           row_class: ''
           default_row_class: true
-          row_class_special: true
           type: ul
           wrapper_class: item-list
           class: ''

@@ -499,8 +499,6 @@ function template_preprocess_views_view_table(&$variables) {
   $options = $view->style_plugin->options;
   $handler = $view->style_plugin;
 
-  $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
-
   $fields = &$view->field;
   $columns = $handler->sanitizeColumns($options['columns'], $fields);
 
@@ -676,7 +674,6 @@ function template_preprocess_views_view_table(&$variables) {
     $variables['header'] = array();
   }
 
-  $count = 0;
   foreach ($variables['rows'] as $num => $row) {
     $variables['rows'][$num]['attributes'] = array();
     if ($row_class = $handler->getRowClass($num)) {
@@ -869,15 +866,10 @@ function template_preprocess_views_view_unformatted(&$variables) {
   $options = $style->options;
 
   $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : FALSE;
-  $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : FALSE;
-  // Set up striping values.
-  $count = 0;
-  $max = count($rows);
   foreach ($rows as $id => $row) {
     $variables['rows'][$id] = array();
     $variables['rows'][$id]['content'] = $row;
     $variables['rows'][$id]['attributes'] = array();
-    $count++;
     if ($default_row_class) {
       $variables['rows'][$id]['attributes']['class'][] = 'views-row';
     }

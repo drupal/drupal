@@ -227,7 +227,6 @@ abstract class StylePluginBase extends PluginBase {
     if ($this->usesRowClass()) {
       $options['row_class'] = array('default' => '');
       $options['default_row_class'] = array('default' => TRUE, 'bool' => TRUE);
-      $options['row_class_special'] = array('default' => TRUE, 'bool' => TRUE);
     }
     $options['uses_fields'] = array('default' => FALSE, 'bool' => TRUE);
 
@@ -312,12 +311,6 @@ abstract class StylePluginBase extends PluginBase {
         '#description' => t('Add the default row classes like views-row-1 to the output. You can use this to quickly reduce the amount of markup the view provides by default, at the cost of making it more difficult to apply CSS.'),
         '#type' => 'checkbox',
         '#default_value' => $this->options['default_row_class'],
-      );
-      $form['row_class_special'] = array(
-        '#title' => t('Add striping (odd/even), first/last row classes'),
-        '#description' => t('Add css classes to the first and last line, as well as odd/even classes for striping.'),
-        '#type' => 'checkbox',
-        '#default_value' => $this->options['row_class_special'],
       );
     }
 

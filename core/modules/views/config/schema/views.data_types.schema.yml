@@ -665,9 +665,6 @@ views_style:
     default_row_class:
       type: boolean
       label: 'Add views row classes'
-    row_class_special:
-      type: boolean
-      label: 'Add striping (odd/even), first/last row classes'
     uses_fields:
       type: boolean
       label: 'Force using fields'

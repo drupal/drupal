@@ -52,7 +52,6 @@ display:
           grouping: {  }
           row_class: ''
           default_row_class: '1'
-          row_class_special: '1'
           override: '1'
           sticky: '0'
           summary: summary-text
