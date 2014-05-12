@@ -9,6 +9,9 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 
+/**
+ * Tests field elements in nested forms.
+ */
 class NestedFormTest extends FieldTestBase {
 
   /**

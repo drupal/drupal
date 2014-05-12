@@ -13,6 +13,9 @@ use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 
+/**
+ * @coversDefaultClass \Drupal\views\Views
+ */
 class ViewsTest extends UnitTestCase {
 
   public static function getInfo() {
@@ -55,6 +58,8 @@ class ViewsTest extends UnitTestCase {
 
   /**
    * Tests the getView() method.
+   *
+   * @covers ::getView
    */
   public function testGetView() {
     $executable = Views::getView('test_view');

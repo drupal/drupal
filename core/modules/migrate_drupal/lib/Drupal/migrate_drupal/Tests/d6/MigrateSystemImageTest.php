@@ -11,6 +11,9 @@ use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
+/**
+ * Tests migration of image toolkit variables to configuration.
+ */
 class MigrateSystemImageTest extends MigrateDrupalTestBase {
 
   /**

@@ -10,6 +10,9 @@ namespace Drupal\system\Tests\Datetime;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
+/**
+ * Tests DrupalDateTime functionality.
+ */
 class DrupalDateTimeTest extends WebTestBase {
 
   /**

@@ -11,6 +11,9 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Utility\Title;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests HTML output escaping of page title, site name, and slogan.
+ */
 class PageTitleTest extends WebTestBase {
 
   /**

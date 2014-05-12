@@ -14,6 +14,9 @@ use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\views_ui\ViewListBuilder;
 
+/**
+ * @coversDefaultClass \Drupal\views_ui\ViewListBuilder
+ */
 class ViewListBuilderTest extends UnitTestCase {
 
   public static function getInfo() {
@@ -28,6 +31,7 @@ class ViewListBuilderTest extends UnitTestCase {
    * Tests the listing of displays on a views list builder.
    *
    * @see \Drupal\views_ui\ViewListBuilder::getDisplaysList()
+   * @covers ::buildRow
    */
   public function testBuildRowEntityList() {
     $storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')

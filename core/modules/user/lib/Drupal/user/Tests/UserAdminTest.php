@@ -9,6 +9,9 @@ namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the user administration UI.
+ */
 class UserAdminTest extends WebTestBase {
 
   /**

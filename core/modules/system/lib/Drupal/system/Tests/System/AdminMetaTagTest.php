@@ -9,6 +9,9 @@ namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the fingerprinting "Generator" HTML meta tag.
+ */
 class AdminMetaTagTest extends WebTestBase {
   /**
    * Implement getInfo().

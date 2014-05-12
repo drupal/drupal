@@ -9,6 +9,9 @@ namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests "404 Not found" pages and custom 404 pages.
+ */
 class PageNotFoundTest extends WebTestBase {
   protected $admin_user;
 

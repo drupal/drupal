@@ -9,8 +9,8 @@ namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
-/*
- * Test that a user, having editing their own account, can still log in.
+/**
+ * Tests user login after editing own user account.
  */
 class UserEditedOwnAccountTest extends WebTestBase {
 

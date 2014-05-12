@@ -6,6 +6,9 @@
 
 namespace Drupal\serialization\Tests;
 
+/**
+ * Tests the entity reference resolver.
+ */
 class EntityResolverTest extends NormalizerTestBase {
 
   /**

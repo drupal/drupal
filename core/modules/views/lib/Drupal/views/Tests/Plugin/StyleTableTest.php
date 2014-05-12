@@ -7,6 +7,9 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+/**
+ * Tests the table style views plugin.
+ */
 class StyleTableTest extends PluginTestBase {
 
   /**

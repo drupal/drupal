@@ -9,6 +9,9 @@ namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests cron runs.
+ */
 class CronRunTest extends WebTestBase {
 
   /**

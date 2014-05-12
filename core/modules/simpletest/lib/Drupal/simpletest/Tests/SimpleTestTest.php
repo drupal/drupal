@@ -10,6 +10,9 @@ namespace Drupal\simpletest\Tests;
 use Drupal\Core\Database\Driver\pgsql\Select;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the Simpletest UI test runner and internal browser.
+ */
 class SimpleTestTest extends WebTestBase {
 
   /**

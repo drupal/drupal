@@ -7,6 +7,9 @@
 
 namespace Drupal\node\Tests\Views;
 
+/**
+ * Tests Node module's Views integration.
+ */
 class NodeIntegrationTest extends NodeTestBase {
 
   /**

@@ -9,6 +9,9 @@ namespace Drupal\system\Tests\Session;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests session handling.
+ */
 class SessionTest extends WebTestBase {
 
   /**

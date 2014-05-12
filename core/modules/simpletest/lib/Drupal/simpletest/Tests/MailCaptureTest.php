@@ -9,6 +9,9 @@ namespace Drupal\simpletest\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests Simpletest email capturing (TestMailCollector) and assertion methods.
+ */
 class MailCaptureTest extends WebTestBase {
   /**
    * Implement getInfo().

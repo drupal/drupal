@@ -12,6 +12,9 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests form element validation.
+ */
 class FormTest extends WebTestBase {
 
   /**

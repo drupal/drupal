@@ -11,6 +11,9 @@ use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
+/**
+ * Tests migration of system performance variables to configuration.
+ */
 class MigrateSystemPerformanceTest extends MigrateDrupalTestBase {
 
   /**

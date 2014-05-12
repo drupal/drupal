@@ -10,6 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests default mobile meta tags on HTML pages.
+ */
 class DefaultMobileMetaTagsTest extends WebTestBase {
   public static function getInfo() {
     return array(

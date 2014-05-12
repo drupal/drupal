@@ -9,6 +9,9 @@ namespace Drupal\ban\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests IP address banning.
+ */
 class IpAddressBlockingTest extends WebTestBase {
 
   /**

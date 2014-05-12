@@ -12,6 +12,9 @@ use Drupal\Core\Language\Language;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
+/**
+ * Tests migration of aggregator feed entities.
+ */
 class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
 
   static $modules = array('aggregator');

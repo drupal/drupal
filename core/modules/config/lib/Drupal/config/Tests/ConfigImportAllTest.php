@@ -10,6 +10,9 @@ namespace Drupal\config\Tests;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\system\Tests\Module\ModuleTestBase;
 
+/**
+ * Tests importing all configuration from Standard profile and all core modules.
+ */
 class ConfigImportAllTest extends ModuleTestBase {
 
   /**

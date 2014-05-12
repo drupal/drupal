@@ -9,6 +9,9 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Language\Language;
 
+/**
+ * Tests the field display API.
+ */
 class DisplayApiTest extends FieldUnitTestBase {
 
   /**

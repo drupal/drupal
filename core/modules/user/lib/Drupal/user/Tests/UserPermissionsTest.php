@@ -10,6 +10,9 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleStorage;
 
+/**
+ * Tests the user role permission UI.
+ */
 class UserPermissionsTest extends WebTestBase {
   protected $admin_user;
   protected $rid;

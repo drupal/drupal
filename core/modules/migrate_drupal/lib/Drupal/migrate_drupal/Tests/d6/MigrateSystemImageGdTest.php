@@ -11,6 +11,9 @@ use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
+/**
+ * Tests migration of image GD toolkit variables to configuration.
+ */
 class MigrateSystemImageGdTest extends MigrateDrupalTestBase {
 
   /**

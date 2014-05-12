@@ -9,6 +9,9 @@ namespace Drupal\block\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the block administration page for a non-default theme.
+ */
 class NonDefaultBlockAdminTest extends WebTestBase {
 
   /**

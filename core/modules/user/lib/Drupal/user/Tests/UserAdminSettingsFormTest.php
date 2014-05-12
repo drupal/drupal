@@ -10,6 +10,9 @@ namespace Drupal\user\Tests;
 use Drupal\system\Tests\System\SystemConfigFormTestBase;
 use Drupal\user\AccountSettingsForm;
 
+/**
+ * Tests the administrative user settings configuration form.
+ */
 class UserAdminSettingsFormTest extends SystemConfigFormTestBase {
 
   public static function getInfo() {

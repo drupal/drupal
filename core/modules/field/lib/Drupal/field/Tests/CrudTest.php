@@ -10,6 +10,9 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\field\FieldException;
 
+/**
+ * Tests field CRUD operations.
+ */
 class CrudTest extends FieldUnitTestBase {
 
   /**

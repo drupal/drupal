@@ -11,6 +11,9 @@ use Drupal\comment\CommentInterface;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;
 
+/**
+ * Tests the Recent Comments default view.
+ */
 class DefaultViewRecentComments extends ViewTestBase {
 
   /**

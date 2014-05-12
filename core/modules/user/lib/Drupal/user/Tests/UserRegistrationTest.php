@@ -11,6 +11,9 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests user registration.
+ */
 class UserRegistrationTest extends WebTestBase {
 
   /**

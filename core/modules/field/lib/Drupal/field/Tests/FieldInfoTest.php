@@ -9,6 +9,9 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Language\Language;
 
+/**
+ * Tests field information for fields, instances, and bundles.
+ */
 class FieldInfoTest extends FieldUnitTestBase {
 
   public static function getInfo() {
