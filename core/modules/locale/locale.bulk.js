@@ -14,9 +14,11 @@
         var $langcode = $form.find('.langcode-input');
         $form.find('.file-import-input')
           .on('change', function () {
-            var matches = $(this).val().match(/\.([\-\w]+)\.po/);
-            if (matches && $langcode.find('option[value="' + matches[1] + '"]').length) {
-              $langcode.val(matches[1]);
+            // If the filename is fully the language code or the filename
+            // ends with a language code, pre-select that one.
+            var matches = $(this).val().match(/([^.][\.]*)([\w-]+)\.po$/);
+            if (matches && $langcode.find('option[value="' + matches[2] + '"]').length) {
+              $langcode.val(matches[2]);
             }
           });
       }
