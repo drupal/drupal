@@ -63,7 +63,11 @@ function filter_theme() {
       'template' => 'filter-tips',
     ),
     'text_format_wrapper' => array(
-      'variables' => array('children' => NULL, 'description' => NULL),
+      'variables' => array(
+        'children' => NULL,
+        'description' => NULL,
+        'attributes' => array(),
+      ),
       'template' => 'text-format-wrapper',
     ),
     'filter_guidelines' => array(
@@ -662,6 +666,25 @@ function template_preprocess_filter_guidelines(&$variables) {
     '#theme' => 'filter_tips',
     '#tips' => _filter_tips($format->format, FALSE),
   );
+}
+
+/**
+ * Prepares variables for text format wrapper templates.
+ *
+ * Default template: text-format-wrapper.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - attributes: An associative array containing properties of the element.
+ */
+function template_preprocess_text_format_wrapper(&$variables) {
+  // Add element class and id for screen readers.
+  if (isset($variables['attributes']['aria-describedby'])) {
+    $variables['attributes']['class'][] = 'description';
+    $variables['attributes']['id'] = $variables['attributes']['aria-describedby'];
+    // Remove aria-describedby attribute as it shouldn't be visible here.
+    unset($variables['attributes']['aria-describedby']);
+  }
 }
 
 /**
