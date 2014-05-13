@@ -4,4 +4,3 @@ description: 'Support module for XML-RPC tests according to the validator1 speci
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true

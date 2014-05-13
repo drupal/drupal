@@ -4,4 +4,3 @@ description: 'Support module for Form API tests.'
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true

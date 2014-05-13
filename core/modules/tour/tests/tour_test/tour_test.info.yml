@@ -4,6 +4,5 @@ description: Tests module for tour module.
 package: Core
 version: VERSION
 core: 8.x
-hidden: TRUE
 dependencies:
   - tour

@@ -6,4 +6,3 @@ version: VERSION
 core: 8.x
 dependencies:
   - views
-hidden: true

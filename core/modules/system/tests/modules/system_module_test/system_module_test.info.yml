@@ -4,4 +4,3 @@ description: 'Provides hook implementations for testing System module functional
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true

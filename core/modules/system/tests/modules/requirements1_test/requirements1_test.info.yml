@@ -4,4 +4,3 @@ description: 'Tests that a module is not installed when it fails hook_requiremen
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true

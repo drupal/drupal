@@ -7,4 +7,3 @@ core: 8.x
 dependencies:
   - taxonomy
   - views
-hidden: true

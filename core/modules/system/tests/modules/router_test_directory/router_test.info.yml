@@ -4,4 +4,3 @@ description: 'Support module for routing testing. In a directory that does not m
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true

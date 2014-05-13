@@ -4,4 +4,3 @@ description: 'Helper module for CronRunTestCase::testCronExceptions().'
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true

@@ -4,7 +4,6 @@ description: 'Support module for action bulk form testing.'
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true
 dependencies:
   - action
   - views

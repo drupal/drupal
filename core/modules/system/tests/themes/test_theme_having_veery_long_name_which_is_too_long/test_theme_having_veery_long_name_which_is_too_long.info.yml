@@ -2,4 +2,3 @@ type: theme
 core: 8.x
 name: 'Test theme with a too long name'
 version: VERSION
-hidden: true

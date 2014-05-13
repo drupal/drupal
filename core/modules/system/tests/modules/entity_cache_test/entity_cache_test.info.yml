@@ -6,4 +6,3 @@ version: VERSION
 core: 8.x
 dependencies:
   - entity_cache_test_dependency
-hidden: true

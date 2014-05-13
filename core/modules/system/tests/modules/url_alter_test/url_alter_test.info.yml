@@ -4,4 +4,3 @@ description: 'A support module to test altering the inbound and outbound path.'
 core: 8.x
 package: Testing
 version: VERSION
-hidden: true

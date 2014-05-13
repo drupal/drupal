@@ -4,4 +4,3 @@ description: 'Test that plugins can provide plugins and provide namespace discov
 package: Testing
 version: VERSION
 core: 8.x
-hidden: true

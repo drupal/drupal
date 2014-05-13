@@ -4,4 +4,3 @@ description: "Test general form component for condition plugins."
 package: Testing
 version: VERSION
 core: 8.x
-hidden: TRUE
