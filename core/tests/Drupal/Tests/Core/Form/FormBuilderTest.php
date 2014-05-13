@@ -9,7 +9,6 @@ namespace Drupal\Tests\Core\Form {
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Form\OptGroup;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -470,33 +469,6 @@ class FormBuilderTest extends FormTestBase {
     $form_state['rebuild_info'] = array();
     $form = $this->formBuilder->buildForm($form_arg, $form_state);
     $this->assertNotSame($original_build_id, $form['#build_id']);
-  }
-
-  /**
-   * Tests the flattenOptions() method.
-   *
-   * @dataProvider providerTestFlattenOptions
-   */
-  public function testFlattenOptions($options) {
-    $this->assertSame(array('foo' => 1), OptGroup::flattenOptions($options));
-  }
-
-  /**
-   * Provides test data for the flattenOptions() method.
-   *
-   * @return array
-   */
-  public function providerTestFlattenOptions() {
-    $object1 = new \stdClass();
-    $object1->option = array('foo' => 'foo');
-    $object2 = new \stdClass();
-    $object2->option = array(array('foo' => 'foo'), array('foo' => 'foo'));
-    return array(
-      array(array('foo' => 'foo')),
-      array(array(array('foo' => 'foo'))),
-      array(array($object1)),
-      array(array($object2)),
-    );
   }
 
   /**
