@@ -1,9 +1,7 @@
 id: d6_contact_category
 label: Drupal 6 contact category configuration
-
 source:
   plugin: d6_contact_category
-
 process:
   id:
     -
@@ -17,6 +15,5 @@ process:
   recipients: recipients
   reply: reply
   weight: weight
-
 destination:
   plugin: entity:contact_category

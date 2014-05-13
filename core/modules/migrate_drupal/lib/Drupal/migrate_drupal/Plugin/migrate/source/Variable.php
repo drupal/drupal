@@ -36,10 +36,28 @@ class Variable extends DrupalSqlBase {
     $this->variables = $this->configuration['variables'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function runQuery() {
-    return new \ArrayIterator(array(array_map('unserialize', $this->prepareQuery()->execute()->fetchAllKeyed())));
+    return new \ArrayIterator(array($this->values()));
   }
 
+  /**
+   * Return the values of the variables specified in the plugin configuration.
+   *
+   * @return array
+   *   An associative array where the keys are the variables specified in the
+   *   plugin configuration and the values are the values found in the source.
+   *   Only those values are returned that are actually in the database.
+   */
+  protected function values() {
+    return array_map('unserialize', $this->prepareQuery()->execute()->fetchAllKeyed());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function count() {
     return intval($this->query()->countQuery()->execute()->fetchField() > 0);
   }

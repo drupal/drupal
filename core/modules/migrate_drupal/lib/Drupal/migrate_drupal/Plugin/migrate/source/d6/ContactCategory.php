@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\migrate\Row;
 
 /**
  * Drupal 6 contact category source from database.
@@ -35,6 +36,13 @@ class ContactCategory extends DrupalSqlBase {
     );
     $query->orderBy('cid');
     return $query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareRow(Row $row) {
+    $row->setSourceProperty('recipients', explode(',', $row->getSourceProperty('recipients')));
   }
 
   /**

@@ -34,7 +34,6 @@ class MigrateContactCategoryTest extends MigrateDrupalTestBase {
     );
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -56,8 +55,15 @@ class MigrateContactCategoryTest extends MigrateDrupalTestBase {
     /** @var \Drupal\contact\Entity\Category $contact_category */
     $contact_category = entity_load('contact_category', 'website_feedback');
     $this->assertEqual($contact_category->label, 'Website feedback');
-    $this->assertEqual($contact_category->recipients, 'admin@example.com');
+    $this->assertEqual($contact_category->recipients, array('admin@example.com'));
     $this->assertEqual($contact_category->reply, '');
     $this->assertEqual($contact_category->weight, 0);
+
+    $contact_category = entity_load('contact_category', 'some_other_category');
+    $this->assertEqual($contact_category->label, 'Some other category');
+    $this->assertEqual($contact_category->recipients, array('test@example.com'));
+    $this->assertEqual($contact_category->reply, 'Thanks for contacting us, we will reply ASAP!');
+    $this->assertEqual($contact_category->weight, 1);
   }
+
 }

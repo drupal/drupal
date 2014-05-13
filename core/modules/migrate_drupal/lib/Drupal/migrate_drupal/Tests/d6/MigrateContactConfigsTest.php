@@ -39,9 +39,18 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
    */
   public function setUp() {
     parent::setUp();
+    // Add some id mappings for the dependent migrations.
+    $id_mappings = array(
+      'd6_contact_category' => array(
+        array(array(1), array('website_feedback')),
+        array(array(2), array('some_other_category')),
+      ),
+    );
+    $this->prepareIdMappings($id_mappings);
     $migration = entity_load('migration', 'd6_contact_settings');
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6ContactSettings.php',
+      $this->getDumpDirectory() . '/Drupal6ContactCategory.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());
@@ -55,5 +64,6 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
     $config = \Drupal::config('contact.settings');
     $this->assertIdentical($config->get('user_default_enabled'), true);
     $this->assertIdentical($config->get('flood.limit'), 3);
+    $this->assertIdentical($config->get('default_category'), 'some_other_category');
   }
 }

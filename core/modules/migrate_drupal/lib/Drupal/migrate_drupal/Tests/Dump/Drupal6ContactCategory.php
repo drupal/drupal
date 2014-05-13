@@ -73,6 +73,14 @@ class Drupal6ContactCategory extends Drupal6DumpBase {
         'recipients' => 'admin@example.com',
         'reply' => '',
         'weight' => '0',
+        'selected' => '0',
+      ))
+      ->values(array(
+        'cid' => '2',
+        'category' => 'Some other category',
+        'recipients' => 'test@example.com',
+        'reply' => 'Thanks for contacting us, we will reply ASAP!',
+        'weight' => '1',
         'selected' => '1',
       ))
       ->execute();

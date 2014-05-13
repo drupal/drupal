@@ -31,7 +31,7 @@ class ContactCategoryTest extends MigrateSqlSourceTestCase {
     array(
       'cid' => 1,
       'category' => 'contact category value 1',
-      'recipients' => 'admin@example.com,user@example.com',
+      'recipients' => array('admin@example.com','user@example.com'),
       'reply' => 'auto reply value 1',
       'weight' => 0,
       'selected' => 0,
@@ -39,7 +39,7 @@ class ContactCategoryTest extends MigrateSqlSourceTestCase {
     array(
       'cid' => 2,
       'category' => 'contact category value 2',
-      'recipients' => 'admin@example.com,user@example.com',
+      'recipients' => array('admin@example.com','user@example.com'),
       'reply' => 'auto reply value 2',
       'weight' => 0,
       'selected' => 0,
@@ -63,6 +63,7 @@ class ContactCategoryTest extends MigrateSqlSourceTestCase {
   protected function setUp() {
     foreach ($this->expectedResults as $k => $row) {
       $this->databaseContents['contact'][$k] = $row;
+      $this->databaseContents['contact'][$k]['recipients'] = implode(',', $row['recipients']);
     }
     parent::setUp();
   }
