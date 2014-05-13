@@ -410,7 +410,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * {@inheritdoc}
    */
-  public function getUnusedPredefinedList() {
+  public function getStandardLanguageListWithoutConfigured() {
     $languages = $this->getLanguages();
     $predefined = $this->getStandardLanguageList();
     foreach ($predefined as $key => $value) {

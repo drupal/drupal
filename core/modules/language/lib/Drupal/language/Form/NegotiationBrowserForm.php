@@ -70,12 +70,12 @@ class NegotiationBrowserForm extends ConfigFormBase {
     // only. If we do have already added languages, set up two option groups with
     // the list of existing and then predefined languages.
     if (empty($existing_languages)) {
-      $language_options = $this->languageManager->getUnusedPredefinedList();
+      $language_options = $this->languageManager->getStandardLanguageListWithoutConfigured();
     }
     else {
       $language_options = array(
         $this->t('Existing languages') => $existing_languages,
-        $this->t('Languages not yet added') => $this->languageManager->getUnusedPredefinedList()
+        $this->t('Languages not yet added') => $this->languageManager->getStandardLanguageListWithoutConfigured(),
       );
     }
 

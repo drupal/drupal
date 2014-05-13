@@ -97,11 +97,11 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
   public function getLanguageConfigOverride($langcode, $name);
 
   /**
-   * Prepare a language code list for unused predefined languages.
+   * Returns the standard language list excluding already configured languages.
    *
    * @return array
-   *   List of predefined language names keyed by langcode.
+   *   A list of standard language names keyed by langcode.
    */
-  public function getUnusedPredefinedList();
+  public function getStandardLanguageListWithoutConfigured();
 
 }
