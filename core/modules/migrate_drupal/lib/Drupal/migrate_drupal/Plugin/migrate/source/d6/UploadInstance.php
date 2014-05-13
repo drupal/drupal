@@ -13,7 +13,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Drupal 6 upload instance source from database.
  *
  * @MigrateSource(
- *   id = "d6_upload_instance"
+ *   id = "d6_upload_instance",
+ *   source_provider = "upload"
  * )
  */
 class UploadInstance extends DrupalSqlBase {
@@ -68,13 +69,6 @@ class UploadInstance extends DrupalSqlBase {
 
   /**
    * {@inheritdoc}
-   */
-  public function checkRequirements() {
-    return $this->moduleExists('upload');
-  }
-
-  /**
-   * {@inheritdoc
    */
   public function fields() {
     return array(

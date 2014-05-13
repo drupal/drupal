@@ -11,7 +11,8 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
  * The view mode source.
  *
  * @MigrateSource(
- *   id = "d6_view_mode"
+ *   id = "d6_view_mode",
+ *   source_provider = "content"
  * )
  */
 class ViewMode extends ViewModeBase {

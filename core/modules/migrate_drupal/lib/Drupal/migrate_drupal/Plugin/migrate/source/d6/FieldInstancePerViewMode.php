@@ -11,7 +11,8 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
  * The field instance per view mode source class.
  *
  * @MigrateSource(
- *   id = "d6_field_instance_per_view_mode"
+ *   id = "d6_field_instance_per_view_mode",
+ *   source_provider = "content"
  * )
  */
 class FieldInstancePerViewMode extends ViewModeBase {
