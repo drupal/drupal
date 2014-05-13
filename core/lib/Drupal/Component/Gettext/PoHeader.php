@@ -228,7 +228,6 @@ class PoHeader {
     // For data compression we store the last position the array value
     // changes and store it as default.
     $element_stack = $this->parseArithmetic($plural);
-    $default = 0;
     if ($element_stack !== FALSE) {
       for ($i = 0; $i <= 199; $i++) {
         $plurals[$i] = $this->evaluatePlural($element_stack, $i);

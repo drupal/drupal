@@ -30,7 +30,7 @@ class Crypt {
    */
   public static function randomBytes($count) {
     // $random_state does not use drupal_static as it stores random bytes.
-    static $random_state, $bytes, $has_openssl;
+    static $random_state, $bytes;
 
     $missing_bytes = $count - strlen($bytes);
 

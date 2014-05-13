@@ -84,7 +84,6 @@ class PHPTransliteration implements TransliterationInterface {
     // Split into Unicode characters and transliterate each one.
     foreach (preg_split('//u', $string, 0, PREG_SPLIT_NO_EMPTY) as $character) {
       $code = self::ordUTF8($character);
-      $to_add = '';
       if ($code == -1) {
         $to_add = $unknown_character;
       }
