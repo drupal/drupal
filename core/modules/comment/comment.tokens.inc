@@ -86,7 +86,7 @@ function comment_token_info() {
     'description' => t("The entity the comment was posted to."),
     'type' => 'entity',
   );
-  // Support legacy comment node tokens, since tokes are embedded in user data
+  // Support legacy comment node tokens, since tokens are embedded in user data
   // and can't be upgraded directly.
   $comment['node'] = array(
     'name' => t("Node"),
@@ -202,7 +202,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'node':
-          // Support legacy comment node tokens, since tokes are embedded in
+          // Support legacy comment node tokens, since tokens are embedded in
           // user data and can't be upgraded directly.
           // @todo Remove in Drupal 9, see https://drupal.org/node/2031901.
           if ($comment->getCommentedEntityTypeId() == 'node') {
