@@ -8,7 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\Config;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Site\Settings;
@@ -43,10 +43,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *
    * @param LanguageManager $language_manager
    *  The LanguageManager object for retrieving the correct language code.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   A config factory for retrieving required config objects.
    */
-  public function __construct(LanguageManager $language_manager, ConfigFactory $config_factory) {
+  public function __construct(LanguageManager $language_manager, ConfigFactoryInterface $config_factory) {
     $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
   }

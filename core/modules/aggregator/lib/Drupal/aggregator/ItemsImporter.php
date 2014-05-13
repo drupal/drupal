@@ -9,7 +9,7 @@ namespace Drupal\aggregator;
 
 use Drupal\aggregator\Plugin\AggregatorPluginManager;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Defines an importer of aggregator items.
@@ -47,7 +47,7 @@ class ItemsImporter implements ItemsImporterInterface {
   /**
    * Constructs an Importer object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $fetcher_manager
    *   The aggregator fetcher plugin manager.
@@ -56,7 +56,7 @@ class ItemsImporter implements ItemsImporterInterface {
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $processor_manager
    *   The aggregator processor plugin manager.
    */
-  public function __construct(ConfigFactory $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager) {
     $this->fetcherManager = $fetcher_manager;
     $this->processorManager = $processor_manager;
     $this->parserManager = $parser_manager;

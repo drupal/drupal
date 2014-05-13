@@ -30,7 +30,7 @@ final class ConfigEvents {
   /**
    * Name of event fired when renaming a configuration object.
    *
-   * @see \Drupal\Core\Config\ConfigFactory::rename().
+   * @see \Drupal\Core\Config\ConfigFactoryInterface::rename().
    */
   const RENAME = 'config.rename';
 
