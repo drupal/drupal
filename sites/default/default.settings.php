@@ -548,7 +548,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * The 'bootstrap_config_storage' setting needs to be a callable that returns
  * core.services.yml.
  */
- # $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
+# $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
 
 /**
  * Configuration overrides.
