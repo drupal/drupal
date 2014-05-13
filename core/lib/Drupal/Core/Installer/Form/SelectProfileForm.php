@@ -32,13 +32,9 @@ class SelectProfileForm extends FormBase {
     foreach ($install_state['profiles'] as $profile) {
       /** @var $profile \Drupal\Core\Extension\Extension */
       $details = install_profile_info($profile->getName());
-      // Skip this extension if its type is not profile.
-      if (!isset($details['type']) || $details['type'] != 'profile') {
-        continue;
-      }
       // Don't show hidden profiles. This is used by to hide the testing profile,
       // which only exists to speed up test runs.
-      if ($details['hidden'] === TRUE) {
+      if ($details['hidden'] === TRUE && !drupal_valid_test_ua()) {
         continue;
       }
       $profiles[$profile->getName()] = $details;
