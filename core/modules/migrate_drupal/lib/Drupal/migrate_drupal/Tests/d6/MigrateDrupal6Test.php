@@ -7,14 +7,12 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
-use Drupal\simpletest\TestBase;
+use Drupal\migrate_drupal\Tests\MigrateFullDrupalTestBase;
 
 /**
  * Test the complete Drupal 6 migration.
  */
-class MigrateDrupal6Test extends MigrateDrupalTestBase {
+class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
 
   /**
    * Modules to enable.
@@ -50,6 +48,94 @@ class MigrateDrupal6Test extends MigrateDrupalTestBase {
   );
 
   /**
+   * Migrations to run in the test.
+   *
+   * @var array
+   */
+  static $migrations = array(
+    'd6_action_settings',
+    'd6_aggregator_settings',
+    'd6_aggregator_feed',
+    'd6_aggregator_item',
+    'd6_block',
+    'd6_book_settings',
+    'd6_cck_field_values:*',
+    'd6_cck_field_revision:*',
+    'd6_comment',
+    'd6_comment_entity_display',
+    'd6_comment_entity_form_display',
+    'd6_comment_field',
+    'd6_comment_field_instance',
+    'd6_contact_category',
+    'd6_contact_settings',
+    'd6_custom_block',
+    'd6_date_formats',
+    'd6_dblog_settings',
+    'd6_field',
+    'd6_field_instance',
+    'd6_field_instance_widget_settings',
+    'd6_field_settings',
+    'd6_field_formatter_settings',
+    'd6_file_settings',
+    'd6_file',
+    'd6_filter_format',
+    'd6_forum_settings',
+    'd6_locale_settings',
+    'd6_menu_settings',
+    'd6_menu',
+    'd6_node_revision',
+    'd6_node',
+    'd6_node_settings',
+    'd6_node_type',
+    'd6_profile_values:user',
+    'd6_search_page',
+    'd6_search_settings',
+    'd6_simpletest_settings',
+    'd6_statistics_settings',
+    'd6_syslog_settings',
+    'd6_system_cron',
+    'd6_system_file',
+    'd6_system_filter',
+    'd6_system_image',
+    'd6_system_image_gd',
+    'd6_system_maintenance',
+    'd6_system_performance',
+    'd6_system_rss',
+    'd6_system_site',
+    'd6_system_theme',
+    'd6_taxonomy_settings',
+    'd6_taxonomy_term',
+    'd6_taxonomy_vocabulary',
+    'd6_term_node_revision:*',
+    'd6_term_node:*',
+    'd6_text_settings',
+    'd6_update_settings',
+    'd6_upload_entity_display',
+    'd6_upload_entity_form_display',
+    'd6_upload_field',
+    'd6_upload_field_instance',
+    'd6_upload',
+    'd6_url_alias',
+    'd6_user_mail',
+    'd6_user_profile_field_instance',
+    'd6_user_profile_entity_display',
+    'd6_user_profile_entity_form_display',
+    'd6_user_profile_field',
+    'd6_user_picture_entity_display',
+    'd6_user_picture_entity_form_display',
+    'd6_user_picture_field_instance',
+    'd6_user_picture_field',
+    'd6_user_picture_file',
+    'd6_user_role',
+    'd6_user',
+    'd6_view_modes',
+    'd6_vocabulary_entity_display',
+    'd6_vocabulary_entity_form_display',
+    'd6_vocabulary_field_instance',
+    'd6_vocabulary_field',
+  );
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -63,22 +149,7 @@ class MigrateDrupal6Test extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  public function tearDown() {
-    // Move the results of every class under ours. This is solely for
-    // reporting, the filename will guide developers.
-    self::getDatabaseConnection()
-      ->update('simpletest')
-      ->fields(array('test_class' => get_class($this)))
-      ->condition('test_id', $this->testId)
-      ->execute();
-    parent::tearDown();
-  }
-
-
-  /**
-   * Test the complete Drupal 6 migration.
-   */
-  public function testDrupal6() {
+  protected function getDumps() {
     $tests_path = $this->getDumpDirectory();
     $dumps = array(
       $tests_path . '/Drupal6ActionSettings.php',
@@ -140,89 +211,14 @@ class MigrateDrupal6Test extends MigrateDrupalTestBase {
       $tests_path . '/Drupal6UserRole.php',
       $tests_path . '/Drupal6VocabularyField.php',
     );
-    $this->loadDumps($dumps);
-    $migrations = array(
-      'd6_action_settings',
-      'd6_aggregator_settings',
-      'd6_aggregator_feed',
-      'd6_aggregator_item',
-      'd6_block',
-      'd6_book_settings',
-      'd6_cck_field_values:*',
-      'd6_cck_field_revision:*',
-      'd6_comment',
-      'd6_comment_entity_display',
-      'd6_comment_entity_form_display',
-      'd6_comment_field',
-      'd6_comment_field_instance',
-      'd6_contact_category',
-      'd6_contact_settings',
-      'd6_custom_block',
-      'd6_date_formats',
-      'd6_dblog_settings',
-      'd6_field',
-      'd6_field_instance',
-      'd6_field_instance_widget_settings',
-      'd6_field_settings',
-      'd6_field_formatter_settings',
-      'd6_file_settings',
-      'd6_file',
-      'd6_filter_format',
-      'd6_forum_settings',
-      'd6_locale_settings',
-      'd6_menu_settings',
-      'd6_menu',
-      'd6_node_revision',
-      'd6_node',
-      'd6_node_settings',
-      'd6_node_type',
-      'd6_profile_values:user',
-      'd6_search_page',
-      'd6_search_settings',
-      'd6_simpletest_settings',
-      'd6_statistics_settings',
-      'd6_syslog_settings',
-      'd6_system_cron',
-      'd6_system_file',
-      'd6_system_filter',
-      'd6_system_image',
-      'd6_system_image_gd',
-      'd6_system_maintenance',
-      'd6_system_performance',
-      'd6_system_rss',
-      'd6_system_site',
-      'd6_system_theme',
-      'd6_taxonomy_settings',
-      'd6_taxonomy_term',
-      'd6_taxonomy_vocabulary',
-      'd6_term_node_revision:*',
-      'd6_term_node:*',
-      'd6_text_settings',
-      'd6_update_settings',
-      'd6_upload_entity_display',
-      'd6_upload_entity_form_display',
-      'd6_upload_field',
-      'd6_upload_field_instance',
-      'd6_upload',
-      'd6_url_alias',
-      'd6_user_mail',
-      'd6_user_profile_field_instance',
-      'd6_user_profile_entity_display',
-      'd6_user_profile_entity_form_display',
-      'd6_user_profile_field',
-      'd6_user_picture_entity_display',
-      'd6_user_picture_entity_form_display',
-      'd6_user_picture_field_instance',
-      'd6_user_picture_field',
-      'd6_user_picture_file',
-      'd6_user_role',
-      'd6_user',
-      'd6_view_modes',
-      'd6_vocabulary_entity_display',
-      'd6_vocabulary_entity_form_display',
-      'd6_vocabulary_field_instance',
-      'd6_vocabulary_field',
-    );
+
+    return $dumps;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getTestClassesList() {
     $classes = array(
       __NAMESPACE__ . '\MigrateActionConfigsTest',
       __NAMESPACE__ . '\MigrateAggregatorConfigsTest',
@@ -305,46 +301,8 @@ class MigrateDrupal6Test extends MigrateDrupalTestBase {
       __NAMESPACE__ . '\MigrateVocabularyFieldInstanceTest',
       __NAMESPACE__ . '\MigrateVocabularyFieldTest',
     );
-    // Run every migration in the order specified by the storage controller.
-    foreach (entity_load_multiple('migration', $migrations) as $migration) {
-      (new MigrateExecutable($migration, $this))->import();
-    }
-    foreach ($classes as $class) {
-      $test_object = new $class($this->testId);
-      $test_object->databasePrefix = $this->databasePrefix;
-      $test_object->container = $this->container;
-      // run() does a lot of setup and tear down work which we don't need:
-      // it would setup a new database connection and wouldn't find the
-      // Drupal 6 dump. Also by skipping the setUp() methods there are no id
-      // mappings or entities prepared. The tests run against solely migrated
-      // data.
-      foreach (get_class_methods($test_object) as $method) {
-        if (strtolower(substr($method, 0, 4)) == 'test') {
-          // Insert a fail record. This will be deleted on completion to ensure
-          // that testing completed.
-          $method_info = new \ReflectionMethod($class, $method);
-          $caller = array(
-            'file' => $method_info->getFileName(),
-            'line' => $method_info->getStartLine(),
-            'function' => $class . '->' . $method . '()',
-          );
-          $completion_check_id = TestBase::insertAssert($this->testId, $class, FALSE, 'The test did not complete due to a fatal error.', 'Completion check', $caller);
-          // Run the test method.
-          try {
-            $test_object->$method();
-          }
-          catch (\Exception $e) {
-            $this->exceptionHandler($e);
-          }
-          // Remove the completion check record.
-          TestBase::deleteAssert($completion_check_id);
-        }
-      }
-      // Add the pass/fail/exception/debug results.
-      foreach ($this->results as $key => &$value) {
-        $value += $test_object->results[$key];
-      }
-    }
+
+    return $classes;
   }
 
 }
