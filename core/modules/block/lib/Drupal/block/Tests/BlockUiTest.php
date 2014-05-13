@@ -176,4 +176,23 @@ class BlockUiTest extends WebTestBase {
     $this->assertFieldByName('id', 'displaymessage_3', 'Block form appends _3 to plugin-suggested machine name when two instances already exist.');
   }
 
+  /**
+   * Tests the block placement indicator.
+   */
+  public function testBlockPlacementIndicator() {
+    // Select the 'Powered by Drupal' block to be placed.
+    $block = array();
+    $block['id'] = strtolower($this->randomName());
+    $block['theme'] = 'stark';
+    $block['region'] = 'content';
+
+    // After adding a block, it will indicate which block was just added.
+    $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
+    $this->assertUrl('admin/structure/block/list/stark?block-placement=' . drupal_html_class($block['id']));
+
+    // Resaving the block page will remove the block indicator.
+    $this->drupalPostForm(NULL, array(), t('Save blocks'));
+    $this->assertUrl('admin/structure/block/list/stark');
+  }
+
 }

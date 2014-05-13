@@ -408,6 +408,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $entity->save();
     }
     drupal_set_message(t('The block settings have been updated.'));
+
+    // Remove any previously set block placement.
+    $this->request->query->remove('block-placement');
+
     Cache::invalidateTags(array('content' => TRUE));
   }
 
