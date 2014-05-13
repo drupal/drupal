@@ -140,8 +140,10 @@ class ExtensionDiscovery {
 
     // Unless an explicit value has been passed, manually check whether we are
     // in a test environment, in which case test extensions must be included.
+    // Test extensions can also be included for debugging purposes by setting a
+    // variable in settings.php.
     if (!isset($include_tests)) {
-      $include_tests = (bool) drupal_valid_test_ua();
+      $include_tests = drupal_valid_test_ua() || Settings::get('extension_discovery_scan_tests');
     }
 
     $files = array();
