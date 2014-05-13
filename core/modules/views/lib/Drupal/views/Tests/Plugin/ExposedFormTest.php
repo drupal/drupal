@@ -45,7 +45,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Create some random nodes.
     for ($i = 0; $i < 5; $i++) {
-      $this->drupalCreateNode();
+      $this->drupalCreateNode(array('type' => 'article'));
     }
   }
 
@@ -159,6 +159,30 @@ class ExposedFormTest extends ViewTestBase {
     // Test there is only one views exposed form on the page.
     $elements = $this->xpath('//form[@id=:id]', array(':id' => $this->getExpectedExposedFormId($view)));
     $this->assertEqual(count($elements), 1, 'One exposed form block found.');
+  }
+
+  /**
+   * Test the input required exposed form type.
+   */
+  public function testInputRequired() {
+    $view = entity_load('view', 'test_exposed_form_buttons');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['exposed_form']['type'] = 'input_required';
+    $view->save();
+
+    $this->drupalGet('test_exposed_form_buttons');
+    $this->assertResponse(200);
+    $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', t('Apply'));
+
+    // Ensure that no results are displayed.
+    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
+    $this->assertEqual(count($rows), 0, 'No rows are displayed by default when no input is provided.');
+
+    $this->drupalGet('test_exposed_form_buttons', array('query' => array('type' => 'article')));
+
+    // Ensure that results are displayed.
+    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
+    $this->assertEqual(count($rows), 5, 'All rows are displayed by default when input is provided.');
   }
 
   /**
