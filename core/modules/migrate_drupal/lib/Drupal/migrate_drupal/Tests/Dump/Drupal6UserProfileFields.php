@@ -235,6 +235,21 @@ class Drupal6UserProfileFields extends Drupal6DumpBase {
           'autocomplete' => '0',
           'options' => '',
         ),
+        array(
+          'fid' => '15',
+          'title' => 'I love migrations',
+          'name' => 'profile_love_migrations',
+          'explanation' => "If you check this box, you love migrations.",
+          'category' => 'Personal information',
+          'page' => 'People who love migrations',
+          'type' => 'checkbox',
+          'weight' => '-15',
+          'required' => '0',
+          'register' => '0',
+          'visibility' => '2',
+          'autocomplete' => '0',
+          'options' => '',
+        ),
       ),
     );
 

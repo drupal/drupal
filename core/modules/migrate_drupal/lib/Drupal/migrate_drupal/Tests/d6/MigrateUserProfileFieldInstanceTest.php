@@ -92,6 +92,11 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupalTestBase {
     $field = entity_load('field_instance_config', 'user.user.profile_birthdate');
     $this->assertEqual($field->label(), 'Birthdate');
     $this->assertEqual($field->getDescription(), "Enter your birth date and we'll send you a coupon.");
+
+    // Another migrated checkbox field, with a different source visibility setting.
+    $field = entity_load('field_instance_config', 'user.user.profile_love_migrations');
+    $this->assertEqual($field->label(), 'I love migrations');
+    $this->assertEqual($field->getDescription(), "If you check this box, you love migrations.");
   }
 
   /**
@@ -101,11 +106,12 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupalTestBase {
     $fields = array(
       'profile_color' => 'text',
       'profile_biography' => 'text_long',
-      'profile_sell_address' => 'list_integer',
+      'profile_sell_address' => 'list_boolean',
       'profile_sold_to' => 'list_text',
       'profile_bands' => 'text',
       'profile_blog' => 'link',
       'profile_birthdate' => 'datetime',
+      'profile_love_migrations' => 'list_boolean',
     );
     foreach ($fields as $name => $type) {
       entity_create('field_config', array(

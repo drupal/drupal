@@ -18,7 +18,7 @@ process:
     plugin: static_map
     source: type
     map:
-      checkbox: options_select
+      checkbox: options_onoff
       date: datetime_default
       list: text_textfield
       selection: options_select
@@ -32,6 +32,12 @@ process:
     source:
       - @type
       - constants.empty # we don't have any settings.
+  'options.settings.display_label':  # Single on/off checkboxes need to have display_label = true otherwise their label doesn't show.
+    plugin: static_map
+    default_value: false
+    source: type
+    map:
+      checkbox: true
   hidden:
     plugin: static_map
     source: visibility

@@ -49,7 +49,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
     entity_create('field_config', array(
       'entity_type' => 'user',
       'name' => 'profile_sell_address',
-      'type' => 'list_integer',
+      'type' => 'list_boolean',
     ))->save();
     entity_create('field_config', array(
       'entity_type' => 'user',
@@ -71,6 +71,11 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
       'entity_type' => 'user',
       'name' => 'profile_birthdate',
       'type' => 'datetime',
+    ))->save();
+    entity_create('field_config', array(
+      'entity_type' => 'user',
+      'name' => 'profile_love_migrations',
+      'type' => 'list_boolean',
     ))->save();
     $field_data = Drupal6UserProfileFields::getData('profile_fields');
     foreach ($field_data as $field) {
@@ -116,6 +121,11 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
 
     // Test PROFILE_HIDDEN field is hidden.
     $this->assertNull($display->getComponent('profile_sold_to'));
+
+    // Test that a checkbox field has the proper display label setting.
+    $component = $display->getComponent('profile_love_migrations');
+    $this->assertEqual($component['type'], 'options_onoff');
+    $this->assertEqual($component['settings']['display_label'], true);
   }
 
 }

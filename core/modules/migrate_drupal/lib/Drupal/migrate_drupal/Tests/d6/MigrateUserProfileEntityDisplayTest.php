@@ -54,7 +54,7 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupalTestBase {
     entity_create('field_config', array(
       'entity_type' => 'user',
       'name' => 'profile_sell_address',
-      'type' => 'list_integer',
+      'type' => 'list_boolean',
     ))->save();
     entity_create('field_config', array(
       'entity_type' => 'user',
@@ -76,6 +76,11 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupalTestBase {
       'entity_type' => 'user',
       'name' => 'profile_birthdate',
       'type' => 'datetime',
+    ))->save();
+    entity_create('field_config', array(
+      'entity_type' => 'user',
+      'name' => 'profile_love_migrations',
+      'type' => 'list_boolean',
     ))->save();
     $field_data = Drupal6UserProfileFields::getData('profile_fields');
     foreach ($field_data as $field) {

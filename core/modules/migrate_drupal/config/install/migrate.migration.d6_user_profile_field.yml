@@ -11,7 +11,7 @@ process:
     plugin: static_map
     source: type
     map:
-      checkbox: list_integer
+      checkbox: list_boolean
       date: datetime
       list: text
       selection: list_text
