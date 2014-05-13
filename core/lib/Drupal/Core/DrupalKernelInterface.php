@@ -38,10 +38,13 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   /**
    * Returns all registered service providers.
    *
+   * @param string $origin
+   *   The origin for which to return service providers; one of 'app' or 'site'.
+   *
    * @return array
    *   An associative array of ServiceProvider objects, keyed by name.
    */
-  public function getServiceProviders();
+  public function getServiceProviders($origin);
 
   /**
    * Gets the current container.

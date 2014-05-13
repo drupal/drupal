@@ -110,13 +110,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $configStorage;
 
   /**
-   * The list of the classnames of the service providers in this kernel.
-   *
-   * @var array
-   */
-  protected $serviceProviderClasses;
-
-  /**
    * Whether the container can be dumped.
    *
    * @var bool
@@ -131,14 +124,33 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $containerNeedsDumping;
 
   /**
-   * Holds the list of YAML files containing service definitions.
+   * List of discovered services.yml pathnames.
+   *
+   * This is a nested array whose top-level keys are 'app' and 'site', denoting
+   * the origin of a service provider. Site-specific providers have to be
+   * collected separately, because they need to be processed last, so as to be
+   * able to override services from application service providers.
    *
    * @var array
    */
   protected $serviceYamls;
 
   /**
-   * The array of registered service providers.
+   * List of discovered service provider class names.
+   *
+   * This is a nested array whose top-level keys are 'app' and 'site', denoting
+   * the origin of a service provider. Site-specific providers have to be
+   * collected separately, because they need to be processed last, so as to be
+   * able to override services from application service providers.
+   *
+   * @var array
+   */
+  protected $serviceProviderClasses;
+
+  /**
+   * List of instantiated service provider classes.
+   *
+   * @see \Drupal\Core\DrupalKernel::$serviceProviderClasses
    *
    * @var array
    */
@@ -203,16 +215,18 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function discoverServiceProviders() {
-    $serviceProviders = array(
-      'CoreServiceProvider' => new CoreServiceProvider(),
-    );
     $this->serviceYamls = array(
-      'core/core.services.yml'
+      'app' => array(),
+      'site' => array(),
     );
-    $this->serviceProviderClasses = array('Drupal\Core\CoreServiceProvider');
+    $this->serviceProviderClasses = array(
+      'app' => array(),
+      'site' => array(),
+    );
+    $this->serviceYamls['app']['core'] = 'core/core.services.yml';
+    $this->serviceProviderClasses['app']['core'] = 'Drupal\Core\CoreServiceProvider';
 
-    // Ensure we know what modules are enabled and that their namespaces are
-    // registered.
+    // Retrieve enabled modules and register their namespaces.
     if (!isset($this->moduleList)) {
       $extensions = $this->getConfigStorage()->read('core.extension');
       $this->moduleList = isset($extensions['module']) ? $extensions['module'] : array();
@@ -226,34 +240,35 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $name = "{$camelized}ServiceProvider";
       $class = "Drupal\\{$module}\\{$name}";
       if (class_exists($class)) {
-        $serviceProviders[$name] = new $class();
-        $this->serviceProviderClasses[] = $class;
+        $this->serviceProviderClasses['app'][$module] = $class;
       }
       $filename = dirname($module_filenames[$module]) . "/$module.services.yml";
       if (file_exists($filename)) {
-        $this->serviceYamls[] = $filename;
+        $this->serviceYamls['app'][$module] = $filename;
       }
     }
 
-    // Add site specific or test service providers.
+    // Add site-specific service providers.
     if (!empty($GLOBALS['conf']['container_service_providers'])) {
-      foreach ($GLOBALS['conf']['container_service_providers'] as $name => $class) {
-        $serviceProviders[$name] = new $class();
-        $this->serviceProviderClasses[] = $class;
+      foreach ($GLOBALS['conf']['container_service_providers'] as $class) {
+        if (class_exists($class)) {
+          $this->serviceProviderClasses['site'][] = $class;
+        }
       }
     }
-    // Add site specific or test YAMLs.
     if (!empty($GLOBALS['conf']['container_yamls'])) {
-      $this->serviceYamls = array_merge($this->serviceYamls, $GLOBALS['conf']['container_yamls']);
+      $this->serviceYamls['site'] = $GLOBALS['conf']['container_yamls'];
     }
-    return $serviceProviders;
+    if (file_exists($site_services_yml = conf_path() . '/services.yml')) {
+      $this->serviceYamls['site'][] = $site_services_yml;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getServiceProviders() {
-    return $this->serviceProviders;
+  public function getServiceProviders($origin) {
+    return $this->serviceProviders[$origin];
   }
 
   /**
@@ -496,7 +511,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->initializeServiceProviders();
     $container = $this->getContainerBuilder();
     $container->set('kernel', $this);
-    $container->setParameter('container.service_providers', $this->serviceProviderClasses);
     $container->setParameter('container.modules', $this->getModulesParameter());
 
     // Get a list of namespaces and put it onto the container.
@@ -531,11 +545,22 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->register('class_loader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
+
+    // Register application services.
     $yaml_loader = new YamlFileLoader($container);
-    foreach ($this->serviceYamls as $filename) {
+    foreach ($this->serviceYamls['app'] as $filename) {
       $yaml_loader->load($filename);
     }
-    foreach ($this->serviceProviders as $provider) {
+    foreach ($this->serviceProviders['app'] as $provider) {
+      if ($provider instanceof ServiceProviderInterface) {
+        $provider->register($container);
+      }
+    }
+    // Register site-specific service overrides.
+    foreach ($this->serviceYamls['site'] as $filename) {
+      $yaml_loader->load($filename);
+    }
+    foreach ($this->serviceProviders['site'] as $provider) {
       if ($provider instanceof ServiceProviderInterface) {
         $provider->register($container);
       }
@@ -563,13 +588,15 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @throws \LogicException
    */
   protected function initializeServiceProviders() {
-    $this->serviceProviders = array();
-
-    foreach ($this->discoverServiceProviders() as $name => $provider) {
-      if (isset($this->serviceProviders[$name])) {
-        throw new \LogicException(sprintf('Trying to register two service providers with the same name "%s"', $name));
+    $this->discoverServiceProviders();
+    $this->serviceProviders = array(
+      'app' => array(),
+      'site' => array(),
+    );
+    foreach ($this->serviceProviderClasses as $origin => $classes) {
+      foreach ($classes as $name => $class) {
+        $this->serviceProviders[$origin][$name] = new $class;
       }
-      $this->serviceProviders[$name] = $provider;
     }
   }
 

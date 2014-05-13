@@ -28,7 +28,13 @@ class ModifyServiceDefinitionsPass implements CompilerPassInterface {
     if (!($kernel instanceof DrupalKernelInterface)) {
       return;
     }
-    $providers = $kernel->getServiceProviders();
+    $providers = $kernel->getServiceProviders('app');
+    foreach ($providers as $provider) {
+      if ($provider instanceof ServiceModifierInterface) {
+        $provider->alter($container);
+      }
+    }
+    $providers = $kernel->getServiceProviders('site');
     foreach ($providers as $provider) {
       if ($provider instanceof ServiceModifierInterface) {
         $provider->alter($container);
