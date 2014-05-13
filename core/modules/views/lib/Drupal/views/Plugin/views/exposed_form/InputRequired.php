@@ -83,7 +83,7 @@ class InputRequired extends ExposedFormPluginBase {
         'format' => $this->options['text_input_required_format'],
       );
       $handler = Views::handlerManager('area')->getHandler($options);
-      $handler->init($this->view, $this->displayHandler, $options);
+      $handler->init($this->view, $options);
       $this->displayHandler->handlers['empty'] = array(
         'area' => $handler,
       );
