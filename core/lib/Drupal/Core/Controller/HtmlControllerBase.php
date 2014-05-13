@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\Page\FeedLinkElement;
 use Drupal\Core\Page\HtmlFragment;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Utility\Title;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,13 +28,23 @@ class HtmlControllerBase {
   protected $titleResolver;
 
   /**
+   * The url generator.
+   *
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   */
+  protected $urlGenerator;
+
+  /**
    * Constructs a new HtmlControllerBase object.
    *
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   *   The url generator.
    */
-  public function __construct(TitleResolverInterface $title_resolver) {
+  public function __construct(TitleResolverInterface $title_resolver, UrlGeneratorInterface $url_generator) {
     $this->titleResolver = $title_resolver;
+    $this->urlGenerator = $url_generator;
   }
 
   /**
@@ -70,6 +82,15 @@ class HtmlControllerBase {
     }
     else if ($route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
       $fragment->setTitle($this->titleResolver->getTitle($request, $route), Title::PASS_THROUGH);
+    }
+
+    // Add feed links from the page content.
+    $attached = drupal_render_collect_attached($page_content, TRUE);
+    if (!empty($attached['drupal_add_feed'])) {
+      foreach ($attached['drupal_add_feed'] as $feed) {
+        $feed_link = new FeedLinkElement($feed[1], $this->urlGenerator->generateFromPath($feed[0]));
+        $fragment->addLinkElement($feed_link);
+      }
     }
 
     return $fragment;

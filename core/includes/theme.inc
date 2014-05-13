@@ -16,6 +16,9 @@ use Drupal\Core\Config\StorageException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionNameLengthException;
+use Drupal\Core\Page\FeedLinkElement;
+use Drupal\Core\Page\LinkElement;
+use Drupal\Core\Page\MetaElement;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\RenderWrapper;
 use Drupal\Core\Theme\ThemeSettings;
@@ -2019,32 +2022,24 @@ function template_preprocess_html(&$variables) {
   $variables['head_title_array'] = $head_title;
   $variables['head_title'] = implode(' | ', $head_title);
 
-  // Display the html.html.twig's default mobile metatags for responsive design.
-  $elements = array(
-    'MobileOptimized' => array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'name' => 'MobileOptimized',
-        'content' => 'width',
-      ),
-    ),
-    'HandheldFriendly' => array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'name' => 'HandheldFriendly',
-        'content' => 'true',
-      ),
-    ),
-    'viewport' => array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'name' => 'viewport',
-        'content' => 'width=device-width',
-      ),
-    ),
-  );
-  foreach ($elements as $name => $element) {
-    drupal_add_html_head($element, $name);
+  // @todo Remove drupal_*_html_head() and refactor accordingly.
+  $html_heads = drupal_get_html_head(FALSE);
+  uasort($html_heads, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+  foreach ($html_heads as $name => $tag) {
+    if ($tag['#tag'] == 'link') {
+      $link = new LinkElement($name, isset($tag['#attributes']['content']) ? $tag['#attributes']['content'] : NULL, $tag['#attributes']);
+      if (!empty($tag['#noscript'])) {
+        $link->setNoScript();
+      }
+      $page->addLinkElement($link);
+    }
+    elseif ($tag['#tag'] == 'meta') {
+      $metatag = new MetaElement(NULL, $tag['#attributes']);
+      if (!empty($tag['#noscript'])) {
+        $metatag->setNoScript();
+      }
+      $page->addMetaElement($metatag);
+    }
   }
 
   $variables['page_top'][] = array('#markup' => $page->getBodyTop());
@@ -2056,7 +2051,9 @@ function template_preprocess_html(&$variables) {
   $variables['page_bottom'][] = array('#markup' => $footer_scripts);
 
   // Wrap function calls in an object so they can be called when printed.
-  $variables['head'] = new RenderWrapper('drupal_get_html_head');
+  $variables['head'] = new RenderWrapper(function() use ($page) {
+    return implode("\n", $page->getMetaElements()) . implode("\n", $page->getLinkElements());
+  });
   $variables['styles'] = new RenderWrapper('drupal_get_css');
   $variables['scripts'] = new RenderWrapper('drupal_get_js');
 }
@@ -2111,7 +2108,19 @@ function template_preprocess_page(&$variables) {
     $variables['secondary_menu'] = theme_get_setting('features.secondary_menu') ? menu_secondary_menu() : array();
     $variables['action_links']   = menu_get_local_actions();
     $variables['tabs']           = menu_local_tabs();
-    $variables['feed_icons']     = drupal_get_feeds();
+
+    // Convert drupal_get_feeds to feed links on the page object.
+    /** @var \Drupal\Core\Page\HtmlPage $page */
+    $page = $variables['page']['#page'];
+    // Render the feed icons.
+    $variables['feed_icons'] = array();
+    foreach ($page->getFeedLinkElements() as $link) {
+      $variables['feed_icons'][] = array(
+        '#theme' => 'feed_icon',
+        '#url' => $link->getAttributes()['href'],
+        '#title' => $link->getAttributes()['title'],
+      );
+    }
   }
   else {
     $variables['main_menu']      = array();

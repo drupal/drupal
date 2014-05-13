@@ -72,6 +72,16 @@ class HeadElement {
   }
 
   /**
+   * Gets all the attributes.
+   *
+   * @return array
+   *   An array of all the attributes keyed by name of attribute.
+   */
+  public function &getAttributes() {
+    return $this->attributes;
+  }
+
+  /**
    * Sets if this element should be wrapped in <noscript>.
    *
    * @param bool $value

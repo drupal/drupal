@@ -472,7 +472,7 @@ services:
       - { name: event_subscriber }
   controller.page:
     class: Drupal\Core\Controller\HtmlPageController
-    arguments: ['@controller_resolver', '@title_resolver']
+    arguments: ['@controller_resolver', '@title_resolver', '@url_generator']
   controller.ajax:
     class: Drupal\Core\Controller\AjaxController
     arguments: ['@controller_resolver', '@ajax_response_renderer']
@@ -598,7 +598,7 @@ services:
     arguments: ['@config.manager', '@config.storage', '@config.storage.snapshot']
   exception_controller:
     class: Drupal\Core\Controller\ExceptionController
-    arguments: ['@content_negotiation', '@title_resolver', '@html_page_renderer', '@html_fragment_renderer', '@string_translation']
+    arguments: ['@content_negotiation', '@title_resolver', '@html_page_renderer', '@html_fragment_renderer', '@string_translation', '@url_generator']
     calls:
       - [setContainer, ['@service_container']]
   exception_listener:

@@ -22,6 +22,20 @@ use Drupal\Core\Utility\Title;
 class HtmlFragment implements CacheableInterface {
 
   /**
+   * An array of Link elements.
+   *
+   * @var array
+   */
+  protected $links = array();
+
+  /**
+   * An array of Meta elements.
+   *
+   * @var array
+   */
+  protected $metatags = array();
+
+  /**
    * HTML content string.
    *
    * @var string
@@ -62,6 +76,65 @@ class HtmlFragment implements CacheableInterface {
   }
 
   /**
+   * Adds a link element to the page.
+   *
+   * @param \Drupal\Core\Page\LinkElement $link
+   *   A link element to enqueue.
+   *
+   * @return $this
+   */
+  public function addLinkElement(LinkElement $link) {
+    $this->links[] = $link;
+    return $this;
+  }
+
+  /**
+   * Returns an array of all enqueued links.
+   *
+   * @return \Drupal\Core\Page\LinkElement[]
+   */
+  public function &getLinkElements() {
+    return $this->links;
+  }
+
+  /**
+   * Returns all feed link elements.
+   *
+   * @return \Drupal\Core\Page\FeedLinkElement[]
+   */
+  public function getFeedLinkElements() {
+    $feed_links = array();
+    foreach ($this->links as $link) {
+      if ($link instanceof FeedLinkElement) {
+        $feed_links[] = $link;
+      }
+    }
+    return $feed_links;
+  }
+
+  /**
+   * Adds a meta element to the page.
+   *
+   * @param \Drupal\Core\Page\MetaElement $meta
+   *   A meta element to add.
+   *
+   * @return $this
+   */
+  public function addMetaElement(MetaElement $meta) {
+    $this->metatags[] = $meta;
+    return $this;
+  }
+
+  /**
+   * Returns an array of all enqueued meta elements.
+   *
+   * @return \Drupal\Core\Page\MetaElement[]
+   */
+  public function &getMetaElements() {
+    return $this->metatags;
+  }
+
+  /**
    * Sets the response content.
    *
    * This should be the bulk of the page content, and will ultimately be placed
@@ -73,8 +146,7 @@ class HtmlFragment implements CacheableInterface {
    * @param mixed $content
    *   The content for this fragment.
    *
-   * @return self
-   *   The fragment.
+   * @return $this
    */
   public function setContent($content) {
     $this->content = $content;
@@ -108,6 +180,8 @@ class HtmlFragment implements CacheableInterface {
    *   \Drupal\Component\Utility\String::checkPlain() or
    *   \Drupal\Component\Utility\Xss::filterAdmin(). With this flag the string
    *   will be passed through unchanged.
+   *
+   * @return $this
    */
   public function setTitle($title, $output = Title::CHECK_PLAIN) {
     if ($output == Title::CHECK_PLAIN) {
@@ -119,6 +193,7 @@ class HtmlFragment implements CacheableInterface {
     else {
       $this->title = $title;
     }
+    return $this;
   }
 
   /**

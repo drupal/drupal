@@ -1,0 +1,5 @@
+services:
+  system_module_test.html_page_subscriber:
+    class: Drupal\system_module_test\EventSubscriber\HtmlPageSubscriber
+    tags:
+      - { name: event_subscriber }

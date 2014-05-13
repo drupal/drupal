@@ -88,6 +88,11 @@ class HtmlViewSubscriber implements EventSubscriberInterface {
       if ($max_age = $page->getCacheMaxAge()) {
         $response->headers->set('cache_max_age', $max_age);
       }
+
+      // Set the generator in the HTTP header.
+      list($version) = explode('.', \Drupal::VERSION, 2);
+      $response->headers->set('X-Generator', 'Drupal ' . $version . ' (http://drupal.org)');
+
       $event->setResponse($response);
     }
   }

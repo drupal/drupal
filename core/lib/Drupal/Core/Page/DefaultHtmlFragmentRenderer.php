@@ -85,7 +85,45 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     $html_attributes['lang'] = $language_interface->id;
     $html_attributes['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
+    $this->setDefaultMetaTags($page);
+
+    // @todo: collect feed links from #attached rather than a static once
+    // http://drupal.org/node/2256365 is completed.
+    foreach (drupal_get_feeds() as $feed) {
+      // Force the URL to be absolute, for consistency with other <link> tags
+      // output by Drupal.
+      $link = new FeedLinkElement($feed['title'], url($feed['url'], array('absolute' => TRUE)));
+      $page->addLinkElement($link);
+    }
+
     return $page;
+  }
+
+  /**
+   * Apply the default meta tags to the page object.
+   *
+   * @param \Drupal\Core\Page\HtmlPage $page
+   *   The html page.
+   */
+  protected function setDefaultMetaTags(HtmlPage $page) {
+    // Add default elements. Make sure the Content-Type comes first because the
+    // IE browser may be vulnerable to XSS via encoding attacks from any content
+    // that comes before this META tag, such as a TITLE tag.
+    $page->addMetaElement(new MetaElement(NULL, array(
+      'name' => 'charset',
+      'charset' => 'utf-8',
+    )));
+    // Show Drupal and the major version number in the META GENERATOR tag.
+    // Get the major version.
+    list($version) = explode('.', \Drupal::VERSION, 2);
+    $page->addMetaElement(new MetaElement('Drupal ' . $version . ' (http://drupal.org)', array(
+      'name' => 'Generator',
+    )));
+
+    // Display the html.html.twig's default mobile metatags for responsive design.
+    $page->addMetaElement(new MetaElement(NULL, array('name' => 'MobileOptimized', 'content' => 'width')));
+    $page->addMetaElement(new MetaElement(NULL, array('name' => 'HandheldFriendly', 'content' => 'true')));
+    $page->addMetaElement(new MetaElement(NULL, array('name' => 'viewport', 'content' => 'width=device-width')));
   }
 
 }

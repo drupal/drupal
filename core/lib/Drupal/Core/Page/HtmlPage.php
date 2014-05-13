@@ -92,7 +92,7 @@ class HtmlPage extends HtmlFragment {
    * @param string $content
    *   The top-content to set.
    *
-   * @return self
+   * @return $this
    *   The called object.
    */
   public function setBodyTop($content) {
@@ -116,7 +116,7 @@ class HtmlPage extends HtmlFragment {
    * @param string $content
    *   The bottom-content to set.
    *
-   * @return self
+   * @return $this
    *   The called object.
    */
   public function setBodyBottom($content) {
@@ -140,7 +140,7 @@ class HtmlPage extends HtmlFragment {
    * @param int $status
    *   The status code to set.
    *
-   * @return self
+   * @return $this
    *   The called object.
    */
   public function setStatusCode($status) {
@@ -163,9 +163,29 @@ class HtmlPage extends HtmlFragment {
    *
    * @param array $cache_tags
    *   The cache tags associated with this HTML page.
+   *
+   * @return $this
+   *   The called object.
    */
   public function setCacheTags(array $cache_tags) {
     $this->cache['tags'] = $cache_tags;
+    return $this;
+  }
+
+  /**
+   * Gets all feed links.
+   *
+   * @return \Drupal\Core\Page\FeedLinkElement[]
+   *   A list of feed links attached to the page.
+   */
+  public function getFeedLinkElements() {
+    $feed_links = array();
+    foreach ($this->getLinkElements() as $link) {
+      if ($link instanceof FeedLinkElement) {
+        $feed_links[] = $link;
+      }
+    }
+    return $feed_links;
   }
 
 }

@@ -8,7 +8,9 @@
 namespace Drupal\Core\Controller;
 
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
+use Drupal\Core\Page\HtmlFragmentRendererInterface;
 use Drupal\Core\Page\HtmlPageRendererInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,9 +70,12 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    *   The page renderer.
    * @param \Drupal\Core\Page\HtmlFragmentRendererInterface $fragment_renderer
    *   The fragment rendering service.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The url generator.
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    */
-  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer, $fragment_renderer, TranslationInterface $string_translation) {
-    parent::__construct($title_resolver);
+  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer, HtmlFragmentRendererInterface $fragment_renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator) {
+    parent::__construct($title_resolver, $url_generator);
     $this->negotiation = $negotiation;
     $this->htmlPageRenderer = $renderer;
     $this->fragmentRenderer = $fragment_renderer;

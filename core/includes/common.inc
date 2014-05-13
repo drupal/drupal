@@ -236,12 +236,7 @@ function drupal_get_profile() {
  * @see drupal_pre_render_html_tag()
  */
 function drupal_add_html_head($data = NULL, $key = NULL) {
-  $stored_head = &drupal_static(__FUNCTION__);
-
-  if (!isset($stored_head)) {
-    // Make sure the defaults, including Content-Type, come first.
-    $stored_head = _drupal_default_html_head();
-  }
+  $stored_head = &drupal_static(__FUNCTION__, array());
 
   if (isset($data) && isset($key)) {
     if (!isset($data['#type'])) {
@@ -253,44 +248,23 @@ function drupal_add_html_head($data = NULL, $key = NULL) {
 }
 
 /**
- * Returns elements that are always displayed in the HEAD tag of the HTML page.
- */
-function _drupal_default_html_head() {
-  // Add default elements. Make sure the Content-Type comes first because the
-  // IE browser may be vulnerable to XSS via encoding attacks from any content
-  // that comes before this META tag, such as a TITLE tag.
-  $elements['system_meta_content_type'] = array(
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'charset' => 'utf-8',
-    ),
-    // Security: This always has to be output first.
-    '#weight' => -1000,
-  );
-  // Show Drupal and the major version number in the META GENERATOR tag.
-  // Get the major version.
-  list($version, ) = explode('.', \Drupal::VERSION);
-  $elements['system_meta_generator'] = array(
-    '#type' => 'html_tag',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'name' => 'Generator',
-      'content' => 'Drupal ' . $version . ' (http://drupal.org)',
-    ),
-  );
-  // Also send the generator in the HTTP header.
-  $elements['system_meta_generator']['#attached']['drupal_add_http_header'][] = array('X-Generator', $elements['system_meta_generator']['#attributes']['content']);
-  return $elements;
-}
-
-/**
  * Retrieves output to be displayed in the HEAD tag of the HTML page.
+ *
+ * @param bool $render
+ *   If TRUE render the HEAD elements, otherwise return just the elements.
+ *
+ * @return string|array
+ *   Return the rendered HTML head or the elements itself.
  */
-function drupal_get_html_head() {
+function drupal_get_html_head($render = TRUE) {
   $elements = drupal_add_html_head();
   \Drupal::moduleHandler()->alter('html_head', $elements);
-  return drupal_render($elements);
+  if ($render) {
+    return drupal_render($elements);
+  }
+  else {
+    return $elements;
+  }
 }
 
 /**
@@ -307,35 +281,17 @@ function drupal_add_feed($url = NULL, $title = '') {
   $stored_feed_links = &drupal_static(__FUNCTION__, array());
 
   if (isset($url)) {
-    $feed_icon = array(
-      '#theme' => 'feed_icon',
-      '#url' => $url,
-      '#title' => $title,
-    );
-
-    $feed_icon['#attached']['drupal_add_html_head_link'][][] = array(
-      'rel' => 'alternate',
-      'type' => 'application/rss+xml',
-      'title' => $title,
-      // Force the URL to be absolute, for consistency with other <link> tags
-      // output by Drupal.
-      'href' => url($url, array('absolute' => TRUE)),
-    );
-
-    $stored_feed_links[$url] = drupal_render($feed_icon);
+    $stored_feed_links[$url] = array('url' => $url, 'title' => $title);
   }
   return $stored_feed_links;
 }
 
 /**
  * Gets the feed URLs for the current page.
- *
- * @param $delimiter
- *   A delimiter to split feeds by.
  */
-function drupal_get_feeds($delimiter = "\n") {
+function drupal_get_feeds() {
   $feeds = drupal_add_feed();
-  return implode($feeds, $delimiter);
+  return $feeds;
 }
 
 /**

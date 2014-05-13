@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,9 +29,11 @@ class HtmlPageController extends HtmlControllerBase {
    *   The controller resolver.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   *   The url generator.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, TitleResolverInterface $title_resolver) {
-    parent::__construct($title_resolver);
+  public function __construct(ControllerResolverInterface $controller_resolver, TitleResolverInterface $title_resolver, UrlGeneratorInterface $url_generator) {
+    parent::__construct($title_resolver, $url_generator);
 
     $this->controllerResolver = $controller_resolver;
   }

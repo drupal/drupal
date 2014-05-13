@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Core\Page\FeedLinkElement;
+use Drupal\Core\Page\HtmlPage;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -39,46 +41,41 @@ class AddFeedTest extends WebTestBase {
     // - 'title' == the title of the feed as passed into drupal_add_feed().
     $urls = array(
       'path without title' => array(
-        'input_url' => $path,
-        'output_url' => url($path, array('absolute' => TRUE)),
+        'url' => url($path, array('absolute' => TRUE)),
         'title' => '',
       ),
       'external URL without title' => array(
-        'input_url' => $external_url,
-        'output_url' => $external_url,
+        'url' => $external_url,
         'title' => '',
       ),
       'local URL without title' => array(
-        'input_url' => $fully_qualified_local_url,
-        'output_url' => $fully_qualified_local_url,
+        'url' => $fully_qualified_local_url,
         'title' => '',
       ),
       'path with title' => array(
-        'input_url' => $path_for_title,
-        'output_url' => url($path_for_title, array('absolute' => TRUE)),
+        'url' => url($path_for_title, array('absolute' => TRUE)),
         'title' => $this->randomName(12),
       ),
       'external URL with title' => array(
-        'input_url' => $external_for_title,
-        'output_url' => $external_for_title,
+        'url' => $external_for_title,
         'title' => $this->randomName(12),
       ),
       'local URL with title' => array(
-        'input_url' => $fully_qualified_for_title,
-        'output_url' => $fully_qualified_for_title,
+        'url' => $fully_qualified_for_title,
         'title' => $this->randomName(12),
       ),
     );
 
+    $html_page = new HtmlPage();
+
     foreach ($urls as $description => $feed_info) {
-      $build['#attached']['drupal_add_feed'][] = array($feed_info['input_url'], $feed_info['title']);
+      $feed_link = new FeedLinkElement($feed_info['title'], $feed_info['url']);
+      $html_page->addLinkElement($feed_link);
     }
 
-    drupal_render($build);
-
-    $this->drupalSetContent(drupal_get_html_head());
+    $this->drupalSetContent(\Drupal::service('html_page_renderer')->render($html_page));
     foreach ($urls as $description => $feed_info) {
-      $this->assertPattern($this->urlToRSSLinkPattern($feed_info['output_url'], $feed_info['title']), format_string('Found correct feed header for %description', array('%description' => $description)));
+      $this->assertPattern($this->urlToRSSLinkPattern($feed_info['url'], $feed_info['title']), format_string('Found correct feed header for %description', array('%description' => $description)));
     }
   }
 
@@ -88,7 +85,7 @@ class AddFeedTest extends WebTestBase {
   function urlToRSSLinkPattern($url, $title = '') {
     // Escape any regular expression characters in the URL ('?' is the worst).
     $url = preg_replace('/([+?.*])/', '[$0]', $url);
-    $generated_pattern = '%<link +rel="alternate" +type="application/rss.xml" +title="' . $title . '" +href="' . $url . '" */>%';
+    $generated_pattern = '%<link +title="' . $title . '" +type="application/rss.xml" +href="' . $url . '" +rel="alternate" */>%';
     return $generated_pattern;
   }
 
