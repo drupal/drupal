@@ -16,4 +16,5 @@ process:
 destination:
   plugin: entity:custom_block
 migration_dependencies:
-  - d6_filter_format
+  required:
+    - d6_filter_format

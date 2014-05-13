@@ -20,34 +20,28 @@ class MigrationStorage extends ConfigEntityStorage implements MigrateBuildDepend
    */
   public function buildDependencyMigration(array $migrations, array $dynamic_ids) {
     // Migration dependencies defined in the migration storage can be
-    // soft dependencies: if a soft dependency does not run, the current
-    // migration is still OK to go. This is indicated by adding ": false"
-    // (without quotes) after the name of the dependency. Hard dependencies
-    // (default) are called requirements. Both hard and soft dependencies (if
-    // run at all) must run before the current one.
+    // optional or required. If an optional dependency does not run, the current
+    // migration is still OK to go. Both optional and required dependencies
+    // (if run at all) must run before the current migration.
     $dependency_graph = array();
     $requirement_graph = array();
     $different = FALSE;
     foreach ($migrations as $migration) {
-      /** @var \Drupal\migrate\Entity\MigrationInterface $migration */
+      /** @var \Drupal\migrate\Entity\Migration $migration */
       $id = $migration->id();
       $requirements[$id] = array();
       $dependency_graph[$id]['edges'] = array();
-      if (isset($migration->migration_dependencies) && is_array($migration->migration_dependencies)) {
-        foreach ($migration->migration_dependencies as $dependency) {
-          if (is_string($dependency) && !isset($dynamic_ids[$dependency])) {
+      if (isset($migration->migration_dependencies['required'])) {
+        foreach ($migration->migration_dependencies['required'] as $dependency) {
+          if (!isset($dynamic_ids[$dependency])) {
             $this->addDependency($requirement_graph, $id, $dependency, $dynamic_ids);
           }
-          if (is_array($dependency)) {
-            list($dependency_string, $required) = each($dependency);
-            $dependency = $dependency_string;
-            if ($required) {
-              $this->addDependency($requirement_graph, $id, $dependency, $dynamic_ids);
-            }
-            else {
-              $different = TRUE;
-            }
-          }
+          $this->addDependency($dependency_graph, $id, $dependency, $dynamic_ids);
+        }
+      }
+      if (isset($migration->migration_dependencies['optional'])) {
+        foreach ($migration->migration_dependencies['optional'] as $dependency) {
+          $different = TRUE;
           $this->addDependency($dependency_graph, $id, $dependency, $dynamic_ids);
         }
       }

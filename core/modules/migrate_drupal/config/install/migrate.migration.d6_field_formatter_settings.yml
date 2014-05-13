@@ -294,5 +294,6 @@ process:
 destination:
   plugin: component_entity_display
 migration_dependencies:
-  - d6_field_instance
-  - d6_view_modes
+  required:
+    - d6_field_instance
+    - d6_view_modes

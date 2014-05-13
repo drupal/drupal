@@ -14,6 +14,7 @@ process:
 destination:
   plugin: entity:node
 migration_dependencies:
-  - d6_vocabulary_entity_display
-  - d6_vocabulary_entity_form_display
-  - d6_node
+  required:
+    - d6_vocabulary_entity_display
+    - d6_vocabulary_entity_form_display
+    - d6_node

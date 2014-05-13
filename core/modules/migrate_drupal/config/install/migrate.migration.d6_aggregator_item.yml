@@ -18,4 +18,5 @@ process:
 destination:
   plugin: entity:aggregator_item
 migration_dependencies:
-  - d6_aggregator_feed
+  required:
+    - d6_aggregator_feed

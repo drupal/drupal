@@ -16,4 +16,7 @@ destination:
   plugin: entity:file
   source_path_property: picture
 migration_dependencies:
-  - d6_file: false
+  # Every migration that saves into {file_managed} must have the d6_file
+  # migration as an optional dependency to ensure it runs first.
+  optional:
+    - d6_file

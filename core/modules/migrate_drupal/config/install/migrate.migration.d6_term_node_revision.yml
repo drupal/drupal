@@ -14,5 +14,6 @@ process:
 destination:
   plugin: entity_revision:node
 migration_dependencies:
-  - d6_term_node
-  - d6_node_revision
+  required:
+    - d6_term_node
+    - d6_node_revision

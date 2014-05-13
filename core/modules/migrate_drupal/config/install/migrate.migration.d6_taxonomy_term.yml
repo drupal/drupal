@@ -22,4 +22,5 @@ process:
 destination:
   plugin: entity:taxonomy_term
 migration_dependencies:
-  - d6_taxonomy_vocabulary
+  required:
+    - d6_taxonomy_vocabulary

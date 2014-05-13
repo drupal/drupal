@@ -24,4 +24,5 @@ process:
 destination:
   plugin: component_entity_display
 migration_dependencies:
-  - d6_user_picture_field_instance
+  required:
+    - d6_user_picture_field_instance

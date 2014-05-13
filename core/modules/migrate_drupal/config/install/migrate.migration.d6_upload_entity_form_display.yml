@@ -23,4 +23,5 @@ process:
 destination:
   plugin: component_entity_form_display
 migration_dependencies:
-  - d6_upload_field_instance
+  required:
+    - d6_upload_field_instance

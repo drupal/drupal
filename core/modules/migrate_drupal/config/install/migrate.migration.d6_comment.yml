@@ -44,8 +44,9 @@ process:
 destination:
   plugin: entity:comment
 migration_dependencies:
-  - d6_node
-  - d6_user
-  - d6_comment_entity_display
-  - d6_comment_entity_form_display
-  - d6_filter_format
+  required:
+    - d6_node
+    - d6_user
+    - d6_comment_entity_display
+    - d6_comment_entity_form_display
+    - d6_filter_format

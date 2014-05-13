@@ -24,4 +24,5 @@ process:
 destination:
   plugin: entity:field_instance_config
 migration_dependencies:
-  - d6_user_picture_field
+  required:
+    - d6_user_picture_field

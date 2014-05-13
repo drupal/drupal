@@ -29,8 +29,10 @@ process:
 destination:
   plugin: entity:node
 migration_dependencies:
-  - d6_node_type
-  - d6_filter_format
-  - d6_field_instance_widget_settings: false
-  - d6_field_formatter_settings: false
-  - d6_node_settings: false
+  required:
+    - d6_node_type
+    - d6_filter_format
+  optional:
+    - d6_field_instance_widget_settings
+    - d6_field_formatter_settings
+    - d6_node_settings

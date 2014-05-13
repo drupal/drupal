@@ -77,7 +77,8 @@ process:
 destination:
   plugin: entity:field_config
 migration_dependencies:
-  # It is not possible to make this a requirement as d6_field_settings has no
-  # source id. However it also has no requirements so it will always run so a
-  # dependency is enough.
-  - d6_field_settings: false
+  optional:
+    # It is not possible to make this required as d6_field_settings has no
+    # source id. However it also has no required dependencies so it will always
+    # run so an optional dependency is enough.
+    - d6_field_settings

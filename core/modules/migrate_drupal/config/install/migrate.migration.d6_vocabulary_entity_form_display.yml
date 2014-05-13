@@ -20,4 +20,5 @@ process:
 destination:
   plugin: component_entity_form_display
 migration_dependencies:
-  - d6_vocabulary_field_instance
+  required:
+    - d6_vocabulary_field_instance

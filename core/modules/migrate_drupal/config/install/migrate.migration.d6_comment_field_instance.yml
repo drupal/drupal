@@ -24,5 +24,6 @@ process:
 destination:
   plugin: entity:field_instance_config
 migration_dependencies:
-  - d6_comment_field
-  - d6_node_type
+  required:
+    - d6_comment_field
+    - d6_node_type

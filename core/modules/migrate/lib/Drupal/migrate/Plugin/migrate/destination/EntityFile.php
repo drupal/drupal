@@ -14,6 +14,9 @@ use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Row;
 
 /**
+ * Every migration that uses this destination must have an optional
+ * dependency on the d6_file migration to ensure it runs first.
+ *
  * @MigrateDestination(
  *   id = "entity:file"
  * )

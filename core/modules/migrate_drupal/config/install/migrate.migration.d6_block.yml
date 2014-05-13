@@ -58,5 +58,7 @@ process:
 destination:
   plugin: entity:block
 migration_dependencies:
-  - d6_custom_block
-  - d6_menu: false
+  required:
+    - d6_custom_block
+  optional:
+    - d6_menu
