@@ -203,6 +203,8 @@ function hook_field_formatter_info_alter(array &$info) {
  * @return int
  *   The maximum weight of the entity's components, or NULL if no components
  *   were found.
+ *
+ * @ingroup field_info
  */
 function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mode) {
   $weights = array();
