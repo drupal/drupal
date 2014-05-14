@@ -6,3 +6,7 @@ version: VERSION
 core: 8.x
 required: true
 configure: user.admin_index
+# @todo Remove this field dependency
+#   @see https://drupal.org/node/2116363
+dependencies:
+  - field

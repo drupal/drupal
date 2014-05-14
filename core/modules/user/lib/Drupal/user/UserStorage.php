@@ -99,7 +99,9 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
    * {@inheritdoc}
    */
   public function save(EntityInterface $entity) {
-    if (!$entity->id()) {
+    // The anonymous user account is saved with the fixed user ID of 0.
+    // Therefore we need to check for NULL explicitly.
+    if ($entity->id() === NULL) {
       $entity->uid->value = $this->database->nextId($this->database->query('SELECT MAX(uid) FROM {users}')->fetchField());
       $entity->enforceIsNew();
     }

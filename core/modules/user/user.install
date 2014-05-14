@@ -220,28 +220,27 @@ function user_schema() {
  * Implements hook_install().
  */
 function user_install() {
+  $storage = \Drupal::entityManager()->getStorage('user');
+  // @todo Rely on the default value for langcode in
+  //   https://drupal.org/node/1966436
+  $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
   // Insert a row for the anonymous user.
-  db_insert('users')
-    ->fields(array(
+  $storage
+    ->create(array(
       'uid' => 0,
-      'uuid' => \Drupal::service('uuid')->generate(),
-      'name' => '',
-      'mail' => '',
-      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
+      'status' => 0,
+      'langcode' => $langcode,
     ))
-    ->execute();
+    ->save();
 
   // We need some placeholders here as name and mail are uniques.
   // This will be changed by the settings form in the installer.
-  db_insert('users')
-    ->fields(array(
+  $storage
+    ->create(array(
       'uid' => 1,
-      'uuid' => \Drupal::service('uuid')->generate(),
       'name' => 'placeholder-for-uid-1',
       'mail' => 'placeholder-for-uid-1',
-      'created' => REQUEST_TIME,
-      'status' => 1,
-      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
+      'langcode' => $langcode,
     ))
-    ->execute();
+    ->save();
 }

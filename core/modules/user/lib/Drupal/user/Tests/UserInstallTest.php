@@ -19,7 +19,7 @@ class UserInstallTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('user');
+  public static $modules = array('field', 'user');
 
   /**
    * {@inheritdoc}
@@ -51,11 +51,15 @@ class UserInstallTest extends DrupalUnitTestBase {
     $this->assertFalse(empty($anon->uuid), 'Anon user has a UUID');
     $this->assertFalse(empty($admin->uuid), 'Admin user has a UUID');
 
-    $this->assertEqual($anon->langcode, \Drupal::languageManager()->getDefaultLanguage()->id, 'Anon user language is the default.');
-    $this->assertEqual($admin->langcode, \Drupal::languageManager()->getDefaultLanguage()->id, 'Admin user language is the default.');
+    // Test that the anonymous and administrators languages are equal to the
+    // site's default language.
+    $this->assertEqual($anon->langcode, \Drupal::languageManager()->getDefaultLanguage()->id);
+    $this->assertEqual($admin->langcode, \Drupal::languageManager()->getDefaultLanguage()->id);
 
-    $this->assertEqual($admin->status, 1, 'Admin user is active.');
-    $this->assertEqual($anon->status, 0, 'Anon user is blocked.');
+    // Test that the administrator is active.
+    $this->assertEqual($admin->status, 1);
+    // Test that the anonymous user is blocked.
+    $this->assertEqual($anon->status, 0);
   }
 
 }
