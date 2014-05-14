@@ -27,10 +27,8 @@ class MapItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['value'] = DataDefinition::create('string')
-      ->setLabel(t('Serialized values'));
-
-    return $properties;
+    // The properties are dynamic and can not be defined statically.
+    return array();
   }
 
   /**
@@ -46,6 +44,15 @@ class MapItem extends FieldItemBase {
         ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toArray() {
+    // The default implementation of toArray() only returns known properties.
+    // For a map, return everything as the properties are not pre-defined.
+    return $this->getValue();
   }
 
   /**
