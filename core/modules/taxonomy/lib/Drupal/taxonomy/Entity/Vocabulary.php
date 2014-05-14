@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\field\Field;
 use Drupal\taxonomy\VocabularyInterface;
@@ -44,7 +44,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *   }
  * )
  */
-class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
+class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
 
   /**
    * The taxonomy vocabulary ID.
@@ -99,10 +99,7 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    if (!$update) {
-      entity_invoke_bundle_hook('create', 'taxonomy_term', $this->id());
-    }
-    elseif ($this->getOriginalId() != $this->id() && !$this->isSyncing()) {
+    if ($update && $this->getOriginalId() != $this->id() && !$this->isSyncing()) {
       // Reflect machine name changes in the definitions of existing 'taxonomy'
       // fields.
       $field_ids = array();
@@ -131,8 +128,6 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
           $field->save();
         }
       }
-      // Update bundles.
-      entity_invoke_bundle_hook('rename', 'taxonomy_term', $this->getOriginalId(), $this->id());
     }
     $storage->resetCache($update ? array($this->getOriginalId()) : array());
   }
@@ -187,8 +182,6 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
         }
       }
     }
-    // Reset caches.
-    $storage->resetCache(array_keys($vocabularies));
   }
 
 }

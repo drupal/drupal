@@ -8,7 +8,7 @@
 namespace Drupal\node\Entity;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\node\NodeTypeInterface;
 
@@ -41,7 +41,7 @@ use Drupal\node\NodeTypeInterface;
  *   }
  * )
  */
-class NodeType extends ConfigEntityBase implements NodeTypeInterface {
+class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
 
   /**
    * The machine name of this node type.
@@ -156,8 +156,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
     parent::postSave($storage, $update);
 
     if (!$update) {
-      entity_invoke_bundle_hook('create', 'node', $this->id());
-
       // Create a body if the create_body property is true and we're not in
       // the syncing process.
       if ($this->get('create_body') && !$this->isSyncing()) {
@@ -176,7 +174,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
             '%type' => $this->id(),
           )));
       }
-      entity_invoke_bundle_hook('rename', 'node', $this->getOriginalId(), $this->id());
     }
   }
 
@@ -188,9 +185,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
 
     // Clear the node type cache to reflect the removal.
     $storage->resetCache(array_keys($entities));
-    foreach ($entities as $entity) {
-      entity_invoke_bundle_hook('delete', 'node', $entity->id());
-    }
   }
 
   /**

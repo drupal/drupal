@@ -8,6 +8,7 @@
 namespace Drupal\contact\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\contact\CategoryInterface;
 
@@ -39,7 +40,7 @@ use Drupal\contact\CategoryInterface;
  *   }
  * )
  */
-class Category extends ConfigEntityBase implements CategoryInterface {
+class Category extends ConfigEntityBundleBase implements CategoryInterface {
 
   /**
    * The category ID.
@@ -75,30 +76,5 @@ class Category extends ConfigEntityBase implements CategoryInterface {
    * @var int
    */
   public $weight = 0;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
-    parent::postSave($storage, $update);
-
-    if (!$update) {
-      entity_invoke_bundle_hook('create', 'contact_message', $this->id());
-    }
-    elseif ($this->original->id() != $this->id()) {
-      entity_invoke_bundle_hook('rename', 'contact_message', $this->original->id(), $this->id());
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
-    parent::postDelete($storage, $entities);
-
-    foreach ($entities as $entity) {
-      entity_invoke_bundle_hook('delete', 'contact_message', $entity->id());
-    }
-  }
 
 }
