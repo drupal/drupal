@@ -78,10 +78,11 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     // Filter the current user's formats to those that support inline editing.
     $formats = array();
     foreach ($user_format_ids as $format_id) {
-      $editor = editor_load($format_id);
-      $editor_id = $editor->getEditor();
-      if ($editor && isset($definitions[$editor_id]) && isset($definitions[$editor_id]['supports_inline_editing']) && $definitions[$editor_id]['supports_inline_editing'] === TRUE) {
-        $formats[] = $format_id;
+      if ($editor = editor_load($format_id)) {
+        $editor_id = $editor->getEditor();
+        if (isset($definitions[$editor_id]['supports_inline_editing']) && $definitions[$editor_id]['supports_inline_editing'] === TRUE) {
+          $formats[] = $format_id;
+        }
       }
     }
 

@@ -49,11 +49,6 @@
  *
  * @see example.sites.php
  * @see conf_path()
- *
- * In addition to customizing application settings through variables in
- * settings.php, you can create a services.yml file in the same directory to
- * register custom, site-specific service definitions and/or swap out default
- * implementations with custom ones.
  */
 
 /**

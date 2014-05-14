@@ -104,6 +104,14 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
       'editor' => 'unicorn',
     ));
     $editor->save();
+
+    // Also create a text format without an associated text editor.
+    entity_create('filter_format', array(
+      'format' => 'no_editor',
+      'name' => 'No Text Editor',
+      'weight' => 2,
+      'filters' => array(),
+    ))->save();
   }
 
   /**
@@ -177,6 +185,17 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
       ),
     );
     $this->assertEqual($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
+  }
+
+  /**
+   * Tests in-place editor attachments when the Editor module is present.
+   */
+  public function testAttachments() {
+    $this->editorSelector = $this->container->get('quickedit.editor.selector');
+
+    $editors = array('editor');
+    $attachments = $this->editorSelector->getEditorAttachments($editors);
+    $this->assertIdentical($attachments, array('library' => array('editor/quickedit.inPlaceEditor.formattedText')), "Expected attachments for Editor module's in-place editor found.");
   }
 
   /**
