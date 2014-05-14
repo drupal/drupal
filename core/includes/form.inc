@@ -334,27 +334,27 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
  * Redirects the user to a URL after a form has been processed.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->redirectForm().
+ *   Use \Drupal::service('form_submitter')->redirectForm().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::redirectForm().
+ * @see \Drupal\Core\Form\FormSubmitterInterface::redirectForm().
  */
 function drupal_redirect_form($form_state) {
-  return \Drupal::formBuilder()->redirectForm($form_state);
+  return \Drupal::service('form_submitter')->redirectForm($form_state);
 }
 
 /**
  * Executes custom validation and submission handlers for a given form.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use either \Drupal::formBuilder()->executeSubmitHandlers() or
+ *   Use either \Drupal::service('form_submitter')->executeSubmitHandlers() or
  *   \Drupal::service('form_validator')->executeValidateHandlers().
  *
- * @see \Drupal\Core\Form\FormBuilderInterface::executeSubmitHandlers()
+ * @see \Drupal\Core\Form\FormSubmitterInterface::executeSubmitHandlers()
  * @see \Drupal\Core\Form\FormValidatorInterface::executeValidateHandlers()
  */
 function form_execute_handlers($type, &$form, &$form_state) {
   if ($type == 'submit') {
-    \Drupal::formBuilder()->executeSubmitHandlers($form, $form_state);
+    \Drupal::service('form_submitter')->executeSubmitHandlers($form, $form_state);
   }
   elseif ($type == 'validate') {
     \Drupal::service('form_validator')->executeValidateHandlers($form, $form_state);

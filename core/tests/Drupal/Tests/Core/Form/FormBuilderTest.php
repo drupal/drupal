@@ -7,12 +7,9 @@
 
 namespace Drupal\Tests\Core\Form {
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Tests the form builder.
@@ -33,17 +30,6 @@ class FormBuilderTest extends FormTestBase {
       'description' => 'Tests the form builder.',
       'group' => 'Form API',
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-
-    $container = new ContainerBuilder();
-    $container->set('url_generator', $this->urlGenerator);
-    \Drupal::setContainer($container);
   }
 
   /**
@@ -219,140 +205,6 @@ class FormBuilderTest extends FormTestBase {
     }
     $this->assertSame($response, $form_state['response']);
   }
-
-  /**
-   * Tests the redirectForm() method when a redirect is expected.
-   *
-   * @param array $form_state
-   *   An array of form state data to use for the redirect.
-   * @param string $result
-   *   The URL the redirect is targeting.
-   * @param int $status
-   *   (optional) The HTTP status code for the redirect.
-   *
-   * @dataProvider providerTestRedirectWithResult
-   */
-  public function testRedirectWithResult($form_state, $result, $status = 302) {
-    $this->urlGenerator->expects($this->once())
-      ->method('generateFromPath')
-      ->will($this->returnValueMap(array(
-        array(NULL, array('query' => array(), 'absolute' => TRUE), '<front>'),
-        array('foo', array('absolute' => TRUE), 'foo'),
-        array('bar', array('query' => array('foo' => 'baz'), 'absolute' => TRUE), 'bar'),
-        array('baz', array('absolute' => TRUE), 'baz'),
-      ))
-    );
-
-    $form_state += $this->formBuilder->getFormStateDefaults();
-    $redirect = $this->formBuilder->redirectForm($form_state);
-    $this->assertSame($result, $redirect->getTargetUrl());
-    $this->assertSame($status, $redirect->getStatusCode());
-  }
-
-  /**
-   * Tests the redirectForm() with redirect_route when a redirect is expected.
-   *
-   * @param array $form_state
-   *   An array of form state data to use for the redirect.
-   * @param string $result
-   *   The URL the redirect is targeting.
-   * @param int $status
-   *   (optional) The HTTP status code for the redirect.
-   *
-   * @dataProvider providerTestRedirectWithRouteWithResult
-   */
-  public function testRedirectWithRouteWithResult($form_state, $result, $status = 302) {
-    $this->urlGenerator->expects($this->once())
-      ->method('generateFromRoute')
-      ->will($this->returnValueMap(array(
-          array('test_route_a', array(), array('absolute' => TRUE), 'test-route'),
-          array('test_route_b', array('key' => 'value'), array('absolute' => TRUE), 'test-route/value'),
-        ))
-      );
-
-    $form_state += $this->formBuilder->getFormStateDefaults();
-    $redirect = $this->formBuilder->redirectForm($form_state);
-    $this->assertSame($result, $redirect->getTargetUrl());
-    $this->assertSame($status, $redirect->getStatusCode());
-  }
-
-  /**
-   * Tests the redirectForm() method with a response object.
-   */
-  public function testRedirectWithResponseObject() {
-    $redirect = new RedirectResponse('/example');
-    $form_state['redirect'] = $redirect;
-
-    $form_state += $this->formBuilder->getFormStateDefaults();
-    $result_redirect = $this->formBuilder->redirectForm($form_state);
-
-    $this->assertSame($redirect, $result_redirect);
-  }
-
-  /**
-   * Tests the redirectForm() method when no redirect is expected.
-   *
-   * @param array $form_state
-   *   An array of form state data to use for the redirect.
-   *
-   * @dataProvider providerTestRedirectWithoutResult
-   */
-  public function testRedirectWithoutResult($form_state) {
-    $this->urlGenerator->expects($this->never())
-      ->method('generateFromPath');
-    $this->urlGenerator->expects($this->never())
-      ->method('generateFromRoute');
-    $form_state += $this->formBuilder->getFormStateDefaults();
-    $redirect = $this->formBuilder->redirectForm($form_state);
-    $this->assertNull($redirect);
-  }
-
-  /**
-   * Provides test data for testing the redirectForm() method with a redirect.
-   *
-   * @return array
-   *   Returns some test data.
-   */
-  public function providerTestRedirectWithResult() {
-    return array(
-      array(array(), '<front>'),
-      array(array('redirect' => 'foo'), 'foo'),
-      array(array('redirect' => array('foo')), 'foo'),
-      array(array('redirect' => array('foo')), 'foo'),
-      array(array('redirect' => array('bar', array('query' => array('foo' => 'baz')))), 'bar'),
-      array(array('redirect' => array('baz', array(), 301)), 'baz', 301),
-    );
-  }
-
-  /**
-   * Provides test data for testing the redirectForm() method with a route name.
-   *
-   * @return array
-   *   Returns some test data.
-   */
-  public function providerTestRedirectWithRouteWithResult() {
-    return array(
-      array(array('redirect_route' => array('route_name' => 'test_route_a')), 'test-route'),
-      array(array('redirect_route' => array('route_name' => 'test_route_b', 'route_parameters' => array('key' => 'value'))), 'test-route/value'),
-      array(array('redirect_route' => new Url('test_route_b', array('key' => 'value'))), 'test-route/value'),
-    );
-  }
-
-  /**
-   * Provides test data for testing the redirectForm() method with no redirect.
-   *
-   * @return array
-   *   Returns some test data.
-   */
-  public function providerTestRedirectWithoutResult() {
-    return array(
-      array(array('programmed' => TRUE)),
-      array(array('rebuild' => TRUE)),
-      array(array('no_redirect' => TRUE)),
-      array(array('redirect' => FALSE)),
-    );
-  }
-
   /**
    * Tests the getForm() method with a string based form ID.
    */
@@ -554,9 +406,6 @@ class FormBuilderTest extends FormTestBase {
     $form_id = 'test_form_id';
     $expected_form = $form_id();
     $expected_form['test']['#required'] = TRUE;
-    $this->formValidator->expects($this->exactly(4))
-      ->method('getAnyErrors')
-      ->will($this->returnValue(TRUE));
 
     // Mock a form object that will be built two times.
     $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');

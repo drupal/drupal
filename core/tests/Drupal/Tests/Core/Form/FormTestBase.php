@@ -35,6 +35,11 @@ abstract class FormTestBase extends UnitTestCase {
   protected $formValidator;
 
   /**
+   * @var \Drupal\Core\Form\FormSubmitterInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $formSubmitter;
+
+  /**
    * The mocked URL generator.
    *
    * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Routing\UrlGeneratorInterface
@@ -84,6 +89,13 @@ abstract class FormTestBase extends UnitTestCase {
   protected $request;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * The event dispatcher.
    *
    * @var \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -117,8 +129,6 @@ abstract class FormTestBase extends UnitTestCase {
         array('form_state', $this->formStateCache),
       )));
 
-    $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
-    $this->formValidator = $this->getMock('Drupal\Core\Form\FormValidatorInterface');
     $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
@@ -126,10 +136,22 @@ abstract class FormTestBase extends UnitTestCase {
     $this->httpKernel = $this->getMockBuilder('Drupal\Core\HttpKernel')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->request = new Request();
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->request = new Request();
+    $this->eventDispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->requestStack = new RequestStack();
+    $this->requestStack->push($this->request);
+    $this->formValidator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
+      ->setConstructorArgs(array($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken))
+      ->setMethods(array('drupalSetMessage'))
+      ->getMock();
+    $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
+      ->setConstructorArgs(array($this->requestStack, $this->urlGenerator))
+      ->setMethods(array('batchGet', 'drupalInstallationAttempted'))
+      ->getMock();
 
-    $this->setupFormBuilder();
+    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->requestStack, $this->csrfToken, $this->httpKernel);
+    $this->formBuilder->setCurrentUser($this->account);
   }
 
   /**
@@ -137,16 +159,6 @@ abstract class FormTestBase extends UnitTestCase {
    */
   protected function tearDown() {
     $this->formBuilder->drupalStaticReset();
-  }
-
-  /**
-   * Sets up a new form builder object to test.
-   */
-  protected function setupFormBuilder() {
-    $request_stack = new RequestStack();
-    $request_stack->push($this->request);
-    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->urlGenerator, $request_stack, $this->csrfToken, $this->httpKernel);
-    $this->formBuilder->setCurrentUser($this->account);
   }
 
   /**
@@ -279,13 +291,6 @@ class TestFormBuilder extends FormBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function drupalInstallationAttempted() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function drupalHtmlClass($class) {
     return $class;
   }
@@ -308,14 +313,6 @@ class TestFormBuilder extends FormBuilder {
    */
   public function drupalStaticReset($name = NULL) {
     static::$seenIds = array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function &batchGet() {
-    $batch = array();
-    return $batch;
   }
 
 }

@@ -15,11 +15,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\HttpKernel;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -29,7 +26,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Provides form building and processing.
  */
-class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
+class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface {
 
   /**
    * The module handler.
@@ -51,13 +48,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
-
-  /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
 
   /**
    * The request stack.
@@ -93,18 +83,23 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
   protected $formValidator;
 
   /**
+   * @var \Drupal\Core\Form\FormSubmitterInterface
+   */
+  protected $formSubmitter;
+
+  /**
    * Constructs a new FormBuilder.
    *
    * @param \Drupal\Core\Form\FormValidatorInterface $form_validator
    *   The form validator.
+   * @param \Drupal\Core\Form\FormSubmitterInterface $form_submitter
+   *   The form submission processor.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The keyvalue expirable factory.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The URL generator.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
@@ -112,12 +107,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
    * @param \Drupal\Core\HttpKernel $http_kernel
    *   The HTTP kernel.
    */
-  public function __construct(FormValidatorInterface $form_validator, ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, UrlGeneratorInterface $url_generator, RequestStack $request_stack, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
     $this->formValidator = $form_validator;
+    $this->formSubmitter = $form_submitter;
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->eventDispatcher = $event_dispatcher;
-    $this->urlGenerator = $url_generator;
     $this->requestStack = $request_stack;
     $this->csrfToken = $csrf_token;
     $this->httpKernel = $http_kernel;
@@ -555,53 +550,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
         $this->drupalStaticReset('drupal_html_id');
       }
 
-      // @todo Move into a dedicated class in https://drupal.org/node/2257835.
-      if ($form_state['submitted'] && !$this->getAnyErrors() && !$form_state['rebuild']) {
-        // Execute form submit handlers.
-        $this->executeSubmitHandlers($form, $form_state);
-
-        // If batches were set in the submit handlers, we process them now,
-        // possibly ending execution. We make sure we do not react to the batch
-        // that is already being processed (if a batch operation performs a
-        // self::submitForm).
-        if ($batch = &$this->batchGet() && !isset($batch['current_set'])) {
-          // Store $form_state information in the batch definition.
-          // We need the full $form_state when either:
-          // - Some submit handlers were saved to be called during batch
-          //   processing. See self::executeSubmitHandlers().
-          // - The form is multistep.
-          // In other cases, we only need the information expected by
-          // self::redirectForm().
-          if ($batch['has_form_submits'] || !empty($form_state['rebuild'])) {
-            $batch['form_state'] = $form_state;
-          }
-          else {
-            $batch['form_state'] = array_intersect_key($form_state, array_flip(array('programmed', 'rebuild', 'storage', 'no_redirect', 'redirect', 'redirect_route')));
-          }
-
-          $batch['progressive'] = !$form_state['programmed'];
-          $response = batch_process();
-          if ($batch['progressive']) {
-            return $response;
-          }
-
-          // Execution continues only for programmatic forms.
-          // For 'regular' forms, we get redirected to the batch processing
-          // page. Form redirection will be handled in _batch_finished(),
-          // after the batch is processed.
-        }
-
-        // Set a flag to indicate the the form has been processed and executed.
-        $form_state['executed'] = TRUE;
-
-        // If no response has been set, process the form redirect.
-        if (!isset($form_state['response']) && $redirect = $this->redirectForm($form_state)) {
-          $form_state['response'] = $redirect;
-        }
-
-        // If there is a response was set, return it instead of continuing.
-        if (isset($form_state['response']) && $form_state['response'] instanceof Response) {
-          return $form_state['response'];
+      if (!$form_state['rebuild'] && !$this->formValidator->getAnyErrors()) {
+        if ($submit_response = $this->formSubmitter->doSubmitForm($form, $form_state)) {
+          return $submit_response;
         }
       }
 
@@ -793,78 +744,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
    * {@inheritdoc}
    */
   public function redirectForm($form_state) {
-    // Skip redirection for form submissions invoked via self::submitForm().
-    if (!empty($form_state['programmed'])) {
-      return;
-    }
-    // Skip redirection if rebuild is activated.
-    if (!empty($form_state['rebuild'])) {
-      return;
-    }
-    // Skip redirection if it was explicitly disallowed.
-    if (!empty($form_state['no_redirect'])) {
-      return;
-    }
-
-    // Allow using redirect responses directly if needed.
-    if (isset($form_state['redirect']) && $form_state['redirect'] instanceof RedirectResponse) {
-      return $form_state['redirect'];
-    }
-
-    // Check for a route-based redirection.
-    if (isset($form_state['redirect_route'])) {
-      // @todo Remove once all redirects are converted to Url.
-      if (!($form_state['redirect_route'] instanceof Url)) {
-        $form_state['redirect_route'] += array(
-          'route_parameters' => array(),
-          'options' => array(),
-        );
-        $form_state['redirect_route'] = new Url($form_state['redirect_route']['route_name'], $form_state['redirect_route']['route_parameters'], $form_state['redirect_route']['options']);
-      }
-
-      $form_state['redirect_route']->setAbsolute();
-      return new RedirectResponse($form_state['redirect_route']->toString());
-    }
-
-    // Only invoke a redirection if redirect value was not set to FALSE.
-    if (!isset($form_state['redirect']) || $form_state['redirect'] !== FALSE) {
-      if (isset($form_state['redirect'])) {
-        if (is_array($form_state['redirect'])) {
-          if (isset($form_state['redirect'][1])) {
-            $options = $form_state['redirect'][1];
-          }
-          else {
-            $options = array();
-          }
-          // Redirections should always use absolute URLs.
-          $options['absolute'] = TRUE;
-          if (isset($form_state['redirect'][2])) {
-            $status_code = $form_state['redirect'][2];
-          }
-          else {
-            $status_code = 302;
-          }
-          return new RedirectResponse($this->urlGenerator->generateFromPath($form_state['redirect'][0], $options), $status_code);
-        }
-        else {
-          // This function can be called from the installer, which guarantees
-          // that $redirect will always be a string, so catch that case here
-          // and use the appropriate redirect function.
-          if ($this->drupalInstallationAttempted()) {
-            install_goto($form_state['redirect']);
-          }
-          else {
-            return new RedirectResponse($this->urlGenerator->generateFromPath($form_state['redirect'], array('absolute' => TRUE)));
-          }
-        }
-      }
-      $request = $this->requestStack->getCurrentRequest();
-      $url = $this->urlGenerator->generateFromPath($request->attributes->get('_system_path'), array(
-        'query' => $request->query->all(),
-        'absolute' => TRUE,
-      ));
-      return new RedirectResponse($url);
-    }
+    return $this->formSubmitter->redirectForm($form_state);
   }
 
   /**
@@ -878,33 +758,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
    * {@inheritdoc}
    */
   public function executeSubmitHandlers(&$form, &$form_state) {
-    // If there was a button pressed, use its handlers.
-    if (isset($form_state['submit_handlers'])) {
-      $handlers = $form_state['submit_handlers'];
-    }
-    // Otherwise, check for a form-level handler.
-    elseif (isset($form['#submit'])) {
-      $handlers = $form['#submit'];
-    }
-    else {
-      $handlers = array();
-    }
+    $this->formSubmitter->executeSubmitHandlers($form, $form_state);
+  }
 
-    foreach ($handlers as $function) {
-      // Check if a previous _submit handler has set a batch, but make sure we
-      // do not react to a batch that is already being processed (for instance
-      // if a batch operation performs a self::submitForm()).
-      if (($batch = &$this->batchGet()) && !isset($batch['id'])) {
-        // Some previous submit handler has set a batch. To ensure correct
-        // execution order, store the call in a special 'control' batch set.
-        // See _batch_next_set().
-        $batch['sets'][] = array('form_submit' => $function);
-        $batch['has_form_submits'] = TRUE;
-      }
-      else {
-        call_user_func_array($function, array(&$form, &$form_state));
-      }
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function doSubmitForm(&$form, &$form_state) {
+    throw new \LogicException('Use FormBuilderInterface::processForm() instead.');
   }
 
   /**
@@ -1379,15 +1240,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
   }
 
   /**
-   * Wraps drupal_installation_attempted().
-   *
-   * @return bool
-   */
-  protected function drupalInstallationAttempted() {
-    return drupal_installation_attempted();
-  }
-
-  /**
    * Wraps drupal_html_class().
    *
    * @return string
@@ -1428,13 +1280,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface {
       }
     }
     return $this->currentUser;
-  }
-
-  /**
-   * Wraps batch_get().
-   */
-  protected function &batchGet() {
-    return batch_get();
   }
 
 }
