@@ -58,6 +58,7 @@ class MenuRouterTest extends WebTestBase {
     $this->doTestMenuOptionalPlaceholders();
     $this->doTestMenuOnRoute();
     $this->doTestMenuName();
+    $this->doTestMenuLinkDefaultsAlter();
     $this->doTestMenuItemTitlesCases();
     $this->doTestMenuLinkMaintain();
     $this->doTestMenuLinkOptions();
@@ -176,6 +177,22 @@ class MenuRouterTest extends WebTestBase {
     $menu_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu_name_test'));
     $menu_link = reset($menu_links);
     $this->assertEqual($menu_link->menu_name, 'changed', 'Menu name was successfully changed after rebuild.');
+  }
+
+  /**
+   * Tests menu links added in hook_menu_link_defaults_alter().
+   */
+  protected function doTestMenuLinkDefaultsAlter() {
+    // Check that machine name does not need to be defined since it is already
+    // set as the key of each menu link.
+    $menu_links = entity_load_multiple_by_properties('menu_link', array('route_name' => 'menu_test.custom'));
+    $menu_link = reset($menu_links);
+    $this->assertEqual($menu_link->machine_name, 'menu_test.custom', 'Menu links added at hook_menu_link_defaults_alter() obtain the machine name from the $links key.');
+    // Make sure that rebuilding the menu tree does not produce duplicates of
+    // links added by hook_menu_link_defaults_alter().
+    \Drupal::service('router.builder')->rebuild();
+    $this->drupalGet('menu-test');
+    $this->assertUniqueText('Custom link', 'Menu links added by hook_menu_link_defaults_alter() do not duplicate after a menu rebuild.');
   }
 
   /**

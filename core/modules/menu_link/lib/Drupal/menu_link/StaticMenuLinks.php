@@ -49,8 +49,12 @@ class StaticMenuLinks {
     }
 
     $this->moduleHandler->alter('menu_link_defaults', $all_links);
-    // Change the key to match the DB column for now.
     foreach ($all_links as $machine_name => $menu_link) {
+      // Set the machine_name to the menu links added dynamically.
+      if (!isset($menu_link['machine_name'])) {
+        $all_links[$machine_name]['machine_name'] = $machine_name;
+      }
+      // Change the key to match the DB column for now.
       $all_links[$machine_name]['link_title'] = $all_links[$machine_name]['title'];
       unset($all_links[$machine_name]['title']);
     }
