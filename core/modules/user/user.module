@@ -151,14 +151,6 @@ function user_js_alter(&$javascript) {
 }
 
 /**
- * Implements hook_entity_bundle_info().
- */
-function user_entity_bundle_info() {
-  $bundles['user']['user']['label'] = t('User');
-  return $bundles;
-}
-
-/**
  * Entity URI callback.
  */
 function user_uri($user) {

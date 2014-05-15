@@ -185,19 +185,6 @@ function node_theme() {
 }
 
 /**
- * Implements hook_entity_bundle_info().
- */
-function node_entity_bundle_info() {
-  $bundles = array();
-  // Bundles must provide a human readable name so we can create help and error
-  // messages.
-  foreach (node_type_get_names() as $id => $label) {
-    $bundles['node'][$id]['label'] = $label;
-  }
-  return $bundles;
-}
-
-/**
  * Implements hook_entity_view_display_alter().
  */
 function node_entity_view_display_alter(EntityViewDisplayInterface $display, $context) {
@@ -323,24 +310,9 @@ function node_type_get_types() {
  *   An array of node type labels, keyed by the node type name.
  */
 function node_type_get_names() {
-  $cid = 'node_type:names:' . \Drupal::languageManager()->getCurrentLanguage()->id;
-  if ($cache = \Drupal::cache()->get($cid)) {
-    return $cache->data;
-  }
-  // Not using node_type_get_types() or entity_load_multiple() here, to allow
-  // this function being used in hook_entity_type_build() implementations.
-  // @todo Consider to convert this into a generic config entity helper.
-  $config_names = \Drupal::configFactory()->listAll('node.type.');
-  $names = array();
-  foreach ($config_names as $config_name) {
-    $config = \Drupal::config($config_name);
-    $names[$config->get('type')] = $config->get('name');
-  }
-  \Drupal::cache()->set($cid, $names, Cache::PERMANENT, array(
-    'node_type' => array_keys($names),
-    'node_types' => TRUE,
-  ));
-  return $names;
+  return array_map(function ($bundle_info) {
+    return $bundle_info['label'];
+  }, \Drupal::entityManager()->getBundleInfo('node'));
 }
 
 /**

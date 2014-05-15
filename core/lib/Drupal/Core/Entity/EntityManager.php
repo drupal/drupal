@@ -627,8 +627,17 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
       }
       else {
         $this->bundleInfo = $this->moduleHandler->invokeAll('entity_bundle_info');
-        // If no bundles are provided, use the entity type name and label.
+        // First look for entity types that act as bundles for others, load them
+        // and add them as bundles.
         foreach ($this->getDefinitions() as $type => $entity_type) {
+          if ($entity_type->getBundleOf()) {
+            foreach ($this->getStorage($type)->loadMultiple() as $entity) {
+              $this->bundleInfo[$entity_type->getBundleOf()][$entity->id()]['label'] = $entity->label();
+            }
+          }
+        }
+        foreach ($this->getDefinitions() as $type => $entity_type) {
+          // If no bundles are provided, use the entity type name and label.
           if (!isset($this->bundleInfo[$type])) {
             $this->bundleInfo[$type][$type]['label'] = $entity_type->getLabel();
           }

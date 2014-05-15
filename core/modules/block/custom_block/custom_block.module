@@ -93,18 +93,6 @@ function custom_block_entity_type_alter(array &$entity_types) {
 }
 
 /**
- * Implements hook_entity_bundle_info().
- */
-function custom_block_entity_bundle_info() {
-  $bundles = array();
-  foreach (\Drupal::configFactory()->listAll('custom_block.type.') as $config_name) {
-    $config = \Drupal::config($config_name);
-    $bundles['custom_block'][$config->get('id')]['label'] = $config->get('label');
-  }
-  return $bundles;
-}
-
-/**
  * Adds the default body field to a custom block type.
  *
  * @param string $block_type_id

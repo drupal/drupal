@@ -116,18 +116,6 @@ function taxonomy_permission() {
 }
 
 /**
- * Implements hook_entity_bundle_info().
- */
-function taxonomy_entity_bundle_info() {
-  $bundles = array();
-  foreach (taxonomy_vocabulary_get_names() as $id) {
-    $config = \Drupal::config('taxonomy.vocabulary.' . $id);
-    $bundles['taxonomy_term'][$id]['label'] = $config->get('name');
-  }
-  return $bundles;
-}
-
-/**
  * Entity URI callback.
  */
 function taxonomy_term_uri($term) {

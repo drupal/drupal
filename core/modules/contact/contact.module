@@ -62,18 +62,6 @@ function contact_entity_type_alter(array &$entity_types) {
 }
 
 /**
- * Implements hook_entity_bundle_info().
- */
-function contact_entity_bundle_info() {
-  $bundles = array();
-  foreach (\Drupal::configFactory()->listAll('contact.category.') as $config_name) {
-    $config = \Drupal::config($config_name);
-    $bundles['contact_message'][$config->get('id')]['label'] = $config->get('label');
-  }
-  return $bundles;
-}
-
-/**
  * Implements hook_entity_extra_field_info().
  */
 function contact_entity_extra_field_info() {
