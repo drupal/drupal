@@ -15,6 +15,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -98,14 +99,25 @@ function comment_help($route_name, Request $request) {
  */
 function comment_entity_bundle_info() {
   $bundles = array();
-  foreach (\Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
-    foreach ($fields as $field_name => $field_info) {
-      $sample_bundle = reset($field_info['bundles']);
-      // We cannot use field info API here because it will result in recursion.
-      $config = \Drupal::config('field.instance.' . $entity_type .  '.' . $sample_bundle . '.' . $field_name);
-      $bundles['comment'][$entity_type . '__' . $field_name] = array(
-        'label' => $config->get('label'),
-      );
+  $ids = \Drupal::entityQuery('field_config')
+    ->condition('type', 'comment')
+    ->execute();
+  $config_factory = \Drupal::configFactory();
+  foreach ($ids as $id) {
+    // @todo: We can not rely on the field map here, so we need to manually look
+    //   for a matching field instance to use for the label. Remove this in
+    //   https://drupal.org/node/2228763.
+    list($entity_type_id, $field_name) = explode('.', $id);
+    $instance_ids = $config_factory->listAll('field.instance.' . $entity_type_id . '.');
+    // Look for an instance for this field.
+    foreach ($instance_ids as $instance_id) {
+      $instance_field_name = substr($instance_id, strrpos($instance_id, '.') + 1);
+      if ($instance_field_name == $field_name) {
+        $config = \Drupal::config($instance_id);
+        $bundles['comment'][$entity_type_id . '__' . $field_name] = array(
+          'label' => $config->get('label'),
+        );
+      }
     }
   }
   return $bundles;
@@ -407,7 +419,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
     $links = array();
     $commenting_status = $node->get($field_name)->status;
     if ($commenting_status) {
-      $instance = \Drupal::service('field.info')->getInstance('node', $node->bundle(), $field_name);
+      $field_definition = $node->getFieldDefinition($field_name);
       // Node have commenting open or close.
       if ($view_mode == 'rss') {
         // Add a comments RSS element which is a URL to the comments of this node.
@@ -449,7 +461,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
         }
         // Provide a link to new comment form.
         if ($commenting_status == CommentItemInterface::OPEN) {
-          $comment_form_location = $instance->getSetting('form_location');
+          $comment_form_location = $field_definition->getSetting('form_location');
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
@@ -481,7 +493,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
         // Node in other view modes: add a "post comment" link if the user is
         // allowed to post comments and if this node is allowing new comments.
         if ($commenting_status == CommentItemInterface::OPEN) {
-          $comment_form_location = $instance->getSetting('form_location');
+          $comment_form_location = $field_definition->getSetting('form_location');
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
@@ -1135,16 +1147,15 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
  *
  * @param int $cid
  *   The comment ID.
- * @param array $instance
- *   Field instance as returned from field_info_instance().
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+ *   Field definition of the comments.
  *
  * @return int
  *   The display ordinal for the comment.
  *
  * @see comment_get_display_page()
- * @see field_info_instance().
  */
-function comment_get_display_ordinal($cid, $instance) {
+function comment_get_display_ordinal($cid, FieldDefinitionInterface $field_definition) {
   // Count how many comments (c1) are before $cid (c2) in display order. This is
   // the 0-based display ordinal.
   $query = db_select('comment', 'c1');
@@ -1155,7 +1166,7 @@ function comment_get_display_ordinal($cid, $instance) {
     $query->condition('c1.status', CommentInterface::PUBLISHED);
   }
 
-  if ($instance->getSetting('default_mode') == COMMENT_MODE_FLAT) {
+  if ($field_definition->getSetting('default_mode') == COMMENT_MODE_FLAT) {
     // For flat comments, cid is used for ordering comments due to
     // unpredictable behavior with timestamp, so we make the same assumption
     // here.
@@ -1179,15 +1190,15 @@ function comment_get_display_ordinal($cid, $instance) {
  *
  * @param int $cid
  *   The comment ID.
- * @param array $instance
- *   Field instance as returned from field_info_instance().
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+ *   Field definition of the comments.
  *
  * @return int
  *   The page number.
  */
-function comment_get_display_page($cid, $instance) {
-  $ordinal = comment_get_display_ordinal($cid, $instance);
-  $comments_per_page = $instance->getSetting('per_page');
+function comment_get_display_page($cid, FieldDefinitionInterface $field_definition) {
+  $ordinal = comment_get_display_ordinal($cid, $field_definition);
+  $comments_per_page = $field_definition->getSetting('per_page');
   return floor($ordinal / $comments_per_page);
 }
 

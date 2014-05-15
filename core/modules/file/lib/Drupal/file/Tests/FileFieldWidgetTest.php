@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\file\Tests;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Tests file field widget.
@@ -208,7 +209,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, 'node', $type_name);
-    $instance = field_info_instance('node', $field_name, $type_name);
+    $instance = FieldInstanceConfig::loadByName('node', $type_name, $field_name);
 
     $test_file = $this->getTestFile('text');
 

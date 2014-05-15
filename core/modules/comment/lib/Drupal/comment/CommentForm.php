@@ -16,20 +16,12 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base for controller for comment forms.
  */
 class CommentForm extends ContentEntityForm {
-
-  /**
-   * The field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
 
   /**
    * The current user.
@@ -44,7 +36,6 @@ class CommentForm extends ContentEntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('field.info'),
       $container->get('current_user')
     );
   }
@@ -59,9 +50,8 @@ class CommentForm extends ContentEntityForm {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldInfo $field_info, AccountInterface $current_user) {
+  public function __construct(EntityManagerInterface $entity_manager, AccountInterface $current_user) {
     parent::__construct($entity_manager);
-    $this->fieldInfo = $field_info;
     $this->currentUser = $current_user;
   }
 
@@ -89,13 +79,13 @@ class CommentForm extends ContentEntityForm {
     $comment = $this->entity;
     $entity = $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->load($comment->getCommentedEntityId());
     $field_name = $comment->getFieldName();
-    $instance = $this->fieldInfo->getInstance($entity->getEntityTypeId(), $entity->bundle(), $field_name);
+    $field_definition = $this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
 
     // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = drupal_html_id('comment_form');
     $form['#theme'] = array('comment_form__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $field_name, 'comment_form');
 
-    $anonymous_contact = $instance->getSetting('anonymous');
+    $anonymous_contact = $field_definition->getSetting('anonymous');
     $is_admin = $comment->id() && $this->currentUser->hasPermission('administer comments');
 
     if (!$this->currentUser->isAuthenticated() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
@@ -214,7 +204,7 @@ class CommentForm extends ContentEntityForm {
       '#title' => $this->t('Subject'),
       '#maxlength' => 64,
       '#default_value' => $comment->getSubject(),
-      '#access' => $instance->getSetting('subject'),
+      '#access' => $field_definition->getSetting('subject'),
     );
 
     // Used for conditional validation of author fields.
@@ -241,8 +231,8 @@ class CommentForm extends ContentEntityForm {
     /* @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->entity;
     $entity = $comment->getCommentedEntity();
-    $instance = $this->fieldInfo->getInstance($comment->getCommentedEntityTypeId(), $entity->bundle(), $comment->getFieldName());
-    $preview_mode = $instance->getSetting('preview');
+    $field_definition = $this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
+    $preview_mode = $field_definition->getSetting('preview');
 
     // No delete action on the comment form.
     unset($element['delete']);
@@ -404,8 +394,8 @@ class CommentForm extends ContentEntityForm {
       }
       $query = array();
       // Find the current display page for this comment.
-      $instance = $this->fieldInfo->getInstance($entity->getEntityTypeId(), $entity->bundle(), $field_name);
-      $page = comment_get_display_page($comment->id(), $instance);
+      $field_definition = $this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$field_name];
+      $page = comment_get_display_page($comment->id(), $field_definition);
       if ($page > 0) {
         $query['page'] = $page;
       }

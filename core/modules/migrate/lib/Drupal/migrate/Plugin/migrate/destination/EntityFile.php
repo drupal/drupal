@@ -7,8 +7,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\field\FieldInfo;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Row;
@@ -26,14 +26,14 @@ class EntityFile extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
     $configuration += array(
       'source_base_path' => '',
       'source_path_property' => 'filepath',
       'destination_path_property' => 'uri',
       'move' => FALSE,
     );
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $plugin_manager, $field_info);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $plugin_manager, $entity_manager);
   }
 
   /**

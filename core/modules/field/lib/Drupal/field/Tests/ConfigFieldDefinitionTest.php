@@ -64,12 +64,12 @@ class ConfigFieldDefinitionTest extends FieldUnitTestBase {
    * Makes sure a field storage definition is exposed for a configurable field.
    */
   public function testFieldStorageDefinition() {
-    $storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityType);
-    $this->assertTrue(isset($storage_definitions[$this->instance->getName()]));
-    $this->assertTrue($storage_definitions[$this->instance->getName()] instanceof FieldStorageDefinitionInterface);
+    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->entityType);
+    $this->assertTrue(isset($field_storage_definitions[$this->instance->getName()]));
+    $this->assertTrue($field_storage_definitions[$this->instance->getName()] instanceof FieldStorageDefinitionInterface);
     // Make sure no storage field for the instance on another entity type is
     // exposed.
-    $this->assertFalse(isset($storage_definitions[$this->instance_rev->getName()]));
+    $this->assertFalse(isset($field_storage_definitions[$this->instance_rev->getName()]));
   }
 
 }

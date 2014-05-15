@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -397,8 +399,8 @@ function node_type_load($name) {
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
-  $field = field_info_field('node', 'body');
-  $instance = field_info_instance('node', 'body', $type->id());
+  $field = FieldConfig::loadByName('node', 'body');
+  $instance = FieldInstanceConfig::loadByName('node', $type->id(), 'body');
   if (empty($field)) {
     $field = entity_create('field_config', array(
       'name' => 'body',

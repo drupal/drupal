@@ -10,6 +10,8 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\FieldConfigInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -92,7 +94,7 @@ function entity_reference_field_config_update(FieldConfigInterface $field) {
 
   foreach ($field->bundles() as $entity_type => $bundles) {
     foreach ($bundles as $bundle) {
-      $instance = field_info_instance($entity_type, $field_name, $bundle);
+      $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
       $instance->settings['handler_settings'] = array();
       $instance->save();
     }
@@ -210,8 +212,8 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
   }
 
   // Look for or add the specified field to the requested entity bundle.
-  $field = field_info_field($entity_type, $field_name);
-  $instance = field_info_instance($entity_type, $field_name, $bundle);
+  $field = FieldConfig::loadByName($entity_type, $field_name);
+  $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
 
   if (empty($field)) {
     $field = array(

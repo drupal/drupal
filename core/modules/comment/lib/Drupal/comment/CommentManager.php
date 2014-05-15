@@ -16,20 +16,12 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\field\FieldInfo;
 
 /**
  * Comment manager contains common functions to manage comment fields.
  */
 class CommentManager implements CommentManagerInterface {
   use StringTranslationTrait;
-
-  /**
-   * The field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
 
   /**
    * The entity manager service.
@@ -62,8 +54,6 @@ class CommentManager implements CommentManagerInterface {
   /**
    * Construct the CommentManager object.
    *
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -73,8 +63,7 @@ class CommentManager implements CommentManagerInterface {
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(FieldInfo $field_info, EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator) {
-    $this->fieldInfo = $field_info;
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator) {
     $this->entityManager = $entity_manager;
     $this->userConfig = $config_factory->get('user.settings');
     $this->stringTranslation = $string_translation;
@@ -98,7 +87,7 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function getAllFields() {
-    $map = $this->fieldInfo->getFieldMap();
+    $map = $this->entityManager->getFieldMap();
     // Build a list of comment fields only.
     $comment_fields = array();
     foreach ($map as $entity_type => $data) {
@@ -116,7 +105,7 @@ class CommentManager implements CommentManagerInterface {
    */
   public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN) {
     // Make sure the field doesn't already exist.
-    if (!$this->fieldInfo->getField($entity_type, $field_name)) {
+    if (!$this->entityManager->getStorage('field_config')->load($entity_type . '.' . $field_name)) {
       // Add a default comment field for existing node comments.
       $field = $this->entityManager->getStorage('field_config')->create(array(
         'entity_type' => $entity_type,
@@ -131,7 +120,7 @@ class CommentManager implements CommentManagerInterface {
       $field->save();
     }
     // Make sure the instance doesn't already exist.
-    if (!$this->fieldInfo->getInstance($entity_type, $bundle, $field_name)) {
+    if (!$this->entityManager->getStorage('field_instance_config')->load($entity_type . '.' . $bundle . '.' . $field_name)) {
       $instance = $this->entityManager->getStorage('field_instance_config')->create(array(
         'label' => 'Comment settings',
         'description' => '',
@@ -241,11 +230,10 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function getFieldUIPageTitle($commented_entity_type, $field_name) {
-    $field_info = $this->fieldInfo->getField($commented_entity_type, $field_name);
-    $bundles = $field_info->getBundles();
-    $sample_bundle = reset($bundles);
-    $sample_instance = $this->fieldInfo->getInstance($commented_entity_type, $sample_bundle, $field_name);
-    return String::checkPlain($sample_instance->label);
+    $field_info = $this->getFields($commented_entity_type);
+    $sample_bundle = reset($field_info[$field_name]['bundles']);
+    $sample_definition = $this->entityManager->getFieldDefinitions($commented_entity_type, $sample_bundle)[$field_name];
+    return String::checkPlain($sample_definition->getLabel());
   }
 
   /**

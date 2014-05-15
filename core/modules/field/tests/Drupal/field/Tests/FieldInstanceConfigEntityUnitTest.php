@@ -48,13 +48,6 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
   protected $uuid;
 
   /**
-   * The field info provider.
-   *
-   * @var \Drupal\field\FieldInfo|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $fieldInfo;
-
-  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -75,14 +68,9 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
-    $this->fieldInfo = $this->getMockBuilder('\Drupal\field\FieldInfo')
-      ->disableOriginalConstructor()
-      ->getMock();
-
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
-    $container->set('field.info', $this->fieldInfo);
     \Drupal::setContainer($container);
 
   }
@@ -98,9 +86,12 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
     $field->expects($this->once())
       ->method('getConfigDependencyName')
       ->will($this->returnValue('field.field.test_entity_type.test_field'));
-    $this->fieldInfo->expects($this->any())
-      ->method('getField')
-      ->with('test_entity_type', 'test_field')
+
+    $field_storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+    $field_storage
+      ->expects($this->any())
+      ->method('load')
+      ->with('test_entity_type.test_field')
       ->will($this->returnValue($field));
 
     // Mock the interfaces necessary to create a dependency on a bundle entity.
@@ -118,8 +109,10 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
 
     $this->entityManager->expects($this->any())
       ->method('getStorage')
-      ->with('bundle_entity_type')
-      ->will($this->returnValue($storage));
+      ->will($this->returnValueMap(array(
+        array('field_config', $field_storage),
+        array('bundle_entity_type', $storage),
+      )));
 
     $target_entity_type = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())

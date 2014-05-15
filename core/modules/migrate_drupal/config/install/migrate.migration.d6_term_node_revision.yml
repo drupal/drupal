@@ -9,6 +9,7 @@ source:
 
 process:
   vid: vid
+  type: type
   # The actual field name is dynamic and will be added by the load plugin.
 
 destination:

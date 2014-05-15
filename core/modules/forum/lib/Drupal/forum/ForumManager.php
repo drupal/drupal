@@ -15,7 +15,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\comment\CommentInterface;
-use Drupal\field\FieldInfo;
 use Drupal\node\NodeInterface;
 
 /**
@@ -101,13 +100,6 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
   protected $index;
 
   /**
-   * Field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
-
-  /**
    * Constructs the forum manager service.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -116,17 +108,14 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
    *   The entity manager service.
    * @param \Drupal\Core\Database\Connection $connection
    *   The current database connection.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Connection $connection, FieldInfo $field_info, TranslationInterface $string_translation) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Connection $connection, TranslationInterface $string_translation) {
     $this->configFactory = $config_factory;
     $this->entityManager = $entity_manager;
     $this->connection = $connection;
-    $this->fieldInfo = $field_info;
-    $this->stringTranslation = $string_translation;
+    $this->translationManager = $string_translation;
   }
 
   /**
@@ -483,8 +472,8 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
    */
   public function checkNodeType(NodeInterface $node) {
     // Fetch information about the forum field.
-    $instances = $this->fieldInfo->getBundleInstances('node', $node->bundle());
-    return !empty($instances['taxonomy_forums']);
+    $field_definitions = $this->entityManager->getFieldDefinitions('node', $node->bundle());
+    return !empty($field_definitions['taxonomy_forums']);
   }
 
   /**

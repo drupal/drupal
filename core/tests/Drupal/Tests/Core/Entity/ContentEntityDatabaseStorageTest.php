@@ -152,10 +152,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
       ->getMock();
-    $field_info = $this->getMockBuilder('\Drupal\field\FieldInfo')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $entity_storage = new ContentEntityDatabaseStorage($entity_type, $connection, $field_info);
+    $entity_storage = new ContentEntityDatabaseStorage($entity_type, $connection, $entity_manager);
 
     $entity = $entity_storage->create();
     $entity->expects($this->atLeastOnce())

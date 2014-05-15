@@ -206,7 +206,8 @@ function user_attach_accounts(array &$build, array $entities) {
  * preprocess stage.
  */
 function user_picture_enabled() {
-  return (bool) field_info_instance('user', 'user_picture', 'user');
+  $field_definitions = \Drupal::entityManager()->getFieldDefinitions('user', 'user');
+  return isset($field_definitions['user_picture']);
 }
 
 /**

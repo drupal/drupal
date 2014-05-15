@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
-use Drupal\field\Field;
 use Drupal\field\FieldException;
 use Drupal\field\FieldInstanceConfigInterface;
 
@@ -232,23 +231,19 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * @ingroup field_crud
    */
   public function __construct(array $values, $entity_type = 'field_instance_config') {
-    // Field instances configuration is stored with a 'field_uuid' property
-    // unambiguously identifying the field. We only take it into account if a
-    // 'uuid' entry is present too, so that leftover 'field_uuid' entries
-    // present in config files imported as "default module config" are ignored.
-    if (isset($values['field_uuid']) && isset($values['uuid'])) {
-      $field = Field::fieldInfo()->getFieldById($values['field_uuid']);
-      if (!$field) {
-        throw new FieldException(format_string('Attempt to create an instance of unknown field @uuid', array('@uuid' => $values['field_uuid'])));
+    // Load the corresponding field. In case the instance was deleted, load the
+    // field based on the UUID, otherwise use the field name.
+    if (!empty($values['deleted'])) {
+      if ($fields = entity_load_multiple_by_properties('field_config', array('uuid' => $values['field_uuid'], 'include_deleted' => TRUE))) {
+        $field = current($fields);
       }
-      $values['field_name'] = $field->getName();
+      else {
+        throw new FieldException(format_string('Attempt to create an instance of field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $values['field_name'], '@entity_type' => $values['entity_type'])));
+      }
     }
-    // Alternatively, accept incoming 'field_name' instead of 'field_uuid', for
-    // easier DX on creation of new instances (either through programmatic
-    // creation / or through import of default config files).
     elseif (isset($values['field_name']) && isset($values['entity_type'])) {
-      $field = Field::fieldInfo()->getField($values['entity_type'], $values['field_name']);
-      if (!$field) {
+      $field = FieldConfig::loadByName($values['entity_type'], $values['field_name']);
+      if (empty($field)) {
         throw new FieldException(format_string('Attempt to create an instance of field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $values['field_name'], '@entity_type' => $values['entity_type'])));
       }
       $values['field_uuid'] = $field->uuid();
@@ -806,6 +801,24 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    */
   public function isDeleted() {
     return $this->deleted;
+  }
+
+  /**
+   * Loads a field config entity based on the entity type and field name.
+   *
+   * @param string $entity_type_id
+   *   ID of the entity type.
+   * @param string $bundle
+   *   Bundle name.
+   * @param string $field_name
+   *   Name of the field.
+   *
+   * @return static
+   *   The field instance config entity if one exists for the provided field
+   *   name, otherwise NULL.
+   */
+  public static function loadByName($entity_type_id, $bundle, $field_name) {
+    return \Drupal::entityManager()->getStorage('field_instance_config')->load($entity_type_id . '.' . $bundle . '.' . $field_name);
   }
 
 }

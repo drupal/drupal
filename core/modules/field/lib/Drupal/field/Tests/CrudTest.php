@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldException;
 
 /**
@@ -315,7 +316,7 @@ class CrudTest extends FieldUnitTestBase {
     // Test that the first field is not deleted, and then delete it.
     $field = current(entity_load_multiple_by_properties('field_config', array('field_name' => $this->field['name'], 'include_deleted' => TRUE)));
     $this->assertTrue(!empty($field) && empty($field->deleted), 'A new field is not marked for deletion.');
-    field_info_field('entity_test', $this->field['name'])->delete();
+    FieldConfig::loadByName('entity_test', $this->field['name'])->delete();
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.

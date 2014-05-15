@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\field\Field;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**

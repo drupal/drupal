@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
@@ -102,10 +103,10 @@ class EntityTranslationFormTest extends WebTestBase {
     $this->assertTrue($node, 'Node found in database.');
 
     // Make body translatable.
-    $field = field_info_field('node', 'body');
+    $field = FieldConfig::loadByName('node', 'body');
     $field->translatable = TRUE;
     $field->save();
-    $field = field_info_field('node', 'body');
+    $field = FieldConfig::loadByName('node', 'body');
     $this->assertTrue($field->isTranslatable(), 'Field body is translatable.');
 
     // Create a body translation and check the form language.

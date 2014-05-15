@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\FieldInfo;
 use Drupal\quickedit\Ajax\FieldFormCommand;
 use Drupal\quickedit\Ajax\FieldFormSavedCommand;
 use Drupal\quickedit\Ajax\FieldFormValidationErrorsCommand;
@@ -48,13 +47,6 @@ class QuickEditController extends ControllerBase {
   protected $editorSelector;
 
   /**
-   * The field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
-
-  /**
    * Constructs a new QuickEditController.
    *
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
@@ -63,14 +55,11 @@ class QuickEditController extends ControllerBase {
    *   The in-place editing metadata generator.
    * @param \Drupal\quickedit\EditorSelectorInterface $editor_selector
    *   The in-place editor selector.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, FieldInfo $field_info) {
+  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;
-    $this->fieldInfo = $field_info;
   }
 
   /**
@@ -80,8 +69,7 @@ class QuickEditController extends ControllerBase {
     return new static(
       $container->get('user.tempstore'),
       $container->get('quickedit.metadata.generator'),
-      $container->get('quickedit.editor.selector'),
-      $container->get('field.info')
+      $container->get('quickedit.editor.selector')
     );
   }
 

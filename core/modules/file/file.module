@@ -5,6 +5,7 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\NestedArray;
@@ -648,8 +649,9 @@ function file_file_download($uri, $field_type = 'file') {
   // reference denied access, access is denied.
   foreach ($references as $field_name => $field_references) {
     foreach ($field_references as $entity_type => $entities) {
+      $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type);
+      $field = $field_storage_definitions[$field_name];
       foreach ($entities as $entity) {
-        $field = field_info_field($entity_type, $field_name);
         // Check if access to this field is not disallowed.
         if (!$entity->get($field_name)->access('view')) {
           $denied = TRUE;
@@ -1858,8 +1860,8 @@ function file_icon_map(File $file) {
  *
  * @param \Drupal\file\File $file
  *   A file entity.
- * @param $field
- *   (optional) A field array to be used for this check. If given, limits the
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field
+ *   (optional) A field definition to be used for this check. If given, limits the
  *   reference check to the given field.
  * @param $age
  *   (optional) A constant that specifies which references to count. Use
@@ -1877,7 +1879,7 @@ function file_icon_map(File $file) {
  *   A multidimensional array. The keys are field_name, entity_type,
  *   entity_id and the value is an entity referencing this file.
  */
-function file_get_file_references(File $file, $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
+function file_get_file_references(File $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = &drupal_static(__FUNCTION__, array());
   $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', array());
 
@@ -1939,7 +1941,8 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
   if ($field || $field_type) {
     foreach ($return as $field_name => $data) {
       foreach (array_keys($data) as $entity_type_id) {
-        $current_field = field_info_field($entity_type_id, $field_name);
+        $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type_id);
+        $current_field = $field_storage_definitions[$field_name];
         if (($field_type && $current_field->getType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
           unset($return[$field_name][$entity_type_id]);
         }

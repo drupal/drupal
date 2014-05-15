@@ -9,11 +9,10 @@ namespace Drupal\user;
 
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\field\FieldInfo;
-use Drupal\user\UserDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 
@@ -46,8 +45,8 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
    *   The entity type definition.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID Service.
    * @param \Drupal\Core\Password\PasswordInterface $password
@@ -55,8 +54,8 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
    * @param \Drupal\user\UserDataInterface $user_data
    *   The user data service.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, FieldInfo $field_info, UuidInterface $uuid_service, PasswordInterface $password, UserDataInterface $user_data) {
-    parent::__construct($entity_type, $database, $field_info, $uuid_service);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, UuidInterface $uuid_service, PasswordInterface $password, UserDataInterface $user_data) {
+    parent::__construct($entity_type, $database, $entity_manager, $uuid_service);
 
     $this->password = $password;
     $this->userData = $user_data;
@@ -69,7 +68,7 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
     return new static(
       $entity_type,
       $container->get('database'),
-      $container->get('field.info'),
+      $container->get('entity.manager'),
       $container->get('uuid'),
       $container->get('password'),
       $container->get('user.data')

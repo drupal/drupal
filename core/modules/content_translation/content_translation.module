@@ -14,6 +14,7 @@ use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -866,7 +867,7 @@ function content_translation_save_settings($settings) {
         // Store whether fields have translation enabled or not.
         if (!empty($bundle_settings['columns'])) {
           foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
-            $instance = field_info_instance($entity_type, $field_name, $bundle);
+            $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
             if ($instance->isTranslatable()) {
               $instance->settings['translation_sync'] = $column_settings;
             }

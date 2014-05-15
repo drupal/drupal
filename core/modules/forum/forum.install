@@ -4,6 +4,7 @@
  * @file
  * Install, update, and uninstall functions for the Forum module.
  */
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_install().
@@ -20,7 +21,7 @@ function forum_install() {
     // Create the 'taxonomy_forums' field if it doesn't already exist. If forum
     // is being enabled at the same time as taxonomy after both modules have been
     // enabled, the field might exist but still be marked inactive.
-    if (!field_info_field('node', 'taxonomy_forums')) {
+    if (!FieldConfig::loadByName('node', 'taxonomy_forums')) {
       entity_create('field_config', array(
         'name' => 'taxonomy_forums',
         'entity_type' => 'node',
@@ -92,15 +93,15 @@ function forum_install() {
  * Implements hook_uninstall().
  */
 function forum_uninstall() {
-  if ($field = field_info_field('node', 'taxonomy_forums')) {
+  if ($field = FieldConfig::loadByName('node', 'taxonomy_forums')) {
     $field->delete();
   }
 
-  if ($field = field_info_field('node', 'comment_forum')) {
+  if ($field = FieldConfig::loadByName('node', 'comment_forum')) {
     $field->delete();
   }
 
-  if ($field = field_info_field('taxonomy_term', 'forum_container')) {
+  if ($field = FieldConfig::loadByName('taxonomy_term', 'forum_container')) {
     $field->delete();
   }
 

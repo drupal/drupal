@@ -8,7 +8,7 @@
 namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentManagerInterface;
-use Drupal\field\FieldInfo;
+use Drupal\field\FieldConfigInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Returns responses for comment module administrative routes.
  */
 class AdminController extends ControllerBase {
-
-  /**
-   * The field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
 
   /**
    * The comment manager service.
@@ -47,7 +40,6 @@ class AdminController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('field.info'),
       $container->get('comment.manager'),
       $container->get('form_builder')
     );
@@ -56,15 +48,12 @@ class AdminController extends ControllerBase {
   /**
    * Constructs an AdminController object.
    *
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
    */
-  public function __construct(FieldInfo $field_info, CommentManagerInterface $comment_manager, FormBuilderInterface $form_builder) {
-    $this->fieldInfo = $field_info;
+  public function __construct(CommentManagerInterface $comment_manager, FormBuilderInterface $form_builder) {
     $this->commentManager = $comment_manager;
     $this->formBuilder = $form_builder;
   }
@@ -105,24 +94,29 @@ class AdminController extends ControllerBase {
     $fields = $this->commentManager->getAllFields();
 
     foreach ($fields as $entity_type => $data) {
+      $field_storage_definitions = $this->entityManager()->getFieldStorageDefinitions($entity_type);
       foreach ($data as $field_name => $field_info_map) {
-        $field_info = $this->fieldInfo->getField($entity_type, $field_name);
+        $storage_definition = $field_storage_definitions[$field_name];
         // Initialize the row.
         $row = array(
-          'class' => $field_info->get('locked') ? array('field-disabled') : array(''),
+          'class' => $storage_definition->get('locked') ? array('field-disabled') : array(''),
         );
 
-        $bundles = $field_info->getBundles();
-        $sample_bundle = reset($bundles);
-        $sample_instance = $this->fieldInfo->getInstance($entity_type, $sample_bundle, $field_name);
+        $label = $storage_definition->getLabel();
+        if ($storage_definition instanceof FieldConfigInterface) {
+          $bundles = $storage_definition->getBundles();
+          $sample_bundle = reset($bundles);
+          $field_definitions = $this->entityManager()->getFieldDefinitions($entity_type, $sample_bundle);
+          $label = $field_definitions[$field_name]->getLabel();
+        }
 
         $tokens = array(
-          '@label' => $sample_instance->label,
+          '@label' => $label,
           '@field_name' => $field_name,
         );
-        $row['data']['field_name']['data'] = $field_info->get('locked') ? $this->t('@label (@field_name) (Locked)', $tokens) : $this->t('@label (@field_name)', $tokens);
+        $row['data']['field_name']['data'] = $storage_definition->get('locked') ? $this->t('@label (@field_name) (Locked)', $tokens) : $this->t('@label (@field_name)', $tokens);
 
-        $row['data']['description']['data'] = $field_info->getSetting('description');
+        $row['data']['description']['data'] = $storage_definition->getSetting('description');
         $row['data']['usage']['data'] = array(
           '#theme' => 'item_list',
           '#items' => array(),

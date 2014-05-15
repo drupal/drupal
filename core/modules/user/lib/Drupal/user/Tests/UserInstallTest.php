@@ -19,7 +19,7 @@ class UserInstallTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'user');
+  public static $modules = array('user');
 
   /**
    * {@inheritdoc}

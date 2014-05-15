@@ -8,7 +8,7 @@
 namespace Drupal\search\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\Field;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Test integration searching comments.
@@ -79,7 +79,7 @@ class SearchCommentTest extends SearchTestBase {
     $comment_body = 'Test comment body';
 
     // Make preview optional.
-    $instance = Field::fieldInfo()->getInstance('node', 'article', 'comment');
+    $instance = FieldInstanceConfig::loadByName('node', 'article', 'comment');
     $instance->settings['preview'] = DRUPAL_OPTIONAL;
     $instance->save();
 
@@ -151,7 +151,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Create a node.
     // Make preview optional.
-    $instance = Field::fieldInfo()->getInstance('node', 'article', 'comment');
+    $instance = FieldInstanceConfig::loadByName('node', 'article', 'comment');
     $instance->settings['preview'] = DRUPAL_OPTIONAL;
     $instance->save();
     $this->node = $this->drupalCreateNode(array('type' => 'article'));

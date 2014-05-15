@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\field\Field;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -90,13 +89,12 @@ class ConfigTranslationFieldInstanceListBuilder extends ConfigTranslationEntityL
    * {@inheritdoc}
    */
   public function load() {
-    $entities = array();
     // It is not possible to use the standard load method, because this needs
     // all field instance entities only for the given baseEntityType.
-    foreach (Field::fieldInfo()->getInstances($this->baseEntityType) as $fields) {
-      $entities = array_merge($entities, array_values($fields));
-    }
-    return $entities;
+    $ids = \Drupal::entityQuery('field_instance_config')
+      ->condition('id', $this->baseEntityType . '.', 'STARTS_WITH')
+      ->execute();
+    return $this->storage->loadMultiple($ids);
   }
 
   /**

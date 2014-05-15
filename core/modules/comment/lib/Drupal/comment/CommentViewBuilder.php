@@ -17,20 +17,12 @@ use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Render controller for comments.
  */
 class CommentViewBuilder extends EntityViewBuilder {
-
-  /**
-   * The field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
 
   /**
    * The module handler service.
@@ -54,7 +46,6 @@ class CommentViewBuilder extends EntityViewBuilder {
       $entity_type,
       $container->get('entity.manager'),
       $container->get('language_manager'),
-      $container->get('field.info'),
       $container->get('csrf_token')
     );
   }
@@ -73,9 +64,8 @@ class CommentViewBuilder extends EntityViewBuilder {
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, FieldInfo $field_info, CsrfTokenGenerator $csrf_token) {
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, CsrfTokenGenerator $csrf_token) {
     parent::__construct($entity_type, $entity_manager, $language_manager);
-    $this->fieldInfo = $field_info;
     $this->csrfToken = $csrf_token;
   }
 
@@ -286,9 +276,9 @@ class CommentViewBuilder extends EntityViewBuilder {
     if (empty($comment->in_preview)) {
       $prefix = '';
       $commented_entity = $comment->getCommentedEntity();
-      $instance = $this->fieldInfo->getInstance($commented_entity->getEntityTypeId(), $commented_entity->bundle(), $comment->getFieldName());
+      $field_definition = $this->entityManager->getFieldDefinitions($commented_entity->getEntityTypeId(), $commented_entity->bundle())[$comment->getFieldName()];
       $is_threaded = isset($comment->divs)
-        && $instance->getSetting('default_mode') == COMMENT_MODE_THREADED;
+        && $field_definition->getSetting('default_mode') == COMMENT_MODE_THREADED;
 
       // Add indentation div or close open divs as needed.
       if ($is_threaded) {

@@ -6,6 +6,7 @@ source:
 process:
   nid: nid
   vid: vid
+  type: type
   upload:
     plugin: iterator
     source: upload

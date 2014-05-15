@@ -8,6 +8,7 @@
 namespace Drupal\image\Tests;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Test class to check that formatters and display settings are working.
@@ -281,7 +282,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
-    $field = field_info_field('node', $field_name);
+    $field = FieldConfig::loadByName('node', $field_name);
     $default_image = $field->getSetting('default_image');
     $file = file_load($default_image['fid']);
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
@@ -323,7 +324,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
-    $field = field_info_field('node', $field_name);
+    $field = FieldConfig::loadByName('node', $field_name);
     $default_image = $field->getSetting('default_image');
     $this->assertFalse($default_image['fid'], 'Default image removed from field.');
     // Create an image field that uses the private:// scheme and test that the
@@ -340,7 +341,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
 
-    $private_field = field_info_field('node', $private_field_name);
+    $private_field = FieldConfig::loadByName('node', $private_field_name);
     $default_image = $private_field->getSetting('default_image');
     $file = file_load($default_image['fid']);
     $this->assertEqual('private', file_uri_scheme($file->getFileUri()), 'Default image uses private:// scheme.');

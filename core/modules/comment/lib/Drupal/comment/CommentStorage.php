@@ -9,9 +9,9 @@ namespace Drupal\comment;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
-use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -36,13 +36,13 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    *   An array of entity info for the entity type.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    * @param \Drupal\comment\CommentStatisticsInterface $comment_statistics
    *   The comment statistics service.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, FieldInfo $field_info, CommentStatisticsInterface $comment_statistics) {
-    parent::__construct($entity_info, $database, $field_info);
+  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, CommentStatisticsInterface $comment_statistics) {
+    parent::__construct($entity_info, $database, $entity_manager);
     $this->statistics = $comment_statistics;
   }
 
@@ -53,7 +53,7 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
     return new static(
       $entity_info,
       $container->get('database'),
-      $container->get('field.info'),
+      $container->get('entity.manager'),
       $container->get('comment.statistics')
     );
   }

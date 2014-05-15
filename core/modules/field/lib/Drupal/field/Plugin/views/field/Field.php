@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Render\Element;
-use Drupal\field\Field as FieldHelper;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterPluginManager;
@@ -166,7 +165,8 @@ class Field extends FieldPluginBase {
    */
   protected function getFieldConfig() {
     if (!$this->fieldConfig) {
-      $this->fieldConfig = FieldHelper::fieldInfo()->getField($this->definition['entity_type'], $this->definition['field_name']);
+      $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($this->definition['entity_type']);
+      $this->fieldConfig = $field_storage_definitions[$this->definition['field_name']];
     }
     return $this->fieldConfig;
   }
@@ -347,7 +347,8 @@ class Field extends FieldPluginBase {
     }
 
     $this->ensureMyTable();
-    $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
+    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->definition['entity_type']);
+    $field = $field_storage_definitions[$this->definition['field_name']];
     $column = ContentEntityDatabaseStorage::_fieldColumnName($field, $this->options['click_sort_column']);
     if (!isset($this->aliases[$column])) {
       // Column is not in query; add a sort on it (without adding the column).
@@ -360,7 +361,8 @@ class Field extends FieldPluginBase {
     $options = parent::defineOptions();
 
     // defineOptions runs before init/construct, so no $this->field_info
-    $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
+    $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->definition['entity_type']);
+    $field = $field_storage_definitions[$this->definition['field_name']];
     $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getType());
     $column_names = array_keys($field->getColumns());
     $default_column = '';

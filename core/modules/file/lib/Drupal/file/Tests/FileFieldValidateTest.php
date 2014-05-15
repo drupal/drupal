@@ -8,7 +8,7 @@
 namespace Drupal\file\Tests;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\field\Field;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Tests various validations.
@@ -32,7 +32,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $field = $this->createFileField($field_name, 'node', $type_name, array(), array('required' => '1'));
-    $instance = Field::fieldInfo()->getInstance('node', $type_name, $field_name);
+    $instance = FieldInstanceConfig::loadByName('node', $type_name, $field_name);
 
     $test_file = $this->getTestFile('text');
 

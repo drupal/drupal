@@ -8,7 +8,7 @@
 namespace Drupal\search\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\field\Field;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests entities with multilingual fields.
@@ -58,7 +58,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // Make the body field translatable. The title is already translatable by
     // definition. The parent class has already created the article and page
     // content types.
-    $field = Field::fieldInfo()->getField('node', 'body');
+    $field = FieldConfig::loadByName('node', 'body');
     $field->translatable = TRUE;
     $field->save();
 

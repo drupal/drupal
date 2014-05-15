@@ -40,13 +40,6 @@ class EntityDatabaseStorage extends EntityStorageBase {
   protected $database;
 
   /**
-   * The field info object.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
-
-  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {

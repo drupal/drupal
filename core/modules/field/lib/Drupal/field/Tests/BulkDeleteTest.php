@@ -9,6 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\FieldConfigInterface;
 
 
@@ -176,7 +177,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $this->assertEqual(count($found), 10, 'Correct number of entities found before deleting');
 
     // Delete the instance.
-    $instance = field_info_instance($this->entity_type, $field->name, $bundle);
+    $instance = FieldInstanceConfig::loadByName($this->entity_type, $bundle, $field->name);
     $instance->delete();
 
     // The instance still exists, deleted.
@@ -226,7 +227,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $field = reset($this->fields);
 
     // Delete the instance.
-    $instance = field_info_instance($this->entity_type, $field->name, $bundle);
+    $instance = FieldInstanceConfig::loadByName($this->entity_type, $bundle, $field->name);
     $instance->delete();
 
     // No field hooks were called.
@@ -285,7 +286,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
 
     // Delete the first instance.
     $bundle = reset($this->bundles);
-    $instance = field_info_instance($this->entity_type, $field->name, $bundle);
+    $instance = FieldInstanceConfig::loadByName($this->entity_type, $bundle, $field->name);
     $instance->delete();
 
     // Assert that FieldItemInterface::delete() was not called yet.
@@ -315,7 +316,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
 
     // Delete the second instance.
     $bundle = next($this->bundles);
-    $instance = field_info_instance($this->entity_type, $field->name, $bundle);
+    $instance = FieldInstanceConfig::loadByName($this->entity_type, $bundle, $field->name);
     $instance->delete();
 
     // Assert that FieldItemInterface::delete() was not called yet.

@@ -11,7 +11,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\Language;
-use Drupal\field\FieldInfo;
 use Drupal\field\FieldConfigUpdateForbiddenException;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -66,11 +65,11 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
   protected $database;
 
   /**
-   * The field info object.
+   * The entity manager.
    *
-   * @var \Drupal\field\FieldInfo
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $fieldInfo;
+  protected $entityManager;
 
   /**
    * {@inheritdoc}
@@ -79,7 +78,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
     return new static(
       $entity_type,
       $container->get('database'),
-      $container->get('field.info')
+      $container->get('entity.manager')
     );
   }
 
@@ -90,14 +89,14 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
    *   The entity type definition.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, FieldInfo $field_info) {
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager) {
     parent::__construct($entity_type);
 
     $this->database = $database;
-    $this->fieldInfo = $field_info;
+    $this->entityManager = $entity_manager;
 
     // Check if the entity type supports UUIDs.
     $this->uuidKey = $this->entityType->getKey('uuid');
@@ -716,8 +715,10 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
     // Collect impacted fields.
     $fields = array();
     foreach ($bundles as $bundle => $v) {
-      foreach ($this->fieldInfo->getBundleInstances($this->entityTypeId, $bundle) as $field_name => $instance) {
-        $fields[$field_name] = $instance->getField();
+      foreach ($this->entityManager->getFieldDefinitions($this->entityTypeId, $bundle) as $field_name => $instance) {
+        if ($instance instanceof FieldInstanceConfigInterface) {
+          $fields[$field_name] = $instance->getField();
+        }
       }
     }
 
@@ -781,7 +782,10 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
       $vid = $id;
     }
 
-    foreach ($this->fieldInfo->getBundleInstances($entity_type, $bundle) as $field_name => $instance) {
+    foreach ($this->entityManager->getFieldDefinitions($entity_type, $bundle) as $field_name => $instance) {
+      if (!($instance instanceof FieldInstanceConfigInterface)) {
+        continue;
+      }
       $field = $instance->getField();
       $table_name = static::_fieldTableName($field);
       $revision_name = static::_fieldRevisionTableName($field);
@@ -855,7 +859,10 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function doDeleteFieldItems(EntityInterface $entity) {
-    foreach ($this->fieldInfo->getBundleInstances($entity->getEntityTypeId(), $entity->bundle()) as $instance) {
+    foreach ($this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $instance) {
+      if (!($instance instanceof FieldInstanceConfigInterface)) {
+        continue;
+      }
       $field = $instance->getField();
       $table_name = static::_fieldTableName($field);
       $revision_name = static::_fieldRevisionTableName($field);
@@ -874,7 +881,10 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
   protected function doDeleteFieldItemsRevision(EntityInterface $entity) {
     $vid = $entity->getRevisionId();
     if (isset($vid)) {
-      foreach ($this->fieldInfo->getBundleInstances($entity->getEntityTypeId(), $entity->bundle()) as $instance) {
+      foreach ($this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $instance) {
+        if (!($instance instanceof FieldInstanceConfigInterface)) {
+          continue;
+        }
         $revision_name = static::_fieldRevisionTableName($instance->getField());
         $this->database->delete($revision_name)
           ->condition('entity_id', $entity->id())

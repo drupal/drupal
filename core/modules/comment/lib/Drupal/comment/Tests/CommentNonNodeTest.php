@@ -42,6 +42,10 @@ class CommentNonNodeTest extends WebTestBase {
     // Create comment field on entity_test bundle.
     $this->container->get('comment.manager')->addDefaultField('entity_test', 'entity_test');
 
+    // Verify that bundles are defined correctly.
+    $bundles = \Drupal::entityManager()->getBundleInfo('comment');
+    $this->assertEqual($bundles['entity_test__comment']['label'], 'Comment settings');
+
     // Create test user.
     $this->admin_user = $this->drupalCreateUser(array(
       'administer comments',

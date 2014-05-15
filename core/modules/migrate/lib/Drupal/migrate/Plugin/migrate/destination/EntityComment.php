@@ -7,9 +7,9 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\field\FieldInfo;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Row;
@@ -46,13 +46,13 @@ class EntityComment extends EntityContentBase {
    *   The list of bundles this entity type has.
    * @param \Drupal\migrate\Plugin\MigratePluginManager $plugin_manager
    *   The migrate plugin manager.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field and instance definitions service.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state storage object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info, StateInterface $state) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $plugin_manager, $field_info);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, EntityManagerInterface $entity_manager, StateInterface $state) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $plugin_manager, $entity_manager);
     $this->state = $state;
   }
 
@@ -69,7 +69,7 @@ class EntityComment extends EntityContentBase {
       $container->get('entity.manager')->getStorage($entity_type),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
       $container->get('plugin.manager.migrate.entity_field'),
-      $container->get('field.info'),
+      $container->get('entity.manager'),
       $container->get('state')
     );
   }

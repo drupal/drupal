@@ -10,7 +10,6 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\TypedData\TypedDataManager;
-use Drupal\field\FieldInfo;
 use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,13 +34,6 @@ class FieldEditForm extends FormBase {
   protected $entityManager;
 
   /**
-   * The field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
-
-  /**
    * The typed data manager.
    *
    * @var \Drupal\Core\TypedData\TypedDataManager
@@ -60,14 +52,11 @@ class FieldEditForm extends FormBase {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
    * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
    *   The typed data manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldInfo $field_info, TypedDataManager $typed_data_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, TypedDataManager $typed_data_manager) {
     $this->entityManager = $entity_manager;
-    $this->fieldInfo = $field_info;
     $this->typedDataManager = $typed_data_manager;
   }
 
@@ -77,7 +66,6 @@ class FieldEditForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('field.info'),
       $container->get('typed_data_manager')
     );
   }

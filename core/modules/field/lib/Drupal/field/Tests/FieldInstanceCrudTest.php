@@ -8,6 +8,8 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\FieldException;
 
 /**
@@ -191,8 +193,8 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     entity_create('field_instance_config', $this->instance_definition)->save();
     entity_create('field_instance_config', $instance_definition_2)->save();
     $field->delete();
-    $this->assertFalse(field_info_instance('entity_test', $this->instance_definition['bundle'], $field->name));
-    $this->assertFalse(field_info_instance('entity_test', $instance_definition_2['bundle'], $field->name));
+    $this->assertFalse(FieldInstanceConfig::loadByName('entity_test', $this->instance_definition['bundle'], $field->name));
+    $this->assertFalse(FieldInstanceConfig::loadByName('entity_test', $instance_definition_2['bundle'], $field->name));
 
     // Chack that deletion of the last instance deletes the field.
     $field = entity_create('field_config', $this->field_definition);
@@ -202,9 +204,9 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $instance_2 = entity_create('field_instance_config', $instance_definition_2);
     $instance_2->save();
     $instance->delete();
-    $this->assertTrue(field_info_field('entity_test', $field->name));
+    $this->assertTrue(FieldConfig::loadByName('entity_test', $field->name));
     $instance_2->delete();
-    $this->assertFalse(field_info_field('entity_test', $field->name));
+    $this->assertFalse(FieldConfig::loadByName('entity_test', $field->name));
 
     // Check that deletion of all instances of the same field simultaneously
     // deletes the field.
@@ -216,7 +218,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $instance_2->save();
     $instance_storage = $this->container->get('entity.manager')->getStorage('field_instance_config');
     $instance_storage->delete(array($instance, $instance_2));
-    $this->assertFalse(field_info_field('entity_test', $field->name));
+    $this->assertFalse(FieldConfig::loadByName('entity_test', $field->name));
   }
 
 }

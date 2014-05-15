@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\file\FileInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -123,7 +125,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Updates an existing file field with new settings.
    */
   function updateFileField($name, $type_name, $instance_settings = array(), $widget_settings = array()) {
-    $instance = field_info_instance('node', $name, $type_name);
+    $instance = FieldInstanceConfig::loadByName('node', $type_name, $name);
     $instance->settings = array_merge($instance->settings, $instance_settings);
     $instance->save();
 
@@ -159,7 +161,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     }
 
     // Attach a file to the node.
-    $field = field_info_field('node', $field_name);
+    $field = FieldConfig::loadByName('node', $field_name);
     $name = 'files[' . $field_name . '_0]';
     if ($field->getCardinality() != 1) {
       $name .= '[]';

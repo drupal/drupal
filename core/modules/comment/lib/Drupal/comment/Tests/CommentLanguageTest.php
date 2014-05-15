@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -74,7 +75,7 @@ class CommentLanguageTest extends WebTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // Make comment body translatable.
-    $field = field_info_field('comment', 'comment_body');
+    $field = FieldConfig::loadByName('comment', 'comment_body');
     $field->translatable = TRUE;
     $field->save();
     $this->assertTrue($field->isTranslatable(), 'Comment body is translatable.');

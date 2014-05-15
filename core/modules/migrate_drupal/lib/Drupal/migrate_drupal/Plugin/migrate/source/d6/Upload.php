@@ -33,6 +33,7 @@ class Upload extends DrupalSqlBase {
       ->distinct()
       ->fields('u', array('nid', 'vid'));
     $query->innerJoin('node', 'n', static::JOIN);
+    $query->addField('n', 'type');
     return $query;
   }
 
@@ -56,6 +57,7 @@ class Upload extends DrupalSqlBase {
       'fid' => $this->t('The file Id.'),
       'nid' => $this->t('The node Id.'),
       'vid' => $this->t('The version Id.'),
+      'type' => $this->t('The node type'),
       'description' => $this->t('The file description.'),
       'list' => $this->t('Whether the list should be visible on the node page.'),
       'weight' => $this->t('The file weight.'),

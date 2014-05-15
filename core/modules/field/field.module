@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\Extension;
-use Drupal\field\Field;
 use Symfony\Component\HttpFoundation\Request;
 
 /*
@@ -202,9 +201,19 @@ function field_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface
  */
 function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
   if ($entity_type->isFieldable()) {
-    // Configurable fields, which are always attached to a specific bundle, are
-    // added 'by bundle'.
-    return Field::fieldInfo()->getBundleInstances($entity_type->id(), $bundle);
+    // Query by filtering on the ID as this is more efficient than filtering
+    // on the entity_type property directly.
+    $ids = \Drupal::entityQuery('field_instance_config')
+      ->condition('id', $entity_type->id() . '.' . $bundle . '.', 'STARTS_WITH')
+      ->execute();
+
+    // Fetch all fields and key them by field name.
+    $field_instance_configs = entity_load_multiple('field_instance_config', $ids);
+    $result = array();
+    foreach ($field_instance_configs as $field_instance) {
+      $result[$field_instance->getName()] = $field_instance;
+    }
+    return $result;
   }
 }
 

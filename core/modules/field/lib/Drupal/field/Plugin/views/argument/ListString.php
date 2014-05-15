@@ -34,7 +34,8 @@ class ListString extends String {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
+    $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($this->definition['entity_type']);
+    $field = $field_storage_definitions[$this->definition['field_name']];
     $this->allowed_values = options_allowed_values($field);
   }
 

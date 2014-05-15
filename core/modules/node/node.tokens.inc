@@ -131,10 +131,9 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
         case 'body':
         case 'summary':
           $translation = \Drupal::entityManager()->getTranslationFromContext($node, $langcode, array('operation' => 'node_tokens'));
-          if (($items = $translation->get('body')) && !$items->isEmpty()) {
+          if ($translation->hasField('body') && ($items = $translation->get('body')) && !$items->isEmpty()) {
             $item = $items[0];
-            $instance = field_info_instance('node', 'body', $node->getType());
-            $field_langcode = $translation->language()->id;
+            $field_definition = \Drupal::entityManager()->getFieldDefinitions('node', $node->bundle())['body'];
             // If the summary was requested and is not empty, use it.
             if ($name == 'summary' && !empty($item->summary)) {
               $output = $sanitize ? $item->summary_processed : $item->summary;
@@ -157,7 +156,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
                   $length = $settings['trim_length'];
                 }
 
-                $output = text_summary($output, $instance->getSetting('text_processing') ? $item->format : NULL, $length);
+                $output = text_summary($output, $field_definition->getSetting('text_processing') ? $item->format : NULL, $length);
               }
             }
             $replacements[$original] = $output;

@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests a taxonomy term reference field that allows multiple vocabularies.
@@ -122,7 +123,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->assertNoText($term2->getName(), 'Term 2 name is not displayed.');
 
     // Verify that field and instance settings are correct.
-    $field = field_info_field('entity_test', $this->field_name);
+    $field = FieldConfig::loadByName('entity_test', $this->field_name);
     $this->assertEqual(count($field->getSetting('allowed_values')), 1, 'Only one vocabulary is allowed for the field.');
 
     // The widget should still be displayed.

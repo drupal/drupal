@@ -10,7 +10,6 @@ namespace Drupal\comment\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\FieldInfo;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,13 +35,6 @@ class CommentController extends ControllerBase {
   protected $httpKernel;
 
   /**
-   * Field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
-
-  /**
    * The comment manager service.
    *
    * @var \Drupal\comment\CommentManagerInterface
@@ -54,14 +46,11 @@ class CommentController extends ControllerBase {
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   HTTP kernel to handle requests.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   Field Info service.
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
    */
-  public function __construct(HttpKernelInterface $http_kernel, FieldInfo $field_info, CommentManagerInterface $comment_manager) {
+  public function __construct(HttpKernelInterface $http_kernel, CommentManagerInterface $comment_manager) {
     $this->httpKernel = $http_kernel;
-    $this->fieldInfo = $field_info;
     $this->commentManager = $comment_manager;
   }
 
@@ -71,7 +60,6 @@ class CommentController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('http_kernel'),
-      $container->get('field.info'),
       $container->get('comment.manager')
     );
   }
@@ -118,15 +106,15 @@ class CommentController extends ControllerBase {
    *   The comment listing set to the page on which the comment appears.
    */
   public function commentPermalink(Request $request, CommentInterface $comment) {
-    if ($entity = $this->entityManager()->getStorage($comment->getCommentedEntityTypeId())->load($comment->getCommentedEntityId())) {
+    if ($entity = $comment->getCommentedEntity()) {
       // Check access permissions for the entity.
       if (!$entity->access('view')) {
         throw new AccessDeniedHttpException();
       }
-      $instance = $this->fieldInfo->getInstance($entity->getEntityTypeId(), $entity->bundle(), $comment->getFieldName());
+      $field_definition = $this->entityManager()->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
 
       // Find the current display page for this comment.
-      $page = comment_get_display_page($comment->id(), $instance);
+      $page = comment_get_display_page($comment->id(), $field_definition);
       // @todo: Cleaner sub request handling.
       $redirect_request = Request::create($entity->getSystemPath(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
       $redirect_request->query->set('page', $page);

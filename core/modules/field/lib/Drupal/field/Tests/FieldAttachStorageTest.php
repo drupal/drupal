@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\field\Tests;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Unit test class for storage-related field behavior.
@@ -337,7 +338,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     entity_test_rename_bundle($this->instance_definition['bundle'], $new_bundle, $entity_type);
 
     // Check that the instance definition has been updated.
-    $this->instance = field_info_instance($entity_type, $this->field_name, $new_bundle);
+    $this->instance = FieldInstanceConfig::loadByName($entity_type, $new_bundle, $this->field_name);
     $this->assertIdentical($this->instance->bundle, $new_bundle, "Bundle name has been updated in the instance.");
 
     // Verify the field data is present on load.

@@ -78,8 +78,8 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     // We need two block types to prevent /block/add redirecting.
     $this->createCustomBlockType('other');
 
-    $instance = field_info_instance('custom_block', 'body', 'basic');
-    $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
+    $field_definition = \Drupal::entityManager()->getFieldDefinitions('custom_block', 'other')['body'];
+    $this->assertEqual($field_definition->getLabel(), 'Body', 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('block/add/basic');

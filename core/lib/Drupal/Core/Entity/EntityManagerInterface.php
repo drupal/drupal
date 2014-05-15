@@ -81,6 +81,17 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getFieldStorageDefinitions($entity_type_id);
 
   /**
+   * Collects a lightweight map of fields across bundles.
+   *
+   * @return array
+   *   An array keyed by entity type. Each value is an array which keys are
+   *   field names and value is an array with two entries:
+   *   - type: The field type.
+   *   - bundles: The bundles in which the field appears.
+   */
+  public function getFieldMap();
+
+  /**
    * Creates a new access controller instance.
    *
    * @param string $entity_type

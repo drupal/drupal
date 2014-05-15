@@ -7,8 +7,6 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\field\Field;
-
 /**
  * Tests creating fields and instances as part of config import.
  */
@@ -60,13 +58,20 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     $this->assertTrue($instance->bundle, 'test_bundle', 'The second field instance was created on bundle test_bundle.');
     $this->assertTrue($instance->bundle, 'test_bundle_2', 'The second field instance was created on bundle test_bundle_2.');
 
-    // Tests field info contains the right data.
-    $instances = Field::fieldInfo()->getInstances('entity_test');
-    $this->assertEqual(count($instances['entity_test']), 2);
-    $this->assertTrue(isset($instances['entity_test']['field_test_import']));
-    $this->assertTrue(isset($instances['entity_test']['field_test_import_2']));
-    $this->assertEqual(count($instances['test_bundle']), 1);
-    $this->assertTrue(isset($instances['test_bundle']['field_test_import_2']));
+    // Tests field instances.
+    $ids = \Drupal::entityQuery('field_instance_config')
+      ->condition('entity_type', 'entity_test')
+      ->condition('bundle', 'entity_test')
+      ->execute();
+    $this->assertEqual(count($ids), 2);
+    $this->assertTrue(isset($ids['entity_test.entity_test.field_test_import']));
+    $this->assertTrue(isset($ids['entity_test.entity_test.field_test_import_2']));
+    $ids = \Drupal::entityQuery('field_instance_config')
+      ->condition('entity_type', 'entity_test')
+      ->condition('bundle', 'test_bundle')
+      ->execute();
+    $this->assertEqual(count($ids), 1);
+    $this->assertTrue(isset($ids['entity_test.test_bundle.field_test_import_2']));
   }
 
   /**

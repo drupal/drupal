@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\taxonomy\Tests;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests for taxonomy term field and formatter.
@@ -170,7 +171,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $this->vocabulary->save();
 
     // Check that the field instance is still attached to the vocabulary.
-    $field = field_info_field('entity_test', $this->field_name);
+    $field = FieldConfig::loadByName('entity_test', $this->field_name);
     $allowed_values = $field->getSetting('allowed_values');
     $this->assertEqual($allowed_values[0]['vocabulary'], $new_name, 'Index 0: Machine name was updated correctly.');
     $this->assertEqual($allowed_values[1]['vocabulary'], $new_name, 'Index 1: Machine name was updated correctly.');

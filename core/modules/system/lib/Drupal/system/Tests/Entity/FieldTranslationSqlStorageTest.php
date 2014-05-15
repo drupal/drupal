@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Language\Language;
-use Drupal\field\Field as FieldService;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests entity translation.
@@ -91,7 +91,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     $fields = array($this->field_name, $this->untranslatable_field_name);
 
     foreach ($fields as $field_name) {
-      $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
+      $field = FieldConfig::loadByName($entity_type, $field_name);
       $tables = array(
         ContentEntityDatabaseStorage::_fieldTableName($field),
         ContentEntityDatabaseStorage::_fieldRevisionTableName($field),

@@ -9,6 +9,7 @@ namespace Drupal\forum\Tests;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -36,7 +37,7 @@ class ForumUninstallTest extends WebTestBase {
    */
   function testForumUninstallWithField() {
     // Ensure that the field exists before uninstallation.
-    $field = field_info_field('node', 'taxonomy_forums');
+    $field = FieldConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNotNull($field, 'The taxonomy_forums field exists.');
 
     // Create a taxonomy term.
@@ -82,7 +83,7 @@ class ForumUninstallTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Check that the field is now deleted.
-    $field = field_info_field('node', 'taxonomy_forums');
+    $field = FieldConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNull($field, 'The taxonomy_forums field has been deleted.');
   }
 
@@ -92,12 +93,12 @@ class ForumUninstallTest extends WebTestBase {
    */
   function testForumUninstallWithoutField() {
     // Manually delete the taxonomy_forums field before module uninstallation.
-    $field = field_info_field('node', 'taxonomy_forums');
+    $field = FieldConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNotNull($field, 'The taxonomy_forums field exists.');
     $field->delete();
 
     // Check that the field is now deleted.
-    $field = field_info_field('node', 'taxonomy_forums');
+    $field = FieldConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNull($field, 'The taxonomy_forums field has been deleted.');
 
     // Ensure that uninstallation succeeds even if the field has already been

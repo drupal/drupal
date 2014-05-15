@@ -11,7 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\field\Field;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Provides a common base class for entity view and form displays.
@@ -168,7 +168,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // Create dependencies on both hidden and visible fields.
     $fields = $this->content + $this->hidden;
     foreach ($fields as $field_name => $component) {
-      $field_instance = Field::fieldInfo()->getInstance($this->targetEntityType, $this->bundle, $field_name);
+      $field_instance = FieldInstanceConfig::loadByName($this->targetEntityType, $this->bundle, $field_name);
       if ($field_instance) {
         $this->addDependency('entity', $field_instance->getConfigDependencyName());
       }

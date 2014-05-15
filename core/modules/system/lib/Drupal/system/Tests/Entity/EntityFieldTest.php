@@ -17,6 +17,7 @@ use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Tests Entity API base functionality.
@@ -623,7 +624,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    */
   protected function assertComputedProperties($entity_type) {
     // Make the test text field processed.
-    $instance = field_info_instance($entity_type, 'field_test_text', $entity_type);
+    $instance = FieldInstanceConfig::loadByName($entity_type, $entity_type, 'field_test_text');
     $instance->settings['text_processing'] = 1;
     $instance->save();
 

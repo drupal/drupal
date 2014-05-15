@@ -9,9 +9,9 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\field\FieldInfo;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Row;
@@ -23,9 +23,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityContentBase extends Entity {
 
   /**
-   * @var \Drupal\field\FieldInfo
+   * Entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $fieldInfo;
+  protected $entityManager;
 
   /**
    * Constructs a content entity.
@@ -44,13 +46,13 @@ class EntityContentBase extends Entity {
    *   The list of bundles this entity type has.
    * @param \Drupal\migrate\Plugin\MigratePluginManager $plugin_manager
    *   The plugin manager.
-   * @param \Drupal\Field\FieldInfo $field_info
-   *   The field info.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, FieldInfo $field_info) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, MigratePluginManager $plugin_manager, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
     $this->migrateEntityFieldPluginManager = $plugin_manager;
-    $this->fieldInfo = $field_info;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -66,7 +68,7 @@ class EntityContentBase extends Entity {
       $container->get('entity.manager')->getStorage($entity_type),
       array_keys($container->get('entity.manager')->getBundleInfo($entity_type)),
       $container->get('plugin.manager.migrate.entity_field'),
-      $container->get('field.info')
+      $container->get('entity.manager')
     );
   }
 
@@ -74,19 +76,21 @@ class EntityContentBase extends Entity {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
-    if ($all_instances = $this->fieldInfo->getInstances($this->storage->getEntityTypeId())) {
-      /** @var \Drupal\Field\Entity\FieldInstanceConfig[] $instances */
-      $instances = array();
-      if ($bundle_key = $this->getKey('bundle')) {
-        $bundle = $row->getDestinationProperty($bundle_key);
-        if (isset($all_instances[$bundle])) {
-          $instances = $all_instances[$bundle];
-        }
-      }
-      foreach ($instances as $field_name => $instance) {
-        $field_type = $instance->getType();
+    if ($bundle_key = $this->getKey('bundle')) {
+      $bundle = $row->getDestinationProperty($bundle_key);
+    }
+    else {
+      $bundle = $this->storage->getEntityTypeId();
+    }
+    // Some migrations save additional data of an existing entity and only
+    // provide the reference to the entity, in those cases, we can not run the
+    // processing below. Migrations that need that need to provide the bundle.
+    if ($bundle) {
+      $field_definitions = $this->entityManager->getFieldDefinitions($this->storage->getEntityTypeId(), $bundle);
+      foreach ($field_definitions as $field_name => $field_definition) {
+        $field_type = $field_definition->getType();
         if ($this->migrateEntityFieldPluginManager->getDefinition($field_type)) {
-          $destination_value = $this->migrateEntityFieldPluginManager->createInstance($field_type)->import($instance, $row->getDestinationProperty($field_name));
+          $destination_value = $this->migrateEntityFieldPluginManager->createInstance($field_type)->import($field_definition, $row->getDestinationProperty($field_name));
           // @TODO: check for NULL return? Add an unset to $row? Maybe needed in
           // exception handling? Propagate exception?
           $row->setDestinationProperty($field_name, $destination_value);

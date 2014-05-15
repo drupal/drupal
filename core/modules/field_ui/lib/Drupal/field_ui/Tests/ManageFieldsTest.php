@@ -10,6 +10,8 @@ namespace Drupal\field_ui\Tests;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\String;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Tests the functionality of the 'Manage fields' screen.
@@ -246,11 +248,11 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Reset the fields info.
     field_info_cache_clear();
     // Assert field settings.
-    $field = field_info_field($entity_type, $field_name);
+    $field = FieldConfig::loadByName($entity_type, $field_name);
     $this->assertTrue($field->getSetting('test_field_setting') == $string, 'Field settings were found.');
 
     // Assert instance settings.
-    $instance = field_info_instance($entity_type, $field_name, $bundle);
+    $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
     $this->assertTrue($instance->getSetting('test_instance_setting') == $string, 'Field instance settings were found.');
   }
 
@@ -322,7 +324,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalPostForm($admin_path, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
-    $instance = field_info_instance('node', $field_name, $this->type);
+    $instance = FieldInstanceConfig::loadByName('node', $this->type, $field_name);
     $this->assertEqual($instance->default_value, array(array('value' => 1)), 'The default value was correctly saved.');
 
     // Check that the default value shows up in the form
@@ -334,7 +336,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
-    $instance = field_info_instance('node', $field_name, $this->type);
+    $instance = FieldInstanceConfig::loadByName('node', $this->type, $field_name);
     $this->assertEqual($instance->default_value, NULL, 'The default value was correctly saved.');
 
     // Check that the default widget is used when the field is hidden.
@@ -375,9 +377,9 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Reset the fields info.
     field_info_cache_clear();
     // Check that the field instance was deleted.
-    $this->assertNull(field_info_instance('node', $this->field_name, $this->type), 'Field instance was deleted.');
+    $this->assertNull(FieldInstanceConfig::loadByName('node', $this->type, $this->field_name), 'Field instance was deleted.');
     // Check that the field was not deleted
-    $this->assertNotNull(field_info_field('node', $this->field_name), 'Field was not deleted.');
+    $this->assertNotNull(FieldConfig::loadByName('node', $this->field_name), 'Field was not deleted.');
 
     // Delete the second instance.
     $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$this->field_name", $this->field_label, $type_name2);
@@ -385,9 +387,9 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Reset the fields info.
     field_info_cache_clear();
     // Check that the field instance was deleted.
-    $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), 'Field instance was deleted.');
+    $this->assertNull(FieldInstanceConfig::loadByName('node', $type_name2, $this->field_name), 'Field instance was deleted.');
     // Check that the field was deleted too.
-    $this->assertNull(field_info_field('node', $this->field_name), 'Field was deleted.');
+    $this->assertNull(FieldConfig::loadByName('node', $this->field_name), 'Field was deleted.');
   }
 
   /**
@@ -407,13 +409,13 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit['fields[_add_new_field][field_name]'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
     $this->drupalPostForm("$bundle_path/fields",  $edit, t('Save'));
-    $this->assertText(t('There was a problem creating field Disallowed field: Attempt to create field title which is reserved by entity type node.', array('%label' => $label)), 'Field was not saved.');
+    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
 
     // Try with a base field.
     $edit['fields[_add_new_field][field_name]'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
     $this->drupalPostForm("$bundle_path/fields",  $edit, t('Save'));
-    $this->assertText(t('There was a problem creating field Disallowed field: Attempt to create field sticky which is reserved by entity type node.', array('%label' => $label)), 'Field was not saved.');
+    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
   }
 
   /**
@@ -554,9 +556,9 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Reset the fields info.
     field_info_cache_clear();
     // Check that the field instance was deleted.
-    $this->assertNull(field_info_instance('taxonomy_term', $this->field_name, 'tags'), 'Field instance was deleted.');
+    $this->assertNull(FieldInstanceConfig::loadByName('taxonomy_term', 'tags', $this->field_name), 'Field instance was deleted.');
     // Check that the field was deleted too.
-    $this->assertNull(field_info_field('taxonomy_term', $this->field_name), 'Field was deleted.');
+    $this->assertNull(FieldConfig::loadByName('taxonomy_term', $this->field_name), 'Field was deleted.');
   }
 
   /**

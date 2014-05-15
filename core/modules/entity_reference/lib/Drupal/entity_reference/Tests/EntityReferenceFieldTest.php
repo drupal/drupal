@@ -7,8 +7,9 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
-use Drupal\field\Field;
 
 /**
  * Tests for the entity reference field.
@@ -88,9 +89,8 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
       array('target_bundles' => array($this->bundle))
     );
 
-    $this->field = Field::fieldInfo()->getField($this->entityType, $this->fieldName);
-    $instances = Field::fieldInfo()->getBundleInstances($this->entityType, $this->bundle);
-    $this->instance = $instances[$this->fieldName];
+    $this->field = FieldConfig::loadByName($this->entityType, $this->fieldName);
+    $this->instance = FieldInstanceConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);
   }
 
   /**

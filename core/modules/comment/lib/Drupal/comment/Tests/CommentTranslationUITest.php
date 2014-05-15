@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests the Comment Translation UI.
@@ -75,7 +76,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    */
   function setupTestFields() {
     parent::setupTestFields();
-    $field = field_info_field('comment', 'comment_body');
+    $field = FieldConfig::loadByName('comment', 'comment_body');
     $field->translatable = TRUE;
     $field->save();
   }

@@ -137,6 +137,16 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
   protected $displayModeInfo = array();
 
   /**
+   * An array keyed by entity type. Each value is an array whose keys are
+   * field names and whose value is an array with two entries:
+   *   - type: The field type.
+   *   - bundles: The bundles in which the field appears.
+   *
+   * @return array
+   */
+  protected $fieldMap = array();
+
+  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -522,6 +532,35 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getFieldMap() {
+    if (!$this->fieldMap) {
+      // Not prepared, try to load from cache.
+      $cid = 'entity_field_map';
+      if ($cache = $this->cache->get($cid)) {
+        $this->fieldMap = $cache->data;
+      }
+      else {
+        // Rebuild the definitions and put it into the cache.
+        foreach ($this->getDefinitions() as $entity_type_id => $entity_type) {
+          if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+            foreach ($this->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
+              foreach ($this->getFieldDefinitions($entity_type_id, $bundle) as $field_name => $field_definition) {
+                $this->fieldMap[$entity_type_id][$field_name]['type'] = $field_definition->getType();
+                $this->fieldMap[$entity_type_id][$field_name]['bundles'][] = $bundle;
+              }
+            }
+          }
+        }
+
+        $this->cache->set($cid, $this->fieldMap, Cache::PERMANENT, array('entity_types' => TRUE, 'entity_field_info' => TRUE));
+      }
+    }
+    return $this->fieldMap;
+  }
+
+  /**
    * Builds field storage definitions for an entity type.
    *
    * @param string $entity_type_id
@@ -565,6 +604,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface,
     $this->baseFieldDefinitions = array();
     $this->fieldDefinitions = array();
     $this->fieldStorageDefinitions = array();
+    $this->fieldMap = array();
     Cache::deleteTags(array('entity_field_info' => TRUE));
   }
 

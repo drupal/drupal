@@ -7,7 +7,7 @@
 
 namespace Drupal\path\Tests;
 
-use Drupal\field\Field;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests URL aliases for translated nodes.
@@ -71,9 +71,7 @@ class PathLanguageTest extends PathTestBase {
     );
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
 
-    // Ensure configuration changes are picked up in the host environment.
-    Field::fieldInfo()->flush();
-    $field = Field::fieldInfo()->getField('node', 'body');
+    $field = FieldConfig::loadByName('node', 'body');
     $this->assertTrue($field->isTranslatable(), 'Node body is translatable.');
   }
 

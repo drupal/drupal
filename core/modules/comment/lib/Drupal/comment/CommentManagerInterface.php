@@ -28,7 +28,7 @@ interface CommentManagerInterface {
    *   - bundles: The bundles in which the field appears, as an array with entity
    *     types as keys and the array of bundle names as values.
    *
-   * @see field_info_field_map()
+   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldMap()
    */
   public function getFields($entity_type_id);
 

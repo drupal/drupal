@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\Language;
-use Drupal\field\Field as FieldService;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Base class for language-aware entity tests.
@@ -133,12 +133,11 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
   protected function toggleFieldTranslatability($entity_type) {
     $fields = array($this->field_name, $this->untranslatable_field_name);
     foreach ($fields as $field_name) {
-      $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
+      $field = FieldConfig::loadByName($entity_type, $field_name);
       $translatable = !$field->isTranslatable();
       $field->set('translatable', $translatable);
       $field->save();
-      FieldService::fieldInfo()->flush();
-      $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
+      $field = FieldConfig::loadByName($entity_type, $field_name);
       $this->assertEqual($field->isTranslatable(), $translatable, 'Field translatability changed.');
     }
     \Drupal::cache('entity')->deleteAll();
