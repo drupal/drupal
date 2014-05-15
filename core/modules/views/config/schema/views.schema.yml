@@ -79,24 +79,31 @@ views.view.*:
       type: boolean
       label: 'Status'
     module:
+      type: string
       label: 'Module'
     id:
+      type: string
       label: 'Machine name'
     description:
       type: text
       label: 'Administrative description'
     tag:
+      type: string
       label: 'Tag'
     base_table:
+      type: string
       label: 'Base table'
     base_field:
+      type: string
       label: 'Base field'
     label:
       type: label
       label: 'Human readable name'
     core:
+      type: string
       label: 'Drupal version'
     uuid:
+      type: string
       label: 'UUID'
     display:
       type: sequence
@@ -106,11 +113,13 @@ views.view.*:
           label: 'Display settings'
           mapping:
             id:
+              type: string
               label: 'Machine name'
             display_title:
               type: text
               label: 'Title'
             display_plugin:
+              type: string
               label: 'Display plugin'
             position:
               type: integer

@@ -68,15 +68,15 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $definition = $config['testitem']->getDataDefinition();
     $expected = array();
     $expected['label'] = 'Test item';
-    $expected['class'] = '\Drupal\Core\TypedData\Plugin\DataType\String';
-    $expected['type'] = 'string';
-    $this->assertEqual($definition, $expected, 'Automatic type detection on string item worked.');
+    $expected['class'] = '\Drupal\Core\Config\Schema\Property';
+    $expected['type'] = 'undefined';
+    $this->assertEqual($definition, $expected, 'Automatic type detected for a scalar is undefined.');
     $definition = $config['testlist']->getDataDefinition();
     $expected = array();
     $expected['label'] = 'Test list';
     $expected['class'] = '\Drupal\Core\Config\Schema\Property';
     $expected['type'] = 'undefined';
-    $this->assertEqual($definition, $expected, 'Automatic type fallback on non-string item worked.');
+    $this->assertEqual($definition, $expected, 'Automatic type detected for a list is undefined.');
 
     // Simple case, straight metadata.
     $definition = \Drupal::service('config.typed')->getDefinition('system.maintenance');
