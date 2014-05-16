@@ -100,7 +100,11 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $source_name, $target_name = NULL) {
+  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $source_name, $target_name = NULL, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    if ($collection != StorageInterface::DEFAULT_COLLECTION) {
+      $source_storage = $source_storage->createCollection($collection);
+      $target_storage = $target_storage->createCollection($collection);
+    }
     if (!isset($target_name)) {
       $target_name = $source_name;
     }
@@ -131,9 +135,22 @@ class ConfigManager implements ConfigManagerInterface {
    * {@inheritdoc}
    */
   public function createSnapshot(StorageInterface $source_storage, StorageInterface $snapshot_storage) {
+    // Empty the snapshot of all configuration.
     $snapshot_storage->deleteAll();
+    foreach ($snapshot_storage->getAllCollectionNames() as $collection) {
+      $snapshot_collection = $snapshot_storage->createCollection($collection);
+      $snapshot_collection->deleteAll();
+    }
     foreach ($source_storage->listAll() as $name) {
       $snapshot_storage->write($name, $source_storage->read($name));
+    }
+    // Copy collections as well.
+    foreach ($source_storage->getAllCollectionNames() as $collection) {
+      $source_collection = $source_storage->createCollection($collection);
+      $snapshot_collection = $snapshot_storage->createCollection($collection);
+      foreach ($source_collection->listAll() as $name) {
+        $snapshot_collection->write($name, $source_collection->read($name));
+      }
     }
   }
 
@@ -156,6 +173,13 @@ class ConfigManager implements ConfigManagerInterface {
     foreach ($config_names as $config_name) {
       $this->configFactory->get($config_name)->delete();
     }
+
+    // Remove any matching configuration from collections.
+    foreach ($this->activeStorage->getAllCollectionNames() as $collection) {
+      $collection_storage = $this->activeStorage->createCollection($collection);
+      $collection_storage->deleteAll($name . '.');
+    }
+
     $schema_dir = drupal_get_path($type, $name) . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY;
     if (is_dir($schema_dir)) {
       // Refresh the schema cache if uninstalling an extension that provides
@@ -216,4 +240,10 @@ class ConfigManager implements ConfigManagerInterface {
     return $entities_to_return;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsConfigurationEntities($collection) {
+    return $collection == StorageInterface::DEFAULT_COLLECTION;
+  }
 }

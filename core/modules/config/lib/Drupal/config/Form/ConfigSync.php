@@ -160,7 +160,7 @@ class ConfigSync extends FormBase {
     );
 
     $source_list = $this->sourceStorage->listAll();
-    $storage_comparer = new StorageComparer($this->sourceStorage, $this->targetStorage);
+    $storage_comparer = new StorageComparer($this->sourceStorage, $this->targetStorage, $this->configManager);
     if (empty($source_list) || !$storage_comparer->createChangelist()->hasChanges()) {
       $form['no_changes'] = array(
         '#type' => 'table',
@@ -184,71 +184,86 @@ class ConfigSync extends FormBase {
     // Add the AJAX library to the form for dialog support.
     $form['#attached']['library'][] = 'core/drupal.ajax';
 
-    foreach ($storage_comparer->getChangelist() as $config_change_type => $config_names) {
-      if (empty($config_names)) {
-        continue;
-      }
-
-      // @todo A table caption would be more appropriate, but does not have the
-      //   visual importance of a heading.
-      $form[$config_change_type]['heading'] = array(
-        '#type' => 'html_tag',
-        '#tag' => 'h3',
-      );
-      switch ($config_change_type) {
-        case 'create':
-          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count new', '@count new');
-          break;
-
-        case 'update':
-          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count changed', '@count changed');
-          break;
-
-        case 'delete':
-          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count removed', '@count removed');
-          break;
-
-        case 'rename':
-          $form[$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count renamed', '@count renamed');
-          break;
-      }
-      $form[$config_change_type]['list'] = array(
-        '#type' => 'table',
-        '#header' => array('Name', 'Operations'),
-      );
-
-      foreach ($config_names as $config_name) {
-        if ($config_change_type == 'rename') {
-          $names = $storage_comparer->extractRenameNames($config_name);
-          $href = $this->urlGenerator->getPathFromRoute('config.diff', array('source_name' => $names['old_name'], 'target_name' => $names['new_name']));
-          $config_name = $this->t('!source_name to !target_name', array('!source_name' => $names['old_name'], '!target_name' => $names['new_name']));
-        }
-        else {
-          $href = $this->urlGenerator->getPathFromRoute('config.diff', array('source_name' => $config_name));
-        }
-        $links['view_diff'] = array(
-          'title' => $this->t('View differences'),
-          'href' => $href,
-          'attributes' => array(
-            'class' => array('use-ajax'),
-            'data-accepts' => 'application/vnd.drupal-modal',
-            'data-dialog-options' => json_encode(array(
-              'width' => 700
-            )),
-          ),
+    foreach ($storage_comparer->getAllCollectionNames() as $collection) {
+      if ($collection != StorageInterface::DEFAULT_COLLECTION) {
+        $form[$collection]['collection_heading'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'h2',
+          '#value' => $this->t('!collection configuration collection', array('!collection' => $collection)),
         );
-        $form[$config_change_type]['list']['#rows'][] = array(
-          'name' => $config_name,
-          'operations' => array(
-            'data' => array(
-              '#type' => 'operations',
-              '#links' => $links,
+      }
+      foreach ($storage_comparer->getChangelist(NULL, $collection) as $config_change_type => $config_names) {
+        if (empty($config_names)) {
+          continue;
+        }
+
+        // @todo A table caption would be more appropriate, but does not have the
+        //   visual importance of a heading.
+        $form[$collection][$config_change_type]['heading'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'h3',
+        );
+        switch ($config_change_type) {
+          case 'create':
+            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count new', '@count new');
+            break;
+
+          case 'update':
+            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count changed', '@count changed');
+            break;
+
+          case 'delete':
+            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count removed', '@count removed');
+            break;
+
+          case 'rename':
+            $form[$collection][$config_change_type]['heading']['#value'] = format_plural(count($config_names), '@count renamed', '@count renamed');
+            break;
+        }
+        $form[$collection][$config_change_type]['list'] = array(
+          '#type' => 'table',
+          '#header' => array('Name', 'Operations'),
+        );
+
+        foreach ($config_names as $config_name) {
+          if ($config_change_type == 'rename') {
+            $names = $storage_comparer->extractRenameNames($config_name);
+            $route_options = array('source_name' => $names['old_name'], 'target_name' => $names['new_name']);
+            $config_name = $this->t('!source_name to !target_name', array('!source_name' => $names['old_name'], '!target_name' => $names['new_name']));
+          }
+          else {
+            $route_options = array('source_name' => $config_name);
+          }
+          if ($collection != StorageInterface::DEFAULT_COLLECTION) {
+            $route_options['collection'] = $collection;
+            $href = $this->urlGenerator->getPathFromRoute('config.diff_collection', $route_options);
+          }
+          else {
+            $href = $this->urlGenerator->getPathFromRoute('config.diff', $route_options);
+          }
+          $links['view_diff'] = array(
+            'title' => $this->t('View differences'),
+            'href' => $href,
+            'attributes' => array(
+              'class' => array('use-ajax'),
+              'data-accepts' => 'application/vnd.drupal-modal',
+              'data-dialog-options' => json_encode(array(
+                'width' => 700
+              )),
             ),
-          ),
-        );
+          );
+          $form[$collection][$config_change_type]['list']['#rows'][] = array(
+            'name' => $config_name,
+            'operations' => array(
+              'data' => array(
+                '#type' => 'operations',
+                '#links' => $links,
+              ),
+            ),
+          );
+        }
       }
     }
-
     return $form;
   }
 

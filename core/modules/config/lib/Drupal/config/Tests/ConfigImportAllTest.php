@@ -111,7 +111,8 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Ensure that we have no configuration changes to import.
     $storage_comparer = new StorageComparer(
       $this->container->get('config.storage.staging'),
-      $this->container->get('config.storage')
+      $this->container->get('config.storage'),
+      $this->container->get('config.manager')
     );
     $this->assertIdentical($storage_comparer->createChangelist()->getChangelist(), $storage_comparer->getEmptyChangelist());
   }

@@ -30,6 +30,11 @@ class StorageComparerTest extends UnitTestCase {
   protected $targetStorage;
 
   /**
+   * @var \Drupal\Core\Config\ConfigManager|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $configManager;
+
+  /**
    * The storage comparer to test.
    *
    * @var \Drupal\Core\Config\StorageComparer
@@ -54,7 +59,8 @@ class StorageComparerTest extends UnitTestCase {
   public function setUp() {
     $this->sourceStorage = $this->getMock('Drupal\Core\Config\StorageInterface');
     $this->targetStorage = $this->getMock('Drupal\Core\Config\StorageInterface');
-    $this->storageComparer = new StorageComparer($this->sourceStorage, $this->targetStorage);
+    $this->configManager = $this->getMock('Drupal\Core\Config\ConfigManagerInterface');
+    $this->storageComparer = new StorageComparer($this->sourceStorage, $this->targetStorage, $this->configManager);
   }
 
   protected function getConfigData() {
@@ -123,6 +129,15 @@ class StorageComparerTest extends UnitTestCase {
     $this->targetStorage->expects($this->once())
       ->method('readMultiple')
       ->will($this->returnValue($config_data));
+    $this->sourceStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->targetStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->configManager->expects($this->any())
+      ->method('supportsConfigurationEntities')
+      ->will($this->returnValue(TRUE));
 
     $this->storageComparer->createChangelist();
     $this->assertEmpty($this->storageComparer->getChangelist('create'));
@@ -151,6 +166,15 @@ class StorageComparerTest extends UnitTestCase {
     $this->targetStorage->expects($this->once())
       ->method('readMultiple')
       ->will($this->returnValue($target_data));
+    $this->sourceStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->targetStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->configManager->expects($this->any())
+      ->method('supportsConfigurationEntities')
+      ->will($this->returnValue(TRUE));
 
     $this->storageComparer->createChangelist();
     $expected = array(
@@ -184,6 +208,15 @@ class StorageComparerTest extends UnitTestCase {
     $this->targetStorage->expects($this->once())
       ->method('readMultiple')
       ->will($this->returnValue($target_data));
+    $this->sourceStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->targetStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->configManager->expects($this->any())
+      ->method('supportsConfigurationEntities')
+      ->will($this->returnValue(TRUE));
 
     $this->storageComparer->createChangelist();
     $expected = array(
@@ -217,6 +250,15 @@ class StorageComparerTest extends UnitTestCase {
     $this->targetStorage->expects($this->once())
       ->method('readMultiple')
       ->will($this->returnValue($target_data));
+    $this->sourceStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->targetStorage->expects($this->once())
+      ->method('getAllCollectionNames')
+      ->will($this->returnValue(array()));
+    $this->configManager->expects($this->any())
+      ->method('supportsConfigurationEntities')
+      ->will($this->returnValue(TRUE));
 
     $this->storageComparer->createChangelist();
     $expected = array(

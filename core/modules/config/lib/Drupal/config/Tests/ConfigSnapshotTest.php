@@ -45,12 +45,13 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
     $active = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
     $snapshot = $this->container->get('config.storage.snapshot');
+    $config_manager = $this->container->get('config.manager');
     $config_name = 'config_test.system';
     $config_key = 'foo';
     $new_data = 'foobar';
 
-    $active_snapshot_comparer = new StorageComparer($active, $snapshot);
-    $staging_snapshot_comparer = new StorageComparer($staging, $snapshot);
+    $active_snapshot_comparer = new StorageComparer($active, $snapshot, $config_manager);
+    $staging_snapshot_comparer = new StorageComparer($staging, $snapshot, $config_manager);
 
     // Verify that we have an initial snapshot that matches the active
     // configuration. This has to be true as no config should be installed.

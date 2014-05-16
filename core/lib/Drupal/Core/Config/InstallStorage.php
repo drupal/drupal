@@ -51,10 +51,14 @@ class InstallStorage extends FileStorage {
    *
    * @param string $directory
    *   The directory to scan in each extension to scan for files. Defaults to
-   *   'config'.
+   *   'config/install'.
+   * @param string $collection
+   *   (optional) The collection to store configuration in. Defaults to the
+   *   default collection.
    */
-  public function __construct($directory = self::CONFIG_INSTALL_DIRECTORY) {
+  public function __construct($directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->directory = $directory;
+    $this->collection = $collection;
   }
 
   /**
@@ -198,7 +202,7 @@ class InstallStorage extends FileStorage {
    *   The configuration folder name for this component.
    */
   protected function getComponentFolder($type, $name) {
-    return drupal_get_path($type, $name) . '/' . $this->directory;
+    return drupal_get_path($type, $name) . '/' . $this->getCollectionDirectory();
   }
 
   /**

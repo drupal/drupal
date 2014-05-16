@@ -38,6 +38,13 @@ class DatabaseStorage implements StorageInterface {
   protected $options = array();
 
   /**
+   * The storage collection.
+   *
+   * @var string
+   */
+  protected $collection = StorageInterface::DEFAULT_COLLECTION;
+
+  /**
    * Constructs a new DatabaseStorage.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -46,11 +53,15 @@ class DatabaseStorage implements StorageInterface {
    *   A database table name to store configuration data in.
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
+   * @param string $collection
+   *   (optional) The collection to store configuration in. Defaults to the
+   *   default collection.
    */
-  public function __construct(Connection $connection, $table, array $options = array()) {
+  public function __construct(Connection $connection, $table, array $options = array(), $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->connection = $connection;
     $this->table = $table;
     $this->options = $options;
+    $this->collection = $collection;
   }
 
   /**
@@ -58,7 +69,8 @@ class DatabaseStorage implements StorageInterface {
    */
   public function exists($name) {
     try {
-      return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name = :name', 0, 1, array(
+      return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :name', 0, 1, array(
+        ':collection' => $this->collection,
         ':name' => $name,
       ), $this->options)->fetchField();
     }
@@ -75,7 +87,7 @@ class DatabaseStorage implements StorageInterface {
   public function read($name) {
     $data = FALSE;
     try {
-      $raw = $this->connection->query('SELECT data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name = :name', array(':name' => $name), $this->options)->fetchField();
+      $raw = $this->connection->query('SELECT data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :name', array(':collection' => $this->collection, ':name' => $name), $this->options)->fetchField();
       if ($raw !== FALSE) {
         $data = $this->decode($raw);
       }
@@ -93,7 +105,7 @@ class DatabaseStorage implements StorageInterface {
   public function readMultiple(array $names) {
     $list = array();
     try {
-      $list = $this->connection->query('SELECT name, data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN (:names)', array(':names' => $names), $this->options)->fetchAllKeyed();
+      $list = $this->connection->query('SELECT name, data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name IN (:names)', array(':collection' => $this->collection, ':names' => $names), $this->options)->fetchAllKeyed();
       foreach ($list as &$data) {
         $data = $this->decode($data);
       }
@@ -136,7 +148,7 @@ class DatabaseStorage implements StorageInterface {
   protected function doWrite($name, $data) {
     $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
     return (bool) $this->connection->merge($this->table, $options)
-      ->key('name', $name)
+      ->keys(array('collection', 'name'), array($this->collection, $name))
       ->fields(array('data' => $data))
       ->execute();
   }
@@ -176,8 +188,15 @@ class DatabaseStorage implements StorageInterface {
     $schema = array(
       'description' => 'The base table for configuration data.',
       'fields' => array(
+        'collection' => array(
+          'description' => 'Primary Key: Config object collection.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
         'name' => array(
-          'description' => 'Primary Key: Unique config object name.',
+          'description' => 'Primary Key: Config object name.',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
@@ -190,7 +209,7 @@ class DatabaseStorage implements StorageInterface {
           'size' => 'big',
         ),
       ),
-      'primary key' => array('name'),
+      'primary key' => array('collection', 'name'),
     );
     return $schema;
   }
@@ -205,6 +224,7 @@ class DatabaseStorage implements StorageInterface {
   public function delete($name) {
     $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
     return (bool) $this->connection->delete($this->table, $options)
+      ->condition('collection', $this->collection)
       ->condition('name', $name)
       ->execute();
   }
@@ -220,6 +240,7 @@ class DatabaseStorage implements StorageInterface {
     return (bool) $this->connection->update($this->table, $options)
       ->fields(array('name' => $new_name))
       ->condition('name', $name)
+      ->condition('collection', $this->collection)
       ->execute();
   }
 
@@ -246,7 +267,8 @@ class DatabaseStorage implements StorageInterface {
    */
   public function listAll($prefix = '') {
     try {
-      return $this->connection->query('SELECT name FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name LIKE :name', array(
+      return $this->connection->query('SELECT name FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name LIKE :name', array(
+        ':collection' => $this->collection,
         ':name' => $this->connection->escapeLike($prefix) . '%',
       ), $this->options)->fetchCol();
     }
@@ -263,10 +285,46 @@ class DatabaseStorage implements StorageInterface {
       $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
       return (bool) $this->connection->delete($this->table, $options)
         ->condition('name', $prefix . '%', 'LIKE')
+        ->condition('collection', $this->collection)
         ->execute();
     }
     catch (\Exception $e) {
       return FALSE;
     }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createCollection($collection) {
+    return new static(
+      $this->connection,
+      $this->table,
+      $this->options,
+      $collection
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCollectionName() {
+    return $this->collection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllCollectionNames() {
+    try {
+      return $this->connection->query('SELECT DISTINCT collection FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection <> :collection ORDER by collection', array(
+        ':collection' => StorageInterface::DEFAULT_COLLECTION)
+      )->fetchCol();
+    }
+    catch (\Exception $e) {
+      return array();
+    }
+  }
+
+
 }

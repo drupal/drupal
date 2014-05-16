@@ -50,4 +50,11 @@ final class ConfigEvents {
    */
   const IMPORT = 'config.importer.import';
 
+  /**
+   * Name of event fired to discover all the possible configuration collections.
+   *
+   * @see \Drupal\Core\Config\ConfigInstaller::installDefaultConfig()
+   */
+  const COLLECTION_NAMES = 'config.collection_names';
+
 }

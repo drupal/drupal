@@ -30,11 +30,26 @@ class ExtensionInstallStorage extends InstallStorage {
    *   themes is stored.
    * @param string $directory
    *   The directory to scan in each extension to scan for files. Defaults to
-   *   'config'.
+   *   'config/install'.
+   * @param string $collection
+   *   (optional) The collection to store configuration in. Defaults to the
+   *   default collection.
    */
-  public function __construct(StorageInterface $config_storage, $directory = self::CONFIG_INSTALL_DIRECTORY) {
+  public function __construct(StorageInterface $config_storage, $directory = self::CONFIG_INSTALL_DIRECTORY, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->configStorage = $config_storage;
     $this->directory = $directory;
+    $this->collection = $collection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createCollection($collection) {
+    return new static(
+      $this->configStorage,
+      $this->directory,
+      $collection
+    );
   }
 
   /**

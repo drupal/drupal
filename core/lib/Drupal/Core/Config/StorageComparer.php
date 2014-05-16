@@ -9,11 +9,12 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Core\DependencyInjection\DependencySerialization;
 
 /**
  * Defines a config storage comparer.
  */
-class StorageComparer implements StorageComparerInterface {
+class StorageComparer extends DependencySerialization implements StorageComparerInterface {
 
   /**
    * The source storage used to discover configuration changes.
@@ -23,6 +24,13 @@ class StorageComparer implements StorageComparerInterface {
   protected $sourceStorage;
 
   /**
+   * The source storages keyed by collection.
+   *
+   * @var \Drupal\Core\Config\StorageInterface[]
+   */
+  protected $sourceStorages;
+
+  /**
    * The target storage used to write configuration changes.
    *
    * @var \Drupal\Core\Config\StorageInterface
@@ -30,7 +38,23 @@ class StorageComparer implements StorageComparerInterface {
   protected $targetStorage;
 
   /**
+   * The target storages keyed by collection.
+   *
+   * @var \Drupal\Core\Config\StorageInterface[]
+   */
+  protected $targetStorages;
+
+  /**
+   * The configuration manager.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface
+   */
+  protected $configManager;
+
+  /**
    * List of changes to between the source storage and the target storage.
+   *
+   * The list is keyed by storage collection name.
    *
    * @var array
    */
@@ -39,12 +63,16 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * Sorted list of all the configuration object names in the source storage.
    *
+   * The list is keyed by storage collection name.
+   *
    * @var array
    */
   protected $sourceNames = array();
 
   /**
    * Sorted list of all the configuration object names in the target storage.
+   *
+   * The list is keyed by storage collection name.
    *
    * @var array
    */
@@ -53,12 +81,16 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * The source configuration data keyed by name.
    *
+   * The data is keyed by storage collection name.
+   *
    * @var array
    */
   protected $sourceData = array();
 
   /**
    * The target configuration data keyed by name.
+   *
+   * The data is keyed by storage collection name.
    *
    * @var array
    */
@@ -71,25 +103,44 @@ class StorageComparer implements StorageComparerInterface {
    *   Storage object used to read configuration.
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   Storage object used to write configuration.
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   *   The configuration manager.
    */
-  public function __construct(StorageInterface $source_storage, StorageInterface $target_storage) {
+  public function __construct(StorageInterface $source_storage, StorageInterface $target_storage, ConfigManagerInterface $config_manager) {
     $this->sourceStorage = $source_storage;
     $this->targetStorage = $target_storage;
-    $this->changelist = $this->getEmptyChangelist();
+    $this->configManager = $config_manager;
+    $this->changelist[StorageInterface::DEFAULT_COLLECTION] = $this->getEmptyChangelist();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSourceStorage() {
-    return $this->sourceStorage;
+  public function getSourceStorage($collection = StorageInterface::DEFAULT_COLLECTION) {
+    if (!isset($this->sourceStorages[$collection])) {
+      if ($collection == StorageInterface::DEFAULT_COLLECTION) {
+        $this->sourceStorages[$collection] = $this->sourceStorage;
+      }
+      else {
+        $this->sourceStorages[$collection] = $this->sourceStorage->createCollection($collection);
+      }
+    }
+    return $this->sourceStorages[$collection];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTargetStorage() {
-    return $this->targetStorage;
+  public function getTargetStorage($collection = StorageInterface::DEFAULT_COLLECTION) {
+    if (!isset($this->targetStorages[$collection])) {
+      if ($collection == StorageInterface::DEFAULT_COLLECTION) {
+        $this->targetStorages[$collection] = $this->targetStorage;
+      }
+      else {
+        $this->targetStorages[$collection] = $this->targetStorage->createCollection($collection);
+      }
+    }
+    return $this->targetStorages[$collection];
   }
 
   /**
@@ -107,16 +158,18 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getChangelist($op = NULL) {
+  public function getChangelist($op = NULL, $collection = StorageInterface::DEFAULT_COLLECTION) {
     if ($op) {
-      return $this->changelist[$op];
+      return $this->changelist[$collection][$op];
     }
-    return $this->changelist;
+    return $this->changelist[$collection];
   }
 
   /**
    * Adds changes to the changelist.
    *
+   * @param string $collection
+   *   The storage collection to add changes for.
    * @param string $op
    *   The change operation performed. Either delete, create, rename, or update.
    * @param array $changes
@@ -125,16 +178,16 @@ class StorageComparer implements StorageComparerInterface {
    *   Array to sort that can be used to sort the changelist. This array must
    *   contain all the items that are in the change list.
    */
-  protected function addChangeList($op, array $changes, array $sort_order = NULL) {
+  protected function addChangeList($collection, $op, array $changes, array $sort_order = NULL) {
     // Only add changes that aren't already listed.
-    $changes = array_diff($changes, $this->changelist[$op]);
-    $this->changelist[$op] = array_merge($this->changelist[$op], $changes);
+    $changes = array_diff($changes, $this->changelist[$collection][$op]);
+    $this->changelist[$collection][$op] = array_merge($this->changelist[$collection][$op], $changes);
     if (isset($sort_order)) {
-      $count = count($this->changelist[$op]);
+      $count = count($this->changelist[$collection][$op]);
       // Sort the changlist in the same order as the $sort_order array and
       // ensure the array is keyed from 0.
-      $this->changelist[$op] = array_values(array_intersect($sort_order, $this->changelist[$op]));
-      if ($count != count($this->changelist[$op])) {
+      $this->changelist[$collection][$op] = array_values(array_intersect($sort_order, $this->changelist[$collection][$op]));
+      if ($count != count($this->changelist[$collection][$op])) {
         throw new \InvalidArgumentException(String::format('Sorting the @op changelist should not change its length.', array('@op' => $op)));
       }
     }
@@ -144,13 +197,20 @@ class StorageComparer implements StorageComparerInterface {
    * {@inheritdoc}
    */
   public function createChangelist() {
-    $this->getAndSortConfigData();
-    $this->addChangelistCreate();
-    $this->addChangelistUpdate();
-    $this->addChangelistDelete();
-    $this->addChangelistRename();
-    $this->sourceData = NULL;
-    $this->targetData = NULL;
+    foreach ($this->getAllCollectionNames() as $collection) {
+      $this->changelist[$collection] = $this->getEmptyChangelist();
+      $this->getAndSortConfigData($collection);
+      $this->addChangelistCreate($collection);
+      $this->addChangelistUpdate($collection);
+      $this->addChangelistDelete($collection);
+      // Only collections that support configuration entities can have renames.
+      if ($this->configManager->supportsConfigurationEntities($collection)) {
+        $this->addChangelistRename($collection);
+      }
+      // Only need data whilst calculating changelists. Free up the memory.
+      $this->sourceData = NULL;
+      $this->targetData = NULL;
+    }
     return $this;
   }
 
@@ -160,10 +220,13 @@ class StorageComparer implements StorageComparerInterface {
    * The list of deletes is sorted so that dependencies are deleted after
    * configuration entities that depend on them. For example, field instances
    * should be deleted after fields.
+   *
+   * @param string $collection
+   *   The storage collection to operate on.
    */
-  protected function addChangelistDelete() {
-    $deletes = array_diff(array_reverse($this->targetNames), $this->sourceNames);
-    $this->addChangeList('delete', $deletes);
+  protected function addChangelistDelete($collection) {
+    $deletes = array_diff(array_reverse($this->targetNames[$collection]), $this->sourceNames[$collection]);
+    $this->addChangeList($collection, 'delete', $deletes);
   }
 
   /**
@@ -172,10 +235,13 @@ class StorageComparer implements StorageComparerInterface {
    * The list of creates is sorted so that dependencies are created before
    * configuration entities that depend on them. For example, fields
    * should be created before field instances.
+   *
+   * @param string $collection
+   *   The storage collection to operate on.
    */
-  protected function addChangelistCreate() {
-    $creates = array_diff($this->sourceNames, $this->targetNames);
-    $this->addChangeList('create', $creates);
+  protected function addChangelistCreate($collection) {
+    $creates = array_diff($this->sourceNames[$collection], $this->targetNames[$collection]);
+    $this->addChangeList($collection, 'create', $creates);
   }
 
   /**
@@ -184,19 +250,22 @@ class StorageComparer implements StorageComparerInterface {
    * The list of updates is sorted so that dependencies are created before
    * configuration entities that depend on them. For example, fields
    * should be updated before field instances.
+   *
+   * @param string $collection
+   *   The storage collection to operate on.
    */
-  protected function addChangelistUpdate() {
+  protected function addChangelistUpdate($collection) {
     $recreates = array();
-    foreach (array_intersect($this->sourceNames, $this->targetNames) as $name) {
-      if ($this->sourceData[$name] !== $this->targetData[$name]) {
-        if (isset($this->sourceData[$name]['uuid']) && $this->sourceData[$name]['uuid'] != $this->targetData[$name]['uuid']) {
+    foreach (array_intersect($this->sourceNames[$collection], $this->targetNames[$collection]) as $name) {
+      if ($this->sourceData[$collection][$name] !== $this->targetData[$collection][$name]) {
+        if (isset($this->sourceData[$collection][$name]['uuid']) && $this->sourceData[$collection][$name]['uuid'] != $this->targetData[$collection][$name]['uuid']) {
           // The entity has the same file as an existing entity but the UUIDs do
           // not match. This means that the entity has been recreated so config
           // synchronisation should do the same.
           $recreates[] = $name;
         }
         else {
-          $this->addChangeList('update', array($name));
+          $this->addChangeList($collection, 'update', array($name));
         }
       }
     }
@@ -204,8 +273,8 @@ class StorageComparer implements StorageComparerInterface {
     if (!empty($recreates)) {
       // Recreates should become deletes and creates. Deletes should be ordered
       // so that dependencies are deleted first.
-      $this->addChangeList('create', $recreates, $this->sourceNames);
-      $this->addChangeList('delete', $recreates, array_reverse($this->targetNames));
+      $this->addChangeList($collection, 'create', $recreates, $this->sourceNames[$collection]);
+      $this->addChangeList($collection, 'delete', $recreates, array_reverse($this->targetNames[$collection]));
 
     }
   }
@@ -216,17 +285,20 @@ class StorageComparer implements StorageComparerInterface {
    * The list of renames is created from the different source and target names
    * with same UUID. These changes will be removed from the create and delete
    * lists.
+   *
+   * @param string $collection
+   *   The storage collection to operate on.
    */
-  protected function addChangelistRename() {
+  protected function addChangelistRename($collection) {
     // Renames will be present in both the create and delete lists.
-    $create_list = $this->getChangelist('create');
-    $delete_list = $this->getChangelist('delete');
+    $create_list = $this->getChangelist('create', $collection);
+    $delete_list = $this->getChangelist('delete', $collection);
     if (empty($create_list) || empty($delete_list)) {
       return;
     }
 
     $create_uuids = array();
-    foreach ($this->sourceData as $id => $data) {
+    foreach ($this->sourceData[$collection] as $id => $data) {
       if (isset($data['uuid']) && in_array($id, $create_list)) {
         $create_uuids[$data['uuid']] = $id;
       }
@@ -245,50 +317,52 @@ class StorageComparer implements StorageComparerInterface {
     // Node type is a good example of a configuration entity that renames other
     // configuration when it is renamed.
     // @see \Drupal\node\Entity\NodeType::postSave()
-    foreach ($this->targetNames as $name) {
-      $data = $this->targetData[$name];
+    foreach ($this->targetNames[$collection] as $name) {
+      $data = $this->targetData[$collection][$name];
       if (isset($data['uuid']) && isset($create_uuids[$data['uuid']])) {
         // Remove the item from the create list.
-        $this->removeFromChangelist('create', $create_uuids[$data['uuid']]);
+        $this->removeFromChangelist($collection, 'create', $create_uuids[$data['uuid']]);
         // Remove the item from the delete list.
-        $this->removeFromChangelist('delete', $name);
+        $this->removeFromChangelist($collection, 'delete', $name);
         // Create the rename name.
         $renames[] = $this->createRenameName($name, $create_uuids[$data['uuid']]);
       }
     }
 
-    $this->addChangeList('rename', $renames);
+    $this->addChangeList($collection, 'rename', $renames);
   }
 
   /**
    * Removes the entry from the given operation changelist for the given name.
    *
+   * @param string $collection
+   *   The storage collection to operate on.
    * @param string $op
    *   The changelist to act on. Either delete, create, rename or update.
    * @param string $name
    *   The name of the configuration to remove.
    */
-  protected function removeFromChangelist($op, $name) {
-    $key = array_search($name, $this->changelist[$op]);
+  protected function removeFromChangelist($collection, $op, $name) {
+    $key = array_search($name, $this->changelist[$collection][$op]);
     if ($key !== FALSE) {
-      unset($this->changelist[$op][$key]);
+      unset($this->changelist[$collection][$op][$key]);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function moveRenameToUpdate($rename) {
+  public function moveRenameToUpdate($rename, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $names = $this->extractRenameNames($rename);
-    $this->removeFromChangelist('rename', $rename);
-    $this->addChangeList('update', array($names['new_name']), $this->sourceNames);
+    $this->removeFromChangelist($collection, 'rename', $rename);
+    $this->addChangeList($collection, 'update', array($names['new_name']), $this->sourceNames[$collection]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function reset() {
-    $this->changelist = $this->getEmptyChangelist();
+    $this->changelist = array(StorageInterface::DEFAULT_COLLECTION => $this->getEmptyChangelist());
     $this->sourceNames = $this->targetNames = array();
     return $this->createChangelist();
   }
@@ -296,10 +370,12 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasChanges($ops = array('delete', 'create', 'update', 'rename')) {
-    foreach ($ops as $op) {
-      if (!empty($this->changelist[$op])) {
-        return TRUE;
+  public function hasChanges() {
+    foreach ($this->getAllCollectionNames() as $collection) {
+      foreach (array('delete', 'create', 'update', 'rename') as $op) {
+        if (!empty($this->changelist[$collection][$op])) {
+          return TRUE;
+        }
       }
     }
     return FALSE;
@@ -317,12 +393,24 @@ class StorageComparer implements StorageComparerInterface {
   /**
    * Gets and sorts configuration data from the source and target storages.
    */
-  protected function getAndSortConfigData() {
-    $this->targetData = $this->targetStorage->readMultiple($this->targetStorage->listAll());
-    $this->sourceData = $this->sourceStorage->readMultiple($this->sourceStorage->listAll());
-    $dependency_manager = new ConfigDependencyManager();
-    $this->targetNames = $dependency_manager->setData($this->targetData)->sortAll();
-    $this->sourceNames = $dependency_manager->setData($this->sourceData)->sortAll();
+  protected function getAndSortConfigData($collection) {
+    $source_storage = $this->getSourceStorage($collection);
+    $target_storage = $this->getTargetStorage($collection);
+    $target_names = $target_storage->listAll();
+    $source_names = $source_storage->listAll();
+    $this->targetData[$collection] = $target_storage->readMultiple($target_names);
+    $this->sourceData[$collection] = $source_storage->readMultiple($source_names);
+    // If the collection only supports simple configuration do not use
+    // configuration dependencies.
+    if ($this->configManager->supportsConfigurationEntities($collection)) {
+      $dependency_manager = new ConfigDependencyManager();
+      $this->targetNames[$collection] = $dependency_manager->setData($this->targetData[$collection])->sortAll();
+      $this->sourceNames[$collection] = $dependency_manager->setData($this->sourceData[$collection])->sortAll();
+    }
+    else {
+      $this->targetNames[$collection] = $target_names;
+      $this->sourceNames[$collection] = $source_names;
+    }
   }
 
   /**
@@ -352,4 +440,16 @@ class StorageComparer implements StorageComparerInterface {
       'new_name' => $names[1],
     );
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllCollectionNames($include_default = TRUE) {
+    $collections = array_unique(array_merge($this->sourceStorage->getAllCollectionNames(), $this->targetStorage->getAllCollectionNames()));
+    if ($include_default) {
+      array_unshift($collections, StorageInterface::DEFAULT_COLLECTION);
+    }
+    return $collections;
+  }
+
 }

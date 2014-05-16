@@ -92,4 +92,26 @@ class NullStorage implements StorageInterface {
   public function deleteAll($prefix = '') {
     return FALSE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createCollection($collection) {
+    // No op.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllCollectionNames() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCollectionName() {
+    return '';
+  }
+
 }

@@ -113,4 +113,36 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     $this->assertEqual(count($diff->edits), 2, 'There are two items in the diff.');
   }
 
+  /**
+   * Tests calculating the difference between two sets of config collections.
+   */
+  function testCollectionDiff() {
+    /** @var \Drupal\Core\Config\StorageInterface $active */
+    $active = $this->container->get('config.storage');
+    /** @var \Drupal\Core\Config\StorageInterface $staging */
+    $staging = $this->container->get('config.storage.staging');
+    $active_test_collection = $active->createCollection('test');
+    $staging_test_collection = $staging->createCollection('test');
+
+    $config_name = 'config_test.test';
+    $data = array('foo' => 'bar');
+
+    $active->write($config_name, $data);
+    $staging->write($config_name, $data);
+    $active_test_collection->write($config_name, $data);
+    $staging_test_collection->write($config_name, array('foo' => 'baz'));
+
+    // Test the fields match in the default collection diff.
+    $diff = \Drupal::service('config.manager')->diff($active, $staging, $config_name);
+    $this->assertEqual($diff->edits[0]->type, 'copy',  'The first item in the diff is a copy.');
+    $this->assertEqual(count($diff->edits), 1, 'There is one item in the diff');
+
+    // Test that the differences are detected when diffing the collection.
+    $diff = \Drupal::service('config.manager')->diff($active, $staging, $config_name, NULL, 'test');
+    $this->assertEqual($diff->edits[0]->type, 'change',  'The second item in the diff is a copy.');
+    $this->assertEqual($diff->edits[0]->orig, array('foo: bar'));
+    $this->assertEqual($diff->edits[0]->closing, array('foo: baz'));
+    $this->assertEqual($diff->edits[1]->type, 'copy',  'The second item in the diff is a copy.');
+  }
+
 }

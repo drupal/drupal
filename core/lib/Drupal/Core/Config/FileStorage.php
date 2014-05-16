@@ -17,6 +17,13 @@ use Drupal\Component\Utility\String;
 class FileStorage implements StorageInterface {
 
   /**
+   * The storage collection.
+   *
+   * @var string
+   */
+  protected $collection;
+
+  /**
    * The filesystem path for configuration objects.
    *
    * @var string
@@ -28,9 +35,13 @@ class FileStorage implements StorageInterface {
    *
    * @param string $directory
    *   A directory path to use for reading and writing of configuration files.
+   * @param string $collection
+   *   (optional) The collection to store configuration in. Defaults to the
+   *   default collection.
    */
-  public function __construct($directory) {
+  public function __construct($directory, $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->directory = $directory;
+    $this->collection = $collection;
   }
 
   /**
@@ -40,7 +51,7 @@ class FileStorage implements StorageInterface {
    *   The path to the configuration file.
    */
   public function getFilePath($name) {
-    return $this->directory . '/' . $name . '.' . static::getFileExtension();
+    return $this->getCollectionDirectory() . '/' . $name . '.' . static::getFileExtension();
   }
 
   /**
@@ -57,10 +68,14 @@ class FileStorage implements StorageInterface {
    * Check if the directory exists and create it if not.
    */
   protected function ensureStorage() {
-    $success = file_prepare_directory($this->directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
-    $success = $success && file_save_htaccess($this->directory, TRUE, TRUE);
+    $dir = $this->getCollectionDirectory();
+    $success = file_prepare_directory($dir, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    // Only create .htaccess file in root directory.
+    if ($dir == $this->directory) {
+      $success = $success && file_save_htaccess($this->directory, TRUE, TRUE);
+    }
     if (!$success) {
-      throw new StorageException("Failed to create config directory {$this->directory}");
+      throw new StorageException('Failed to create config directory ' . $dir);
     }
     return $this;
   }
@@ -142,8 +157,9 @@ class FileStorage implements StorageInterface {
    */
   public function delete($name) {
     if (!$this->exists($name)) {
-      if (!file_exists($this->directory)) {
-        throw new StorageException($this->directory . '/ not found.');
+      $dir = $this->getCollectionDirectory();
+      if (!file_exists($dir)) {
+        throw new StorageException($dir . '/ not found.');
       }
       return FALSE;
     }
@@ -186,12 +202,13 @@ class FileStorage implements StorageInterface {
   public function listAll($prefix = '') {
     // glob() silently ignores the error of a non-existing search directory,
     // even with the GLOB_ERR flag.
-    if (!file_exists($this->directory)) {
+    $dir = $this->getCollectionDirectory();
+    if (!file_exists($dir)) {
       return array();
     }
     $extension = '.' . static::getFileExtension();
     // \GlobIterator on Windows requires an absolute path.
-    $files = new \GlobIterator(realpath($this->directory) . '/' . $prefix . '*' . $extension);
+    $files = new \GlobIterator(realpath($dir) . '/' . $prefix . '*' . $extension);
 
     $names = array();
     foreach ($files as $file) {
@@ -212,7 +229,110 @@ class FileStorage implements StorageInterface {
         $success = FALSE;
       }
     }
-
+    if ($success && $this->collection != StorageInterface::DEFAULT_COLLECTION) {
+      // Remove empty directories.
+      if (!(new \FilesystemIterator($this->getCollectionDirectory()))->valid()) {
+        drupal_rmdir($this->getCollectionDirectory());
+      }
+    }
     return $success;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createCollection($collection) {
+    return new static(
+      $this->directory,
+      $collection
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCollectionName() {
+    return $this->collection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllCollectionNames() {
+    $collections = $this->getAllCollectionNamesHelper($this->directory);
+    sort($collections);
+    return $collections;
+  }
+
+  /**
+   * Helper function for getAllCollectionNames().
+   *
+   * If the file storage has the following subdirectory structure:
+   *   ./another_collection/one
+   *   ./another_collection/two
+   *   ./collection/sub/one
+   *   ./collection/sub/two
+   * this function will return:
+   * @code
+   *   array(
+   *     'another_collection.one',
+   *     'another_collection.two',
+   *     'collection.sub.one',
+   *     'collection.sub.two',
+   *   );
+   * @endcode
+   *
+   * @param string $directory
+   *   The directory to check for sub directories. This allows this
+   *   function to be used recursively to discover all the collections in the
+   *   storage.
+   *
+   * @return array
+   *   A list of collection names contained within the provided directory.
+   */
+  protected function getAllCollectionNamesHelper($directory) {
+    $collections = array();
+    foreach (new \DirectoryIterator($directory) as $fileinfo) {
+      if ($fileinfo->isDir() && !$fileinfo->isDot()) {
+        $collection = $fileinfo->getFilename();
+        // Recursively call getAllCollectionNamesHelper() to discover if there
+        // are subdirectories. Subdirectories represent a dotted collection
+        // name.
+        $sub_collections = $this->getAllCollectionNamesHelper($directory . '/' . $collection);
+        if (!empty($sub_collections)) {
+          // Build up the collection name by concatenating the subdirectory
+          // names with the current directory name.
+          foreach ($sub_collections as $sub_collection) {
+            $collections[] = $collection . '.' . $sub_collection;
+          }
+        }
+        // Check that the collection is valid by searching if for configuration
+        // objects. A directory without any configuration objects is not a valid
+        // collection.
+        // \GlobIterator on Windows requires an absolute path.
+        $files = new \GlobIterator(realpath($directory . '/' . $collection) . '/*.' . $this->getFileExtension());
+        if (count($files)) {
+          $collections[] = $collection;
+        }
+      }
+    }
+    return $collections;
+  }
+
+  /**
+   * Gets the directory for the collection.
+   *
+   * @return string
+   *   The directory for the collection.
+   */
+  protected function getCollectionDirectory() {
+    if ($this->collection == StorageInterface::DEFAULT_COLLECTION) {
+      $dir = $this->directory;
+    }
+    else {
+      $dir = $this->directory . '/' . str_replace('.', '/', $this->collection);
+    }
+    return $dir;
+  }
+
 }

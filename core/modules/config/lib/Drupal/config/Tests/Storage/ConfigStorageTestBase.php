@@ -181,6 +181,80 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
     $this->assertIdentical($read_data, $data);
   }
 
+  /**
+   * Tests that the storage supports collections.
+   */
+  public function testCollection() {
+    $name = 'config_test.storage';
+    $data = array('foo' => 'bar');
+    $result = $this->storage->write($name, $data);
+    $this->assertIdentical($result, TRUE);
+    $this->assertIdentical($data, $this->storage->read($name));
+
+    // Create configuration in a new collection.
+    $new_storage = $this->storage->createCollection('collection.sub.new');
+    $this->assertFalse($new_storage->exists($name));
+    $this->assertEqual(array(), $new_storage->listAll());
+    $new_storage->write($name, $data);
+    $this->assertIdentical($result, TRUE);
+    $this->assertIdentical($data, $new_storage->read($name));
+    $this->assertEqual(array($name), $new_storage->listAll());
+    $this->assertTrue($new_storage->exists($name));
+    $new_data = array('foo' => 'baz');
+    $new_storage->write($name, $new_data);
+    $this->assertIdentical($result, TRUE);
+    $this->assertIdentical($new_data, $new_storage->read($name));
+
+    // Create configuration in another collection.
+    $another_storage = $this->storage->createCollection('collection.sub.another');
+    $this->assertFalse($another_storage->exists($name));
+    $this->assertEqual(array(), $another_storage->listAll());
+    $another_storage->write($name, $new_data);
+    $this->assertIdentical($result, TRUE);
+    $this->assertIdentical($new_data, $another_storage->read($name));
+    $this->assertEqual(array($name), $another_storage->listAll());
+    $this->assertTrue($another_storage->exists($name));
+
+    // Create configuration in yet another collection.
+    $alt_storage = $this->storage->createCollection('alternate');
+    $alt_storage->write($name, $new_data);
+    $this->assertIdentical($result, TRUE);
+    $this->assertIdentical($new_data, $alt_storage->read($name));
+
+    // Switch back to the collection-less mode and check the data still exists
+    // add has not been touched.
+    $this->assertIdentical($data, $this->storage->read($name));
+
+    // Check that the getAllCollectionNames() method works.
+    $this->assertIdentical(array('alternate', 'collection.sub.another', 'collection.sub.new'), $this->storage->getAllCollectionNames());
+
+    // Check that the collections are removed when they are empty.
+    $alt_storage->delete($name);
+    $this->assertIdentical(array('collection.sub.another', 'collection.sub.new'), $this->storage->getAllCollectionNames());
+
+    // Create configuration in collection called 'collection'. This ensures that
+    // FileStorage's collection storage works regardless of its use of
+    // subdirectories.
+    $parent_storage = $this->storage->createCollection('collection');
+    $this->assertFalse($parent_storage->exists($name));
+    $this->assertEqual(array(), $parent_storage->listAll());
+    $parent_storage->write($name, $new_data);
+    $this->assertIdentical($result, TRUE);
+    $this->assertIdentical($new_data, $parent_storage->read($name));
+    $this->assertEqual(array($name), $parent_storage->listAll());
+    $this->assertTrue($parent_storage->exists($name));
+    $this->assertIdentical(array('collection', 'collection.sub.another', 'collection.sub.new'), $this->storage->getAllCollectionNames());
+    $parent_storage->deleteAll();
+    $this->assertIdentical(array('collection.sub.another', 'collection.sub.new'), $this->storage->getAllCollectionNames());
+
+    // Check that the having an empty collection-less storage does not break
+    // anything. Before deleting check that the previous delete did not affect
+    // data in another collection.
+    $this->assertIdentical($data, $this->storage->read($name));
+    $this->storage->delete($name);
+    $this->assertIdentical(array('collection.sub.another', 'collection.sub.new'), $this->storage->getAllCollectionNames());
+  }
+
   abstract protected function read($name);
 
   abstract protected function insert($name, $data);
@@ -188,4 +262,5 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
   abstract protected function update($name, $data);
 
   abstract protected function delete($name);
+
 }
