@@ -54,14 +54,6 @@ views_display:
           label: 'Provider'
     cache:
       type: views.cache.[type]
-      label: 'Caching'
-      mapping:
-        type:
-          type: string
-          label: 'Cache type'
-        provider:
-          type: string
-          label: 'Provider'
     empty:
       type: sequence
       label: 'No results behavior'
@@ -864,3 +856,14 @@ views_entity_row:
     view_mode:
       type: string
       label: 'View mode'
+
+views_cache:
+  type: mapping
+  label: 'Cache configuration'
+  mapping:
+    type:
+      type: string
+      label: 'Cache type'
+    provider:
+      type: string
+      label: 'Provider'

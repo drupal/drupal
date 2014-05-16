@@ -127,6 +127,12 @@ entity.form_display.*.*.*:
     dependencies:
       type: config_dependencies
       label: 'Dependencies'
+    hidden:
+      type: sequence
+      label: 'Hidden'
+      sequence:
+        - type: boolean
+          label: 'Component'
 
 # Default schema for entity display field with undefined type.
 entity_view_display.field.*:

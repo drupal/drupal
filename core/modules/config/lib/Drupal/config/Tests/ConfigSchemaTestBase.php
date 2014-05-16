@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains Drupal\config\Tests\DefaultConfigTest.
+ * Contains Drupal\config\Tests\ConfigSchemaTestBase.
  */
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Config\Schema\ArrayElement;
 use Drupal\Core\Config\Schema\Property;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
@@ -38,20 +39,11 @@ abstract class ConfigSchemaTestBase extends WebTestBase {
   protected $configName;
 
   /**
+   * Global state for whether the config has a valid schema.
+   *
    * @var boolean
    */
   protected $configPass;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Default configuration',
-      'description' => 'Tests that default configuration provided by all modules matches schema.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Asserts the TypedConfigManager has a valid schema for the configuration.
@@ -92,44 +84,46 @@ abstract class ConfigSchemaTestBase extends WebTestBase {
    *   Returns mixed value.
    */
   protected function checkValue($key, $value) {
+
+    try {
+      $element = $this->schema->get($key);
+    }
+    catch (SchemaIncompleteException $e) {
+      $this->fail("{$this->configName}:$key has no schema.");
+    }
     if (is_scalar($value) || $value === NULL) {
-      try {
-        $success = FALSE;
-        $type = gettype($value);
-        $element = $this->schema->get($key);
-        if ($element instanceof PrimitiveInterface) {
-          if ($type == 'integer' && $element instanceof IntegerInterface) {
-            $success = TRUE;
-          }
-          if ($type == 'double' && $element instanceof FloatInterface) {
-            $success = TRUE;
-          }
-          if ($type == 'boolean' && $element instanceof BooleanInterface) {
-            $success = TRUE;
-          }
-          if ($type == 'string' && ($element instanceof StringInterface || $element instanceof Property)) {
-            $success = TRUE;
-          }
-          // Null values are allowed for all types.
-          if ($value === NULL) {
-            $success = TRUE;
-          }
+      $success = FALSE;
+      $type = gettype($value);
+      if ($element instanceof PrimitiveInterface) {
+        if ($type == 'integer' && $element instanceof IntegerInterface) {
+          $success = TRUE;
         }
-        else {
-          // @todo throw an exception due to an incomplete schema. Only possible
-          //   once https://drupal.org/node/1910624 is complete.
+        if ($type == 'double' && $element instanceof FloatInterface) {
+          $success = TRUE;
         }
-        $class = get_class($element);
-        if (!$success) {
-          $this->fail("{$this->configName}:$key has the wrong schema. Variable type is $type and schema class is $class.");
+        if ($type == 'boolean' && $element instanceof BooleanInterface) {
+          $success = TRUE;
+        }
+        if ($type == 'string' && ($element instanceof StringInterface || $element instanceof Property)) {
+          $success = TRUE;
+        }
+        // Null values are allowed for all scalar types.
+        if ($value === NULL) {
+          $success = TRUE;
         }
       }
-      catch (SchemaIncompleteException $e) {
-        $this->fail("{$this->configName}:$key has no schema.");
+      if (!$success) {
+        $class = get_class($element);
+        $this->fail("{$this->configName}:$key has the wrong schema. Variable type is $type and schema class is $class.");
       }
     }
     else {
-      // Any non-scalar value must be an array.
+      if (!$element instanceof ArrayElement) {
+        $this->fail("Non-scalar {$this->configName}:$key is not defined as an array type (such as mapping or sequence).");
+      }
+
+      // Go on processing so we can get errors on all levels. Any non-scalar
+      // value must be an array so cast to an array.
       if (!is_array($value)) {
         $value = (array) $value;
       }

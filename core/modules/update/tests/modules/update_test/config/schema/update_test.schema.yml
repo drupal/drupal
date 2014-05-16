@@ -5,19 +5,19 @@ update_test.settings:
   label: 'Update test settings'
   mapping:
     system_info:
-      type: seqeuence
+      type: sequence
       label: 'System info'
       sequence:
         - type: string
           label: 'Value'
     update_status:
-      type: seqeuence
+      type: sequence
       label: 'Update status'
       sequence:
         - type: string
           label: 'Value'
     xml_map:
-      type: seqeuence
+      type: sequence
       label: 'XML map'
       sequence:
         - type: string

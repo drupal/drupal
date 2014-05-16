@@ -1,20 +1,29 @@
 # Schema for the views cache.
 
 views.cache.none:
-  type: mapping
-  label: 'None'
+  type: views_cache
+  label: 'No caching'
   mapping:
-    type:
-      type: string
-      label: 'Cache type'
+    options:
+      type: sequence
+      label: 'Options'
+      sequence:
+        - type: undefined
+
+views.cache.tag:
+  type: views_cache
+  label: 'Tag based caching'
+  mapping:
+    options:
+      type: sequence
+      label: 'Options'
+      sequence:
+        - type: undefined
 
 views.cache.time:
-  type: mapping
-  label: 'None'
+  type: views_cache
+  label: 'Time based caching'
   mapping:
-    type:
-      type: string
-      label: 'Time-based'
     options:
       type: mapping
       label: 'Cache options'

@@ -2,6 +2,7 @@ id: node.article.field_tags
 entity_type: node
 bundle: article
 field_name: field_tags
+field_type: taxonomy_term_reference
 label: Tags
 description: 'Enter a comma-separated list. For example: Amsterdam, Mexico City, "Cleveland, Ohio"'
 required: false
