@@ -16,12 +16,13 @@ use Drupal\filter\Plugin\FilterInterface;
 class FilterAdminTest extends WebTestBase {
 
   /**
-   * The installation profile to use with this test.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $profile = 'standard';
+  public static $modules = array('filter', 'node');
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Filter administration functionality',
@@ -30,13 +31,62 @@ class FilterAdminTest extends WebTestBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function setUp() {
     parent::setUp();
 
-    // Create users.
-    $basic_html_format = entity_load('filter_format', 'basic_html');
-    $restricted_html_format = entity_load('filter_format', 'restricted_html');
-    $full_html_format = entity_load('filter_format', 'full_html');
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+
+    // Set up the filter formats used by this test.
+    $basic_html_format = entity_create('filter_format', array(
+      'format' => 'basic_html',
+      'name' => 'Basic HTML',
+      'filters' => array(
+        'filter_html' => array(
+          'status' => 1,
+          'settings' => array(
+            'allowed_html' => '<p> <br> <strong> <a> <em>',
+          ),
+        ),
+      ),
+    ));
+    $basic_html_format->save();
+    $restricted_html_format = entity_create('filter_format', array(
+      'format' => 'restricted_html',
+      'name' => 'Restricted HTML',
+      'filters' => array(
+        'filter_html' => array(
+          'status' => TRUE,
+          'weight' => -10,
+          'settings' => array(
+            'allowed_html' => '<p> <br> <strong> <a> <em> <h4>',
+          ),
+        ),
+        'filter_autop' => array(
+          'status' => TRUE,
+          'weight' => 0,
+        ),
+        'filter_url' => array(
+          'status' => TRUE,
+          'weight' => 0,
+        ),
+        'filter_htmlcorrector' => array(
+          'status' => TRUE,
+          'weight' => 10,
+        ),
+      ),
+    ));
+    $restricted_html_format->save();
+    $full_html_format = entity_create('filter_format', array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+      'weight' => 1,
+      'filters' => array(),
+    ));
+    $full_html_format->save();
+
     $this->admin_user = $this->drupalCreateUser(array(
       'administer filters',
       $basic_html_format->getPermissionName(),
@@ -45,6 +95,8 @@ class FilterAdminTest extends WebTestBase {
     ));
 
     $this->web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
+    user_role_grant_permissions('authenticated', array($basic_html_format->getPermissionName()));
+    user_role_grant_permissions('anonymous', array($restricted_html_format->getPermissionName()));
     $this->drupalLogin($this->admin_user);
   }
 
