@@ -150,7 +150,7 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
           }
           // @todo Replace with a #type => link render element so that the alter
           // hook can work with the actual data.
-          $links[] = $this->l($title, $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME), $route_request->attributes->get('_raw_variables')->all());
+          $links[] = $this->l($title, $route_request->attributes->get(RouteObjectInterface::ROUTE_NAME), $route_request->attributes->get('_raw_variables')->all(), array('html' => TRUE));
         }
       }
 

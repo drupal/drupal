@@ -190,7 +190,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $link_front = '<a href="/">Home</a>';
     $this->linkGenerator->expects($this->at(0))
       ->method('generate')
-      ->with('Example', 'example', array(), array())
+      ->with('Example', 'example', array(), array('html' => TRUE))
       ->will($this->returnValue($link_example));
     $this->linkGenerator->expects($this->at(1))
       ->method('generate')
@@ -241,12 +241,12 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $link_front = '<a href="/">Home</a>';
     $this->linkGenerator->expects($this->at(0))
       ->method('generate')
-      ->with('Bar', 'example_bar', array(), array())
+      ->with('Bar', 'example_bar', array(), array('html' => TRUE))
       ->will($this->returnValue($link_example_bar));
 
     $this->linkGenerator->expects($this->at(1))
       ->method('generate')
-      ->with('Example', 'example', array(), array())
+      ->with('Example', 'example', array(), array('html' => TRUE))
       ->will($this->returnValue($link_example));
     $this->linkGenerator->expects($this->at(2))
       ->method('generate')
@@ -364,7 +364,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $link_front = '<a href="/">Home</a>';
     $this->linkGenerator->expects($this->at(0))
       ->method('generate')
-      ->with('Admin', 'user_page', array(), array())
+      ->with('Admin', 'user_page', array(), array('html' => TRUE))
       ->will($this->returnValue($link_user));
 
     $this->linkGenerator->expects($this->at(1))
