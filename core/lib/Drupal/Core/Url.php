@@ -171,6 +171,8 @@ class Url extends DependencySerialization {
     // Set empty route name and parameters.
     $this->routeName = NULL;
     $this->routeParameters = array();
+    // Flag the path as external so the UrlGenerator does not need to check.
+    $this->options['external'] = TRUE;
 
     return $this;
   }

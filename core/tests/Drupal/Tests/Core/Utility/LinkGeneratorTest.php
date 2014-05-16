@@ -17,6 +17,9 @@ use Drupal\Tests\UnitTestCase;
  *
  * @see \Drupal\Core\Utility\LinkGenerator
  *
+ * @group Drupal
+ * @group Utility
+ *
  * @coversDefaultClass \Drupal\Core\Utility\LinkGenerator
  */
 class LinkGeneratorTest extends UnitTestCase {
@@ -159,8 +162,8 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateFromUrlExternal() {
     $this->urlGenerator->expects($this->once())
       ->method('generateFromPath')
-      ->with('http://drupal.org', array('set_active_class' => TRUE) + $this->defaultOptions)
-      ->will($this->returnValue('http://drupal.org'));
+      ->with('http://drupal.org', array('set_active_class' => TRUE, 'external' => TRUE) + $this->defaultOptions)
+      ->will($this->returnArgument(0));
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')

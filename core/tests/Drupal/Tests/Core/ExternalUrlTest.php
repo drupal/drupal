@@ -64,9 +64,7 @@ class ExternalUrlTest extends UnitTestCase {
     $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
     $this->urlGenerator->expects($this->any())
       ->method('generateFromPath')
-      ->will($this->returnCallback(function ($path) {
-        return $path;
-      }));
+      ->will($this->returnArgument(0));
 
     $this->router = $this->getMock('Drupal\Tests\Core\Routing\TestRouterInterface');
     $container = new ContainerBuilder();
@@ -143,7 +141,7 @@ class ExternalUrlTest extends UnitTestCase {
   public function testToArray(Url $url) {
     $expected = array(
       'path' => $this->path,
-      'options' => array(),
+      'options' => array('external' => TRUE),
     );
     $this->assertSame($expected, $url->toArray());
   }
