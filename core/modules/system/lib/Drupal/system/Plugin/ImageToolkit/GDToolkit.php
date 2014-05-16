@@ -320,17 +320,26 @@ class GDToolkit extends ImageToolkitBase {
     $res = imagecreatetruecolor($width, $height);
 
     if ($type == IMAGETYPE_GIF) {
-      // Grab transparent color index from image resource.
+      // Find out if a transparent color is set, will return -1 if no
+      // transparent color has been defined in the image.
       $transparent = imagecolortransparent($this->getResource());
-
       if ($transparent >= 0) {
-        // The original must have a transparent color, allocate to the new image.
-        $transparent_color = imagecolorsforindex($this->getResource(), $transparent);
-        $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
+        // Find out the number of colors in the image palette. It will be 0 for
+        // truecolor images.
+        $palette_size = imagecolorstotal($this->getResource());
+        if ($palette_size == 0 || $transparent < $palette_size) {
+          // Set the transparent color in the new resource, either if it is a
+          // truecolor image or if the transparent color is part of the palette.
+          // Since the index of the transparency color is a property of the
+          // image rather than of the palette, it is possible that an image
+          // could be created with this index set outside the palette size.
+          $transparent_color = imagecolorsforindex($this->getResource(), $transparent);
+          $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
 
-        // Flood with our new transparent color.
-        imagefill($res, 0, 0, $transparent);
-        imagecolortransparent($res, $transparent);
+          // Flood with our new transparent color.
+          imagefill($res, 0, 0, $transparent);
+          imagecolortransparent($res, $transparent);
+        }
       }
     }
     elseif ($type == IMAGETYPE_PNG) {

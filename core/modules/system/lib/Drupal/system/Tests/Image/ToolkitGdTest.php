@@ -274,7 +274,8 @@ class ToolkitGdTest extends DrupalUnitTestBase {
 
         $directory = $this->public_files_directory .'/imagetest';
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-        $image->save($directory . '/' . $op . image_type_to_extension($image->getType()));
+        $file_path = $directory . '/' . $op . image_type_to_extension($image->getType());
+        $image->save($file_path);
 
         $this->assertTrue($correct_dimensions_real, String::format('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
         $this->assertTrue($correct_dimensions_object, String::format('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
@@ -307,6 +308,9 @@ class ToolkitGdTest extends DrupalUnitTestBase {
             $this->assertTrue($correct_colors, String::format('Image %file object after %action action has the correct color placement at corner %corner.', array('%file' => $file, '%action' => $op, '%corner' => $key)));
           }
         }
+
+        // Check that saved image reloads without raising PHP errors.
+        $image_reloaded = $this->imageFactory->get($file_path);
       }
     }
   }
