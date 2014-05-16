@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Access;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,9 +38,17 @@ class CsrfAccessCheck implements RoutingAccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks access based on a CSRF token for the request.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check against.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Route $route, Request $request) {
     // If this is the controller request, check CSRF access as normal.
     if ($request->attributes->get('_controller_request')) {
       return $this->csrfToken->validate($request->query->get('token'), $request->attributes->get('_system_path')) ? static::ALLOW : static::KILL;

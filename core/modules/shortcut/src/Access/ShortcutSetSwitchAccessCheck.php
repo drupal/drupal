@@ -9,18 +9,25 @@ namespace Drupal\shortcut\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\user\UserInterface;
 
 /**
- * Provides an access check for shortcut link delete routes.
+ * Checks access to switch a user's shortcut set.
  */
 class ShortcutSetSwitchAccessCheck implements AccessInterface {
 
   /**
-   * {@inheritdoc}
+   * Checks access.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The owner of the shortcut set.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(UserInterface $user, AccountInterface $account) {
     if ($account->hasPermission('administer shortcuts')) {
       // Administrators can switch anyone's shortcut set.
       return static::ALLOW;
@@ -31,8 +38,7 @@ class ShortcutSetSwitchAccessCheck implements AccessInterface {
       return static::DENY;
     }
 
-    $user = $request->attributes->get('account');
-    if (!isset($user) || $user->id() == $account->id()) {
+    if ($user->id() == $account->id()) {
       // Users with the 'switch shortcut sets' permission can switch their own
       // shortcuts sets.
       return static::ALLOW;

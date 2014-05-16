@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\Access;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
-
 /**
  * Provides access check results.
  */

@@ -8,13 +8,9 @@
 namespace Drupal\Tests\Core\Route;
 
 use Drupal\Core\Access\AccessCheckInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Access\RoleAccessCheck;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -159,16 +155,14 @@ class RoleAccessCheckTest extends UnitTestCase {
     $collection = $this->getTestRouteCollection();
 
     foreach ($grant_accounts as $account) {
-      $subrequest = Request::create($path, 'GET');
       $message = sprintf('Access granted for user with the roles %s on path: %s', implode(', ', $account->getRoles()), $path);
-      $this->assertSame(AccessCheckInterface::ALLOW, $role_access_check->access($collection->get($path), $subrequest, $account), $message);
+      $this->assertSame(AccessCheckInterface::ALLOW, $role_access_check->access($collection->get($path), $account), $message);
     }
 
     // Check all users which don't have access.
     foreach ($deny_accounts as $account) {
-      $subrequest = Request::create($path, 'GET');
       $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->getRoles()), $path);
-      $has_access = $role_access_check->access($collection->get($path), $subrequest, $account);
+      $has_access = $role_access_check->access($collection->get($path), $account);
       $this->assertSame(AccessCheckInterface::DENY, $has_access , $message);
     }
   }

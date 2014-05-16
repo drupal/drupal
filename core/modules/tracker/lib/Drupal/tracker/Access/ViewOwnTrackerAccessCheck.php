@@ -9,8 +9,7 @@ namespace Drupal\tracker\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\user\UserInterface;
 
 /**
  * Access check for user tracker routes.
@@ -18,12 +17,17 @@ use Symfony\Component\HttpFoundation\Request;
 class ViewOwnTrackerAccessCheck implements AccessInterface {
 
   /**
-   * {@inheritdoc}
+   * Checks access.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   * @param \Drupal\user\UserInterface $user
+   *   The user whose tracker page is being accessed.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    // The user object from the User ID in the path.
-    $user = $request->attributes->get('user');
+  public function access(AccountInterface $account, UserInterface $user) {
     return ($user && $account->isAuthenticated() && ($user->id() == $account->id())) ? static::ALLOW : static::DENY;
   }
 }
-

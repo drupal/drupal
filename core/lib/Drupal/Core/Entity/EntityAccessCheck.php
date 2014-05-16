@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 class EntityAccessCheck implements AccessInterface {
 
   /**
-   * Implements \Drupal\Core\Access\AccessCheckInterface::access().
+   * Checks access to the entity operation on the given route.
    *
    * The value of the '_entity_access' key must be in the pattern
    * 'entity_type.operation.' The entity type must match the {entity_type}
@@ -29,6 +29,16 @@ class EntityAccessCheck implements AccessInterface {
    *   _entity_access: 'node.update'
    * @endcode
    * Available operations are 'view', 'update', 'create', and 'delete'.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check against.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
     // Split the entity type and the operation.

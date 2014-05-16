@@ -8,10 +8,7 @@
 namespace Drupal\update\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Determines whether allow authorized operations is set.
@@ -36,9 +33,12 @@ class UpdateManagerAccessCheck implements AccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks access.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access() {
     return $this->settings->get('allow_authorize_operations', TRUE) ? static::ALLOW : static::DENY;
   }
 

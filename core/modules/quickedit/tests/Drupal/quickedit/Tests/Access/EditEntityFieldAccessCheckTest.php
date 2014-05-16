@@ -8,7 +8,6 @@
 namespace Drupal\quickedit\Tests\Access;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
@@ -118,13 +117,13 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * @dataProvider providerTestAccess
    */
   public function testAccess(EntityInterface $entity, FieldConfigInterface $field = NULL, $expected_result) {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
 
+    $field_name = 'valid';
     $entity_with_field = clone $entity;
     $entity_with_field->expects($this->any())
       ->method('get')
-      ->with('valid')
+      ->with($field_name)
       ->will($this->returnValue($field));
     $entity_with_field->expects($this->once())
       ->method('hasTranslation')
@@ -134,11 +133,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     // Prepare the request to be valid.
     $request->attributes->set('entity_type', 'test_entity');
     $request->attributes->set('entity', $entity_with_field);
-    $request->attributes->set('field_name', 'valid');
+    $request->attributes->set('field_name', $field_name);
     $request->attributes->set('langcode', Language::LANGCODE_NOT_SPECIFIED);
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $access = $this->editAccessCheck->access($route, $request, $account);
+    $access = $this->editAccessCheck->access($request, $field_name, $account);
     $this->assertSame($expected_result, $access);
   }
 
@@ -146,7 +145,6 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * Tests the access method with an undefined entity type.
    */
   public function testAccessWithUndefinedEntityType() {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'non_valid');
 
@@ -156,14 +154,13 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, NULL, $account));
   }
 
   /**
    * Tests the access method with a non existing entity.
    */
   public function testAccessWithNotExistingEntity() {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'entity_test');
     $request->attributes->set('entity', 1);
@@ -179,48 +176,47 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, NULL, $account));
   }
 
   /**
    * Tests the access method with a forgotten passed field_name.
    */
   public function testAccessWithNotPassedFieldName() {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'entity_test');
     $request->attributes->set('entity', $this->createMockEntity());
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, NULL, $account));
   }
 
   /**
    * Tests the access method with a non existing field.
    */
   public function testAccessWithNonExistingField() {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
+    $field_name = 'not_valid';
     $request->attributes->set('entity_type', 'entity_test');
     $request->attributes->set('entity', $this->createMockEntity());
-    $request->attributes->set('field_name', 'not_valid');
+    $request->attributes->set('field_name', $field_name);
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $field_name, $account));
   }
 
   /**
    * Tests the access method with a forgotten passed language.
    */
   public function testAccessWithNotPassedLanguage() {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
+    $field_name = 'valid';
     $request->attributes->set('entity_type', 'entity_test');
     $request->attributes->set('entity', $this->createMockEntity());
-    $request->attributes->set('field_name', 'valid');
+    $request->attributes->set('field_name', $field_name);
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $field_name, $account));
   }
 
   /**
@@ -233,15 +229,15 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->with('xx-lolspeak')
       ->will($this->returnValue(FALSE));
 
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
+    $field_name = 'valid';
     $request->attributes->set('entity_type', 'entity_test');
     $request->attributes->set('entity', $entity);
-    $request->attributes->set('field_name', 'valid');
+    $request->attributes->set('field_name', $field_name);
     $request->attributes->set('langcode', 'xx-lolspeak');
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $field_name, $account));
   }
 
   /**

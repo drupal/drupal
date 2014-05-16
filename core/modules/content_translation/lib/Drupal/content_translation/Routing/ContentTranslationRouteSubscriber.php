@@ -50,7 +50,6 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
        $path,
         array(
           '_content' => '\Drupal\content_translation\Controller\ContentTranslationController::overview',
-          'account' => 'NULL',
           '_entity_type_id' => $entity_type_id,
         ),
         array(

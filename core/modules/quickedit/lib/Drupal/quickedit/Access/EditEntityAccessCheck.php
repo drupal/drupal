@@ -10,13 +10,11 @@ namespace Drupal\quickedit\Access;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Access check for editing entities.
+ * Access check for editing entities with QuickEdit.
  */
 class EditEntityAccessCheck implements AccessInterface {
 
@@ -38,12 +36,20 @@ class EditEntityAccessCheck implements AccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks Quick Edit access to the entity.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
+   *
+   * @todo Replace $request parameter with $entity once
+   *   https://drupal.org/node/1837388 is fixed.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    // @todo Request argument validation and object loading should happen
-    //   elsewhere in the request processing pipeline:
-    //   http://drupal.org/node/1798214.
+  public function access(Request $request, AccountInterface $account) {
     if (!$this->validateAndUpcastRequestAttributes($request)) {
       return static::KILL;
     }
@@ -60,6 +66,8 @@ class EditEntityAccessCheck implements AccessInterface {
 
   /**
    * Validates and upcasts request attributes.
+   *
+   * @todo Remove once https://drupal.org/node/1837388 is fixed.
    */
   protected function validateAndUpcastRequestAttributes(Request $request) {
     // Load the entity.

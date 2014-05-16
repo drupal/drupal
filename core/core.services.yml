@@ -515,9 +515,11 @@ services:
   csrf_token:
     class: Drupal\Core\Access\CsrfTokenGenerator
     arguments: ['@private_key']
+  access_arguments_resolver:
+    class: Drupal\Core\Access\AccessArgumentsResolver
   access_manager:
     class: Drupal\Core\Access\AccessManager
-    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager']
+    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager', '@access_arguments_resolver']
     calls:
       - [setContainer, ['@service_container']]
       - [setRequest, ['@?request']]
@@ -552,7 +554,7 @@ services:
       - { name: access_check, applies_to: _access_theme }
   access_check.custom:
     class: Drupal\Core\Access\CustomAccessCheck
-    arguments: ['@controller_resolver']
+    arguments: ['@controller_resolver', '@access_arguments_resolver']
     tags:
       - { name: access_check, applies_to: _custom_access }
   access_check.csrf:

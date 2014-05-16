@@ -10,7 +10,6 @@ namespace Drupal\content_translation\Access;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -36,9 +35,17 @@ class ContentTranslationOverviewAccess implements AccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks access to the translation overview for the entity and bundle.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Request $request, AccountInterface $account) {
     $entity_type = $request->attributes->get('_entity_type_id');
     if ($entity = $request->attributes->get($entity_type)) {
       // Get entity base info.

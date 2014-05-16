@@ -8,7 +8,6 @@
 namespace Drupal\quickedit\Tests\Access;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\quickedit\Access\EditEntityAccessCheck;
 use Drupal\Tests\UnitTestCase;
@@ -103,7 +102,6 @@ class EditEntityAccessCheckTest extends UnitTestCase {
    * @dataProvider providerTestAccess
    */
   public function testAccess(EntityInterface $entity, $expected_result) {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity' => 'TRUE'));
     $request = new Request();
 
     // Prepare the request to be valid.
@@ -111,7 +109,7 @@ class EditEntityAccessCheckTest extends UnitTestCase {
     $request->attributes->set('entity_type', 'test_entity');
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $access = $this->editAccessCheck->access($route, $request, $account);
+    $access = $this->editAccessCheck->access($request, $account);
     $this->assertSame($expected_result, $access);
   }
 
@@ -119,7 +117,6 @@ class EditEntityAccessCheckTest extends UnitTestCase {
    * Tests the access method with an undefined entity type.
    */
   public function testAccessWithUndefinedEntityType() {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'non_valid');
 
@@ -129,14 +126,13 @@ class EditEntityAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $account));
   }
 
   /**
    * Tests the access method with a non existing entity.
    */
   public function testAccessWithNotExistingEntity() {
-    $route = new Route('/quickedit/form/test_entity/1/body/und/full', array(), array('_access_quickedit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'entity_test');
     $request->attributes->set('entity', 1);
@@ -152,7 +148,7 @@ class EditEntityAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($request, $account));
   }
 
 }

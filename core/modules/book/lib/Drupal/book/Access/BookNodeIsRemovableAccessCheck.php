@@ -9,9 +9,7 @@ namespace Drupal\book\Access;
 
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
-use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\node\NodeInterface;
 
 /**
  * Determines whether the requested node can be removed from its book.
@@ -36,14 +34,16 @@ class BookNodeIsRemovableAccessCheck implements AccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks access for removing the node from its book.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node requested to be removed from its book.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    $node = $request->attributes->get('node');
-    if (!empty($node)) {
-      return $this->bookManager->checkNodeIsRemovable($node) ? static::ALLOW : static::DENY;
-    }
-    return static::DENY;
+  public function access(NodeInterface $node) {
+    return $this->bookManager->checkNodeIsRemovable($node) ? static::ALLOW : static::DENY;
   }
 
 }

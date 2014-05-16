@@ -41,9 +41,17 @@ class CSRFAccessCheck implements AccessCheckInterface {
   }
 
   /**
-   * Implements AccessCheckInterface::access().
+   * Checks access.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Request $request, AccountInterface $account) {
     $method = $request->getMethod();
     $cookie = $request->attributes->get('_authentication_provider') == 'cookie';
 

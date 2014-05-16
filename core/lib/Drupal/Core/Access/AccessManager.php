@@ -9,7 +9,6 @@ namespace Drupal\Core\Access;
 
 use Drupal\Core\ParamConverter\ParamConverterManagerInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -44,6 +43,13 @@ class AccessManager implements ContainerAwareInterface {
    * @var array
    */
   protected $checks;
+
+  /**
+   * Array of access check method names keyed by service ID.
+   *
+   * @var array
+   */
+  protected $checkMethods = array();
 
   /**
    * An array to map static requirement keys to service IDs.
@@ -81,6 +87,13 @@ class AccessManager implements ContainerAwareInterface {
   protected $paramConverterManager;
 
   /**
+   * The access arguments resolver.
+   *
+   * @var \Drupal\Core\Access\AccessArgumentsResolverInterface
+   */
+  protected $argumentsResolver;
+
+  /**
    * A request object.
    *
    * @var \Symfony\Component\HttpFoundation\Request
@@ -96,11 +109,14 @@ class AccessManager implements ContainerAwareInterface {
    *   The url generator.
    * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $paramconverter_manager
    *   The param converter manager.
+   * @param \Drupal\Core\Access\AccessArgumentsResolverInterface $arguments_resolver
+   *   The access arguments resolver.
    */
-  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManagerInterface $paramconverter_manager) {
+  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverInterface $arguments_resolver) {
     $this->routeProvider = $route_provider;
     $this->urlGenerator = $url_generator;
     $this->paramConverterManager = $paramconverter_manager;
+    $this->argumentsResolver = $arguments_resolver;
   }
 
   /**
@@ -121,12 +137,15 @@ class AccessManager implements ContainerAwareInterface {
    *
    * @param string $service_id
    *   The ID of the service in the Container that provides a check.
+   * @param string $service_method
+   *   The method to invoke on the service object for performing the check.
    * @param array $applies_checks
    *   (optional) An array of route requirement keys the checker service applies
    *   to.
    */
-  public function addCheckService($service_id, array $applies_checks = array()) {
+  public function addCheckService($service_id, $service_method, array $applies_checks = array()) {
     $this->checkIds[] = $service_id;
+    $this->checkMethods[$service_id] = $service_method;
     foreach ($applies_checks as $applies_check) {
       $this->staticRequirementMap[$applies_check][] = $service_id;
     }
@@ -267,11 +286,7 @@ class AccessManager implements ContainerAwareInterface {
         $this->loadCheck($service_id);
       }
 
-      $service_access = $this->checks[$service_id]->access($route, $request, $account);
-
-      if (!in_array($service_access, array(AccessInterface::ALLOW, AccessInterface::DENY, AccessInterface::KILL), TRUE)) {
-        throw new AccessException("Access error in $service_id. Access services can only return AccessInterface::ALLOW, AccessInterface::DENY, or AccessInterface::KILL constants.");
-      }
+      $service_access = $this->performCheck($service_id, $route, $request, $account);
 
       if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
@@ -310,11 +325,7 @@ class AccessManager implements ContainerAwareInterface {
         $this->loadCheck($service_id);
       }
 
-      $service_access = $this->checks[$service_id]->access($route, $request, $account);
-
-      if (!in_array($service_access, array(AccessInterface::ALLOW, AccessInterface::DENY, AccessInterface::KILL), TRUE)) {
-        throw new AccessException("Access error in $service_id. Access services can only return AccessInterface::ALLOW, AccessInterface::DENY, or AccessInterface::KILL constants.");
-      }
+      $service_access = $this->performCheck($service_id, $route, $request, $account);
 
       if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
@@ -328,10 +339,45 @@ class AccessManager implements ContainerAwareInterface {
   }
 
   /**
+   * Performs the specified access check.
+   *
+   * @param string $service_id
+   *   The access check service ID to use.
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check access to.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   *
+   * @throws \Drupal\Core\Access\AccessException
+   *   Thrown when the access check returns an invalid value.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
+   */
+  protected function performCheck($service_id, $route, $request, $account) {
+    $callable = array($this->checks[$service_id], $this->checkMethods[$service_id]);
+    $arguments = $this->argumentsResolver->getArguments($callable, $route, $request, $account);
+    $service_access = call_user_func_array($callable, $arguments);
+
+    if (!in_array($service_access, array(AccessInterface::ALLOW, AccessInterface::DENY, AccessInterface::KILL), TRUE)) {
+      throw new AccessException("Access error in $service_id. Access services can only return AccessInterface::ALLOW, AccessInterface::DENY, or AccessInterface::KILL constants.");
+    }
+
+    return $service_access;
+  }
+
+  /**
    * Lazy-loads access check services.
    *
    * @param string $service_id
    *   The service id of the access check service to load.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when the service hasn't been registered in addCheckService().
+   * @throws \Drupal\Core\Access\AccessException
+   *   Thrown when the service doesn't implement the required interface.
    */
   protected function loadCheck($service_id) {
     if (!in_array($service_id, $this->checkIds)) {
@@ -340,8 +386,11 @@ class AccessManager implements ContainerAwareInterface {
 
     $check = $this->container->get($service_id);
 
-    if (!($check instanceof RoutingAccessInterface)) {
+    if (!($check instanceof AccessInterface)) {
       throw new AccessException('All access checks must implement AccessInterface.');
+    }
+    if (!is_callable(array($check, $this->checkMethods[$service_id]))) {
+      throw new AccessException(sprintf('Access check method %s in service %s must be callable.', $this->checkMethods[$service_id], $service_id));
     }
 
     $this->checks[$service_id] = $check;

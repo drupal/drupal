@@ -33,25 +33,42 @@ class CustomAccessCheck implements RoutingAccessInterface {
   protected $controllerResolver;
 
   /**
+   * The arguments resolver.
+   *
+   * @var \Drupal\Core\Access\AccessArgumentsResolverInterface
+   */
+  protected $argumentsResolver;
+
+  /**
    * Constructs a CustomAccessCheck instance.
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
+   * @param \Drupal\Core\Access\AccessArgumentsResolverInterface $arguments_resolver
+   *   The arguments resolver.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver) {
+  public function __construct(ControllerResolverInterface $controller_resolver, AccessArgumentsResolverInterface $arguments_resolver) {
     $this->controllerResolver = $controller_resolver;
+    $this->argumentsResolver = $arguments_resolver;
   }
 
   /**
-   * {@inheritdoc}
+   * Checks access for the account and route using the custom access checker.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check against.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
-    $access_controller = $route->getRequirement('_custom_access');
-
-    $controller = $this->controllerResolver->getControllerFromDefinition($access_controller);
-    $arguments = $this->controllerResolver->getArguments($request, $controller);
-
-    return call_user_func_array($controller, $arguments);
+    $callable = $this->controllerResolver->getControllerFromDefinition($route->getRequirement('_custom_access'));
+    $arguments = $this->argumentsResolver->getArguments($callable, $route, $request, $account);
+    return call_user_func_array($callable, $arguments);
   }
 
 }

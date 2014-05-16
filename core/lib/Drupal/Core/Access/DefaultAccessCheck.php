@@ -7,10 +7,8 @@
 
 namespace Drupal\Core\Access;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Allows access to routes to be controlled by an '_access' boolean parameter.
@@ -18,9 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultAccessCheck implements RoutingAccessInterface {
 
   /**
-   * {@inheritdoc}
+   * Checks access to the route based on the _access parameter.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check against.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(Route $route) {
     if ($route->getRequirement('_access') === 'TRUE') {
       return static::ALLOW;
     }

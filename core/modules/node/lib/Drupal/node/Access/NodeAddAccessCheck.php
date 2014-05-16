@@ -10,8 +10,7 @@ namespace Drupal\node\Access;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\node\NodeTypeInterface;
 
 /**
  * Determines access to for node add pages.
@@ -36,17 +35,26 @@ class NodeAddAccessCheck implements AccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks access to the node add page for the node type.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   * @param \Drupal\node\NodeTypeInterface $node_type
+   *   (optional) The node type. If not specified, access is allowed if there
+   *   exists at least one node type for which the user may create a node.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access(AccountInterface $account, NodeTypeInterface $node_type = NULL) {
     $access_controller = $this->entityManager->getAccessController('node');
-    // If a node type is set on the request, just check that.
-    if ($request->attributes->has('node_type')) {
-      return $access_controller->createAccess($request->attributes->get('node_type')->type, $account) ? static::ALLOW : static::DENY;
+    // If checking whether a node of a particular type may be created.
+    if ($node_type) {
+      return $access_controller->createAccess($node_type->id(), $account) ? static::ALLOW : static::DENY;
     }
-    foreach (node_permissions_get_configured_types() as $type) {
-      if ($access_controller->createAccess($type->type, $account)) {
-        // Allow access if at least one type is permitted.
+    // If checking whether a node of any type may be created.
+    foreach (node_permissions_get_configured_types() as $node_type) {
+      if ($access_controller->createAccess($node_type->id(), $account)) {
         return static::ALLOW;
       }
     }

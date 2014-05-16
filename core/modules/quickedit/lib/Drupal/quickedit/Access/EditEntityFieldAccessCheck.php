@@ -10,7 +10,6 @@ namespace Drupal\quickedit\Access;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -37,17 +36,29 @@ class EditEntityFieldAccessCheck implements AccessInterface, EditEntityFieldAcce
   }
 
   /**
-   * {@inheritdoc}
+   * Checks Quick Edit access to the field.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param string $field_name.
+   *   The field name.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
+   *
+   * @todo Replace $request parameter with $entity once
+   *   https://drupal.org/node/1837388 is fixed.
+   *
+   * @todo Use the $account argument: https://drupal.org/node/2266809.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    // @todo Request argument validation and object loading should happen
-    //   elsewhere in the request processing pipeline:
-    //   http://drupal.org/node/1798214.
+  public function access(Request $request, $field_name, AccountInterface $account) {
     if (!$this->validateAndUpcastRequestAttributes($request)) {
       return static::KILL;
     }
 
-    return $this->accessEditEntityField($request->attributes->get('entity'), $request->attributes->get('field_name'))  ? static::ALLOW : static::DENY;
+    return $this->accessEditEntityField($request->attributes->get('entity'), $field_name)  ? static::ALLOW : static::DENY;
   }
 
   /**
@@ -59,6 +70,8 @@ class EditEntityFieldAccessCheck implements AccessInterface, EditEntityFieldAcce
 
   /**
    * Validates and upcasts request attributes.
+   *
+   * @todo Remove once https://drupal.org/node/1837388 is fixed.
    */
   protected function validateAndUpcastRequestAttributes(Request $request) {
     // Load the entity.

@@ -9,7 +9,6 @@ namespace Drupal\views;
 
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -27,12 +26,16 @@ class ViewsAccessCheck implements AccessCheckInterface {
   }
 
   /**
-   * Implements AccessCheckInterface::applies().
+   * Checks access.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    $access = $account->hasPermission('access all views');
-
-    return $access ? static::ALLOW : static::DENY;
+  public function access(AccountInterface $account) {
+    return $account->hasPermission('access all views') ? static::ALLOW : static::DENY;
   }
 
 }

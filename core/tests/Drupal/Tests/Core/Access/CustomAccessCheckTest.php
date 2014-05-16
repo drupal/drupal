@@ -34,6 +34,13 @@ class CustomAccessCheckTest extends UnitTestCase {
    */
   protected $controllerResolver;
 
+  /**
+   * The mocked arguments resolver.
+   *
+   * @var \Drupal\Core\Access\AccessArgumentsResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $argumentsResolver;
+
   public static function getInfo() {
     return array(
       'name' => 'Custom access check',
@@ -49,7 +56,8 @@ class CustomAccessCheckTest extends UnitTestCase {
     parent::setUp();
 
     $this->controllerResolver = $this->getMock('Drupal\Core\Controller\ControllerResolverInterface');
-    $this->accessChecker = new CustomAccessCheck($this->controllerResolver);
+    $this->argumentsResolver = $this->getMock('Drupal\Core\Access\AccessArgumentsResolverInterface');
+    $this->accessChecker = new CustomAccessCheck($this->controllerResolver, $this->argumentsResolver);
   }
 
   /**
@@ -63,25 +71,25 @@ class CustomAccessCheckTest extends UnitTestCase {
       ->with('\Drupal\Tests\Core\Access\TestController::accessDeny')
       ->will($this->returnValue(array(new TestController(), 'accessDeny')));
 
+    $this->argumentsResolver->expects($this->at(0))
+      ->method('getArguments')
+      ->will($this->returnValue(array()));
+
     $this->controllerResolver->expects($this->at(1))
+      ->method('getControllerFromDefinition')
+      ->with('\Drupal\Tests\Core\Access\TestController::accessAllow')
+      ->will($this->returnValue(array(new TestController(), 'accessAllow')));
+
+    $this->argumentsResolver->expects($this->at(1))
       ->method('getArguments')
       ->will($this->returnValue(array()));
 
     $this->controllerResolver->expects($this->at(2))
       ->method('getControllerFromDefinition')
-      ->with('\Drupal\Tests\Core\Access\TestController::accessAllow')
-      ->will($this->returnValue(array(new TestController(), 'accessAllow')));
-
-    $this->controllerResolver->expects($this->at(3))
-      ->method('getArguments')
-      ->will($this->returnValue(array()));
-
-    $this->controllerResolver->expects($this->at(4))
-      ->method('getControllerFromDefinition')
       ->with('\Drupal\Tests\Core\Access\TestController::accessParameter')
       ->will($this->returnValue(array(new TestController(), 'accessParameter')));
 
-    $this->controllerResolver->expects($this->at(5))
+    $this->argumentsResolver->expects($this->at(2))
       ->method('getArguments')
       ->will($this->returnValue(array('parameter' => 'TRUE')));
 

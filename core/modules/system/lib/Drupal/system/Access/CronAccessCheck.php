@@ -8,9 +8,6 @@
 namespace Drupal\system\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;
-use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Access check for cron routes.
@@ -18,10 +15,15 @@ use Symfony\Component\HttpFoundation\Request;
 class CronAccessCheck implements AccessInterface {
 
   /**
-   * Implements AccessCheckInterface::access().
+   * Checks access.
+   *
+   * @param string $key
+   *   The cron key.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    $key = $request->attributes->get('key');
+  public function access($key) {
     if ($key != \Drupal::state()->get('system.cron_key')) {
       watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
       return static::KILL;

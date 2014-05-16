@@ -11,8 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserDataInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\user\UserInterface;
 
 /**
  * Access check for contact_personal_page route.
@@ -47,10 +46,18 @@ class ContactPageAccess implements AccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks access to the given user's contact page.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The user being contacted.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    $contact_account = $request->attributes->get('user');
+  public function access(UserInterface $user, AccountInterface $account) {
+    $contact_account = $user;
 
     // Anonymous users cannot have contact forms.
     if ($contact_account->isAnonymous()) {

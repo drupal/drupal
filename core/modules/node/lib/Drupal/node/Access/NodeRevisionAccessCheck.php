@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -63,21 +62,30 @@ class NodeRevisionAccessCheck implements AccessInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks routing access for the node revision.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check against.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
+   * @param int $node_revision
+   *   (optional) The node revision ID. If not specified, but $node is, access
+   *   is checked for that object's revision.
+   * @param \Drupal\node\NodeInterface $node
+   *   (optional) A node object. Used for checking access to a node's default
+   *   revision when $node_revision is unspecified. Ignored when $node_revision
+   *   is specified. If neither $node_revision nor $node are specified, then
+   *   access is denied.
+   *
+   * @return string
+   *   A \Drupal\Core\Access\AccessInterface constant value.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
-    // If the route has a {node_revision} placeholder, load the node for that
-    // revision. Otherwise, try to use a {node} placeholder.
-    if ($request->attributes->has('node_revision')) {
-      $node = $this->nodeStorage->loadRevision($request->attributes->get('node_revision'));
+  public function access(Route $route, AccountInterface $account, $node_revision = NULL, NodeInterface $node = NULL) {
+    if ($node_revision) {
+      $node = $this->nodeStorage->loadRevision($node_revision);
     }
-    elseif ($request->attributes->has('node')) {
-      $node = $request->attributes->get('node');
-    }
-    else {
-      return static::DENY;
-    }
-    return $this->checkAccess($node, $account, $route->getRequirement('_access_node_revision')) ? static::ALLOW : static::DENY;
+    $operation = $route->getRequirement('_access_node_revision');
+    return ($node && $this->checkAccess($node, $account, $operation)) ? static::ALLOW : static::DENY;
   }
 
   /**
