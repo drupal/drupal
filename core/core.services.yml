@@ -25,6 +25,8 @@ services:
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
     arguments: ['@database']
+  cache.backend.apcu:
+    class: Drupal\Core\Cache\ApcuBackendFactory
   cache.backend.php:
     class: Drupal\Core\Cache\PhpBackendFactory
   cache.backend.memory:
