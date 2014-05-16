@@ -181,6 +181,12 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $this->assertTrue($cached->valid, 'Item is marked as valid.');
     $this->assertEqual($cached->created, REQUEST_TIME, 'Created time is correct.');
     $this->assertEqual($cached->expire, Cache::PERMANENT, 'Expire time is correct.');
+
+    $with_variable = array('foo' => '$bar');
+    $backend->set('test6', $with_variable);
+    $cached = $backend->get('test6');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test6.");
+    $this->assertIdentical($with_variable, $cached->data);
   }
 
   /**
