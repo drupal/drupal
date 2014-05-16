@@ -14,6 +14,7 @@ use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Plugin\PluginDependencyTrait;
 
 /**
  * Defines a base configuration entity class.
@@ -21,6 +22,10 @@ use Drupal\Core\Language\Language;
  * @ingroup entity_api
  */
 abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface {
+
+  use PluginDependencyTrait {
+    addDependency as addDependencyTrait;
+  }
 
   /**
    * The original ID of the configuration entity.
@@ -71,13 +76,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * @var bool
    */
   private $isUninstalling = FALSE;
-
-  /**
-   * The configuration entity's dependencies.
-   *
-   * @var array
-   */
-  protected $dependencies = array();
 
   /**
    * The language code of the entity's default language.
@@ -305,17 +303,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
       // Configuration entities need to depend on the providers of any plugins
       // that they store the configuration for.
       $plugin_bag = $this->getPluginBag();
-      foreach($plugin_bag as $instance) {
-        $definition = $instance->getPluginDefinition();
-        $this->addDependency('module', $definition['provider']);
-        // Plugins can declare additional dependencies in their definition.
-        if (isset($definition['config_dependencies'])) {
-          $this->addDependencies($definition['config_dependencies']);
-        }
-        // If a plugin is configurable, calculate its dependencies.
-        if ($instance instanceof ConfigurablePluginInterface && $plugin_dependencies = $instance->calculateDependencies()) {
-          $this->addDependencies($plugin_dependencies);
-        }
+      foreach ($plugin_bag as $instance) {
+        $this->calculatePluginDependencies($instance);
       }
     }
     return $this->dependencies;
@@ -343,18 +332,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
-   * Creates a dependency.
-   *
-   * @param string $type
-   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
-   * @param string $name
-   *   If $type equals 'module' or 'theme' then it should be the name of the
-   *   module or theme. In the case of entity it should be the full
-   *   configuration object name.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   protected function addDependency($type, $name) {
     // A config entity is always dependent on its provider. There is no need to
@@ -364,44 +342,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     if ($type == 'module' && ($name == $this->getEntityType()->getProvider() || $name == 'Core')) {
       return $this;
     }
-    if (empty($this->dependencies[$type])) {
-      $this->dependencies[$type] = array($name);
-      if (count($this->dependencies) > 1) {
-        // Ensure a consistent order of type keys.
-        ksort($this->dependencies);
-      }
-    }
-    elseif (!in_array($name, $this->dependencies[$type])) {
-      $this->dependencies[$type][] = $name;
-      // Ensure a consistent order of dependency names.
-      sort($this->dependencies[$type], SORT_FLAG_CASE);
-    }
-    return $this;
-  }
 
-  /**
-   * Adds multiple dependencies.
-   *
-   * @param array $dependencies.
-   *   An array of dependencies keyed by the type of dependency. One example:
-   * @code
-   * array(
-   *   'module' => array(
-   *     'node',
-   *     'field',
-   *     'image'
-   *   ),
-   * );
-   * @endcode
-   *
-   * @see ::addDependency
-   */
-  protected function addDependencies(array $dependencies) {
-    foreach ($dependencies as $dependency_type => $list) {
-      foreach ($list as $name) {
-        $this->addDependency($dependency_type, $name);
-      }
-    }
+    return $this->addDependencyTrait($type, $name);
   }
 
   /**

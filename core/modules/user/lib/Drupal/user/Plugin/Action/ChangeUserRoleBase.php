@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a base class for operations to change a user's role.
  */
 abstract class ChangeUserRoleBase extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
+
+  use DependencyTrait;
 
   /**
    * The user role entity type.
@@ -80,12 +83,11 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase implements Cont
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    $dependencies = array();
     if (!empty($this->configuration['rid'])) {
       $prefix = $this->entityType->getConfigPrefix() . '.';
-      $dependencies['entity'][] = $prefix . $this->configuration['rid'];
+      $this->addDependency('entity', $prefix . $this->configuration['rid']);
     }
-    return $dependencies;
+    return $this->dependencies;
   }
 
 }
