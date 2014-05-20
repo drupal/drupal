@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator\Tests;
 
+use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\aggregator\FeedInterface;
@@ -58,7 +59,7 @@ abstract class AggregatorTestBase extends WebTestBase {
 
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title[0][value]'], ':url' => $edit['url[0][value]']))->fetchField();
     $this->assertTrue(!empty($fid), 'The feed found in database.');
-    return aggregator_feed_load($fid);
+    return Feed::load($fid);
   }
 
   /**

@@ -593,8 +593,8 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * @see entity_load_multiple()
  * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use entity_load_multiple('taxonomy_term', $tids).
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\taxonomy\Entity\Term::loadMultiple().
  *
  * @param array $tids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
@@ -604,7 +604,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  *   found, an empty array is returned.
  */
 function taxonomy_term_load_multiple(array $tids = NULL) {
-  return entity_load_multiple('taxonomy_term', $tids);
+  return Term::loadMultiple($tids);
 }
 
 /**
@@ -616,8 +616,8 @@ function taxonomy_term_load_multiple(array $tids = NULL) {
  *
  * @see entity_load_multiple()
  *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use entity_load_multiple('taxonomy_vocabulary', $vids).
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\taxonomy\Entity\Vocabulary::loadMultiple().
  *
  * @param array $vids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
@@ -626,14 +626,14 @@ function taxonomy_term_load_multiple(array $tids = NULL) {
  *  An array of vocabulary objects, indexed by vid.
  */
 function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
-  return entity_load_multiple('taxonomy_vocabulary', $vids);
+  return Vocabulary::loadMultiple($vids);
 }
 
 /**
  * Return the taxonomy vocabulary entity matching a vocabulary ID.
  *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use entity_load('taxonomy_vocabulary', $vid).
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\taxonomy\Entity\Vocabulary::load().
  *
  * @param int $vid
  *   The vocabulary's ID.
@@ -643,14 +643,14 @@ function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
  *   statically cached.
  */
 function taxonomy_vocabulary_load($vid) {
-  return entity_load('taxonomy_vocabulary', $vid);
+  return Vocabulary::load($vid);
 }
 
 /**
  * Return the taxonomy term entity matching a term ID.
  *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use entity_load('taxonomy_term', $tid).
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\taxonomy\Entity\Term::load().
  *
  * @param $tid
  *   A term's ID
@@ -663,7 +663,7 @@ function taxonomy_term_load($tid) {
   if (!is_numeric($tid)) {
     return NULL;
   }
-  return entity_load('taxonomy_term', $tid);
+  return Term::load($tid);
 }
 
 /**

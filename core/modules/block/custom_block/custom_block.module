@@ -5,8 +5,6 @@
  * Allows the creation of custom blocks through the user interface.
  */
 
-use Drupal\custom_block\Entity\CustomBlockType;
-use Drupal\custom_block\Entity\CustomBlock;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
@@ -51,32 +49,6 @@ function custom_block_theme($existing, $type, $theme, $path) {
       'template' => 'custom-block-add-list',
     ),
   );
-}
-
-/**
- * Loads a custom block type.
- *
- * @param int $id
- *   The ID of the custom block type to load.
- *
- * @return \Drupal\custom_block\Entity\CustomBlockType|null
- *   A CustomBlockType object or NULL if the requested $id does not exist.
- */
-function custom_block_type_load($id) {
-  return entity_load('custom_block_type', $id);
-}
-
-/**
- * Loads a custom block.
- *
- * @param int $id
- *   The id of the custom block.
- *
- * @return \Drupal\custom_block\Entity\CustomBlock|null
- *   A CustomBlock object or NULL if the requested $id does not exist.
- */
-function custom_block_load($id) {
-  return entity_load('custom_block', $id);
 }
 
 /**

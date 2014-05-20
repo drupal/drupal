@@ -19,6 +19,8 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -295,10 +297,13 @@ function node_mark($nid, $timestamp) {
  * @return \Drupal\node\NodeTypeInterface[]
  *   An array of node type entities, keyed by ID.
  *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\node\Entity\NodeType::loadMultiple().
+ *
  * @see node_type_load()
  */
 function node_type_get_types() {
-  return entity_load_multiple('node_type');
+  return NodeType::loadMultiple();
 }
 
 /**
@@ -353,9 +358,12 @@ function node_type_get_description(NodeTypeInterface $node_type) {
  *
  * @return \Drupal\node\NodeTypeInterface
  *   A node type object or NULL if $name does not exist.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\node\Entity\NodeType::load().
  */
 function node_type_load($name) {
-  return entity_load('node_type', $name);
+  return NodeType::load($name);
 }
 
 /**
@@ -487,11 +495,17 @@ function node_type_update_nodes($old_id, $new_id) {
  * @return \Drupal\node\NodeInterface[]
  *   An array of node entities indexed by nid.
  *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\node\Entity\Node::loadMultiple().
+ *
  * @see entity_load_multiple()
  * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {
-  return entity_load_multiple('node', $nids, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('node')->resetCache($nids);
+  }
+  return Node::loadMultiple($nids);
 }
 
 /**
@@ -505,9 +519,15 @@ function node_load_multiple(array $nids = NULL, $reset = FALSE) {
  *
  * @return \Drupal\node\NodeInterface|null
  *   A fully-populated node entity, or NULL if the node is not found.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\node\Entity\Node::load().
  */
 function node_load($nid = NULL, $reset = FALSE) {
-  return entity_load('node', $nid, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('node')->resetCache(array($nid));
+  }
+  return Node::load($nid);
 }
 
 /**

@@ -157,7 +157,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
    */
   public function addBreakpointFromMediaQuery($name, $media_query) {
     // Use the existing breakpoint if it exists.
-    $breakpoint = entity_load('breakpoint', $this->sourceType . '.' . $this->name . '.' . $name);
+    $breakpoint = Breakpoint::load($this->sourceType . '.' . $this->name . '.' . $name);
     if (!$breakpoint) {
       // Build a new breakpoint.
       $breakpoint = entity_create('breakpoint', array(
@@ -191,7 +191,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
   public function getBreakpoints() {
     if (empty($this->breakpoints)) {
       foreach ($this->breakpoint_ids as $breakpoint_id) {
-        $breakpoint = breakpoint_load($breakpoint_id);
+        $breakpoint = Breakpoint::load($breakpoint_id);
         if ($breakpoint) {
           $this->breakpoints[$breakpoint_id] = $breakpoint;
         }

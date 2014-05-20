@@ -5,6 +5,7 @@
  * Used to aggregate syndicated content (RSS, RDF, and Atom).
  */
 
+use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\FeedInterface;
 use Drupal\Component\Utility\Xss;
 use Symfony\Component\HttpFoundation\Request;
@@ -113,9 +114,8 @@ function aggregator_permission() {
 function aggregator_cron() {
   $queue = \Drupal::queue('aggregator_feeds');
 
-  $result = \Drupal::entityManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
-  foreach ($result as $fid) {
-    $feed = aggregator_feed_load($fid);
+  $ids = \Drupal::entityManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+  foreach (Feed::loadMultiple($ids) as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
       $feed->setQueuedTime(REQUEST_TIME);
@@ -124,12 +124,12 @@ function aggregator_cron() {
   }
 
   // Delete queued timestamp after 6 hours assuming the update has failed.
-  $result = \Drupal::entityQuery('aggregator_feed')
+  $ids = \Drupal::entityQuery('aggregator_feed')
     ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
     ->execute();
 
-  if ($result) {
-    $feeds = entity_load_multiple('aggregator_feed', $result);
+  if ($ids) {
+    $feeds = Feed::loadMultiple($ids);
     foreach ($feeds as $feed) {
       $feed->setQueuedTime(0);
       $feed->save();
@@ -151,19 +151,6 @@ function aggregator_queue_info() {
     ),
   );
   return $queues;
-}
-
-/**
- * Loads an aggregator feed.
- *
- * @param int $fid
- *   The feed id.
- *
- * @return \Drupal\aggregator\FeedInterface
- *   An object describing the feed.
- */
-function aggregator_feed_load($fid) {
-  return entity_load('aggregator_feed', $fid);
 }
 
 /**

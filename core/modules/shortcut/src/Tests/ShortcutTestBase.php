@@ -7,6 +7,7 @@
 
 namespace Drupal\shortcut\Tests;
 
+use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -79,7 +80,7 @@ abstract class ShortcutTestBase extends WebTestBase {
 
     // Log in as admin and grab the default shortcut set.
     $this->drupalLogin($this->admin_user);
-    $this->set = shortcut_set_load('default');
+    $this->set = ShortcutSet::load('default');
     shortcut_set_assign_user($this->set, $this->admin_user);
   }
 

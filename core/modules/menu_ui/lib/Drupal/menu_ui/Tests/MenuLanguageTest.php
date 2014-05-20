@@ -9,6 +9,7 @@ namespace Drupal\menu_ui\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
+use Drupal\system\Entity\Menu;
 
 /**
  * Defines a test class for testing menu language functionality.
@@ -174,7 +175,7 @@ class MenuLanguageTest extends MenuWebTestBase {
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
 
     // Check that the language settings were saved.
-    $menu = menu_ui_load($menu_name);
+    $menu = Menu::load($menu_name);
     $this->assertEqual($menu->langcode, 'en');
 
     // Remove English language. To do that another language has to be set as
@@ -186,7 +187,7 @@ class MenuLanguageTest extends MenuWebTestBase {
 
     // Save the menu again and check if the language is still the same.
     $this->drupalPostForm("admin/structure/menu/manage/$menu_name", array(), t('Save'));
-    $menu = menu_ui_load($menu_name);
+    $menu = Menu::load($menu_name);
     $this->assertEqual($menu->langcode, 'en');
   }
 

@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\shortcut\Tests;
+use Drupal\shortcut\Entity\ShortcutSet;
 
 /**
  * Defines shortcut set test cases.
@@ -98,7 +99,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalGet('admin/config/user-interface/shortcut');
     $this->clickLink(t('Edit shortcut set'));
     $this->drupalPostForm(NULL, array('label' => $new_label), t('Save'));
-    $set = shortcut_set_load($set->id());
+    $set = ShortcutSet::load($set->id());
     $this->assertTrue($set->label() == $new_label, 'Shortcut set has been successfully renamed.');
   }
 
@@ -110,7 +111,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $existing_label = $this->set->label();
     $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id(), array('label' => $existing_label), t('Save'));
     $this->assertRaw(t('The shortcut set %name already exists. Choose another name.', array('%name' => $existing_label)));
-    $set = shortcut_set_load($set->id());
+    $set = ShortcutSet::load($set->id());
     $this->assertNotEqual($set->label(), $existing_label, format_string('The shortcut set %title cannot be renamed to %new-title because a shortcut set with that title already exists.', array('%title' => $set->label(), '%new-title' => $existing_label)));
   }
 

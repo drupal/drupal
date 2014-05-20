@@ -8,6 +8,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use \Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\user\RoleInterface;
@@ -261,9 +262,15 @@ function user_entity_extra_field_info() {
  * @see user_load_by_mail()
  * @see user_load_by_name()
  * @see \Drupal\Core\Entity\Query\QueryInterface
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\user\Entity\User::loadMultiple().
  */
 function user_load_multiple(array $uids = NULL, $reset = FALSE) {
-  return entity_load_multiple('user', $uids, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('user')->resetCache($uids);
+  }
+  return User::loadMultiple($uids);
 }
 
 /**
@@ -288,10 +295,16 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  *   A fully-loaded user object upon successful user load, or NULL if the user
  *   cannot be loaded.
  *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\user\Entity\User::load().
+ *
  * @see user_load_multiple()
  */
 function user_load($uid, $reset = FALSE) {
-  return entity_load('user', $uid, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('user')->resetCache(array($uid));
+  }
+  return User::load($uid);
 }
 
 /**
@@ -1293,9 +1306,12 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  * @return
  *   A fully-loaded role object if a role with the given ID exists, or NULL
  *   otherwise.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\user\Entity\Role::load().
  */
 function user_role_load($rid) {
-  return entity_load('user_role', $rid);
+  return Role::load($rid);
 }
 
 /**

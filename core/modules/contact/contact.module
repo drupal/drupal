@@ -116,19 +116,6 @@ function contact_entity_extra_field_info() {
 }
 
 /**
- * Loads a contact category.
- *
- * @param $id
- *   The ID of the contact category to load.
- *
- * @return \Drupal\contact\Entity\Category|null
- *   A Category object or NULL if the requested $id does not exist.
- */
-function contact_category_load($id) {
-  return entity_load('contact_category', $id);
-}
-
-/**
  * Implements hook_mail().
  */
 function contact_mail($key, &$message, $params) {

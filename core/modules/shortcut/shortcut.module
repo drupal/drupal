@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\UrlMatcher;
 use Drupal\Core\Url;
+use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,22 +123,6 @@ function shortcut_set_switch_access($account = NULL) {
 }
 
 /**
- * Loads the data for a shortcut set.
- *
- * @param string $id
- *   The machine-name of the shortcut set to load.
- *
- * @return \Drupal\shortcut\ShortcutSetInterface|null
- *   If the shortcut set exists, an object containing the following properties:
- *   - 'id': The internal name of the shortcut set.
- *   - 'label': The title of the shortcut set.
- *   If the shortcut set does not exist, the function returns NULL.
- */
-function shortcut_set_load($id) {
-  return entity_load('shortcut_set', $id);
-}
-
-/**
  * Assigns a user to a particular shortcut set.
  *
  * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
@@ -198,7 +183,7 @@ function shortcut_current_displayed_set($account = NULL) {
     ->getStorage('shortcut_set')
     ->getAssignedToUser($account);
   if ($shortcut_set_name) {
-    $shortcut_set = shortcut_set_load($shortcut_set_name);
+    $shortcut_set = ShortcutSet::load($shortcut_set_name);
   }
   // Otherwise, use the default set.
   else {
@@ -233,7 +218,7 @@ function shortcut_default_set($account = NULL) {
   $suggestions = array_reverse(\Drupal::moduleHandler()->invokeAll('shortcut_default_set', array($account)));
   $suggestions[] = 'default';
   foreach ($suggestions as $name) {
-    if ($shortcut_set = shortcut_set_load($name)) {
+    if ($shortcut_set = ShortcutSet::load($name)) {
       break;
     }
   }

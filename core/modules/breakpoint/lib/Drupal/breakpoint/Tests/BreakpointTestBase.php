@@ -38,14 +38,14 @@ abstract class BreakpointTestBase extends WebTestBase {
       'multipliers',
     );
 
-    // Verify breakpoint_load().
-    $compare_breakpoint = is_null($compare_breakpoint) ? breakpoint_load($breakpoint->id()) : $compare_breakpoint;
+    // Verify Breakpoint::load().
+    $compare_breakpoint = is_null($compare_breakpoint) ? Breakpoint::load($breakpoint->id()) : $compare_breakpoint;
     foreach ($properties as $property) {
       $t_args = array(
         '%breakpoint' => $breakpoint->label(),
         '%property' => $property,
       );
-      $this->assertEqual($compare_breakpoint->{$property}, $breakpoint->{$property}, format_string('breakpoint_load: Proper %property for breakpoint %breakpoint.', $t_args), 'Breakpoint API');
+      $this->assertEqual($compare_breakpoint->{$property}, $breakpoint->{$property}, format_string('Proper %property for breakpoint %breakpoint.', $t_args), 'Breakpoint API');
     }
   }
 }

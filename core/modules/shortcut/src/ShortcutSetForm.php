@@ -31,7 +31,7 @@ class ShortcutSetForm extends EntityForm {
     $form['id'] = array(
       '#type' => 'machine_name',
       '#machine_name' => array(
-        'exists' => 'shortcut_set_load',
+        'exists' => '\Drupal\shortcut\Entity\ShortcutSet::load',
         'source' => array('label'),
         'replace_pattern' => '[^a-z0-9-]+',
         'replace' => '-',

@@ -83,13 +83,19 @@ function file_element_info() {
  * @return array
  *   An array of file entities, indexed by fid.
  *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\file\Entity\File::loadMultiple().
+ *
  * @see hook_file_load()
  * @see file_load()
  * @see entity_load()
  * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function file_load_multiple(array $fids = NULL, $reset = FALSE) {
-  return entity_load_multiple('file', $fids, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('file')->resetCache($fids);
+  }
+  return File::loadMultiple($fids);
 }
 
 /**
@@ -103,11 +109,17 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
  * @return \Drupal\file\FileInterface
  *   A file entity or NULL if the file was not found.
  *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\file\Entity\File::load().
+ *
  * @see hook_file_load()
  * @see file_load_multiple()
  */
 function file_load($fid, $reset = FALSE) {
-  return entity_load('file', $fid, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('file')->resetCache(array($fid));
+  }
+  return File::load($fid);
 }
 
 /**

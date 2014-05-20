@@ -37,7 +37,7 @@ class CategoryForm extends EntityForm {
       '#default_value' => $category->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => array(
-        'exists' => 'contact_category_load',
+        'exists' => '\Drupal\contact\Entity\Category::load',
       ),
       '#disabled' => !$category->isNew(),
     );

@@ -35,7 +35,7 @@ class CustomBlockTypeForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $block_type->id(),
       '#machine_name' => array(
-        'exists' => 'custom_block_type_load',
+        'exists' => '\Drupal\custom_block\Entity\CustomBlockType::load',
       ),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => !$block_type->isNew(),

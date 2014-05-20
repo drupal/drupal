@@ -4,6 +4,7 @@
  * @file
  * Administrative page callbacks for the shortcut module.
  */
+use Drupal\shortcut\Entity\ShortcutSet;
 
 /**
  * Form callback: builds the form for switching shortcut sets.
@@ -71,7 +72,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
     $form['id'] = array(
       '#type' => 'machine_name',
       '#machine_name' => array(
-        'exists' => 'shortcut_set_load',
+        'exists' => '\Drupal\shortcut\Entity\ShortcutSet::load',
         'source' => array('label'),
         'replace_pattern' => '[^a-z0-9-]+',
         'replace' => '-',
@@ -164,7 +165,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
   }
   else {
     // Switch to a different shortcut set.
-    $set = shortcut_set_load($form_state['values']['set']);
+    $set = ShortcutSet::load($form_state['values']['set']);
     $replacements = array(
       '%user' => $account->getUsername(),
       '%set_name' => $set->label(),

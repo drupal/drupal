@@ -11,6 +11,7 @@
  */
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
@@ -1049,8 +1050,8 @@ function comment_user_predelete($account) {
 /**
  * Loads comment entities from the database.
  *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use entity_load_multiple('comment', $cids).
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\comment\Entity\Comment::loadMultiple().
  *
  * @param array $cids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
@@ -1064,7 +1065,10 @@ function comment_user_predelete($account) {
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
-  return entity_load_multiple('comment', $cids, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('comment')->resetCache($cids);
+  }
+  return Comment::loadMultiple($cids);
 }
 
 /**
@@ -1077,9 +1081,15 @@ function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
  *
  * @return \Drupal\comment\CommentInterface
  *   The comment object.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\comment\Entity\Comment::load().
  */
 function comment_load($cid, $reset = FALSE) {
-  return entity_load('comment', $cid, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('comment')->resetCache(array($cid));
+  }
+  return Comment::load($cid);
 }
 
 /**

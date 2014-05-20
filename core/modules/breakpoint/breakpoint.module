@@ -40,22 +40,6 @@ function breakpoint_help($route_name, Request $request) {
 }
 
 /**
- * Load one breakpoint by its identifier.
- *
- * @param int $id
- *   The id of the breakpoint to load.
- *
- * @return \Drupal\breakpoint\Entity\Breakpoint|null
- *   The entity object, or NULL if there is no entity with the given id.
- *
- * @todo Remove this in a follow-up issue.
- * @see http://drupal.org/node/1798214
- */
-function breakpoint_load($id) {
-  return entity_load('breakpoint', $id);
-}
-
-/**
  * Load all breakpoint groups as select options.
  *
  * @return array
@@ -63,7 +47,7 @@ function breakpoint_load($id) {
  */
 function breakpoint_group_select_options() {
   $options = array();
-  $breakpoint_groups = entity_load_multiple('breakpoint_group');
+  $breakpoint_groups = BreakpointGroup::loadMultiple();
   foreach ($breakpoint_groups as $breakpoint_group) {
     $options[$breakpoint_group->id()] = $breakpoint_group->label();
   }
@@ -79,7 +63,7 @@ function breakpoint_group_select_options() {
  */
 function breakpoint_select_options() {
   $options = array();
-  $breakpoints = entity_load_multiple('breakpoint');
+  $breakpoints = Breakpoint::loadMultiple();
   foreach ($breakpoints as $breakpoint) {
     $options[$breakpoint->id()] = $breakpoint->label() . ' (' . $breakpoint->source . ' - ' . $breakpoint->sourceType . ') [' . $breakpoint->mediaQuery . ']';
   }

@@ -86,7 +86,7 @@ class BlockForm extends EntityForm {
       '#description' => $this->t('A unique name for this block instance. Must be alpha-numeric and underscore separated.'),
       '#default_value' => !$entity->isNew() ? $entity->id() : $this->getUniqueMachineName($entity),
       '#machine_name' => array(
-        'exists' => 'block_load',
+        'exists' => '\Drupal\block\Entity\Block::load',
         'replace_pattern' => '[^a-z0-9_.]+',
         'source' => array('settings', 'label'),
       ),

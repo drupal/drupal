@@ -8,6 +8,7 @@
 namespace Drupal\menu_ui\Tests;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\system\Entity\Menu;
 
 /**
  * Defines a test class for testing menu and menu link functionality.
@@ -199,7 +200,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Enable the block.
     $this->drupalPlaceBlock('system_menu_block:' . $menu_name);
-    return menu_ui_load($menu_name);
+    return Menu::load($menu_name);
   }
 
   /**
@@ -216,7 +217,7 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalPostForm("admin/structure/menu/manage/$menu_name/delete", array(), t('Delete'));
     $this->assertResponse(200);
     $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $label)), 'Custom menu was deleted');
-    $this->assertFalse(menu_ui_load($menu_name), 'Custom menu was deleted');
+    $this->assertNull(Menu::load($menu_name), 'Custom menu was deleted');
     // Test if all menu links associated to the menu were removed from database.
     $result = entity_load_multiple_by_properties('menu_link', array('menu_name' => $menu_name));
     $this->assertFalse($result, 'All menu links associated to the custom menu were deleted.');

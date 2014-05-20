@@ -7,8 +7,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\file\Entity\File;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -243,16 +241,6 @@ function image_path_flush($path) {
   foreach ($styles as $style) {
     $style->flush($path);
   }
-}
-
-/**
- * Loads an ImageStyle object.
- *
- * @param string $name
- *   The ID of the ImageStyle object to load.
- */
-function image_style_load($name) {
-  return entity_load('image_style', $name);
 }
 
 /**

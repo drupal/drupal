@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\aggregator\Tests;
+use Drupal\aggregator\Entity\Feed;
 
 /**
  * Tests functionality of updating a feed item in the Aggregator module.
@@ -48,7 +49,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title[0][value]'])), format_string('The feed !name has been added.', array('!name' => $edit['title[0][value]'])));
 
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url[0][value]']))->fetchField();
-    $feed = aggregator_feed_load($fid);
+    $feed = Feed::load($fid);
 
     $feed->refreshItems();
     $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();

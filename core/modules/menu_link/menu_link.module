@@ -45,9 +45,15 @@ function menu_link_uri(MenuLink $menu_link) {
  *
  * @return \Drupal\menu_link\Entity\MenuLink|null
  *   A menu link entity, or NULL if there is no entity with the given ID.
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\menu_link\Entity\MenuLink::load().
  */
 function menu_link_load($mlid = NULL, $reset = FALSE) {
-  return entity_load('menu_link', $mlid, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('menu_link')->resetCache(array($mlid));
+  }
+  return MenuLink::load($mlid);
 }
 
 /**
@@ -63,9 +69,15 @@ function menu_link_load($mlid = NULL, $reset = FALSE) {
  *
  * @see menu_link_load()
  * @see entity_load_multiple()
+ *
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\menu_link\Entity\MenuLink::loadMultiple().
  */
 function menu_link_load_multiple(array $mlids = NULL, $reset = FALSE) {
-  return entity_load_multiple('menu_link', $mlids, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('menu_link')->resetCache($mlids);
+  }
+  return MenuLink::loadMultiple($mlids);
 }
 
 /**

@@ -114,18 +114,6 @@ function menu_ui_theme() {
 }
 
 /**
- * Load the data for a single custom menu.
- *
- * @param $menu_name
- *   The unique name of a custom menu to load.
- * @return
- *   Array defining the custom menu, or NULL if the menu doesn't exist.
- */
-function menu_ui_load($menu_name) {
-  return entity_load('menu', $menu_name);
-}
-
-/**
  * Implements hook_menu_insert()
  */
 function menu_ui_menu_insert(Menu $menu) {

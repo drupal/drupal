@@ -50,7 +50,7 @@ class ResponsiveImageMappingForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $responsive_image_mapping->id(),
       '#machine_name' => array(
-        'exists' => 'responsive_image_mapping_load',
+        'exists' => '\Drupal\responsive_image\Entity\ResponsiveImageMapping::load',
         'source' => array('label'),
       ),
       '#disabled' => (bool) $responsive_image_mapping->id() && $this->operation != 'duplicate',

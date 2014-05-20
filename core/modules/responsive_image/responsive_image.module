@@ -5,7 +5,7 @@
  * Responsive image display formatter for image fields.
  */
 
-use Drupal\responsive_image\Entity\ResponsiveImageMapping;
+use Drupal\breakpoint\Entity\Breakpoint;
 use \Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -68,24 +68,6 @@ function responsive_image_menu() {
   );
 
   return $items;
-}
-
-/**
- * Load one responsive image by its identifier.
- *
- * @param int $id
- *   The id of the responsive image mapping to load.
- *
- * @return \Drupal\responsive_image\ResponsiveImageMappingInterface
- *   The entity object, or NULL if there is no entity with the given id.
- *
- * @todo Needed for menu_callback
- *
- * @see http://drupal.org/node/1798214
- *
- */
-function responsive_image_mapping_load($id) {
-  return entity_load('responsive_image_mapping', $id);
 }
 
 /**
@@ -218,7 +200,7 @@ function theme_responsive_image($variables) {
 
   // All breakpoints and multipliers.
   foreach ($variables['breakpoints'] as $breakpoint_name => $multipliers) {
-    $breakpoint = breakpoint_load($breakpoint_name);
+    $breakpoint = Breakpoint::load($breakpoint_name);
     if ($breakpoint) {
       $new_sources = array();
       foreach ($multipliers as $multiplier => $image_style) {

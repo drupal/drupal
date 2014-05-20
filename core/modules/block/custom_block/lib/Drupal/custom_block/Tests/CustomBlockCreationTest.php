@@ -8,6 +8,7 @@
 namespace Drupal\custom_block\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\custom_block\Entity\CustomBlock;
 
 /**
  * Tests creating and saving a block.
@@ -180,7 +181,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $url = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
     $this->drupalPostForm($url, $instance, t('Save block'));
 
-    $block = custom_block_load(1);
+    $block = CustomBlock::load(1);
 
     // Test getInstances method.
     $this->assertEqual(1, count($block->getInstances()));

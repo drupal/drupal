@@ -238,7 +238,7 @@ class MenuForm extends EntityForm {
    *
    * This form constructor can be integrated as a section into another form. It
    * relies on the following keys in $form_state:
-   * - menu: A loaded menu definition, as returned by menu_ui_load().
+   * - menu: A menu entity.
    * - menu_overview_form_parents: An array containing the parent keys to this
    *   form.
    * Forms integrating this section should call menu_overview_form_submit() from

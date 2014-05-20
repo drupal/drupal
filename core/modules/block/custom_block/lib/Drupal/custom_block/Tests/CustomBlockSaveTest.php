@@ -8,6 +8,7 @@
 namespace Drupal\custom_block\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\custom_block\Entity\CustomBlock;
 
 /**
  * Tests block save related functionality.
@@ -63,7 +64,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
     $this->assertEqual($block->id(), $test_id, 'Block imported using provide id');
 
     // Test the import saved.
-    $block_by_id = custom_block_load($test_id);
+    $block_by_id = CustomBlock::load($test_id);
     $this->assertTrue($block_by_id, 'Custom block load by block ID.');
     $this->assertIdentical($block_by_id->body->value, $block_array['body']['value']);
   }
@@ -93,7 +94,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
     $this->assertEqual($block->getChangedTime(), 979534800, 'Saving a custom block uses "changed" timestamp set in presave hook.');
 
     // Test the static block load cache to be cleared.
-    $block = custom_block_load($block->id());
+    $block = CustomBlock::load($block->id());
     $this->assertEqual($block->label(), 'updated_presave', 'Static cache has been cleared.');
   }
 

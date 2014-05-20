@@ -13,6 +13,8 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
+use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
+use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
@@ -413,6 +415,74 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   public function getListCacheTags() {
     // @todo Add bundle-specific listing cache tag? https://drupal.org/node/2145751
     return array($this->entityTypeId . 's' => TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function load($id) {
+    return \Drupal::entityManager()->getStorage(static::getEntityTypeFromStaticClass())->load($id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function loadMultiple(array $ids = NULL) {
+    return \Drupal::entityManager()->getStorage(static::getEntityTypeFromStaticClass())->loadMultiple($ids);
+  }
+
+  /**
+   * Returns the entity type ID based on the class that is called on.
+   *
+   * Compares the class this is called on against the known entity classes
+   * and returns the entity type ID of a direct match or a subclass as fallback,
+   * to support entity type definitions that were altered.
+   *
+   * @return string
+   *   The entity type ID.
+   *
+   * @throws \Drupal\Core\Entity\Exception\AmbiguousEntityClassException
+   *   Thrown when multiple subclasses correspond to the called class.
+   * @throws \Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException
+   *   Thrown when no entity class corresponds to the called class.
+   *
+   * @see \Drupal\Core\Entity\Entity::load()
+   * @see \Drupal\Core\Entity\Entity::loadMultiple()
+   */
+  protected static function getEntityTypeFromStaticClass() {
+    $called_class = get_called_class();
+    $subclasses = 0;
+    $same_class = 0;
+    $entity_type_id = NULL;
+    $subclass_entity_type_id = NULL;
+    foreach (\Drupal::entityManager()->getDefinitions() as $entity_type) {
+      // Check if this is the same class, throw an exception if there is more
+      // than one match.
+      if ($entity_type->getClass() == $called_class) {
+        $entity_type_id = $entity_type->id();
+        if ($same_class++) {
+          throw new AmbiguousEntityClassException($called_class);
+        }
+      }
+      // Check for entity types that are subclasses of the called class, but
+      // throw an exception if we have multiple matches.
+      elseif (is_subclass_of($entity_type->getClass(), $called_class)) {
+        $subclass_entity_type_id = $entity_type->id();
+        if ($subclasses++) {
+          throw new AmbiguousEntityClassException($called_class);
+        }
+      }
+    }
+
+    // Return the matching entity type ID or the subclass match if there is one
+    // as a secondary priority.
+    if ($entity_type_id) {
+      return $entity_type_id;
+    }
+    if ($subclass_entity_type_id) {
+      return $subclass_entity_type_id;
+    }
+    throw new NoCorrespondingEntityClassException($called_class);
   }
 
   /**
