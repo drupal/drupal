@@ -143,7 +143,7 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    */
   public function on403Html(FlattenException $exception, Request $request) {
     $system_path = $request->attributes->get('_system_path');
-    watchdog('access denied', $system_path, NULL, WATCHDOG_WARNING);
+    watchdog('access denied', $system_path, array(), WATCHDOG_WARNING);
 
     $system_config = $this->container->get('config.factory')->get('system.site');
     $path = $this->container->get('path.alias_manager')->getPathByAlias($system_config->get('page.403'));
@@ -185,7 +185,7 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    *   A response object.
    */
   public function on404Html(FlattenException $exception, Request $request) {
-    watchdog('page not found', String::checkPlain($request->attributes->get('_system_path')), NULL, WATCHDOG_WARNING);
+    watchdog('page not found', String::checkPlain($request->attributes->get('_system_path')), array(), WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
     $config = \Drupal::config('system.performance');

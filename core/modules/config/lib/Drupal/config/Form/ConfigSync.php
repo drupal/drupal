@@ -348,7 +348,7 @@ class ConfigSync extends FormBase {
       if (!empty($results['errors'])) {
         foreach ($results['errors'] as $error) {
           drupal_set_message($error, 'error');
-          watchdog('config_sync', $error, NULL, WATCHDOG_ERROR);
+          watchdog('config_sync', $error, array(), WATCHDOG_ERROR);
         }
         drupal_set_message(\Drupal::translation()->translate('The configuration was imported with errors.'), 'warning');
       }

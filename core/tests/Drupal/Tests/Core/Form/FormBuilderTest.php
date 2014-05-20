@@ -446,6 +446,7 @@ class TestFormInjected extends TestForm implements ContainerInjectionInterface {
 namespace {
   function test_form_id_custom_submit(array &$form, array &$form_state) {
   }
+  // @todo Remove once watchdog() is removed.
   if (!defined('WATCHDOG_ERROR')) {
     define('WATCHDOG_ERROR', 3);
   }

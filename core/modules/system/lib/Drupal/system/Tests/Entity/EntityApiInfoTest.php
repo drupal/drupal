@@ -48,9 +48,9 @@ class EntityApiInfoTest extends WebTestBase  {
   /**
    * Tests entity info cache after enabling a module with a dependency on an entity providing module.
    *
-   * @see entity_cache_test_watchdog()
+   * @see entity_cache_test_modules_enabled()
    */
-  function testEntityInfoCacheWatchdog() {
+  function testEntityInfoCacheModulesEnabled() {
     \Drupal::moduleHandler()->install(array('entity_cache_test'));
     $entity_type = \Drupal::state()->get('entity_cache_test');
     $this->assertEqual($entity_type->getLabel(), 'Entity Cache Test', 'Entity info label is correct.');
