@@ -15,9 +15,23 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface EditorInterface extends ConfigEntityInterface {
 
   /**
+   * Returns whether this text editor has an associated filter format.
+   *
+   * A text editor may be created at the same time as the filter format it's
+   * going to be associated with; in that case, no filter format object is
+   * available yet.
+   *
+   * @return bool
+   */
+  public function hasAssociatedFilterFormat();
+
+  /**
    * Returns the filter format this text editor is associated with.
    *
-   * @return \Drupal\filter\FilterFormatInterface
+   * This could be NULL if the associated filter format is still being created.
+   * @see hasAssociatedFilterFormat()
+   *
+   * @return \Drupal\filter\FilterFormatInterface|null
    */
   public function getFilterFormat();
 

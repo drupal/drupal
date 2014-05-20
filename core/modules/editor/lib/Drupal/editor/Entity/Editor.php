@@ -105,6 +105,13 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasAssociatedFilterFormat() {
+    return $this->format !== NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFilterFormat() {
     if (!$this->filterFormat) {
       $this->filterFormat = \Drupal::entityManager()->getStorage('filter_format')->load($this->format);

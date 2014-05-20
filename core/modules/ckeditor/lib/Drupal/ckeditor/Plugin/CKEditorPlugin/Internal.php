@@ -289,9 +289,16 @@ class Internal extends CKEditorPluginBase {
    *     array or FALSE. The latter indicates that nothing is disallowed.
    */
   protected function generateACFSettings(Editor $editor) {
-    // When nothing is disallowed, set allowedContent to true.
+    // When no text format is associated yet, assume nothing is disallowed, so
+    // set allowedContent to true.
+    if (!$editor->hasAssociatedFilterFormat()) {
+      return TRUE;
+    }
+
     $format = $editor->getFilterFormat();
     $filter_types = $format->getFilterTypes();
+
+    // When nothing is disallowed, set allowedContent to true.
     if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $filter_types)) {
       return array(TRUE, FALSE);
     }

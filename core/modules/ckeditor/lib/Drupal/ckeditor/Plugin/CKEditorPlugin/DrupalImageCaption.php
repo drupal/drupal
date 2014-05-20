@@ -68,6 +68,10 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
    * {@inheritdoc}
    */
   function isEnabled(Editor $editor) {
+    if (!$editor->hasAssociatedFilterFormat()) {
+      return FALSE;
+    }
+
     // Automatically enable this plugin if the text format associated with this
     // text editor uses the filter_caption filter and the DrupalImage button is
     // enabled.
