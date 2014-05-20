@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\Core\Entity\EntityManagerTest.
  */
 
-namespace Drupal\Tests\Core\Entity;
+namespace Drupal\Tests\Core\Entity {
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -80,13 +80,6 @@ class EntityManagerTest extends UnitTestCase {
   protected $translationManager;
 
   /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $formBuilder;
-
-  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -111,20 +104,19 @@ class EntityManagerTest extends UnitTestCase {
 
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
 
-    $this->languageManager = $this->getMockBuilder('Drupal\Core\Language\LanguageManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->returnValue((object) array('id' => 'en')));
+    $this->languageManager->expects($this->any())
+      ->method('getLanguages')
+      ->will($this->returnValue(array('en' => (object) array('id' => 'en'))));
 
     $this->translationManager = $this->getStringTranslationStub();
 
-    $this->formBuilder = $this->getMock('Drupal\Core\Form\FormBuilderInterface');
-
     $this->container = $this->getContainerWithCacheBins($this->cache);
 
-    $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface');
+    $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
   }
 
   /**
@@ -149,7 +141,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->formBuilder);
+    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager);
     $this->entityManager->setContainer($this->container);
     $this->entityManager->setDiscovery($this->discovery);
   }
@@ -162,8 +154,9 @@ class EntityManagerTest extends UnitTestCase {
    */
   public function testClearCachedDefinitions() {
     $this->setUpEntityManager();
-    $this->discovery->expects($this->once())
-      ->method('clearCachedDefinitions');
+    $this->cache->expects($this->once())
+      ->method('deleteTags')
+      ->with(array('entity_types' => TRUE));
 
     $this->entityManager->clearCachedDefinitions();
   }
@@ -491,15 +484,13 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getName')
       ->will($this->returnValue('field_storage'));
 
-    $this->moduleHandler->expects($this->at(0))
+    $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
-      ->with('entity_base_field_info')
-      ->will($this->returnValue(array()));
-
-    $this->moduleHandler->expects($this->at(2))
-      ->method('getImplementations')
-      ->with('entity_field_storage_info')
-      ->will($this->returnValue(array('example_module')));
+      ->will($this->returnValueMap(array(
+        array('entity_type_build', array()),
+        array('entity_base_field_info', array()),
+        array('entity_field_storage_info', array('example_module')),
+      )));
 
     $this->moduleHandler->expects($this->any())
       ->method('invoke')
@@ -527,9 +518,17 @@ class EntityManagerTest extends UnitTestCase {
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue(FALSE));
-    $this->cache->expects($this->once())
-      ->method('set');
+    $this->cache->expects($this->at(1))
+      ->method('get')
+      ->with('entity_type::en', FALSE)
+      ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
+      ->method('set')
+      ->with('entity_type::en');
+    $this->cache->expects($this->at(3))
+      ->method('set')
+      ->with('entity_base_field_definitions:test_entity_type:en');
+    $this->cache->expects($this->at(4))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
@@ -558,12 +557,18 @@ class EntityManagerTest extends UnitTestCase {
       ->with('entity_bundle_field_definitions:test_entity_type:test_bundle:en', FALSE)
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
-      ->method('set');
+      ->method('get')
+      ->with('entity_type::en', FALSE)
+      ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(3))
+      ->method('set');
+    $this->cache->expects($this->at(4))
+      ->method('set');
+    $this->cache->expects($this->at(5))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
-    $this->cache->expects($this->at(4))
+    $this->cache->expects($this->at(6))
       ->method('get')
       ->with('entity_bundle_field_definitions:test_entity_type:test_bundle:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
@@ -587,8 +592,10 @@ class EntityManagerTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
-      ->with('entity_field_storage_info')
-      ->will($this->returnValue(array('example_module')));
+      ->will($this->returnValueMap(array(
+        array('entity_field_storage_info', array('example_module')),
+        array('entity_type_build', array())
+      )));
 
     $this->moduleHandler->expects($this->once())
       ->method('invoke')
@@ -609,12 +616,20 @@ class EntityManagerTest extends UnitTestCase {
       ->with('entity_field_storage_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
-      ->method('set');
+      ->method('get')
+      ->with('entity_type::en', FALSE)
+      ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(3))
+      ->method('set')
+      ->with('entity_type::en');
+    $this->cache->expects($this->at(4))
+      ->method('set')
+      ->with('entity_field_storage_definitions:test_entity_type:en');
+    $this->cache->expects($this->at(5))
       ->method('get')
       ->with('entity_base_field_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => array('id' => $expected['id']))));
-    $this->cache->expects($this->at(4))
+    $this->cache->expects($this->at(6))
       ->method('get')
       ->with('entity_field_storage_definitions:test_entity_type:en', FALSE)
       ->will($this->returnValue((object) array('data' => $expected)));
@@ -809,14 +824,27 @@ class EntityManagerTest extends UnitTestCase {
       'apple' => $apple,
       'banana' => $banana,
     ));
+    $this->cache->expects($this->at(0))
+      ->method('get')
+      ->with("entity_bundle_info:en", FALSE)
+      ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(1))
       ->method('get')
+      ->with("entity_type::en", FALSE)
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
+      ->method('set')
+      ->with("entity_type::en");
+    $this->cache->expects($this->at(3))
+      ->method('set')
+      ->with("entity_bundle_info:en");
+    $this->cache->expects($this->at(4))
+      ->method('deleteTags')
+      ->with(array('entity_types' => TRUE));
+    $this->cache->expects($this->at(5))
       ->method('get')
+      ->with("entity_bundle_info:en", FALSE)
       ->will($this->returnValue((object) array('data' => 'cached data')));
-    $this->cache->expects($this->once())
-      ->method('set');
 
     $expected = array(
       'apple' => array(
@@ -1244,4 +1272,14 @@ class TestEntityFormInjected extends TestEntityForm implements ContainerInjectio
 
 if (!defined('DRUPAL_ROOT')) {
   define('DRUPAL_ROOT', dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)))));
+}
+}
+
+namespace {
+
+  /**
+   * Implements hook_entity_type_build().
+   */
+  function entity_manager_test_module_entity_type_build() {
+  }
 }

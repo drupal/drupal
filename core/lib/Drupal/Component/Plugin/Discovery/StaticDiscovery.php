@@ -37,7 +37,7 @@ class StaticDiscovery implements DiscoveryInterface {
   /**
    * Sets a plugin definition.
    */
-  public function setDefinition($plugin, array $definition) {
+  public function setDefinition($plugin, $definition) {
     $this->definitions[$plugin] = $definition;
   }
 

@@ -270,6 +270,11 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     // If this plugin was provided by a module that does not exist, remove the
     // plugin definition.
     foreach ($definitions as $plugin_id => $plugin_definition) {
+      // If the plugin definition is an object, attempt to convert it to an
+      // array, if that is not possible, skip further processing.
+      if (is_object($plugin_definition) && !($plugin_definition = (array) $plugin_definition)) {
+        continue;
+      }
       if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('Core', 'Component')) && !$this->moduleHandler->moduleExists($plugin_definition['provider'])) {
         unset($definitions[$plugin_id]);
       }
