@@ -220,7 +220,7 @@ class YamlFileLoader {
     }
     if ($keys = array_diff_key($content, array('parameters' => TRUE, 'services' => TRUE))) {
       $invalid_keys = htmlspecialchars(implode(', ', $keys), ENT_QUOTES, 'UTF-8');
-      throw new \InvalidArgumentException(sprintf('The service file "%s" is not valid: it contains invalid keys %s.', $filename, $invalid_keys));
+      throw new \InvalidArgumentException(sprintf('The service file "%s" is not valid: it contains invalid keys %s. Services have to be added under "services" and Parameters under "parameters".', $filename, $invalid_keys));
     }
 
     return $content;
