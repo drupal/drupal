@@ -180,7 +180,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $checksum = $this->checksumTags($flat_tags);
     $fields = array(
       'serialized' => 0,
-      'created' => REQUEST_TIME,
+      'created' => round(microtime(TRUE), 3),
       'expire' => $expire,
       'tags' => implode(' ', $flat_tags),
       'checksum_invalidations' => $checksum['invalidations'],
@@ -575,8 +575,10 @@ class DatabaseBackend implements CacheBackendInterface {
           'default' => 0,
         ),
         'created' => array(
-          'description' => 'A Unix timestamp indicating when the cache entry was created.',
-          'type' => 'int',
+          'description' => 'A timestamp with millisecond precision indicating when the cache entry was created.',
+          'type' => 'numeric',
+          'precision' => 14,
+          'scale' => 3,
           'not null' => TRUE,
           'default' => 0,
         ),

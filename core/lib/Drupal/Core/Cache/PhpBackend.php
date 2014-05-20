@@ -121,7 +121,7 @@ class PhpBackend implements CacheBackendInterface {
     $item = (object) array(
       'cid' => $cid,
       'data' => $data,
-      'created' => REQUEST_TIME,
+      'created' => round(microtime(TRUE), 3),
       'expire' => $expire,
     );
     $item->tags = $this->flattenTags($tags);

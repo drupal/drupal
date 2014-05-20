@@ -68,6 +68,12 @@ interface CacheBackendInterface {
   /**
    * Stores data in the persistent cache.
    *
+   * Core cache implementations set the created time on cache item with
+   * microtime(TRUE) rather than REQUEST_TIME_FLOAT, because the created time
+   * of cache items should match when they are created, not when the request
+   * started. Apart from being more accurate, this increases the chance an
+   * item will legitimately be considered valid.
+   *
    * @param string $cid
    *   The cache ID of the data to store.
    * @param mixed $data
