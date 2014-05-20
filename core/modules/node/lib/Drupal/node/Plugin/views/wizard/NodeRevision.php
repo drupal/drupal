@@ -27,7 +27,7 @@ class NodeRevision extends WizardPluginBase {
   /**
    * Set the created column.
    */
-  protected $createdColumn = 'timestamp';
+  protected $createdColumn = 'changed';
 
   /**
    * Set default values for the path field options.
@@ -95,20 +95,20 @@ class NodeRevision extends WizardPluginBase {
     unset($display_options['fields']);
 
     /* Field: Content revision: Created date */
-    $display_options['fields']['timestamp']['id'] = 'timestamp';
-    $display_options['fields']['timestamp']['table'] = 'node_revision';
-    $display_options['fields']['timestamp']['field'] = 'timestamp';
-    $display_options['fields']['timestamp']['provider'] = 'node';
-    $display_options['fields']['timestamp']['alter']['alter_text'] = 0;
-    $display_options['fields']['timestamp']['alter']['make_link'] = 0;
-    $display_options['fields']['timestamp']['alter']['absolute'] = 0;
-    $display_options['fields']['timestamp']['alter']['trim'] = 0;
-    $display_options['fields']['timestamp']['alter']['word_boundary'] = 0;
-    $display_options['fields']['timestamp']['alter']['ellipsis'] = 0;
-    $display_options['fields']['timestamp']['alter']['strip_tags'] = 0;
-    $display_options['fields']['timestamp']['alter']['html'] = 0;
-    $display_options['fields']['timestamp']['hide_empty'] = 0;
-    $display_options['fields']['timestamp']['empty_zero'] = 0;
+    $display_options['fields']['changed']['id'] = 'changed';
+    $display_options['fields']['changed']['table'] = 'node_field_revision';
+    $display_options['fields']['changed']['field'] = 'changed';
+    $display_options['fields']['changed']['provider'] = 'node';
+    $display_options['fields']['changed']['alter']['alter_text'] = FALSE;
+    $display_options['fields']['changed']['alter']['make_link'] = FALSE;
+    $display_options['fields']['changed']['alter']['absolute'] = FALSE;
+    $display_options['fields']['changed']['alter']['trim'] = FALSE;
+    $display_options['fields']['changed']['alter']['word_boundary'] = FALSE;
+    $display_options['fields']['changed']['alter']['ellipsis'] = FALSE;
+    $display_options['fields']['changed']['alter']['strip_tags'] = FALSE;
+    $display_options['fields']['changed']['alter']['html'] = FALSE;
+    $display_options['fields']['changed']['hide_empty'] = FALSE;
+    $display_options['fields']['changed']['empty_zero'] = FALSE;
 
     /* Field: Content revision: Title */
     $display_options['fields']['title']['id'] = 'title';

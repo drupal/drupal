@@ -517,6 +517,10 @@ function node_views_data() {
       'left_field' => 'vid',
       'field' => 'vid',
     ),
+    'node_revision' => array(
+      'left_field' => 'vid',
+      'field' => 'vid',
+    ),
   );
 
   $data['node_field_revision']['status'] = array(
