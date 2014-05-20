@@ -189,7 +189,7 @@ class ApcuBackend implements CacheBackendInterface {
   public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
     $cache = new \stdClass();
     $cache->cid = $cid;
-    $cache->created = REQUEST_TIME;
+    $cache->created = round(microtime(TRUE), 3);
     $cache->expire = $expire;
     $cache->tags = implode(' ', $this->flattenTags($tags));
     $checksum = $this->checksumTags($tags);
