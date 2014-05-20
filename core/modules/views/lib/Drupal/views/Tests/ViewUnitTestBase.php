@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  * ViewTestBase instead.
  *
  * @see \Drupal\views\Tests\ViewTestBase
+ * @see \Drupal\simpletest\DrupalUnitTestBase
  */
 abstract class ViewUnitTestBase extends DrupalUnitTestBase {
 

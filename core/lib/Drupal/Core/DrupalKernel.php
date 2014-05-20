@@ -117,13 +117,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $allowDumping;
 
   /**
-   * Whether the container can be loaded.
-   *
-   * @var bool
-   */
-  protected $allowLoading;
-
-  /**
    * Whether the container needs to be dumped once booting is complete.
    *
    * @var bool
@@ -178,16 +171,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @param bool $allow_dumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
-   * @param bool $allow_loading
-   *   (optional) FALSE to prevent the kernel attempting to read the dependency
-   *   injection container from disk. Defaults to $allow_dumping.
    */
-  public function __construct($environment, ClassLoader $class_loader, $allow_dumping = TRUE, $allow_loading = NULL) {
+  public function __construct($environment, ClassLoader $class_loader, $allow_dumping = TRUE) {
     $this->environment = $environment;
     $this->booted = FALSE;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
-    $this->allowLoading = isset($allow_loading) ? $allow_loading : $allow_dumping;
   }
 
   /**
@@ -355,12 +344,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     foreach ($module_filenames as $name => $extension) {
       $this->moduleData[$name] = $extension;
     }
-
-    // This method is called whenever the list of modules changed. Therefore
-    // disable loading of a dumped container from the disk, because it is
-    // guaranteed to be out of date and needs to be rebuilt anyway.
-    $this->allowLoading = FALSE;
-
     // If we haven't yet booted, we don't need to do anything: the new module
     // list will take effect when boot() is called. If we have already booted,
     // then reboot in order to refresh the serviceProvider list and container.
@@ -414,7 +397,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $class = $this->getClassName();
     $cache_file = $class . '.php';
 
-    if ($this->allowLoading) {
+    if ($this->allowDumping) {
       // First, try to load.
       if (!class_exists($class, FALSE)) {
         $this->storage()->load($cache_file);
@@ -434,12 +417,33 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->moduleList = $this->newModuleList;
       unset($this->newModuleList);
     }
+    // Second, check if some other request -- for example on another web
+    // frontend or during the installer -- changed the list of enabled modules.
     if (isset($this->container)) {
       // All namespaces must be registered before we attempt to use any service
       // from the container.
+      $container_modules = $this->container->getParameter('container.modules');
+      $namespaces_before = $this->classLoader->getPrefixesPsr4();
       $this->registerNamespacesPsr4($this->container->getParameter('container.namespaces'));
+
+      // If 'container.modules' is wrong, the container must be rebuilt.
+      if (!isset($this->moduleList)) {
+        $this->moduleList = $this->container->get('config.factory')->get('core.extension')->get('module') ?: array();
+      }
+      if (array_keys($this->moduleList) !== array_keys($container_modules)) {
+        $persist = $this->getServicesToPersist();
+        unset($this->container);
+        // Revert the class loader to its prior state. However,
+        // registerNamespaces() performs a merge rather than replace, so to
+        // effectively remove erroneous registrations, we must replace them with
+        // empty arrays.
+        $namespaces_after = $this->classLoader->getPrefixesPsr4();
+        $namespaces_before += array_fill_keys(array_diff(array_keys($namespaces_after), array_keys($namespaces_before)), array());
+        $this->registerNamespacesPsr4($namespaces_before);
+      }
     }
-    else {
+
+    if (!isset($this->container)) {
       $this->container = $this->buildContainer();
       $this->persistServices($persist);
 

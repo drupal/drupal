@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\simpletest\Tests\KernelTestBaseTest.
+ * Contains \Drupal\simpletest\Tests\DrupalUnitTestBaseTest.
  */
 
 namespace Drupal\simpletest\Tests;
 
-use Drupal\simpletest\KernelTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests KernelTestBase functionality.
+ * Tests DrupalUnitTestBase functionality.
  */
-class KernelTestBaseTest extends KernelTestBase {
+class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
@@ -23,8 +23,8 @@ class KernelTestBaseTest extends KernelTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'KernelTestBase',
-      'description' => 'Tests KernelTestBase functionality.',
+      'name' => 'DrupalUnitTestBase',
+      'description' => 'Tests DrupalUnitTestBase functionality.',
       'group' => 'SimpleTest',
     );
   }

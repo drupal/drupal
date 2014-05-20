@@ -27,7 +27,7 @@ class DrupalKernelTest extends DrupalUnitTestBase {
   function setUp() {
     // DrupalKernel relies on global $config_directories and requires those
     // directories to exist. Therefore, create the directories, but do not
-    // invoke KernelTestBase::setUp(), since that would set up further
+    // invoke DrupalUnitTestBase::setUp(), since that would set up further
     // environment aspects, which would distort this test, because it tests
     // the DrupalKernel (re-)building itself.
     $this->prepareConfigDirectories();
@@ -56,6 +56,7 @@ class DrupalKernelTest extends DrupalUnitTestBase {
     // Instantiate it a second time and we should get the compiled Container
     // class.
     $kernel = new DrupalKernel('testing', $classloader);
+    $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
     $refClass = new \ReflectionClass($container);
@@ -63,10 +64,6 @@ class DrupalKernelTest extends DrupalUnitTestBase {
       $refClass->getParentClass()->getName() == 'Drupal\Core\DependencyInjection\Container' &&
       !$refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
     $this->assertTrue($is_compiled_container);
-    // Verify that the list of modules is the same for the initial and the
-    // compiled container.
-    $module_list = array_keys($container->get('module_handler')->getModuleList());
-    $this->assertEqual(array_values($module_enabled), $module_list);
 
     // Now use the read-only storage implementation, simulating a "production"
     // environment.
@@ -74,6 +71,7 @@ class DrupalKernelTest extends DrupalUnitTestBase {
     $php_storage['service_container']['class'] = 'Drupal\Component\PhpStorage\FileReadOnlyStorage';
     $this->settingsSet('php_storage', $php_storage);
     $kernel = new DrupalKernel('testing', $classloader);
+    $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
     $refClass = new \ReflectionClass($container);
@@ -81,10 +79,6 @@ class DrupalKernelTest extends DrupalUnitTestBase {
       $refClass->getParentClass()->getName() == 'Drupal\Core\DependencyInjection\Container' &&
       !$refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
     $this->assertTrue($is_compiled_container);
-    // Verify that the list of modules is the same for the initial and the
-    // compiled container.
-    $module_list = array_keys($container->get('module_handler')->getModuleList());
-    $this->assertEqual(array_values($module_enabled), $module_list);
     // Test that our synthetic services are there.
     $classloader = $container->get('class_loader');
     $refClass = new \ReflectionClass($classloader);

@@ -1094,7 +1094,7 @@ abstract class WebTestBase extends TestBase {
       $request_stack = \Drupal::service('request_stack');
     }
 
-    $this->kernel = new DrupalKernel($environment, drupal_classloader(), TRUE, FALSE);
+    $this->kernel = new DrupalKernel($environment, drupal_classloader(), FALSE);
     $this->kernel->boot();
     // DrupalKernel replaces the container in \Drupal::getContainer() with a
     // different object, so we need to replace the instance on this test class.

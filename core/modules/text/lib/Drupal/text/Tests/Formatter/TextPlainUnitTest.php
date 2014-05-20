@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
 /**
  * Tests the text_plain field formatter.
  *
- * @todo Move assertion helper methods into KernelTestBase.
+ * @todo Move assertion helper methods into DrupalUnitTestBase.
  * @todo Move field helper methods, $modules, and setUp() into a new
  *   FieldPluginUnitTestBase.
  */
