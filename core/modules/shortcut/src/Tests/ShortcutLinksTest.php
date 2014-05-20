@@ -2,10 +2,11 @@
 
 /**
  * @file
- * Definition of Drupal\shortcut\Tests\ShortcutLinksTest.
+ * Contains \Drupal\shortcut\Tests\ShortcutLinksTest.
  */
 
 namespace Drupal\shortcut\Tests;
+use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 
 /**
@@ -65,6 +66,18 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $paths = $this->getShortcutInformation($saved_set, 'path');
       $this->assertTrue(in_array($this->container->get('path.alias_manager')->getPathByAlias($test['path']), $paths), 'Shortcut created: ' . $test['path']);
       $this->assertLink($title, 0, 'Shortcut link found on the page.');
+    }
+    $saved_set = ShortcutSet::load($set->id());
+    // Test that saving and re-loading a shortcut preserves its values.
+    $shortcuts = $saved_set->getShortcuts();
+    foreach ($shortcuts as $entity) {
+      // Test the node routes with parameters.
+      if (strpos($entity->route_name->value, 'node.') === 0) {
+        $entity->save();
+        $loaded = Shortcut::load($entity->id());
+        $this->assertEqual($entity->route_name->value, $loaded->route_name->value);
+        $this->assertEqual($entity->get('route_parameters')->first()->getValue(), $loaded->get('route_parameters')->first()->getValue());
+      }
     }
   }
 
