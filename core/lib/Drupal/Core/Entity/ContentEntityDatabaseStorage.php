@@ -587,7 +587,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
   /**
    * Maps from an entity object to the storage record.
    *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    * @param string $table_key
    *   (optional) The entity key identifying the target table. Defaults to
@@ -596,9 +596,10 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
    * @return \stdClass
    *   The record to store.
    */
-  protected function mapToStorageRecord(ContentEntityInterface $entity, $table_key = 'base_table') {
+  protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
     $record = new \stdClass();
     $values = array();
+    $definitions = $entity->getFieldDefinitions();
     $schema = drupal_get_schema($this->entityType->get($table_key));
     $is_new = $entity->isNew();
 
@@ -610,23 +611,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase {
         $multi_column_fields[$field] = TRUE;
         continue;
       }
-      $values[$name] = NULL;
-      if ($entity->hasField($name)) {
-        // Only the first field item is stored.
-        $field_item = $entity->get($name)->first();
-        $main_property = $entity->getFieldDefinition($name)->getMainPropertyName();
-        if ($main_property && isset($field_item->$main_property)) {
-          // If the field has a main property, store the value of that.
-          $values[$name] = $field_item->$main_property;
-        }
-        elseif (!$main_property) {
-          // If there is no main property, get all properties from the first
-          // field item and assume that they will be stored serialized.
-          // @todo Give field types more control over this behavior in
-          //   https://drupal.org/node/2232427.
-          $values[$name] = $field_item->getValue();
-        }
-      }
+      $values[$name] = isset($definitions[$name]) && isset($entity->$name->value) ? $entity->$name->value : NULL;
     }
 
     // Handle fields that store multiple properties and match each property name

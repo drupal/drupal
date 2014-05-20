@@ -104,19 +104,4 @@ class MapItem extends FieldItemBase {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function mainPropertyName() {
-    // A map item has no main property.
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isEmpty() {
-    return empty($this->values);
-  }
-
 }
