@@ -7,6 +7,7 @@
 
 namespace Drupal\shortcut\Tests;
 
+use Drupal\shortcut\Entity\Shortcut;
 use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 
 /**
@@ -44,7 +45,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    */
   protected function createEntity() {
     // Create a "Llama" shortcut.
-    $shortcut = entity_create('shortcut', array(
+    $shortcut = Shortcut::create(array(
       'set' => 'default',
       'title' => t('Llama'),
       'weight' => 0,

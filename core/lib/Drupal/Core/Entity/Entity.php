@@ -432,6 +432,13 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function create(array $values = array()) {
+    return \Drupal::entityManager()->getStorage(static::getEntityTypeFromStaticClass())->create($values);
+  }
+
+  /**
    * Returns the entity type ID based on the class that is called on.
    *
    * Compares the class this is called on against the known entity classes

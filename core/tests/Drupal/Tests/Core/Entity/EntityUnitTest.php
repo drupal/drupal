@@ -262,6 +262,7 @@ class EntityUnitTest extends UnitTestCase {
     $methods = get_class_methods('Drupal\entity_test\Entity\EntityTestMul');
     unset($methods[array_search('load', $methods)]);
     unset($methods[array_search('loadMultiple', $methods)]);
+    unset($methods[array_search('create', $methods)]);
     $this->entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTestMul')
       ->disableOriginalConstructor()
       ->setMethods($methods)
@@ -472,6 +473,29 @@ class EntityUnitTest extends UnitTestCase {
     // entity.
     $class = get_class($this->entity);
     $this->assertSame(array(1 => $this->entity), $class::loadMultiple(array(1)));
+  }
+
+  /**
+   * @covers ::create
+   * @covers ::getEntityTypeFromStaticClass
+   */
+  public function testCreate() {
+    $this->setupTestLoad();
+
+    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage->expects($this->once())
+      ->method('create')
+      ->with(array())
+      ->will($this->returnValue($this->entity));
+    $this->entityManager->expects($this->once())
+      ->method('getStorage')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue($storage));
+
+    // Call Entity::create() statically and check that it returns the mock
+    // entity.
+    $class = get_class($this->entity);
+    $this->assertSame($this->entity, $class::create(array()));
   }
 
   /**

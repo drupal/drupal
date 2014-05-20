@@ -137,8 +137,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
 
   if ($form_state['values']['set'] == 'new') {
     // Save a new shortcut set with links copied from the user's default set.
-    $default_set = shortcut_default_set($account);
-    $set = entity_create('shortcut_set', array(
+    $set = ShortcutSet::create(array(
       'id' => $form_state['values']['id'],
       'label' => $form_state['values']['label'],
     ));
