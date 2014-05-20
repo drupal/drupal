@@ -638,15 +638,16 @@ function node_views_data() {
     if ($enabled) {
       $data['node_search_index']['table']['group'] = t('Search');
 
-      // Automatically join to the node table. Use a Views table alias to
-      // allow other modules to use this table too, if they use the search
-      // index.
+      // Automatically join to the node table (or actually, node_field_data).
+      // Use a Views table alias to allow other modules to use this table too,
+      // if they use the search index.
       $data['node_search_index']['table']['join'] = array(
         'node' => array(
           'left_field' => 'nid',
           'field' => 'sid',
           'table' => 'search_index',
-          'extra' => "node_search_index.type = 'node_search'",
+          'left_table' => 'node_field_data',
+          'extra' => "node_search_index.type = 'node_search' AND node_search_index.langcode = node_field_data.langcode",
         )
       );
 
@@ -661,7 +662,8 @@ function node_views_data() {
         'node_search_index' => array(
           'left_field' => 'sid',
           'field' => 'sid',
-          'extra' => 'node_search_index.type = node_search_dataset.type',
+          'table' => 'search_dataset',
+          'extra' => 'node_search_index.type = node_search_dataset.type AND node_search_index.langcode = node_search_dataset.langcode',
           'type' => 'INNER',
         ),
       );
