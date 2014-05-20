@@ -28,10 +28,10 @@ use Drupal\Core\Condition\ConditionPluginBase;
 class NodeType extends ConditionPluginBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
-    $form = parent::buildForm($form, $form_state);
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
     $options = array();
     foreach (node_type_get_types() as $type) {
       $options[$type->type] = $type->name;
@@ -47,9 +47,9 @@ class NodeType extends ConditionPluginBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateConfigurationForm(array &$form, array &$form_state) {
     foreach ($form_state['values']['bundles'] as $bundle) {
       if (!in_array($bundle, array_keys(node_type_get_types()))) {
         form_set_error('bundles', $form_state, t('You have chosen an invalid node bundle, please check your selection and try again.'));
@@ -58,15 +58,15 @@ class NodeType extends ConditionPluginBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     $this->configuration['bundles'] = $form_state['values']['bundles'];
-    parent::submitForm($form, $form_state);
+    parent::submitConfigurationForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Executable\ExecutableInterface::summary().
+   * {@inheritdoc}
    */
   public function summary() {
     if (count($this->configuration['bundles']) > 1) {
@@ -80,7 +80,7 @@ class NodeType extends ConditionPluginBase {
   }
 
   /**
-   * Implements \Drupal\condition\ConditionInterface::evaluate().
+   * {@inheritdoc}
    */
   public function evaluate() {
     $node = $this->getContextValue('node');

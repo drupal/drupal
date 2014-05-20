@@ -17,22 +17,23 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
-    $definition = $this->getPluginDefinition();
-    return implode('_', array($definition['module'], $definition['id'], 'condition'));
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->setConfiguration($configuration);
   }
 
   /**
-   * Implements \Drupal\condition\Plugin\ConditionInterface::isNegated().
+   * {@inheritdoc}
    */
   public function isNegated() {
     return !empty($this->configuration['negate']);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     $form['negate'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Negate the condition.'),
@@ -42,22 +43,54 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {}
+  public function validateConfigurationForm(array &$form, array &$form_state) {
+  }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     $this->configuration['negate'] = $form_state['values']['negate'];
   }
 
   /**
-   * Implements \Drupal\Core\Executable\ExecutablePluginBase::execute().
+   * {@inheritdoc}
    */
   public function execute() {
     return $this->executableManager->execute($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return array(
+      'id' => $this->getPluginId(),
+    ) + $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $this->configuration = $configuration + $this->defaultConfiguration();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return array();
   }
 
 }

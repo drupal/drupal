@@ -7,9 +7,11 @@
 
 namespace Drupal\Core\Condition;
 
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Executable\ExecutableInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
  * An interface for condition plugins.
@@ -29,7 +31,7 @@ use Drupal\Core\Form\FormInterface;
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  * @see \Drupal\Core\Executable\ExecutableInterface
  */
-interface ConditionInterface extends ExecutableInterface, FormInterface {
+interface ConditionInterface extends ExecutableInterface, PluginFormInterface, ConfigurablePluginInterface, PluginInspectionInterface {
 
   /**
    * Determines whether condition result will be negated.

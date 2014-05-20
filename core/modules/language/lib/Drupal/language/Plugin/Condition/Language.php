@@ -28,8 +28,8 @@ class Language extends ConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
-    $form = parent::buildForm($form, $form_state);
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
     if (\Drupal::languageManager()->isMultilingual()) {
       // Fetch languages.
       $languages = language_list(Lang::STATE_ALL);
@@ -57,9 +57,9 @@ class Language extends ConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     $this->configuration['langcodes'] = array_filter($form_state['values']['langcodes']);
-    parent::submitForm($form, $form_state);
+    parent::submitConfigurationForm($form, $form_state);
   }
 
   /**

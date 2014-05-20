@@ -41,7 +41,7 @@ class FormController implements FormInterface {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $form = $this->condition->buildForm($form, $form_state);
+    $form = $this->condition->buildConfigurationForm($form, $form_state);
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
@@ -53,14 +53,14 @@ class FormController implements FormInterface {
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
   public function validateForm(array &$form, array &$form_state) {
-    $this->condition->validateForm($form, $form_state);
+    $this->condition->validateConfigurationForm($form, $form_state);
   }
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->condition->submitForm($form, $form_state);
+    $this->condition->submitConfigurationForm($form, $form_state);
     $config = $this->condition->getConfig();
     $bundles = implode(' and ', $config['bundles']);
     drupal_set_message(t('The bundles are @bundles', array('@bundles' => $bundles)));
