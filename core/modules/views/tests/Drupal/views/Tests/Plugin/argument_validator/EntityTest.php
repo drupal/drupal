@@ -64,10 +64,7 @@ class EntityTest extends UnitTestCase {
 
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
-    $mock_entity = $this->getMockBuilder('Drupal\Core\Entity\Entity')
-      ->disableOriginalConstructor()
-      ->setMethods(array('bundle', 'access'))
-      ->getMock();
+    $mock_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(), '', FALSE, TRUE, TRUE, array('bundle', 'access'));
     $mock_entity->expects($this->any())
       ->method('bundle')
       ->will($this->returnValue('test_bundle'));
@@ -79,10 +76,7 @@ class EntityTest extends UnitTestCase {
         array('test_op_3', NULL, TRUE),
       )));
 
-    $mock_entity_bundle_2 = $this->getMockBuilder('Drupal\Core\Entity\Entity')
-      ->disableOriginalConstructor()
-      ->setMethods(array('bundle', 'access'))
-      ->getMock();
+    $mock_entity_bundle_2 = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(), '', FALSE, TRUE, TRUE, array('bundle', 'access'));
     $mock_entity_bundle_2->expects($this->any())
       ->method('bundle')
       ->will($this->returnValue('test_bundle_2'));

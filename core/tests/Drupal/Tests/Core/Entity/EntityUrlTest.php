@@ -7,9 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -70,7 +68,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testUrlInfo($entity_class, $link_template, $expected) {
     /** @var $entity \Drupal\Core\Entity\EntityInterface */
-    $entity = new $entity_class(array('id' => 'test_entity_id'), 'test_entity_type');
+    $entity = $this->getMockForAbstractClass($entity_class, array(array('id' => 'test_entity_id'), 'test_entity_type'));
     $uri = $this->getTestUrlInfo($entity, $link_template);
 
     $this->assertSame($expected, $uri->getRouteName());
@@ -82,10 +80,10 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function providerTestUrlInfo() {
     return array(
-      array('Drupal\Tests\Core\Entity\TestEntity', 'edit-form', 'test_entity_type.edit'),
-      array('Drupal\Tests\Core\Entity\TestConfigEntity', 'edit-form', 'test_entity_type.edit'),
+      array('Drupal\Core\Entity\Entity', 'edit-form', 'test_entity_type.edit'),
+      array('Drupal\Core\Config\Entity\ConfigEntityBase', 'edit-form', 'test_entity_type.edit'),
       // Test that overriding the default $rel parameter works.
-      array('Drupal\Tests\Core\Entity\TestConfigEntity', FALSE, 'test_entity_type.edit'),
+      array('Drupal\Core\Config\Entity\ConfigEntityBase', FALSE, 'test_entity_type.edit'),
     );
   }
 
@@ -101,7 +99,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testUrlInfoForInvalidLinkTemplate($entity_class, $link_template) {
     /** @var $entity \Drupal\Core\Entity\EntityInterface */
-    $entity = new $entity_class(array('id' => 'test_entity_id'), 'test_entity_type');
+    $entity = $this->getMockForAbstractClass($entity_class, array(array('id' => 'test_entity_id'), 'test_entity_type'));
     $uri = $this->getTestUrlInfo($entity, $link_template);
 
     $this->assertEmpty($uri);
@@ -112,9 +110,9 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function providerTestUrlInfoForInvalidLinkTemplate() {
     return array(
-      array('Drupal\Tests\Core\Entity\TestEntity', 'canonical'),
-      array('Drupal\Tests\Core\Entity\TestEntity', FALSE),
-      array('Drupal\Tests\Core\Entity\TestConfigEntity', 'canonical'),
+      array('Drupal\Core\Entity\Entity', 'canonical'),
+      array('Drupal\Core\Entity\Entity', FALSE),
+      array('Drupal\Core\Config\Entity\ConfigEntityBase', 'canonical'),
     );
   }
 
@@ -164,7 +162,7 @@ class EntityUrlTest extends UnitTestCase {
    * @expectedException \Drupal\Core\Entity\EntityMalformedException
    */
   public function testUrlInfoForNewEntity() {
-    $entity = new TestEntity(array(), 'test_entity_type');
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array(), 'test_entity_type'));
     $entity->urlInfo();
   }
 
@@ -187,13 +185,13 @@ class EntityUrlTest extends UnitTestCase {
       ->with('test_entity_type')
       ->will($this->returnValue($entity_type));
 
-    $invalid_entity = new TestEntity(array(), 'test_entity_type');
+    $invalid_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array(), 'test_entity_type'));
     $this->assertSame('', $invalid_entity->url());
 
-    $no_link_entity = new TestEntity(array('id' => 'test_entity_id'), 'test_entity_type');
+    $no_link_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'));
     $this->assertSame('', $no_link_entity->url('banana'));
 
-    $valid_entity = new TestEntity(array('id' => 'test_entity_id'), 'test_entity_type');
+    $valid_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'));
     $this->urlGenerator->expects($this->exactly(2))
       ->method('generateFromRoute')
       ->will($this->returnValueMap(array(
@@ -245,7 +243,10 @@ class EntityUrlTest extends UnitTestCase {
       ))
       ->will($this->returnValue('entity/test_entity_type/test_entity_bundle/test_entity_id'));
 
-    $entity = new TestEntityWithBundle(array('id' => 'test_entity_id', 'bundle' => 'test_entity_bundle'), 'test_entity_type');
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'), '', TRUE, TRUE, TRUE, array('bundle'));
+    $entity->expects($this->any())
+      ->method('bundle')
+      ->will($this->returnValue('test_entity_bundle'));
 
     $this->assertSame('entity/test_entity_type/test_entity_bundle/test_entity_id', $entity->url('admin-form'));
   }
@@ -269,7 +270,7 @@ class EntityUrlTest extends UnitTestCase {
       ->with('test_entity_type')
       ->will($this->returnValue($entity_type));
 
-    $no_link_entity = new TestEntity(array('id' => 'test_entity_id'), 'test_entity_type');
+    $no_link_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'));
     $this->assertSame('', $no_link_entity->getSystemPath('banana'));
 
     $this->urlGenerator->expects($this->once())
@@ -277,7 +278,7 @@ class EntityUrlTest extends UnitTestCase {
       ->with('test_entity_type.view', array('test_entity_type' => 'test_entity_id'))
       ->will($this->returnValue('entity/test_entity_type/test_entity_id'));
 
-    $valid_entity = new TestEntity(array('id' => 'test_entity_id'), 'test_entity_type');
+    $valid_entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'));
 
     $this->assertSame('entity/test_entity_type/test_entity_id', $valid_entity->getSystemPath());
   }
@@ -290,21 +291,30 @@ class EntityUrlTest extends UnitTestCase {
    *
    * @dataProvider providerTestLinkTemplates
    */
-  public function testLinkTemplates($entity_class, $expected) {
+  public function testLinkTemplates($override_templates, $expected) {
     $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->expects($this->exactly(2))
+    $entity_type->expects($this->any())
       ->method('getLinkTemplates')
       ->will($this->returnValue(array(
         'canonical' => 'test_entity_type.view',
       )));
 
     $this->entityManager
-      ->expects($this->exactly(2))
+      ->expects($this->any())
       ->method('getDefinition')
       ->with('test_entity_type')
       ->will($this->returnValue($entity_type));
 
-    $entity = new $entity_class(array('id' => 'test_entity_id'), 'test_entity_type');
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\Entity', array(array('id' => 'test_entity_id'), 'test_entity_type'), '', TRUE, TRUE, TRUE, array('linkTemplates'));
+    $entity->expects($this->any())
+      ->method('linkTemplates')
+      ->will($this->returnCallback(function () use ($entity_type, $override_templates) {
+        $templates = $entity_type->getLinkTemplates();
+        if ($override_templates) {
+          $templates['bananas'] = 'test_entity_type.bananas';
+        }
+        return $templates;
+      }));
     $this->assertSame($expected['canonical'], $entity->hasLinkTemplate('canonical'));
     $this->assertSame($expected['bananas'], $entity->hasLinkTemplate('bananas'));
   }
@@ -314,53 +324,15 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function providerTestLinkTemplates() {
     return array(
-      array('Drupal\Tests\Core\Entity\TestEntity', array(
+      array(FALSE, array(
         'canonical' => TRUE,
         'bananas' => FALSE,
       )),
-      array('Drupal\Tests\Core\Entity\TestEntityWithTemplates', array(
+      array(TRUE, array(
         'canonical' => TRUE,
         'bananas' => TRUE,
       )),
     );
-  }
-
-}
-
-class TestConfigEntity extends ConfigEntityBase {
-}
-
-class TestEntity extends Entity {
-
-}
-
-class TestEntityWithTemplates extends TestEntity {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function linkTemplates() {
-    $templates = parent::linkTemplates();
-    $templates['bananas'] = 'test_entity_type.bananas';
-    return $templates;
-  }
-
-}
-
-class TestEntityWithBundle extends TestEntity {
-
-  /**
-   * The entity bundle.
-   *
-   * @var string
-   */
-  protected $bundle;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function bundle() {
-    return $this->bundle;
   }
 
 }
