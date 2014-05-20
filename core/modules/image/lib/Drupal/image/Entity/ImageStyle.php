@@ -9,8 +9,8 @@ namespace Drupal\image\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\image\ImageEffectBag;
 use Drupal\image\ImageEffectInterface;
@@ -47,7 +47,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *   }
  * )
  */
-class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginBagInterface {
+class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginBagsInterface {
 
   /**
    * The name of the image style to use as replacement upon delete.
@@ -83,11 +83,6 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @var \Drupal\image\ImageEffectBag
    */
   protected $effectsBag;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $pluginConfigKey = 'effects';
 
   /**
    * Overrides Drupal\Core\Entity\Entity::id().
@@ -347,8 +342,8 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function getPluginBag() {
-    return $this->getEffects();
+  public function getPluginBags() {
+    return array('effects' => $this->getEffects());
   }
 
   /**

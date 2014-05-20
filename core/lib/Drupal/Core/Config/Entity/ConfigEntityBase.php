@@ -13,6 +13,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 
@@ -136,10 +137,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function set($property_name, $value) {
-    if ($this instanceof EntityWithPluginBagInterface) {
-      if ($property_name == $this->pluginConfigKey) {
+    if ($this instanceof EntityWithPluginBagsInterface) {
+      $plugin_bags = $this->getPluginBags();
+      if (isset($plugin_bags[$property_name])) {
         // If external code updates the settings, pass it along to the plugin.
-        $this->getPluginBag()->setConfiguration($value);
+        $plugin_bags[$property_name]->setConfiguration($value);
       }
     }
 
@@ -257,11 +259,12 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if ($this instanceof EntityWithPluginBagInterface) {
+    if ($this instanceof EntityWithPluginBagsInterface) {
       // Any changes to the plugin configuration must be saved to the entity's
       // copy as well.
-      $plugin_bag = $this->getPluginBag();
-      $this->set($this->pluginConfigKey, $plugin_bag->getConfiguration());
+      foreach ($this->getPluginBags() as $plugin_config_key => $plugin_bag) {
+        $this->set($plugin_config_key, $plugin_bag->getConfiguration());
+      }
     }
 
     // Ensure this entity's UUID does not exist with a different ID, regardless
@@ -297,14 +300,13 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     // Dependencies should be recalculated on every save. This ensures stale
     // dependencies are never saved.
     $this->dependencies = array();
-    // @todo When \Drupal\Core\Config\Entity\EntityWithPluginBagInterface moves
-    //   to a trait, switch to class_uses() instead.
-    if ($this instanceof EntityWithPluginBagInterface) {
+    if ($this instanceof EntityWithPluginBagsInterface) {
       // Configuration entities need to depend on the providers of any plugins
       // that they store the configuration for.
-      $plugin_bag = $this->getPluginBag();
-      foreach ($plugin_bag as $instance) {
-        $this->calculatePluginDependencies($instance);
+      foreach ($this->getPluginBags() as $plugin_bag) {
+        foreach ($plugin_bag as $instance) {
+          $this->calculatePluginDependencies($instance);
+        }
       }
     }
     return $this->dependencies;

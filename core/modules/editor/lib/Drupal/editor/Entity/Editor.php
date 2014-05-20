@@ -95,7 +95,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
     parent::calculateDependencies();
     // Create a dependency on the associated FilterFormat.
     $this->addDependency('entity', $this->getFilterFormat()->getConfigDependencyName());
-    // @todo use EntityWithPluginBagInterface so configuration between config
+    // @todo use EntityWithPluginBagsInterface so configuration between config
     //   entity and dependency on provider is managed automatically.
     $definition = $this->editorPluginManager()->createInstance($this->editor)->getPluginDefinition();
     $this->addDependency('module', $definition['provider']);

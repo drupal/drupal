@@ -12,7 +12,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\block\BlockPluginBag;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
+use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -42,7 +42,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *   }
  * )
  */
-class Block extends ConfigEntityBase implements BlockInterface, EntityWithPluginBagInterface {
+class Block extends ConfigEntityBase implements BlockInterface, EntityWithPluginBagsInterface {
 
   /**
    * The ID of the block.
@@ -87,11 +87,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   protected $pluginBag;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $pluginConfigKey = 'settings';
-
-  /**
    * The visibility settings.
    *
    * @var array
@@ -106,13 +101,23 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   }
 
   /**
-   * {@inheritdoc}
+   * Encapsulates the creation of the block's PluginBag.
+   *
+   * @return \Drupal\Component\Plugin\PluginBag
+   *   The block's plugin bag.
    */
-  public function getPluginBag() {
+  protected function getPluginBag() {
     if (!$this->pluginBag) {
       $this->pluginBag = new BlockPluginBag(\Drupal::service('plugin.manager.block'), $this->plugin, $this->get('settings'), $this->id());
     }
     return $this->pluginBag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginBags() {
+    return array('settings' => $this->getPluginBag());
   }
 
   /**

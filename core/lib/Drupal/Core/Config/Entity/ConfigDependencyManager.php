@@ -35,7 +35,7 @@ use Drupal\Component\Utility\SortArray;
  * \Drupal\Core\Config\Entity\ConfigEntityBase::calculateDependencies() which
  * resets the dependencies and provides an implementation to determine the
  * plugin providers for configuration entities that implement
- * \Drupal\Core\Config\Entity\EntityWithPluginBagInterface.
+ * \Drupal\Core\Entity\EntityWithPluginBagsInterface.
  *
  * The configuration manager service provides methods to find dependencies for
  * a specified module, theme or configuration entity.

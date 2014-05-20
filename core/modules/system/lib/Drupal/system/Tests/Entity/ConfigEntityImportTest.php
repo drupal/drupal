@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
+use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -101,7 +101,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     /** @var $entity \Drupal\filter\Entity\FilterFormat */
     $entity = entity_load('filter_format', 'plain_text');
-    $plugin_bag = $entity->getPluginBag();
+    $plugin_bag = $entity->getPluginBags()['filters'];
 
     $filters = $entity->get('filters');
     $this->assertIdentical(72, $filters['filter_url']['settings']['filter_url_length']);
@@ -113,7 +113,7 @@ class ConfigEntityImportTest extends WebTestBase {
     $this->assertIdentical($filters, $plugin_bag->getConfiguration());
 
     $filters['filter_url']['settings']['filter_url_length'] = -100;
-    $entity->getPluginBag()->setConfiguration($filters);
+    $entity->getPluginBags()['filters']->setConfiguration($filters);
     $entity->save();
     $this->assertIdentical($filters, $entity->get('filters'));
     $this->assertIdentical($filters, $plugin_bag->getConfiguration());
@@ -133,7 +133,7 @@ class ConfigEntityImportTest extends WebTestBase {
 
     /** @var $entity \Drupal\image\Entity\ImageStyle */
     $entity = entity_load('image_style', 'thumbnail');
-    $plugin_bag = $entity->getPluginBag();
+    $plugin_bag = $entity->getPluginBags()['effects'];
 
     $effects = $entity->get('effects');
     $effect_id = key($effects);
@@ -147,7 +147,7 @@ class ConfigEntityImportTest extends WebTestBase {
     $this->assertIdentical($effects, $plugin_bag->getConfiguration());
 
     $effects[$effect_id]['data']['height'] = -50;
-    $entity->getPluginBag()->setConfiguration($effects);
+    $entity->getPluginBags()['effects']->setConfiguration($effects);
     $entity->save();
     // Ensure the entity and plugin have the correct configuration.
     $this->assertIdentical($effects, $entity->get('effects'));
@@ -184,7 +184,7 @@ class ConfigEntityImportTest extends WebTestBase {
   /**
    * Tests that a single set of plugin config stays in sync.
    *
-   * @param \Drupal\Core\Config\Entity\EntityWithPluginBagInterface $entity
+   * @param \Drupal\Core\Entity\EntityWithPluginBagsInterface $entity
    *   The entity.
    * @param string $config_key
    *   Where the plugin config is stored.
@@ -193,8 +193,8 @@ class ConfigEntityImportTest extends WebTestBase {
    * @param mixed $expected
    *   The expected default value of the plugin config setting.
    */
-  protected function checkSinglePluginConfigSync(EntityWithPluginBagInterface $entity, $config_key, $setting_key, $expected) {
-    $plugin_bag = $entity->getPluginBag();
+  protected function checkSinglePluginConfigSync(EntityWithPluginBagsInterface $entity, $config_key, $setting_key, $expected) {
+    $plugin_bag = $entity->getPluginBags()[$config_key];
     $settings = $entity->get($config_key);
 
     // Ensure the default config exists.

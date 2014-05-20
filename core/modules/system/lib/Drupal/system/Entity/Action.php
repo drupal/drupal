@@ -9,7 +9,7 @@ namespace Drupal\system\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
+use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Action\ActionBag;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
@@ -27,7 +27,7 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *   }
  * )
  */
-class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginBagInterface {
+class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginBagsInterface {
 
   /**
    * The name (plugin ID) of the action.
@@ -72,18 +72,23 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
   protected $pluginBag;
 
   /**
-   * {@inheritdoc}
+   * Encapsulates the creation of the action's PluginBag.
+   *
+   * @return \Drupal\Component\Plugin\PluginBag
+   *   The action's plugin bag.
    */
-  protected $pluginConfigKey = 'configuration';
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPluginBag() {
+  protected function getPluginBag() {
     if (!$this->pluginBag) {
       $this->pluginBag = new ActionBag(\Drupal::service('plugin.manager.action'), $this->plugin, $this->configuration);
     }
     return $this->pluginBag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginBags() {
+    return array('configuration' => $this->getPluginBag());
   }
 
   /**

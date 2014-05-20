@@ -9,9 +9,9 @@ namespace Drupal\search\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginBag;
 use Drupal\search\SearchPageInterface;
@@ -50,7 +50,7 @@ use Drupal\search\SearchPageInterface;
  *   }
  * )
  */
-class SearchPage extends ConfigEntityBase implements SearchPageInterface, EntityWithPluginBagInterface {
+class SearchPage extends ConfigEntityBase implements SearchPageInterface, EntityWithPluginBagsInterface {
 
   /**
    * The name (plugin ID) of the search page entity.
@@ -106,23 +106,28 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
   /**
    * {@inheritdoc}
    */
-  protected $pluginConfigKey = 'configuration';
-
-  /**
-   * {@inheritdoc}
-   */
   public function getPlugin() {
     return $this->getPluginBag()->get($this->plugin);
   }
 
   /**
-   * {@inheritdoc}
+   * Encapsulates the creation of the search page's PluginBag.
+   *
+   * @return \Drupal\Component\Plugin\PluginBag
+   *   The search page's plugin bag.
    */
-  public function getPluginBag() {
+  protected function getPluginBag() {
     if (!$this->pluginBag) {
       $this->pluginBag = new SearchPluginBag($this->searchPluginManager(), $this->plugin, $this->configuration, $this->id());
     }
     return $this->pluginBag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginBags() {
+    return array('configuration' => $this->getPluginBag());
   }
 
   /**

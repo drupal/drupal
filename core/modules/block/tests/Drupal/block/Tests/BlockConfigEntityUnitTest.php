@@ -88,10 +88,10 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies() {
     $values = array('theme' => 'stark');
-    // Mock the entity under test so that we can mock getPluginBag().
+    // Mock the entity under test so that we can mock getPluginBags().
     $entity = $this->getMockBuilder('\Drupal\block\Entity\Block')
       ->setConstructorArgs(array($values, $this->entityTypeId))
-      ->setMethods(array('getPluginBag'))
+      ->setMethods(array('getPluginBags'))
       ->getMock();
     // Create a configurable plugin that would add a dependency.
     $instance_id = $this->randomName();
@@ -110,8 +110,8 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
 
     // Return the mocked plugin bag.
     $entity->expects($this->once())
-      ->method('getPluginBag')
-      ->will($this->returnValue($plugin_bag));
+      ->method('getPluginBags')
+      ->will($this->returnValue(array($plugin_bag)));
 
     $dependencies = $entity->calculateDependencies();
     $this->assertContains('test', $dependencies['module']);

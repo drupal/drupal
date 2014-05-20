@@ -210,13 +210,13 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    *
-   * @dataProvider providerCalculateDependenciesWithPluginBag
+   * @dataProvider providerCalculateDependenciesWithPluginBags
    */
-  public function testCalculateDependenciesWithPluginBag($definition, $expected_dependencies) {
+  public function testCalculateDependenciesWithPluginBags($definition, $expected_dependencies) {
     $values = array();
-    $this->entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginBag')
+    $this->entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginBags')
       ->setConstructorArgs(array($values, $this->entityTypeId))
-      ->setMethods(array('getPluginBag'))
+      ->setMethods(array('getPluginBags'))
       ->getMock();
 
     // Create a configurable plugin that would add a dependency.
@@ -236,18 +236,18 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
     // Return the mocked plugin bag.
     $this->entity->expects($this->once())
-      ->method('getPluginBag')
-      ->will($this->returnValue($pluginBag));
+      ->method('getPluginBags')
+      ->will($this->returnValue(array($pluginBag)));
 
     $this->assertEquals($expected_dependencies, $this->entity->calculateDependencies());
   }
 
   /**
-   * Data provider for testCalculateDependenciesWithPluginBag.
+   * Data provider for testCalculateDependenciesWithPluginBags.
    *
    * @return array
    */
-  public function providerCalculateDependenciesWithPluginBag() {
+  public function providerCalculateDependenciesWithPluginBags() {
     // Start with 'a' so that order of the dependency array is fixed.
     $instance_dependency_1 = 'a' . $this->randomName(10);
     $instance_dependency_2 = 'a' . $this->randomName(11);
