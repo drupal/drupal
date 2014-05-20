@@ -10,6 +10,7 @@ namespace Drupal\menu_ui\Form;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -65,12 +66,7 @@ class MenuDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'menu_ui.menu_edit',
-      'route_parameters' => array(
-        'menu' => $this->entity->id(),
-      ),
-    );
+    return $this->entity->urlInfo('edit-form');
   }
 
   /**
@@ -97,7 +93,7 @@ class MenuDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function submit(array $form, array &$form_state) {
-    $form_state['redirect_route']['route_name'] = 'menu_ui.overview_page';
+    $form_state['redirect_route'] = new Url('menu_ui.overview_page');
 
     // Locked menus may not be deleted.
     if ($this->entity->isLocked()) {

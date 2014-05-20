@@ -11,6 +11,7 @@ use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,10 +102,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => $this->mapper->getOverviewRouteName(),
-      'route_parameters' => $this->mapper->getOverviewRouteParameters(),
-    );
+    return new Url($this->mapper->getOverviewRouteName(), $this->mapper->getOverviewRouteParameters());
   }
 
   /**
@@ -148,10 +146,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
 
     drupal_set_message($this->t('@language translation of %label was deleted', array('%label' => $this->mapper->getTitle(), '@language' => $this->language->name)));
 
-    $form_state['redirect_route'] = array(
-      'route_name' => $this->mapper->getOverviewRoute(),
-      'route_parameters' => $this->mapper->getOverviewRouteParameters(),
-    );
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

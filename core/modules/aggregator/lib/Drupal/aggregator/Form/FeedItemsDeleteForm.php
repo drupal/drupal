@@ -8,6 +8,7 @@
 namespace Drupal\aggregator\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for items that belong to a feed.
@@ -25,9 +26,7 @@ class FeedItemsDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'aggregator.admin_overview',
-    );
+    return new Url('aggregator.admin_overview');
   }
 
   /**
@@ -43,7 +42,7 @@ class FeedItemsDeleteForm extends ContentEntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity->deleteItems();
 
-    $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

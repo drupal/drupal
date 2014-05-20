@@ -8,6 +8,7 @@
 namespace Drupal\search\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirm form for search.
@@ -25,9 +26,7 @@ class SearchPageDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'search.settings',
-    );
+    return new Url('search.settings');
   }
 
   /**
@@ -42,7 +41,7 @@ class SearchPageDeleteForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    $form_state['redirect_route']['route_name'] = 'search.settings';
+    $form_state['redirect_route'] = $this->getCancelRoute();
     drupal_set_message($this->t('The %label search page has been deleted.', array('%label' => $this->entity->label())));
   }
 

@@ -10,6 +10,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -104,9 +105,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'system.modules_uninstall',
-    );
+    return new Url('system.modules_uninstall');
   }
 
   /**
@@ -201,7 +200,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
     $this->moduleHandler->uninstall($this->modules);
 
     drupal_set_message($this->t('The selected modules have been uninstalled.'));
-    $form_state['redirect_route']['route_name'] = 'system.modules_uninstall';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

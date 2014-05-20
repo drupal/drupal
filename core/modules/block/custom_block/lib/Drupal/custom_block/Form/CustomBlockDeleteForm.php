@@ -8,6 +8,7 @@
 namespace Drupal\custom_block\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a confirmation form for deleting a custom block entity.
@@ -25,9 +26,7 @@ class CustomBlockDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'block.admin_display',
-    );
+    return new Url('block.admin_display');
   }
 
   /**
@@ -58,7 +57,7 @@ class CustomBlockDeleteForm extends ContentEntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('Custom block %label has been deleted.', array('%label' => $this->entity->label())));
     watchdog('custom_block', 'Custom block %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect_route']['route_name'] = 'custom_block.list';
+    $form_state['redirect_route'] = new Url('custom_block.list');
   }
 
 }

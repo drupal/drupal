@@ -8,6 +8,7 @@
 namespace Drupal\menu_ui\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Defines a confirmation form for resetting a single modified menu link.
@@ -25,12 +26,9 @@ class MenuLinkResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'menu_ui.menu_edit',
-      'route_parameters' => array(
-        'menu' => $this->entity->menu_name,
-      ),
-    );
+    return new Url('menu_ui.menu_edit', array(
+      'menu' => $this->entity->menu_name,
+    ));
   }
 
   /**
@@ -51,14 +49,9 @@ class MenuLinkResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function submit(array $form, array &$form_state) {
-    $new_menu_link = $this->entity->reset();
+    $this->entity = $this->entity->reset();
     drupal_set_message(t('The menu link was reset to its default settings.'));
-    $form_state['redirect_route'] = array(
-      'route_name' => 'menu_ui.menu_edit',
-      'route_parameters' => array(
-        'menu' => $new_menu_link->menu_name,
-      ),
-    );
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

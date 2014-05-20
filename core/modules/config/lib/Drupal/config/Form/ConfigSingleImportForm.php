@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -80,9 +81,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'config.import_single',
-    );
+    return new Url('config.import_single');
   }
 
   /**

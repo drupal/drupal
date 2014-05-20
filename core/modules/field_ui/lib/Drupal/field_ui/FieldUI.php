@@ -8,6 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Url;
 
 /**
  * Static service container wrapper for Field UI.
@@ -22,25 +23,15 @@ class FieldUI {
    * @param string $bundle
    *   The entity bundle.
    *
-   * @return array
-   *   An associative array with the following keys:
-   *   - route_name: The name of the route.
-   *   - route_parameters: (optional) An associative array of parameter names
-   *     and values.
-   *   - options: (optional) An associative array of additional options. See
-   *     \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
-   *     comprehensive documentation.
+   * @return \Drupal\Core\Url
+   *   A URL object.
    */
   public static function getOverviewRouteInfo($entity_type_id, $bundle) {
     $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
     if ($entity_type->hasLinkTemplate('admin-form')) {
-      return array(
-        'route_name' => "field_ui.overview_$entity_type_id",
-        'route_parameters' => array(
-          $entity_type->getBundleEntityType() => $bundle,
-        ),
-        'options' => array(),
-      );
+      return new Url("field_ui.overview_$entity_type_id", array(
+        $entity_type->getBundleEntityType() => $bundle,
+      ));
     }
   }
 

@@ -111,7 +111,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $usage = array();
     foreach ($field->getBundles() as $bundle) {
       if ($route_info = FieldUI::getOverviewRouteInfo($field->entity_type, $bundle)) {
-        $usage[] = \Drupal::l($this->bundles[$field->entity_type][$bundle]['label'], $route_info['route_name'], $route_info['route_parameters'], $route_info['options']);
+        $usage[] = \Drupal::linkGenerator()->generateFromUrl($this->bundles[$field->entity_type][$bundle]['label'], $route_info);
       }
       else {
         $usage[] = $this->bundles[$field->entity_type][$bundle]['label'];

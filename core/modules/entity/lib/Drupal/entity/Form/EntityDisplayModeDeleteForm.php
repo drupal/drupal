@@ -8,6 +8,7 @@
 namespace Drupal\entity\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides the delete form for entity display modes.
@@ -18,9 +19,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'entity.' . $this->entity->getEntityTypeId() . '_list',
-    );
+    return new Url('entity.' . $this->entity->getEntityTypeId() . '_list');
   }
 
   /**
@@ -56,7 +55,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
     drupal_set_message(t('Deleted the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $entity_type->getLowercaseLabel())));
     $this->entity->delete();
     entity_info_cache_clear();
-    $form_state['redirect_route']['route_name'] = 'entity.' . $this->entity->getEntityTypeId() . '_list';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

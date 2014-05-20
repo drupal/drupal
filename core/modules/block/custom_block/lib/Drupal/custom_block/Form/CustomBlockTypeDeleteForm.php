@@ -9,6 +9,7 @@ namespace Drupal\custom_block\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -53,9 +54,7 @@ class CustomBlockTypeDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'custom_block.type_list',
-    );
+    return new Url('custom_block.type_list');
   }
 
   /**
@@ -85,9 +84,9 @@ class CustomBlockTypeDeleteForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    $form_state['redirect_route']['route_name'] = 'custom_block.type_list';
     drupal_set_message(t('Custom block type %label has been deleted.', array('%label' => $this->entity->label())));
     watchdog('custom_block', 'Custom block type %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

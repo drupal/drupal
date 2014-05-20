@@ -8,6 +8,7 @@
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides the entity_test delete form.
@@ -18,9 +19,7 @@ class EntityTestDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => '<front>',
-    );
+    return new Url('<front>');
   }
 
   /**
@@ -39,7 +38,7 @@ class EntityTestDeleteForm extends ContentEntityConfirmFormBase {
     $entity = $this->entity;
     $entity->delete();
     drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId())));
-    $form_state['redirect_route']['route_name'] = '<front>';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

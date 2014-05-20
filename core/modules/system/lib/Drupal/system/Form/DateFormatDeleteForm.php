@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -63,9 +64,7 @@ class DateFormatDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'system.date_format_list',
-    );
+    return new Url('system.date_format_list');
   }
 
   /**
@@ -75,7 +74,7 @@ class DateFormatDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message(t('Removed date format %format.', array('%format' => $this->entity->label())));
 
-    $form_state['redirect_route']['route_name'] = 'system.date_format_list';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

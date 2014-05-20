@@ -23,14 +23,8 @@ interface ConfirmFormInterface extends FormInterface {
   /**
    * Returns the route to go to if the user cancels the action.
    *
-   * @return array
-   *   An associative array with the following keys:
-   *   - route_name: The name of the route.
-   *   - route_parameters: (optional) An associative array of parameter names
-   *     and values.
-   *   - options: (optional) An associative array of additional options. See
-   *     \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
-   *     comprehensive documentation.
+   * @return \Drupal\Core\Url
+   *   A URL object.
    */
   public function getCancelRoute();
 

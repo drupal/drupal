@@ -8,6 +8,7 @@
 namespace Drupal\block\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for the block instance deletion form.
@@ -25,9 +26,7 @@ class BlockDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'block.admin_display',
-    );
+    return new Url('block.admin_display');
   }
 
   /**
@@ -43,7 +42,7 @@ class BlockDeleteForm extends EntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('The block %name has been removed.', array('%name' => $this->entity->label())));
-    $form_state['redirect_route']['route_name'] = 'block.admin_display';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

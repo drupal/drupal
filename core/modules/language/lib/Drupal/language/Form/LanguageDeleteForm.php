@@ -9,6 +9,7 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,9 +57,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'language.admin_overview',
-    );
+    return new Url('language.admin_overview');
   }
 
   /**
@@ -115,7 +114,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
       drupal_set_message($this->t('The %language (%langcode) language has been removed.', array('%language' => $this->entity->label(), '%langcode' => $this->entity->id())));
     }
 
-    $form_state['redirect_route']['route_name'] = 'language.admin_overview';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

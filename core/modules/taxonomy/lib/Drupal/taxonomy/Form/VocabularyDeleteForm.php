@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for taxonomy vocabulary.
@@ -33,9 +34,7 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'taxonomy.vocabulary_list',
-    );
+    return new Url('taxonomy.vocabulary_list');
   }
 
   /**
@@ -59,7 +58,7 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('Deleted vocabulary %name.', array('%name' => $this->entity->label())));
     watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect_route']['route_name'] = 'taxonomy.vocabulary_list';
+    $form_state['redirect_route'] = $this->getCancelRoute();
     Cache::invalidateTags(array('content' => TRUE));
   }
 

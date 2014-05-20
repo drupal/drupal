@@ -27,10 +27,6 @@ class ConfirmFormHelper {
    *
    * @return array
    *   The link render array for the cancel form.
-   *
-   * @throws \UnexpectedValueException
-   *   Ensures that \Drupal\Core\Form\ConfirmFormInterface::getCancelRoute()
-   *   returns an array containing a route name.
    */
   public static function buildCancelLink(ConfirmFormInterface $form, Request $request) {
     // Prepare cancel link.
@@ -45,18 +41,6 @@ class ConfirmFormHelper {
     }
     // Check for a route-based cancel link.
     elseif ($route = $form->getCancelRoute()) {
-      if (!($route instanceof Url)) {
-        if (empty($route['route_name'])) {
-          throw new \UnexpectedValueException(String::format('Missing route name in !class::getCancelRoute().', array('!class' => get_class($form))));
-        }
-        // Ensure there is something to pass as the params and options.
-        $route += array(
-          'route_parameters' => array(),
-          'options' => array(),
-        );
-        $route = new Url($route['route_name'], $route['route_parameters'], $route['options']);
-      }
-
       $link = $route->toRenderArray();
     }
 

@@ -8,6 +8,7 @@
 namespace Drupal\user\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a deletion confirmation form for Role entity.
@@ -25,9 +26,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'user.role_list',
-    );
+    return new Url('user.role_list');
   }
 
   /**
@@ -44,7 +43,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
     $this->entity->delete();
     watchdog('user', 'Role %name has been deleted.', array('%name' => $this->entity->label()));
     drupal_set_message($this->t('Role %name has been deleted.', array('%name' => $this->entity->label())));
-    $form_state['redirect_route']['route_name'] = 'user.role_list';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

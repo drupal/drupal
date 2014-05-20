@@ -8,6 +8,7 @@
 namespace Drupal\action\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Builds a form to delete an action.
@@ -32,9 +33,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'action.admin',
-    );
+    return new Url('action.admin');
   }
 
   /**
@@ -46,9 +45,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
     watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $this->entity->id(), '%action' => $this->entity->label()));
     drupal_set_message($this->t('Action %action was deleted', array('%action' => $this->entity->label())));
 
-    $form_state['redirect_route'] = array(
-      'route_name' => 'action.admin',
-    );
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

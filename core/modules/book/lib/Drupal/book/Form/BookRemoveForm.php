@@ -9,6 +9,7 @@ namespace Drupal\book\Form;
 
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -96,12 +97,7 @@ class BookRemoveForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'node.view',
-      'route_parameters' => array(
-        'node' => $this->node->id(),
-      ),
-    );
+    return $this->node->urlInfo();
   }
 
   /**
@@ -112,12 +108,7 @@ class BookRemoveForm extends ConfirmFormBase {
       $this->bookManager->deleteFromBook($this->node->id());
       drupal_set_message($this->t('The post has been removed from the book.'));
     }
-    $form_state['redirect_route'] = array(
-      'route_name' => 'node.view',
-      'route_parameters' => array(
-        'node' => $this->node->id(),
-      ),
-    );
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

@@ -11,6 +11,7 @@ use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -69,9 +70,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'comment.admin',
-    );
+    return new Url('comment.admin');
   }
 
   /**
@@ -126,7 +125,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
       watchdog('content', 'Deleted @count comments.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
-    $form_state['redirect_route']['route_name'] = 'comment.admin';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a test confirmation form.
@@ -32,9 +33,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'system.admin',
-    );
+    return new Url('system.admin');
   }
 
   /**

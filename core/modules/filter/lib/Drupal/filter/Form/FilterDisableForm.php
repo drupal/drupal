@@ -8,6 +8,7 @@
 namespace Drupal\filter\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides the filter format disable form.
@@ -25,9 +26,7 @@ class FilterDisableForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'filter.admin_overview',
-    );
+    return new Url('filter.admin_overview');
   }
 
   /**
@@ -51,7 +50,7 @@ class FilterDisableForm extends EntityConfirmFormBase {
     $this->entity->disable()->save();
     drupal_set_message(t('Disabled text format %format.', array('%format' => $this->entity->label())));
 
-    $form_state['redirect_route']['route_name'] = 'filter.admin_overview';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

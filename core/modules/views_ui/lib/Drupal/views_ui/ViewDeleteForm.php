@@ -8,6 +8,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a delete form for a view.
@@ -25,9 +26,7 @@ class ViewDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'views_ui.list',
-    );
+    return new Url('views_ui.list');
   }
 
   /**
@@ -44,8 +43,9 @@ class ViewDeleteForm extends EntityConfirmFormBase {
     parent::submit($form, $form_state);
 
     $this->entity->delete();
-    $form_state['redirect_route']['route_name'] = 'views_ui.list';
     drupal_set_message($this->t('View %name deleted',array('%name' => $this->entity->label())));
+
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

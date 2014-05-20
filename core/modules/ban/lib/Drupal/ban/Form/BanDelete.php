@@ -9,6 +9,7 @@ namespace Drupal\ban\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\ban\BanIpManagerInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -68,9 +69,7 @@ class BanDelete extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'ban.admin_page',
-    );
+    return new Url('ban.admin_page');
   }
 
   /**
@@ -93,7 +92,7 @@ class BanDelete extends ConfirmFormBase {
     $this->ipManager->unbanIp($this->banIp);
     watchdog('user', 'Deleted %ip', array('%ip' => $this->banIp));
     drupal_set_message($this->t('The IP address %ip was deleted.', array('%ip' => $this->banIp)));
-    $form_state['redirect_route']['route_name'] = 'ban.admin_page';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

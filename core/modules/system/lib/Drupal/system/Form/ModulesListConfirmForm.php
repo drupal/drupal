@@ -10,6 +10,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -73,9 +74,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'system.modules_list',
-    );
+    return new Url('system.modules_list');
   }
 
   /**
@@ -152,7 +151,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       drupal_set_message($this->t('The configuration options have been saved.'));
     }
 
-    $form_state['redirect_route']['route_name'] = 'system.modules_list';
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

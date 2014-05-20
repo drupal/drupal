@@ -8,6 +8,7 @@
 namespace Drupal\search\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides the search reindex confirmation form.
@@ -53,9 +54,7 @@ class ReindexConfirm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'search.settings',
-    );
+    return new Url('search.settings');
   }
 
   /**
@@ -65,7 +64,7 @@ class ReindexConfirm extends ConfirmFormBase {
     if ($form['confirm']) {
       search_reindex();
       drupal_set_message($this->t('The index will be rebuilt.'));
-      $form_state['redirect_route']['route_name'] = 'search.settings';
+      $form_state['redirect_route'] = $this->getCancelRoute();
     }
   }
 }

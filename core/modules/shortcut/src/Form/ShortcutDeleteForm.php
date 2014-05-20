@@ -8,6 +8,7 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Builds the shortcut link deletion form.
@@ -32,12 +33,9 @@ class ShortcutDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'shortcut.set_customize',
-      'route_parameters' => array(
-        'shortcut_set' => $this->entity->bundle(),
-      ),
-    );
+    return new Url('shortcut.set_customize', array(
+      'shortcut_set' => $this->entity->bundle(),
+    ));
   }
 
   /**
@@ -52,12 +50,7 @@ class ShortcutDeleteForm extends ContentEntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    $form_state['redirect_route'] = array(
-      'route_name' => 'shortcut.set_customize',
-      'route_parameters' => array(
-        'shortcut_set' => $this->entity->bundle(),
-      ),
-    );
+    $form_state['redirect_route'] = $this->getCancelRoute();
     drupal_set_message($this->t('The shortcut %title has been deleted.', array('%title' => $this->entity->title->value)));
   }
 

@@ -125,7 +125,7 @@ class AdminController extends ControllerBase {
           if (isset($entity_bundles[$entity_type][$bundle])) {
             // Add the current instance.
             if ($field_ui_enabled && $route_info = FieldUI::getOverviewRouteInfo($entity_type, $bundle)) {
-              $row['data']['usage']['data']['#items'][] = $this->l($entity_bundles[$entity_type][$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
+              $row['data']['usage']['data']['#items'][] = \Drupal::linkGenerator()->generateFromUrl($entity_bundles[$entity_type][$bundle]['label'], $route_info);
             }
             else {
               $row['data']['usage']['data']['#items'][] = $entity_bundles[$entity_type][$bundle]['label'];
