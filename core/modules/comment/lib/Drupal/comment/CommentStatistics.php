@@ -73,7 +73,8 @@ class CommentStatistics implements CommentStatisticsInterface {
       ->fields('ces')
       ->condition('ces.entity_id', array_keys($entities))
       ->condition('ces.entity_type', $entity_type)
-      ->execute();
+      ->execute()
+      ->fetchAllAssoc('entity_id');
   }
 
   /**
