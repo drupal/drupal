@@ -970,7 +970,7 @@ abstract class TestBase {
   /**
    * Act on global state information before the environment is altered for a test.
    *
-   * Allows e.g. DrupalUnitTestBase to prime system/extension info from the
+   * Allows e.g. KernelTestBase to prime system/extension info from the
    * parent site (and inject it into the test environment so as to improve
    * performance).
    */
@@ -1058,7 +1058,7 @@ abstract class TestBase {
     // Unregister all custom stream wrappers of the parent site.
     // Availability of Drupal stream wrappers varies by test base class:
     // - UnitTestBase operates in a completely empty environment.
-    // - DrupalUnitTestBase supports and maintains stream wrappers in a custom
+    // - KernelTestBase supports and maintains stream wrappers in a custom
     //   way.
     // - WebTestBase re-initializes Drupal stream wrappers after installation.
     // The original stream wrappers are restored after the test run.
