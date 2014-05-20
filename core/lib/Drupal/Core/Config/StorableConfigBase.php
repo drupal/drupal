@@ -8,10 +8,12 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Config\Schema\Ignore;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
+use Drupal\Core\Config\Schema\Undefined;
 
 /**
  * Provides a base class for configuration objects with storage support.
@@ -167,36 +169,35 @@ abstract class StorableConfigBase extends ConfigBase {
    *   Exception on unsupported/undefined data type deducted.
    */
   protected function castValue($key, $value) {
-    if ($value === NULL) {
-      $value = NULL;
+    $element = FALSE;
+    try {
+      $element = $this->getSchemaWrapper()->get($key);
     }
-    elseif (is_scalar($value)) {
-      try {
-        $element = $this->getSchemaWrapper()->get($key);
-        if ($element instanceof PrimitiveInterface) {
-          // Special handling for integers and floats since the configuration
-          // system is primarily concerned with saving values from the Form API
-          // we have to special case the meaning of an empty string for numeric
-          // types. In PHP this would be casted to a 0 but for the purposes of
-          // configuration we need to treat this as a NULL.
-          if ($value === '' && ($element instanceof IntegerInterface || $element instanceof FloatInterface)) {
-            $value = NULL;
-          }
-          else {
-            $value = $element->getCastedValue();
-          }
+    catch (SchemaIncompleteException $e) {
+      // @todo Consider making schema handling more strict by throwing
+      // SchemaIncompleteException for all incomplete schema conditions *and*
+      // throwing it forward. See https://drupal.org/node/2183983.
+      // Until then, we need to handle the Undefined case below.
+    }
+    // Do not cast value if it is unknown or defined to be ignored.
+    if ($element && ($element instanceof Undefined || $element instanceof Ignore)) {
+      return $value;
+    }
+    if ((is_scalar($value) || $value === NULL)) {
+      if ($element && $element instanceof PrimitiveInterface) {
+        // Special handling for integers and floats since the configuration
+        // system is primarily concerned with saving values from the Form API
+        // we have to special case the meaning of an empty string for numeric
+        // types. In PHP this would be casted to a 0 but for the purposes of
+        // configuration we need to treat this as a NULL.
+        $empty_value =  $value === '' && ($element instanceof IntegerInterface || $element instanceof FloatInterface);
+
+        if ($value === NULL || $empty_value) {
+          $value = NULL;
         }
         else {
-          // Config only supports primitive data types. If the config schema
-          // does define a type $element will be an instance of
-          // \Drupal\Core\Config\Schema\Property. Convert it to string since it
-          // is the safest possible type.
-          $value = $element->getString();
+          $value = $element->getCastedValue();
         }
-      }
-      catch (SchemaIncompleteException $e) {
-        // @todo throw an exception due to an incomplete schema.
-        // Fix as part of https://drupal.org/node/2183983.
       }
     }
     else {

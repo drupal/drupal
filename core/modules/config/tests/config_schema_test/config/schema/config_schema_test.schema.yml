@@ -132,3 +132,20 @@ config_schema_test.schema_in_install:
 config_schema_test_integer:
   type: integer
   label: 'Config test integer'
+
+config_schema_test.ignore:
+  type: mapping
+  label: 'Ignore test'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    irrelevant:
+      type: ignore
+      label: 'Irrelevant'
+    indescribable:
+      type: ignore
+      label: 'Indescribable'
+    weight:
+      type: integer
+      label: 'Weight'

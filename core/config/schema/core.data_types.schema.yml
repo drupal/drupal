@@ -1,3 +1,23 @@
+# Base types provided by Drupal core.
+
+# Read https://drupal.org/node/1905070 for more details about configuration
+# schema, types and type resolution.
+
+# Undefined type used by the system to assign to elements at any level where
+# configuration schema is not defined. Using explicitly has the same effect as
+# not defining schema, so there is no point in doing that.
+undefined:
+  label: 'Undefined'
+  class: '\Drupal\Core\Config\Schema\Undefined'
+
+# Explicit type to use when no data typing is possible. Instead of using this
+# type, we strongly suggest you use configuration structures that can be
+# described with other structural elements of schema, and describe your schema
+# with those elements.
+ignore:
+  label: 'Ignore'
+  class: '\Drupal\Core\Config\Schema\Ignore'
+
 # Basic scalar data types from typed data.
 boolean:
   label: 'Boolean'
@@ -18,21 +38,13 @@ uri:
   label: 'Uri'
   class: '\Drupal\Core\TypedData\Plugin\DataType\Uri'
 
-# Basic data types for configuration.
-undefined:
-  label: 'Undefined'
-  class: '\Drupal\Core\Config\Schema\Property'
+# Container data types for lists with known and unknown keys.
 mapping:
   label: Mapping
   class: '\Drupal\Core\Config\Schema\Mapping'
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
-
-# Default mapping for unknown types or types not found.
-default:
-  type: undefined
-  label: 'Unknown'
 
 # Simple extended data types:
 
@@ -58,6 +70,11 @@ date_format:
   type: string
   label: 'PHP date format'
   translatable: true
+
+# HTML color value.
+color_hex:
+  type: string
+  label: 'Color'
 
 # Complex extended data types:
 
@@ -193,11 +210,6 @@ route:
       sequence:
         - type: string
           label: 'Param'
-
-# HTML color value.
-color_hex:
-  type: string
-  label: 'Color'
 
 # Config dependencies.
 config_dependencies:

@@ -152,9 +152,8 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
       $type = $name;
     }
     else {
-      // If we don't have definition, return the 'default' element.
-      // This should map to 'undefined' type by default, unless overridden.
-      $type = 'default';
+      // If we don't have definition, return the 'undefined' element.
+      $type = 'undefined';
     }
     $definition = $definitions[$type];
     // Check whether this type is an extension of another one and compile it.
@@ -326,10 +325,9 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
    * {@inheritdoc}
    */
   public function hasConfigSchema($name) {
-    // The schema system falls back on the Property class for unknown types.
-    // See http://drupal.org/node/1905230
+    // The schema system falls back on the Undefined class for unknown types.
     $definition = $this->getDefinition($name);
-    return is_array($definition) && ($definition['class'] != '\Drupal\Core\Config\Schema\Property');
+    return is_array($definition) && ($definition['class'] != '\Drupal\Core\Config\Schema\Undefined');
   }
 
 }

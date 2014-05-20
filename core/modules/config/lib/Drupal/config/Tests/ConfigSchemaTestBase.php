@@ -8,7 +8,6 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\Schema\ArrayElement;
-use Drupal\Core\Config\Schema\Property;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
@@ -84,36 +83,34 @@ abstract class ConfigSchemaTestBase extends WebTestBase {
    *   Returns mixed value.
    */
   protected function checkValue($key, $value) {
-
+    $element = FALSE;
     try {
       $element = $this->schema->get($key);
     }
     catch (SchemaIncompleteException $e) {
-      $this->fail("{$this->configName}:$key has no schema.");
+      if (is_scalar($value) || $value === NULL) {
+        $this->fail("{$this->configName}:$key has no schema.");
+      }
     }
+    // Do not check value if it is defined to be ignored.
+    if ($element && $element instanceof Ignore) {
+      return $value;
+    }
+
     if (is_scalar($value) || $value === NULL) {
       $success = FALSE;
       $type = gettype($value);
       if ($element instanceof PrimitiveInterface) {
-        if ($type == 'integer' && $element instanceof IntegerInterface) {
-          $success = TRUE;
-        }
-        if ($type == 'double' && $element instanceof FloatInterface) {
-          $success = TRUE;
-        }
-        if ($type == 'boolean' && $element instanceof BooleanInterface) {
-          $success = TRUE;
-        }
-        if ($type == 'string' && ($element instanceof StringInterface || $element instanceof Property)) {
-          $success = TRUE;
-        }
-        // Null values are allowed for all scalar types.
-        if ($value === NULL) {
-          $success = TRUE;
-        }
+        $success =
+          ($type == 'integer' && $element instanceof IntegerInterface) ||
+          ($type == 'double' && $element instanceof FloatInterface) ||
+          ($type == 'boolean' && $element instanceof BooleanInterface) ||
+          ($type == 'string' && $element instanceof StringInterface) ||
+          // Null values are allowed for all types.
+          ($value === NULL);
       }
+      $class = get_class($element);
       if (!$success) {
-        $class = get_class($element);
         $this->fail("{$this->configName}:$key has the wrong schema. Variable type is $type and schema class is $class.");
       }
     }
