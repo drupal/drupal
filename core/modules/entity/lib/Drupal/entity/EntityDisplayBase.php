@@ -174,8 +174,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       }
       // Create a dependency on the module that provides the formatter or
       // widget.
-      if (isset($component['type'])) {
-        $definition = $this->pluginManager->getDefinition($component['type']);
+      if (isset($component['type']) && $definition = $this->pluginManager->getDefinition($component['type'], FALSE)) {
         $this->addDependency('module', $definition['provider']);
       }
     }

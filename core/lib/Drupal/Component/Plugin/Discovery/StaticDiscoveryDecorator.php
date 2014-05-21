@@ -41,14 +41,14 @@ class StaticDiscoveryDecorator extends StaticDiscovery {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
+   * {@inheritdoc}
    */
-  public function getDefinition($base_plugin_id) {
+  public function getDefinition($base_plugin_id, $exception_on_invalid = TRUE) {
     if (isset($this->registerDefinitions)) {
       call_user_func($this->registerDefinitions);
     }
     $this->definitions += $this->decorated->getDefinitions();
-    return parent::getDefinition($base_plugin_id);
+    return parent::getDefinition($base_plugin_id, $exception_on_invalid);
   }
 
   /**

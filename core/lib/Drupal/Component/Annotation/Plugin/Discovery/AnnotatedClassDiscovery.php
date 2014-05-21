@@ -13,11 +13,14 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Reflection\StaticReflectionParser;
+use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 
 /**
  * Defines a discovery mechanism to find annotated plugins in PSR-0 namespaces.
  */
 class AnnotatedClassDiscovery implements DiscoveryInterface {
+
+  use DiscoveryTrait;
 
   /**
    * The namespaces within which to find plugin classes.
@@ -73,14 +76,6 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
       $this->annotationReader->addNamespace($namespace);
     }
     return $this->annotationReader;
-  }
-
-  /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
-   */
-  public function getDefinition($plugin_id) {
-    $plugins = $this->getDefinitions();
-    return isset($plugins[$plugin_id]) ? $plugins[$plugin_id] : NULL;
   }
 
   /**

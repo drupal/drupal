@@ -170,8 +170,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   /**
    * {@inheritdoc}
    */
-  public function getDefinition($entity_type_id, $exception_on_invalid = FALSE) {
-    if (($entity_type = parent::getDefinition($entity_type_id)) && class_exists($entity_type->getClass())) {
+  public function getDefinition($entity_type_id, $exception_on_invalid = TRUE) {
+    if (($entity_type = parent::getDefinition($entity_type_id, FALSE)) && class_exists($entity_type->getClass())) {
       return $entity_type;
     }
     elseif (!$exception_on_invalid) {
@@ -185,7 +185,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * {@inheritdoc}
    */
   public function hasController($entity_type, $controller_type) {
-    if ($definition = $this->getDefinition($entity_type)) {
+    if ($definition = $this->getDefinition($entity_type, FALSE)) {
       return $definition->hasControllerClass($controller_type);
     }
     return FALSE;
@@ -260,7 +260,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    */
   public function getController($entity_type, $controller_type, $controller_class_getter = NULL) {
     if (!isset($this->controllers[$controller_type][$entity_type])) {
-      $definition = $this->getDefinition($entity_type, TRUE);
+      $definition = $this->getDefinition($entity_type);
       if ($controller_class_getter) {
         $class = $definition->{$controller_class_getter}();
       }
@@ -291,7 +291,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    * {@inheritdoc}
    */
   public function getAdminRouteInfo($entity_type_id, $bundle) {
-    if (($entity_type = $this->getDefinition($entity_type_id)) && $admin_form = $entity_type->getLinkTemplate('admin-form')) {
+    if (($entity_type = $this->getDefinition($entity_type_id, FALSE)) && $admin_form = $entity_type->getLinkTemplate('admin-form')) {
       return array(
         'route_name' => $admin_form,
         'route_parameters' => array(

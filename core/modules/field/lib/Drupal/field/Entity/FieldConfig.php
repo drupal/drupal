@@ -311,7 +311,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     }
 
     // Check that the field type is known.
-    $field_type = $field_type_manager->getDefinition($this->type);
+    $field_type = $field_type_manager->getDefinition($this->type, FALSE);
     if (!$field_type) {
       throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
     }

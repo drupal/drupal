@@ -9,11 +9,14 @@ namespace Drupal\Core\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Discovery\YamlDiscovery as ComponentYamlDiscovery;
+use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 
 /**
  * Allows YAML files to define plugin definitions.
  */
 class YamlDiscovery implements DiscoveryInterface {
+
+  use DiscoveryTrait;
 
   /**
    * YAML file discovery and parsing handler.
@@ -33,14 +36,6 @@ class YamlDiscovery implements DiscoveryInterface {
    */
   function __construct($name, array $directories) {
     $this->discovery = new ComponentYamlDiscovery($name, $directories);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDefinition($plugin_id) {
-    $definitions = $this->getDefinitions();
-    return isset($definitions[$plugin_id]) ? $definitions[$plugin_id] : NULL;
   }
 
   /**

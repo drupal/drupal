@@ -19,7 +19,7 @@ class MigrateCckFieldRevisionTest extends MigrateNodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'text');
+  public static $modules = array('field', 'filter', 'node', 'text');
 
   /**
    * {@inheritdoc}

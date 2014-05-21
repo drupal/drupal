@@ -56,7 +56,7 @@ abstract class DiscoveryTestBase extends UnitTestBase {
     $this->assertIdentical($this->emptyDiscovery->getDefinitions(), array(), 'array() returned if no plugin definitions are found.');
 
     // Ensure that NULL is returned as the definition of a non-existing plugin.
-    $this->assertIdentical($this->emptyDiscovery->getDefinition('non_existing'), NULL, 'NULL returned as the definition of a non-existing plugin.');
+    $this->assertIdentical($this->emptyDiscovery->getDefinition('non_existing', FALSE), NULL, 'NULL returned as the definition of a non-existing plugin.');
   }
 }
 

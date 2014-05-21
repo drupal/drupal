@@ -8,11 +8,14 @@
 namespace Drupal\Core\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 
 /**
  * Allows info hook implementations to enhance discovered plugin definitions.
  */
 class InfoHookDecorator implements DiscoveryInterface {
+
+  use DiscoveryTrait;
 
   /**
    * The Discovery object being decorated.
@@ -39,14 +42,6 @@ class InfoHookDecorator implements DiscoveryInterface {
   public function __construct(DiscoveryInterface $decorated, $hook) {
     $this->decorated = $decorated;
     $this->hook = $hook;
-  }
-
-  /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
-   */
-  public function getDefinition($plugin_id) {
-    $definitions = $this->getDefinitions();
-    return isset($definitions[$plugin_id]) ? $definitions[$plugin_id] : NULL;
   }
 
   /**

@@ -35,8 +35,8 @@ class DerivativeTest extends PluginTestBase {
     // Ensure that NULL is returned as the definition of a non-existing base
     // plugin, a non-existing derivative plugin, or a base plugin that may not
     // be used without deriving.
-    $this->assertIdentical($this->mockBlockManager->getDefinition('non_existing'), NULL, 'NULL returned as the definition of a non-existing base plugin.');
-    $this->assertIdentical($this->mockBlockManager->getDefinition('menu:non_existing'), NULL, 'NULL returned as the definition of a non-existing derivative plugin.');
-    $this->assertIdentical($this->mockBlockManager->getDefinition('menu'), NULL, 'NULL returned as the definition of a base plugin that may not be used without deriving.');
+    $this->assertIdentical($this->mockBlockManager->getDefinition('non_existing', FALSE), NULL, 'NULL returned as the definition of a non-existing base plugin.');
+    $this->assertIdentical($this->mockBlockManager->getDefinition('menu:non_existing', FALSE), NULL, 'NULL returned as the definition of a non-existing derivative plugin.');
+    $this->assertIdentical($this->mockBlockManager->getDefinition('menu', FALSE), NULL, 'NULL returned as the definition of a base plugin that may not be used without deriving.');
   }
 }

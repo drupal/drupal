@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Entity {
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -127,16 +128,22 @@ class EntityManagerTest extends UnitTestCase {
    */
   protected function setUpEntityManager($definitions = array()) {
     $class = $this->getMockClass('Drupal\Core\Entity\EntityInterface');
-    $definitions_map = array();
     foreach ($definitions as $entity_type_id => $entity_type) {
       $entity_type->expects($this->any())
         ->method('getClass')
         ->will($this->returnValue($class));
-      $definitions_map[] = array($entity_type_id, $entity_type);
     }
     $this->discovery->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValueMap($definitions_map));
+      ->will($this->returnCallback(function ($entity_type_id, $exception_on_invalid = FALSE) use ($definitions) {
+        if (isset($definitions[$entity_type_id])) {
+          return $definitions[$entity_type_id];
+        }
+        elseif (!$exception_on_invalid) {
+          return NULL;
+        }
+        else throw new PluginNotFoundException($entity_type_id);
+      }));
     $this->discovery->expects($this->any())
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
@@ -175,7 +182,7 @@ class EntityManagerTest extends UnitTestCase {
       'banana' => $entity,
     ));
 
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $entity_type = $this->entityManager->getDefinition($entity_type_id, FALSE);
     if ($expected) {
       $this->assertInstanceOf('Drupal\Core\Entity\EntityTypeInterface', $entity_type);
     }

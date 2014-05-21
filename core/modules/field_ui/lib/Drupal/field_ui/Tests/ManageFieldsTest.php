@@ -114,7 +114,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $url = base_path() . "admin/structure/types/manage/$type/fields/node.$type.body";
     $this->assertIdentical($url, (string) $result[0]['href']);
     $this->assertIdentical("$url/field", (string) $result[1]['href']);
-    $this->assertIdentical("$url/delete", (string) $result[2]['href']);
+    $this->assertIdentical("$url/delete", (string) $result[3]['href']);
   }
 
   /**

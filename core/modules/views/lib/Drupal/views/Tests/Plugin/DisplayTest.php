@@ -248,7 +248,7 @@ class DisplayTest extends PluginTestBase {
 
     $this->drupalGet('test_display_invalid');
     $this->assertResponse(200);
-    $this->assertText(t('The plugin (invalid) did not specify an instance class.'));
+    $this->assertText('The "invalid" plugin does not exist.');
 
     // Rebuild the router, and ensure that the path is not accessible anymore.
     views_invalidate_cache();
@@ -278,7 +278,7 @@ class DisplayTest extends PluginTestBase {
     // plugin warning message.
     $this->drupalGet('<front>');
     $this->assertResponse(200);
-    $this->assertText(t('The plugin (invalid) did not specify an instance class.'));
+    $this->assertText('The "invalid" plugin does not exist.');
     $this->assertNoBlockAppears($block);
   }
 

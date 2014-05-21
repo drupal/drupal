@@ -8,6 +8,8 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
+use Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\PluginManagerInterface;
@@ -25,12 +27,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
  */
 class DefaultPluginManager extends PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface {
 
-  /**
-   * Cached definitions array.
-   *
-   * @var array
-   */
-  protected $definitions;
+  use DiscoveryCachedTrait;
 
   /**
    * Cache backend instance.
@@ -159,20 +156,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   protected function alterInfo($alter_hook) {
     $this->alterHook = $alter_hook;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDefinition($plugin_id) {
-    // Fetch definitions if they're not loaded yet.
-    if (!isset($this->definitions)) {
-      $this->getDefinitions();
-    }
-    // Avoid using a ternary that would create a copy of the array.
-    if (isset($this->definitions[$plugin_id])) {
-      return $this->definitions[$plugin_id];
-    }
   }
 
   /**

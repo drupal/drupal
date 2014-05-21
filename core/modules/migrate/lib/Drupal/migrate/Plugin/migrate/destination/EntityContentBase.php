@@ -89,7 +89,7 @@ class EntityContentBase extends Entity {
       $field_definitions = $this->entityManager->getFieldDefinitions($this->storage->getEntityTypeId(), $bundle);
       foreach ($field_definitions as $field_name => $field_definition) {
         $field_type = $field_definition->getType();
-        if ($this->migrateEntityFieldPluginManager->getDefinition($field_type)) {
+        if ($this->migrateEntityFieldPluginManager->getDefinition($field_type, FALSE)) {
           $destination_value = $this->migrateEntityFieldPluginManager->createInstance($field_type)->import($field_definition, $row->getDestinationProperty($field_name));
           // @TODO: check for NULL return? Add an unset to $row? Maybe needed in
           // exception handling? Propagate exception?

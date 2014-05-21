@@ -89,7 +89,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
     $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook');
 
-    $this->assertEmpty($plugin_manager->getDefinition('cherry'), 'Plugin information of a disabled module is not available');
+    $this->assertEmpty($plugin_manager->getDefinition('cherry', FALSE), 'Plugin information of a disabled module is not available');
   }
 
   /**

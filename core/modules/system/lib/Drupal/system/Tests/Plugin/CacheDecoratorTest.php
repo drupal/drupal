@@ -123,7 +123,7 @@ class CacheDecoratorTest extends DiscoveryTestBase {
     $this->discovery->setDefinition('banana', $this->expectedDefinitions['banana']);
 
     // Check that the new definition is not found.
-    $definition = $this->discovery->getDefinition('banana');
+    $definition = $this->discovery->getDefinition('banana', FALSE);
     $this->assertNull($definition, 'Newly added definition is not found.');
 
     // Clear cached definitions, and check that the new definition is found.

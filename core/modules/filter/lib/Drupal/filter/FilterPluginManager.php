@@ -47,10 +47,14 @@ class FilterPluginManager extends DefaultPluginManager {
   /**
    * {@inheritdoc}
    */
-  public function getDefinition($plugin_id) {
-    $plugins = $this->getDefinitions();
+  public function getDefinition($plugin_id, $exception_on_invalid = TRUE) {
+    $definitions = $this->getDefinitions();
+    // Avoid using a ternary that would create a copy of the array.
+    if (isset($definitions[$plugin_id])) {
+      return $definitions[$plugin_id];
+    }
     // If the requested filter is missing, use the null filter.
-    return isset($plugins[$plugin_id]) ? $plugins[$plugin_id] : $plugins['filter_null'];
+    return $definitions['filter_null'];
   }
 
 }

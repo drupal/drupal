@@ -15,6 +15,8 @@ namespace Drupal\Component\Plugin\Discovery;
  */
 class ProcessDecorator implements DiscoveryInterface {
 
+  use DiscoveryTrait;
+
   /**
    * The Discovery object being decorated.
    *
@@ -44,16 +46,6 @@ class ProcessDecorator implements DiscoveryInterface {
   public function __construct(DiscoveryInterface $decorated, $process_callback) {
     $this->decorated = $decorated;
     $this->processCallback = $process_callback;
-  }
-
-  /**
-   * Implements \Drupal\Component\Plugin\Discovery\DicoveryInterface::getDefinition().
-   */
-  public function getDefinition($plugin_id) {
-    $definitions = $this->getDefinitions();
-    if (isset($definitions[$plugin_id])) {
-      return $definitions[$plugin_id];
-    }
   }
 
   /**

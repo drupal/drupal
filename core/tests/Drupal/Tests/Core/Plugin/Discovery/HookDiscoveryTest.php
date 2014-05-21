@@ -116,7 +116,7 @@ class HookDiscoveryTest extends UnitTestCase {
         )
       ));
 
-    $this->assertNull($this->hookDiscovery->getDefinition('test_non_existant'));
+    $this->assertNull($this->hookDiscovery->getDefinition('test_non_existant', FALSE));
 
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_1');
     $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple');
@@ -129,6 +129,21 @@ class HookDiscoveryTest extends UnitTestCase {
     $plugin_definition = $this->hookDiscovery->getDefinition('test_id_3');
     $this->assertEquals($plugin_definition['class'], 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry');
     $this->assertEquals($plugin_definition['module'], 'hook_discovery_test2');
+  }
+
+  /**
+   * Tests the getDefinition method with an unknown plugin ID.
+   *
+   * @see \Drupal\Core\Plugin\Discovery::getDefinition()
+   *
+   * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function testGetDefinitionWithUnknownID() {
+    $this->moduleHandler->expects($this->once())
+      ->method('getImplementations')
+      ->will($this->returnValue(array()));
+
+    $this->hookDiscovery->getDefinition('test_non_existant', TRUE);
   }
 
 }

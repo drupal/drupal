@@ -68,9 +68,7 @@ function field_views_data_alter(&$data) {
  */
 function _field_views_is_sql_entity_type(FieldConfigInterface $field) {
   $entity_manager = \Drupal::entityManager();
-  if ($entity_manager->getDefinition($field->entity_type) && $entity_manager->getStorage($field->entity_type) instanceof ContentEntityDatabaseStorage) {
-    return TRUE;
-  }
+  return $entity_manager->hasDefinition($field->entity_type) && $entity_manager->getStorage($field->entity_type) instanceof ContentEntityDatabaseStorage;
 }
 
 /**
@@ -115,7 +113,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
   $data = array();
 
   // Check the field type is available.
-  if (!\Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getType())) {
+  if (!\Drupal::service('plugin.manager.field.field_type')->hasDefinition($field->getType())) {
     return $data;
   }
   // Check the field has instances.

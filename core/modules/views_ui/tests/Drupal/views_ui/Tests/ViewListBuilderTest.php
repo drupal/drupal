@@ -46,6 +46,7 @@ class ViewListBuilderTest extends UnitTestCase {
       ->will($this->returnValueMap(array(
         array(
           'default',
+          TRUE,
           array(
             'id' => 'default',
             'title' => 'Master',
@@ -55,6 +56,7 @@ class ViewListBuilderTest extends UnitTestCase {
         ),
         array(
           'page',
+          TRUE,
           array(
             'id' => 'page',
             'title' => 'Page',
@@ -67,6 +69,7 @@ class ViewListBuilderTest extends UnitTestCase {
         ),
         array(
           'embed',
+          TRUE,
           array(
             'id' => 'embed',
             'title' => 'embed',

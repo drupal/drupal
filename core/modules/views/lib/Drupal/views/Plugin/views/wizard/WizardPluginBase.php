@@ -793,7 +793,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // Load the plugin ID and module.
     $base_field = $data['table']['base']['field'];
     $display_options['fields'][$base_field]['plugin_id'] = $data[$base_field]['field']['id'];
-    if ($definition = Views::pluginManager('field')->getDefinition($display_options['fields'][$base_field]['plugin_id'])) {
+    if ($definition = Views::pluginManager('field')->getDefinition($display_options['fields'][$base_field]['plugin_id'], FALSE)) {
       $display_options['fields'][$base_field]['provider'] = isset($definition['provider']) ? $definition['provider'] : 'views';
     }
 

@@ -140,9 +140,9 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
+   * {@inheritdoc}
    */
-  public function getDefinition($base_plugin_id) {
+  public function getDefinition($base_plugin_id, $exception_on_invalid = TRUE) {
     $definitions = $this->getDefinitions();
     if (isset($definitions[$base_plugin_id])) {
       $type = $base_plugin_id;
@@ -158,7 +158,7 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
     $definition = $definitions[$type];
     // Check whether this type is an extension of another one and compile it.
     if (isset($definition['type'])) {
-      $merge = $this->getDefinition($definition['type']);
+      $merge = $this->getDefinition($definition['type'], $exception_on_invalid);
       $definition = NestedArray::mergeDeep($merge, $definition);
       // Unset type so we try the merge only once per type.
       unset($definition['type']);
