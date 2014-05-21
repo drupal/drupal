@@ -11,6 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\UrlCacheContext;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the block view builder.
@@ -302,7 +303,9 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
 
     // Third: the same block configuration, but a different URL.
     $original_url_cache_context = $this->container->get('cache_context.url');
-    $temp_context = new UrlCacheContext(Request::create('/foo'));
+    $request_stack = new RequestStack();
+    $request_stack->push(Request::create('/foo'));
+    $temp_context = new UrlCacheContext($request_stack);
     $this->container->set('cache_context.url', $temp_context);
     $old_cid = $cid;
     $build = $this->getBlockRenderArray();

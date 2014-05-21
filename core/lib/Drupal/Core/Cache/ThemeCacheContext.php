@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Cache;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 
 /**
@@ -16,11 +16,11 @@ use Drupal\Core\Theme\ThemeNegotiatorInterface;
 class ThemeCacheContext implements CacheContextInterface {
 
   /**
-   * The current request.
+   * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The theme negotiator.
@@ -32,13 +32,13 @@ class ThemeCacheContext implements CacheContextInterface {
   /**
    * Constructs a new ThemeCacheContext service.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HTTP request object.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
    *   The theme negotiator.
    */
-  public function __construct(Request $request, ThemeNegotiatorInterface $theme_negotiator) {
-    $this->request = $request;
+  public function __construct(RequestStack $request_stack, ThemeNegotiatorInterface $theme_negotiator) {
+    $this->requestStack = $request_stack;
     $this->themeNegotiator = $theme_negotiator;
   }
 
@@ -53,7 +53,8 @@ class ThemeCacheContext implements CacheContextInterface {
    * {@inheritdoc}
    */
   public function getContext() {
-    return $this->themeNegotiator->determineActiveTheme($this->request) ?: 'stark';
+    $request = $this->requestStack->getCurrentRequest();
+    return $this->themeNegotiator->determineActiveTheme($request) ?: 'stark';
   }
 
 }

@@ -9,7 +9,7 @@ services:
     arguments: ['@service_container', '%cache_contexts%' ]
   cache_context.url:
     class: Drupal\Core\Cache\UrlCacheContext
-    arguments: ['@request']
+    arguments: ['@request_stack']
     tags:
       - { name: cache.context}
   cache_context.language:
@@ -19,7 +19,7 @@ services:
       - { name: cache.context}
   cache_context.theme:
     class: Drupal\Core\Cache\ThemeCacheContext
-    arguments: ['@request', '@theme.negotiator']
+    arguments: ['@request_stack', '@theme.negotiator']
     tags:
       - { name: cache.context}
   cache.backend.database:
