@@ -243,8 +243,7 @@ class ApcuBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function garbageCollection() {
-    // Any call to apc_fetch() causes APC to expunge expired items.
-    apc_fetch('');
+    // APC performs garbage collection automatically.
   }
 
   /**
