@@ -1137,18 +1137,58 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  * @param $link
  *   A link to associate with the message.
  *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::logger($channel)->log($severity, $message, $context), or any
- *   of the shortcut methods of \Psr\Log\LoggerTrait.
- *
  * @see watchdog_severity_levels()
  * @see hook_watchdog()
  */
-function watchdog($type, $message, array $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
-  if ($link) {
-    $variables['link'] = $link;
+function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG_NOTICE, $link = NULL) {
+  global $user, $base_root;
+
+  static $in_error_state = FALSE;
+
+  // It is possible that the error handling will itself trigger an error. In that case, we could
+  // end up in an infinite loop. To avoid that, we implement a simple static semaphore.
+  if (!$in_error_state && \Drupal::hasService('module_handler')) {
+    $in_error_state = TRUE;
+
+    // The user object may not exist in all conditions, so 0 is substituted if needed.
+    $user_uid = isset($user) ? $user->id() : 0;
+
+    // Prepare the fields to be logged
+    $log_entry = array(
+      'type'        => $type,
+      'message'     => $message,
+      'variables'   => $variables,
+      'severity'    => $severity,
+      'link'        => $link,
+      'user'        => $user,
+      'uid'         => $user_uid,
+      'request_uri' => '',
+      'referer'     => '',
+      'ip'          => '',
+      // Request time isn't accurate for long processes, use time() instead.
+      'timestamp'   => time(),
+    );
+
+    try {
+      $request = \Drupal::request();
+      $log_entry['request_uri'] = $request->getUri();
+      $log_entry['referer'] = $request->headers->get('Referer', '');
+      $log_entry['ip'] = $request->getClientIP();
+    }
+    catch (DependencyInjectionRuntimeException $e) {
+      // We are not in a request context.
+    }
+
+    // Call the logging hooks to log/process the message
+    foreach (\Drupal::moduleHandler()->getImplementations('watchdog') as $module) {
+      $function = $module . '_watchdog';
+      $function($log_entry);
+    }
+
+    // It is critical that the semaphore is only cleared here, in the parent
+    // watchdog() call (not outside the loop), to prevent recursive execution.
+    $in_error_state = FALSE;
   }
-  \Drupal::service('logger.factory')->get($type)->log($severity, $message, $variables);
 }
 
 /**

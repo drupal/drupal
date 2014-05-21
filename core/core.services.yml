@@ -142,18 +142,6 @@ services:
     arguments: ['@serialization.phpserialize', '@database']
     tags:
       - { name: needs_destruction }
-  logger.factory:
-    class: Drupal\Core\Logger\LoggerChannelFactory
-    parent: container.trait
-    tags:
-      - { name: service_collector, tag: logger, call: addLogger }
-  logger.channel.default:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory_method: get
-    factory_service: logger.factory
-    arguments: ['system']
-  logger.log_message_parser:
-    class: Drupal\Core\Logger\LogMessageParser
 
   serialization.json:
     class: Drupal\Component\Serialization\Json
@@ -270,7 +258,6 @@ services:
     arguments: ['@service_container']
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@logger.channel.default']
     parent: container.trait
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
@@ -343,7 +330,7 @@ services:
       - { name: service_collector, tag: route_filter, call: addRouteFilter }
   url_generator:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@settings', '@logger.channel.default']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@settings']
     calls:
       - [setRequest, ['@?request']]
       - [setContext, ['@?router.request_context']]

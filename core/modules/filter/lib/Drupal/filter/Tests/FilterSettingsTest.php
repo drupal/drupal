@@ -34,11 +34,13 @@ class FilterSettingsTest extends DrupalUnitTestBase {
    */
   function testFilterDefaults() {
     $filter_info = $this->container->get('plugin.manager.filter')->getDefinitions();
+    $filters = array_fill_keys(array_keys($filter_info), array());
 
     // Create text format using filter default settings.
     $filter_defaults_format = entity_create('filter_format', array(
       'format' => 'filter_defaults',
       'name' => 'Filter defaults',
+      'filters' => $filters,
     ));
     $filter_defaults_format->save();
 

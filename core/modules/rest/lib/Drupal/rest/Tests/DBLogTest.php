@@ -41,9 +41,9 @@ class DBLogTest extends RESTTestBase {
    */
   public function testWatchdog() {
     // Write a log message to the DB.
-    watchdog('rest', 'Test message');
+    watchdog('rest_test', 'Test message');
     // Get the ID of the written message.
-    $id = db_query_range("SELECT wid FROM {watchdog} WHERE type = :type ORDER BY wid DESC", 0, 1, array(':type' => 'rest'))
+    $id = db_query_range("SELECT wid FROM {watchdog} WHERE type = :type ORDER BY wid DESC", 0, 1, array(':type' => 'rest_test'))
       ->fetchField();
 
     // Create a user account that has the required permissions to read
@@ -56,7 +56,7 @@ class DBLogTest extends RESTTestBase {
     $this->assertHeader('content-type', $this->defaultMimeType);
     $log = Json::decode($response);
     $this->assertEqual($log['wid'], $id, 'Log ID is correct.');
-    $this->assertEqual($log['type'], 'rest', 'Type of log message is correct.');
+    $this->assertEqual($log['type'], 'rest_test', 'Type of log message is correct.');
     $this->assertEqual($log['message'], 'Test message', 'Log message text is correct.');
 
     // Request an unknown log entry.
