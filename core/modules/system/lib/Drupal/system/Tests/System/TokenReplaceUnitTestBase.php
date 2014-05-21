@@ -20,7 +20,7 @@ abstract class TokenReplaceUnitTestBase extends EntityUnitTestBase {
    *
    * @var \Drupal\Core\Language\Language
    */
-  protected $languageInterface;
+  protected $interfaceLanguage;
 
   /**
    * Token service.
@@ -41,7 +41,7 @@ abstract class TokenReplaceUnitTestBase extends EntityUnitTestBase {
     // Install default system configuration.
     $this->installConfig(array('system'));
 
-    $this->languageInterface = \Drupal::languageManager()->getCurrentLanguage();
+    $this->interfaceLanguage = \Drupal::languageManager()->getCurrentLanguage();
     $this->tokenService = \Drupal::token();
   }
 
