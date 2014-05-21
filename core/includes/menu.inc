@@ -464,13 +464,6 @@ function menu_navigation_links($menu_name, $level = 0) {
         $class = ' active-trail';
         $l['attributes']['class'][] = 'active-trail';
       }
-      // Normally, l() compares the href of every link with the current path and
-      // sets the active class accordingly. But local tasks do not appear in
-      // menu trees, so if the current path is a local task, and this link is
-      // its tab root, then we have to set the class manually.
-      if ($item['link']['href'] != current_path()) {
-        $l['attributes']['class'][] = 'active';
-      }
       // Keyed with the unique mlid to generate classes in links.html.twig.
       $links['menu-' . $item['link']['mlid'] . $class] = $l;
     }
