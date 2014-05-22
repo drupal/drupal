@@ -55,20 +55,20 @@ class NodeConditionTest extends EntityUnitTestBase {
     // Grab the node type condition and configure it to check against node type
     // of 'article' and set the context to the page type node.
     $condition = $manager->createInstance('node_type')
-      ->setConfig('bundles', array('article'))
+      ->setConfig('bundles', array('article' => 'article'))
       ->setContextValue('node', $page);
     $this->assertFalse($condition->execute(), 'Page type nodes fail node type checks for articles.');
     // Check for the proper summary.
     $this->assertEqual('The node bundle is article', $condition->summary());
 
     // Set the node type check to page.
-    $condition->setConfig('bundles', array('page'));
+    $condition->setConfig('bundles', array('page' => 'page'));
     $this->assertTrue($condition->execute(), 'Page type nodes pass node type checks for pages');
     // Check for the proper summary.
     $this->assertEqual('The node bundle is page', $condition->summary());
 
     // Set the node type check to page or article.
-    $condition->setConfig('bundles', array('page', 'article'));
+    $condition->setConfig('bundles', array('page' => 'page', 'article' => 'article'));
     $this->assertTrue($condition->execute(), 'Page type nodes pass node type checks for pages or articles');
     // Check for the proper summary.
     $this->assertEqual('The node bundle is page or article', $condition->summary());
@@ -82,11 +82,11 @@ class NodeConditionTest extends EntityUnitTestBase {
     $this->assertFalse($condition->execute(), 'Test type nodes pass node type checks for pages or articles');
 
     // Check a greater than 2 bundles summary scenario.
-    $condition->setConfig('bundles', array('page', 'article', 'test'));
+    $condition->setConfig('bundles', array('page' => 'page', 'article' => 'article', 'test' => 'test'));
     $this->assertEqual('The node bundle is page, article or test', $condition->summary());
 
     // Test Constructor injection.
-    $condition = $manager->createInstance('node_type', array('bundles' => array('article'), 'context' => array('node' => $article)));
+    $condition = $manager->createInstance('node_type', array('bundles' => array('article' => 'article'), 'context' => array('node' => $article)));
     $this->assertTrue($condition->execute(), 'Constructor injection of context and configuration working as anticipated.');
   }
 }

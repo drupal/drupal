@@ -61,7 +61,7 @@ class NodeType extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, array &$form_state) {
-    $this->configuration['bundles'] = $form_state['values']['bundles'];
+    $this->configuration['bundles'] = array_filter($form_state['values']['bundles']);
     parent::submitConfigurationForm($form, $form_state);
   }
 
@@ -75,7 +75,7 @@ class NodeType extends ConditionPluginBase {
       $bundles = implode(', ', $bundles);
       return t('The node bundle is @bundles or @last', array('@bundles' => $bundles, '@last' => $last));
     }
-    $bundle = $this->configuration['bundles'][0];
+    $bundle = reset($this->configuration['bundles']);
     return t('The node bundle is @bundle', array('@bundle' => $bundle));
   }
 
@@ -84,7 +84,7 @@ class NodeType extends ConditionPluginBase {
    */
   public function evaluate() {
     $node = $this->getContextValue('node');
-    return in_array($node->getType(), $this->configuration['bundles']);
+    return !empty($this->configuration['bundles'][$node->getType()]);
   }
 
 }
