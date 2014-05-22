@@ -10,7 +10,7 @@ namespace Drupal\user;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
@@ -42,7 +42,7 @@ class UserAutocomplete {
   /**
    * The entity manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -54,7 +54,7 @@ class UserAutocomplete {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(Connection $connection, ConfigFactoryInterface $config_factory, EntityManager $entity_manager, QueryFactory $entity_query) {
+  public function __construct(Connection $connection, ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, QueryFactory $entity_query) {
     $this->connection = $connection;
     $this->configFactory = $config_factory;
     $this->entityQuery = $entity_query;

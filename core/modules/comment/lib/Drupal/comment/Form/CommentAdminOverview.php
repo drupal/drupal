@@ -12,7 +12,7 @@ use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\Date;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,7 +25,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * The entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -53,7 +53,7 @@ class CommentAdminOverview extends FormBase {
   /**
    * Creates a CommentAdminOverview form.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\comment\CommentStorageInterface $comment_storage
    *   The comment storage.
@@ -62,7 +62,7 @@ class CommentAdminOverview extends FormBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(EntityManager $entity_manager, CommentStorageInterface $comment_storage, Date $date, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityManagerInterface $entity_manager, CommentStorageInterface $comment_storage, Date $date, ModuleHandlerInterface $module_handler) {
     $this->entityManager = $entity_manager;
     $this->commentStorage = $comment_storage;
     $this->date = $date;
