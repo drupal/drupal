@@ -110,7 +110,7 @@ function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity
  * @param string $bundle_old
  *   The machine-readable name of the bundle to rename.
  * @param string $bundle_new
- *   The new machine-readable name of the bundle
+ *   The new machine-readable name of the bundle.
  * @param string $entity_type
  *   (optional) The entity type for which the bundle is renamed. Defaults to
  *   'entity_test'.
@@ -203,7 +203,7 @@ function entity_test_entity_extra_field_info() {
     'display' => array(
       // Note: those extra fields do not currently display anything, they are
       // just used in \Drupal\entity\Tests\EntityDisplayTest to test the
-      // behavior of entity display objects,
+      // behavior of entity display objects.
       'display_extra_field' => array(
         'label' => t('Display extra field'),
         'description' => t('An extra field on the display side.'),
@@ -360,7 +360,7 @@ function entity_test_entity_form_display_alter(EntityFormDisplay $form_display, 
 }
 
 /**
- * Implements hook_entity_presave()
+ * Implements hook_entity_presave().
  */
 function entity_test_entity_presave(EntityInterface $entity) {
   if (isset($GLOBALS['entity_test_throw_exception'])) {
@@ -369,7 +369,7 @@ function entity_test_entity_presave(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_predelete()
+ * Implements hook_entity_predelete().
  */
 function entity_test_entity_predelete(EntityInterface $entity) {
   if (isset($GLOBALS['entity_test_throw_exception'])) {

@@ -104,8 +104,7 @@ class EntityApiTest extends EntityUnitTestBase {
   }
 
   /**
-   * Tests that exceptions are properly thrown when saving or deleting an
-   * entity.
+   * Tests that exceptions are thrown when saving or deleting an entity.
    */
   public function testEntityStorageExceptionHandling() {
     $entity = entity_create('entity_test', array('name' => 'test'));
