@@ -64,13 +64,6 @@ class BlockAccessController extends EntityAccessController implements EntityCont
       return FALSE;
     }
 
-    // If the plugin denies access, then deny access.
-    if (!$entity->getPlugin()->access($account)) {
-      return FALSE;
-    }
-
-    // Otherwise, check for other access restrictions.
-
     // User role access handling.
     // If a block has no roles associated, it is displayed for every role.
     // For blocks with roles associated, if none of the user's roles matches
@@ -121,6 +114,14 @@ class BlockAccessController extends EntityAccessController implements EntityCont
         return FALSE;
       }
     }
+
+    // If the plugin denies access, then deny access. Apply plugin access checks
+    // last, because it's almost certainly cheaper to first apply Block's own
+    // visibility checks.
+    if (!$entity->getPlugin()->access($account)) {
+      return FALSE;
+    }
+
     return TRUE;
   }
 
