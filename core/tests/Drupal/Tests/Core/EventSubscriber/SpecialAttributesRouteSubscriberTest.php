@@ -118,7 +118,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
 
 namespace {
   if (!function_exists('watchdog')) {
-    function watchdog($type, $message, array $args = NULL) {
+    function watchdog($type, $message, array $args = array()) {
     }
   }
   if (!function_exists('drupal_set_message')) {

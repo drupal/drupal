@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\Controller;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -42,7 +42,7 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   /**
    * Constructs a new ControllerResolver.
    *
-   * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   (optional) A LoggerInterface instance.
    */
   public function __construct(LoggerInterface $logger = NULL) {

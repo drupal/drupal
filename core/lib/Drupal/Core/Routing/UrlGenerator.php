@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Routing;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -88,7 +88,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    *    The config factory.
    * @param \Drupal\Core\Site\Settings $settings
    *    The read only settings.
-   * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   An optional logger for recording errors.
    */
   public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, Settings $settings, LoggerInterface $logger = NULL) {

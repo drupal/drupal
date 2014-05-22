@@ -502,7 +502,7 @@ class FormValidator implements FormValidatorInterface {
   /**
    * Wraps watchdog().
    */
-  protected function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG_NOTICE, $link = NULL) {
+  protected function watchdog($type, $message, array $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
     watchdog($type, $message, $variables, $severity, $link);
   }
 

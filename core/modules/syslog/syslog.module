@@ -89,36 +89,3 @@ function syslog_facility_list() {
     LOG_LOCAL7 => 'LOG_LOCAL7',
   );
 }
-
-/**
- * Implements hook_watchdog().
- */
-function syslog_watchdog(array $log_entry) {
-  global $base_url;
-
-  $log_init = &drupal_static(__FUNCTION__, FALSE);
-  $config = \Drupal::config('syslog.settings');
-
-  if (!$log_init) {
-    $log_init = TRUE;
-    $facility = $config->get('facility');
-    if ($facility === '') {
-      $facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
-    }
-    openlog($config->get('identity'), LOG_NDELAY, $facility);
-  }
-
-  $message = strtr($config->get('format'), array(
-    '!base_url'    => $base_url,
-    '!timestamp'   => $log_entry['timestamp'],
-    '!type'        => $log_entry['type'],
-    '!ip'          => $log_entry['ip'],
-    '!request_uri' => $log_entry['request_uri'],
-    '!referer'     => $log_entry['referer'],
-    '!uid'         => $log_entry['uid'],
-    '!link'        => strip_tags($log_entry['link']),
-    '!message'     => strip_tags(!isset($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables'])),
-  ));
-
-  syslog($log_entry['severity'], $message);
-}

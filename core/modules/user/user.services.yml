@@ -15,6 +15,11 @@ services:
     class: Drupal\user\Access\LoginStatusCheck
     tags:
       - { name: access_check, applies_to: _user_is_logged_in }
+  authentication.cookie:
+    class: Drupal\Core\Authentication\Provider\Cookie
+    arguments: ['@session_manager']
+    tags:
+      - { name: authentication_provider, priority: 0 }
   cache_context.user:
     class: Drupal\user\Cache\UserCacheContext
     arguments: ['@current_user']
