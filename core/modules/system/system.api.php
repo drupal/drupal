@@ -291,8 +291,6 @@ function hook_library_info_alter(&$libraries, $module) {
  *
  * @param array $library
  *   The JavaScript/CSS library that is being added.
- * @param string $extension
- *   The name of the extension that registered the library.
  * @param string $name
  *   The name of the library.
  *
