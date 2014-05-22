@@ -91,22 +91,23 @@ class Language implements LanguageInterface {
   /**
    * Constructs a new class instance.
    *
-   * @param array $options
-   *   The properties used to construct the language.
+   * @param array $values
+   *   An array of property values, keyed by property name, used to construct
+   *   the language.
    */
-  public function __construct(array $options = array()) {
+  public function __construct(array $values = array()) {
     // Set all the provided properties for the language.
-    foreach ($options as $name => $value) {
-      $this->{$name} = $value;
+    foreach ($values as $key => $value) {
+      $this->{$key} = $value;
     }
-    // If some options were not set, set sane defaults of a predefined language.
-    if (!isset($options['name']) || !isset($options['direction'])) {
+    // If some values were not set, set sane defaults of a predefined language.
+    if (!isset($values['name']) || !isset($values['direction'])) {
       $predefined = LanguageManager::getStandardLanguageList();
       if (isset($predefined[$this->id])) {
-        if (!isset($options['name'])) {
+        if (!isset($values['name'])) {
           $this->name = $predefined[$this->id][0];
         }
-        if (!isset($options['direction']) && isset($predefined[$this->id][2])) {
+        if (!isset($values['direction']) && isset($predefined[$this->id][2])) {
           $this->direction = $predefined[$this->id][2];
         }
       }
