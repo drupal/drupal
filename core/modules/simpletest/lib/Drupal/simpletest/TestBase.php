@@ -7,7 +7,6 @@
 
 namespace Drupal\simpletest;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\String;
@@ -189,11 +188,6 @@ abstract class TestBase {
    * @var \Drupal\Component\Utility\Random
    */
   protected $randomGenerator;
-
-  /**
-   * The name of the session cookie.
-   */
-  protected $originalSessionName;
 
   /**
    * Constructor for Test.
@@ -1035,17 +1029,8 @@ abstract class TestBase {
     $this->originalProfile = drupal_get_profile();
     $this->originalUser = isset($user) ? clone $user : NULL;
 
-    // Prevent that session data is leaked into the UI test runner by closing
-    // the session and then setting the session-name (i.e. the name of the
-    // session cookie) to a random value. If a test starts a new session, then
-    // it will be associated with a different session-name. After the test-run
-    // it can be safely destroyed.
-    // @see TestBase::restoreEnvironment()
-    if (PHP_SAPI != 'cli' && session_status() == PHP_SESSION_ACTIVE) {
-      session_write_close();
-    }
-    $this->originalSessionName = session_name();
-    session_name('SIMPLETEST' . Crypt::randomBytesBase64());
+    // Ensure that the current session is not changed by the new environment.
+    \Drupal::service('session_manager')->disable();
 
     // Save and clean the shutdown callbacks array because it is static cached
     // and will be changed by the test run. Otherwise it will contain callbacks
@@ -1160,15 +1145,6 @@ abstract class TestBase {
    * @see TestBase::prepareEnvironment()
    */
   private function restoreEnvironment() {
-    // Destroy the session if one was started during the test-run.
-    $_SESSION = array();
-    if (PHP_SAPI != 'cli' && session_status() == PHP_SESSION_ACTIVE) {
-      session_destroy();
-      $params = session_get_cookie_params();
-      setcookie(session_name(), '', REQUEST_TIME - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    }
-    session_name($this->originalSessionName);
-
     // Reset all static variables.
     // Unsetting static variables will potentially invoke destruct methods,
     // which might call into functions that prime statics and caches again.
@@ -1254,6 +1230,7 @@ abstract class TestBase {
 
     // Restore original user session.
     $this->container->set('current_user', $this->originalUser);
+    \Drupal::service('session_manager')->enable();
   }
 
   /**

@@ -40,12 +40,12 @@ class SessionHttpsTest extends WebTestBase {
 
   protected function testHttpsSession() {
     if ($this->request->isSecure()) {
-      $secure_session_name = $this->getSessionName();
-      $insecure_session_name = substr($this->getSessionName(), 1);
+      $secure_session_name = session_name();
+      $insecure_session_name = substr(session_name(), 1);
     }
     else {
-      $secure_session_name = 'S' . $this->getSessionName();
-      $insecure_session_name = $this->getSessionName();
+      $secure_session_name = 'S' . session_name();
+      $insecure_session_name = session_name();
     }
 
     $user = $this->drupalCreateUser(array('access administration pages'));
@@ -124,8 +124,8 @@ class SessionHttpsTest extends WebTestBase {
       return;
     }
     else {
-      $secure_session_name = 'S' . $this->getSessionName();
-      $insecure_session_name = $this->getSessionName();
+      $secure_session_name = 'S' . session_name();
+      $insecure_session_name = session_name();
     }
 
     // Enable secure pages.
@@ -231,12 +231,12 @@ class SessionHttpsTest extends WebTestBase {
    */
   protected function testCsrfTokenWithMixedModeSsl() {
     if ($this->request->isSecure()) {
-      $secure_session_name = $this->getSessionName();
-      $insecure_session_name = substr($this->getSessionName(), 1);
+      $secure_session_name = session_name();
+      $insecure_session_name = substr(session_name(), 1);
     }
     else {
-      $secure_session_name = 'S' . $this->getSessionName();
-      $insecure_session_name = $this->getSessionName();
+      $secure_session_name = 'S' . session_name();
+      $insecure_session_name = session_name();
     }
 
     // Enable mixed mode SSL.
