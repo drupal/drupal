@@ -50,6 +50,8 @@
  *
  * @section additional Additional topics
  *
+ * - @link batch Batch API @endlink
+ * - @link queue Queue API @endlink
  * - @link container Services and the Dependency Injection Container @endlink
  * - @link typed_data Typed Data @endlink
  * - @link testing Automated tests @endlink
