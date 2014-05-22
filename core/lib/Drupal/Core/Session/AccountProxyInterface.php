@@ -13,23 +13,20 @@ namespace Drupal\Core\Session;
 interface AccountProxyInterface extends AccountInterface {
 
   /**
-   * Set the current wrapped account.
+   * Sets the currently wrapped account.
    *
    * Setting the current account is highly discouraged! Instead, make sure to
    * inject the desired user object into the dependent code directly
    *
-   * @param \Drupal\Core\Session\AccountInterface
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   The current account.
    */
   public function setAccount(AccountInterface $account);
 
   /**
-   * Set the current wrapped account.
+   * Gets the currently wrapped account.
    *
-   * Setting the current account is highly discouraged! Instead, make sure to
-   * inject the desired user object into the dependent code directly
-   *
-   * @param \Drupal\Core\Session\AccountInterface
+   * @return \Drupal\Core\Session\AccountInterface
    *   The current account.
    */
   public function getAccount();
