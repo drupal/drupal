@@ -14,7 +14,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Allows access to routes to be controlled by an '_access' boolean parameter.
+ * Defines an access check for entity form mode routes.
+ *
+ * @see \Drupal\entity\Entity\EntityFormMode
  */
 class FormModeAccessCheck implements AccessInterface {
 
