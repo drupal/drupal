@@ -512,34 +512,3 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
 
   return $entity_form_display;
 }
-
-/**
- * Generic access callback for entity pages.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity for which access is being checked.
- * @param string $operation
- *   (optional) The operation being performed on the entity. Defaults to 'view'.
- *
- * @return bool
- *   TRUE if the access is granted. FALSE if access is denied.
- */
-function entity_page_access(EntityInterface $entity, $operation = 'view') {
-  return $entity->access($operation);
-}
-
-/**
- * Generic access callback for create entity pages.
- *
- * @param string $entity_type
- *   The entity type.
- * @param string $bundle
- *   (optional) The bundle of the entity. Required if the entity supports
- *   bundles, defaults to NULL otherwise.
- *
- * @return bool
- *   TRUE if the access is granted. FALSE if access is denied.
- */
-function entity_page_create_access($entity_type, $bundle = NULL) {
-  return \Drupal::entityManager()->getAccessController($entity_type)->createAccess($bundle);
-}
