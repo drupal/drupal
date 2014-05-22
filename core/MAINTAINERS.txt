@@ -167,7 +167,6 @@ Theme system
 - Mark Carver 'Mark Carver' http://drupal.org/user/501638
 - Jen Lampton 'jenlampton' http://drupal.org/user/85586
 - Scott Reeves 'Cottser' http://drupal.org/user/1167326
-- Carl Wiedemann 'c4rl' http://drupal.org/user/235047
 - Steve Oliver 'steveoliver' http://drupal.org/user/42327
 - Fabian Franz 'Fabianx' http://drupal.org/user/693738
 - Joël Pittet 'joelpittet' https://drupal.org/user/160302
@@ -312,7 +311,7 @@ History module
 - Andrey Postnikov 'andypost' http://drupal.org/user/118908
 
 Hypertext Application Language (HAL) module
-- Lin Clark 'linclark' http://drupal.org/user/396253
+- ?
 
 Help module
 - ?
@@ -378,7 +377,6 @@ Search module
 - Peter Wolanin 'pwolanin' https://drupal.org/user/49851
 
 Serialization module
-- Lin Clark 'linclark' http://drupal.org/user/396253
 - Damian Lee 'damiankloip' http://drupal.org/user/1037976
 
 Shortcut module
