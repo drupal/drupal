@@ -36,7 +36,7 @@ class SessionTest extends WebTestBase {
    */
   function testSessionSaveRegenerate() {
     $session_manager = $this->container->get('session_manager');
-    $this->assertFalse($session_manager->isEnabled(), 'SessionManager->isEnabled() initially returns FALSE (in testing framework).');
+    $this->assertTrue($session_manager->isEnabled(), 'SessionManager->isEnabled() initially returns TRUE.');
     $this->assertFalse($session_manager->disable()->isEnabled(), 'SessionManager->isEnabled() returns FALSE after disabling.');
     $this->assertTrue($session_manager->enable()->isEnabled(), 'SessionManager->isEnabled() returns TRUE after enabling.');
 
