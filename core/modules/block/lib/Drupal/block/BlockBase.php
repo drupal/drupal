@@ -7,7 +7,7 @@
 
 namespace Drupal\block;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\NestedArray;
@@ -25,7 +25,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @ingroup block_api
  */
-abstract class BlockBase extends PluginBase implements BlockPluginInterface {
+abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginInterface {
 
   /**
    * {@inheritdoc}
