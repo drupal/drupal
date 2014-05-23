@@ -1401,6 +1401,12 @@ input.form-submit:focus {
   margin-bottom: 2em;
 }
 
+/* Vertical Tabs Reset */
+ul.vertical-tabs-list {
+  margin: -1px 0 -1px -15em;
+  padding: 0;
+}
+
 /* Contact Form */
 .contact-form #edit-name {
   width: 75%;
