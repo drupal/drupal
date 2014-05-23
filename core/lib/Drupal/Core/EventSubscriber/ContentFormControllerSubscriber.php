@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Controller\HtmlFormController;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -26,9 +27,9 @@ class ContentFormControllerSubscriber implements EventSubscriberInterface, Conta
   /**
    * The controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   * @var  \Drupal\Core\DependencyInjection\ClassResolverInterface.
    */
-  protected $resolver;
+  protected $classResolver;
 
   /**
    * The form builder.
@@ -40,13 +41,16 @@ class ContentFormControllerSubscriber implements EventSubscriberInterface, Conta
   /**
    * Constructs a new ContentFormControllerSubscriber object.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
-   *   The controller resolver.
+   * @param  \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   *   The class resolver.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The class resolver.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
    */
-  public function __construct(ControllerResolverInterface $resolver, FormBuilderInterface $form_builder) {
-    $this->resolver = $resolver;
+  public function __construct(ClassResolverInterface $class_resolver, ControllerResolverInterface $controller_resolver, FormBuilderInterface $form_builder) {
+    $this->classResolver = $class_resolver;
+    $this->controllerResolver = $controller_resolver;
     $this->formBuilder = $form_builder;
   }
 
@@ -60,7 +64,7 @@ class ContentFormControllerSubscriber implements EventSubscriberInterface, Conta
     $request = $event->getRequest();
 
     if ($form = $request->attributes->get('_form')) {
-      $wrapper = new HtmlFormController($this->resolver, $this->container, $form, $this->formBuilder);
+      $wrapper = new HtmlFormController($this->classResolver, $this->controllerResolver, $this->container, $form, $this->formBuilder);
       $request->attributes->set('_content', array($wrapper, 'getContentResult'));
     }
   }

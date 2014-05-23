@@ -121,7 +121,7 @@ services:
     arguments: [default]
   form_builder:
     class: Drupal\Core\Form\FormBuilder
-    arguments: ['@form_validator', '@form_submitter', '@module_handler', '@keyvalue.expirable', '@event_dispatcher', '@request_stack', '@?csrf_token', '@?http_kernel']
+    arguments: ['@form_validator', '@form_submitter', '@module_handler', '@keyvalue.expirable', '@event_dispatcher', '@request_stack', '@class_resolver', '@?csrf_token', '@?http_kernel']
   form_validator:
     class: Drupal\Core\Form\FormValidator
     arguments: ['@request_stack', '@string_translation', '@csrf_token']
@@ -224,7 +224,7 @@ services:
     arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@config.installer', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation']
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver']
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }
@@ -270,8 +270,11 @@ services:
     arguments: ['@service_container']
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@logger.channel.default']
-    parent: container.trait
+    arguments: ['@class_resolver', '@logger.channel.default']
+  class_resolver:
+    class: Drupal\Core\DependencyInjection\ClassResolver
+    calls:
+      - [setContainer, ['@service_container']]
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation']
@@ -476,7 +479,7 @@ services:
       - { name: event_subscriber }
   route_content_form_controller_subscriber:
     class: Drupal\Core\EventSubscriber\ContentFormControllerSubscriber
-    arguments: ['@controller_resolver', '@form_builder']
+    arguments: ['@class_resolver', '@controller_resolver', '@form_builder']
     parent: container.trait
     tags:
       - { name: event_subscriber }
@@ -496,7 +499,7 @@ services:
     arguments: ['@controller_resolver', '@ajax_response_renderer']
   controller.entityform:
     class: Drupal\Core\Entity\HtmlEntityFormController
-    arguments: ['@controller_resolver', '@service_container', '@entity.manager']
+    arguments: ['@class_resolver', '@controller_resolver', '@service_container', '@entity.manager']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
     arguments: ['@controller_resolver', '@title_resolver']

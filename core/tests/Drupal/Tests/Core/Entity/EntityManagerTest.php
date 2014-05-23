@@ -81,6 +81,20 @@ class EntityManagerTest extends UnitTestCase {
   protected $translationManager;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $formBuilder;
+
+  /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $controllerResolver;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -115,6 +129,9 @@ class EntityManagerTest extends UnitTestCase {
 
     $this->translationManager = $this->getStringTranslationStub();
 
+    $this->formBuilder = $this->getMock('Drupal\Core\Form\FormBuilderInterface');
+    $this->controllerResolver = $this->getClassResolverStub();
+
     $this->container = $this->getContainerWithCacheBins($this->cache);
 
     $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
@@ -148,7 +165,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager);
+    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->getClassResolverStub());
     $this->entityManager->setContainer($this->container);
     $this->entityManager->setDiscovery($this->discovery);
   }

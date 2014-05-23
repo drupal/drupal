@@ -10,6 +10,8 @@ namespace Drupal\Core\Controller;
 use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\Controller\ControllerResolverInterface;
 
 /**
  * Wrapping controller for forms that serve as the main page body.
@@ -31,10 +33,18 @@ class HtmlFormController extends FormController {
   protected $formClass;
 
   /**
+   * The class resolver.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface;
+   */
+  protected $classResolver;
+
+  /**
    * Constructs a new \Drupal\Core\Routing\Enhancer\FormEnhancer object.
    */
-  public function __construct(ControllerResolverInterface $resolver, ContainerInterface $container, $class, FormBuilderInterface $form_builder) {
-    parent::__construct($resolver, $form_builder);
+  public function __construct(ClassResolverInterface $class_resolver, ControllerResolverInterface $controller_resolver, ContainerInterface $container, $class, FormBuilderInterface $form_builder) {
+    parent::__construct($controller_resolver, $form_builder);
+    $this->classResolver = $class_resolver;
     $this->container = $container;
     $this->formDefinition = $class;
   }
@@ -51,17 +61,7 @@ class HtmlFormController extends FormController {
    *   The form object to use.
    */
   protected function getFormObject(Request $request, $form_arg) {
-    // If this is a class, instantiate it.
-    if (class_exists($form_arg)) {
-      if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($form_arg))) {
-        return $form_arg::create($this->container);
-      }
-
-      return new $form_arg();
-    }
-
-    // Otherwise, it is a service.
-    return $this->container->get($form_arg);
+    return $this->classResolver->getInstanceFromDefinition($form_arg);
   }
 
 }

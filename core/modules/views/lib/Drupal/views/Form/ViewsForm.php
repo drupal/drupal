@@ -9,6 +9,7 @@ namespace Drupal\views\Form;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Form\FormInterface;
@@ -28,11 +29,11 @@ use Symfony\Component\HttpFoundation\Request;
 class ViewsForm extends DependencySerialization implements FormInterface, ContainerInjectionInterface {
 
   /**
-   * The controller resolver to get the subform form objects.
+   * The class resolver to get the subform form objects.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
    */
-  protected $controllerResolver;
+  protected $classResolver;
 
   /**
    * The current request.
@@ -65,8 +66,8 @@ class ViewsForm extends DependencySerialization implements FormInterface, Contai
   /**
    * Constructs a ViewsForm object.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver to get the subform form objects.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $controller_resolver
+   *   The class resolver to get the subform form objects.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator to generate the form action.
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -76,8 +77,8 @@ class ViewsForm extends DependencySerialization implements FormInterface, Contai
    * @param string $view_display_id
    *   The ID of the active view's display.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, UrlGeneratorInterface $url_generator, Request $request, $view_id, $view_display_id) {
-    $this->controllerResolver = $controller_resolver;
+  public function __construct(ClassResolverInterface $controller_resolver, UrlGeneratorInterface $url_generator, Request $request, $view_id, $view_display_id) {
+    $this->classResolver = $controller_resolver;
     $this->urlGenerator = $url_generator;
     $this->request = $request;
     $this->viewId = $view_id;
@@ -169,17 +170,7 @@ class ViewsForm extends DependencySerialization implements FormInterface, Contai
   protected function getFormObject(array $form_state) {
     // If this is a class, instantiate it.
     $form_step_class = isset($form_state['step_controller'][$form_state['step']]) ? $form_state['step_controller'][$form_state['step']] : 'Drupal\views\Form\ViewsFormMainForm';
-    $container = \Drupal::getContainer();
-    if (class_exists($form_step_class)) {
-      if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($form_step_class))) {
-        return $form_step_class::create($container);
-      }
-
-      return new $form_step_class();
-    }
-
-    // Otherwise, it is a service.
-    return $container->get($form_step_class);
+    return $this->classResolver->getInstanceFromDefinition($form_step_class);
   }
 
 }

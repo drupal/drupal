@@ -10,8 +10,7 @@ namespace Drupal\Core\Controller;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 
 /**
  * ControllerResolver to enhance controllers beyond Symfony's basic handling.
@@ -28,9 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *    controller by using a service:method notation (Symfony uses the same
  *    convention).
  */
-class ControllerResolver extends BaseControllerResolver implements ControllerResolverInterface, ContainerAwareInterface {
-
-   use ContainerAwareTrait;
+class ControllerResolver extends BaseControllerResolver implements ControllerResolverInterface {
 
   /**
    * The PSR-3 logger. (optional)
@@ -40,12 +37,23 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   protected $logger;
 
   /**
+   * The class resolver.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
+   */
+  protected $classResolver;
+
+  /**
    * Constructs a new ControllerResolver.
    *
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   *   The class resolver.
    * @param \Psr\Log\LoggerInterface $logger
    *   (optional) A LoggerInterface instance.
    */
-  public function __construct(LoggerInterface $logger = NULL) {
+  public function __construct(ClassResolverInterface $class_resolver, LoggerInterface $logger = NULL) {
+    $this->classResolver = $class_resolver;
+
     parent::__construct($logger);
   }
 
@@ -109,31 +117,17 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
     // Controller in the service:method notation.
     $count = substr_count($controller, ':');
     if ($count == 1) {
-      list($service, $method) = explode(':', $controller, 2);
-      return array($this->container->get($service), $method);
+      list($class_or_service, $method) = explode(':', $controller, 2);
     }
-
     // Controller in the class::method notation.
-    if (strpos($controller, '::') !== FALSE) {
-      list($class, $method) = explode('::', $controller, 2);
-      if (!class_exists($class)) {
-        throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
-      }
-      // @todo Remove the second in_array() once that interface has been removed.
-      if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($class))) {
-        $controller = $class::create($this->container);
-      }
-      else {
-        $controller = new $class();
-      }
+    elseif (strpos($controller, '::') !== FALSE) {
+      list($class_or_service, $method) = explode('::', $controller, 2);
     }
     else {
       throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
     }
 
-    if ($controller instanceof ContainerAwareInterface) {
-      $controller->setContainer($this->container);
-    }
+    $controller = $this->classResolver->getInstanceFromDefinition($class_or_service);
 
     return array($controller, $method);
   }

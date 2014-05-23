@@ -10,6 +10,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\String;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -88,6 +89,13 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected $translationManager;
 
   /**
+   * The class resolver.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
+   */
+  protected $classResolver;
+
+  /**
    * Static cache of bundle information.
    *
    * @var array
@@ -125,14 +133,17 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
    *   The language manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The string translationManager.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   *   The class resolver.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\Annotation\EntityType');
 
     $this->setCacheBackend($cache, $language_manager, 'entity_type:', array('entity_types' => TRUE));
     $this->alterInfo('entity_type');
 
     $this->translationManager = $translation_manager;
+    $this->classResolver = $class_resolver;
   }
 
   /**
@@ -213,12 +224,8 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       if (!$class = $this->getDefinition($entity_type, TRUE)->getFormClass($operation)) {
         throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type, $operation));
       }
-      if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($class))) {
-        $controller = $class::create($this->container);
-      }
-      else {
-        $controller = new $class();
-      }
+
+      $controller = $this->classResolver->getInstanceFromDefinition($class);
 
       $controller
         ->setStringTranslation($this->translationManager)

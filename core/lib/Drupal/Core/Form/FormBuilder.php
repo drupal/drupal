@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\HttpKernel;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
@@ -71,6 +72,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   protected $httpKernel;
 
   /**
+   * The class resolver.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
+   */
+  protected $classResolver;
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -102,18 +110,21 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The event dispatcher.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   *   The class resolver.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
    * @param \Drupal\Core\HttpKernel $http_kernel
    *   The HTTP kernel.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->eventDispatcher = $event_dispatcher;
     $this->requestStack = $request_stack;
+    $this->classResolver = $class_resolver;
     $this->csrfToken = $csrf_token;
     $this->httpKernel = $http_kernel;
   }
@@ -122,15 +133,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * {@inheritdoc}
    */
   public function getFormId($form_arg, &$form_state) {
-    // If the $form_arg is the name of a class, instantiate it.
+    // If the $form_arg is the name of a class, instantiate it. Don't allow
+    // arbitrary strings to be passed to the class resolver.
     if (is_string($form_arg) && class_exists($form_arg)) {
-      if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($form_arg))) {
-        $form_arg = $form_arg::create(\Drupal::getContainer());
-      }
-      else {
-        $form_arg = new $form_arg();
-      }
+      $form_arg = $this->classResolver->getInstanceFromDefinition($form_arg);
     }
+
     // If the $form_arg implements \Drupal\Core\Form\FormInterface, add that as
     // the callback object and determine the form ID.
     if (is_object($form_arg) && $form_arg instanceof FormInterface) {

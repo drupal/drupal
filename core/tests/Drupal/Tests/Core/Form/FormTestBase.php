@@ -42,42 +42,49 @@ abstract class FormTestBase extends UnitTestCase {
   /**
    * The mocked URL generator.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $urlGenerator;
 
   /**
    * The mocked module handler.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $moduleHandler;
 
   /**
    * The expirable key value store used by form cache.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $formCache;
 
   /**
    * The expirable key value store used by form state cache.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $formStateCache;
 
   /**
    * The current user.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $account;
 
   /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $controllerResolver;
+
+  /**
    * The CSRF token generator.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Access\CsrfTokenGenerator
+   * @var \Drupal\Core\Access\CsrfTokenGenerator|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $csrfToken;
 
@@ -96,21 +103,33 @@ abstract class FormTestBase extends UnitTestCase {
   protected $requestStack;
 
   /**
+   * The class results.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $classResolver;
+
+  /**
    * The event dispatcher.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $eventDispatcher;
 
   /**
    * The expirable key value factory.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\KeyValueStore\KeyValueExpirableFactory
+   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactory|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $keyValueExpirableFactory;
 
   /**
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\HttpKernel
+   * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $translationManager;
+
+  /**
+   * @var \Drupal\Core\HttpKernel|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $httpKernel;
 
@@ -130,6 +149,7 @@ abstract class FormTestBase extends UnitTestCase {
       )));
 
     $this->urlGenerator = $this->getMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->classResolver = $this->getClassResolverStub();
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();
@@ -150,7 +170,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->setMethods(array('batchGet', 'drupalInstallationAttempted'))
       ->getMock();
 
-    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->requestStack, $this->csrfToken, $this->httpKernel);
+    $this->formBuilder = new TestFormBuilder($this->formValidator, $this->formSubmitter, $this->moduleHandler, $this->keyValueExpirableFactory, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->csrfToken, $this->httpKernel);
     $this->formBuilder->setCurrentUser($this->account);
   }
 
