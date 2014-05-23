@@ -535,6 +535,9 @@ function search_mark_for_reindex($type, $sid) {
     ->fields(array('reindex' => REQUEST_TIME))
     ->condition('type', $type)
     ->condition('sid', $sid)
+    // Only mark items that were not previously marked for reindex, so that
+    // marked items maintain their priority by request time.
+    ->condition('reindex', 0)
     ->execute();
 }
 
