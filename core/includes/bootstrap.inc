@@ -5,6 +5,7 @@
  */
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
@@ -157,13 +158,6 @@ const DRUPAL_ANONYMOUS_RID = 'anonymous';
  * Role ID for authenticated users; should match what's in the "role" table.
  */
 const DRUPAL_AUTHENTICATED_RID = 'authenticated';
-
-/**
- * The number of bytes in a kilobyte.
- *
- * For more information, visit http://en.wikipedia.org/wiki/Kilobyte.
- */
-const DRUPAL_KILOBYTE = 1024;
 
 /**
  * The maximum number of characters in a module or theme name.
@@ -2294,18 +2288,12 @@ function _drupal_shutdown_function() {
  * @return
  *   TRUE if there is sufficient memory to allow the operation, or FALSE
  *   otherwise.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Environment::checkMemoryLimit().
  */
 function drupal_check_memory_limit($required, $memory_limit = NULL) {
-  if (!isset($memory_limit)) {
-    $memory_limit = ini_get('memory_limit');
-  }
-
-  // There is sufficient memory if:
-  // - No memory limit is set.
-  // - The memory limit is set to unlimited (-1).
-  // - The memory limit is greater than or equal to the memory required for
-  //   the operation.
-  return ((!$memory_limit) || ($memory_limit == -1) || (parse_size($memory_limit) >= parse_size($required)));
+  return Environment::checkMemoryLimit($required, $memory_limit);
 }
 
 /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\editor\Form;
 
+use Drupal\Component\Utility\Bytes;
 use Drupal\Core\Form\FormBase;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -55,7 +56,7 @@ class EditorImageDialog extends FormBase {
     else {
       $max_dimensions = 0;
     }
-    $max_filesize = min(parse_size($image_upload['max_size']), file_upload_max_size());
+    $max_filesize = min(Bytes::toInt($image_upload['max_size']), file_upload_max_size());
 
     $existing_file = isset($image_element['data-editor-file-uuid']) ? entity_load_by_uuid('file', $image_element['data-editor-file-uuid']) : NULL;
     $fid = $existing_file ? $existing_file->id() : NULL;

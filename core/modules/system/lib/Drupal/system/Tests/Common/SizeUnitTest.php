@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Utility\Bytes;
 use Drupal\simpletest\UnitTestBase;
 
 /**
@@ -25,7 +26,7 @@ class SizeUnitTest extends UnitTestBase {
   }
 
   function setUp() {
-    $kb = DRUPAL_KILOBYTE;
+    $kb = Bytes::KILOBYTE;
     $this->exact_test_cases = array(
       '1 byte' => 1,
       '1 KB'   => $kb,
@@ -63,46 +64,13 @@ class SizeUnitTest extends UnitTestBase {
   }
 
   /**
-   * Checks that parse_size() returns the proper byte sizes.
-   */
-  function testCommonParseSize() {
-    foreach ($this->exact_test_cases as $string => $size) {
-      $this->assertEqual(
-        $parsed_size = parse_size($string),
-        $size,
-        $size . ' == ' . $parsed_size . ' (' . $string . ')'
-      );
-    }
-
-    // Some custom parsing tests
-    $string = '23476892 bytes';
-    $this->assertEqual(
-      ($parsed_size = parse_size($string)),
-      $size = 23476892,
-      $string . ' == ' . $parsed_size . ' bytes'
-    );
-    $string = '76MRandomStringThatShouldBeIgnoredByParseSize.'; // 76 MB
-    $this->assertEqual(
-      $parsed_size = parse_size($string),
-      $size = 79691776,
-      $string . ' == ' . $parsed_size . ' bytes'
-    );
-    $string = '76.24 Giggabyte'; // Misspeld text -> 76.24 GB
-    $this->assertEqual(
-      $parsed_size = parse_size($string),
-      $size = 81862076662,
-      $string . ' == ' . $parsed_size . ' bytes'
-    );
-  }
-
-  /**
-   * Cross-tests parse_size() and format_size().
+   * Cross-tests Bytes::toInt() and format_size().
    */
   function testCommonParseSizeFormatSize() {
     foreach ($this->exact_test_cases as $size) {
       $this->assertEqual(
         $size,
-        ($parsed_size = parse_size($string = format_size($size, NULL))),
+        ($parsed_size = Bytes::toInt($string = format_size($size, NULL))),
         $size . ' == ' . $parsed_size . ' (' . $string . ')'
       );
     }

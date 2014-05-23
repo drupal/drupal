@@ -11,6 +11,7 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
+use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\SortArray;
@@ -549,17 +550,12 @@ function format_plural($count, $singular, $plural, array $args = array(), array 
  *
  * @return
  *   An integer representation of the size in bytes.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Bytes::toInt().
  */
 function parse_size($size) {
-  $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
-  $size = preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
-  if ($unit) {
-    // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
-    return round($size * pow(DRUPAL_KILOBYTE, stripos('bkmgtpezy', $unit[0])));
-  }
-  else {
-    return round($size);
-  }
+  return Bytes::toInt($size);
 }
 
 /**
@@ -575,11 +571,11 @@ function parse_size($size) {
  *   A translated string representation of the size.
  */
 function format_size($size, $langcode = NULL) {
-  if ($size < DRUPAL_KILOBYTE) {
+  if ($size < Bytes::KILOBYTE) {
     return format_plural($size, '1 byte', '@count bytes', array(), array('langcode' => $langcode));
   }
   else {
-    $size = $size / DRUPAL_KILOBYTE; // Convert bytes to kilobytes.
+    $size = $size / Bytes::KILOBYTE; // Convert bytes to kilobytes.
     $units = array(
       t('@size KB', array(), array('langcode' => $langcode)),
       t('@size MB', array(), array('langcode' => $langcode)),
@@ -591,8 +587,8 @@ function format_size($size, $langcode = NULL) {
       t('@size YB', array(), array('langcode' => $langcode)),
     );
     foreach ($units as $unit) {
-      if (round($size, 2) >= DRUPAL_KILOBYTE) {
-        $size = $size / DRUPAL_KILOBYTE;
+      if (round($size, 2) >= Bytes::KILOBYTE) {
+        $size = $size / Bytes::KILOBYTE;
       }
       else {
         break;

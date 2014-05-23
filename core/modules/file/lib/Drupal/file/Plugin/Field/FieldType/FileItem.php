@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Bytes;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\TypedData\DataDefinition;
@@ -240,13 +241,13 @@ class FileItem extends EntityReferenceItem {
    * Form API callback.
    *
    * Ensures that a size has been entered and that it can be parsed by
-   * parse_size().
+   * \Drupal\Component\Utility\Bytes::toInt().
    *
    * This function is assigned as an #element_validate callback in
    * instanceSettingsForm().
    */
   public static function validateMaxFilesize($element, &$form_state) {
-    if (!empty($element['#value']) && !is_numeric(parse_size($element['#value']))) {
+    if (!empty($element['#value']) && !is_numeric(Bytes::toInt($element['#value']))) {
       form_error($element, $form_state, t('The "!name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', array('!name' => t($element['title']))));
     }
   }
@@ -284,9 +285,9 @@ class FileItem extends EntityReferenceItem {
     $settings = $this->getSettings();
 
     // Cap the upload size according to the PHP limit.
-    $max_filesize = parse_size(file_upload_max_size());
+    $max_filesize = Bytes::toInt(file_upload_max_size());
     if (!empty($settings['max_filesize'])) {
-      $max_filesize = min($max_filesize, parse_size($settings['max_filesize']));
+      $max_filesize = min($max_filesize, Bytes::toInt($settings['max_filesize']));
     }
 
     // There is always a file size limit due to the PHP server limit.
