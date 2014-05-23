@@ -47,7 +47,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupalTestBase {
   public function setUp() {
     parent::setUp();
 
-    entity_create('node_type', array('type' => 'article'))->save();
+    entity_create('node_type', array('type' => 'test_page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
 
     // Add some id mappings for the dependant migrations.

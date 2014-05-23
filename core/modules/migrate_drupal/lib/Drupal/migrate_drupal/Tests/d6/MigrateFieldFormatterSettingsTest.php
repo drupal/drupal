@@ -40,7 +40,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
   public function setUp() {
     parent::setUp();
 
-    entity_create('node_type', array('type' => 'article'))->save();
+    entity_create('node_type', array('type' => 'test_page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
     // Create the node preview view mode.
     entity_create('view_mode', array('id' => 'node.preview', 'targetEntityType' => 'node'))->save();
@@ -102,7 +102,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
     $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Test migrate worked with multiple bundles.
-    $display = entity_load('entity_view_display', 'node.article.teaser');
+    $display = entity_load('entity_view_display', 'node.test_page.teaser');
     $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Test RSS because that has been converted from 4 to rss.

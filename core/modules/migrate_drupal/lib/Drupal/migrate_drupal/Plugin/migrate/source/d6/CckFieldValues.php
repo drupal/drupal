@@ -117,18 +117,49 @@ class CckFieldValues extends DrupalSqlBase implements SourceEntityInterface {
 
     // Handle fields that have their own table.
     foreach ($this->getSourceFieldInfo($bundle) as $field_name => $field_info) {
-      if ($field_info['multiple'] && !$field_info['db_storage']) {
+      if ($field_info['multiple'] || !$field_info['db_storage']) {
         // Select the data.
         $table = "content_$field_name";
-        $data = $this
+        $field_query = $this
           ->select($table, 't')
-          ->fields('t', array('delta') + $field_info['columns'])
-          ->condition('vid', $row->getSourceProperty('vid'))
-          ->execute()
-          ->fetchAllKeyed();
+          ->condition('vid', $row->getSourceProperty('vid'));
+        if ($field_info['multiple']) {
+          $field_query->addField('t', 'delta');
+        }
+        $data = FALSE;
+        foreach ($field_info['columns'] as $display_name => $column_name) {
+          // The database API won't allow colons in column aliases, so we
+          // will accept the default alias, and fix up the field names later.
+          // Remember how to translate the field names.
+          if ($field_info['type'] == 'filefield' &&
+            (strpos($display_name, ':list') || strpos($display_name, ':description'))) {
+            if (!$data) {
+              //$this->fileDataFields[] = $field_name . '_data';
+              $field_query->addField('t', $field_name . '_data');
+              $data = TRUE;
+            }
+          }
+          else {
+            $field_query->addField('t', $column_name);
+          }
+        }
 
-        // Set it on the row.
-        $row->setSourceProperty($field_name, $data);
+        if ($field_info['multiple']) {
+          foreach ($field_query->execute() as $field_row) {
+            foreach ($field_info['columns'] as $display_name => $column_name) {
+              list ( , $column) = explode(':', $display_name);
+              $propery_path = $field_name . '.' . $field_row['delta'] . '.' . $column;
+              $row->setSourceProperty($propery_path, $field_row[$column_name]);
+            }
+          }
+        }
+        else {
+          if ($field_row = $field_query->execute()->fetchAssoc()) {
+            foreach ($field_info['columns'] as $display_name => $column_name) {
+              $row->setSourceProperty(str_replace(':', '.', $display_name), $field_row[$column_name]);
+            }
+          }
+        }
       }
     }
     parent::prepareRow($row);

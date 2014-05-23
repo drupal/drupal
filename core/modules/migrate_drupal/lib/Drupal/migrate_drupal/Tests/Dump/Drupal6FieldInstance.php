@@ -139,7 +139,7 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
     ))
     ->values(array(
       'field_name' => 'field_test',
-      'type_name' => 'article',
+      'type_name' => 'test_page',
       'weight' => 1,
       'label' => 'Text Field',
       'widget_type' => 'text_textfield',
@@ -630,7 +630,7 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
 
     // Create the field table.
     $this->createTable('content_node_field', array(
-      'description' => 'Table that contains field instance settings.',
+      'description' => 'Table that contains field settings.',
       'fields' => array(
         'field_name' => array(
           'type' => 'varchar',
@@ -712,7 +712,7 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'type' => 'text',
       'global_settings' => 'a:4:{s:15:"text_processing";s:1:"1";s:10:"max_length";s:0:"";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";}',
       'multiple' => 0,
-      'db_storage' => 1,
+      'db_storage' => 0,
       'db_columns' => serialize(array(
         'value' => array(
           'type' => 'text',
@@ -720,6 +720,12 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
           'not null' => FALSE,
           'sortable' => TRUE,
           'views' => TRUE,
+        ),
+        'format' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
         ),
       )),
       'active' => 1,
@@ -741,7 +747,16 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'global_settings' => '',
       'multiple' => 0,
       'db_storage' => 1,
-      'db_columns' => 'a:0:{}',
+      'db_columns' => serialize(array(
+        'value' => array(
+          'type' => 'numeric',
+          'precision' => 10,
+          'scale' => 2,
+          'not null' => FALSE,
+          'sortable' => TRUE,
+          'views' => TRUE,
+        ),
+      )),
       'active' => 1,
     ))
     ->values(array(
@@ -842,6 +857,53 @@ class Drupal6FieldInstance extends Drupal6DumpBase {
       'active' => 0,
     ))
     ->execute();
+
+    $this->createTable('content_field_test', array(
+        'description' => 'Table for field_test',
+        'fields' => array(
+          'vid' => array(
+            'description' => 'The primary identifier for this version.',
+            'type' => 'serial',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'nid' => array(
+            'description' => 'The {node} this version belongs to.',
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'field_test_value' => array(
+            'description' => 'Test field value.',
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => TRUE,
+            'default' => '',
+          ),
+          'field_test_format' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+        ),
+        'primary key' => array('vid'),
+      ));
+    $this->database->insert('content_field_test')->fields(array(
+        'vid',
+        'nid',
+        'field_test_value',
+        'field_test_format',
+      ))
+      ->values(array(
+          'vid' => 1,
+          'nid' => 1,
+          'field_test_value' => 'This is a shared text field',
+          'field_test_format' => 1,
+        ))
+      ->execute();
+
 
     $this->createTable('content_field_test_two', array(
       'description' => 'Table for field_test_two',

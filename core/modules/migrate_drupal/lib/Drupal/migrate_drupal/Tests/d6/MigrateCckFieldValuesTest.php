@@ -58,6 +58,16 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
       'field_name' => 'field_test_two',
       'bundle' => 'story',
     ))->save();
+    entity_create('field_config', array(
+      'entity_type' => 'node',
+      'name' => 'field_test_three',
+      'type' => 'decimal',
+    ))->save();
+    entity_create('field_instance_config', array(
+      'entity_type' => 'node',
+      'field_name' => 'field_test_three',
+      'bundle' => 'story',
+    ))->save();
 
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
@@ -87,9 +97,11 @@ class MigrateCckFieldValuesTest extends MigrateNodeTestBase {
    */
   public function testCckFields() {
     $node = node_load(1);
-    $this->assertEqual($node->field_test->value, 'This is a text field', "Single field storage field is correct.");
+    $this->assertEqual($node->field_test->value, 'This is a shared text field', "Shared field storage field is correct.");
+    $this->assertEqual($node->field_test->format, 1, "Shared field storage field with multiple columns is correct.");
     $this->assertEqual($node->field_test_two->value, 10, 'Multi field storage field is correct');
     $this->assertEqual($node->field_test_two[1]->value, 20, 'Multi field second value is correct.');
+    $this->assertEqual($node->field_test_three->value, '42.42', 'Single field second value is correct.');
   }
 
 }

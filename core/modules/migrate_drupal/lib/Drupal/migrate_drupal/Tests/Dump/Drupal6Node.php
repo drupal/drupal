@@ -303,12 +303,12 @@ class Drupal6Node extends Drupal6DumpBase {
           'unsigned' => TRUE,
           'not null' => TRUE,
         ),
-        'field_test_value' => array(
+        'field_test_three_value' => array(
           'description' => 'Test field column.',
-          'type' => 'varchar',
-          'length' => 255,
-          'not null' => TRUE,
-          'default' => '',
+          'type' => 'numeric',
+          'precision' => 10,
+          'scale' => 2,
+          'not null' => FALSE
         ),
       ),
       'primary key' => array('vid'),
@@ -318,12 +318,12 @@ class Drupal6Node extends Drupal6DumpBase {
       array(
         'nid',
         'vid',
-        'field_test_value',
+        'field_test_three_value',
       ))
       ->values(array(
         'nid' => 1,
         'vid' => 1,
-        'field_test_value' => 'This is a text field',
+        'field_test_three_value' => '42.42',
       ))
       ->execute();
     $this->setModuleVersion('content', 6001);
