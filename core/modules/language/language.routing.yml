@@ -82,6 +82,6 @@ language.content_settings_page:
   path: '/admin/config/regional/content-language'
   defaults:
     _title: 'Content language'
-    _content: '\Drupal\language\Controller\LanguageController::contentSettings'
+    _form: 'Drupal\language\Form\ContentLanguageSettingsForm'
   requirements:
     _permission: 'administer languages'

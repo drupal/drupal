@@ -49,22 +49,6 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Return a list of entity types for which language settings are supported.
-   *
-   * @return array
-   *   A list of entity types which are translatable.
-   */
-  protected function entitySupported() {
-    $supported = array();
-    foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($entity_type->isTranslatable()) {
-        $supported[$entity_type_id] = $entity_type_id;
-      }
-    }
-    return $supported;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -79,14 +63,17 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
     $labels = array();
     $default = array();
 
-    $bundles = entity_get_bundles();
+    $bundles = $this->entityManager->getAllBundleInfo();
     $language_configuration = array();
-    foreach ($this->entitySupported() as $entity_type_id) {
-      $labels[$entity_type_id] = $entity_types[$entity_type_id]->getLabel() ?: $entity_type_id;
+    foreach ($entity_types as $entity_type_id => $entity_type) {
+      if (!$entity_type->isTranslatable()) {
+        continue;
+      }
+      $labels[$entity_type_id] = $entity_type->getLabel() ?: $entity_type_id;
       $default[$entity_type_id] = FALSE;
 
       // Check whether we have any custom setting.
-      foreach ($bundles as $bundle => $bundle_info) {
+      foreach ($bundles[$entity_type_id] as $bundle => $bundle_info) {
         $conf = language_get_default_configuration($entity_type_id, $bundle);
         if (!empty($conf['language_show']) || $conf['langcode'] != 'site_default') {
           $default[$entity_type_id] = $entity_type_id;
@@ -131,7 +118,7 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
         ),
       );
 
-      foreach ($bundles as $bundle => $bundle_info) {
+      foreach ($bundles[$entity_type_id] as $bundle => $bundle_info) {
         $form['settings'][$entity_type_id][$bundle]['settings'] = array(
           '#type' => 'item',
           '#label' => $bundle_info['label'],
@@ -147,13 +134,13 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
       }
     }
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Save'),
-    );
+    $form = parent::buildForm($form, $form_state);
+    // @todo Remove this override. There are tests that check for explicitly for
+    //   the button label which need to be adapted for that.
+    //   https://drupal.org/node/2241727
+    $form['actions']['submit']['#value'] = $this->t('Save');
 
-    return parent::buildForm($form, $form_state);
+    return $form;
   }
 
   /**
@@ -163,16 +150,14 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
     $config = $this->config('language.settings');
     foreach ($form_state['values']['settings'] as $entity_type => $entity_settings) {
       foreach ($entity_settings as $bundle => $bundle_settings) {
-          $config->set(language_get_default_configuration_settings_key($entity_type, $bundle),
-            array(
-              'langcode' => $bundle_settings['settings']['language']['langcode'],
-              'language_show' => $bundle_settings['settings']['langcode']['language_show'],
-            )
-          );
+        $config->set(language_get_default_configuration_settings_key($entity_type, $bundle), array(
+          'langcode' => $bundle_settings['settings']['language']['langcode'],
+          'language_show' => $bundle_settings['settings']['language']['language_show'],
+        ));
       }
     }
     $config->save();
-    parent::submitForm($form, $form_state);
+    drupal_set_message($this->t('Settings successfully updated.'));
   }
 
 }

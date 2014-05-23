@@ -117,22 +117,6 @@ function language_theme() {
 }
 
 /**
- * Returns a list of supported entity types.
- *
- * @return array
- *   An array of entity type names.
- */
-function language_entity_supported() {
-  $supported = array();
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    if ($entity_type->isTranslatable()) {
-      $supported[$entity_type_id] = $entity_type_id;
-    }
-  }
-  return $supported;
-}
-
-/**
  * Implements hook_element_info_alter().
  */
 function language_element_info_alter(&$type) {
@@ -260,7 +244,7 @@ function language_configuration_element_process($element, &$form_state, &$form) 
 
   // Do not add the submit callback for the language content settings page,
   // which is handled separately.
-  if (array_search('language_content_settings_form_submit', $form['#submit']) === FALSE) {
+  if ($form['#form_id'] != 'language_content_settings_form') {
     // Determine where to attach the language_configuration element submit handler.
     // @todo Form API: Allow form widgets/sections to declare #submit handlers.
     if (isset($form['actions']['submit']['#submit']) && array_search('language_configuration_element_submit', $form['actions']['submit']['#submit']) === FALSE) {
