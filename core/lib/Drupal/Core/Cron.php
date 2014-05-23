@@ -14,6 +14,7 @@ use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\SessionManagerInterface;
+use Drupal\Core\Queue\SuspendQueueException;
 
 /**
  * The Drupal core Cron service.
@@ -167,9 +168,19 @@ class Cron implements CronInterface {
             call_user_func_array($callback, array($item->data));
             $queue->deleteItem($item);
           }
+          catch (SuspendQueueException $e) {
+            // If the worker indicates there is a problem with the whole queue,
+            // release the item and skip to the next queue.
+            $queue->releaseItem($item);
+
+            watchdog_exception('cron', $e);
+
+            // Skip to the next queue.
+            continue 2;
+          }
           catch (\Exception $e) {
-            // In case of exception log it and leave the item in the queue
-            // to be processed again later.
+            // In case of any other kind of exception, log it and leave the item
+            // in the queue to be processed again later.
             watchdog_exception('cron', $e);
           }
         }
