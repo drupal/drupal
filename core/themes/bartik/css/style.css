@@ -280,23 +280,20 @@ table ul.links li {
   font-size: 0.929em;
 }
 .item-list .pager li {
-  padding: 0;
+  padding: 10px 15px;
 }
 .item-list .pager a {
   display: inline-block;
-  padding: 10px 15px;
 }
-.item-list .pager .pager-first a {
+.item-list .pager li.pager-first,
+.item-list .pager li.pager-previous {
   padding: 10px 10px 10px 0;
 }
-.item-list .pager .pager-previous a {
+.item-list .pager li.pager-ellipsis {
   padding: 10px 0;
 }
-.item-list .pager .pager-current {
-  padding: 0 10px;
-}
-.item-list .pager .pager-next a,
-.item-list .pager .pager-last a {
+.item-list .pager li.pager-last,
+.item-list .pager li.pager-next {
   padding: 10px 0 10px 10px;
 }
 ul.menu li {
