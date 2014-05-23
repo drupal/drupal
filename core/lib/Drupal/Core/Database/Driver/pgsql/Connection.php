@@ -214,7 +214,7 @@ class Connection extends DatabaseConnection {
 
     try {
       // Create the database and set it as active.
-      $this->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='utf8' LC_CTYPE='$locale.utf8' LC_COLLATE='$locale.utf8'");
+      $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='utf8' LC_CTYPE='$locale.utf8' LC_COLLATE='$locale.utf8'");
     }
     catch (\Exception $e) {
       throw new DatabaseNotFoundException($e->getMessage());

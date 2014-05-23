@@ -288,7 +288,7 @@ class Connection extends DatabaseConnection {
    */
   public function createDatabase($database) {
     // Verify the database is writable.
-    $db_directory = new SplFileInfo(dirname($database));
+    $db_directory = new \SplFileInfo(dirname($database));
     if (!$db_directory->isDir() && !drupal_mkdir($db_directory->getPathName(), 0755, TRUE)) {
       throw new DatabaseNotFoundException('Unable to create database directory ' . $db_directory->getPathName());
     }
