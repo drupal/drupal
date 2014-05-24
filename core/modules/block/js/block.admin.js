@@ -19,8 +19,8 @@
        * Hides the <details> element for a category if it has no visible blocks.
        */
       function hideCategoryDetails(index, element) {
-        var $details = $(element);
-        $details.toggle($details.find('li:visible').length > 0);
+        var $catDetails = $(element);
+        $catDetails.toggle($catDetails.find('li:visible').length > 0);
       }
 
       /**

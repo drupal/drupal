@@ -524,7 +524,7 @@
     /**
      * Dynamically click the button that adds a new filter group.
      */
-    clickAddGroupButton: function () {
+    clickAddGroupButton: function (event) {
       // Due to conflicts between Drupal core's AJAX system and the Views AJAX
       // system, the only way to get this to work seems to be to trigger both the
       // mousedown and submit events.

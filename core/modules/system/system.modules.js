@@ -19,9 +19,9 @@
       var $rowsAndDetails, $rows, $details;
       var searching = false;
       function hidePackageDetails(index, element) {
-        var $details = $(element);
-        var $visibleRows = $details.find('table:not(.sticky-header)').find('tbody tr:visible');
-        $details.toggle($visibleRows.length > 0);
+        var $packDetails = $(element);
+        var $visibleRows = $packDetails.find('table:not(.sticky-header)').find('tbody tr:visible');
+        $packDetails.toggle($visibleRows.length > 0);
       }
 
       function filterModuleList(e) {

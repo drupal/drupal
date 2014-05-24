@@ -29,7 +29,6 @@
     attach: function (context, settings) {
       var self = this;
       var $context = $(context);
-      var source_id, options, machine, eventData;
 
       function clickEditHandler(e) {
         var data = e.data;
@@ -42,15 +41,15 @@
 
       function machineNameHandler(e) {
         var data = e.data;
-        var settings = data.options;
+        var options = data.options;
         var baseValue = $(e.target).val();
 
-        var rx = new RegExp(settings.replace_pattern, 'g');
-        var expected = baseValue.toLowerCase().replace(rx, settings.replace).substr(0, settings.maxlength);
+        var rx = new RegExp(options.replace_pattern, 'g');
+        var expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
 
         if (baseValue.toLowerCase() !== expected) {
-          self.transliterate(baseValue, settings).done(function (machine) {
-            self.showMachineName(machine.substr(0, settings.maxlength), data);
+          self.transliterate(baseValue, options).done(function (machine) {
+            self.showMachineName(machine.substr(0, options.maxlength), data);
           });
         }
         else {
@@ -58,70 +57,69 @@
         }
       }
 
-      for (source_id in settings.machineName) {
-        if (settings.machineName.hasOwnProperty(source_id)) {
-          options = settings.machineName[source_id];
+      Object.keys(settings.machineName).forEach(function (source_id) {
+        var machine, eventData;
+        var options = settings.machineName[source_id];
 
-          var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
-          var $target = $context.find(options.target).addClass('machine-name-target');
-          var $suffix = $context.find(options.suffix);
-          var $wrapper = $target.closest('.form-item');
-          // All elements have to exist.
-          if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {
-            return;
-          }
-          // Skip processing upon a form validation error on the machine name.
-          if ($target.hasClass('error')) {
-            return;
-          }
-          // Figure out the maximum length for the machine name.
-          options.maxlength = $target.attr('maxlength');
-          // Hide the form item container of the machine name form element.
-          $wrapper.hide();
-          // Determine the initial machine name value. Unless the machine name form
-          // element is disabled or not empty, the initial default value is based on
-          // the human-readable form element value.
-          if ($target.is(':disabled') || $target.val() !== '') {
-            machine = $target.val();
-          }
-          else {
-            machine = self.transliterate($source.val(), options);
-          }
-          // Append the machine name preview to the source field.
-          var $preview = $('<span class="machine-name-value">' + options.field_prefix + Drupal.checkPlain(machine) + options.field_suffix + '</span>');
-          $suffix.empty();
-          if (options.label) {
-            $suffix.append(' ').append('<span class="machine-name-label">' + options.label + ':</span>');
-          }
-          $suffix.append(' ').append($preview);
-
-          // If the machine name cannot be edited, stop further processing.
-          if ($target.is(':disabled')) {
-            return;
-          }
-
-          eventData = {
-            $source: $source,
-            $target: $target,
-            $suffix: $suffix,
-            $wrapper: $wrapper,
-            $preview: $preview,
-            options: options
-          };
-          // If it is editable, append an edit link.
-          var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').on('click', eventData, clickEditHandler);
-          $suffix.append(' ').append($link);
-
-          // Preview the machine name in realtime when the human-readable name
-          // changes, but only if there is no machine name yet; i.e., only upon
-          // initial creation, not when editing.
-          if ($target.val() === '') {
-            $source.on('keyup.machineName change.machineName input.machineName', eventData, machineNameHandler)
-              // Initialize machine name preview.
-              .trigger('keyup');
-          }
+        var $source = $context.find(source_id).addClass('machine-name-source').once('machine-name');
+        var $target = $context.find(options.target).addClass('machine-name-target');
+        var $suffix = $context.find(options.suffix);
+        var $wrapper = $target.closest('.form-item');
+        // All elements have to exist.
+        if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {
+          return;
         }
-      }
+        // Skip processing upon a form validation error on the machine name.
+        if ($target.hasClass('error')) {
+          return;
+        }
+        // Figure out the maximum length for the machine name.
+        options.maxlength = $target.attr('maxlength');
+        // Hide the form item container of the machine name form element.
+        $wrapper.hide();
+        // Determine the initial machine name value. Unless the machine name form
+        // element is disabled or not empty, the initial default value is based on
+        // the human-readable form element value.
+        if ($target.is(':disabled') || $target.val() !== '') {
+          machine = $target.val();
+        }
+        else {
+          machine = self.transliterate($source.val(), options);
+        }
+        // Append the machine name preview to the source field.
+        var $preview = $('<span class="machine-name-value">' + options.field_prefix + Drupal.checkPlain(machine) + options.field_suffix + '</span>');
+        $suffix.empty();
+        if (options.label) {
+          $suffix.append(' ').append('<span class="machine-name-label">' + options.label + ':</span>');
+        }
+        $suffix.append(' ').append($preview);
+
+        // If the machine name cannot be edited, stop further processing.
+        if ($target.is(':disabled')) {
+          return;
+        }
+
+        eventData = {
+          $source: $source,
+          $target: $target,
+          $suffix: $suffix,
+          $wrapper: $wrapper,
+          $preview: $preview,
+          options: options
+        };
+        // If it is editable, append an edit link.
+        var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').on('click', eventData, clickEditHandler);
+        $suffix.append(' ').append($link);
+
+        // Preview the machine name in realtime when the human-readable name
+        // changes, but only if there is no machine name yet; i.e., only upon
+        // initial creation, not when editing.
+        if ($target.val() === '') {
+          $source.on('keyup.machineName change.machineName input.machineName', eventData, machineNameHandler)
+            // Initialize machine name preview.
+            .trigger('keyup');
+        }
+      });
     },
 
     showMachineName: function (machine, data) {

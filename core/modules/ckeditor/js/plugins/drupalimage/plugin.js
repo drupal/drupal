@@ -71,7 +71,7 @@
           'alt': 'alt',
           'width': 'width',
           'height': 'height',
-          'data-editor-file-uuid': 'data-editor-file-uuid',
+          'data-editor-file-uuid': 'data-editor-file-uuid'
         };
 
         // Protected; transforms widget's data object to the format used by the

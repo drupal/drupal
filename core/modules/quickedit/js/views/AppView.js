@@ -207,11 +207,9 @@
                 this.model.set('activeField', fieldModel);
                 accept = false;
               }
-              else {
-                // Do not reject: the field is either in the 'candidate' or
-                // 'highlighted' state and we allow it to enter the 'activating'
-                // state!
-              }
+              // Do not reject: the field is either in the 'candidate' or
+              // 'highlighted' state and we allow it to enter the 'activating'
+              // state!
             }
           }
           // Reject going from activating/active to candidate because of a

@@ -31,7 +31,7 @@
       // @see Drupal.contextualToolbar.VisualView.persist()
       isViewing: localStorage.getItem('Drupal.contextualToolbar.isViewing') !== 'false'
     }, {
-      contextualCollection: Drupal.contextual.collection,
+      contextualCollection: Drupal.contextual.collection
     });
 
     var viewOptions = {
@@ -56,7 +56,7 @@
 
   Drupal.contextualToolbar = {
     // The Drupal.contextualToolbar.Model instance.
-    model: null,
+    model: null
   };
 
 })(jQuery, Drupal, Backbone);

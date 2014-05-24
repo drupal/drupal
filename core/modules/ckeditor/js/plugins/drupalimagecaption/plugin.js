@@ -162,7 +162,7 @@
         CKEDITOR.tools.extend(widgetDefinition._mapDataToDialog, {
           'align': 'data-align',
           'data-caption': 'data-caption',
-          'hasCaption': 'hasCaption',
+          'hasCaption': 'hasCaption'
         });
 
         // Override Drupal dialog save callback.

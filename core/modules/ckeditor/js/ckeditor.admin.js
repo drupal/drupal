@@ -1178,7 +1178,6 @@
     if ($group.hasClass('placeholder')) {
 
       if (view.isProcessing) {
-        event.stopPropagation();
         return;
       }
       view.isProcessing = true;
