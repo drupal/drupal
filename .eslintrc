@@ -1,0 +1,33 @@
+{
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "Drupal": true,
+    "drupalSettings": true,
+    "domready": true,
+    "jQuery": true,
+    "_": true,
+    "matchMedia": true,
+    "Backbone": true,
+    "Modernizr": true,
+    "CKEDITOR": true
+  },
+  "rules": {
+    "eqeqeq": [2, "smart"],
+    "guard-for-in": 2,
+    "no-undef": 2,
+    //"no-unused-vars": [2, {"vars": "local", "args": "none"}],
+    "no-unused-vars": 0,
+    "strict": 2,
+    "new-cap": 0,
+    "quotes": 0,
+    "camelcase": 0,
+    "no-underscore-dangle": 0,
+    "no-new": 0,
+    "no-alert": 0,
+    "no-use-before-define": 0,
+    "consistent-return": 0,
+    "no-constant-condition": 0
+  }
+}
