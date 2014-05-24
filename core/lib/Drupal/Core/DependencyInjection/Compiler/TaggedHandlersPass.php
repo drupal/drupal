@@ -89,9 +89,6 @@ class TaggedHandlersPass implements CompilerPassInterface {
         $accepts_priority = isset($params[1]) && $params[1]->getName() === 'priority';
 
         if (!isset($interface)) {
-          if ($container->getParameter('kernel.environment') === 'prod') {
-            continue;
-          }
           throw new LogicException(vsprintf("Service consumer '%s' class method %s::%s() has to type-hint an interface.", array(
             $consumer_id,
             $consumer->getClass(),
@@ -106,9 +103,6 @@ class TaggedHandlersPass implements CompilerPassInterface {
           // Validate the interface.
           $handler = $container->getDefinition($id);
           if (!is_subclass_of($handler->getClass(), $interface)) {
-            if ($container->getParameter('kernel.environment') === 'prod') {
-              continue;
-            }
             throw new LogicException("Service '$id' for consumer '$consumer_id' does not implement $interface.");
           }
           $handlers[$id] = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
