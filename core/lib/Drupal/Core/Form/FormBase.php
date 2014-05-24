@@ -130,6 +130,13 @@ abstract class FormBase extends DependencySerialization implements FormInterface
   }
 
   /**
+   * Resets the configuration factory.
+   */
+  public function resetConfigFactory() {
+    $this->configFactory = NULL;
+  }
+
+  /**
    * Gets the request object.
    *
    * @return \Symfony\Component\HttpFoundation\Request $request

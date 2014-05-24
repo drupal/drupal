@@ -19,5 +19,8 @@ menu.entity.node.*:
   label: 'Per-content type menu settings'
   mapping:
     available_menus:
-      type: array
+      type: sequence
       label: 'Available menus'
+      sequence:
+       - type: string
+         label: 'Menu machine name'

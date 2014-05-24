@@ -254,6 +254,8 @@ class SiteConfigureForm extends FormBase {
       // Add the site maintenance account's email address to the list of
       // addresses to be notified when updates are available, if selected.
       if ($form_state['values']['update_status_module'][2]) {
+        // Reset the configuration factory so it is updated with the new module.
+        $this->resetConfigFactory();
         $this->config('update.settings')->set('notification.emails', array($form_state['values']['account']['mail']))->save();
       }
     }

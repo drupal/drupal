@@ -42,3 +42,60 @@ action.configuration.comment_unpublish_by_keyword_action:
 action.configuration.comment_unpublish_action:
   type: action_configuration_default
   label: 'Unpublish comment configuration'
+
+
+field.comment.settings:
+  type: sequence
+  label: 'Settings'
+  sequence:
+    - type: string
+      label: 'Setting'
+
+field.comment.value:
+  type: sequence
+  label: 'Settings'
+  sequence:
+    - type: mapping
+      label: 'Settings'
+      mapping:
+        status:
+          type: integer
+          label: 'Status'
+        cid:
+          type: integer
+          label: 'Status'
+        last_comment_timestamp:
+          type: integer
+          label: 'Last comment timestamp'
+        last_comment_name:
+          type: integer
+          label: 'Name'
+        last_comment_uid:
+          type: integer
+          label: 'UID'
+        comment_count:
+          type: integer
+          label: 'Count'
+
+field.comment.instance_settings:
+  type: mapping
+  label: 'Comment settings'
+  mapping:
+    default_mode:
+      type: boolean
+      label: 'Threading'
+    per_page:
+      type: integer
+      label: 'Comments per page'
+    anonymous:
+      type: integer
+      label: 'Mode'
+    subject:
+      type: boolean
+      label: 'Allow comment title'
+    form_location:
+      type: boolean
+      label: ' Allow comment title'
+    preview:
+      type: integer
+      label: 'Preview comment'

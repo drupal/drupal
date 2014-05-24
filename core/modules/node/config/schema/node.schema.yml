@@ -108,13 +108,25 @@ action.configuration.node_publish_action:
   type: action_configuration_default
   label: 'Publish selected content configuration'
 
+action.configuration.node_unpublish_action:
+  type: action_configuration_default
+  label: 'Unpublish selected content configuration'
+
 action.configuration.node_save_action:
   type: action_configuration_default
-  label: 'save content configuration'
+  label: 'Save content configuration'
+
+action.configuration.node_delete_action:
+  type: action_configuration_default
+  label: 'Delete content configuration'
 
 action.configuration.node_make_sticky_action:
   type: action_configuration_default
   label: 'Make selected content sticky configuration'
+
+action.configuration.node_make_unsticky_action:
+  type: action_configuration_default
+  label: 'Make selected content unsticky configuration'
 
 action.configuration.node_unpublish_by_keyword_action:
   type: mapping
@@ -126,11 +138,3 @@ action.configuration.node_unpublish_by_keyword_action:
       sequence:
         - type: sequence
           label: 'Keyword'
-
-action.configuration.node_unpublish_action:
-  type: action_configuration_default
-  label: 'Unpublish selected content configuration'
-
-action.configuration.node_unsticky_action:
-  type: action_configuration_default
-  label: 'Publish selected content not sticky configuration'
