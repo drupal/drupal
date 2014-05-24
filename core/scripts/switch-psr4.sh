@@ -201,6 +201,8 @@ function process_extension($name, $dir) {
   // Clean up.
   require_dir_empty("$dir/lib/Drupal");
   rmdir("$dir/lib/Drupal");
+  require_dir_empty("$dir/lib");
+  rmdir("$dir/lib");
 }
 
 /**
