@@ -425,6 +425,8 @@ function language_save($language) {
   $language_entity->save();
   $t_args = array('%language' => $language->name, '%langcode' => $language->id);
   if ($language->is_new) {
+    // Install any available language configuration overrides for the language.
+    \Drupal::service('language.config_factory_override')->installLanguageOverrides($language->getId());
     watchdog('language', 'The %language (%langcode) language has been created.', $t_args);
   }
   else {

@@ -123,4 +123,12 @@ interface ConfigManagerInterface {
    */
   public function supportsConfigurationEntities($collection);
 
+  /**
+   * Gets available collection information using the event system.
+   *
+   * @return \Drupal\Core\Config\ConfigCollectionInfo
+   *   The object which contains information about the available collections.
+   */
+  public function getConfigCollectionInfo();
+
 }

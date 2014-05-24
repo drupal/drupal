@@ -77,7 +77,7 @@ services:
     arguments: [discovery]
   config.manager:
     class: Drupal\Core\Config\ConfigManager
-    arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage']
+    arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage', '@event_dispatcher']
   config.factory:
     class: Drupal\Core\Config\ConfigFactory
     tags:

@@ -12,7 +12,6 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 
 /**
@@ -230,9 +229,9 @@ class LocaleConfigManager extends TypedConfigManager {
    *   Language code to delete.
    */
   public function deleteLanguageTranslations($langcode) {
-    $locale_name = LanguageConfigFactoryOverrideInterface::LANGUAGE_CONFIG_PREFIX . '.' . $langcode . '.';
-    foreach ($this->configStorage->listAll($locale_name) as $name) {
-      $this->configStorage->delete($name);
+    $storage = $this->languageManager->getLanguageConfigOverrideStorage($langcode);
+    foreach ($storage->listAll() as $name) {
+      $this->languageManager->getLanguageConfigOverride($langcode, $name)->delete();
     }
   }
 

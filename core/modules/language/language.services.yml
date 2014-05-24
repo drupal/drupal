@@ -16,3 +16,4 @@ services:
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed']
     tags:
       - { name: config.factory.override, priority: -254 }
+      - { name: event_subscriber }

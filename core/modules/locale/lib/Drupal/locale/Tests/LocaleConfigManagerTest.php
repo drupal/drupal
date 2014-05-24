@@ -42,7 +42,7 @@ class LocaleConfigManagerTest extends DrupalUnitTestBase {
     $this->installConfig(array('locale_test'));
     $locale_config_manager = \Drupal::service('locale.config.typed');
 
-    $language = new Language(array('id' => 'de'));
+    $language = language_save(new Language(array('id' => 'de')));
     $result = $locale_config_manager->hasTranslation('locale_test.no_translation', $language);
     $this->assertFalse($result, 'There is no translation for locale_test.no_translation configuration.');
 

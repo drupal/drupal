@@ -51,9 +51,9 @@ class DefaultConfigTest extends ConfigSchemaTestBase {
     $default_config_storage = new TestInstallStorage();
 
     foreach ($default_config_storage->listAll() as $config_name) {
-      // @todo: remove once migration (https://drupal.org/node/2183957) and
-      // translation (https://drupal.org/node/2168609) schemas are in.
-      if (strpos($config_name, 'migrate.migration') === 0 || strpos($config_name, 'language.config') === 0) {
+      // @todo: remove once migration (https://drupal.org/node/2183957) schemas
+      // are in.
+      if (strpos($config_name, 'migrate.migration') === 0) {
         continue;
       }
 

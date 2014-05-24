@@ -7,24 +7,37 @@
 
 namespace Drupal\language\Config;
 
-use Drupal\Core\Config\Config;
+use Drupal\Component\Utility\String;
+use Drupal\Core\Config\ConfigCollectionInfo;
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Provides language overrides for the configuration factory.
  */
-class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInterface {
+class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInterface, EventSubscriberInterface {
 
   /**
    * The configuration storage.
    *
+   * Do not access this directly. Should be accessed through self::getStorage()
+   * so that the cache of storages per langcode is used.
+   *
    * @var \Drupal\Core\Config\StorageInterface
    */
-  protected $storage;
+  protected $baseStorage;
+
+  /**
+   * An array of configuration storages keyed by langcode.
+   *
+   * @var \Drupal\Core\Config\StorageInterface[]
+   */
+  protected $storages;
 
   /**
    * The typed config manager.
@@ -58,7 +71,7 @@ class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInte
    *   The typed configuration manager.
    */
   public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config) {
-    $this->storage = $storage;
+    $this->baseStorage = $storage;
     $this->eventDispatcher = $event_dispatcher;
     $this->typedConfigManager = $typed_config;
   }
@@ -67,72 +80,34 @@ class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInte
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
-    $data = array();
-    $language_names = $this->getLanguageConfigNames($names);
-    if ($language_names) {
-      $data = $this->storage->readMultiple(array_values($language_names));
-      // Re-key the data array to use configuration names rather than override
-      // names.
-      $prefix_length = strlen(static::LANGUAGE_CONFIG_PREFIX . '.' . $this->language->id) + 1;
-      foreach ($data as $key => $value) {
-        unset($data[$key]);
-        $key = substr($key, $prefix_length);
-        $data[$key] = $value;
-      }
+    if ($this->language) {
+      $storage = $this->getStorage($this->language->getId());
+      return $storage->readMultiple($names);
     }
-    return $data;
+    return array();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getOverride($langcode, $name) {
-    $override_name = $this->getLanguageConfigName($langcode, $name);
-    $overrides = $this->storage->read($override_name);
-    $config = new Config($override_name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
-    if (!empty($overrides)) {
-      $config->initWithData($overrides);
+    $storage = $this->getStorage($langcode);
+    $data = $storage->read($name);
+    $override = new LanguageConfigOverride($name, $storage, $this->typedConfigManager);
+    if (!empty($data)) {
+      $override->initWithData($data);
     }
-    return $config;
+    return $override;
   }
 
   /**
-   * Generate a list of configuration names based on base names.
-   *
-   * @param array $names
-   *   List of configuration names.
-   *
-   * @return array
-   *   List of configuration names for language override files if applicable.
+   * {@inheritdoc}
    */
-  protected function getLanguageConfigNames(array $names) {
-    $language_names = array();
-    if (isset($this->language)) {
-      foreach ($names as $name) {
-        if ($language_name = $this->getLanguageConfigName($this->language->id, $name)) {
-          $language_names[$name] = $language_name;
-        }
-      }
+  public function getStorage($langcode) {
+    if (!isset($this->storages[$langcode])) {
+      $this->storages[$langcode] = $this->baseStorage->createCollection($this->createConfigCollectionName($langcode));
     }
-    return $language_names;
-  }
-
-  /**
-   * Get language override name for given language and configuration name.
-   *
-   * @param string $langcode
-   *   Language code.
-   * @param string $name
-   *   Configuration name.
-   *
-   * @return bool|string
-   *   Configuration name or FALSE if not applicable.
-   */
-  protected function getLanguageConfigName($langcode, $name) {
-     if (strpos($name, static::LANGUAGE_CONFIG_PREFIX) === 0) {
-      return FALSE;
-    }
-    return static::LANGUAGE_CONFIG_PREFIX . '.' . $langcode . '.' . $name;
+    return $this->storages[$langcode];
   }
 
   /**
@@ -163,6 +138,79 @@ class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInte
   public function setLanguageFromDefault(LanguageDefault $language_default = NULL) {
     $this->language = $language_default ? $language_default->get() : NULL;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function installLanguageOverrides($langcode) {
+    /** @var \Drupal\Core\Config\ConfigInstallerInterface $config_installer */
+    $config_installer = \Drupal::service('config.installer');
+    $config_installer->installCollectionDefaultConfig($this->createConfigCollectionName($langcode));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    $langcode = $this->getLangcodeFromCollectionName($collection);
+    return $this->getOverride($langcode, $name);
+  }
+
+  /**
+   * Creates a configuration collection name based on a langcode.
+   *
+   * @param string $langcode
+   *   The langcode.
+   *
+   * @return string
+   *   The configuration collection name for a langcode.
+   */
+  protected function createConfigCollectionName($langcode) {
+    return 'language.' . $langcode;
+  }
+
+  /**
+   * Converts a configuration collection name to a langcode.
+   *
+   * @param string $collection
+   *   The configuration collection name.
+   *
+   * @return string
+   *   The langcode of the collection.
+   *
+   * @throws \InvalidArgumentException
+   *   Exception thrown if the provided collection name is not in the format
+   *   "language.LANGCODE".
+   *
+   * @see self::createConfigCollectionName()
+   */
+  protected function getLangcodeFromCollectionName($collection) {
+    preg_match('/^language\.(.*)$/', $collection, $matches);
+    if (!isset($matches[1])) {
+      throw new \InvalidArgumentException(String::format('!collection is not a valid language override collection', array('!collection' => $collection)));
+    }
+    return $matches[1];
+  }
+
+  /**
+   * Reacts to the ConfigEvents::COLLECTION_INFO event.
+   *
+   * @param \Drupal\Core\Config\ConfigCollectionInfo $collection_info
+   *   The configuration collection names event.
+   */
+  public function addCollections(ConfigCollectionInfo $collection_info) {
+    foreach (\Drupal::languageManager()->getLanguages() as $language) {
+      $collection_info->addCollection($this->createConfigCollectionName($language->getId()), $this);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  static function getSubscribedEvents() {
+    $events[ConfigEvents::COLLECTION_INFO][] = array('addCollections');
+    return $events;
   }
 
 }

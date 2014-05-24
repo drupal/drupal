@@ -96,10 +96,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $this->typedConfig->clearCachedDefinitions();
     }
 
-    // Gather all the supported collection names.
-    $event = new ConfigCollectionNamesEvent();
-    $this->eventDispatcher->dispatch(ConfigEvents::COLLECTION_NAMES, $event);
-    $collections = $event->getCollectionNames();
+    // Gather information about all the supported collections.
+    $collection_info = $this->configManager->getConfigCollectionInfo();
 
     $old_state = $this->configFactory->getOverrideState();
     $this->configFactory->setOverrideState(FALSE);
@@ -110,7 +108,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $enabled_extensions = array_keys((array) $extension_config->get('module'));
     $enabled_extensions += array_keys((array) $extension_config->get('theme'));
 
-    foreach ($collections as $collection) {
+    foreach ($collection_info->getCollectionNames(TRUE) as $collection) {
       $config_to_install = $this->listDefaultConfigCollection($collection, $type, $name, $enabled_extensions);
       if (!empty($config_to_install)) {
         $this->createConfiguration($collection, $config_to_install);
@@ -185,7 +183,15 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $config_to_install = array_diff($config_to_install, $this->getActiveStorage($collection)->listAll());
 
     foreach ($config_to_install as $name) {
-      $new_config = new Config($name, $this->getActiveStorage($collection), $this->eventDispatcher, $this->typedConfig);
+      // Allow config factory overriders to use a custom configuration object if
+      // they are responsible for the collection.
+      $overrider = $this->configManager->getConfigCollectionInfo()->getOverrideService($collection);
+      if ($overrider) {
+        $new_config = $overrider->createConfigObject($name, $collection);
+      }
+      else {
+        $new_config = new Config($name, $this->getActiveStorage($collection), $this->eventDispatcher, $this->typedConfig);
+      }
       if ($data[$name] !== FALSE) {
         $new_config->setData($data[$name]);
       }

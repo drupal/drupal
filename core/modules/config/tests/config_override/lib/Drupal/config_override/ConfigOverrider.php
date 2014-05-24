@@ -10,6 +10,7 @@ namespace Drupal\config_override;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\ConfigModuleOverridesEvent;
+use Drupal\Core\Config\StorageInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -38,6 +39,13 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
    */
   public function getCacheSuffix() {
     return 'ConfigOverrider';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    return NULL;
   }
 
 }

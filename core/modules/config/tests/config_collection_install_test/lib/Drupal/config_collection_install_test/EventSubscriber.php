@@ -7,7 +7,7 @@
 
 namespace Drupal\config_collection_install_test;
 
-use Drupal\Core\Config\ConfigCollectionNamesEvent;
+use Drupal\Core\Config\ConfigCollectionInfo;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -34,18 +34,21 @@ class EventSubscriber implements EventSubscriberInterface {
   /**
    * Reacts to the ConfigEvents::COLLECTION_NAMES event.
    *
-   * @param \Drupal\Core\Config\ConfigCollectionNamesEvent $event
+   * @param \Drupal\Core\Config\ConfigCollectionInfo $collection_info
    *   The configuration collection names event.
    */
-  public function addCollectionNames(ConfigCollectionNamesEvent $event) {
-    $event->addCollectionNames($this->state->get('config_collection_install_test.collection_names', array()));
+  public function addCollections(ConfigCollectionInfo $collection_info) {
+    $collections = $this->state->get('config_collection_install_test.collection_names', array());
+    foreach ($collections as $collection) {
+      $collection_info->addCollection($collection);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[ConfigEvents::COLLECTION_NAMES][] = array('addCollectionNames');
+    $events[ConfigEvents::COLLECTION_INFO][] = array('addCollections');
     return $events;
   }
 

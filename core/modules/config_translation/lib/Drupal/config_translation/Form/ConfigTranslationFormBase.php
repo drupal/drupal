@@ -15,6 +15,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Language\Language;
+use Drupal\language\Config\LanguageConfigOverride;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\locale\StringStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -352,7 +353,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    *   Set the configuration in this language.
    * @param \Drupal\Core\Config\Config $base_config
    *   Base configuration values, in the source language.
-   * @param \Drupal\Core\Config\Config $config_translation
+   * @param \Drupal\language\Config\LanguageConfigOverride $config_translation
    *   Translation configuration override data.
    * @param array $config_values
    *   A simple one dimensional or recursive array:
@@ -372,7 +373,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    * @return array
    *   Translation configuration override data.
    */
-  protected function setConfig(Language $language, Config $base_config, Config $config_translation, array $config_values, $shipped_config = FALSE) {
+  protected function setConfig(Language $language, Config $base_config, LanguageConfigOverride $config_translation, array $config_values, $shipped_config = FALSE) {
     foreach ($config_values as $key => $value) {
       if (is_array($value) && !isset($value['translation'])) {
         // Traverse into this level in the configuration.

@@ -896,7 +896,15 @@ class ConfigImporter extends DependencySerialization {
    *   The name of the configuration to process.
    */
   protected function importConfig($collection, $op, $name) {
-    $config = new Config($name, $this->storageComparer->getTargetStorage($collection), $this->eventDispatcher, $this->typedConfigManager);
+    // Allow config factory overriders to use a custom configuration object if
+    // they are responsible for the collection.
+    $overrider = $this->configManager->getConfigCollectionInfo()->getOverrideService($collection);
+    if ($overrider) {
+      $config = $overrider->createConfigObject($name, $collection);
+    }
+    else {
+      $config = new Config($name, $this->storageComparer->getTargetStorage($collection), $this->eventDispatcher, $this->typedConfigManager);
+    }
     if ($op == 'delete') {
       $config->delete();
     }

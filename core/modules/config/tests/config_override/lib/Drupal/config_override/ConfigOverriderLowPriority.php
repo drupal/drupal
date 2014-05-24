@@ -8,6 +8,7 @@
 namespace Drupal\config_override;
 
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
+use Drupal\Core\Config\StorageInterface;
 
 /**
  * Tests module overrides for configuration.
@@ -39,6 +40,13 @@ class ConfigOverriderLowPriority implements ConfigFactoryOverrideInterface {
    */
   public function getCacheSuffix() {
     return 'ConfigOverriderLowPriority';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION) {
+    return NULL;
   }
 
 }

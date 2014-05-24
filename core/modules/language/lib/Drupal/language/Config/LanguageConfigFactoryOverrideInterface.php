@@ -17,11 +17,6 @@ use Drupal\Core\Language\LanguageDefault;
 interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideInterface {
 
   /**
-   * Prefix for all language configuration files.
-   */
-  const LANGUAGE_CONFIG_PREFIX = 'language.config';
-
-  /**
    * Gets the language object used to override configuration data.
    *
    * @return \Drupal\Core\Language\Language
@@ -61,5 +56,24 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    *   Configuration override object.
    */
   public function getOverride($langcode, $name);
+
+  /**
+   * Returns the storage instance for a particular langcode.
+   *
+   * @param string $langcode
+   *   Language code.
+   *
+   * @return \Drupal\Core\Config\StorageInterface
+   *   The storage instance for a particular langcode.
+   */
+  public function getStorage($langcode);
+
+  /**
+   * Installs available language configuration overrides for a given langcode.
+   *
+   * @param string $langcode
+   *   Language code.
+   */
+  public function installLanguageOverrides($langcode);
 
 }
