@@ -1,0 +1,5 @@
+core/assets/vendor/*
+core/modules/locale/tests/locale_test.js
+core/modules/tour/js/jquery.joyride-2.0.3.js
+core/vendor/*
+sites/*/files
