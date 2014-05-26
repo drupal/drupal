@@ -24,43 +24,6 @@ use Drupal\node\NodeInterface;
 class User extends ArgumentDefaultPluginBase {
 
   /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
-   * Constructs a default argument User object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->request = $request;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('request')
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function defineOptions() {
@@ -87,16 +50,16 @@ class User extends ArgumentDefaultPluginBase {
   public function getArgument() {
 
     // If there is a user object in the current route.
-    if ($this->request->attributes->has('user')) {
-      $user = $this->request->attributes->get('user');
+    if ($this->view->getRequest()->attributes->has('user')) {
+      $user = $this->view->getRequest()->attributes->get('user');
       if ($user instanceof UserInterface) {
         return $user->id();
       }
     }
 
     // If option to use node author; and node in current route.
-    if (!empty($this->options['user']) && $this->request->attributes->has('node')) {
-      $node = $this->request->attributes->get('node');
+    if (!empty($this->options['user']) && $this->view->getRequest()->attributes->has('node')) {
+      $node = $this->view->getRequest()->attributes->get('node');
       if ($node instanceof NodeInterface) {
         return $node->getOwnerId();
       }

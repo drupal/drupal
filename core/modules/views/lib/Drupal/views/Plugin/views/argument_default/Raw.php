@@ -24,13 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 class Raw extends ArgumentDefaultPluginBase {
 
   /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * The alias manager.
    *
    * @var \Drupal\Core\Path\AliasManagerInterface
@@ -46,15 +39,12 @@ class Raw extends ArgumentDefaultPluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The alias manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, AliasManagerInterface $alias_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasManagerInterface $alias_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->request = $request;
     $this->aliasManager = $alias_manager;
   }
 
@@ -66,7 +56,6 @@ class Raw extends ArgumentDefaultPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('request'),
       $container->get('path.alias_manager.cached')
     );
   }
@@ -99,7 +88,7 @@ class Raw extends ArgumentDefaultPluginBase {
   }
 
   public function getArgument() {
-    $path = $this->request->attributes->get('_system_path');
+    $path = $this->view->getRequest()->attributes->get('_system_path');
     if ($this->options['use_alias']) {
       $path = $this->aliasManager->getAliasByPath($path);
     }

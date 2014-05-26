@@ -366,8 +366,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $reflection = new \ReflectionClass($view);
     $defaults = $reflection->getDefaultProperties();
     // The storage and user should remain.
-    unset($defaults['storage']);
-    unset($defaults['user']);
+    unset($defaults['storage'], $defaults['user'], $defaults['request']);
 
     foreach ($defaults as $property => $default) {
       $this->assertIdentical($this->getProtectedProperty($view, $property), $default);

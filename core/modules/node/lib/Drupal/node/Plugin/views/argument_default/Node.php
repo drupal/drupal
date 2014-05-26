@@ -9,8 +9,6 @@ namespace Drupal\node\Plugin\views\argument_default;
 
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Drupal\node\NodeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Default argument plugin to extract a node.
@@ -25,48 +23,12 @@ use Symfony\Component\HttpFoundation\Request;
 class Node extends ArgumentDefaultPluginBase {
 
   /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
-   * Constructs a new Node instance.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->request = $request;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('request')
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getArgument() {
-    if (($node = $this->request->attributes->get('node')) && $node instanceof NodeInterface) {
+    if (($node = $this->view->getRequest()->attributes->get('node')) && $node instanceof NodeInterface) {
       return $node->id();
     }
   }
+
 }

@@ -13,6 +13,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\views_ui\ViewListBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @coversDefaultClass \Drupal\views_ui\ViewListBuilder
@@ -124,7 +126,9 @@ class ViewListBuilderTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $user = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $executable_factory = new ViewExecutableFactory($user);
+    $request_stack = new RequestStack();
+    $request_stack->push(new Request());
+    $executable_factory = new ViewExecutableFactory($user, $request_stack);
     $container->set('views.executable', $executable_factory);
     $container->set('plugin.manager.views.display', $display_manager);
     \Drupal::setContainer($container);

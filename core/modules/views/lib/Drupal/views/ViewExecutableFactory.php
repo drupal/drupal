@@ -9,6 +9,7 @@ namespace Drupal\views;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\ViewStorageInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines the cache backend factory.
@@ -23,13 +24,23 @@ class ViewExecutableFactory {
   protected $user;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a new ViewExecutableFactory
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct(AccountInterface $user) {
+  public function __construct(AccountInterface $user, RequestStack $request_stack) {
     $this->user = $user;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -42,7 +53,9 @@ class ViewExecutableFactory {
    *   A ViewExecutable instance.
    */
   public function get(ViewStorageInterface $view) {
-    return new ViewExecutable($view, $this->user);
+    $view = new ViewExecutable($view, $this->user);
+    $view->setRequest($this->requestStack->getCurrentRequest());
+    return $view;
   }
 
 }

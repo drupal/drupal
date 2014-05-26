@@ -44,43 +44,7 @@ class Date extends Formula {
    */
   protected $argFormat = 'Y-m-d';
 
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
   var $option_name = 'default_argument_date';
-
-  /**
-   * Constructs a new Date instance.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->request = $request;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('request')
-    );
-  }
 
   /**
    * Add an option to set the default value to the current date.
@@ -101,7 +65,7 @@ class Date extends Formula {
       return date($this->argFormat, REQUEST_TIME);
     }
     elseif (!$raw && in_array($this->options['default_argument_type'], array('node_created', 'node_changed'))) {
-      $node = $this->request->attributes->get('node');
+      $node = $this->view->getRequest()->attributes->get('node');
 
       if (!($node instanceof NodeInterface)) {
         return parent::getDefaultArgument();

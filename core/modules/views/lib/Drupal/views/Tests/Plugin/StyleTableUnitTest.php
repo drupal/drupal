@@ -47,8 +47,7 @@ class StyleTableUnitTest extends PluginUnitTestBase {
 
     // Test the buildSort() method.
     $request = new Request();
-    $this->container->enterScope('request');
-    $this->container->set('request', $request);
+    $view->setRequest($request);
 
     $style_plugin->options['override'] = FALSE;
 
@@ -70,8 +69,7 @@ class StyleTableUnitTest extends PluginUnitTestBase {
 
     // Test the buildSortPost() method.
     $request = new Request();
-    $this->container->enterScope('request');
-    $this->container->set('request', $request);
+    $view->setRequest($request);
 
     // Setup no valid default.
     $this->prepareView($view);
@@ -130,7 +128,6 @@ class StyleTableUnitTest extends PluginUnitTestBase {
 
     // Excluded field to make sure its wrapping td doesn't show.
     $this->prepareView($view);
-    $style_plugin = $view->style_plugin;
     $view->field['name']->options['exclude'] = TRUE;
     $output = $view->preview();
     $output = drupal_render($output);

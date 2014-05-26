@@ -1485,7 +1485,7 @@ abstract class FieldPluginBase extends HandlerBase {
     }
 
     // Get flattened set of tokens for any array depth in query parameters.
-    $tokens += $this->getTokenValuesRecursive(\Drupal::request()->query->all());
+    $tokens += $this->getTokenValuesRecursive($this->view->getRequest()->query->all());
 
     // Now add replacements for our fields.
     foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {

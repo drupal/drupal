@@ -12,6 +12,8 @@ use Drupal\views\Views;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @coversDefaultClass \Drupal\views\Views
@@ -34,7 +36,9 @@ class ViewsTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $user = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $container->set('views.executable', new ViewExecutableFactory($user));
+    $request_stack = new RequestStack();
+    $request_stack->push(new Request());
+    $container->set('views.executable', new ViewExecutableFactory($user, $request_stack));
 
     $this->view = new View(array('id' => 'test_view'), 'view');
 

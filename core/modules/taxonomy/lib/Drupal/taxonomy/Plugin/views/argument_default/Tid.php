@@ -25,42 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 class Tid extends ArgumentDefaultPluginBase {
 
   /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
-   * Constructs a new Tid instance.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->request = $request;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('request')
-    );
-  }
-
-  /**
    * Overrides \Drupal\views\Plugin\views\Plugin\views\PluginBase::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
@@ -166,7 +130,7 @@ class Tid extends ArgumentDefaultPluginBase {
     // Load default argument from node.
     if (!empty($this->options['node'])) {
       // Just check, if a node could be detected.
-      if (($node = $this->request->attributes->has('node')) && $node instanceof NodeInterface) {
+      if (($node = $this->view->getRequest()->attributes->has('node')) && $node instanceof NodeInterface) {
         $taxonomy = array();
         foreach ($node->getFieldDefinitions() as $field) {
           if ($field->getType() == 'taxonomy_term_reference') {

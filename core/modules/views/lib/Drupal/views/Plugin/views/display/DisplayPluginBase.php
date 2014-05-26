@@ -893,8 +893,7 @@ abstract class DisplayPluginBase extends PluginBase {
         // @todo Remove dependency on Request object
         //   https://drupal.org/node/2059003.
         try {
-          $request = \Drupal::request();
-          if ($request->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
+          if ($this->view->getRequest()->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
             $info = $this->view->temporary_options[$type][$id];
           }
         }

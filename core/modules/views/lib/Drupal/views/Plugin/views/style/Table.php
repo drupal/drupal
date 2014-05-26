@@ -60,29 +60,6 @@ class Table extends StylePluginBase {
    */
   public $order;
 
-  /**
-   * Contains the current request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('request'));
-  }
-
-  /**
-   * Constructs a Table object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->request = $request;
-  }
-
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -104,7 +81,7 @@ class Table extends StylePluginBase {
    * {@inheritdoc}
    */
   public function buildSort() {
-    $order = $this->request->query->get('order');
+    $order = $this->view->getRequest()->query->get('order');
     if (!isset($order) && ($this->options['default'] == -1 || empty($this->view->field[$this->options['default']]))) {
       return TRUE;
     }
@@ -122,7 +99,7 @@ class Table extends StylePluginBase {
    * Add our actual sort criteria
    */
   public function buildSortPost() {
-    $query = $this->request->query;
+    $query = $this->view->getRequest()->query;
     $order = $query->get('order');
     if (!isset($order)) {
       // check for a 'default' clicksort. If there isn't one, exit gracefully.

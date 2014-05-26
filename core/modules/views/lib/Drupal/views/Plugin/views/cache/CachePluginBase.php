@@ -297,10 +297,9 @@ abstract class CachePluginBase extends PluginBase {
         'langcode' => \Drupal::languageManager()->getCurrentLanguage()->id,
         'base_url' => $GLOBALS['base_url'],
       );
-      $request = \Drupal::request();
       foreach (array('exposed_info', 'page', 'sort', 'order', 'items_per_page', 'offset') as $key) {
-        if ($request->query->has($key)) {
-          $key_data[$key] = $request->query->get($key);
+        if ($this->view->getRequest()->query->has($key)) {
+          $key_data[$key] = $this->view->getRequest()->query->get($key);
         }
       }
 
