@@ -380,7 +380,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Clear the cache.
-    field_cache_clear();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Invalidate the render cache for all affected entities.
     $entity_manager = \Drupal::entityManager();
@@ -416,7 +416,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     $field_storage = \Drupal::entityManager()->getStorage('field_config');
 
     // Clear the cache upfront, to refresh the results of getBundles().
-    field_cache_clear();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Notify the entity storage.
     foreach ($instances as $instance) {

@@ -7,7 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\field\Field;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -71,7 +71,7 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     $this->assertEqual(array('test_page'), $migration->getIdMap()->lookupDestinationID(array('test_page')));
 
     // Test we have a body field.
-    $instance = Field::fieldInfo()->getInstance('node', 'test_page', 'body');
+    $instance = FieldInstanceConfig::loadByName('node', 'test_page', 'body');
     $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
 
     // Test the test_story content type.
@@ -91,7 +91,7 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
     $this->assertEqual(array('test_story'), $migration->getIdMap()->lookupDestinationID(array('test_story')));
 
     // Test we don't have a body field.
-    $instance = Field::fieldInfo()->getInstance('node', 'test_story', 'body');
+    $instance = FieldInstanceConfig::loadByName('node', 'test_story', 'body');
     $this->assertEqual($instance, NULL, 'No body field found');
   }
 }

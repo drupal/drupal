@@ -410,7 +410,6 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Verify that the tables were not dropped in the process.
-    field_cache_clear();
     $entity = $this->container->get('entity.manager')->getStorage($entity_type)->load(1);
     $this->assertEqual($entity->$field_name->value, 'field data', t("Index changes performed without dropping the tables"));
   }

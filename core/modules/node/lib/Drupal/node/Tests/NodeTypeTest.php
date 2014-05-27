@@ -97,8 +97,6 @@ class NodeTypeTest extends NodeTestBase {
       'title_label' => 'Foo',
     );
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    // Refresh the field information for the rest of the test.
-    field_info_cache_clear();
 
     $this->drupalGet('node/add/page');
     $this->assertRaw('Foo', 'New title label was displayed.');
@@ -111,7 +109,6 @@ class NodeTypeTest extends NodeTestBase {
       'description' => 'Lorem ipsum.',
     );
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    field_info_cache_clear();
 
     $this->drupalGet('node/add');
     $this->assertRaw('Bar', 'New name was displayed.');

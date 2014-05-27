@@ -376,7 +376,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Clear the cache.
-    field_cache_clear();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     if ($update) {
       // Invalidate the render cache for all affected entities.
@@ -443,7 +443,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     }
 
     // Clear the cache.
-    field_cache_clear();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
   /**
@@ -498,7 +498,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function getBundles() {
     if (empty($this->deleted)) {
-      $map = field_info_field_map();
+      $map = \Drupal::entityManager()->getFieldMap();
       if (isset($map[$this->entity_type][$this->name]['bundles'])) {
         return $map[$this->entity_type][$this->name]['bundles'];
       }

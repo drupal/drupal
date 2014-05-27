@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\comment\CommentInterface;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -105,10 +106,10 @@ abstract class CommentTestBase extends WebTestBase {
     $edit['comment_body[0][value]'] = $comment;
 
     if ($entity !== NULL) {
-      $instance = $this->container->get('field.info')->getInstance('node', $entity->bundle(), $field_name);
+      $instance = FieldInstanceConfig::loadByName('node', $entity->bundle(), $field_name);
     }
     else {
-      $instance = $this->container->get('field.info')->getInstance('node', 'article', $field_name);
+      $instance = FieldInstanceConfig::loadByName('node', 'article', $field_name);
     }
     $preview_mode = $instance->settings['preview'];
     $subject_mode = $instance->settings['subject'];
@@ -295,7 +296,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Defaults to 'comment'.
    */
   public function setCommentSettings($name, $value, $message, $field_name = 'comment') {
-    $instance = $this->container->get('field.info')->getInstance('node', 'article', $field_name);
+    $instance = FieldInstanceConfig::loadByName('node', 'article', $field_name);
     $instance->settings[$name] = $value;
     $instance->save();
     // Display status message.

@@ -94,7 +94,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
-    \Drupal::entityManager()->clearCachedDefinitions();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
   /**
@@ -102,7 +102,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    */
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     parent::preDelete($storage, $entities);
-    \Drupal::entityManager()->clearCachedDefinitions();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
   }
 
 }

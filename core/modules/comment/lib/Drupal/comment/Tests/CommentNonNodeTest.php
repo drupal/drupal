@@ -9,6 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -92,7 +93,7 @@ class CommentNonNodeTest extends WebTestBase {
     $edit = array();
     $edit['comment_body[0][value]'] = $comment;
 
-    $instance = $this->container->get('field.info')->getInstance('entity_test', 'entity_test', 'comment');
+    $instance = FieldInstanceConfig::loadByName('entity_test', 'entity_test', 'comment');
     $preview_mode = $instance->getSetting('preview');
     $subject_mode = $instance->getSetting('subject');
 

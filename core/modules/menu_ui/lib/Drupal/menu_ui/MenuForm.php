@@ -203,7 +203,7 @@ class MenuForm extends EntityForm {
     $form_state['language']['default_language']['bundle'] = $form_state['values']['id'];
     // Clear cache so new menus (bundles) show on the language settings admin
     // page.
-    entity_info_cache_clear();
+    \Drupal::entityManager()->clearCachedBundles();
   }
 
   /**

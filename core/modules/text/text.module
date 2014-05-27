@@ -162,14 +162,14 @@ function text_summary($text, $format = NULL, $size = NULL) {
  * Implements hook_filter_format_update().
  */
 function text_filter_format_update($format) {
-  field_cache_clear();
+  \Drupal::entityManager()->clearCachedFieldDefinitions();
 }
 
 /**
  * Implements hook_filter_format_disable().
  */
 function text_filter_format_disable($format) {
-  field_cache_clear();
+  \Drupal::entityManager()->clearCachedFieldDefinitions();
 }
 
 /**

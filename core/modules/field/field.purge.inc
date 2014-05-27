@@ -162,9 +162,6 @@ function field_purge_instance($instance) {
   unset($deleted_instances[$instance->uuid()]);
   $state->set('field.instance.deleted', $deleted_instances);
 
-  // Clear the cache.
-  field_info_cache_clear();
-
   // Invoke external hooks after the cache is cleared for API consistency.
   \Drupal::moduleHandler()->invokeAll('field_purge_instance', array($instance));
 }
@@ -191,9 +188,6 @@ function field_purge_field($field) {
 
   // Notify the storage layer.
   \Drupal::entityManager()->getStorage($field->entity_type)->onFieldPurge($field);
-
-  // Clear the cache.
-  field_info_cache_clear();
 
   // Invoke external hooks after the cache is cleared for API consistency.
   \Drupal::moduleHandler()->invokeAll('field_purge_field', array($field));

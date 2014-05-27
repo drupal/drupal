@@ -16,10 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
  * mechanism for auto-loading core APIs, so we have to load them on
  * every page request.
  */
-require_once __DIR__ . '/field.info.inc';
 require_once __DIR__ . '/field.form.inc';
 require_once __DIR__ . '/field.purge.inc';
-require_once __DIR__ . '/field.deprecated.inc';
 
 /**
  * @defgroup field Field API
@@ -63,10 +61,6 @@ require_once __DIR__ . '/field.deprecated.inc';
  *   structures, display, and perform a variety of other functions for field
  *   data connected to individual entities. Fieldable entity types like node and
  *   user use this API to make themselves fieldable.
- *
- * - @link field_info Field Info API @endlink: Exposes information about all
- *   fields, instances, widgets, and related information defined by or with the
- *   Field API.
  *
  * - @link field_purge Field API bulk data deletion @endlink: Cleans up after
  *   bulk deletion operations such as deletion of field or field_instance.
@@ -217,13 +211,6 @@ function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundl
   }
 }
 
-/**
- * Implements hook_entity_bundle_create().
- */
-function field_entity_bundle_create($entity_type, $bundle) {
-  // Clear the cache.
-  field_cache_clear();
-}
 
 /**
  * Implements hook_entity_bundle_rename().
@@ -239,9 +226,6 @@ function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
       $instance->save();
     }
   }
-
-  // Clear the field cache.
-  field_cache_clear();
 }
 
 /**
@@ -262,38 +246,6 @@ function field_entity_bundle_delete($entity_type, $bundle) {
   foreach ($instances as $instance) {
     $instance->delete();
   }
-
-  // Clear the cache.
-  field_cache_clear();
-}
-
-/**
- * Implements hook_rebuild().
- */
-function field_rebuild() {
-  field_cache_clear();
-}
-
-/**
- * Implements hook_modules_installed().
- */
-function field_modules_installed($modules) {
-  field_cache_clear();
-}
-
-/**
- * Implements hook_modules_uninstalled().
- */
-function field_modules_uninstalled($modules) {
-  field_cache_clear();
-}
-
-/**
- * Clears the field info and field data caches.
- */
-function field_cache_clear() {
-  \Drupal::cache('entity')->deleteAll();
-  field_info_cache_clear();
 }
 
 /**

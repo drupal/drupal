@@ -60,8 +60,6 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $this->container->get('comment.manager')->addDefaultField('node', 'page', 'comment');
     // Mark this bundle as translatable.
     content_translation_set_config('comment', 'node__comment_article', 'enabled', TRUE);
-    // Refresh entity info.
-    entity_info_cache_clear();
   }
 
   /**

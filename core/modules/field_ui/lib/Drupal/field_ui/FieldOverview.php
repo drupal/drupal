@@ -492,7 +492,7 @@ class FieldOverview extends OverviewBase {
 
     // Collect candidate field instances: all instances of fields for this
     // entity type that are not already present in the current bundle.
-    $field_map = field_info_field_map();
+    $field_map = \Drupal::entityManager()->getFieldMap();
     $instance_ids = array();
     if (!empty($field_map[$this->entity_type])) {
       foreach ($field_map[$this->entity_type] as $field_name => $data) {

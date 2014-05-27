@@ -165,7 +165,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     // picked up.
     content_translation_set_config($this->entityTypeId, $this->bundle, 'enabled', TRUE);
     drupal_static_reset();
-    entity_info_cache_clear();
+    \Drupal::entityManager()->clearCachedDefinitions();
     \Drupal::service('router.builder')->rebuild();
   }
 

@@ -21,7 +21,7 @@ function field_views_data() {
   $data = array();
   $module_handler = \Drupal::moduleHandler();
 
-  foreach (field_info_fields() as $field) {
+  foreach (\Drupal::entityManager()->getStorage('field_config')->loadMultiple() as $field) {
     if (_field_views_is_sql_entity_type($field)) {
       $result = (array) $module_handler->invoke($field->module, 'field_views_data', array($field));
       if (empty($result)) {
@@ -47,7 +47,7 @@ function field_views_data() {
  * in field_views_data.
  */
 function field_views_data_alter(&$data) {
-  foreach (field_info_fields() as $field) {
+  foreach (\Drupal::entityManager()->getStorage('field_config')->loadMultiple() as $field) {
     if (_field_views_is_sql_entity_type($field)) {
       $function = $field->module . '_field_views_data_views_data_alter';
       if (function_exists($function)) {

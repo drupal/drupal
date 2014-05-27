@@ -84,8 +84,8 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     $this->assertTrue(isset($config_entity['default_value'][0]['target_uuid']), 'Default value contains target_uuid property');
     $this->assertEqual($config_entity['default_value'][0]['target_uuid'], $referenced_node->uuid(), 'Content uuid and config entity uuid are the same');
 
-    // Clean field_info cache in order to avoid stale cache values.
-    field_info_cache_clear();
+    // Clear field definitions cache in order to avoid stale cache values.
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Create a new node to check that UUID has been converted to numeric ID.
     $new_node = entity_create('node', array('type' => 'reference_content'));

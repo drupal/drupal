@@ -245,8 +245,6 @@ class ManageFieldsTest extends FieldUiTestBase {
    *   The entity type for the instance.
    */
   function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
-    // Reset the fields info.
-    field_info_cache_clear();
     // Assert field settings.
     $field = FieldConfig::loadByName($entity_type, $field_name);
     $this->assertTrue($field->getSetting('test_field_setting') == $string, 'Field settings were found.');
@@ -323,7 +321,6 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit = array($element_name => '1');
     $this->drupalPostForm($admin_path, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
-    field_info_cache_clear();
     $instance = FieldInstanceConfig::loadByName('node', $this->type, $field_name);
     $this->assertEqual($instance->default_value, array(array('value' => 1)), 'The default value was correctly saved.');
 
@@ -335,7 +332,6 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit = array($element_name => '');
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
-    field_info_cache_clear();
     $instance = FieldInstanceConfig::loadByName('node', $this->type, $field_name);
     $this->assertEqual($instance->default_value, NULL, 'The default value was correctly saved.');
 
@@ -374,8 +370,6 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Delete the first instance.
     $this->fieldUIDeleteField($bundle_path1, "node.$this->type.$this->field_name", $this->field_label, $this->type);
 
-    // Reset the fields info.
-    field_info_cache_clear();
     // Check that the field instance was deleted.
     $this->assertNull(FieldInstanceConfig::loadByName('node', $this->type, $this->field_name), 'Field instance was deleted.');
     // Check that the field was not deleted
@@ -384,8 +378,6 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Delete the second instance.
     $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$this->field_name", $this->field_label, $type_name2);
 
-    // Reset the fields info.
-    field_info_cache_clear();
     // Check that the field instance was deleted.
     $this->assertNull(FieldInstanceConfig::loadByName('node', $type_name2, $this->field_name), 'Field instance was deleted.');
     // Check that the field was deleted too.
@@ -553,8 +545,6 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Delete the field.
     $this->fieldUIDeleteField($bundle_path, "taxonomy_term.tags.$this->field_name", $this->field_label, 'Tags');
 
-    // Reset the fields info.
-    field_info_cache_clear();
     // Check that the field instance was deleted.
     $this->assertNull(FieldInstanceConfig::loadByName('taxonomy_term', 'tags', $this->field_name), 'Field instance was deleted.');
     // Check that the field was deleted too.

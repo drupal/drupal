@@ -13,6 +13,7 @@
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -257,6 +258,16 @@ function comment_field_config_delete(FieldConfigInterface $field) {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
+ */
+function comment_field_config_insert(FieldConfigInterface $field) {
+  if ($field->getType() == 'comment') {
+    // Delete all fields and displays attached to the comment bundle.
+    entity_invoke_bundle_hook('insert', 'comment', $field->getTargetEntityTypeId() . '__' . $field->getName());
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
  */
 function comment_field_instance_config_delete(FieldInstanceConfigInterface $instance) {
@@ -300,7 +311,7 @@ function comment_permission() {
  *   Number of comments.
  * @param int $new_replies
  *   Number of new replies.
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  *   The first new comment entity.
  * @param string $field_name
  *   The field name on the entity to which comments are attached to.
@@ -308,10 +319,10 @@ function comment_permission() {
  * @return array|null
  *   An array "page=X" if the page number is greater than zero; NULL otherwise.
  */
-function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
-  $instance = \Drupal::service('field.info')->getInstance($entity->getEntityTypeId(), $entity->bundle(), $field_name);
-  $mode = $instance->getSetting('default_mode');
-  $comments_per_page = $instance->getSetting('per_page');
+function comment_new_page_count($num_comments, $new_replies, ContentEntityInterface $entity, $field_name = 'comment') {
+  $field_definition = $entity->getFieldDefinition($field_name);
+  $mode = $field_definition->getSetting('default_mode');
+  $comments_per_page = $field_definition->getSetting('per_page');
   $pagenum = NULL;
   $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
@@ -960,9 +971,9 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
       if (!$node->hasField($field_name)) {
         continue;
       }
-      $instance = \Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
-      $mode = $instance->getSetting('default_mode');
-      $comments_per_page = $instance->getSetting('per_page');
+      $field_definition = $node->getFieldDefinition($field_name);
+      $mode = $field_definition->getSetting('default_mode');
+      $comments_per_page = $field_definition->getSetting('per_page');
       if ($node->get($field_name)->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = entity_load_multiple('comment', $cids);
         comment_prepare_thread($comments);

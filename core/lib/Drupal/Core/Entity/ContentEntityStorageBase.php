@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -165,7 +166,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Fie
             }
           }
           $cid = "field:{$this->entityTypeId}:$id";
-          \Drupal::cache('entity')->set($cid, $data);
+          \Drupal::cache('entity')->set($cid, $data, Cache::PERMANENT, array('entity_field_info' => TRUE));
         }
       }
     }

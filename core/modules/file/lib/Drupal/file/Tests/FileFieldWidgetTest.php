@@ -264,7 +264,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalPostForm(NULL, array(), t('Save settings'));
 
     // Manually clear cache on the tester side.
-    field_info_cache_clear();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     // Create node.
     $edit = array(

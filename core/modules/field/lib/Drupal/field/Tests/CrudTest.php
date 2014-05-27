@@ -238,7 +238,6 @@ class CrudTest extends FieldUnitTestBase {
     );
     $field = entity_create('field_config', $field_definition);
     $field->save();
-    field_cache_clear();
     $field = entity_load('field_config', $field->id());
     $schema = $field->getSchema();
     $expected_indexes = array('value' => array('value'));
@@ -256,7 +255,6 @@ class CrudTest extends FieldUnitTestBase {
     );
     $field = entity_create('field_config', $field_definition);
     $field->save();
-    field_cache_clear();
     $field = entity_load('field_config', $field->id());
     $schema = $field->getSchema();
     $expected_indexes = array('value' => array());
@@ -275,7 +273,6 @@ class CrudTest extends FieldUnitTestBase {
     $field = entity_create('field_config', $field_definition);
     $field->save();
     $id = $field->id();
-    field_cache_clear();
     $field = entity_load('field_config', $id);
     $schema = $field->getSchema();
     $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));

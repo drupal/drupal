@@ -143,6 +143,16 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function clearCachedDefinitions();
 
   /**
+   * Clears static and persistent field definition caches.
+   */
+  public function clearCachedFieldDefinitions();
+
+  /**
+   * Clears static and persistent bundles.
+   */
+  public function clearCachedBundles();
+
+  /**
    * Creates a new view builder instance.
    *
    * @param string $entity_type
@@ -176,11 +186,6 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *   A form instance.
    */
   public function getFormObject($entity_type, $operation);
-
-  /**
-   * Clears static and persistent field definition caches.
-   */
-  public function clearCachedFieldDefinitions();
 
   /**
    * Checks whether a certain entity type has a certain controller.

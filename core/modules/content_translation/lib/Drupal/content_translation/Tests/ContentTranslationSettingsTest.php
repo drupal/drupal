@@ -94,7 +94,6 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'settings[comment][node__comment_article][fields][comment_body]' => TRUE,
     );
     $this->assertSettings('comment', 'node__comment_article', TRUE, $edit);
-    field_info_cache_clear();
     $field = FieldConfig::loadByName('comment', 'comment_body');
     $this->assertTrue($field->isTranslatable(), 'Comment body is translatable.');
 
@@ -143,8 +142,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
       $translatable = !$translatable;
       $edit = array('field[translatable]' => $translatable);
       $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.body/field', $edit, t('Save field settings'));
-      field_info_cache_clear();
-      entity_info_cache_clear();
+      \Drupal::entityManager()->clearCachedFieldDefinitions();
       $field = FieldConfig::loadByName('node', 'body');
       $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'article');
       $this->assertEqual($definitions['body']->isTranslatable(), $translatable, 'Field translatability correctly switched.');
@@ -171,8 +169,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
     $args = array('@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled');
     $message = format_string('Translation for entity @entity_type (@bundle) is @enabled.', $args);
-    field_info_cache_clear();
-    entity_info_cache_clear();
+    \Drupal::entityManager()->clearCachedDefinitions();
     return $this->assertEqual(content_translation_enabled($entity_type, $bundle), $enabled, $message);
   }
 

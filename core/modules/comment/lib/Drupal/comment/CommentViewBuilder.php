@@ -59,8 +59,6 @@ class CommentViewBuilder extends EntityViewBuilder {
    *   The entity manager service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */

@@ -86,11 +86,6 @@ abstract class OverviewBase extends FormBase {
 
     $this->entity_type = $entity_type_id;
     $this->bundle = $form_state['bundle'];
-
-    // When displaying the form, make sure the list of fields is up-to-date.
-    if (empty($form_state['post'])) {
-      field_info_cache_clear();
-    }
   }
 
   /**

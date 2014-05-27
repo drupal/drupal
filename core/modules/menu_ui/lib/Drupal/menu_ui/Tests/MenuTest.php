@@ -500,8 +500,8 @@ class MenuTest extends MenuWebTestBase {
   public function testMenuBundles() {
     $this->drupalLogin($this->admin_user);
     $menu = $this->addCustomMenu();
-    // Clear the entity info cache to ensure the static caches are rebuilt.
-    entity_info_cache_clear();
+    // Clear the entity cache to ensure the static caches are rebuilt.
+    \Drupal::entityManager()->clearCachedBundles();
     $bundles = entity_get_bundles('menu_link');
     $this->assertTrue(isset($bundles[$menu->id()]));
     $menus = menu_list_system_menus();

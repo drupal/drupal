@@ -91,7 +91,6 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
       'label' => 'Bar',
     );
     $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic', $edit, t('Save'));
-    field_info_cache_clear();
 
     $this->drupalGet('block/add');
     $this->assertRaw('Bar', 'New name was displayed.');

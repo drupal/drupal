@@ -157,8 +157,6 @@ class TranslationTest extends FieldUnitTestBase {
     $instance = entity_create('field_instance_config', $instance_definition);
     $instance->save();
 
-    entity_info_cache_clear();
-
     $translation_langcodes = array_slice($available_langcodes, 0, 2);
     asort($translation_langcodes);
     $translation_langcodes = array_values($translation_langcodes);

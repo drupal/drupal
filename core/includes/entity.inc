@@ -11,15 +11,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 
 /**
- * Resets the cached information about entity types.
- */
-function entity_info_cache_clear() {
-  // Clear all languages.
-  \Drupal::entityManager()->clearCachedDefinitions();
-  \Drupal::entityManager()->clearCachedFieldDefinitions();
-}
-
-/**
  * Clears the entity render cache for all entity types.
  */
 function entity_render_cache_clear() {
@@ -67,7 +58,7 @@ function entity_get_bundles($entity_type = NULL) {
  *   NULL.
  */
 function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = NULL) {
-  entity_info_cache_clear();
+  \Drupal::entityManager()->clearCachedBundles();
 
   // Notify the entity storage.
   $method = 'onBundle' . ucfirst($hook);

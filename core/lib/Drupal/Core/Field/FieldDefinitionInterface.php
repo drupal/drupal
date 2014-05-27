@@ -119,7 +119,8 @@ interface FieldDefinitionInterface extends FieldStorageDefinitionInterface, List
    *
    * @return mixed
    *   The default value for the field, as accepted by
-   *   Drupal\field\Plugin\Core\Entity\Field::setValue(). This can be either:
+   *   Drupal\field\Plugin\Core\Entity\FieldConfig::setValue(). This can be
+   *   either:
    *   - a literal, in which case it will be assigned to the first property of
    *     the first item.
    *   - a numerically indexed array of items, each item being a property/value

@@ -8,6 +8,8 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Tests fields on comments.
@@ -39,13 +41,13 @@ class CommentFieldsTest extends CommentTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
 
     // Check that the 'comment_body' field is present on the comment bundle.
-    $instance = $this->container->get('field.info')->getInstance('comment', 'node__comment', 'comment_body');
+    $instance = FieldInstanceConfig::loadByName('comment', 'node__comment', 'comment_body');
     $this->assertTrue(!empty($instance), 'The comment_body field is added when a comment bundle is created');
 
     $instance->delete();
 
     // Check that the 'comment_body' field is deleted.
-    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
+    $field = FieldConfig::loadByName('comment', 'comment_body');
     $this->assertTrue(empty($field), 'The comment_body field was deleted');
 
     // Create a new content type.
@@ -55,10 +57,10 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
-    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
+    $field = FieldConfig::loadByName('comment', 'comment_body');
     $this->assertTrue($field, 'The comment_body field exists');
-    $instances = $this->container->get('field.info')->getInstances('comment');
-    $this->assertTrue(isset($instances['node__comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+    $instance = FieldInstanceConfig::loadByName('comment', 'node__comment', 'comment_body');
+    $this->assertTrue(isset($instance), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
     $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED);
@@ -75,8 +77,8 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Drop default comment field added in CommentTestBase::setup().
-    entity_load('field_config', 'node.comment')->delete();
-    if ($field = $this->container->get('field.info')->getField('node', 'comment_node_forum')) {
+    FieldConfig::loadByName('node', 'comment')->delete();
+    if ($field = FieldConfig::loadByName('node', 'comment_node_forum')) {
       $field->delete();
     }
 

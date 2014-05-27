@@ -110,7 +110,6 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][1][value]' => 13,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    field_cache_clear();
     $entity_1 = entity_load($entity_type, 1);
     $entity_2 = entity_load($entity_type, 2);
     $this->assertFieldValues($entity_1, 'field_single', array(1));
@@ -143,7 +142,6 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][1][_weight]' => -1,
     );
     $this->drupalPostForm('test-entity/nested/1/2', $edit, t('Save'));
-    field_cache_clear();
     $this->assertFieldValues($entity_1, 'field_unlimited', array(3, 2));
     $this->assertFieldValues($entity_2, 'field_unlimited', array(13, 12));
 
@@ -170,7 +168,6 @@ class NestedFormTest extends FieldTestBase {
     $this->assertFieldByName('entity_2[field_unlimited][3][value]', '', 'Entity 2: an empty widget was added for field_unlimited value 3.');
     // Save the form and check values are saved correctly.
     $this->drupalPostForm(NULL, array(), t('Save'));
-    field_cache_clear();
     $this->assertFieldValues($entity_1, 'field_unlimited', array(3, 2));
     $this->assertFieldValues($entity_2, 'field_unlimited', array(13, 14, 15));
   }

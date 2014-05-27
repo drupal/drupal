@@ -280,8 +280,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'field[settings][default_image][title]' => $title,
     );
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
-    // Clear field info cache so the new default image is detected.
-    field_info_cache_clear();
+    // Clear field definition cache so the new default image is detected.
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
     $field = FieldConfig::loadByName('node', $field_name);
     $default_image = $field->getSetting('default_image');
     $file = file_load($default_image['fid']);
@@ -322,8 +322,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'field[settings][default_image][fid][fids]' => 0,
     );
     $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
-    // Clear field info cache so the new default image is detected.
-    field_info_cache_clear();
+    // Clear field definition cache so the new default image is detected.
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
     $field = FieldConfig::loadByName('node', $field_name);
     $default_image = $field->getSetting('default_image');
     $this->assertFalse($default_image['fid'], 'Default image removed from field.');
@@ -338,8 +338,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'field[settings][default_image][title]' => $title,
     );
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/field', $edit, t('Save field settings'));
-    // Clear field info cache so the new default image is detected.
-    field_info_cache_clear();
+    // Clear field definition cache so the new default image is detected.
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
 
     $private_field = FieldConfig::loadByName('node', $private_field_name);
     $default_image = $private_field->getSetting('default_image');

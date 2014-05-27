@@ -54,7 +54,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
     $entity_type = $this->entity->getEntityType();
     drupal_set_message(t('Deleted the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $entity_type->getLowercaseLabel())));
     $this->entity->delete();
-    entity_info_cache_clear();
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
     $form_state['redirect_route'] = $this->getCancelRoute();
   }
 

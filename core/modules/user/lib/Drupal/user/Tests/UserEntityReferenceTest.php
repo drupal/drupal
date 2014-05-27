@@ -6,7 +6,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\field\Field;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -67,13 +67,13 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
    * Tests user selection by roles.
    */
   function testUserSelectionByRole() {
-    $fields = Field::fieldInfo()->getBundleInstances('user', 'user');
-    $fields['user_reference']->settings['handler_settings']['filter']['role'] = array(
+    $field_definition = FieldInstanceConfig::loadByName('user', 'user', 'user_reference');
+    $field_definition->settings['handler_settings']['filter']['role'] = array(
       $this->role1->id() => $this->role1->id(),
       $this->role2->id() => 0,
     );
-    $fields['user_reference']->settings['handler_settings']['filter']['type'] = 'role';
-    $fields['user_reference']->save();
+    $field_definition->settings['handler_settings']['filter']['type'] = 'role';
+    $field_definition->save();
 
     $user1 = $this->createUser(array('name' => 'aabb'));
     $user1->addRole($this->role1->id());
@@ -90,7 +90,7 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     /** @var \Drupal\entity_reference\EntityReferenceAutocomplete $autocomplete */
     $autocomplete = \Drupal::service('entity_reference.autocomplete');
 
-    $matches = $autocomplete->getMatches($fields['user_reference'], 'user', 'user', 'NULL', '', 'aabb');
+    $matches = $autocomplete->getMatches($field_definition, 'user', 'user', 'NULL', '', 'aabb');
     $this->assertEqual(count($matches), 2);
     $users = array();
     foreach ($matches as $match) {
@@ -100,7 +100,7 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     $this->assertTrue(in_array($user2->label(), $users));
     $this->assertFalse(in_array($user3->label(), $users));
 
-    $matches = $autocomplete->getMatches($fields['user_reference'], 'user', 'user', 'NULL', '', 'aabbbb');
+    $matches = $autocomplete->getMatches($field_definition, 'user', 'user', 'NULL', '', 'aabbbb');
     $this->assertEqual(count($matches), 0, '');
   }
 }

@@ -239,7 +239,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   protected function init() {
     // Fill in defaults for extra fields.
-    $extra_fields = field_info_extra_fields($this->targetEntityType, $this->bundle, ($this->displayContext == 'view' ? 'display' : $this->displayContext));
+    $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
+    $extra_fields = \Drupal::entityManager()->getExtraFields($this->targetEntityType, $this->bundle);
+    $extra_fields = isset($extra_fields[$context]) ? $extra_fields[$context] : array();
     foreach ($extra_fields as $name => $definition) {
       if (!isset($this->content[$name]) && !isset($this->hidden[$name])) {
         // Extra fields are visible by default unless they explicitly say so.

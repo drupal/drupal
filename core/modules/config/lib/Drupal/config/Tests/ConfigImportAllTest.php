@@ -66,11 +66,9 @@ class ConfigImportAllTest extends ModuleTestBase {
     // Delete every field on the site so all modules can be uninstalled. For
     // example, if a comment field exists then module becomes required and can
     // not be uninstalled.
-    $fields = \Drupal::service('field.info')->getFields();
-    foreach ($fields as $field) {
-      entity_invoke_bundle_hook('delete', $field->entity_type, $field->entity_type . '__' . $field->name);
-      $field->delete();
-    }
+
+    $fields = \Drupal::entityManager()->getStorage('field_config')->loadMultiple();
+    \Drupal::entityManager()->getStorage('field_config')->delete($fields);
     // Purge the data.
     field_purge_batch(1000);
 

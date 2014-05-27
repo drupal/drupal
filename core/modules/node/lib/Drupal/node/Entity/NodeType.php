@@ -175,6 +175,11 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
           )));
       }
     }
+    if ($update) {
+      // Clear the cached field definitions as some settings affect the field
+      // definitions.
+      $this->entityManager()->clearCachedFieldDefinitions();
+    }
   }
 
   /**

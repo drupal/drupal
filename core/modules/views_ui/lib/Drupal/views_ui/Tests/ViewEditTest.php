@@ -109,7 +109,6 @@ class ViewEditTest extends UITestBase {
     $this->container->get('module_handler')->install(array('node', 'language'));
     $this->resetAll();
     $this->rebuildContainer();
-    entity_info_cache_clear();
 
     $this->drupalGet('admin/structure/views/nojs/display/test_display/page_1/field_langcode');
     $this->assertResponse(200);

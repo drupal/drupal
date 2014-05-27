@@ -21,7 +21,6 @@ class VocabularyStorage extends ConfigEntityStorage implements VocabularyStorage
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_vocabulary_get_names');
     parent::resetCache($ids);
-    entity_info_cache_clear();
   }
 
   /**

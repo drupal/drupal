@@ -81,18 +81,18 @@ class EntityManagerTest extends UnitTestCase {
   protected $translationManager;
 
   /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $formBuilder;
-
-  /**
    * The controller resolver.
    *
    * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $controllerResolver;
+
+  /**
+   * The typed data manager.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataManager|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $typedDataManager;
 
   /**
    * {@inheritdoc}
@@ -135,6 +135,10 @@ class EntityManagerTest extends UnitTestCase {
     $this->container = $this->getContainerWithCacheBins($this->cache);
 
     $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
+
+    $this->typedDataManager = $this->getMockBuilder('\Drupal\Core\TypedData\TypedDataManager')
+      ->disableOriginalConstructor()
+      ->getMock();
   }
 
   /**
@@ -165,7 +169,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->getClassResolverStub());
+    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->getClassResolverStub(), $this->typedDataManager);
     $this->entityManager->setContainer($this->container);
     $this->entityManager->setDiscovery($this->discovery);
   }
@@ -178,9 +182,15 @@ class EntityManagerTest extends UnitTestCase {
    */
   public function testClearCachedDefinitions() {
     $this->setUpEntityManager();
-    $this->cache->expects($this->once())
+    $this->cache->expects($this->at(0))
       ->method('deleteTags')
       ->with(array('entity_types' => TRUE));
+    $this->cache->expects($this->at(1))
+      ->method('deleteTags')
+      ->with(array('entity_bundles' => TRUE));
+    $this->cache->expects($this->at(2))
+      ->method('deleteTags')
+      ->with(array('entity_field_info' => TRUE));
 
     $this->entityManager->clearCachedDefinitions();
   }
@@ -779,8 +789,24 @@ class EntityManagerTest extends UnitTestCase {
     $this->cache->expects($this->once())
       ->method('deleteTags')
       ->with(array('entity_field_info' => TRUE));
+    $this->typedDataManager->expects($this->once())
+      ->method('clearCachedDefinitions');
 
     $this->entityManager->clearCachedFieldDefinitions();
+  }
+
+  /**
+   * Tests the clearCachedBundles() method.
+   *
+   * @covers ::clearCachedBundles()
+   */
+  public function testClearCachedBundles() {
+    $this->setUpEntityManager();
+    $this->cache->expects($this->once())
+      ->method('deleteTags')
+      ->with(array('entity_bundles' => TRUE));
+
+    $this->entityManager->clearCachedBundles();
   }
 
   /**
@@ -866,6 +892,12 @@ class EntityManagerTest extends UnitTestCase {
       ->method('deleteTags')
       ->with(array('entity_types' => TRUE));
     $this->cache->expects($this->at(5))
+      ->method('deleteTags')
+      ->with(array('entity_bundles' => TRUE));
+    $this->cache->expects($this->at(6))
+      ->method('deleteTags')
+      ->with(array('entity_field_info' => TRUE));
+    $this->cache->expects($this->at(7))
       ->method('get')
       ->with("entity_bundle_info:en", FALSE)
       ->will($this->returnValue((object) array('data' => 'cached data')));

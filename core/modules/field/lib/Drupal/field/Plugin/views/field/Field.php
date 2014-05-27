@@ -180,9 +180,9 @@ class Field extends FieldPluginBase {
     $this->multiple = FALSE;
     $this->limit_values = FALSE;
 
-    $field_info = $this->getFieldDefinition();
-    $cardinality = $field_info->getCardinality();
-    if ($field_info->isMultiple()) {
+    $field_definition = $this->getFieldDefinition();
+    $cardinality = $field_definition->getCardinality();
+    if ($field_definition->isMultiple()) {
       $this->multiple = TRUE;
 
       // If "Display all values in the same row" is FALSE, then we always limit
@@ -360,7 +360,6 @@ class Field extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    // defineOptions runs before init/construct, so no $this->field_info
     $field_storage_definitions = $this->entityManager->getFieldStorageDefinitions($this->definition['entity_type']);
     $field = $field_storage_definitions[$this->definition['field_name']];
     $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getType());

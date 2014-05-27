@@ -200,7 +200,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // Cacheable entity type.
     $entity_type = 'entity_test_rev';
     $this->createFieldWithInstance('_2', $entity_type);
-    entity_info_cache_clear();
 
     $entity_init = entity_create($entity_type, array(
       'type' => $entity_type,

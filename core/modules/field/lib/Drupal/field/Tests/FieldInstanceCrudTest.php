@@ -160,6 +160,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     entity_create('field_instance_config', $this->instance_definition)->save();
     $another_instance_definition = $this->instance_definition;
     $another_instance_definition['bundle'] .= '_another_bundle';
+    entity_test_create_bundle($another_instance_definition['bundle']);
     entity_create('field_instance_config', $another_instance_definition)->save();
 
     // Test that the first instance is not deleted, and then delete it.
@@ -187,6 +188,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
   function testDeleteFieldInstanceCrossDeletion() {
     $instance_definition_2 = $this->instance_definition;
     $instance_definition_2['bundle'] .= '_another_bundle';
+    entity_test_create_bundle($instance_definition_2['bundle']);
 
     // Check that deletion of a field deletes its instances.
     $field = $this->field;

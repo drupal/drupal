@@ -224,7 +224,7 @@ services:
     arguments: ['@config.factory', '@module_handler', '@state', '@info_parser', '@config.installer', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver']
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@language_manager', '@string_translation', '@class_resolver', '@typed_data_manager']
     parent: container.trait
     tags:
       - { name: plugin_manager_cache_clear }

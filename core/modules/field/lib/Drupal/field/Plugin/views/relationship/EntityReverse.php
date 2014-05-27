@@ -47,16 +47,6 @@ class EntityReverse extends RelationshipPluginBase  {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\relationship\RelationshipPluginBase::init().
-   */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
-    parent::init($view, $display, $options);
-
-    $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($this->definition['entity_type']);
-    $this->field_info = $field_storage_definitions[$this->definition['field_name']];
-  }
-
-  /**
    * Called to implement a relationship in a query.
    */
   public function query() {

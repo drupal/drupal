@@ -261,6 +261,7 @@ class CommentPagerTest extends CommentTestBase {
       6 => 0, // Page of comment 0
     );
 
+    \Drupal::entityManager()->getStorage('node')->resetCache(array($node->id()));
     $node = node_load($node->id());
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned = comment_new_page_count($node->get('comment')->comment_count, $new_replies, $node);

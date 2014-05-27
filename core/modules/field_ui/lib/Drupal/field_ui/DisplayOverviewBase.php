@@ -679,10 +679,14 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * Returns the extra fields of the entity type and bundle used by this form.
    *
    * @return array
-   *   An array of extra field info, as provided by field_info_extra_fields().
+   *   An array of extra field info.
+   *
+   * @see \Drupal\Core\Entity\EntityManagerInterface::getExtraFields()
    */
   protected function getExtraFields() {
-    return field_info_extra_fields($this->entity_type, $this->bundle, ($this->displayContext == 'view' ? 'display' : $this->displayContext));
+    $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
+    $extra_fields = $this->entityManager->getExtraFields($this->entity_type, $this->bundle);
+    return isset($extra_fields[$context]) ? $extra_fields[$context] : array();
   }
 
   /**

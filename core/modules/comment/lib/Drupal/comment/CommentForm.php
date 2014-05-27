@@ -45,8 +45,6 @@ class CommentForm extends ContentEntityForm {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
