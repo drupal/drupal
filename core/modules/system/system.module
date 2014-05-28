@@ -1717,19 +1717,19 @@ function theme_system_config_form($variables) {
  * Implements hook_path_update().
  */
 function system_path_update() {
-  \Drupal::service('path.alias_manager.cached')->cacheClear();
+  \Drupal::service('path.alias_manager')->cacheClear();
 }
 
 /**
  * Implements hook_path_insert().
  */
 function system_path_insert() {
-  \Drupal::service('path.alias_manager.cached')->cacheClear();
+  \Drupal::service('path.alias_manager')->cacheClear();
 }
 
 /**
  * Implements hook_path_delete().
  */
 function system_path_delete($path) {
-  \Drupal::service('path.alias_manager.cached')->cacheClear();
+  \Drupal::service('path.alias_manager')->cacheClear();
 }

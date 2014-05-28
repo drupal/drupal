@@ -58,12 +58,12 @@ class PathAliasTest extends PathTestBase {
     \Drupal::cache('data')->deleteAll();
     // Make sure the path is not converted to the alias.
     $this->drupalGet($edit['source'], array('alias' => TRUE));
-    $this->assertTrue(\Drupal::cache('data')->get($edit['source']), 'Cache entry was created.');
+    $this->assertTrue(\Drupal::cache('data')->get('preload-paths:' . $edit['source']), 'Cache entry was created.');
 
     // Visit the alias for the node and confirm a cache entry is created.
     \Drupal::cache('data')->deleteAll();
     $this->drupalGet($edit['alias']);
-    $this->assertTrue(\Drupal::cache('data')->get($edit['source']), 'Cache entry was created.');
+    $this->assertTrue(\Drupal::cache('data')->get('preload-paths:' .  $edit['source']), 'Cache entry was created.');
   }
 
   /**

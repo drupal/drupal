@@ -184,7 +184,7 @@ services:
     arguments: [path_alias_whitelist, '@cache.default', '@lock', '@state', '@path.alias_storage']
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
-    arguments: ['@path.alias_storage', '@path.alias_whitelist', '@language_manager']
+    arguments: ['@path.alias_storage', '@path.alias_whitelist', '@language_manager', '@cache.data']
   http_client:
     class: Drupal\Core\Http\Client
     tags:
@@ -393,9 +393,6 @@ services:
     arguments: ['@router.builder', '@lock']
     tags:
       - { name: event_subscriber }
-  path.alias_manager.cached:
-    class: Drupal\Core\CacheDecorator\AliasManagerCacheDecorator
-    arguments: ['@path.alias_manager', '@cache.data']
   path.alias_storage:
     class: Drupal\Core\Path\AliasStorage
     arguments: ['@database', '@module_handler']
@@ -588,7 +585,7 @@ services:
     class: Drupal\Core\EventSubscriber\PathSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@path.alias_manager.cached', '@path_processor_manager']
+    arguments: ['@path.alias_manager', '@path_processor_manager']
   legacy_request_subscriber:
     class: Drupal\Core\EventSubscriber\LegacyRequestSubscriber
     tags:

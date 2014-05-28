@@ -56,7 +56,7 @@ class Raw extends ArgumentDefaultPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('path.alias_manager.cached')
+      $container->get('path.alias_manager')
     );
   }
 

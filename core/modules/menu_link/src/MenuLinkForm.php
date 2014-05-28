@@ -62,7 +62,7 @@ class MenuLinkForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager')->getStorage('menu_link'),
-      $container->get('path.alias_manager.cached'),
+      $container->get('path.alias_manager'),
       $container->get('url_generator')
     );
   }

@@ -82,20 +82,6 @@ class MockAliasManager implements AliasManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPathLookups() {
-    return array_keys($this->lookedUp);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preloadPathLookups(array $path_list) {
-    // Not needed.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function cacheClear($source = NULL) {
     // Not needed.
   }

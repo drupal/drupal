@@ -84,7 +84,7 @@ class AliasTest extends PathUnitTestBase {
     $this->fixtures->createTables($connection);
 
     //Create AliasManager and Path object.
-    $aliasManager = $this->container->get('path.alias_manager.cached');
+    $aliasManager = $this->container->get('path.alias_manager');
     $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
 
     // Test the situation where the source is the same for multiple aliases.
@@ -106,7 +106,7 @@ class AliasTest extends PathUnitTestBase {
     );
     $aliasStorage->save($path['source'], $path['alias'], $path['langcode']);
     // Hook that clears cache is not executed with unit tests.
-    \Drupal::service('path.alias_manager.cached')->cacheClear();
+    \Drupal::service('path.alias_manager')->cacheClear();
     $this->assertEqual($aliasManager->getAliasByPath($path['source']), $path['alias'], 'English alias overrides language-neutral alias.');
     $this->assertEqual($aliasManager->getPathByAlias($path['alias']), $path['source'], 'English source overrides language-neutral source.');
 
@@ -170,7 +170,7 @@ class AliasTest extends PathUnitTestBase {
     // Create AliasManager and Path object.
     $aliasStorage = new AliasStorage($connection, $this->container->get('module_handler'));
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $aliasStorage);
-    $aliasManager = new AliasManager($aliasStorage, $whitelist, $this->container->get('language_manager'));
+    $aliasManager = new AliasManager($aliasStorage, $whitelist, $this->container->get('language_manager'), $memoryCounterBackend);
 
     // No alias for user and admin yet, so should be NULL.
     $this->assertNull($whitelist->get('user'));

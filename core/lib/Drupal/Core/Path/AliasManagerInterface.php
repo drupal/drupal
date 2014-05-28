@@ -36,23 +36,6 @@ interface AliasManagerInterface {
   public function getAliasByPath($path, $langcode = NULL);
 
   /**
-   * Returns an array of system paths that have been looked up.
-   *
-   * @return array
-   *   An array of all system paths that have been looked up during the current
-   *   request.
-   */
-  public function getPathLookups();
-
-  /**
-   * Preload a set of paths for bulk alias lookups.
-   *
-   * @param $path_list
-   *   An array of system paths.
-   */
-  public function preloadPathLookups(array $path_list);
-
-  /**
    * Clear internal caches in alias manager.
    *
    * @param $source
