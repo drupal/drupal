@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Archiver\Tar;
 use Drupal\simpletest\WebTestBase;
 
@@ -20,7 +21,7 @@ class ConfigExportUITest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config', 'config_test');
+  public static $modules = array('config', 'config_test', 'config_export_test');
 
   public static function getInfo() {
     return array(
@@ -73,6 +74,13 @@ class ConfigExportUITest extends WebTestBase {
     // Assert that the downloaded archive file contents are the same as the test
     // site active store.
     $this->assertIdentical($archive_contents, $config_files);
+
+    // Ensure the test configuration override is in effect but was not exported.
+    $this->assertIdentical(\Drupal::config('system.maintenance')->get('message'), 'Foo');
+    $archiver->extract(file_directory_temp(), array('system.maintenance.yml'));
+    $file_contents = file_get_contents(file_directory_temp() . '/' . 'system.maintenance.yml');
+    $exported = Yaml::decode($file_contents);
+    $this->assertNotIdentical($exported['message'], 'Foo');
   }
 
 }

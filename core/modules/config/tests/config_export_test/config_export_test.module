@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @file
+ * Provides config export testing support functionality.
+ */
+
+// Override the system maintenance message for testing.
+$GLOBALS['config']['system.maintenance']['message'] = 'Foo';

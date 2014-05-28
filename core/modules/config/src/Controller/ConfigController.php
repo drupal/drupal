@@ -85,9 +85,11 @@ class ConfigController implements ContainerInjectionInterface {
     file_unmanaged_delete(file_directory_temp() . '/config.tar.gz');
 
     $archiver = new ArchiveTar(file_directory_temp() . '/config.tar.gz', 'gz');
-    foreach ($this->targetStorage->listAll() as $name) {
-      $archiver->addString("$name.yml", Yaml::encode(\Drupal::config($name)->get()));
+    // Get raw configuration data without overrides.
+    foreach ($this->configManager->getConfigFactory()->listAll() as $name) {
+      $archiver->addString("$name.yml", Yaml::encode($this->configManager->getConfigFactory()->get($name)->getRawData()));
     }
+    // Get all override data from the remaining collections.
     foreach ($this->targetStorage->getAllCollectionNames() as $collection) {
       $collection_storage = $this->targetStorage->createCollection($collection);
       foreach ($collection_storage->listAll() as $name) {
