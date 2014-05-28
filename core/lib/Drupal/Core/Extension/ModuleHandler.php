@@ -651,21 +651,18 @@ class ModuleHandler implements ModuleHandlerInterface {
         return TRUE;
       }
 
-      // Conditionally add the dependencies to the list of modules.
-      if ($enable_dependencies) {
-        // Add dependencies to the list. The new modules will be processed as
-        // the while loop continues.
-        while (list($module) = each($module_list)) {
-          foreach (array_keys($module_data[$module]->requires) as $dependency) {
-            if (!isset($module_data[$dependency])) {
-              // The dependency does not exist.
-              return FALSE;
-            }
+      // Add dependencies to the list. The new modules will be processed as
+      // the while loop continues.
+      while (list($module) = each($module_list)) {
+        foreach (array_keys($module_data[$module]->requires) as $dependency) {
+          if (!isset($module_data[$dependency])) {
+            // The dependency does not exist.
+            return FALSE;
+          }
 
-            // Skip already installed modules.
-            if (!isset($module_list[$dependency]) && !isset($installed_modules[$dependency])) {
-              $module_list[$dependency] = $dependency;
-            }
+          // Skip already installed modules.
+          if (!isset($module_list[$dependency]) && !isset($installed_modules[$dependency])) {
+            $module_list[$dependency] = $dependency;
           }
         }
       }
