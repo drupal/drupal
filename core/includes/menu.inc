@@ -103,26 +103,6 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  */
 
 /**
- * @defgroup menu_status_codes Menu status codes
- * @{
- * Status codes for menu callbacks.
- */
-
-/**
- * Internal menu status code -- Menu item inaccessible because site is offline.
- */
-const MENU_SITE_OFFLINE = 4;
-
-/**
- * Internal menu status code -- Everything is working fine.
- */
-const MENU_SITE_ONLINE = 5;
-
-/**
- * @} End of "defgroup menu_status_codes".
- */
-
-/**
  * @defgroup menu_tree_parameters Menu tree parameters
  * @{
  * Parameters for a menu tree.
@@ -963,47 +943,6 @@ function _menu_set_expanded_menus() {
   }
 
   \Drupal::state()->set('menu_expanded', $names);
-}
-
-
-/**
- * Checks whether the site is in maintenance mode.
- *
- * This function will log the current user out and redirect to front page
- * if the current user has no 'access site in maintenance mode' permission.
- *
- * @param $check_only
- *   If this is set to TRUE, the function will perform the access checks and
- *   return the site offline status, but not log the user out or display any
- *   messages.
- *
- * @return
- *   FALSE if the site is not in maintenance mode, the user login page is
- *   displayed, or the user has the 'access site in maintenance mode'
- *   permission. TRUE for anonymous users not being on the login page when the
- *   site is in maintenance mode.
- */
-function _menu_site_is_offline($check_only = FALSE) {
-  // Check if site is in maintenance mode.
-  if (\Drupal::state()->get('system.maintenance_mode')) {
-    if (user_access('access site in maintenance mode')) {
-      // Ensure that the maintenance mode message is displayed only once
-      // (allowing for page redirects) and specifically suppress its display on
-      // the maintenance mode settings page.
-      if (!$check_only && current_path() != 'admin/config/development/maintenance') {
-        if (user_access('administer site configuration')) {
-          drupal_set_message(t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => url('admin/config/development/maintenance'))), 'status', FALSE);
-        }
-        else {
-          drupal_set_message(t('Operating in maintenance mode.'), 'status', FALSE);
-        }
-      }
-    }
-    else {
-      return TRUE;
-    }
-  }
-  return FALSE;
 }
 
 /**

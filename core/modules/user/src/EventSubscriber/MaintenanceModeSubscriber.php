@@ -11,6 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Drupal\Core\EventSubscriber\MaintenanceModeSubscriber as CoreMaintenanceModeSubscriber;
 
 /**
  * Maintenance mode subscriber to logout users.
@@ -28,7 +29,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     $request = $event->getRequest();
     $site_status = $request->attributes->get('_maintenance');
     $path = $request->attributes->get('_system_path');
-    if ($site_status == MENU_SITE_OFFLINE) {
+    if ($site_status == CoreMaintenanceModeSubscriber::SITE_OFFLINE) {
       // If the site is offline, log out unprivileged users.
       if ($user->isAuthenticated() && !$user->hasPermission('access site in maintenance mode')) {
         user_logout();
@@ -46,12 +47,12 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
           case 'user/login':
           case 'user/password':
             // Disable offline mode.
-            $request->attributes->set('_maintenance', MENU_SITE_ONLINE);
+            $request->attributes->set('_maintenance', CoreMaintenanceModeSubscriber::SITE_ONLINE);
             break;
           default:
             if (strpos($path, 'user/reset/') === 0) {
               // Disable offline mode.
-              $request->attributes->set('_maintenance', MENU_SITE_ONLINE);
+              $request->attributes->set('_maintenance', CoreMaintenanceModeSubscriber::SITE_ONLINE);
             }
             break;
         }
