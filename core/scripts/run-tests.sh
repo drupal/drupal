@@ -71,10 +71,13 @@ drupal_set_time_limit(0);
 
 simpletest_script_reporter_init();
 
-// Execute tests.
+$tests_to_run = array();
 for ($i = 0; $i < $args['repeat']; $i++) {
-  simpletest_script_execute_batch($test_list);
+  $tests_to_run = array_merge($tests_to_run, $test_list);
 }
+
+// Execute tests.
+simpletest_script_execute_batch($tests_to_run);
 
 // Stop the timer.
 simpletest_script_reporter_timer_stop();
