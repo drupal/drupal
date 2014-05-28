@@ -53,15 +53,6 @@ function dblog_menu_link_defaults_alter(&$links) {
 }
 
 /**
- * Implements hook_page_build().
- */
-function dblog_page_build(&$page) {
-  if (arg(0) == 'admin' && arg(1) == 'reports') {
-    $page['#attached']['css'][] = drupal_get_path('module', 'dblog') . '/css/dblog.module.css';
-  }
-}
-
-/**
  * Implements hook_cron().
  *
  * Controls the size of the log table, paring it to 'dblog_row_limit' messages.

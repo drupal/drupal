@@ -210,6 +210,9 @@ class DbLogController extends ControllerBase {
       '#rows' => $rows,
       '#attributes' => array('id' => 'admin-dblog', 'class' => array('admin-dblog')),
       '#empty' => $this->t('No log messages available.'),
+      '#attached' => array(
+        'library' => array('dblog/drupal.dblog'),
+      ),
     );
     $build['dblog_pager'] = array('#theme' => 'pager');
 
@@ -283,6 +286,9 @@ class DbLogController extends ControllerBase {
         '#type' => 'table',
         '#rows' => $rows,
         '#attributes' => array('class' => array('dblog-event')),
+        '#attached' => array(
+          'library' => array('dblog/drupal.dblog'),
+        ),
       );
     }
 
@@ -383,6 +389,9 @@ class DbLogController extends ControllerBase {
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No log messages available.'),
+      '#attached' => array(
+        'library' => array('dblog/drupal.dblog'),
+      ),
     );
     $build['dblog_top_pager'] = array('#theme' => 'pager');
 

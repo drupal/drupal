@@ -70,12 +70,13 @@ class Raw extends ArgumentDefaultPluginBase {
 
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    // Using range(1, 10) will create an array keyed 0-9, which allows arg() to
-    // properly function since it is also zero-based.
     $form['index'] = array(
       '#type' => 'select',
       '#title' => t('Path component'),
       '#default_value' => $this->options['index'],
+      // range(1, 10) returns an array with:
+      // - keys that count from 0 to match PHP array keys from explode().
+      // - values that count from 1 for display to humans.
       '#options' => range(1, 10),
       '#description' => t('The numbering starts from 1, e.g. on the page admin/structure/types, the 3rd path component is "types".'),
     );

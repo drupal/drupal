@@ -29,7 +29,7 @@ class UpdateCoreTest extends UpdateTestBase {
 
   function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules'));
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules', 'administer themes'));
     $this->drupalLogin($admin_user);
   }
 

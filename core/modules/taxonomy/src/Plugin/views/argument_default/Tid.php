@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument_default;
 
+use Drupal\taxonomy\TermInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
@@ -123,8 +124,8 @@ class Tid extends ArgumentDefaultPluginBase {
   public function getArgument() {
     // Load default argument from taxonomy page.
     if (!empty($this->options['term_page'])) {
-      if (arg(0) == 'taxonomy' && arg(1) == 'term' && is_numeric(arg(2))) {
-        return arg(2);
+      if (($taxonomy_term = $this->request->attributes->get('taxonomy_term')) && $taxonomy_term instanceof TermInterface) {
+        return $taxonomy_term->id();
       }
     }
     // Load default argument from node.

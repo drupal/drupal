@@ -1943,6 +1943,8 @@ function _current_path($path = NULL) {
  *   The component specified by $index, or NULL if the specified component was
  *   not found. If called without arguments, it returns an array containing all
  *   the components of the current path.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  */
 function arg($index = NULL, $path = NULL) {
   // Even though $arguments doesn't need to be resettable for any functional

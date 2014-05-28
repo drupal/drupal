@@ -66,12 +66,7 @@ class FeedForm extends ContentEntityForm {
     $feed->save();
     if ($insert) {
       drupal_set_message($this->t('The feed %feed has been updated.', array('%feed' => $feed->label())));
-      if (arg(0) == 'admin') {
-        $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
-      }
-      else {
-        $form_state['redirect_route'] = $feed->urlInfo('canonical');
-      }
+      $form_state['redirect_route'] = $feed->urlInfo('canonical');
     }
     else {
       watchdog('aggregator', 'Feed %feed added.', array('%feed' => $feed->label()), WATCHDOG_NOTICE, l($this->t('View'), 'admin/config/services/aggregator'));

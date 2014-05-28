@@ -16,6 +16,7 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException as DependencyInjectionRuntimeException;
 
 /**
@@ -2398,8 +2399,9 @@ abstract class DisplayPluginBase extends PluginBase {
    *  The rendered exposed form as string or NULL otherwise.
    */
   public function viewExposedFormBlocks() {
-    // avoid interfering with the admin forms.
-    if (arg(0) == 'admin' && arg(1) == 'structure' && arg(2) == 'views') {
+    // Avoid interfering with the admin forms.
+    $route_name = \Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
+    if (strpos($route_name, 'views_ui.') === 0) {
       return;
     }
     $this->view->initHandlers();

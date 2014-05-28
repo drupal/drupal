@@ -651,14 +651,16 @@ function system_element_info() {
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_html(array $variables) {
-  return theme_get_suggestions(arg(), 'html');
+  $path_args = explode('/', current_path());
+  return theme_get_suggestions($path_args, 'html');
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
 function system_theme_suggestions_page(array $variables) {
-  return theme_get_suggestions(arg(), 'page');
+  $path_args = explode('/', current_path());
+  return theme_get_suggestions($path_args, 'page');
 }
 
 /**

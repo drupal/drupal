@@ -1984,8 +1984,9 @@ function template_preprocess_html(&$variables) {
   $body_classes[] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
   $variables['attributes']['class'] = $body_classes;
 
+  $path_args = explode('/', current_path());
   // Populate the body classes.
-  if ($suggestions = theme_get_suggestions(arg(), 'page', '-')) {
+  if ($suggestions = theme_get_suggestions($path_args, 'page', '-')) {
     foreach ($suggestions as $suggestion) {
       if ($suggestion != 'page-front') {
         // Add current suggestion to page classes to make it possible to theme
@@ -2066,9 +2067,6 @@ function template_preprocess_html(&$variables) {
  * Most themes utilize their own copy of page.html.twig. The default is located
  * inside "modules/system/page.html.twig". Look in there for the full list of
  * variables.
- *
- * Uses the arg() function to generate a series of page template suggestions
- * based on the current path.
  *
  * @see drupal_render_page()
  */
@@ -2186,7 +2184,7 @@ function template_preprocess_page(&$variables) {
  * additional suggestions or classes on the path of the current page.
  *
  * @param $args
- *   An array of path arguments, such as from function arg().
+ *   An array of path arguments.
  * @param $base
  *   A string identifying the base 'thing' from which more specific suggestions
  *   are derived. For example, 'page' or 'html'.

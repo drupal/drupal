@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\Block;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\block\BlockBase;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Provides a 'User login' block.
@@ -25,7 +26,8 @@ class UserLoginBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    return (!$account->id() && !(arg(0) == 'user' && !is_numeric(arg(1))));
+    $route_name = \Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
+    return ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login', 'user.logout')));
   }
 
   /**
