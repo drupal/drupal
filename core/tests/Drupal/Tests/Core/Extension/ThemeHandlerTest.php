@@ -175,6 +175,7 @@ class ThemeHandlerTest extends UnitTestCase {
         'style.css' => DRUPAL_ROOT . '/core/themes/seven/style.css',
         'css/components/buttons.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.css',
         'css/components/buttons.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.theme.css',
+        'css/components/dropbutton.component.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/dropbutton.component.css',
         'css/components/tour.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/tour.theme.css',
       ),
     ), $info->info['stylesheets']);

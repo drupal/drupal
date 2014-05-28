@@ -13,15 +13,12 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-.js .dropbutton-wrapper {
-  display: block;
-  min-height: 2em;
-  position: relative;
-}
 .js .dropbutton-wrapper,
 .js .dropbutton-widget {
-  max-width: 100%;
+  display: block;
+  position: relative;
 }
+
 @media screen and (max-width:600px) {
   .js .dropbutton-wrapper {
     width: 100%;
@@ -36,10 +33,6 @@
   position: static;
 }
 
-
-.js .dropbutton-widget {
-  position: absolute;
-}
 /* UL styles are over-scoped in core, so this selector needs weight parity. */
 .js .dropbutton-widget .dropbutton {
   list-style-image: none;
@@ -51,6 +44,14 @@
 .js .dropbutton li,
 .js .dropbutton a {
   display: block;
+  outline: none;
+}
+
+.js .dropbutton li:hover,
+.js .dropbutton li:focus,
+.js .dropbutton a:hover,
+.js .dropbutton a:focus {
+  outline: initial;
 }
 
 /**
@@ -106,6 +107,10 @@
   margin: 0;
   padding: 0;
   width: 100%;
+}
+.dropbutton-toggle button:hover,
+.dropbutton-toggle button:focus {
+  outline: initial;
 }
 .dropbutton-arrow {
   border-bottom-color: transparent;
