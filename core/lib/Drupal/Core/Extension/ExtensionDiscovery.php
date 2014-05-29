@@ -275,18 +275,7 @@ class ExtensionDiscovery {
     $files = array();
     // Duplicate files found in later search directories take precedence over
     // earlier ones; they replace the extension in the existing $files array.
-    // The exception to this is if the later extension is not compatible with
-    // the current version of Drupal core, which may occur during upgrades when
-    // e.g. new modules were introduced in core while older contrib modules with
-    // the same name still exist in a later search path.
     foreach ($all_files as $file) {
-      if (isset($files[$file->getName()])) {
-        // Skip the extension if it is incompatible with Drupal core.
-        $info = $this->getInfoParser()->parse($file->getPathname());
-        if (!isset($info['core']) || $info['core'] != \Drupal::CORE_COMPATIBILITY) {
-          continue;
-        }
-      }
       $files[$file->getName()] = $file;
     }
     return $files;
