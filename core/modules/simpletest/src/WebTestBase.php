@@ -24,6 +24,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\block\Entity\Block;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\CssSelector\CssSelector;
 
 /**
  * Test case for typical Drupal tests.
@@ -2336,6 +2337,22 @@ abstract class WebTestBase extends TestBase {
     else {
       return FALSE;
     }
+  }
+
+  /**
+   * Performs a CSS selection based search on the contents of the internal
+   * browser. The search is relative to the root element (HTML tag normally) of
+   * the page.
+   *
+   * @param $selector string
+   *   CSS selector to use in the search.
+   *
+   * @return \SimpleXMLElement
+   *   The return value of the xpath search performed after converting the css
+   *   selector to an XPath selector.
+   */
+  protected function cssSelect($selector) {
+    return $this->xpath(CssSelector::toXPath($selector));
   }
 
   /**
