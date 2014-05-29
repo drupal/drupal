@@ -74,6 +74,11 @@ interface EntityAccessControllerInterface {
   /**
    * Checks access to an operation on a given entity field.
    *
+   * This method does not determine whether access is granted to the entity
+   * itself, only the specific field. Callers are responsible for ensuring that
+   * entity access is also respected, for example by using
+   * \Drupal\Core\Entity\EntityAccessControllerInterface::access().
+   *
    * @param string $operation
    *   The operation access should be checked for.
    *   Usually one of "view" or "edit".
@@ -86,6 +91,8 @@ interface EntityAccessControllerInterface {
    *   (optional) The field values for which to check access, or NULL if access
    *    is checked for the field definition, without any specific value
    *    available. Defaults to NULL.
+   *
+   * @see \Drupal\Core\Entity\EntityAccessControllerInterface::access()
    */
   public function fieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account = NULL, FieldItemListInterface $items = NULL);
 
