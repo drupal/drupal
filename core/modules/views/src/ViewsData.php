@@ -38,11 +38,23 @@ class ViewsData {
   protected $cacheBackend;
 
   /**
-   * Storage for the data itself.
+   * Table data storage.
+   *
+   * This is used for explicitly requested tables.
    *
    * @var array
    */
   protected $storage = array();
+
+  /**
+   * All table storage data loaded from cache.
+   *
+   * This is used when all data has been loaded from the cache to prevent
+   * further cache get calls when rebuilding all data or for single tables.
+   *
+   * @var array
+   */
+  protected $allStorage = array();
 
   /**
    * Whether the data has been fully loaded in this request.
@@ -115,8 +127,8 @@ class ViewsData {
       if (!isset($this->storage[$key])) {
         // Prepare a cache ID for get and set.
         $cid = $this->baseCid . ':' . $key;
-
         $from_cache = FALSE;
+
         if ($data = $this->cacheGet($cid)) {
           $this->storage[$key] = $data->data;
           $from_cache = TRUE;
@@ -124,18 +136,23 @@ class ViewsData {
         // If there is no cached entry and data is not already fully loaded,
         // rebuild. This will stop requests for invalid tables calling getData.
         elseif (!$this->fullyLoaded) {
-          $this->storage = $this->getData();
+          $this->allStorage = $this->getData();
         }
 
         if (!$from_cache) {
-          if (!isset($this->storage[$key])) {
+          if (!isset($this->allStorage[$key])) {
             // Write an empty cache entry if no information for that table
             // exists to avoid repeated cache get calls for this table and
             // prevent loading all tables unnecessarily.
             $this->storage[$key] = array();
+            $this->allStorage[$key] = array();
           }
+          else {
+            $this->storage[$key] = $this->allStorage[$key];
+          }
+
           // Create a cache entry for the requested table.
-          $this->cacheSet($cid, $this->storage[$key]);
+          $this->cacheSet($cid, $this->allStorage[$key]);
         }
       }
 
@@ -143,11 +160,16 @@ class ViewsData {
     }
     else {
       if (!$this->fullyLoaded) {
-        $this->storage = $this->getData();
+        $this->allStorage = $this->getData();
       }
+
+      // Set storage from allStorage outside of the fullyLoaded check to prevent
+      // cache calls on requests that have requested all data to get a single
+      // tables data. Make sure $this->storage is populated in this case.
+      $this->storage = $this->allStorage;
     }
 
-    return $this->storage;
+    return $this->allStorage;
   }
 
   /**
@@ -286,6 +308,7 @@ class ViewsData {
    */
   public function clear() {
     $this->storage = array();
+    $this->allStorage = array();
     $this->fullyLoaded = FALSE;
     Cache::deleteTags(array('views_data' => TRUE));
   }

@@ -16,7 +16,7 @@ use Drupal\views\ViewsData;
  *
  * @see hook_views_data
  *
- * @see \Drupal\views\ViewsData
+ * @coversDefaultClass \Drupal\views\ViewsData
  */
 class ViewsDataTest extends UnitTestCase {
 
@@ -192,6 +192,7 @@ class ViewsDataTest extends UnitTestCase {
   public function testFullAndTableGetCache() {
     $expected_views_data = $this->viewsData();
     $table_name = 'views_test_data';
+    $table_name_2 = 'views_test_data_2';
     $random_table_name = $this->randomName();
 
     // Views data should be invoked twice due to the clear call.
@@ -212,8 +213,7 @@ class ViewsDataTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cacheBackend->expects($this->at(1))
       ->method('set')
-      ->with("views_data:en", $expected_views_data)
-      ->will($this->returnValue(FALSE));
+      ->with("views_data:en", $expected_views_data);
     $this->cacheBackend->expects($this->at(2))
       ->method('get')
       ->with("views_data:$random_table_name:en")
@@ -229,8 +229,7 @@ class ViewsDataTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cacheBackend->expects($this->at(6))
       ->method('set')
-      ->with("views_data:en", $expected_views_data)
-      ->will($this->returnValue(FALSE));
+      ->with("views_data:en", $expected_views_data);
     $this->cacheBackend->expects($this->at(7))
       ->method('get')
       ->with("views_data:$random_table_name:en")
@@ -246,6 +245,10 @@ class ViewsDataTest extends UnitTestCase {
     $views_data = $this->viewsData->get($table_name);
     $this->assertSame($expected_views_data[$table_name], $views_data);
 
+    // Another table being requested should also come from the static cache.
+    $views_data = $this->viewsData->get($table_name_2);
+    $this->assertSame($expected_views_data[$table_name_2], $views_data);
+
     $views_data = $this->viewsData->get($random_table_name);
     $this->assertSame(array(), $views_data);
 
@@ -254,6 +257,7 @@ class ViewsDataTest extends UnitTestCase {
     // Get the views data again.
     $this->viewsData->get();
     $this->viewsData->get($table_name);
+    $this->viewsData->get($table_name_2);
     $this->viewsData->get($random_table_name);
   }
 
@@ -576,6 +580,44 @@ class ViewsDataTest extends UnitTestCase {
       $views_data = $this->viewsData->get();
       $this->assertSame($expected_views_data, $views_data);
     }
+  }
+
+  /**
+   * Tests the cache calls for multiple tables without warm caches.
+   *
+   * @covers ::get
+   */
+  public function testCacheCallsWithoutWarmCacheAndGetMultipleTables() {
+    $expected_views_data = $this->viewsData();
+    $table_name = 'views_test_data';
+    $table_name_2 = 'views_test_data_2';
+
+    // Setup a warm cache backend for all table data, but not single tables.
+    $this->cacheBackend->expects($this->at(0))
+      ->method('get')
+      ->with("views_data:$table_name:en")
+      ->will($this->returnValue(FALSE));
+    $this->cacheBackend->expects($this->at(1))
+      ->method('get')
+      ->with('views_data:en')
+      ->will($this->returnValue((object) array('data' => $expected_views_data)));
+    $this->cacheBackend->expects($this->at(2))
+      ->method('set')
+      ->with("views_data:$table_name:en", $expected_views_data[$table_name]);
+    $this->cacheBackend->expects($this->at(3))
+      ->method('get')
+      ->with("views_data:$table_name_2:en")
+      ->will($this->returnValue(FALSE));
+    $this->cacheBackend->expects($this->at(4))
+      ->method('set')
+      ->with("views_data:$table_name_2:en", $expected_views_data[$table_name_2]);
+
+    $this->assertSame($expected_views_data[$table_name], $this->viewsData->get($table_name));
+    $this->assertSame($expected_views_data[$table_name_2], $this->viewsData->get($table_name_2));
+
+    // Should only be invoked the first time.
+    $this->assertSame($expected_views_data[$table_name], $this->viewsData->get($table_name));
+    $this->assertSame($expected_views_data[$table_name_2], $this->viewsData->get($table_name_2));
   }
 
 }
