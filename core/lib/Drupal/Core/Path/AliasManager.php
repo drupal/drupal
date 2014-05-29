@@ -135,7 +135,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     if ($this->cacheNeedsWriting && !empty($this->cacheKey)) {
       // Start with the preloaded path lookups, so that cached entries for other
       // languages will not be lost.
-      $path_lookups_lookups = $this->preloadedPathLookups ?: array();
+      $path_lookups = $this->preloadedPathLookups ?: array();
       foreach ($this->lookupMap as $langcode => $lookups) {
         $path_lookups[$langcode] = array_keys($lookups);
         if (!empty($this->noAlias[$langcode])) {
@@ -144,7 +144,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
       }
 
       if (!empty($path_lookups)) {
-        $twenty_four_hours_four_hours = 60 * 60 * 24;
+        $twenty_four_hours = 60 * 60 * 24;
         $this->cache->set($this->cacheKey, $path_lookups, REQUEST_TIME + $twenty_four_hours);
       }
     }
