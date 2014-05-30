@@ -40,16 +40,15 @@ class NodeViewBuilder extends EntityViewBuilder {
         'view_mode' => $view_mode,
         'langcode' => $langcode,
         'in_preview' => !empty($entity->in_preview),
-        'token' => drupal_render_cache_generate_token(),
       );
-
+      $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
       $build[$id]['links'] = array(
         '#post_render_cache' => array(
           $callback => array(
             $context,
           ),
         ),
-        '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
+        '#markup' => $placeholder,
       );
 
 
@@ -105,7 +104,7 @@ class NodeViewBuilder extends EntityViewBuilder {
    */
   public static function renderLinks(array $element, array $context) {
     $callback = '\Drupal\node\NodeViewBuilder::renderLinks';
-    $placeholder = drupal_render_cache_generate_placeholder($callback, $context, $context['token']);
+    $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
 
     $links = array(
       '#theme' => 'links__node',

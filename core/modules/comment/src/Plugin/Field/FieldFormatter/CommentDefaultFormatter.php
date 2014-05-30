@@ -181,15 +181,15 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
               'entity_type' => $entity->getEntityTypeId(),
               'entity_id' => $entity->id(),
               'field_name' => $field_name,
-              'token' => drupal_render_cache_generate_token(),
             );
+            $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
             $output['comment_form'] = array(
               '#post_render_cache' => array(
                 $callback => array(
                   $context,
                 ),
               ),
-              '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
+              '#markup' => $placeholder,
             );
           }
         }
@@ -223,7 +223,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    */
   public static function renderForm(array $element, array $context) {
     $callback = '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm';
-    $placeholder = drupal_render_cache_generate_placeholder($callback, $context, $context['token']);
+    $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
     $entity = entity_load($context['entity_type'], $context['entity_id']);
     $form = comment_add($entity, $context['field_name']);
     // @todo: This only works as long as assets are still tracked in a global

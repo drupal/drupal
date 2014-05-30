@@ -207,7 +207,7 @@ function common_test_post_render_cache(array $element, array $context) {
  *   A render array.
  */
 function common_test_post_render_cache_placeholder(array $element, array $context) {
-  $placeholder = drupal_render_cache_generate_placeholder(__FUNCTION__, $context, $context['token']);
+  $placeholder = drupal_render_cache_generate_placeholder(__FUNCTION__, $context);
   $replace_element = array(
     '#markup' => '<bar>' . $context['bar'] . '</bar>',
     '#attached' => array(

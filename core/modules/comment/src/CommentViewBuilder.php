@@ -120,15 +120,15 @@ class CommentViewBuilder extends EntityViewBuilder {
         'commented_entity_type' => $commented_entity->getEntityTypeId(),
         'commented_entity_id' => $commented_entity->id(),
         'in_preview' => !empty($entity->in_preview),
-        'token' => drupal_render_cache_generate_token(),
       );
+      $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
       $build[$id]['links'] = array(
         '#post_render_cache' => array(
           $callback => array(
             $context,
           ),
         ),
-        '#markup' => drupal_render_cache_generate_placeholder($callback, $context, $context['token']),
+        '#markup' => $placeholder,
       );
 
       if (!isset($build[$id]['#attached'])) {
@@ -167,7 +167,7 @@ class CommentViewBuilder extends EntityViewBuilder {
    */
   public static function renderLinks(array $element, array $context) {
     $callback = '\Drupal\comment\CommentViewBuilder::renderLinks';
-    $placeholder = drupal_render_cache_generate_placeholder($callback, $context, $context['token']);
+    $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
     $links = array(
       '#theme' => 'links__comment',
       '#pre_render' => array('drupal_pre_render_links'),
