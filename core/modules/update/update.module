@@ -748,7 +748,9 @@ function update_clear_update_disk_cache() {
 function update_delete_file_if_stale($path) {
   if (file_exists($path)) {
     $filectime = filectime($path);
-    if (REQUEST_TIME - $filectime > DRUPAL_MAXIMUM_TEMP_FILE_AGE || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && REQUEST_TIME - $filectime > 300)) {
+    $max_age = \Drupal::config('system.file')->get('temporary_maximum_age');
+
+    if (REQUEST_TIME - $filectime > $max_age || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && REQUEST_TIME - $filectime > 300)) {
       file_unmanaged_delete_recursive($path);
     }
   }

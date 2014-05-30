@@ -30,7 +30,10 @@ interface FileStorageInterface extends EntityStorageInterface {
   public function spaceUsed($uid = NULL, $status = FILE_STATUS_PERMANENT);
 
   /**
-   * Retrieve temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+   * Retrieves old temporary files.
+   *
+   * Get files older than the temporary maximum age,
+   * \Drupal::config('system.file')->get('temporary_maximum_age').
    *
    *  @return array
    *    A list of files to be deleted.

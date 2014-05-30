@@ -35,7 +35,7 @@ class FileStorage extends ContentEntityDatabaseStorage implements FileStorageInt
     // of PHP. See http://drupal.org/node/352956.
     return $this->database->query('SELECT fid FROM {' . $this->entityType->getBaseTable() . '} WHERE status <> :permanent AND changed < :changed', array(
       ':permanent' => FILE_STATUS_PERMANENT,
-      ':changed' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE
+      ':changed' => REQUEST_TIME - \Drupal::config('system.file')->get('temporary_maximum_age'),
     ));
   }
 }
