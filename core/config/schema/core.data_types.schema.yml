@@ -68,7 +68,7 @@ text:
 # PHP Date format string that is translatable.
 date_format:
   type: string
-  label: 'PHP date format'
+  label: 'Date format'
   translatable: true
 
 # HTML color value.

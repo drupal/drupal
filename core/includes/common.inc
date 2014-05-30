@@ -709,30 +709,6 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
 }
 
 /**
- * Retrieves the correct datetime format type for this system.
- *
- * This value is sometimes required when the format type needs to be determined
- * before a date can be created.
- *
- * @return string
- *   A string as defined in \DrupalComponent\Datetime\DateTimePlus.php: either
- *   'intl' or 'php', depending on whether IntlDateFormatter is available.
- */
-function datetime_default_format_type() {
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['format_type'] = &drupal_static(__FUNCTION__);
-  }
-  $format_type = &$drupal_static_fast['format_type'];
-
-  if (!isset($format_type)) {
-    $date = new DrupalDateTime();
-    $format_type = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
-  }
-  return $format_type;
-}
-
-/**
  * @} End of "defgroup format".
  */
 

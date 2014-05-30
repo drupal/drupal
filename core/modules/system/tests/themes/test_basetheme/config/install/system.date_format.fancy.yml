@@ -6,6 +6,4 @@ label: 'Fancy date'
 status: true
 langcode: en
 locked: false
-pattern:
-  php: 'U'
-  intl: 'EEEE, LLLL d, yyyy - kk:mm'
+pattern: 'U'

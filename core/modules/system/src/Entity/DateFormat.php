@@ -85,15 +85,15 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPattern($type = DrupalDateTime::PHP) {
-    return isset($this->pattern[$type]) ? $this->pattern[$type] : '';
+  public function getPattern() {
+    return $this->pattern;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setPattern($pattern, $type = DrupalDateTime::PHP) {
-    $this->pattern[$type] = $pattern;
+  public function setPattern($pattern) {
+    $this->pattern = $pattern;
     return $this;
   }
 

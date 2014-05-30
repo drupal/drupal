@@ -24,7 +24,7 @@ class EntityDateFormat extends EntityConfigBase {
    */
   protected function updateEntityProperty(EntityInterface $entity, array $parents, $value) {
     if ($parents[0] == 'pattern') {
-      $entity->setPattern($value, $parents[1]);
+      $entity->setPattern($value);
     }
     else {
       parent::updateEntityProperty($entity, $parents, $value);

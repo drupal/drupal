@@ -3,6 +3,4 @@ label: 'HTML Datetime'
 status: true
 langcode: en
 locked: true
-pattern:
-  php: 'Y-m-d\TH:i:sO'
-  intl: 'yyyy-MM-dd''T''kk:mm:ssZZ'
+pattern: 'Y-m-d\TH:i:sO'

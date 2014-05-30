@@ -15,16 +15,6 @@ namespace Drupal\Component\Datetime;
  * format, or an array of date parts. It also adds an errors array
  * and a __toString() method to the date object.
  *
- * In addition, it swaps the IntlDateFormatter into the format() method,
- * if it is available. The format() method is also extended with a settings
- * array to provide settings needed by the IntlDateFormatter. It will
- * will only be used if the class is available, a langcode, country, and
- * calendar have been set, and the format is in the right pattern, otherwise
- * the parent format() method is used in the usual way. These values can
- * either be set globally in the object and reused over and over as the date
- * is repeatedly formatted, or set specifically in the format() method
- * for the requested format.
- *
  * This class is less lenient than the parent DateTime class. It changes
  * the default behavior for handling date values like '2011-00-00'.
  * The parent class would convert that value to '2010-11-30' and report
@@ -39,9 +29,6 @@ namespace Drupal\Component\Datetime;
 class DateTimePlus extends \DateTime {
 
   const FORMAT   = 'Y-m-d H:i:s';
-  const CALENDAR = 'gregorian';
-  const PHP      = 'php';
-  const INTL     = 'intl';
 
   /**
    * An array of possible date parts.
@@ -91,24 +78,9 @@ class DateTimePlus extends \DateTime {
   protected $langcode = NULL;
 
   /**
-   * The value of the country code passed to the constructor.
-   */
-  protected $country = NULL;
-
-  /**
-   * The value of the calendar setting passed to the constructor.
-   */
-  protected $calendar = NULL;
-
-  /**
    * An array of errors encountered when creating this date.
    */
   protected $errors = array();
-
-  /**
-   * A boolean to store whether or not the intl php extension is available.
-   */
-  static $intlExtentionExists = NULL;
 
   /**
    * Creates a date object from an input date object.
@@ -205,38 +177,7 @@ class DateTimePlus extends \DateTime {
     // invalid it doesn't return an exception.
     $datetimeplus = new static('', $timezone, $settings);
 
-    $format_string_type = isset($settings['format_string_type']) ? $settings['format_string_type'] : static::PHP;
-    if ($datetimeplus->canUseIntl() && $format_string_type == static::INTL) {
-      // Construct the $locale variable needed by the IntlDateFormatter.
-      $locale = $datetimeplus->langcode . '_' . $datetimeplus->country;
-
-      // If we have information about a calendar, add it.
-      if (!empty($datetimeplus->calendar) && $datetimeplus->calendar != static::CALENDAR) {
-        $locale .= '@calendar=' . $datetimeplus->calendar;
-      }
-
-      // If we're working with a non-gregorian calendar, indicate that.
-      $calendar_type = \IntlDateFormatter::GREGORIAN;
-      if ($datetimeplus->calendar != static::CALENDAR) {
-        $calendar_type = \IntlDateFormatter::TRADITIONAL;
-      }
-
-      $date_type = !empty($settings['date_type']) ? $settings['date_type'] : \IntlDateFormatter::FULL;
-      $time_type = !empty($settings['time_type']) ? $settings['time_type'] : \IntlDateFormatter::FULL;
-      $timezone = !empty($settings['timezone']) ? $settings['timezone'] : $datetimeplus->getTimezone()->getName();
-      $formatter = new \IntlDateFormatter($locale, $date_type, $time_type, $timezone, $calendar_type, $format);
-
-      $timestamp = $formatter->parse($time);
-      if ($timestamp) {
-        $date = $datetimeplus->createFromTimestamp($timestamp, $timezone, $settings);
-      }
-      else {
-        $date = NULL;
-      }
-    }
-    else {
-      $date = \DateTime::createFromFormat($format, $time, $datetimeplus->getTimezone());
-    }
+    $date = \DateTime::createFromFormat($format, $time, $datetimeplus->getTimezone());
     if (!$date instanceOf \DateTime) {
       throw new \Exception('The date cannot be created from a format.');
     }
@@ -271,16 +212,8 @@ class DateTimePlus extends \DateTime {
    *   PHP DateTimeZone object, string or NULL allowed.
    *   Defaults to NULL.
    * @param array $settings
-   *   - langcode: (optional) String two letter language code to construct
-   *     the locale string by the intlDateFormatter class. Used to control
-   *     the result of the format() method if that class is available.
-   *     Defaults to NULL.
-   *   - country: (optional) String two letter country code to construct
-   *     the locale string by the intlDateFormatter class. Used to control
-   *     the result of the format() method if that class is available.
-   *     Defaults to NULL.
-   *   - calendar: (optional) String calendar name to use for the date.
-   *     Defaults to DateTimePlus::CALENDAR.
+   *   - langcode: (optional) String two letter language code used to control
+   *     the result of the format(). Defaults to NULL.
    *   - debug: (optional) Boolean choice to leave debug values in the
    *     date object for debugging purposes. Defaults to FALSE.
    */
@@ -288,8 +221,6 @@ class DateTimePlus extends \DateTime {
 
     // Unpack settings.
     $this->langcode = !empty($settings['langcode']) ? $settings['langcode'] : NULL;
-    $this->country = !empty($settings['country']) ? $settings['country'] : NULL;
-    $this->calendar = !empty($settings['calendar']) ? $settings['calendar'] : static::CALENDAR;
 
     // Massage the input values as necessary.
     $prepared_time = $this->prepareTime($time);
@@ -571,71 +502,16 @@ class DateTimePlus extends \DateTime {
     return sprintf("%0" . $size . "d", $value);
   }
 
-
-  /**
-   * Tests whether the IntlDateFormatter can be used.
-   *
-   * @param string $calendar
-   *   (optional) String calendar name to use for the date. Defaults to NULL.
-   * @param string $langcode
-   *   (optional) String two letter language code to construct the locale string
-   *   by the intlDateFormatter class. Defaults to NULL.
-   * @param string $country
-   *   (optional) String two letter country code to construct the locale string
-   *   by the intlDateFormatter class. Defaults to NULL.
-   *
-   * @return bool
-   *   TRUE if IntlDateFormatter can be used.
-   */
-  public function canUseIntl($calendar = NULL, $langcode = NULL, $country = NULL) {
-    $langcode = !empty($langcode) ? $langcode : $this->langcode;
-    $country = !empty($country) ? $country : $this->country;
-    $calendar = !empty($calendar) ? $calendar : $this->calendar;
-
-    return $this->intlDateFormatterExists() && !empty($calendar) && !empty($langcode) && !empty($country);
-  }
-
-  public static function intlDateFormatterExists() {
-    if (static::$intlExtentionExists === NULL) {
-      static::$intlExtentionExists = class_exists('IntlDateFormatter');
-    }
-    return static::$intlExtentionExists;
-  }
-
   /**
    * Formats the date for display.
    *
-   * Uses the IntlDateFormatter to display the format, if possible.
-   * Adds an optional array of settings that provides the information
-   * the IntlDateFormatter will need.
-   *
    * @param string $format
-   *   A format string using either PHP's date() or the
-   *   IntlDateFormatter() format.
+   *   A format string using either PHP's date().
    * @param array $settings
-   *   - format_string_type: (optional) DateTimePlus::PHP or
-   *     DateTimePlus::INTL. Identifies the pattern used by the format
-   *     string. When using the Intl formatter, the format string must
-   *     use the Intl pattern, which is different from the pattern used
-   *     by the DateTime format function. Defaults to DateTimePlus::PHP.
+   *   - langcode: (optional) String two letter language code used to control
+   *     the result of the format(). Defaults to NULL.
    *   - timezone: (optional) String timezone name. Defaults to the timezone
    *     of the date object.
-   *   - langcode: (optional) String two letter language code to construct the
-   *     locale string by the intlDateFormatter class. Used to control the
-   *     result of the format() method if that class is available. Defaults
-   *     to NULL.
-   *   - country: (optional) String two letter country code to construct the
-   *     locale string by the intlDateFormatter class. Used to control the
-   *     result of the format() method if that class is available. Defaults
-   *     to NULL.
-   *   - calendar: (optional) String calendar name to use for the date,
-   *     Defaults to DateTimePlus::CALENDAR.
-   *   - date_type: (optional) Integer date type to use in the formatter,
-   *     defaults to IntlDateFormatter::FULL.
-   *   - time_type: (optional) Integer date type to use in the formatter,
-   *     defaults to IntlDateFormatter::FULL.
-   *   - lenient: (optional) Boolean choice of whether or not to use lenient
-   *     processing in the intl formatter. Defaults to FALSE;
    *
    * @return string
    *   The formatted value of the date.
@@ -647,45 +523,9 @@ class DateTimePlus extends \DateTime {
       return;
     }
 
-    $format_string_type = isset($settings['format_string_type']) ? $settings['format_string_type'] : static::PHP;
-    $langcode = !empty($settings['langcode']) ? $settings['langcode'] : $this->langcode;
-    $country = !empty($settings['country']) ? $settings['country'] : $this->country;
-    $calendar = !empty($settings['calendar']) ? $settings['calendar'] : $this->calendar;
-
     // Format the date and catch errors.
     try {
-
-      // If we have what we need to use the IntlDateFormatter, do so.
-      if ($this->canUseIntl($calendar, $langcode, $country) && $format_string_type == static::INTL) {
-
-        // Construct the $locale variable needed by the IntlDateFormatter.
-        $locale = $langcode . '_' . $country;
-
-        // If we have information about a calendar, add it.
-        if (!empty($calendar) && $calendar != static::CALENDAR) {
-          $locale .= '@calendar=' . $calendar;
-        }
-
-        // If we're working with a non-gregorian calendar, indicate that.
-        $calendar_type = \IntlDateFormatter::GREGORIAN;
-        if ($calendar != self::CALENDAR) {
-          $calendar_type = \IntlDateFormatter::TRADITIONAL;
-        }
-
-        $date_type = !empty($settings['date_type']) ? $settings['date_type'] : \IntlDateFormatter::FULL;
-        $time_type = !empty($settings['time_type']) ? $settings['time_type'] : \IntlDateFormatter::FULL;
-        $timezone = !empty($settings['timezone']) ? $settings['timezone'] : $this->getTimezone()->getName();
-        $formatter = new \IntlDateFormatter($locale, $date_type, $time_type, $timezone, $calendar_type, $format);
-
-        $lenient = !empty($settings['lenient']) ? $settings['lenient'] : FALSE;
-        $formatter->setLenient($lenient);
-        $value = $formatter->format($this);
-      }
-
-      // Otherwise, use the parent method.
-      else {
-        $value = parent::format($format);
-      }
+      $value = parent::format($format);
     }
     catch (\Exception $e) {
       $this->errors[] = $e->getMessage();

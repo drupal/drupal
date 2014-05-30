@@ -30,17 +30,15 @@ const DATETIME_DATE_STORAGE_FORMAT = 'Y-m-d';
  * Implements hook_element_info().
  */
 function datetime_element_info() {
-  $format_type = datetime_default_format_type();
-
   $date_format = '';
   $time_format = '';
   // Date formats cannot be loaded during install or update.
   if (!defined('MAINTENANCE_MODE')) {
     if ($date_format_entity = entity_load('date_format', 'html_date')) {
-      $date_format = $date_format_entity->getPattern($format_type);
+      $date_format = $date_format_entity->getPattern();
     }
     if ($time_format_entity = entity_load('date_format', 'html_time')) {
-      $time_format = $time_format_entity->getPattern($format_type);
+      $time_format = $time_format_entity->getPattern();
     }
   }
   $types['datetime'] = array(
@@ -51,7 +49,6 @@ function datetime_element_info() {
     '#theme' => 'datetime_form',
     '#theme_wrappers' => array('datetime_wrapper'),
     '#date_date_format' => $date_format,
-    '#date_format_string_type' => $format_type,
     '#date_date_element' => 'date',
     '#date_date_callbacks' => array(),
     '#date_time_format' => $time_format,
@@ -341,7 +338,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *   The form element whose value has been processed.
  */
 function datetime_datetime_form_process($element, &$form_state) {
-  $format_settings = array('format_string_type' => $element['#date_format_string_type']);
+  $format_settings = array();
   // The value callback has populated the #value array.
   $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
 
@@ -468,8 +465,7 @@ function form_type_datetime_value($element, $input = FALSE) {
     try {
       $date_time_format = trim($date_format . ' ' . $time_format);
       $date_time_input = trim($date_input . ' ' . $time_input);
-      $date_time_settings = array('format_string_type' => $element['#date_format_string_type']);
-      $date = DrupalDateTime::createFromFormat($date_time_format, $date_time_input, $timezone, $date_time_settings);
+      $date = DrupalDateTime::createFromFormat($date_time_format, $date_time_input, $timezone);
     }
     catch (\Exception $e) {
       $date = NULL;
@@ -484,8 +480,8 @@ function form_type_datetime_value($element, $input = FALSE) {
     $date = $element['#default_value'];
     if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
       $input = array(
-        'date'   => $date->format($element['#date_date_format'], array('format_string_type' => $element['#date_format_string_type'])),
-        'time'   => $date->format($element['#date_time_format'], array('format_string_type' => $element['#date_format_string_type'])),
+        'date'   => $date->format($element['#date_date_format']),
+        'time'   => $date->format($element['#date_time_format']),
         'object' => $date,
       );
     }
@@ -564,16 +560,15 @@ function datetime_datetime_validate($element, &$form_state) {
  *   if this is not a HTML5 element.
  */
 function datetime_html5_format($part, $element) {
-  $format_type = datetime_default_format_type();
   switch ($part) {
     case 'date':
       switch ($element['#date_date_element']) {
         case 'date':
-          return entity_load('date_format', 'html_date')->getPattern($format_type);
+          return entity_load('date_format', 'html_date')->getPattern();
 
         case 'datetime':
         case 'datetime-local':
-          return entity_load('date_format', 'html_datetime')->getPattern($format_type);
+          return entity_load('date_format', 'html_datetime')->getPattern();
 
         default:
           return $element['#date_date_format'];
@@ -583,7 +578,7 @@ function datetime_html5_format($part, $element) {
     case 'time':
       switch ($element['#date_time_element']) {
         case 'time':
-          return entity_load('date_format', 'html_time')->getPattern($format_type);
+          return entity_load('date_format', 'html_time')->getPattern();
 
         default:
           return $element['#date_time_format'];
@@ -604,12 +599,11 @@ function datetime_html5_format($part, $element) {
  *
  */
 function datetime_format_example($format) {
-  $format_type = datetime_default_format_type();
   $date = &drupal_static(__FUNCTION__);
   if (empty($date)) {
     $date = new DrupalDateTime();
   }
-  return $date->format($format, array('format_string_type' => $format_type));
+  return $date->format($format);
 }
 
 /**
@@ -987,12 +981,10 @@ function datetime_range_years($string, $date = NULL) {
  * Implements hook_form_BASE_FORM_ID_alter() for node forms.
  */
 function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $format_type = datetime_default_format_type();
-
   // Alter the 'Authored on' date to use datetime.
   $form['created']['#type'] = 'datetime';
-  $date_format = entity_load('date_format', 'html_date')->getPattern($format_type);
-  $time_format = entity_load('date_format', 'html_time')->getPattern($format_type);
+  $date_format = entity_load('date_format', 'html_date')->getPattern();
+  $time_format = entity_load('date_format', 'html_time')->getPattern();
   $form['created']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($date_format . ' ' . $time_format)));
   unset($form['created']['#maxlength']);
 }

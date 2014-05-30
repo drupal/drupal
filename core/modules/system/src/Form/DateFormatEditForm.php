@@ -20,7 +20,7 @@ class DateFormatEditForm extends DateFormatFormBase {
 
     $now = t('Displayed as %date', array('%date' => $this->dateService->format(REQUEST_TIME, $this->entity->id())));
     $form['date_format_pattern']['#field_suffix'] = ' <small id="edit-date-format-suffix">' . $now . '</small>';
-    $form['date_format_pattern']['#default_value'] = $this->entity->getPattern($this->patternType);
+    $form['date_format_pattern']['#default_value'] = $this->entity->getPattern();
 
     return $form;
   }

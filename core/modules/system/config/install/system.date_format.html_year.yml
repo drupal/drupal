@@ -3,6 +3,4 @@ label: 'HTML Year'
 status: true
 langcode: en
 locked: true
-pattern:
-  php: Y
-  intl: Y
+pattern: Y

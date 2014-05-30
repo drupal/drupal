@@ -3,6 +3,4 @@ label: 'HTML Week'
 status: true
 langcode: en
 locked: true
-pattern:
-  php: Y-\WW
-  intl: 'Y-''W''WW'
+pattern: Y-\WW

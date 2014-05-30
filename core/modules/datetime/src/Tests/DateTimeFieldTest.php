@@ -104,9 +104,8 @@ class DateTimeFieldTest extends WebTestBase {
     // Submit a valid date and ensure it is accepted.
     $value = '2012-12-31 00:00:00';
     $date = new DrupalDateTime($value);
-    $format_type = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
-    $date_format = entity_load('date_format', 'html_date')->getPattern($format_type);
-    $time_format = entity_load('date_format', 'html_time')->getPattern($format_type);
+    $date_format = entity_load('date_format', 'html_date')->getPattern();
+    $time_format = entity_load('date_format', 'html_time')->getPattern();
 
     $edit = array(
       'user_id' => 1,
@@ -174,9 +173,8 @@ class DateTimeFieldTest extends WebTestBase {
     // Submit a valid date and ensure it is accepted.
     $value = '2012-12-31 00:00:00';
     $date = new DrupalDateTime($value);
-    $format_type = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
-    $date_format = entity_load('date_format', 'html_date')->getPattern($format_type);
-    $time_format = entity_load('date_format', 'html_time')->getPattern($format_type);
+    $date_format = entity_load('date_format', 'html_date')->getPattern();
+    $time_format = entity_load('date_format', 'html_time')->getPattern();
 
     $edit = array(
       'user_id' => 1,

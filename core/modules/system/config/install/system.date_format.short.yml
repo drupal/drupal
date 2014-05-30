@@ -3,6 +3,4 @@ label: 'Default short date'
 status: true
 langcode: en
 locked: false
-pattern:
-  php: 'm/d/Y - H:i'
-  intl: 'MM/dd/yyyy - kk:mm'
+pattern: 'm/d/Y - H:i'

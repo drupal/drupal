@@ -132,7 +132,7 @@ class DateTimeTest extends WebTestBase {
     $date_format = entity_create('date_format', array(
       'id' => 'xss_short',
       'label' => 'XSS format',
-      'pattern' => array('php' => '\<\s\c\r\i\p\t\>\a\l\e\r\t\(\'\X\S\S\'\)\;\<\/\s\c\r\i\p\t\>'),
+      'pattern' => '\<\s\c\r\i\p\t\>\a\l\e\r\t\(\'\X\S\S\'\)\;\<\/\s\c\r\i\p\t\>',
     ));
     $date_format->save();
 

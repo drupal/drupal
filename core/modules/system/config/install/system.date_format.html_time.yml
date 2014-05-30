@@ -3,6 +3,4 @@ label: 'HTML Time'
 status: true
 langcode: en
 locked: true
-pattern:
-  php: 'H:i:s'
-  intl: 'H:mm:ss'
+pattern: 'H:i:s'

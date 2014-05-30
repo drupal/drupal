@@ -23,12 +23,7 @@ class DateFormat implements ElementInterface {
    * {@inheritdoc}
    */
   public function getFormElement(array $definition, Language $language, $value) {
-    if (class_exists('intlDateFormatter')) {
-      $description = $this->t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://userguide.icu-project.org/formatparse/datetime'));
-    }
-    else {
-      $description = $this->t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://php.net/manual/function.date.php'));
-    }
+    $description = $this->t('A user-defined date format. See the <a href="@url">PHP manual</a> for available options.', array('@url' => 'http://php.net/manual/function.date.php'));
     $format = $this->t('Displayed as %date_format', array('%date_format' => \Drupal::service('date')->format(REQUEST_TIME, 'custom', $value)));
     return array(
       '#type' => 'textfield',

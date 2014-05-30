@@ -134,15 +134,8 @@ system.date_format.*:
       type: boolean
       label: 'Locked'
     pattern:
-      type: mapping
-      label: 'Format string'
-      mapping:
-        php:
-          type: date_format
-          label: 'PHP date format'
-        intl:
-          type: string
-          label: 'Intl date format'
+      type: date_format
+      label: 'PHP date format'
     langcode:
       type: string
       label: 'Default language'

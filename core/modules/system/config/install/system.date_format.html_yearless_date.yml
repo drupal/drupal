@@ -3,6 +3,4 @@ label: 'HTML Yearless date'
 status: true
 langcode: en
 locked: true
-pattern:
-  php: m-d
-  intl: MM-d
+pattern: m-d

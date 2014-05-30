@@ -117,7 +117,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
 
     // Get translation and check we've only got the site name.
     $translation = $wrapper->getTranslation($langcode);
-    $format = $translation->get('pattern')->get('php')->getValue();
+    $format = $translation->get('pattern')->getValue();
     $this->assertEqual($format, 'D', 'Got the right date format pattern after translation.');
 
     // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should

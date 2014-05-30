@@ -3,6 +3,4 @@ label: 'HTML Month'
 status: true
 langcode: en
 locked: true
-pattern:
-  php: Y-m
-  intl: Y-MM
+pattern: Y-m

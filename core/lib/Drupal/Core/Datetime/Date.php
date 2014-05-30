@@ -142,23 +142,19 @@ class Date {
     );
     $date = DrupalDateTime::createFromTimestamp($timestamp, $this->timezones[$timezone], $create_settings);
 
-    // Find the appropriate format type.
-    $key = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
-
     // If we have a non-custom date format use the provided date format pattern.
     if ($date_format = $this->dateFormat($type, $langcode)) {
-      $format = $date_format->getPattern($key);
+      $format = $date_format->getPattern();
     }
 
     // Fall back to medium if a format was not found.
     if (empty($format)) {
-      $format = $this->dateFormat('fallback', $langcode)->getPattern($key);
+      $format = $this->dateFormat('fallback', $langcode)->getPattern();
     }
 
     // Call $date->format().
     $settings = array(
       'langcode' => $langcode,
-      'format_string_type' => $key,
     );
     return Xss::filter($date->format($format, $settings));
   }

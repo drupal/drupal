@@ -3,6 +3,4 @@ label: 'Fallback date format'
 status: true
 langcode: en
 locked: true
-pattern:
-  php: 'D, m/d/Y - H:i'
-  intl: 'ccc, MM/dd/yyyy - kk:mm'
+pattern: 'D, m/d/Y - H:i'
