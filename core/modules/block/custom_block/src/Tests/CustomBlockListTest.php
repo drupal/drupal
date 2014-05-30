@@ -21,7 +21,7 @@ class CustomBlockListTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'custom_block');
+  public static $modules = array('block', 'custom_block', 'config_translation');
 
   public static function getInfo() {
     return array(
@@ -35,7 +35,7 @@ class CustomBlockListTest extends WebTestBase {
    * Tests the custom block listing page.
    */
   public function testListing() {
-    $this->drupalLogin($this->drupalCreateUser(array('administer blocks')));
+    $this->drupalLogin($this->drupalCreateUser(array('administer blocks', 'translate configuration')));
     $this->drupalGet('admin/structure/block/custom-blocks');
 
     // Test for the page title.

@@ -174,7 +174,10 @@ function config_translation_config_translation_info(&$info) {
  */
 function config_translation_entity_operation(EntityInterface $entity) {
   $operations = array();
-  if (\Drupal::currentUser()->hasPermission('translate configuration')) {
+  $entity_type = $entity->getEntityType();
+  if ($entity_type->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface') &&
+    $entity->hasLinkTemplate('drupal:config-translation-overview') &&
+    \Drupal::currentUser()->hasPermission('translate configuration')) {
     $operations['translate'] = array(
       'title' => t('Translate'),
       'weight' => 50,
