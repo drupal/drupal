@@ -159,20 +159,6 @@ function text_summary($text, $format = NULL, $size = NULL) {
 }
 
 /**
- * Implements hook_filter_format_update().
- */
-function text_filter_format_update($format) {
-  \Drupal::entityManager()->clearCachedFieldDefinitions();
-}
-
-/**
- * Implements hook_filter_format_disable().
- */
-function text_filter_format_disable($format) {
-  \Drupal::entityManager()->clearCachedFieldDefinitions();
-}
-
-/**
  * Implements hook_field_formatter_info_alter().
  */
 function text_field_formatter_info_alter(&$info) {

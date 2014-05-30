@@ -51,11 +51,6 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->createFieldWithInstance('', $entity_type);
     $cardinality = $this->field->getCardinality();
 
-    // Configure the instance so that we test
-    // \Drupal\field_test\Plugin\Field\FieldType\TestItem::getCacheData().
-    $this->instance->settings['test_cached_data'] = TRUE;
-    $this->instance->save();
-
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
     // Preparation: create three revisions and store them in $revision array.
     $values = array();
@@ -80,10 +75,6 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     for ($delta = 0; $delta < $cardinality; $delta++) {
       // The field value loaded matches the one inserted or updated.
       $this->assertEqual($entity->{$this->field_name}[$delta]->value , $values[$current_revision][$delta]['value'], format_string('Current revision: expected value %delta was found.', array('%delta' => $delta)));
-      // The value added in
-      // \Drupal\field_test\Plugin\Field\FieldType\TestItem::getCacheData() is
-      // found.
-      $this->assertEqual($entity->{$this->field_name}[$delta]->additional_key, 'additional_value', format_string('Current revision: extra information for value %delta was found', array('%delta' => $delta)));
     }
 
     // Confirm each revision loads the correct data.
@@ -134,11 +125,6 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
           'field_name' => $field_names[$i],
           'entity_type' => $entity_type,
           'bundle' => $bundles[$bundle],
-          // Configure the instance so that we test
-          // \Drupal\field_test\Plugin\Field\FieldType\TestItem::getCacheData().
-          'settings' => array(
-            'test_cached_data' => TRUE,
-          ),
         ))->save();
       }
     }
@@ -169,8 +155,6 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
         }
         // The field value loaded matches the one inserted.
         $this->assertEqual($entity->{$field_name}->value, $values[$index][$field_name], format_string('Entity %index: expected value was found.', array('%index' => $index)));
-        // The value added in hook_field_load() is found.
-        $this->assertEqual($entity->{$field_name}->additional_key, 'additional_value', format_string('Entity %index: extra information was found', array('%index' => $index)));
       }
     }
   }
