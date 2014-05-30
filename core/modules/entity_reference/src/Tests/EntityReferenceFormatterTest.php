@@ -125,7 +125,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
       entity_view($referencing_entity, 'default');
 
       // Verify the un-accessible item still exists.
-      $this->assertEqual($referencing_entity->{$field_name}->value, $this->referencedEntity->id(), format_string('The un-accessible item still exists after @name formatter was executed.', array('@name' => $name)));
+      $this->assertEqual($referencing_entity->{$field_name}->target_id, $this->referencedEntity->id(), format_string('The un-accessible item still exists after @name formatter was executed.', array('@name' => $name)));
     }
   }
 

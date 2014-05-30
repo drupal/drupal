@@ -73,17 +73,17 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     $this->assertEqual('The first comment.', $comment->subject->value);
     $this->assertEqual('The first comment body.', $comment->comment_body->value);
     $this->assertEqual('filtered_html', $comment->comment_body->format);
-    $this->assertEqual(0, $comment->pid->value);
-    $this->assertEqual(1, $comment->entity_id->value);
+    $this->assertEqual(0, $comment->pid->target_id);
+    $this->assertEqual(1, $comment->entity_id->target_id);
     $this->assertEqual('node', $comment->entity_type->value);
     $this->assertEqual(Language::LANGCODE_NOT_SPECIFIED, $comment->language()->id);
 
     $comment = entity_load('comment', 2);
     $this->assertEqual('The response to the second comment.', $comment->subject->value);
-    $this->assertEqual(3, $comment->pid->value);
+    $this->assertEqual(3, $comment->pid->target_id);
 
     $comment = entity_load('comment', 3);
     $this->assertEqual('The second comment.', $comment->subject->value);
-    $this->assertEqual(0, $comment->pid->value);
+    $this->assertEqual(0, $comment->pid->target_id);
   }
 }

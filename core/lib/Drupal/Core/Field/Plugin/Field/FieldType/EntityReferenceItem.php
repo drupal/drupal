@@ -132,30 +132,6 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function __get($name) {
-    $name = ($name == 'value') ? 'target_id' : $name;
-    return parent::__get($name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function get($property_name) {
-    $property_name = ($property_name == 'value') ? 'target_id' : $property_name;
-    return parent::get($property_name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __isset($property_name) {
-    $property_name = ($property_name == 'value') ? 'target_id' : $property_name;
-    return parent::__isset($property_name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setValue($values, $notify = TRUE) {
     if (isset($values) && !is_array($values)) {
       // Directly update the property instead of invoking the parent, so it can

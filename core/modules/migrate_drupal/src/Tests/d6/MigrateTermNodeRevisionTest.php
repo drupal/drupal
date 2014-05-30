@@ -53,8 +53,8 @@ class MigrateTermNodeRevisionTest extends MigrateTermNodeTestBase {
   public function testTermRevisionNode() {
     $node = \Drupal::entityManager()->getStorage('node')->loadRevision(2);
     $this->assertEqual(count($node->vocabulary_3_i_2_), 2);
-    $this->assertEqual($node->vocabulary_3_i_2_[0]->value, 4);
-    $this->assertEqual($node->vocabulary_3_i_2_[1]->value, 5);
+    $this->assertEqual($node->vocabulary_3_i_2_[0]->target_id, 4);
+    $this->assertEqual($node->vocabulary_3_i_2_[1]->target_id, 5);
   }
 
 }
