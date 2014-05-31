@@ -356,4 +356,22 @@ interface EntityManagerInterface extends PluginManagerInterface {
    */
   public function getFormModeOptions($entity_type_id, $include_disabled = FALSE);
 
+  /**
+   * Loads an entity by UUID.
+   *
+   * Note that some entity types may not support UUIDs.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID to load from.
+   * @param string $uuid
+   *   The UUID of the entity to load.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|FALSE
+   *   The entity object, or FALSE if there is no entity with the given UUID.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   Thrown in case the requested entity type does not support UUIDs.
+   */
+  public function loadEntityByUuid($entity_type_id, $uuid);
+
 }

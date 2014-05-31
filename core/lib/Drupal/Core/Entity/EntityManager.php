@@ -876,4 +876,19 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadEntityByUuid($entity_type_id, $uuid) {
+    $entity_type = $this->getDefinition($entity_type_id);
+
+    if (!$uuid_key = $entity_type->getKey('uuid')) {
+      throw new EntityStorageException("Entity type $entity_type_id does not support UUIDs.");
+    }
+
+    $entities = $this->getStorage($entity_type_id)->loadByProperties(array($uuid_key => $uuid));
+
+    return reset($entities);
+  }
+
 }

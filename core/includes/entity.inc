@@ -141,8 +141,6 @@ function entity_revision_delete($entity_type, $revision_id) {
  *   The entity type to load; e.g., 'node' or 'user'.
  * @param string $uuid
  *   The UUID of the entity to load.
- * @param bool $reset
- *   Whether to reset the internal cache for the requested entity type.
  *
  * @return EntityInterface|FALSE
  *   The entity object, or FALSE if there is no entity with the given UUID.
@@ -151,20 +149,11 @@ function entity_revision_delete($entity_type, $revision_id) {
  *   Thrown in case the requested entity type does not support UUIDs.
  *
  * @see \Drupal\Core\Entity\EntityManagerInterface
+ *
+ * @deprecated Use \Drupal::entityManager()->loadEntityByUuid();
  */
-function entity_load_by_uuid($entity_type_id, $uuid, $reset = FALSE) {
-  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
-
-  if (!$uuid_key = $entity_type->getKey('uuid')) {
-    throw new EntityStorageException("Entity type $entity_type_id does not support UUIDs.");
-  }
-
-  $controller = \Drupal::entityManager()->getStorage($entity_type_id);
-  if ($reset) {
-    $controller->resetCache();
-  }
-  $entities = $controller->loadByProperties(array($uuid_key => $uuid));
-  return reset($entities);
+function entity_load_by_uuid($entity_type_id, $uuid) {
+  return \Drupal::entityManager()->loadEntityByUuid($entity_type_id, $uuid);
 }
 
 /**

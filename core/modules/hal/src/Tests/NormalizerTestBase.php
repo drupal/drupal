@@ -122,13 +122,14 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
       'bundle' => 'entity_test',
     ))->save();
 
-    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('default')), new RelationLinkManager(new MemoryBackend('default'), \Drupal::entityManager()));
+    $entity_manager = \Drupal::entityManager();
+    $link_manager = new LinkManager(new TypeLinkManager(new MemoryBackend('default')), new RelationLinkManager(new MemoryBackend('default'), $entity_manager));
 
-    $chain_resolver = new ChainEntityResolver(array(new UuidResolver(), new TargetIdResolver()));
+    $chain_resolver = new ChainEntityResolver(array(new UuidResolver($entity_manager), new TargetIdResolver()));
 
     // Set up the mock serializer.
     $normalizers = array(
-      new ContentEntityNormalizer($link_manager, \Drupal::entityManager(), \Drupal::moduleHandler()),
+      new ContentEntityNormalizer($link_manager, $entity_manager, \Drupal::moduleHandler()),
       new EntityReferenceItemNormalizer($link_manager, $chain_resolver),
       new FieldItemNormalizer(),
       new FieldNormalizer(),

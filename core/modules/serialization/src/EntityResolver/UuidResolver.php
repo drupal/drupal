@@ -7,6 +7,7 @@
 
 namespace Drupal\serialization\EntityResolver;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -15,14 +16,31 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class UuidResolver implements EntityResolverInterface {
 
   /**
-   * Implements \Drupal\serialization\EntityResolver\EntityResolverInterface::resolve().
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a UuidResolver object.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(EntityManagerInterface $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function resolve(NormalizerInterface $normalizer, $data, $entity_type) {
     // The normalizer is what knows the specification of the data being
     // deserialized. If it can return a UUID from that data, and if there's an
     // entity with that UUID, then return its ID.
-    if (($normalizer instanceof UuidReferenceInterface) && $uuid = $normalizer->getUuid($data)) {
-      if ($entity = entity_load_by_uuid($entity_type, $uuid)) {
+    if (($normalizer instanceof UuidReferenceInterface) && ($uuid = $normalizer->getUuid($data))) {
+      if ($entity = $this->entityManager->loadEntityByUuid($entity_type, $uuid)) {
         return $entity->id();
       }
     }
