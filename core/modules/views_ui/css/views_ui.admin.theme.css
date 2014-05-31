@@ -188,6 +188,7 @@ input.form-radio {
 
 .container-inline {
   padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .container-inline > * + *,
