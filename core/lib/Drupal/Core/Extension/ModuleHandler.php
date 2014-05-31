@@ -183,7 +183,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   protected function add($type, $name, $path) {
     $pathname = "$path/$name.info.yml";
-    $filename = file_exists("$path/$name.$type") ? "$name.$type" : NULL;
+    $filename = file_exists(DRUPAL_ROOT . "/$path/$name.$type") ? "$name.$type" : NULL;
     $this->moduleList[$name] = new Extension($type, $pathname, $filename);
     $this->resetImplementations();
   }

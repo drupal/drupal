@@ -90,8 +90,9 @@ $dirs = array_map('drupal_phpunit_find_extension_directories', $extension_roots)
 $dirs = array_reduce($dirs, 'array_merge', array());
 drupal_phpunit_register_extension_dirs($loader, $dirs);
 
-// Look into removing this later.
+// Look into removing these later.
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
+define('DRUPAL_ROOT', realpath(__DIR__ . '/../../'));
 
 // Set sane locale settings, to ensure consistent string, dates, times and
 // numbers handling.

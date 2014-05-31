@@ -1,0 +1,4 @@
+<?php
+
+// return an array to test nested merge in invoke all.
+function module_handler_test_all1_hook($arg) { return array($arg); }
