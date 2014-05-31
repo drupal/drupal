@@ -230,7 +230,8 @@ table tr th {
 }
 table tr th,
 table tr th a,
-table tr th a:hover {
+table tr th a:hover,
+table tr th a:focus {
   color: #fff;
   font-weight: bold;
 }
@@ -432,8 +433,8 @@ h1.site-name {
   margin-right: 0;
 }
 .region-header .form-text:hover,
-.region-header .form-text:focus,
-.region-header .form-text:active {
+.region-header .form-text:active,
+.region-header .form-text:focus {
   background: #fff;
   background: rgba(255, 255, 255, 0.8);
 }
@@ -457,8 +458,8 @@ h1.site-name {
   padding: 3px 7px;
 }
 .region-header .block-menu li a:hover,
-.region-header .block-menu li a:focus,
-.region-header .block-menu li a:active {
+.region-header .block-menu li a:active,
+.region-header .block-menu li a:focus {
   text-decoration: none;
   background: rgba(255, 255, 255, 0.15);
 }
@@ -1284,8 +1285,8 @@ div.password-confirm {
   border-radius: 15px;
 }
 .button:hover,
-.button:focus,
-.button:active {
+.button:active,
+.button:focus {
   text-decoration: none;
   color: #5a5a5a;
   background: #dedede;
@@ -1324,8 +1325,8 @@ details summary a {
   color: #3b3b3b;
 }
 details summary a:hover,
-details summary a:focus,
-details summary a:active {
+details summary a:active,
+details summary a:focus {
   color: #000;
 }
 details .details-description {
@@ -1432,16 +1433,17 @@ ul.vertical-tabs-list {
 .form-disabled textarea,
 .form-button-disabled,
 .form-button-disabled:hover,
-.form-button-disabled:focus,
-.form-button-disabled:active {
+.form-button-disabled:active,
+.form-button-disabled:focus
+ {
   background: #ededed;
   border-color: #bbb;
   color: #717171;
 }
 .image-button-disabled,
 .image-button-disabled:hover,
-.image-button-disabled:focus,
-.image-button-disabled:active {
+.image-button-disabled:active,
+.image-button-disabled:focus {
   -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
   opacity: .5;
@@ -1765,11 +1767,13 @@ div.admin-panel .description {
   background-color: white;
   border-radius: 5px;
 }
-.js .dropbutton-widget:hover {
+.js .dropbutton-widget:hover,
+.js .dropbutton-widget:focus {
   background-color: #f8f8f8;
   border-color: #b8b8b8;
 }
-.js .dropbutton-multiple.open .dropbutton-widget:hover {
+.js .dropbutton-multiple.open .dropbutton-widget:hover,
+.js .dropbutton-multiple.open .dropbutton-widget:focus {
   background-color: white;
 }
 
@@ -1962,7 +1966,8 @@ div.admin-panel .description {
   border-radius: 5px 5px 0 0;
 }
 
-.views-displays .secondary .open > a:hover {
+.views-displays .secondary .open > a:hover,
+.views-displays .secondary .open > a:focus {
   color: #0071B3;
 }
 
@@ -2014,7 +2019,8 @@ div.admin-panel .description {
   color: #0071B3;
 }
 
-.views-display-columns a.fieldset-title:hover {
+.views-display-columns a.fieldset-title:hover,
+.views-display-columns a.fieldset-title:focus {
   color: #018FE2;
 }
 

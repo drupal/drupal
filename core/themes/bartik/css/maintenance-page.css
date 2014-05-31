@@ -40,7 +40,7 @@ body.maintenance-page {
 .maintenance-page #name-and-slogan,
 .maintenance-page #name-and-slogan a,
 .maintenance-page #name-and-slogan a:hover,
-.maintenance-page #name-and-slogan a:hover {
+.maintenance-page #name-and-slogan a:focus {
   color: #777;
 }
 .maintenance-page  h1#page-title {
