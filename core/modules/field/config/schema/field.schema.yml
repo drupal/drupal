@@ -9,21 +9,9 @@ field.settings:
       label: 'Maximum number of field data records to purge'
 
 field.field.*.*:
-  type: mapping
+  type: config_entity
   label: 'Field'
   mapping:
-    id:
-      type: string
-      label: 'Machine name'
-    uuid:
-      type: string
-      label: 'UUID'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
     name:
       type: string
       label: 'Name'
@@ -56,26 +44,11 @@ field.field.*.*:
           sequence:
             - type: string
               label: 'Column'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 field.instance.*.*.*:
-  type: mapping
+  type: config_entity
   label: 'Field instance'
   mapping:
-    id:
-      type: string
-      label: 'ID'
-    uuid:
-      type: string
-      label: 'UUID'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
     field_uuid:
       type: string
       label: 'Field UUID'
@@ -88,9 +61,6 @@ field.instance.*.*.*:
     bundle:
       type: string
       label: 'Bundle'
-    label:
-      type: label
-      label: 'Label'
     description:
       type: text
       label: 'Help text'
@@ -107,9 +77,6 @@ field.instance.*.*.*:
     field_type:
       type: string
       label: 'Field type'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 entity_form_display.field.hidden:
   type: entity_field_form_display_base

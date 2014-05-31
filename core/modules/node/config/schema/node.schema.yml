@@ -12,18 +12,15 @@ node.settings:
       label: 'Use admin theme when editing or creating content'
 
 node.type.*:
-  type: mapping
+  type: config_entity
   label: 'Content type'
   mapping:
-    type:
-      type: string
-      label: 'Machine-readable name'
-    uuid:
-      type: string
-      label: 'UUID'
     name:
       type: label
       label: 'Name'
+    type:
+      type: string
+      label: 'Machine-readable name'
     description:
       type: text
       label: 'Description'
@@ -42,12 +39,6 @@ node.type.*:
       mapping:
         node:
           type: node.settings.node
-    status:
-      type: boolean
-      label: 'Enabled status of the configuration entity'
-    langcode:
-      type: string
-      label: 'Default language'
 
 node.settings.node:
   type: mapping

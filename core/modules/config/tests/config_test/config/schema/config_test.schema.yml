@@ -21,29 +21,14 @@ config_test.dynamic.*:
       label: 'Protected property'
 
 config_test_dynamic:
-  type: mapping
+  type: config_entity
   mapping:
-    id:
-      type: string
-      label: 'ID'
-    uuid:
-      type: string
-      label: 'UUID'
-    label:
-      type: label
-      label: 'Label'
     weight:
       type: integer
       label: 'Weight'
     style:
       type: string
       label: 'style'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
     protected_property:
       type: string
       label: 'Protected property'

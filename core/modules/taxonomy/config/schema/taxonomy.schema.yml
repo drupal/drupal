@@ -15,18 +15,15 @@ taxonomy.settings:
       label: 'Number of terms per page'
 
 taxonomy.vocabulary.*:
-  type: mapping
+  type: config_entity
   label: 'Vocabulary'
   mapping:
-    vid:
-      type: string
-      label: 'Machine name'
-    uuid:
-      type: string
-      label: 'UUID'
     name:
       type: label
       label: 'Name'
+    vid:
+      type: string
+      label: 'Machine name'
     description:
       type: label
       label: 'Description'
@@ -36,12 +33,6 @@ taxonomy.vocabulary.*:
     weight:
       type: integer
       label: 'Weight'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
 
 field.taxonomy_term_reference.settings:
   type: mapping

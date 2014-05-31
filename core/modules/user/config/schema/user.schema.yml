@@ -116,18 +116,9 @@ user.flood:
       label: 'User window'
 
 user.role.*:
-  type: mapping
+  type: config_entity
   label: 'User role settings'
   mapping:
-    id:
-      type: string
-      label: 'User role ID'
-    uuid:
-      type: string
-      label: 'UUID'
-    label:
-      type: label
-      label: 'User role label'
     weight:
       type: integer
       label: 'User role weight'
@@ -137,12 +128,6 @@ user.role.*:
       sequence:
         - type: string
           label: 'Permission'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
 
 action.configuration.user_add_role_action:
   type: mapping

@@ -115,21 +115,9 @@ system.date:
               label: 'Remind users at login if their time zone is not set'
 
 system.date_format.*:
-  type: mapping
+  type: config_entity
   label: 'Date format'
   mapping:
-    id:
-      type: string
-      label: 'Date format identifier'
-    uuid:
-      type: string
-      label: 'UUID'
-    label:
-      type: label
-      label: 'Date format label'
-    status:
-      type: boolean
-      label: 'Enabled'
     locked:
       type: boolean
       label: 'Locked'
@@ -272,50 +260,20 @@ system.theme:
       label: 'Default theme'
 
 system.menu.*:
-  type: mapping
+  type: config_entity
   label: 'Menu'
   mapping:
-    id:
-      type: string
-      label: 'Menu identifier'
-    uuid:
-      type: string
-      label: 'UUID'
-    label:
-      type: label
-      label: 'Menu label'
     description:
       type: label
       label: 'Menu description'
-    langcode:
-      type: string
-      label: 'Default language'
     locked:
-      type: boolean
-      label: ''
-    status:
       type: boolean
       label: ''
 
 system.action.*:
-  type: mapping
+  type: config_entity
   label: 'System action'
   mapping:
-    id:
-      type: string
-      label: 'ID'
-    uuid:
-      type: string
-      label: 'UUID'
-    label:
-      type: label
-      label: 'Label'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
     type:
       type: string
       label: 'Type'
@@ -324,9 +282,6 @@ system.action.*:
       label: 'Plugin'
     configuration:
       type: action.configuration.[%parent.plugin]
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 system.file:
   type: mapping

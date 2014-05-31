@@ -1,16 +1,11 @@
 # Schema for configuration files of the Image module.
 
 image.style.*:
-  type: mapping
+  type: config_entity
   label: 'Image style'
   mapping:
     name:
       type: string
-    uuid:
-      type: string
-      label: 'UUID'
-    label:
-      type: label
     effects:
       type: sequence
       sequence:
@@ -24,12 +19,6 @@ image.style.*:
               type: integer
             uuid:
               type: string
-    langcode:
-      type: string
-      label: 'Default language'
-    status:
-      type: boolean
-      label: 'Enabled'
 
 image.effect.image_crop:
   type: image_size

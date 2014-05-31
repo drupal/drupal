@@ -135,21 +135,27 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['label'] = 'Image style';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['name']['type'] = 'string';
-    $expected['mapping']['uuid']['label'] = 'UUID';
+    $expected['mapping']['id']['label'] = 'ID';
+    $expected['mapping']['id']['type'] = 'string';
     $expected['mapping']['uuid']['type'] = 'string';
+    $expected['mapping']['uuid']['label'] = 'UUID';
     $expected['mapping']['label']['type'] = 'label';
+    $expected['mapping']['label']['label'] = 'Label';
+    $expected['mapping']['langcode']['type'] = 'string';
+    $expected['mapping']['langcode']['label'] = 'Default language';
+    $expected['mapping']['status']['type'] = 'boolean';
+    $expected['mapping']['status']['label'] = 'Status';
+    $expected['mapping']['dependencies']['type'] = 'config_dependencies';
+    $expected['mapping']['dependencies']['label'] = 'Dependencies';
+    $expected['mapping']['name']['type'] = 'string';
     $expected['mapping']['effects']['type'] = 'sequence';
     $expected['mapping']['effects']['sequence'][0]['type'] = 'mapping';
     $expected['mapping']['effects']['sequence'][0]['mapping']['id']['type'] = 'string';
     $expected['mapping']['effects']['sequence'][0]['mapping']['data']['type'] = 'image.effect.[%parent.id]';
     $expected['mapping']['effects']['sequence'][0]['mapping']['weight']['type'] = 'integer';
     $expected['mapping']['effects']['sequence'][0]['mapping']['uuid']['type'] = 'string';
-    $expected['mapping']['langcode']['label'] = 'Default language';
-    $expected['mapping']['langcode']['type'] = 'string';
-    $expected['mapping']['status']['label'] = 'Enabled';
-    $expected['mapping']['status']['type'] = 'boolean';
 
-    $this->assertEqual($definition, $expected, 'Retrieved the right metadata for image.style.large');
+    $this->assertEqual($definition, $expected);
 
     // More complex, type based on a complex one.
     $definition = \Drupal::service('config.typed')->getDefinition('image.effect.image_scale');

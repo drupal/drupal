@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Editor module.
 
 editor.editor.*:
-  type: mapping
+  type: config_entity
   label: 'Text editor'
   mapping:
     format:
@@ -38,12 +38,3 @@ editor.editor.*:
             height:
               type: integer
               label: 'Maximum height'
-    status:
-      type: boolean
-      label: 'Status'
-    langcode:
-      type: string
-      label: 'Default language'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'

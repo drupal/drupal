@@ -65,24 +65,9 @@ search.settings:
               label: 'Tag a weight'
 
 search.page.*:
-  type: mapping
+  type: config_entity
   label: 'Search page'
   mapping:
-    id:
-      type: string
-      label: 'Machine-readable name'
-    label:
-      type: label
-      label: 'Label'
-    uuid:
-      type: string
-      label: 'UUID'
-    status:
-      type: boolean
-      label: 'Enabled status of the configuration entity'
-    langcode:
-      type: string
-      label: 'Default language'
     path:
       type: string
       label: 'Search page path'
@@ -94,6 +79,3 @@ search.page.*:
       label: 'Plugin'
     configuration:
       type: search.plugin.[%parent.plugin]
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'

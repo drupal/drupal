@@ -1,15 +1,9 @@
 # Schema for the configuration files of the Block module.
 
 block.block.*:
-  type: mapping
+  type: config_entity
   label: 'Block'
   mapping:
-    id:
-      type: string
-      label: 'ID'
-    uuid:
-      type: string
-      label: 'UUID'
     theme:
       type: string
       label: 'Theme'
@@ -22,9 +16,6 @@ block.block.*:
     provider:
       type: string
       label: 'Provider'
-    status:
-      type: boolean
-      label: 'Status'
     visibility:
       type: mapping
       label: 'Visibility settings'
@@ -97,9 +88,3 @@ block.block.*:
         provider:
           type: string
           label: 'Provider'
-    langcode:
-      type: string
-      label: 'Default language'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'

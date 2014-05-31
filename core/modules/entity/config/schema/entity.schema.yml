@@ -30,45 +30,21 @@ entity.view_mode.*.*:
       label: 'Dependencies'
 
 entity.form_mode.*.*:
-  type: mapping
+  type: config_entity
   label: 'Entity form mode settings'
   mapping:
-    id:
-      type: string
-      label: 'ID'
-    uuid:
-      type: string
-      label: 'UUID'
-    label:
-      type: label
-      label: 'The human-readable name of the form mode'
     targetEntityType:
       type: string
       label: 'Target entity type'
-    status:
-      type: boolean
-      label: 'Enabled'
     cache:
       type: boolean
       label: 'Cache'
-    langcode:
-      type: string
-      label: 'Default language'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 # Overview configuration information for view mode or form mode displays.
 entity.view_display.*.*.*:
-  type: mapping
+  type: config_entity
   label: 'Entity display'
   mapping:
-    id:
-      type: string
-      label: 'Entity display ID'
-    uuid:
-      type: string
-      label: 'UUID'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -78,9 +54,6 @@ entity.view_display.*.*.*:
     mode:
       type: string
       label: 'View or form mode machine name'
-    status:
-      type: boolean
-      label: 'Enabled'
     content:
       type: sequence
       label: 'Field display formatters'
@@ -92,21 +65,12 @@ entity.view_display.*.*.*:
       sequence:
         - type: boolean
           label: 'Value'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 # Overview configuration information for form mode displays.
 entity.form_display.*.*.*:
-  type: mapping
+  type: config_entity
   label: 'Entity form display'
   mapping:
-    id:
-      type: string
-      label: 'Entity display ID'
-    uuid:
-      type: string
-      label: 'UUID'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -121,12 +85,6 @@ entity.form_display.*.*.*:
       label: 'Field form display formatters'
       sequence:
         - type: entity_form_display.field.[type]
-    status:
-      type: boolean
-      label: 'Enabled'
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
     hidden:
       type: sequence
       label: 'Hidden'
