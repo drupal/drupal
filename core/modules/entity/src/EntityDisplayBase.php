@@ -108,13 +108,13 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
-    // @todo See http://drupal.org/node/1825044#comment-6847792: contact.module
-    // currently produces invalid entities with a NULL bundle in some cases.
-    // Add the validity checks back when http://drupal.org/node/1856556 is
-    // fixed.
-    // if (!isset($values['targetEntityType']) || !isset($values['bundle']) || !isset($values['mode'])) {
-    //   throw new \InvalidArgumentException('Missing required properties for an EntityDisplayBase entity.');
-    // }
+    if (!isset($values['targetEntityType']) || !isset($values['bundle']) || !isset($values['mode'])) {
+      throw new \InvalidArgumentException('Missing required properties for an EntityDisplay entity.');
+    }
+
+    if (!$this->entityManager()->getDefinition($values['targetEntityType'])->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+      throw new \InvalidArgumentException('EntityDisplay entities can only handle content entity types.');
+    }
 
     // A plugin manager and a context type needs to be set by extending classes.
     if (!isset($this->pluginManager)) {
