@@ -70,6 +70,9 @@ language.negotiation:
           sequence:
             - type: string
               label: 'Domain'
+    selected_langcode:
+      type: string
+      label: 'Selected language'
 
 language.mappings:
   type: sequence
