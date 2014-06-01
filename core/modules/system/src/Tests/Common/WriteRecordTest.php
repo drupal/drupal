@@ -7,19 +7,19 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests writing of data records with drupal_write_record().
  */
-class WriteRecordTest extends WebTestBase {
+class WriteRecordTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('database_test', 'node');
+  public static $modules = array('database_test');
 
   public static function getInfo() {
     return array(
@@ -33,6 +33,8 @@ class WriteRecordTest extends WebTestBase {
    * Tests the drupal_write_record() API function.
    */
   function testDrupalWriteRecord() {
+    $this->installSchema('database_test', array('test', 'test_null', 'test_serialized', 'test_composite_primary'));
+
     // Insert a record with no columns populated.
     $record = array();
     $insert_result = drupal_write_record('test', $record);
@@ -135,15 +137,14 @@ class WriteRecordTest extends WebTestBase {
     $this->assertTrue($update_result == SAVED_UPDATED, 'Correct value returned when a valid update is run without changing any values.');
 
     // Insert an object record for a table with a multi-field primary key.
-    $node_access = new \stdClass();
-    $node_access->nid = mt_rand();
-    $node_access->gid = mt_rand();
-    $node_access->realm = $this->randomName();
-    $insert_result = drupal_write_record('node_access', $node_access);
+    $composite_primary = new \stdClass();
+    $composite_primary->name = $this->randomName();
+    $composite_primary->age = mt_rand();
+    $insert_result = drupal_write_record('test_composite_primary', $composite_primary);
     $this->assertTrue($insert_result == SAVED_NEW, 'Correct value returned when a record is inserted with drupal_write_record() for a table with a multi-field primary key.');
 
     // Update the record.
-    $update_result = drupal_write_record('node_access', $node_access, array('nid', 'gid', 'realm'));
+    $update_result = drupal_write_record('test_composite_primary', $composite_primary, array('name', 'job'));
     $this->assertTrue($update_result == SAVED_UPDATED, 'Correct value returned when a record is updated with drupal_write_record() for a table with a multi-field primary key.');
   }
 

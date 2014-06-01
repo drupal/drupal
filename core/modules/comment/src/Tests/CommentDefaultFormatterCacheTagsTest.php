@@ -47,7 +47,8 @@ class CommentDefaultFormatterCacheTagsTest extends EntityUnitTestBase {
     $current_user->setAccount($this->createUser(array(), array('access comments')));
 
     // Install tables and config needed to render comments.
-    $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
+    $this->installSchema('comment', array('comment_entity_statistics'));
+    $this->installEntitySchema('comment');
     $this->installConfig(array('system', 'filter'));
 
     // Comment rendering generates links, so build the router.

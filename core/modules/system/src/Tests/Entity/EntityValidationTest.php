@@ -32,17 +32,10 @@ class EntityValidationTest extends EntityUnitTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users_data'));
-    $this->installSchema('entity_test', array(
-      'entity_test_mul',
-      'entity_test_mul_property_data',
-      'entity_test_rev',
-      'entity_test_rev_revision',
-      'entity_test_mulrev',
-      'entity_test_mulrev_revision',
-      'entity_test_mulrev_property_data',
-      'entity_test_mulrev_property_revision'
-    ));
+
+    $this->installEntitySchema('entity_test_rev');
+    $this->installEntitySchema('entity_test_mul');
+    $this->installEntitySchema('entity_test_mulrev');
 
     // Create the test field.
     entity_test_install();

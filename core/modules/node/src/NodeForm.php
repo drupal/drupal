@@ -36,16 +36,7 @@ class NodeForm extends ContentEntityForm {
     $type = entity_load('node_type', $node->bundle());
     $this->settings = $type->getModuleSettings('node');
 
-    // If this is a new node, fill in the default values.
-    if ($node->isNew()) {
-      foreach (array('status', 'promote', 'sticky') as $key) {
-        // Multistep node forms might have filled in something already.
-        if ($node->$key->isEmpty()) {
-          $node->$key = (int) !empty($this->settings['options'][$key]);
-        }
-      }
-    }
-    else {
+    if (!$node->isNew()) {
       $node->date = format_date($node->getCreatedTime(), 'custom', 'Y-m-d H:i:s O');
       // Remove the log message from the original node entity.
       $node->log = NULL;

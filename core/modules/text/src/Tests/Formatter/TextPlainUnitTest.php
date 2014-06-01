@@ -48,7 +48,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
 
     // Configure the theme system.
     $this->installConfig(array('system', 'field'));
-    $this->installSchema('entity_test', 'entity_test');
+    $this->installEntitySchema('entity_test');
 
     // @todo Add helper methods for all of the following.
 

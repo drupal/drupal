@@ -163,7 +163,7 @@ class CommentAttributesTest extends CommentTestBase {
     $anonymous_user['name'] = $this->randomName();
     $anonymous_user['mail'] = 'tester@simpletest.org';
     $anonymous_user['homepage'] = 'http://example.org/';
-    $comment2 = $this->saveComment($this->node->id(), NULL, $anonymous_user);
+    $comment2 = $this->saveComment($this->node->id(), 0, $anonymous_user);
 
     // Tests comment #2 as anonymous user.
     $parser = new \EasyRdf_Parser_Rdfa();

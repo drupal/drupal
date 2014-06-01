@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
@@ -114,7 +115,9 @@ class EntityReferenceItem extends FieldItemBase {
         'target_id' => array(
           'description' => 'The ID of the target entity.',
           'type' => 'varchar',
-          'length' => '255',
+          // If the target entities act as bundles for another entity type,
+          // their IDs should not exceed the maximum length for bundles.
+          'length' => $target_type_info->getBundleOf() ? EntityTypeInterface::BUNDLE_MAX_LENGTH : 255,
         ),
       );
     }

@@ -258,11 +258,12 @@ class File extends ContentEntityBase implements FileInterface {
     $fields['filesize'] = FieldDefinition::create('integer')
       ->setLabel(t('File size'))
       ->setDescription(t('The size of the file in bytes.'))
-      ->setSetting('unsigned', TRUE);
+      ->setSetting('unsigned', TRUE)
+      ->setSetting('size', 'big');
 
-    $fields['status'] = FieldDefinition::create('integer')
+    $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('Status'))
-      ->setDescription(t('The status of the file, temporary (0) and permanent (1).'));
+      ->setDescription(t('The status of the file, temporary (FALSE) and permanent (TRUE).'));
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))

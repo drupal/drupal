@@ -42,8 +42,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->installSchema('taxonomy', 'taxonomy_term_data');
-    $this->installSchema('taxonomy', 'taxonomy_term_hierarchy');
+    $this->installEntitySchema('taxonomy_term');
 
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),

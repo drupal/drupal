@@ -38,6 +38,7 @@ class MigrateBookTest extends MigrateDrupalTestBase {
       $entity = entity_create('node', array(
         'type' => 'story',
         'nid' => $i,
+        'status' => TRUE,
       ));
       $entity->enforceIsNew();
       $entity->save();

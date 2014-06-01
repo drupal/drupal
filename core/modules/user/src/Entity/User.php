@@ -18,6 +18,9 @@ use Drupal\user\UserInterface;
 /**
  * Defines the user entity class.
  *
+ * The base table name here is plural, despite Drupal table naming standards,
+ * because "user" is a reserved word in many databases.
+ *
  * @ContentEntityType(
  *   id = "user",
  *   label = @Translation("User"),
@@ -500,8 +503,11 @@ class User extends ContentEntityBase implements UserInterface {
 
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('User status'))
-      ->setDescription(t('Whether the user is active (1) or blocked (0).'))
-      ->setSetting('default_value', 1);
+      ->setDescription(t('Whether the user is active or blocked.'))
+      // @todo As the status has access implications users should be created as
+      //   blocked by default and activated explicitly if needed. See
+      //   https://drupal.org/node/2248969.
+      ->setSetting('default_value', TRUE);
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
@@ -525,6 +531,7 @@ class User extends ContentEntityBase implements UserInterface {
     // @todo Convert this to entity_reference_field, see
     // https://drupal.org/node/2044859.
     $fields['roles'] = FieldDefinition::create('string')
+      ->setCustomStorage(TRUE)
       ->setLabel(t('Roles'))
       ->setCardinality(FieldDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setDescription(t('The roles the user has.'));

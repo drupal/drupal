@@ -21,8 +21,8 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('entity_test', array('entity_test_mulrev', 'entity_test_mulrev_revision', 'entity_test_mulrev_property_revision', 'entity_test_mulrev_property_data'));
-    $this->installSchema('user', array('users', 'users_roles'));
+    $this->installEntitySchema('entity_test_mulrev');
+    $this->installEntitySchema('user');
     $this->installSchema('system', array('url_alias'));
     $this->installConfig(array('field'));
 

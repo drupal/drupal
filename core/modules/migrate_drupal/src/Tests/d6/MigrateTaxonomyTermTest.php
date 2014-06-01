@@ -60,11 +60,13 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
         'source_vid' => 1,
         'vid' => 'vocabulary_1_i_0_',
         'weight' => 0,
+        'parent' => array(0),
       ),
       '2' => array(
         'source_vid' => 2,
         'vid' => 'vocabulary_2_i_1_',
         'weight' => 3,
+        'parent' => array(0),
       ),
       '3' => array(
         'source_vid' => 2,
@@ -76,6 +78,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
         'source_vid' => 3,
         'vid' => 'vocabulary_3_i_2_',
         'weight' => 6,
+        'parent' => array(0),
       ),
       '5' => array(
         'source_vid' => 3,
@@ -98,8 +101,8 @@ class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
       $this->assertIdentical($term->description->value, "description of term {$tid} of vocabulary {$values['source_vid']}");
       $this->assertEqual($term->vid->target_id, $values['vid']);
       $this->assertEqual($term->weight->value, $values['weight']);
-      if (empty($values['parent'])) {
-        $this->assertNull($term->parent->value);
+      if ($values['parent'] === array(0)) {
+        $this->assertEqual($term->parent->value, 0);
       }
       else {
         $parents = array();

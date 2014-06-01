@@ -35,7 +35,7 @@ class HandlerAliasTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('user', 'users');
+    $this->installEntitySchema('user');
   }
 
   /**

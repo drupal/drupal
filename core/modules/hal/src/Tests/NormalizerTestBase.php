@@ -62,8 +62,8 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
   function setUp() {
     parent::setUp();
     $this->installSchema('system', array('url_alias', 'router'));
-    $this->installSchema('user', array('users'));
-    $this->installSchema('entity_test', array('entity_test'));
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('entity_test');
     $this->installConfig(array('field', 'language'));
 
     // Add English as a language.

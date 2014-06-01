@@ -29,8 +29,9 @@ abstract class FileManagedUnitTestBase extends DrupalUnitTestBase {
     file_test_reset();
 
     $this->installConfig(array('system'));
-    $this->installSchema('file', array('file_managed', 'file_usage'));
-    $this->installSchema('user', array('users', 'users_roles'));
+    $this->installEntitySchema('file');
+    $this->installEntitySchema('user');
+    $this->installSchema('file', array('file_usage'));
 
     // Make sure that a user with uid 1 exists, self::createFile() relies on
     // it.

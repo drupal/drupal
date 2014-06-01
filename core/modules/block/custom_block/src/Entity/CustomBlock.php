@@ -21,6 +21,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   label = @Translation("Custom Block"),
  *   bundle_label = @Translation("Custom Block type"),
  *   controllers = {
+ *     "storage" = "Drupal\custom_block\CustomBlockStorage",
  *     "access" = "Drupal\custom_block\CustomBlockAccessController",
  *     "list_builder" = "Drupal\custom_block\CustomBlockListBuilder",
  *     "view_builder" = "Drupal\custom_block\CustomBlockViewBuilder",
@@ -186,7 +187,7 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
       ->setSetting('target_type', 'custom_block_type')
       ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH);
 
-    $fields['log'] = FieldDefinition::create('string')
+    $fields['log'] = FieldDefinition::create('string_long')
       ->setLabel(t('Revision log message'))
       ->setDescription(t('The revision log message.'))
       ->setRevisionable(TRUE);

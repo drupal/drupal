@@ -84,10 +84,12 @@ class ViewExecutableTest extends ViewUnitTestBase {
   }
 
   protected function setUpFixtures() {
-    $this->installSchema('user', array('users'));
-    $this->installSchema('node', array('node', 'node_field_data'));
-    $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('comment');
+    $this->installSchema('comment', array('comment_entity_statistics'));
     $this->installConfig(array('field'));
+
     entity_create('node_type', array(
       'type' => 'page',
       'name' => 'Page',

@@ -66,7 +66,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->installSchema('entity_test', array('entity_test_rev', 'entity_test_rev_revision'));
+
+    $this->installEntitySchema('entity_test_rev');
     $entity_type = 'entity_test_rev';
 
     $this->field_name = strtolower($this->randomName());

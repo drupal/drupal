@@ -47,7 +47,8 @@ class ImageItemTest extends FieldUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installSchema('file', array('file_managed', 'file_usage'));
+    $this->installEntitySchema('file');
+    $this->installSchema('file', array('file_usage'));
 
     entity_create('field_config', array(
       'name' => 'image_test',

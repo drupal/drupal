@@ -35,8 +35,8 @@ interface FileStorageInterface extends EntityStorageInterface {
    * Get files older than the temporary maximum age,
    * \Drupal::config('system.file')->get('temporary_maximum_age').
    *
-   *  @return array
-   *    A list of files to be deleted.
+   *  @return int[]
+   *    A list of file IDs of the files to be deleted.
    */
   public function retrieveTemporaryFiles();
 

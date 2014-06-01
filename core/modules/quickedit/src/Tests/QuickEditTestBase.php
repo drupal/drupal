@@ -27,7 +27,7 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('entity_test', array('entity_test', 'entity_test_rev'));
+    $this->installEntitySchema('entity_test');
     $this->installConfig(array('field', 'filter'));
   }
 

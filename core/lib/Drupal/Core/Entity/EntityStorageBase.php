@@ -76,6 +76,7 @@ abstract class EntityStorageBase extends EntityControllerBase implements EntityS
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->idKey = $this->entityType->getKey('id');
+    $this->uuidKey = $this->entityType->getKey('uuid');
     $this->entityClass = $this->entityType->getClass();
   }
 

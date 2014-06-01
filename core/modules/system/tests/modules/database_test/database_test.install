@@ -245,5 +245,34 @@ function database_test_schema() {
     ),
   );
 
+  $schema['test_composite_primary'] = array(
+    'description' => 'Basic test table with a composite primary key',
+    'fields' => array(
+      'name' => array(
+        'description' => "A person's name",
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'binary' => TRUE,
+      ),
+      'age' => array(
+        'description' => "The person's age",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'job' => array(
+        'description' => "The person's job",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'Undefined',
+      ),
+    ),
+    'primary key' => array('name', 'age'),
+  );
+
   return $schema;
 }

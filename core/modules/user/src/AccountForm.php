@@ -378,9 +378,12 @@ abstract class AccountForm extends ContentEntityForm {
       // Move text value for user signature into 'signature'.
       $form_state['values']['signature'] = $form_state['values']['signature']['value'];
 
-      $user_schema = drupal_get_schema('users');
-      if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
-        $this->setFormError('signature', $form_state, $this->t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
+      // @todo Make the user signature field use a widget to benefit from
+      //   automatic typed data validation in https://drupal.org/node/2227381.
+      $field_definitions = $this->entityManager->getFieldDefinitions('user', $this->getEntity()->bundle());
+      $max_length = $field_definitions['signature']->getSetting('max_length');
+      if (drupal_strlen($form_state['values']['signature']) > $max_length) {
+        $this->setFormError('signature', $form_state, $this->t('The signature is too long: it must be %max characters or less.', array('%max' => $max_length)));
       }
     }
   }

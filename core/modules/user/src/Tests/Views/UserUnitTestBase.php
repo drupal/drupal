@@ -48,7 +48,7 @@ abstract class UserUnitTestBase extends ViewUnitTestBase {
 
     ViewTestData::createTestViews(get_class($this), array('user_test_views'));
 
-    $this->installSchema('user', array('users', 'users_roles'));
+    $this->installEntitySchema('user');
     $this->installSchema('system', 'sequences');
 
     $entity_manager = $this->container->get('entity.manager');

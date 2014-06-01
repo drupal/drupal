@@ -41,6 +41,9 @@ class IntegerItem extends NumericItemBase {
       'max' => '',
       'prefix' => '',
       'suffix' => '',
+      // Valid size property values include: 'tiny', 'small', 'medium', 'normal'
+      // and 'big'.
+      'size' => 'normal',
     ) + parent::defaultInstanceSettings();
   }
 
@@ -91,6 +94,9 @@ class IntegerItem extends NumericItemBase {
           'not null' => FALSE,
           // Expose the 'unsigned' setting in the field item schema.
           'unsigned' => $field_definition->getSetting('unsigned'),
+          // Expose the 'size' setting in the field item schema. For instance,
+          // supply 'big' as a value to produce a 'bigint' type.
+          'size' => $field_definition->getSetting('size'),
         ),
       ),
     );

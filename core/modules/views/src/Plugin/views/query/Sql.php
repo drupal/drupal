@@ -1425,7 +1425,6 @@ class Sql extends QueryPluginBase {
 
         $result = $query->execute();
         $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
-
         $view->result = iterator_to_array($result);
 
         $view->pager->postExecute($view->result);

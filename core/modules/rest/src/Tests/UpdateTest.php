@@ -58,7 +58,6 @@ class UpdateTest extends RESTTestBase {
     $patch_entity = entity_create($entity_type, $patch_values);
     // We don't want to overwrite the UUID.
     unset($patch_entity->uuid);
-    $patch_entity->save();
     $serialized = $serializer->serialize($patch_entity, $this->defaultFormat);
 
     // Update the entity over the REST API.

@@ -71,8 +71,7 @@ class Item extends ContentEntityBase implements ItemInterface {
       ->setLabel(t('Author'))
       ->setDescription(t('The author of the feed item.'));
 
-    // @todo Convert to a text field in https://drupal.org/node/2149845.
-    $fields['description'] = FieldDefinition::create('string')
+    $fields['description'] = FieldDefinition::create('string_long')
       ->setLabel(t('Description'))
       ->setDescription(t('The body of the feed item.'));
 
@@ -81,7 +80,7 @@ class Item extends ContentEntityBase implements ItemInterface {
       ->setDescription(t('Posted date of the feed item, as a Unix timestamp.'));
 
     // @todo Convert to a real UUID field in https://drupal.org/node/2149851.
-    $fields['guid'] = FieldDefinition::create('string')
+    $fields['guid'] = FieldDefinition::create('string_long')
       ->setLabel(t('GUID'))
       ->setDescription(t('Unique identifier for the feed item.'));
 

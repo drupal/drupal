@@ -115,7 +115,20 @@ display:
             group_items: {  }
           reduce_duplicates: '1'
           plugin_id: user_permissions
-      sorts: {  }
+      sorts:
+        uid:
+          id: uid
+          table: users
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: standard
+          provider: views
 human_name: test_filter_permission
 module: views
 id: test_filter_permission

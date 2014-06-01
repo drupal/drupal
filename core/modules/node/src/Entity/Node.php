@@ -65,6 +65,23 @@ class Node extends ContentEntityBase implements NodeInterface {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    // If no owner has been set explicitly, make the current user the owner.
+    if (!$this->getOwner()) {
+      $this->setOwnerId(\Drupal::currentUser()->id());
+    }
+    // If no revision author has been set explicitly, make the node owner the
+    // revision author.
+    if (!$this->getRevisionAuthor()) {
+      $this->setRevisionAuthorId($this->getOwnerId());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
@@ -340,6 +357,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Type'))
       ->setDescription(t('The node type.'))
       ->setSetting('target_type', 'node_type')
+      ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH)
       ->setReadOnly(TRUE);
 
     $fields['langcode'] = FieldDefinition::create('language')
@@ -353,10 +371,8 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 255,
-      ))
+      ->setSetting('default_value', '')
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'string',
@@ -372,10 +388,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Author'))
       ->setDescription(t('The user that is the node author.'))
       ->setRevisionable(TRUE)
-      ->setSettings(array(
-        'target_type' => 'user',
-        'default_value' => 0,
-      ))
+      ->setSetting('target_type', 'user')
       ->setTranslatable(TRUE);
 
     $fields['status'] = FieldDefinition::create('boolean')
@@ -408,7 +421,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
-    $fields['revision_timestamp'] = FieldDefinition::create('timestamp')
+    $fields['revision_timestamp'] = FieldDefinition::create('created')
       ->setLabel(t('Revision timestamp'))
       ->setDescription(t('The time that the current revision was created.'))
       ->setQueryable(FALSE)
@@ -417,11 +430,11 @@ class Node extends ContentEntityBase implements NodeInterface {
     $fields['revision_uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Revision user ID'))
       ->setDescription(t('The user ID of the author of the current revision.'))
-      ->setSettings(array('target_type' => 'user'))
+      ->setSetting('target_type', 'user')
       ->setQueryable(FALSE)
       ->setRevisionable(TRUE);
 
-    $fields['log'] = FieldDefinition::create('string')
+    $fields['log'] = FieldDefinition::create('string_long')
       ->setLabel(t('Log'))
       ->setDescription(t('The log entry explaining the changes in this revision.'))
       ->setRevisionable(TRUE)
@@ -436,10 +449,30 @@ class Node extends ContentEntityBase implements NodeInterface {
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $node_type = node_type_load($bundle);
     $fields = array();
+
+    // When deleting a node type the corresponding node displays are deleted as
+    // well. In order to be deleted, they need to be loaded first. Entity
+    // displays, however, fetch the field definitions of the respective entity
+    // type to fill in their defaults. Therefore this function ends up being
+    // called with a non-existing bundle.
+    // @todo Fix this in https://drupal.org/node/2248795
+    if (!$node_type) {
+      return $fields;
+    }
+
     if (isset($node_type->title_label)) {
       $fields['title'] = clone $base_field_definitions['title'];
       $fields['title']->setLabel($node_type->title_label);
     }
+
+    $options = $node_type->getModuleSettings('node')['options'];
+    $fields['status'] = clone $base_field_definitions['status'];
+    $fields['status']->setSetting('default_value', !empty($options['status']) ? NODE_PUBLISHED : NODE_NOT_PUBLISHED);
+    $fields['promote'] = clone $base_field_definitions['promote'];
+    $fields['promote']->setSetting('default_value', !empty($options['promote']) ? NODE_PROMOTED : NODE_NOT_PROMOTED);
+    $fields['sticky'] = clone $base_field_definitions['sticky'];
+    $fields['sticky']->setSetting('default_value', !empty($options['sticky']) ? NODE_STICKY : NODE_NOT_STICKY);
+
     return $fields;
   }
 

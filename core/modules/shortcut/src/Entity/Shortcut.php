@@ -167,6 +167,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setLabel(t('Shortcut set'))
       ->setDescription(t('The bundle of the shortcut.'))
       ->setSetting('target_type', 'shortcut_set')
+      ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH)
       ->setRequired(TRUE);
 
     $fields['title'] = FieldDefinition::create('string')
@@ -174,10 +175,8 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setDescription(t('The name of the shortcut.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 255,
-      ))
+      ->setSetting('default_value', '')
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('form', array(
         'type' => 'string',
         'weight' => -10,
@@ -201,10 +200,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
     $fields['langcode'] = FieldDefinition::create('language')
       ->setLabel(t('Language code'))
       ->setDescription(t('The language code of the shortcut.'));
-
-    $fields['default_langcode'] = FieldDefinition::create('boolean')
-      ->setLabel(t('Default language'))
-      ->setDescription(t('Flag to indicate whether this is the default language.'));
 
     $fields['path'] = FieldDefinition::create('string')
       ->setLabel(t('Path'))

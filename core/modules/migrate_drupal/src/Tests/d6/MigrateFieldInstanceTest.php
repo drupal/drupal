@@ -107,6 +107,7 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
       'prefix' => 'pref',
       'suffix' => 'suf',
       'unsigned' => '',
+      'size' => 'normal',
     );
     $this->assertEqual($field->getSettings(), $expected);
 

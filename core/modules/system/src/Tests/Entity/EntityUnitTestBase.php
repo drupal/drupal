@@ -42,9 +42,11 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
     $this->entityManager = $this->container->get('entity.manager');
     $this->state = $this->container->get('state');
 
-    $this->installSchema('user', array('users', 'users_roles'));
     $this->installSchema('system', 'sequences');
-    $this->installSchema('entity_test', 'entity_test');
+
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('entity_test');
+
     $this->installConfig(array('field'));
   }
 

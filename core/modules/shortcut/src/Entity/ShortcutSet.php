@@ -63,15 +63,17 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // Generate menu-compatible set name.
-    if (!$update && !$this->getOriginalId()) {
+    if (!$update && !$this->isSyncing()) {
       // Save a new shortcut set with links copied from the user's default set.
       $default_set = shortcut_default_set();
-      foreach ($default_set->getShortcuts() as $shortcut) {
-        $shortcut = $shortcut->createDuplicate();
-        $shortcut->enforceIsNew();
-        $shortcut->shortcut_set->target_id = $this->id();
-        $shortcut->save();
+      // This is the default set, do not copy shortcuts.
+      if ($default_set->id() != $this->id()) {
+        foreach ($default_set->getShortcuts() as $shortcut) {
+          $shortcut = $shortcut->createDuplicate();
+          $shortcut->enforceIsNew();
+          $shortcut->shortcut_set->target_id = $this->id();
+          $shortcut->save();
+        }
       }
     }
   }

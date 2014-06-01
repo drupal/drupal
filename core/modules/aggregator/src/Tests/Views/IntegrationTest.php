@@ -21,7 +21,7 @@ class IntegrationTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('aggregator', 'aggregator_test_views', 'system', 'entity', 'field');
+  public static $modules = array('aggregator', 'aggregator_test_views', 'system', 'entity', 'field', 'options');
 
   /**
    * Views used by this test.
@@ -55,7 +55,8 @@ class IntegrationTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('aggregator', array('aggregator_item', 'aggregator_feed'));
+    $this->installEntitySchema('aggregator_item');
+    $this->installEntitySchema('aggregator_feed');
 
     ViewTestData::createTestViews(get_class($this), array('aggregator_test_views'));
 

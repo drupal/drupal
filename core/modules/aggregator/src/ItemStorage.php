@@ -22,6 +22,29 @@ class ItemStorage extends ContentEntityDatabaseStorage implements ItemStorageInt
   /**
    * {@inheritdoc}
    */
+  public function getSchema() {
+    $schema = parent::getSchema();
+
+    // Marking the respective fields as NOT NULL makes the indexes more
+    // performant.
+    $schema['aggregator_item']['fields']['timestamp']['not null'] = TRUE;
+
+    $schema['aggregator_item']['indexes'] += array(
+      'aggregator_item__timestamp' => array('timestamp'),
+    );
+    $schema['aggregator_item']['foreign keys'] += array(
+      'aggregator_item__aggregator_feed' => array(
+        'table' => 'aggregator_feed',
+        'columns' => array('fid' => 'fid'),
+      ),
+    );
+
+    return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getItemCount(FeedInterface $feed) {
     $query = \Drupal::entityQuery('aggregator_item')
       ->condition('fid', $feed->id())

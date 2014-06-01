@@ -34,13 +34,22 @@ class UserAdminTest extends WebTestBase {
    */
   function testUserAdmin() {
     $user_a = $this->drupalCreateUser();
+    $user_a->name = 'User A';
     $user_a->mail = $this->randomName() . '@example.com';
     $user_a->save();
     $user_b = $this->drupalCreateUser(array('administer taxonomy'));
+    $user_b->name = 'User B';
+    $user_b->save();
     $user_c = $this->drupalCreateUser(array('administer taxonomy'));
+    $user_c->name = 'User C';
+    $user_c->save();
 
     // Create admin user to delete registered user.
     $admin_user = $this->drupalCreateUser(array('administer users'));
+    // Use a predictable name so that we can reliably order the user admin page
+    // by name.
+    $admin_user->name = 'Admin user';
+    $admin_user->save();
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/people');
     $this->assertText($user_a->getUsername(), 'Found user A on admin users page');
@@ -86,8 +95,12 @@ class UserAdminTest extends WebTestBase {
     $this->assertTrue($account->isActive(), 'User C not blocked');
     $edit = array();
     $edit['action'] = 'user_block_user_action';
-    $edit['user_bulk_form[1]'] = TRUE;
-    $this->drupalPostForm('admin/people', $edit, t('Apply'));
+    $edit['user_bulk_form[4]'] = TRUE;
+    $this->drupalPostForm('admin/people', $edit, t('Apply'), array(
+      // Sort the table by username so that we know reliably which user will be
+      // targeted with the blocking action.
+      'query' => array('order' => 'name', 'sort' => 'asc')
+    ));
     $account = user_load($user_c->id(), TRUE);
     $this->assertTrue($account->isBlocked(), 'User C blocked');
 
@@ -100,8 +113,12 @@ class UserAdminTest extends WebTestBase {
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = array();
     $editunblock['action'] = 'user_unblock_user_action';
-    $editunblock['user_bulk_form[1]'] = TRUE;
-    $this->drupalPostForm('admin/people', $editunblock, t('Apply'));
+    $editunblock['user_bulk_form[4]'] = TRUE;
+    $this->drupalPostForm('admin/people', $editunblock, t('Apply'), array(
+      // Sort the table by username so that we know reliably which user will be
+      // targeted with the blocking action.
+      'query' => array('order' => 'name', 'sort' => 'asc')
+    ));
     $account = user_load($user_c->id(), TRUE);
     $this->assertTrue($account->isActive(), 'User C unblocked');
     $this->assertMail("to", $account->getEmail(), "Activation mail sent to user C");

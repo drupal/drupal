@@ -36,9 +36,9 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    */
   function setUp() {
     parent::setUp();
-    $this->installSchema('entity_test', 'entity_test');
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('user');
     $this->installSchema('system', array('sequences'));
-    $this->installSchema('user', array('users', 'users_roles'));
 
     // Set default storage backend and configure the theme system.
     $this->installConfig(array('field', 'system'));

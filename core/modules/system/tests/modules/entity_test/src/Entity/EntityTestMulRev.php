@@ -46,23 +46,4 @@ use Drupal\entity_test\Entity\EntityTestRev;
  */
 class EntityTestMulRev extends EntityTestRev {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields = parent::baseFieldDefinitions($entity_type);
-
-    $fields['revision_id'] = FieldDefinition::create('integer')
-      ->setLabel(t('Revision ID'))
-      ->setDescription(t('The version id of the test entity.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
-
-    $fields['default_langcode'] = FieldDefinition::create('boolean')
-      ->setLabel(t('Default language'))
-      ->setDescription(t('Flag to indicate whether this is the default language.'));
-
-    return $fields;
-  }
-
 }

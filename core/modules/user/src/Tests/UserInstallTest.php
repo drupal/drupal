@@ -37,7 +37,9 @@ class UserInstallTest extends DrupalUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users'));
+    $this->container->get('module_handler')->loadInclude('user', 'install');
+    $this->installEntitySchema('user');
+    user_install();
   }
 
 
@@ -45,7 +47,6 @@ class UserInstallTest extends DrupalUnitTestBase {
    * Test that the initial users have correct values.
    */
   public function testUserInstall() {
-    user_install();
     $anon = db_query('SELECT * FROM {users} WHERE uid = 0')->fetchObject();
     $admin = db_query('SELECT * FROM {users} WHERE uid = 1')->fetchObject();
     $this->assertFalse(empty($anon->uuid), 'Anon user has a UUID');

@@ -30,7 +30,7 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
     // filter_permission() calls into url() to output a link in the description.
     $this->installSchema('system', 'url_alias');
 
-    $this->installSchema('user', array('users_roles'));
+    $this->installEntitySchema('user');
 
     // Install filter_test module, which ships with custom default format.
     $this->installConfig(array('user', 'filter_test'));

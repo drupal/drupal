@@ -28,7 +28,6 @@ use Drupal\Core\Field\FieldDefinition;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *     "revision" = "revision_id",
  *     "bundle" = "type"
  *   },
  *   links = {

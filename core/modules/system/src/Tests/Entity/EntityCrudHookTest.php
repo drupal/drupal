@@ -44,9 +44,14 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
   public function setUp() {
     parent::setUp();
+
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('comment');
+
     $this->installSchema('user', array('users_data'));
-    $this->installSchema('node', array('node', 'node_revision', 'node_field_data', 'node_field_revision', 'node_access'));
-    $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
+    $this->installSchema('file', array('file_usage'));
+    $this->installSchema('node', array('node_access'));
+    $this->installSchema('comment', array('comment_entity_statistics'));
   }
 
   /**
@@ -219,7 +224,8 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    * Tests hook invocations for CRUD operations on files.
    */
   public function testFileHooks() {
-    $this->installSchema('file', array('file_managed', 'file_usage'));
+    $this->installEntitySchema('file');
+
     $url = 'public://entity_crud_hook_test.file';
     file_put_contents($url, 'Test test test');
     $file = entity_create('file', array(
@@ -346,7 +352,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    * Tests hook invocations for CRUD operations on taxonomy terms.
    */
   public function testTaxonomyTermHooks() {
-    $this->installSchema('taxonomy', array('taxonomy_term_data', 'taxonomy_term_hierarchy'));
+    $this->installEntitySchema('taxonomy_term');
 
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',
@@ -415,7 +421,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    * Tests hook invocations for CRUD operations on taxonomy vocabularies.
    */
   public function testTaxonomyVocabularyHooks() {
-    $this->installSchema('taxonomy', array('taxonomy_term_data', 'taxonomy_term_hierarchy'));
+    $this->installEntitySchema('taxonomy_term');
 
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Test vocabulary',

@@ -31,11 +31,8 @@ class NodeLastChangedTest extends DrupalUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->installSchema('node', 'node');
-    $this->installSchema('node', 'node_revision');
-    $this->installSchema('node', 'node_field_data');
-    $this->installSchema('node', 'node_field_revision');
-    $this->installSchema('user', array('users'));
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('user');
   }
 
   /**

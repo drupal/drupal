@@ -44,7 +44,7 @@ class TypedDataTest extends DrupalUnitTestBase {
   public function setUp() {
     parent::setup();
 
-    $this->installSchema('file', array('file_managed', "file_usage"));
+    $this->installEntitySchema('file');
     $this->typedDataManager = $this->container->get('typed_data_manager');
   }
 

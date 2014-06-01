@@ -37,7 +37,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->installSchema('entity_test', array('entity_test_rev', 'entity_test_rev_revision'));
+    $this->installEntitySchema('entity_test_rev');
   }
 
   /**

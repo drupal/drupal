@@ -807,7 +807,10 @@ function node_user_cancel($edit, $account, $method) {
       // Anonymize all of the nodes for this old account.
       module_load_include('inc', 'node', 'node.admin');
       $vids = \Drupal::entityManager()->getStorage('node')->userRevisionIds($account);
-      node_mass_update($vids, array('uid' => 0), NULL, TRUE, TRUE);
+      node_mass_update($vids, array(
+        'uid' => 0,
+        'revision_uid' => 0,
+      ), NULL, TRUE, TRUE);
       break;
   }
 }

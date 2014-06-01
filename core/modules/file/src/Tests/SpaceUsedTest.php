@@ -23,20 +23,40 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
     parent::setUp();
 
     // Create records for a couple of users with different sizes.
-    $file = array('uid' => 2, 'uri' => 'public://example1.txt', 'filesize' => 50, 'status' => FILE_STATUS_PERMANENT);
-    db_insert('file_managed')->fields($file)->execute();
-    $file = array('uid' => 2, 'uri' => 'public://example2.txt', 'filesize' => 20, 'status' => FILE_STATUS_PERMANENT);
-    db_insert('file_managed')->fields($file)->execute();
-    $file = array('uid' => 3, 'uri' => 'public://example3.txt', 'filesize' => 100, 'status' => FILE_STATUS_PERMANENT);
-    db_insert('file_managed')->fields($file)->execute();
-    $file = array('uid' => 3, 'uri' => 'public://example4.txt', 'filesize' => 200, 'status' => FILE_STATUS_PERMANENT);
-    db_insert('file_managed')->fields($file)->execute();
+    $this->createFileWithSize('public://example1.txt', 50, 2);
+    $this->createFileWithSize('public://example2.txt', 20, 2);
+    $this->createFileWithSize('public://example3.txt', 100, 3);
+    $this->createFileWithSize('public://example4.txt', 200, 3);
 
     // Now create some non-permanent files.
-    $file = array('uid' => 2, 'uri' => 'public://example5.txt', 'filesize' => 1, 'status' => 0);
-    db_insert('file_managed')->fields($file)->execute();
-    $file = array('uid' => 3, 'uri' => 'public://example6.txt', 'filesize' => 3, 'status' => 0);
-    db_insert('file_managed')->fields($file)->execute();
+    $this->createFileWithSize('public://example5.txt', 1, 2, 0);
+    $this->createFileWithSize('public://example6.txt', 3, 3, 0);
+  }
+
+  /**
+   * Creates a file with a given size.
+   *
+   * @param string $uri
+   *   URI of the file to create.
+   * @param int $size
+   *   Size of the file.
+   * @param int $uid
+   *   File owner ID.
+   * @param int $status
+   *   Whether the file should be permanent or temporary.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The file entity.
+   */
+  protected function createFileWithSize($uri, $size, $uid, $status = FILE_STATUS_PERMANENT) {
+    file_put_contents($uri, $this->randomName($size));
+    $file = entity_create('file', array(
+      'uri' => $uri,
+      'uid' => $uid,
+      'status' => $status,
+    ));
+    $file->save();
+    return $file;
   }
 
   /**

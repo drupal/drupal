@@ -52,7 +52,8 @@ class UriItem extends StringItem {
     return array(
       'columns' => array(
         'value' => array(
-          'type' => 'text',
+          'type' => 'varchar',
+          'length' => (int) $field_definition->getSetting('max_length'),
           'not null' => TRUE,
         ),
       ),

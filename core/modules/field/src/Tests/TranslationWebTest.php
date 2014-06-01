@@ -33,7 +33,7 @@ class TranslationWebTest extends FieldTestBase {
    *
    * @var string
    */
-  protected $entity_type = 'entity_test_rev';
+  protected $entity_type = 'entity_test_mulrev';
 
   /**
    * The field to use in this test.
@@ -78,7 +78,7 @@ class TranslationWebTest extends FieldTestBase {
       'bundle' => $this->entity_type,
     );
     entity_create('field_instance_config', $instance)->save();
-    $this->instance = entity_load('field_instance_config', 'entity_test.' . $instance['bundle'] . '.' . $this->field_name);
+    $this->instance = entity_load('field_instance_config', $this->entity_type . '.' . $instance['bundle'] . '.' . $this->field_name);
 
     entity_get_form_display($this->entity_type, $this->entity_type, 'default')
       ->setComponent($this->field_name)

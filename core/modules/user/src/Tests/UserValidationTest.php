@@ -36,7 +36,7 @@ class UserValidationTest extends DrupalUnitTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users'));
+    $this->installEntitySchema('user');
     $this->installSchema('system', array('sequences'));
   }
 

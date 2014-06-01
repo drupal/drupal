@@ -127,4 +127,50 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       ->fetchCol();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSchema() {
+    $schema = parent::getSchema();
+
+    // Marking the respective fields as NOT NULL makes the indexes more
+    // performant.
+    $schema['comment']['fields']['pid']['not null'] = TRUE;
+    $schema['comment']['fields']['status']['not null'] = TRUE;
+    $schema['comment']['fields']['entity_id']['not null'] = TRUE;
+    $schema['comment']['fields']['field_id']['not null'] = TRUE;
+    $schema['comment']['fields']['created']['not null'] = TRUE;
+    $schema['comment']['fields']['thread']['not null'] = TRUE;
+
+    unset($schema['comment']['indexes']['field__pid']);
+    unset($schema['comment']['indexes']['field__entity_id']);
+    $schema['comment']['indexes'] += array(
+      'comment__status_pid' => array('pid', 'status'),
+      'comment__num_new' => array(
+        'entity_id',
+        array('entity_type', 32),
+        array('field_id', 32),
+        'status',
+        'created',
+        'cid',
+        'thread',
+      ),
+      'comment__entity_langcode' => array(
+        'entity_id',
+        array('entity_type', 32),
+        array('field_id', 32),
+        'langcode',
+      ),
+      'comment__created' => array('created'),
+    );
+    $schema['comment']['foreign keys'] += array(
+      'comment__author' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    );
+
+    return $schema;
+  }
+
 }

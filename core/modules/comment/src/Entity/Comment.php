@@ -273,7 +273,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
-      ->setDescription(t('A boolean indicating whether the comment is published.'));
+      ->setDescription(t('A boolean indicating whether the comment is published.'))
+      ->setSetting('default_value', TRUE);
 
     $fields['thread'] = FieldDefinition::create('string')
       ->setLabel(t('Thread place'))

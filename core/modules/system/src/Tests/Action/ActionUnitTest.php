@@ -45,7 +45,7 @@ class ActionUnitTest extends DrupalUnitTestBase {
     parent::setUp();
 
     $this->actionManager = $this->container->get('plugin.manager.action');
-    $this->installSchema('user', array('users', 'users_roles'));
+    $this->installEntitySchema('user');
     $this->installSchema('system', array('sequences'));
   }
 

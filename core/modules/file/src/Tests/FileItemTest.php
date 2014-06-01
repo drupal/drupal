@@ -42,8 +42,8 @@ class FileItemTest extends FieldUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installSchema('file', 'file_managed');
-    $this->installSchema('file', 'file_usage');
+    $this->installEntitySchema('file');
+    $this->installSchema('file', array('file_usage'));
 
     entity_create('field_config', array(
       'name' => 'file_test',

@@ -49,7 +49,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('entity_test', array('entity_test'));
+    $this->installEntitySchema('entity_test');
 
     $this->storage = $this->container->get('entity.manager')->getStorage('entity_test');
   }
