@@ -91,6 +91,13 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   /**
    * {@inheritdoc}
    */
+  public function label() {
+    return $this->getFilterFormat()->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function calculateDependencies() {
     parent::calculateDependencies();
     // Create a dependency on the associated FilterFormat.
