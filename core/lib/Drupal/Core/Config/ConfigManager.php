@@ -36,7 +36,7 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * The typed config manager.
    *
-   * @var \Drupal\Core\Config\TypedConfigManager
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
    */
   protected $typedConfigManager;
 
@@ -82,7 +82,7 @@ class ConfigManager implements ConfigManagerInterface {
    *   The entity manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\Core\Config\TypedConfigManager $typed_config_manager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
    *   The typed config manager.
    * @param \Drupal\Core\StringTranslation\TranslationManager $string_translation
    *   The string translation service.
@@ -91,7 +91,7 @@ class ConfigManager implements ConfigManagerInterface {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TypedConfigManager $typed_config_manager, TranslationManager $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationManager $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher) {
     $this->entityManager = $entity_manager;
     $this->configFactory = $config_factory;
     $this->typedConfigManager = $typed_config_manager;

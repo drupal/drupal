@@ -29,14 +29,14 @@ class ConfigEntityMapperTest extends UnitTestCase {
   /**
    * The entity manager used for testing.
    *
-   * @var \Drupal\Core\Config\TypedConfigManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityManager;
 
   /**
    * The entity instance used for testing.
    *
-   * @var \Drupal\Core\Config\TypedConfigManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entity;
 

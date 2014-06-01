@@ -18,6 +18,58 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDiscoveryInterface {
 
   /**
+   * Gets typed configuration data.
+   *
+   * @param string $name
+   *   Configuration object name.
+   *
+   * @return \Drupal\Core\Config\Schema\Element
+   *   Typed configuration element.
+   */
+  public function get($name);
+
+  /**
+   * Instantiates a typed configuration object.
+   *
+   * @param string $data_type
+   *   The data type, for which a typed configuration object should be
+   *   instantiated.
+   * @param array $configuration
+   *   The plugin configuration array, i.e. an array with the following keys:
+   *   - data definition: The data definition array.
+   *   - name: (optional) If a property or list item is to be created, the name
+   *     of the property or the delta of the list item.
+   *   - parent: (optional) If a property or list item is to be created, the
+   *     parent typed data object implementing either the ListInterface or the
+   *     ComplexDataInterface.
+   *
+   * @return \Drupal\Core\Config\Schema\Element
+   *   The instantiated typed configuration object.
+   */
+  public function createInstance($data_type, array $configuration = array());
+
+  /**
+   * Creates a new typed configuration object instance.
+   *
+   * @param array $definition
+   *   The data definition of the typed data object
+   * @param mixed $value
+   *   (optional) The data value. If set, it has to match one of the supported
+   *   data type format as documented for the data type classes.
+   * @param string $name
+   *   (optional) If a property or list item is to be created, the name of the
+   *   property or the delta of the list item.
+   * @param mixed $parent
+   *   (optional) If a property or list item is to be created, the parent typed
+   *   data object implementing either the ListInterface or the
+   *   ComplexDataInterface.
+   *
+   * @return \Drupal\Core\Config\Schema\Element
+   *   The instantiated typed data object.
+   */
+  public function create(array $definition, $value = NULL, $name = NULL, $parent = NULL);
+
+  /**
    * Checks if the configuration schema with the given config name exists.
    *
    * @param string $name

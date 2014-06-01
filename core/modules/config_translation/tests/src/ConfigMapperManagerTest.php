@@ -30,7 +30,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
   /**
    * The typed configuration manager used for testing.
    *
-   * @var \Drupal\Core\Config\TypedConfigManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $typedConfigManager;
 
@@ -53,8 +53,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
       ->with(Language::TYPE_INTERFACE)
       ->will($this->returnValue($language));
 
-    $this->typedConfigManager = $this->getMockBuilder('Drupal\Core\Config\TypedConfigManager')
-      ->disableOriginalConstructor()
+    $this->typedConfigManager = $this->getMockBuilder('Drupal\Core\Config\TypedConfigManagerInterface')
       ->getMock();
 
     $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
