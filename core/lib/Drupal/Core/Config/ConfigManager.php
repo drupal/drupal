@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -18,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * The ConfigManager provides helper functions for the configuration system.
  */
 class ConfigManager implements ConfigManagerInterface {
+  use StringTranslationTrait;
 
   /**
    * The entity manager.
@@ -39,13 +41,6 @@ class ConfigManager implements ConfigManagerInterface {
    * @var \Drupal\Core\Config\TypedConfigManagerInterface
    */
   protected $typedConfigManager;
-
-  /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $stringTranslation;
 
   /**
    * The active configuration storage.
@@ -148,11 +143,11 @@ class ConfigManager implements ConfigManagerInterface {
     // Check for new or removed files.
     if ($source_data === array('false')) {
       // Added file.
-      $source_data = array($this->stringTranslation->translate('File added'));
+      $source_data = array($this->t('File added'));
     }
     if ($target_data === array('false')) {
       // Deleted file.
-      $target_data = array($this->stringTranslation->translate('File removed'));
+      $target_data = array($this->t('File removed'));
     }
 
     return new \Diff($source_data, $target_data);
