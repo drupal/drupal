@@ -17,10 +17,7 @@ use Drupal\Core\Condition\ConditionPluginBase;
  *   label = @Translation("Node Bundle"),
  *   context = {
  *     "node" = {
- *       "type" = "entity",
- *       "constraints" = {
- *         "EntityType" = "node"
- *       }
+ *       "type" = "entity:node"
  *     }
  *   }
  * )
