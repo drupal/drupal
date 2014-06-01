@@ -13,13 +13,9 @@ use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Core\Utility\Title;
 
 /**
- * Response object that contains variables for injection into the html template.
- *
- * @todo Should we have this conform to an interface?
- *   https://drupal.org/node/1871596#comment-7134686
- * @todo Add method replacements for *all* data sourced by html.tpl.php.
+ * Basic mutable implementation of an HTML fragment.
  */
-class HtmlFragment implements CacheableInterface {
+class HtmlFragment implements CacheableInterface, HtmlFragmentInterface {
 
   /**
    * An array of Link elements.
@@ -89,18 +85,14 @@ class HtmlFragment implements CacheableInterface {
   }
 
   /**
-   * Returns an array of all enqueued links.
-   *
-   * @return \Drupal\Core\Page\LinkElement[]
+   * {@inheritdoc}
    */
   public function &getLinkElements() {
     return $this->links;
   }
 
   /**
-   * Returns all feed link elements.
-   *
-   * @return \Drupal\Core\Page\FeedLinkElement[]
+   * {@inheritdoc}
    */
   public function getFeedLinkElements() {
     $feed_links = array();
@@ -126,9 +118,7 @@ class HtmlFragment implements CacheableInterface {
   }
 
   /**
-   * Returns an array of all enqueued meta elements.
-   *
-   * @return \Drupal\Core\Page\MetaElement[]
+   * {@inheritdoc}
    */
   public function &getMetaElements() {
     return $this->metatags;
@@ -154,10 +144,7 @@ class HtmlFragment implements CacheableInterface {
   }
 
   /**
-   * Gets the main content of this HtmlFragment.
-   *
-   * @return string
-   *   The content for this fragment.
+   * {@inheritdoc}
    */
   public function getContent() {
     return $this->content;
@@ -197,19 +184,14 @@ class HtmlFragment implements CacheableInterface {
   }
 
   /**
-   * Indicates whether or not this HtmlFragment has a title.
-   *
-   * @return bool
+   * {@inheritdoc}
    */
   public function hasTitle() {
     return !empty($this->title);
   }
 
   /**
-   * Gets the title for this HtmlFragment, if any.
-   *
-   * @return string
-   *   The title.
+   * {@inheritdoc}
    */
   public function getTitle() {
     return $this->title;

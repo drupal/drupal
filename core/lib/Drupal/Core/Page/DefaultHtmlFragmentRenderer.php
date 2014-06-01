@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Page;
 
+use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 
@@ -35,14 +36,17 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(HtmlFragment $fragment, $status_code = 200) {
+  public function render(HtmlFragmentInterface $fragment, $status_code = 200) {
     // Converts the given HTML fragment which represents the main content region
     // of the page into a render array.
     $page_content['main'] = array(
       '#markup' => $fragment->getContent(),
-      '#cache' => array('tags' => $fragment->getCacheTags()),
     );
     $page_content['#title'] = $fragment->getTitle();
+
+    if ($fragment instanceof CacheableInterface) {
+      $page_content['main']['#cache']['tags'] = $fragment->getCacheTags();
+    }
 
     // Build the full page array by calling drupal_prepare_page(), which invokes
     // hook_page_build(). This adds the other regions to the page.
@@ -54,13 +58,16 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     $page->setBodyTop(drupal_render($page_array['page_top']));
     $page->setBodyBottom(drupal_render($page_array['page_bottom']));
     $page->setContent(drupal_render($page_array));
-    // Collect cache tags for all the content in all the regions on the page.
-    $tags = $page_array['#cache']['tags'];
-    // Enforce the generic "content" cache tag on all pages.
-    // @todo Remove the "content" cache tag. @see https://drupal.org/node/2124957
-    $tags['content'] = TRUE;
-    $page->setCacheTags($tags);
     $page->setStatusCode($status_code);
+
+    if ($fragment instanceof CacheableInterface) {
+      // Collect cache tags for all the content in all the regions on the page.
+      $tags = $page_array['#cache']['tags'];
+      // Enforce the generic "content" cache tag on all pages.
+      // @todo Remove the "content" cache tag. @see https://drupal.org/node/2124957
+      $tags['content'] = TRUE;
+      $page->setCacheTags($tags);
+    }
 
     return $page;
   }
