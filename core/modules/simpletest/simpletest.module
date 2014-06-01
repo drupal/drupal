@@ -465,29 +465,32 @@ function simpletest_test_get_all($module = NULL) {
         $all_data += $listing->scan('profile', TRUE);
         $all_data += $listing->scan('theme', TRUE);
       }
+
+      // Scan all extension folders for class files.
       $classes = array();
       foreach ($all_data as $name => $data) {
-        $extension_dir = DRUPAL_ROOT . '/' . $data->getPath();
 
-        // Build directories in which the test files would reside.
-        $tests_dirs = array(
-          $extension_dir . '/lib/Drupal/' . $name . '/Tests',
-          $extension_dir . '/src/Tests',
-        );
+        // Build the directory in which simpletest test classes would reside.
+        $tests_dir = DRUPAL_ROOT . '/' . $data->getPath() . '/src/Tests';
 
+        // Check if the directory exists.
+        if (!is_dir($tests_dir)) {
+          // This extension has no directory for simpletest cases.
+          continue;
+        }
+
+        // Scan the directory for class files.
+        $files = file_scan_directory($tests_dir, '/\.php$/');
+        if (empty($files)) {
+          // No class files found.
+          continue;
+        }
+
+        // Convert the file names into the namespaced class names.
+        $strlen = strlen($tests_dir) + 1;
         $namespace = 'Drupal\\' . $name . '\Tests\\';
-        // Scan it for test files if it exists.
-        foreach ($tests_dirs as $tests_dir) {
-          if (is_dir($tests_dir)) {
-            $files = file_scan_directory($tests_dir, '/\.php$/');
-            if (!empty($files)) {
-              $strlen = strlen($tests_dir) + 1;
-              // Convert the file names into the namespaced class names.
-              foreach ($files as $file) {
-                $classes[] = $namespace . str_replace('/', '\\', substr($file->uri, $strlen, -4));
-              }
-            }
-          }
+        foreach ($files as $file) {
+          $classes[] = $namespace . str_replace('/', '\\', substr($file->uri, $strlen, -4));
         }
       }
 

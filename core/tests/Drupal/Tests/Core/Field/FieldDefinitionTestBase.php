@@ -32,17 +32,8 @@ abstract class FieldDefinitionTestBase extends UnitTestCase {
     // getModuleAndPath() returns an array of the module name and directory.
     list($module_name, $module_dir) = $this->getModuleAndPath();
 
-    $namespaces = new \ArrayObject(
-      array(
-        "Drupal\\$module_name" => array(
-          // Suppport both PSR-0 and PSR-4 directory layouts.
-          $module_dir . '/src',
-          // @todo Remove this when PSR-0 support ends.
-          // @see https://drupal.org/node/2247287
-          $module_dir . '/lib/Drupal/' . $module_name,
-        ),
-      )
-    );
+    $namespaces = new \ArrayObject();
+    $namespaces["Drupal\\$module_name"] = $module_dir . '/src';
 
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->once())

@@ -243,7 +243,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->moduleList = isset($extensions['module']) ? $extensions['module'] : array();
     }
     $module_filenames = $this->getModuleFileNames();
-    $this->registerNamespacesPsr4($this->getModuleNamespacesPsr4($module_filenames));
+    $this->classLoaderAddMultiplePsr4($this->getModuleNamespacesPsr4($module_filenames));
 
     // Load each module's serviceProvider class.
     foreach ($this->moduleList as $module => $weight) {
@@ -437,7 +437,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (isset($this->container)) {
       // All namespaces must be registered before we attempt to use any service
       // from the container.
-      $this->registerNamespacesPsr4($this->container->getParameter('container.namespaces'));
+      $this->classLoaderAddMultiplePsr4($this->container->getParameter('container.namespaces'));
     }
     else {
       $this->container = $this->buildContainer();
@@ -710,40 +710,18 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Gets the PSR-4 base directories for module namespaces.
    *
-   * @param array $module_file_names
+   * @param string[] $module_file_names
    *   Array where each key is a module name, and each value is a path to the
    *   respective *.module or *.profile file.
    *
-   * @return array
+   * @return string[]
    *   Array where each key is a module namespace like 'Drupal\system', and each
-   *   value is an array of PSR-4 base directories associated with the module
-   *   namespace.
+   *   value is the PSR-4 base directory associated with the module namespace.
    */
   protected function getModuleNamespacesPsr4($module_file_names) {
     $namespaces = array();
     foreach ($module_file_names as $module => $filename) {
-      // @todo Remove lib/Drupal/$module, once the switch to PSR-4 is complete.
-      $namespaces["Drupal\\$module"][] = DRUPAL_ROOT . '/' . dirname($filename) . '/lib/Drupal/' . $module;
-      $namespaces["Drupal\\$module"][] = DRUPAL_ROOT . '/' . dirname($filename) . '/src';
-    }
-    return $namespaces;
-  }
-
-  /**
-   * Gets the PSR-0 base directories for module namespaces.
-   *
-   * @param array $module_file_names
-   *   Array where each key is a module name, and each value is a path to the
-   *   respective *.module or *.profile file.
-   *
-   * @return array
-   *   Array where each key is a module namespace like 'Drupal\system', and each
-   *   value is a PSR-0 base directory associated with the module namespace.
-   */
-  protected function getModuleNamespaces($module_file_names) {
-    $namespaces = array();
-    foreach ($module_file_names as $module => $filename) {
-      $namespaces["Drupal\\$module"] = DRUPAL_ROOT . '/' . dirname($filename) . '/lib';
+      $namespaces["Drupal\\$module"] = DRUPAL_ROOT . '/' . dirname($filename) . '/src';
     }
     return $namespaces;
   }
@@ -756,23 +734,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   is either a PSR-4 base directory, or an array of PSR-4 base directories
    *   associated with this namespace.
    */
-  protected function registerNamespacesPsr4(array $namespaces = array()) {
+  protected function classLoaderAddMultiplePsr4(array $namespaces = array()) {
     foreach ($namespaces as $prefix => $paths) {
       $this->classLoader->addPsr4($prefix . '\\', $paths);
     }
   }
 
-  /**
-   * Registers a list of namespaces with PSR-0 directories for class loading.
-   *
-   * @param array $namespaces
-   *   Array where each key is a namespace like 'Drupal\system', and each value
-   *   is either a PSR-0 base directory, or an array of PSR-0 base directories
-   *   associated with this namespace.
-   */
-  protected function registerNamespaces(array $namespaces = array()) {
-    foreach ($namespaces as $prefix => $path) {
-      $this->classLoader->add($prefix, $path);
-    }
-  }
 }
