@@ -1,11 +1,11 @@
-# To use this file simply copy it to .gitignore, and it will cause files like
-# your settings.php and user-uploaded files to be excluded from git source
-# control.  This is a common strategy to avoid accidentally including private
-# information in public repositories and patch files.
+# This file contains default .gitignore rules. To use it, copy it to .gitignore,
+# and it will cause files like your settings.php and user-uploaded files to be
+# excluded from Git version control. This is a common strategy to avoid
+# accidentally including private information in public repositories and patch
+# files.
 #
-# A .gitignore file was included in Drupal core for versions 7.2 through 7.8.
-# As of Drupal 7.9, this is no longer the case, and any changes made to your
-# .gitignore file will no longer be overwritten by core updates.
+# Because .gitignore can be specific to your site, this file has a different
+# name; updating Drupal core will not override your custom .gitignore file.
 
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
