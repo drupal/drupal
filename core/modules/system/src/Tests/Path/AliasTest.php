@@ -20,9 +20,9 @@ class AliasTest extends PathUnitTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Path Alias Unit Tests'),
-      'description' => t('Tests path alias CRUD and lookup functionality.'),
-      'group' => t('Path API'),
+      'name' => 'Path Alias Unit Tests',
+      'description' => 'Tests path alias CRUD and lookup functionality.',
+      'group' => 'Path API',
     );
   }
 

@@ -36,9 +36,9 @@ class PathProcessorAliasTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Path Processor alias'),
-      'description' => t('Tests the path alias path processor.'),
-      'group' => t('Path API'),
+      'name' => 'Path Processor alias',
+      'description' => 'Tests the path alias path processor.',
+      'group' => 'Path API',
     );
   }
 

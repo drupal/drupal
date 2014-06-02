@@ -31,9 +31,9 @@ class PathProcessorTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Path Processor Unit Tests'),
-      'description' => t('Tests processing of the inbound path.'),
-      'group' => t('Path API'),
+      'name' => 'Path Processor Unit Tests',
+      'description' => 'Tests processing of the inbound path.',
+      'group' => 'Path API',
     );
   }
 

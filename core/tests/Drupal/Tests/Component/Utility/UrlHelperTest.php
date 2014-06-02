@@ -21,9 +21,9 @@ class UrlHelperTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('UrlHelper Tests'),
-      'description' => t('Tests the UrlHelper utility class.'),
-      'group' => t('Path API'),
+      'name' => 'UrlHelper Tests',
+      'description' => 'Tests the UrlHelper utility class.',
+      'group' => 'Path API',
     );
   }
 

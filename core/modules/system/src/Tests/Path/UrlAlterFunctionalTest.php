@@ -23,9 +23,9 @@ class UrlAlterFunctionalTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => t('URL altering'),
-      'description' => t('Tests altering the inbound path and the outbound path.'),
-      'group' => t('Path API'),
+      'name' => 'URL altering',
+      'description' => 'Tests altering the inbound path and the outbound path.',
+      'group' => 'Path API',
     );
   }
 
