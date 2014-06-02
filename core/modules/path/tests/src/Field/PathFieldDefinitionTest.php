@@ -49,7 +49,7 @@ class PathFieldDefinitionTest extends FieldDefinitionTestBase {
    * Tests FieldDefinition::getColumns().
    *
    * @covers \Drupal\Core\Field\FieldDefinition::getColumns
-   * @covers \Drupal\path\Plugin\Field\FieldType\PathItem::getSchema
+   * @covers \Drupal\path\Plugin\Field\FieldType\PathItem::schema
    */
   public function testGetColumns() {
     $this->assertSame(array(), $this->definition->getColumns());
