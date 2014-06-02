@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\serialization\Tests\Normalizer\ListNormalizerTest.
+ * Contains \Drupal\serialization\Tests\EntityResolver\UuidResolverTest.
  */
 
-namespace Drupal\serialization\Tests\Normalizer;
+namespace Drupal\serialization\Tests\EntityResolver;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\EntityResolver\UuidResolver;

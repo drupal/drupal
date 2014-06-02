@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\PhpStorage\FileStorageTest.
+ * Contains \Drupal\Tests\Component\PhpStorage\FileStorageReadOnlyTest.
  */
 
 namespace Drupal\Tests\Component\PhpStorage;
@@ -18,7 +18,7 @@ use Drupal\Component\PhpStorage\FileReadOnlyStorage;
  *
  * @coversDefaultClass \Drupal\Component\PhpStorage\FileReadOnlyStorage
  */
-class FileStorageReadyOnlyTest extends PhpStorageTestBase {
+class FileStorageReadOnlyTest extends PhpStorageTestBase {
 
   /**
    * Standard test settings to pass to storage instances.

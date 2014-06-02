@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Logger\LoggerChannelFactoryTest
+ * Contains \Drupal\Tests\Core\Logger\LoggerChannelFactoryTest.
  */
 
-namespace Drupal\Tests\Logger;
+namespace Drupal\Tests\Core\Logger;
 
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Session\AccountInterface;

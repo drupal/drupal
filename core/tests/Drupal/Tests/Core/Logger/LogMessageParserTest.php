@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Logger\LogMessageParserTraitTest
+ * Contains \Drupal\Tests\Core\Logger\LogMessageParserTest.
  */
 
 namespace Drupal\Tests\Core\Logger;

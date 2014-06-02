@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\ExternalUrlTest.
+ * Contains \Drupal\Tests\Core\Path\AliasManagerTest.
  */
 
-namespace Drupal\Tests\Core;
+namespace Drupal\Tests\Core\Path;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;

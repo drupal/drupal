@@ -9,6 +9,9 @@ namespace Drupal\system\Tests\Page;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests default HTML metatags on a page.
+ */
 class DefaultMetatagsTest extends WebTestBase {
 
   /**
