@@ -78,11 +78,11 @@ class EntityComment extends EntityContentBase {
    * {@inheritdoc}
    */
   public function import(Row $row, array $old_destination_id_values = array()) {
-    if (($stub = !$row->getSourceProperty('entity_type')) && ($state = $this->state->get('comment.maintain_entity_statistics', 0))) {
+    if ($row->stub() && ($state = $this->state->get('comment.maintain_entity_statistics', 0))) {
       $this->state->set('comment.maintain_entity_statistics', 0);
     }
     $return = parent::import($row, $old_destination_id_values);
-    if ($stub && $state) {
+    if ($row->stub() && $state) {
       $this->state->set('comment.maintain_entity_statistics', $state);
     }
     return $return;
