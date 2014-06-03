@@ -21,6 +21,7 @@
     for (var i = 0, il = $tables.length; i < il; i++) {
       TableHeader.tables.push(new TableHeader($tables[i]));
     }
+    forTables('onScroll');
   }
 
   // Helper method to loop through tables and execute a method.
@@ -171,10 +172,10 @@
      */
     stickyPosition: function (offsetTop, offsetLeft) {
       var css = {};
-      if (!isNaN(offsetTop)) {
+      if (typeof offsetTop === 'number') {
         css.top = offsetTop + 'px';
       }
-      if (!isNaN(offsetLeft)) {
+      if (typeof offsetLeft === 'number') {
         css.left = (this.tableOffset.left - offsetLeft) + 'px';
       }
       return this.$stickyTable.css(css);
