@@ -79,7 +79,8 @@ class EntityReferenceIntegrationTest extends WebTestBase {
         'name' => $entity_name,
         'user_id' => mt_rand(0, 128),
         $this->fieldName . '[0][target_id]' => $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')',
-        $this->fieldName . '[1][target_id]' => $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')',
+        // Test an input of the entity label without a ' (entity_id)' suffix.
+        $this->fieldName . '[1][target_id]' => $referenced_entities[1]->label(),
       );
       $this->drupalPostForm($this->entityType . '/add', $edit, t('Save'));
       $this->assertFieldValues($entity_name, $referenced_entities);
@@ -97,7 +98,8 @@ class EntityReferenceIntegrationTest extends WebTestBase {
 
       $entity_name = $this->randomName();
       $target_id = $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')';
-      $target_id .= ', ' . $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')';
+      // Test an input of the entity label without a ' (entity_id)' suffix.
+      $target_id .= ', ' . $referenced_entities[1]->label();
       $edit = array(
         'name' => $entity_name,
         'user_id' => mt_rand(0, 128),

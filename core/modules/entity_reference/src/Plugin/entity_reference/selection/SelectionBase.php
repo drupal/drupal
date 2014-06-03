@@ -220,7 +220,11 @@ class SelectionBase implements SelectionInterface {
    * {@inheritdoc}
    */
   public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) {
-    $entities = $this->getReferenceableEntities($input, '=', 6);
+    $bundled_entities = $this->getReferenceableEntities($input, '=', 6);
+    $entities = array();
+    foreach ($bundled_entities as $entities_list) {
+      $entities += $entities_list;
+    }
     $params = array(
       '%value' => $input,
       '@value' => $input,
