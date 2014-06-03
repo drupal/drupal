@@ -39,6 +39,7 @@ interface MessageFactoryInterface
      *
      * - headers: Associative array of headers to add to the request
      * - body: string|resource|array|StreamInterface request body to send
+     * - json: mixed Uploads JSON encoded data using an application/json Content-Type header.
      * - query: Associative array of query string values to add to the request
      * - auth: array|string HTTP auth settings (user, pass[, type="basic"])
      * - version: The HTTP protocol version to use with the request
@@ -59,7 +60,7 @@ interface MessageFactoryInterface
      * - expect: true/false/integer Controls the "Expect: 100-Continue" header
      * - config: Associative array of request config collection options
      *
-     * @param string     $method  HTTP method (GET, POST, PUT, etc ...)
+     * @param string     $method  HTTP method (GET, POST, PUT, etc.)
      * @param string|Url $url     HTTP URL to connect to
      * @param array      $options Array of options to apply to the request
      *

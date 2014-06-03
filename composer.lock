@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "cc429f39777a4435a2d1415648978f97",
+    "hash": "15b33bcba2392fb947bc320f35fcc14e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -458,26 +459,30 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "4.0.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "4063f08ca434efac12bf7a3db0d370b1c451345b"
+                "reference": "85a0ba7de064493c928a8bcdc5eef01e0bde9953"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4063f08ca434efac12bf7a3db0d370b1c451345b",
-                "reference": "4063f08ca434efac12bf7a3db0d370b1c451345b",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/85a0ba7de064493c928a8bcdc5eef01e0bde9953",
+                "reference": "85a0ba7de064493c928a8bcdc5eef01e0bde9953",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/streams": "1.*",
+                "ext-json": "*",
+                "guzzlehttp/streams": "~1.0",
                 "php": ">=5.4.0"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "4.*",
-                "psr/log": "~1"
+                "phpunit/phpunit": "~4.0",
+                "psr/log": "~1.0"
+            },
+            "suggest": {
+                "ext-curl": "Guzzle will use specific adapters if cURL is present"
             },
             "type": "library",
             "extra": {
@@ -515,7 +520,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2014-03-29 23:11:36"
+            "time": "2014-05-28 05:13:19"
         },
         {
             "name": "guzzlehttp/streams",
@@ -2098,12 +2103,8 @@
             "time": "2013-06-12 19:46:58"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "symfony/yaml": 20,
@@ -2115,7 +2116,5 @@
     "platform": {
         "php": ">=5.4.2"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }

@@ -5,7 +5,7 @@ Clients
 Clients are used to create requests, create transactions, send requests
 through an HTTP adapter, and return a response. You can add default request
 options to a client that are applied to every request (e.g., default headers,
-default query string parameters, etc), and you can add event listeners and
+default query string parameters, etc.), and you can add event listeners and
 subscribers to every request created by a client.
 
 Creating a client
@@ -55,6 +55,11 @@ defaults
     request created by the client. This allows you to specify things like
     default headers (e.g., User-Agent), default query string parameters, SSL
     configurations, and any other supported request options.
+
+emitter
+    Specifies an event emitter (``GuzzleHttp\Event\EmitterInterface``) instance
+    to be used by the client to emit request events. This option is useful if
+    you need to inject an emitter with listeners/subscribers already attached.
 
 Here's an example of creating a client with various options, including using
 a mock adapter that just returns the result of a callable function and a
@@ -245,7 +250,7 @@ request using event callbacks.
             // Do something with the completion of the request...
         },
         'error' => function (ErrorEvent $event) {
-            echo 'Request failed: ' . $event->getRequest()->getUrl() . "\n"
+            echo 'Request failed: ' . $event->getRequest()->getUrl() . "\n";
             echo $event->getException();
             // Do something to handle the error...
         }
@@ -297,7 +302,7 @@ immeditaley and prevent subsequent requests from being sent.
         }
     ]);
 
-.. _request-options:
+.. _batch-requests:
 
 Batching Requests
 -----------------
@@ -337,6 +342,8 @@ third argument that allows you to specify the 'before', 'complete' and 'error'
 events as well as specify the maximum number of request to send in parallel
 using the 'parallel' option key. This options array is the exact same format as
 the options array exposed in ``GuzzleHttp\ClientInterface::sendAll()``.
+
+.. _request-options:
 
 Request Options
 ===============
@@ -425,6 +432,33 @@ This setting can be set to any of the following types:
       $stream = GuzzleHttp\Stream\Stream::factory('contents...');
       $client->post('/post', ['body' => $stream]);
 
+json
+----
+
+:Summary: The ``json`` option is used to easily upload JSON encoded data as the
+    body of a request. A Content-Type header of ``application/json`` will be
+    added if no Content-Type header is already present on the message.
+:Types:
+    Any PHP type that can be operated on by PHP's ``json_encode()`` function.
+:Default: None
+
+.. code-block:: php
+
+    $request = $client->createRequest('/put', ['json' => ['foo' => 'bar']]);
+    echo $request->getHeader('Content-Type');
+    // application/json
+    echo $request->getBody();
+    // {"foo":"bar"}
+
+.. note::
+
+    This request option does not support customizing the Content-Type header
+    or any of the options from PHP's `json_encode() <http://www.php.net/manual/en/function.json-encode.php>`_
+    function. If you need to customize these settings, then you must pass the
+    JSON encoded data into the request yourself using the ``body`` request
+    option and you must specify the correct Content-Type header using the
+    ``headers`` request option.
+
 query
 -----
 
@@ -437,7 +471,7 @@ query
 .. code-block:: php
 
     // Send a GET request to /get?foo=bar
-    $client->get('/get', ['query' => ['foo' => 'bar']);
+    $client->get('/get', ['query' => ['foo' => 'bar']]);
 
 Query strings specified in the ``query`` option are combined with any query
 string values that are parsed from the URL.
@@ -445,7 +479,7 @@ string values that are parsed from the URL.
 .. code-block:: php
 
     // Send a GET request to /get?abc=123&foo=bar
-    $client->get('/get?abc=123', ['query' => ['foo' => 'bar']);
+    $client->get('/get?abc=123', ['query' => ['foo' => 'bar']]);
 
 auth
 ----
@@ -510,7 +544,7 @@ to ensure that they are fired last or near last in the event chain.
      * Listens to the "before" event of a request and only modifies the request
      * when the "auth" config setting of the request is "foo".
      */
-    class FooAuth implements GuzzleHttp\Common\SubscriberInterface
+    class FooAuth implements GuzzleHttp\Event\SubscriberInterface
     {
         private $password;
 
@@ -532,14 +566,14 @@ to ensure that they are fired last or near last in the event chain.
         }
     }
 
-    $client->getEmitter->attach(new FooAuth('password'));
+    $client->getEmitter()->attach(new FooAuth('password'));
     $client->get('/', ['auth' => 'foo']);
 
 Adapter Specific Authentication Schemes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you need to use authentication methods provided by cURL (e.g., NTLM, GSS,
-etc...), then you need to specify a curl adapter option in the ``options``
+etc.), then you need to specify a curl adapter option in the ``options``
 request option array. See :ref:`config-option` for more information.
 
 .. _cookies-option:

@@ -49,9 +49,14 @@ class ComposerAutoloaderInitDrupal8
 
         $includeFiles = require __DIR__ . '/autoload_files.php';
         foreach ($includeFiles as $file) {
-            require $file;
+            composerRequireDrupal8($file);
         }
 
         return $loader;
     }
+}
+
+function composerRequireDrupal8($file)
+{
+    require $file;
 }

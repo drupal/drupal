@@ -16,7 +16,12 @@
 
     "require": {
         "php": ">=5.4.0",
-        "guzzlehttp/streams": "1.*"
+        "ext-json": "*",
+        "guzzlehttp/streams": "~1.0"
+    },
+
+    "suggest": {
+        "ext-curl": "Guzzle will use specific adapters if cURL is present"
     },
 
     "autoload": {
@@ -28,8 +33,8 @@
 
     "require-dev": {
         "ext-curl": "*",
-        "psr/log": "~1",
-        "phpunit/phpunit": "4.*"
+        "psr/log": "~1.0",
+        "phpunit/phpunit": "~4.0"
     },
 
     "extra": {
