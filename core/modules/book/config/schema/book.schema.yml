@@ -24,3 +24,11 @@ book.settings:
     child_type:
       type: string
       label: 'Content type for child pages'
+
+block.settings.book_navigation:
+  type: block_settings
+  label: 'Book navigation block'
+  mapping:
+    block_mode:
+      type: string
+      label: 'Block display mode'

@@ -253,3 +253,42 @@ config_entity:
     dependencies:
       type: config_dependencies
       label: 'Dependencies'
+
+block_settings:
+  type: mapping
+  label: 'Block settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Description'
+    label_display:
+      type: string
+      label: 'Display title'
+    cache:
+      type: mapping
+      label: 'Cache settings'
+      mapping:
+        max_age:
+          type: integer
+          label: 'Maximum age'
+        contexts:
+          type: sequence
+          label: 'Vary by context'
+          sequence:
+            - type: string
+              label: 'Context'
+    status:
+      type: boolean
+      label: 'Status'
+    info:
+      type: label
+      label: 'Admin info'
+    view_mode:
+      type: string
+      label: 'View mode'
+    provider:
+      type: string
+      label: 'Provider'

@@ -338,3 +338,17 @@ system.mail:
 system.theme.global:
   type: theme_settings
   label: 'Theme global settings'
+
+block.settings.system_branding_block:
+  type: block_settings
+  label: 'Branding block'
+  mapping:
+    use_site_logo:
+      type: boolean
+      label: 'Use site logo'
+    use_site_name:
+      type: boolean
+      label: 'Use site name'
+    use_site_slogan:
+      type: boolean
+      label: 'Use site slogan'

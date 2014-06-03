@@ -36,3 +36,14 @@ aggregator.settings:
         list_max:
           type: integer
           label: 'Number of items shown in listing pages'
+
+block.settings.aggregator_feed_block:
+  type: block_settings
+  label: 'Aggregator feed block'
+  mapping:
+    block_count:
+      type: integer
+      label: 'Block count'
+    feed:
+      type: string
+      label: 'Feed'
