@@ -171,10 +171,10 @@ abstract class KernelTestBase extends UnitTestBase {
     // Modules have been collected in reverse class hierarchy order; modules
     // defined by base classes should be sorted first. Then, merge the results
     // together.
+    $modules = array_reverse($modules);
+    $modules = call_user_func_array('array_merge_recursive', $modules);
     if ($modules) {
-      $modules = array_reverse($modules);
-      $modules = call_user_func_array('array_merge_recursive', $modules);
-      $this->enableModules($modules, FALSE);
+      $this->enableModules($modules);
     }
     // In order to use theme functions default theme config needs to exist.
     \Drupal::config('system.theme')->set('default', 'stark');
