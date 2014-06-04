@@ -12,6 +12,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Diff\DiffFormatter;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,6 +51,13 @@ class ConfigController implements ContainerInjectionInterface {
   protected $fileDownloadController;
 
   /**
+   * The diff formatter.
+   *
+   * @var \Drupal\Core\Diff\DiffFormatter
+   */
+  protected $diffFormatter;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -57,7 +65,8 @@ class ConfigController implements ContainerInjectionInterface {
       $container->get('config.storage'),
       $container->get('config.storage.staging'),
       $container->get('config.manager'),
-      new FileDownloadController()
+      new FileDownloadController(),
+      $container->get('diff.formatter')
     );
   }
 
@@ -71,11 +80,12 @@ class ConfigController implements ContainerInjectionInterface {
    * @param \Drupal\system\FileDownloadController $file_download_controller
    *   The file download controller.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter) {
     $this->targetStorage = $target_storage;
     $this->sourceStorage = $source_storage;
     $this->configManager = $config_manager;
     $this->fileDownloadController = $file_download_controller;
+    $this->diffFormatter = $diff_formatter;
   }
 
   /**
@@ -102,7 +112,7 @@ class ConfigController implements ContainerInjectionInterface {
   }
 
   /**
-   * Shows diff of specificed configuration file.
+   * Shows diff of specified configuration file.
    *
    * @param string $source_name
    *   The name of the configuration file.
@@ -121,8 +131,7 @@ class ConfigController implements ContainerInjectionInterface {
       $collection = StorageInterface::DEFAULT_COLLECTION;
     }
     $diff = $this->configManager->diff($this->targetStorage, $this->sourceStorage, $source_name, $target_name, $collection);
-    $formatter = new \DrupalDiffFormatter();
-    $formatter->show_header = FALSE;
+    $this->diffFormatter->show_header = FALSE;
 
     $build = array();
 
@@ -136,7 +145,7 @@ class ConfigController implements ContainerInjectionInterface {
         array('data' => t('Old'), 'colspan' => '2'),
         array('data' => t('New'), 'colspan' => '2'),
       ),
-      '#rows' => $formatter->format($diff),
+      '#rows' => $this->diffFormatter->format($diff),
     );
 
     $build['back'] = array(

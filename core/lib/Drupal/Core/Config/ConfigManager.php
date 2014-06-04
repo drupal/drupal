@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Diff\Diff;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -130,10 +131,6 @@ class ConfigManager implements ConfigManagerInterface {
     if (!isset($target_name)) {
       $target_name = $source_name;
     }
-    // @todo Replace with code that can be autoloaded.
-    //   https://drupal.org/node/1848266
-    require_once __DIR__ . '/../../Component/Diff/DiffEngine.php';
-
     // The output should show configuration object differences formatted as YAML.
     // But the configuration is not necessarily stored in files. Therefore, they
     // need to be read and parsed, and lastly, dumped into YAML strings.
@@ -150,7 +147,7 @@ class ConfigManager implements ConfigManagerInterface {
       $target_data = array($this->t('File removed'));
     }
 
-    return new \Diff($source_data, $target_data);
+    return new Diff($source_data, $target_data);
   }
 
   /**

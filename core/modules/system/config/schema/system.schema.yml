@@ -128,6 +128,21 @@ system.date_format.*:
       type: string
       label: 'Default language'
 
+system.diff:
+  type: mapping
+  label: 'Diff settings'
+  mapping:
+    context:
+      type: mapping
+      label: 'Context'
+      mapping:
+        lines_leading:
+          type: integer
+          label: 'Number of leading lines in a diff'
+        lines_trailing:
+          type: integer
+          label: 'Number of trailing lines in a diff'
+
 system.filter:
   type: mapping
   label: 'Filter settings'

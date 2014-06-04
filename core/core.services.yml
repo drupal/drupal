@@ -114,6 +114,9 @@ services:
   cron:
     class: Drupal\Core\Cron
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user', '@session_manager']
+  diff.formatter:
+    class: Drupal\Core\Diff\DiffFormatter
+    arguments: ['@config.factory']
   database:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database
