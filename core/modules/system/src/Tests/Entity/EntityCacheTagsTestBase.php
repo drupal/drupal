@@ -263,7 +263,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($referencing_entity_path, 'HIT', $tags);
 
     // Also verify the existence of an entity render cache entry.
-    $cid = 'entity_view:entity_test:' . $this->referencing_entity->id() . ':full:stark:r.anonymous';
+    $cid = 'entity_view:entity_test:' . $this->referencing_entity->id() . ':full:stark:r.anonymous:' . date_default_timezone_get();
     $this->verifyRenderCache($cid, $referencing_entity_cache_tags);
 
     // Prime the page cache for the non-referencing entity.
@@ -274,7 +274,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->verifyPageCache($non_referencing_entity_path, 'HIT', $tags);
 
     // Also verify the existence of an entity render cache entry.
-    $cid = 'entity_view:entity_test:' . $this->non_referencing_entity->id() . ':full:stark:r.anonymous';
+    $cid = 'entity_view:entity_test:' . $this->non_referencing_entity->id() . ':full:stark:r.anonymous:' . date_default_timezone_get();
     $this->verifyRenderCache($cid, $non_referencing_entity_cache_tags);
 
 

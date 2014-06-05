@@ -22,6 +22,10 @@ services:
     arguments: ['@request_stack', '@theme.negotiator']
     tags:
       - { name: cache.context}
+  cache_context.timezone:
+    class: Drupal\Core\Cache\TimeZoneCacheContext
+    tags:
+      - { name: cache.context}
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
     arguments: ['@database']

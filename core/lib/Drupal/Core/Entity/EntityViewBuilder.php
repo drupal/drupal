@@ -174,6 +174,9 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
           $view_mode,
           'cache_context.theme',
           'cache_context.user.roles',
+          // @todo Move this out of here and into field formatters that depend
+          //       on the timezone. Blocked on https://drupal.org/node/2099137.
+          'cache_context.timezone',
         ),
         'bin' => $this->cacheBin,
       );
