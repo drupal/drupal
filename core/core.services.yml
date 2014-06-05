@@ -197,6 +197,10 @@ services:
     arguments: ['@access_check.theme', '@request_stack']
     tags:
       - { name: service_collector, tag: theme_negotiator, call: addNegotiator }
+  theme.negotiator.request_subscriber:
+    class: Drupal\Core\EventSubscriber\ThemeNegotiatorRequestSubscriber
+    tags:
+      - { name: event_subscriber }
   theme.negotiator.default:
     class: Drupal\Core\Theme\DefaultNegotiator
     arguments: ['@config.factory']
@@ -590,10 +594,6 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@path.alias_manager', '@path_processor_manager']
-  legacy_request_subscriber:
-    class: Drupal\Core\EventSubscriber\LegacyRequestSubscriber
-    tags:
-      - { name: event_subscriber }
   finish_response_subscriber:
     class: Drupal\Core\EventSubscriber\FinishResponseSubscriber
     tags:

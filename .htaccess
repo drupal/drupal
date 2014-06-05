@@ -25,8 +25,9 @@ ErrorDocument 404 /index.php
 DirectoryIndex index.php index.html index.htm
 
 # Override PHP settings that cannot be changed at runtime. See
-# sites/default/default.settings.php and drupal_environment_initialize() in
-# core/includes/bootstrap.inc for settings that can be changed at runtime.
+# sites/default/default.settings.php and
+# Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be
+# changed at runtime.
 
 # PHP 5, Apache 1 and 2.
 <IfModule mod_php5.c>
@@ -119,7 +120,7 @@ DirectoryIndex index.php index.html index.htm
   RewriteRule ^ %1/core/%2 [L,QSA,R=301]
 
   # Pass all requests not referring directly to files in the filesystem to
-  # index.php. Clean URLs are handled in drupal_environment_initialize().
+  # index.php.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico

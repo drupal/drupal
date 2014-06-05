@@ -7,21 +7,25 @@
 
 namespace Drupal\Core;
 
-use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Timer;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
-use Drupal\Core\CoreServiceProvider;
+use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Composer\Autoload\ClassLoader;
 
@@ -61,7 +65,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @var bool
    */
-  protected $booted;
+  protected $booted = FALSE;
 
   /**
    * Holds the list of enabled modules.
@@ -164,14 +168,78 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $serviceProviders;
 
   /**
+   * Whether the request globals have been initialized.
+   *
+   * @var bool
+   */
+  protected static $isRequestInitialized = FALSE;
+
+  /**
+   * Whether the PHP environment has been initialized.
+   *
+   * This legacy phase can only be booted once because it sets session INI
+   * settings. If a session has already been started, re-generating these
+   * settings would break the session.
+   *
+   * @var bool
+   */
+  protected static $isEnvironmentInitialized = FALSE;
+
+  /**
+   * The site directory.
+   *
+   * @var string
+   */
+  protected $sitePath;
+
+  /**
+   * Create a DrupalKernel object from a request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Composer\Autoload\ClassLoader $class_loader
+   *   (optional) The classloader is only used if $storage is not given or
+   *   the load from storage fails and a container rebuild is required. In
+   *   this case, the loaded modules will be registered with this loader in
+   *   order to be able to find the module serviceProviders.
+   * @param string $environment
+   *   String indicating the environment, e.g. 'prod' or 'dev'.
+   * @param bool $allow_dumping
+   *   (optional) FALSE to stop the container from being written to or read
+   *   from disk. Defaults to TRUE.
+   * @return static
+   */
+  public static function createFromRequest(Request $request, ClassLoader $class_loader, $environment, $allow_dumping = TRUE) {
+    // Include our bootstrap file.
+    require_once dirname(dirname(dirname(__DIR__))) . '/includes/bootstrap.inc';
+
+    $kernel = new static($environment, $class_loader, $allow_dumping);
+
+    // Ensure sane php environment variables..
+    static::bootEnvironment();
+
+    // Get our most basic settings setup.
+    $site_path = static::findSitePath($request);
+    $kernel->setSitePath($site_path);
+    Settings::initialize($site_path);
+
+    // Redirect the user to the installation script if Drupal has not been
+    // installed yet (i.e., if no $databases array has been defined in the
+    // settings.php file) and we are not already installing.
+    if (!Database::getConnectionInfo() && !drupal_installation_attempted() && !drupal_is_cli()) {
+      $response = new RedirectResponse($request->getBasePath() . '/core/install.php');
+      $response->prepare($request)->send();
+    }
+
+    return $kernel;
+  }
+
+  /**
    * Constructs a DrupalKernel object.
    *
    * @param string $environment
-   *   String indicating the environment, e.g. 'prod' or 'dev'. Used by
-   *   Symfony\Component\HttpKernel\Kernel::__construct(). Drupal does not use
-   *   this value currently. Pass 'prod'.
+   *   String indicating the environment, e.g. 'prod' or 'dev'.
    * @param \Composer\Autoload\ClassLoader $class_loader
-   *   (optional) The classloader is only used if $storage is not given or
+   *   (optional) The class loader is only used if $storage is not given or
    *   the load from storage fails and a container rebuild is required. In
    *   this case, the loaded modules will be registered with this loader in
    *   order to be able to find the module serviceProviders.
@@ -184,10 +252,108 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function __construct($environment, ClassLoader $class_loader, $allow_dumping = TRUE, $allow_loading = NULL) {
     $this->environment = $environment;
-    $this->booted = FALSE;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
     $this->allowLoading = isset($allow_loading) ? $allow_loading : $allow_dumping;
+  }
+
+  /**
+   * Returns the appropriate site directory for a request.
+   *
+   * Once the kernel has been created DrupalKernelInterface::getSitePath() is
+   * preferred since it gets the statically cached result of this method.
+   *
+   * Site directories contain all site specific code. This includes settings.php
+   * for bootstrap level configuration, file configuration stores, public file
+   * storage and site specific modules and themes.
+   *
+   * Finds a matching site directory file by stripping the website's hostname
+   * from left to right and pathname from right to left. By default, the
+   * directory must contain a 'settings.php' file for it to match. If the
+   * parameter $require_settings is set to FALSE, then a directory without a
+   * 'settings.php' file will match as well. The first configuration file found
+   * will be used and the remaining ones will be ignored. If no configuration
+   * file is found, returns a default value 'sites/default'. See
+   * default.settings.php for examples on how the URL is converted to a
+   * directory.
+   *
+   * If a file named sites.php is present in the sites directory, it will be
+   * loaded prior to scanning for directories. That file can define aliases in
+   * an associative array named $sites. The array is written in the format
+   * '<port>.<domain>.<path>' => 'directory'. As an example, to create a
+   * directory alias for http://www.drupal.org:8080/mysite/test whose
+   * configuration file is in sites/example.com, the array should be defined as:
+   * @code
+   * $sites = array(
+   *   '8080.www.drupal.org.mysite.test' => 'example.com',
+   * );
+   * @endcode
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   * @param bool $require_settings
+   *   Only directories with an existing settings.php file will be recognized.
+   *   Defaults to TRUE. During initial installation, this is set to FALSE so
+   *   that Drupal can detect a matching directory, then create a new
+   *   settings.php file in it.
+   *
+   * @return string
+   *   The path of the matching directory.
+   *
+   * @see \Drupal\Core\DrupalKernelInterface::getSitePath()
+   * @see \Drupal\Core\DrupalKernelInterface::setSitePath()
+   * @see default.settings.php
+   * @see example.sites.php
+   */
+  public static function findSitePath(Request $request, $require_settings = TRUE) {
+    // Check for a simpletest override.
+    if ($test_prefix = drupal_valid_test_ua()) {
+      return 'sites/simpletest/' . substr($test_prefix, 10);
+    }
+
+    // Determine whether multi-site functionality is enabled.
+    if (!file_exists(DRUPAL_ROOT . '/sites/sites.php')) {
+      return 'sites/default';
+    }
+
+    // Otherwise, use find the site path using the request.
+    $script_name = $request->server->get('SCRIPT_NAME');
+    if (!$script_name) {
+      $script_name = $request->server->get('SCRIPT_FILENAME');
+    }
+    $http_host = $request->server->get('HTTP_HOST');
+
+    $sites = array();
+    include DRUPAL_ROOT . '/sites/sites.php';
+
+    $uri = explode('/', $script_name);
+    $server = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
+    for ($i = count($uri) - 1; $i > 0; $i--) {
+      for ($j = count($server); $j > 0; $j--) {
+        $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+        if (isset($sites[$dir]) && file_exists(DRUPAL_ROOT . '/sites/' . $sites[$dir])) {
+          $dir = $sites[$dir];
+        }
+        if (file_exists(DRUPAL_ROOT . '/sites/' . $dir . '/settings.php') || (!$require_settings && file_exists(DRUPAL_ROOT . '/sites/' . $dir))) {
+          return "sites/$dir";
+        }
+      }
+    }
+    return 'sites/default';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSitePath($path) {
+    $this->sitePath = $path;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSitePath() {
+    return $this->sitePath;
   }
 
   /**
@@ -195,13 +361,47 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function boot() {
     if ($this->booted) {
-      return;
+      return $this;
     }
+
+    // Start a page timer:
+    Timer::start('page');
+
+    drupal_classloader();
+
+    // Load legacy and other functional code.
+    require_once DRUPAL_ROOT . '/core/includes/common.inc';
+    require_once DRUPAL_ROOT . '/core/includes/database.inc';
+    require_once DRUPAL_ROOT . '/' . Settings::get('path_inc', 'core/includes/path.inc');
+    require_once DRUPAL_ROOT . '/core/includes/module.inc';
+    require_once DRUPAL_ROOT . '/core/includes/theme.inc';
+    require_once DRUPAL_ROOT . '/core/includes/pager.inc';
+    require_once DRUPAL_ROOT . '/' . Settings::get('menu_inc', 'core/includes/menu.inc');
+    require_once DRUPAL_ROOT . '/core/includes/tablesort.inc';
+    require_once DRUPAL_ROOT . '/core/includes/file.inc';
+    require_once DRUPAL_ROOT . '/core/includes/unicode.inc';
+    require_once DRUPAL_ROOT . '/core/includes/form.inc';
+    require_once DRUPAL_ROOT . '/core/includes/mail.inc';
+    require_once DRUPAL_ROOT . '/core/includes/ajax.inc';
+    require_once DRUPAL_ROOT . '/core/includes/errors.inc';
+    require_once DRUPAL_ROOT . '/core/includes/schema.inc';
+    require_once DRUPAL_ROOT . '/core/includes/entity.inc';
+
+    // Ensure that findSitePath is set.
+    if (!$this->sitePath) {
+      throw new \Exception('Kernel does not have site path set before calling boot()');
+    }
+    // Intialize the container.
     $this->initializeContainer();
+
+    // Ensure mt_rand() is reseeded to prevent random values from one page load
+    // being exploited to predict random values in subsequent page loads.
+    $seed = unpack("L", Crypt::randomBytes(4));
+    mt_srand($seed[1]);
+
     $this->booted = TRUE;
-    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, static::CONTAINER_BASE_CLASS)) {
-      watchdog('DrupalKernel', 'Container cannot be written to disk');
-    }
+
+    return $this;
   }
 
   /**
@@ -213,13 +413,101 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
     $this->booted = FALSE;
     $this->container = NULL;
+    $this->moduleList = NULL;
+    $this->moduleData = array();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getContainer() {
+    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, static::CONTAINER_BASE_CLASS)) {
+      watchdog('DrupalKernel', 'Container cannot be written to disk');
+    }
     return $this->container;
+  }
+
+  /**
+   * Helper method that does request related initialization.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   */
+  protected function preHandle(Request $request) {
+    // Load all enabled modules.
+    $this->container->get('module_handler')->loadAll();
+
+    // Initialize legacy request globals.
+    $this->initializeRequestGlobals($request);
+
+    // Initialize cookie globals.
+    $this->initializeCookieGlobals($request);
+
+    // Ensure container has a request scope so we can load file stream wrappers.
+    if (!$this->container->isScopeActive('request')) {
+      // Enter the request scope so that current_user service is available for
+      // locale/translation sake.
+      $this->container->enterScope('request');
+      $this->container->set('request', $request, 'request');
+      $this->container->get('request_stack')->push($request);
+    }
+
+    // Make sure all stream wrappers are registered.
+    file_get_stream_wrappers();
+
+    // Back out scope required to initialize the file stream wrappers.
+    if ($this->container->isScopeActive('request')) {
+      $this->container->leaveScope('request');
+    }
+
+    // Set the allowed protocols once we have the config available.
+    $allowed_protocols = $this->container->get('config.factory')->get('system.filter')->get('protocols');
+    if (!isset($allowed_protocols)) {
+      // \Drupal\Component\Utility\UrlHelper::filterBadProtocol() is called by
+      // the installer and update.php, in which case the configuration may not
+      // exist (yet). Provide a minimal default set of allowed protocols for
+      // these cases.
+      $allowed_protocols = array('http', 'https');
+    }
+    UrlHelper::setAllowedProtocols($allowed_protocols);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Invoke proper request/response/terminate events.
+   */
+  public function handlePageCache(Request $request) {
+    $this->boot();
+    $this->initializeCookieGlobals($request);
+
+    // Check for a cache mode force from settings.php.
+    if (Settings::get('page_cache_without_database')) {
+      $cache_enabled = TRUE;
+    }
+    else {
+      $config = $this->getContainer()->get('config.factory')->get('system.performance');
+      $cache_enabled = $config->get('cache.page.use_internal');
+    }
+
+    // If there is no session cookie and cache is enabled (or forced), try to
+    // serve a cached page.
+    if (!$request->cookies->has(session_name()) && $cache_enabled && drupal_page_is_cacheable()) {
+      // Get the page from the cache.
+      $response = drupal_page_get_cache($request);
+      // If there is a cached page, display it.
+      if ($response) {
+        $response->headers->set('X-Drupal-Cache', 'HIT');
+
+        drupal_serve_page_from_cache($response, $request);
+
+        // We are done.
+        $response->prepare($request);
+        $response->send();
+        exit;
+      }
+    }
+    return $this;
   }
 
   /**
@@ -246,14 +534,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->classLoaderAddMultiplePsr4($this->getModuleNamespacesPsr4($module_filenames));
 
     // Load each module's serviceProvider class.
-    foreach ($this->moduleList as $module => $weight) {
+    foreach ($module_filenames as $module => $filename) {
       $camelized = ContainerBuilder::camelize($module);
       $name = "{$camelized}ServiceProvider";
       $class = "Drupal\\{$module}\\{$name}";
       if (class_exists($class)) {
         $this->serviceProviderClasses['app'][$module] = $class;
       }
-      $filename = dirname($module_filenames[$module]) . "/$module.services.yml";
+      $filename = dirname($filename) . "/$module.services.yml";
       if (file_exists($filename)) {
         $this->serviceYamls['app'][$module] = $filename;
       }
@@ -270,7 +558,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!empty($GLOBALS['conf']['container_yamls'])) {
       $this->serviceYamls['site'] = $GLOBALS['conf']['container_yamls'];
     }
-    if (file_exists($site_services_yml = conf_path() . '/services.yml')) {
+    if (file_exists($site_services_yml = $this->getSitePath() . '/services.yml')) {
       $this->serviceYamls['site'][] = $site_services_yml;
     }
   }
@@ -298,12 +586,25 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = TRUE) {
-    if (FALSE === $this->booted) {
-      $this->boot();
-    }
-
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+    $this->boot();
+    $this->preHandle($request);
     return $this->getHttpKernel()->handle($request, $type, $catch);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareLegacyRequest(Request $request) {
+    $this->boot();
+    $this->preHandle($request);
+    // Enter the request scope so that current_user service is available for
+    // locale/translation sake.
+    $this->container->enterScope('request');
+    $this->container->set('request', $request);
+    $this->container->get('request_stack')->push($request);
+    $this->container->get('router.request_context')->fromRequest($request);
+    return $this;
   }
 
   /**
@@ -467,6 +768,215 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->container->set('request', $request);
     }
     \Drupal::setContainer($this->container);
+  }
+
+  /**
+   * Setup a consistent PHP environment.
+   *
+   * This method sets PHP environment options we want to be sure are set
+   * correctly for security or just saneness.
+   */
+  public static function bootEnvironment() {
+    if (static::$isEnvironmentInitialized) {
+      return;
+    }
+
+    // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
+    error_reporting(E_STRICT | E_ALL);
+
+    // Override PHP settings required for Drupal to work properly.
+    // sites/default/default.settings.php contains more runtime settings.
+    // The .htaccess file contains settings that cannot be changed at runtime.
+
+    // Use session cookies, not transparent sessions that puts the session id in
+    // the query string.
+    ini_set('session.use_cookies', '1');
+    ini_set('session.use_only_cookies', '1');
+    ini_set('session.use_trans_sid', '0');
+    // Don't send HTTP headers using PHP's session handler.
+    // Send an empty string to disable the cache limiter.
+    ini_set('session.cache_limiter', '');
+    // Use httponly session cookies.
+    ini_set('session.cookie_httponly', '1');
+
+    // Set sane locale settings, to ensure consistent string, dates, times and
+    // numbers handling.
+    setlocale(LC_ALL, 'C');
+
+    // Detect string handling method.
+    Unicode::check();
+
+    // Indicate that code is operating in a test child site.
+    if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
+      if ($test_prefix = drupal_valid_test_ua()) {
+        // Only code that interfaces directly with tests should rely on this
+        // constant; e.g., the error/exception handler conditionally adds further
+        // error information into HTTP response headers that are consumed by
+        // Simpletest's internal browser.
+        define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
+
+        // Log fatal errors to the test site directory.
+        ini_set('log_errors', 1);
+        ini_set('error_log', DRUPAL_ROOT . '/sites/simpletest/' . substr($test_prefix, 10) . '/error.log');
+      }
+      else {
+        // Ensure that no other code defines this.
+        define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
+      }
+    }
+
+    // Set the Drupal custom error handler.
+    set_error_handler('_drupal_error_handler');
+    set_exception_handler('_drupal_exception_handler');
+
+    static::$isEnvironmentInitialized = TRUE;
+  }
+
+  /**
+   * Bootstraps the legacy global request variables.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
+   * @todo D8: Eliminate this entirely in favor of Request object.
+   */
+  protected function initializeRequestGlobals(Request $request) {
+    // Provided by settings.php.
+    global $base_url;
+    // Set and derived from $base_url by this function.
+    global $base_path, $base_root, $script_path;
+    global $base_secure_url, $base_insecure_url;
+
+    // @todo Refactor with the Symfony Request object.
+    _current_path(request_path());
+
+    if (isset($base_url)) {
+      // Parse fixed base URL from settings.php.
+      $parts = parse_url($base_url);
+      if (!isset($parts['path'])) {
+        $parts['path'] = '';
+      }
+      $base_path = $parts['path'] . '/';
+      // Build $base_root (everything until first slash after "scheme://").
+      $base_root = substr($base_url, 0, strlen($base_url) - strlen($parts['path']));
+    }
+    else {
+      // Create base URL.
+      $http_protocol = $request->isSecure() ? 'https' : 'http';
+      $base_root = $http_protocol . '://' . $request->server->get('HTTP_HOST');
+
+      $base_url = $base_root;
+
+      // For a request URI of '/index.php/foo', $_SERVER['SCRIPT_NAME'] is
+      // '/index.php', whereas $_SERVER['PHP_SELF'] is '/index.php/foo'.
+      if ($dir = rtrim(dirname($request->server->get('SCRIPT_NAME')), '\/')) {
+        // Remove "core" directory if present, allowing install.php, update.php,
+        // and others to auto-detect a base path.
+        $core_position = strrpos($dir, '/core');
+        if ($core_position !== FALSE && strlen($dir) - 5 == $core_position) {
+          $base_path = substr($dir, 0, $core_position);
+        }
+        else {
+          $base_path = $dir;
+        }
+        $base_url .= $base_path;
+        $base_path .= '/';
+      }
+      else {
+        $base_path = '/';
+      }
+    }
+    $base_secure_url = str_replace('http://', 'https://', $base_url);
+    $base_insecure_url = str_replace('https://', 'http://', $base_url);
+
+    // Determine the path of the script relative to the base path, and add a
+    // trailing slash. This is needed for creating URLs to Drupal pages.
+    if (!isset($script_path)) {
+      $script_path = '';
+      // We don't expect scripts outside of the base path, but sanity check
+      // anyway.
+      if (strpos($request->server->get('SCRIPT_NAME'), $base_path) === 0) {
+        $script_path = substr($request->server->get('SCRIPT_NAME'), strlen($base_path)) . '/';
+        // If the request URI does not contain the script name, then clean URLs
+        // are in effect and the script path can be similarly dropped from URL
+        // generation. For servers that don't provide $_SERVER['REQUEST_URI'],
+        // we do not know the actual URI requested by the client, and
+        // request_uri() returns a URI with the script name, resulting in
+        // non-clean URLs unless
+        // there's other code that intervenes.
+        if (strpos(request_uri(TRUE) . '/', $base_path . $script_path) !== 0) {
+          $script_path = '';
+        }
+        // @todo Temporary BC for install.php, update.php, and other scripts.
+        //   - http://drupal.org/node/1547184
+        //   - http://drupal.org/node/1546082
+        if ($script_path !== 'index.php/') {
+          $script_path = '';
+        }
+      }
+    }
+
+  }
+
+  /**
+   * Initialize cookie settings.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
+   * @todo D8: Eliminate this entirely in favor of a session object.
+   */
+  protected function initializeCookieGlobals(Request $request) {
+    // If we do this more then once per page request we are likely to cause
+    // errors.
+    if (static::$isRequestInitialized) {
+      return;
+    }
+    global $cookie_domain;
+
+    if ($cookie_domain) {
+      // If the user specifies the cookie domain, also use it for session name.
+      $session_name = $cookie_domain;
+    }
+    else {
+      // Otherwise use $base_url as session name, without the protocol
+      // to use the same session identifiers across HTTP and HTTPS.
+      $session_name = $request->getHost() . $request->getBasePath();
+      // Replace "core" out of session_name so core scripts redirect properly,
+      // specifically install.php and update.php.
+      $session_name = preg_replace('/\/core$/', '', $session_name);
+      // HTTP_HOST can be modified by a visitor, but has been sanitized already
+      // in DrupalKernel::bootEnvironment().
+      if ($cookie_domain = $request->server->get('HTTP_HOST')) {
+        // Strip leading periods, www., and port numbers from cookie domain.
+        $cookie_domain = ltrim($cookie_domain, '.');
+        if (strpos($cookie_domain, 'www.') === 0) {
+          $cookie_domain = substr($cookie_domain, 4);
+        }
+        $cookie_domain = explode(':', $cookie_domain);
+        $cookie_domain = '.' . $cookie_domain[0];
+      }
+    }
+    // Per RFC 2109, cookie domains must contain at least one dot other than the
+    // first. For hosts such as 'localhost' or IP Addresses we don't set a
+    // cookie domain.
+    if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
+      ini_set('session.cookie_domain', $cookie_domain);
+    }
+    // To prevent session cookies from being hijacked, a user can configure the
+    // SSL version of their website to only transfer session cookies via SSL by
+    // using PHP's session.cookie_secure setting. The browser will then use two
+    // separate session cookies for the HTTPS and HTTP versions of the site. So
+    // we must use different session identifiers for HTTPS and HTTP to prevent a
+    // cookie collision.
+    if ($request->isSecure()) {
+      ini_set('session.cookie_secure', TRUE);
+    }
+    $prefix = ini_get('session.cookie_secure') ? 'SSESS' : 'SESS';
+
+    session_name($prefix . substr(hash('sha256', $session_name), 0, 32));
+
+    static::$isRequestInitialized = TRUE;
   }
 
   /**
@@ -634,7 +1144,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Gets a http kernel from the container
    *
-   * @return HttpKernel
+   * @return \Symfony\Component\HttpKernel\HttpKernelInterface
    */
   protected function getHttpKernel() {
     return $this->container->get('http_kernel');

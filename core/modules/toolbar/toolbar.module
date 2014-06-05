@@ -109,7 +109,7 @@ function toolbar_element_info() {
  * Use Drupal's page cache for toolbar/subtrees/*, even for authenticated users.
  *
  * This gets invoked after full bootstrap, so must duplicate some of what's
- * done by _drupal_bootstrap_page_cache().
+ * done by \Drupal\Core\DrupalKernel::handlePageCache().
  *
  * @todo Replace this hack with something better integrated with DrupalKernel
  *   once Drupal's page caching itself is properly integrated.
@@ -119,7 +119,7 @@ function _toolbar_initialize_page_cache() {
   drupal_page_is_cacheable(TRUE);
 
   // If we have a cache, serve it.
-  // @see _drupal_bootstrap_page_cache()
+  // @see \Drupal\Core\DrupalKernel::handlePageCache()
   $request = \Drupal::request();
   $response = drupal_page_get_cache($request);
   if ($response) {

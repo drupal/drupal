@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Database\Database;
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Site\Settings;
 
@@ -634,24 +632,29 @@ function drupal_verify_profile($install_state) {
  *   to set the default language.
  */
 function drupal_install_system($install_state) {
-  // Boot a new kernel into a regular production environment.
-  $request = \Drupal::hasRequest() ? \Drupal::request() : FALSE;
-
+  // Remove the service provider of the early installer.
   unset($GLOBALS['conf']['container_service_providers']['InstallerServiceProvider']);
-  $kernel = new DrupalKernel('prod', drupal_classloader(), FALSE);
-  $kernel->boot();
 
-  if ($request) {
-    $kernel->getContainer()->enterScope('request');
-    $kernel->getContainer()->set('request', $request, 'request');
-    $kernel->getContainer()->get('request_stack')->push($request);
-  }
+  // Reboot into a full production environment to continue the installation.
+  $kernel = \Drupal::service('kernel');
+  $kernel->shutdown();
+  $kernel->prepareLegacyRequest(\Drupal::request());
 
   // Install base system configuration.
   \Drupal::service('config.installer')->installDefaultConfig('core', 'core');
 
   // Install System module.
-  \Drupal::moduleHandler()->install(array('system'), FALSE);
+  $kernel->getContainer()->get('module_handler')->install(array('system'), FALSE);
+
+  // DrupalKernel::prepareLegacyRequest() above calls into
+  // DrupalKernel::bootCode(), which primes file_get_stream_wrappers()'s static
+  // list of custom stream wrappers that are based on the currently enabled
+  // list of modules (none).
+  // @todo Custom stream wrappers of a new module have to be registered as soon
+  //   as the module is installed/enabled. Fix either ModuleHandler::install()
+  //   and/or DrupalKernel::updateModules().
+  // @see https://drupal.org/node/2028109
+  drupal_static_reset('file_get_stream_wrappers');
 
   // Ensure default language is saved.
   if (isset($install_state['parameters']['langcode'])) {

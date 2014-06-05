@@ -87,7 +87,7 @@ define('DRUPAL_ROOT', realpath(__DIR__ . '/../../'));
 
 // Set sane locale settings, to ensure consistent string, dates, times and
 // numbers handling.
-// @see drupal_environment_initialize()
+// @see \Drupal\Core\DrupalKernel::bootEnvironment()
 setlocale(LC_ALL, 'C');
 
 // Set the default timezone. While this doesn't cause any tests to fail, PHP

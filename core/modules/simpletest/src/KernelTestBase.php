@@ -13,6 +13,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,22 +132,30 @@ abstract class KernelTestBase extends UnitTestBase {
     // Create and set new configuration directories.
     $this->prepareConfigDirectories();
 
-    // Build a minimal, partially mocked environment for unit tests.
-    $this->containerBuild(\Drupal::getContainer());
-    // Make sure it survives kernel rebuilds.
+    // Add this test class as a service provider.
+    // @todo Remove the indirection; implement ServiceProviderInterface instead.
     $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
 
-    \Drupal::state()->set('system.module.files', $this->moduleFiles);
-    \Drupal::state()->set('system.theme.files', $this->themeFiles);
-
-    // Bootstrap the kernel.
-    // No need to dump it; this test runs in-memory.
-    $this->kernel = new DrupalKernel('unit_testing', drupal_classloader(), FALSE);
+    // Back up settings from TestBase::prepareEnvironment().
+    $settings = Settings::getAll();
+    // Bootstrap a new kernel. Don't use createFromRequest so we don't mess with settings.
+    $this->kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
+    $request = Request::create('/');
+    $this->kernel->setSitePath(DrupalKernel::findSitePath($request));
     $this->kernel->boot();
 
-    $request = Request::create('/');
+    // Restore and merge settings.
+    // DrupalKernel::boot() initializes new Settings, and the containerBuild()
+    // method sets additional settings.
+    new Settings($settings + Settings::getAll());
+
+    // Set the request scope.
+    $this->container = $this->kernel->getContainer();
     $this->container->set('request', $request);
     $this->container->get('request_stack')->push($request);
+
+    $this->container->get('state')->set('system.module.files', $this->moduleFiles);
+    $this->container->get('state')->set('system.theme.files', $this->themeFiles);
 
     // Create a minimal core.extension configuration object so that the list of
     // enabled modules can be maintained allowing
@@ -404,8 +413,7 @@ abstract class KernelTestBase extends UnitTestBase {
     // Ensure isLoaded() is TRUE in order to make _theme() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
     // no longer the $module_handler instance from above.
-    $module_handler = $this->container->get('module_handler');
-    $module_handler->reload();
+    $this->container->get('module_handler')->reload();
     $this->pass(format_string('Enabled modules: %modules.', array(
       '%modules' => implode(', ', $modules),
     )));

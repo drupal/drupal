@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Site;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Read only settings that are initialized with the class.
  *
@@ -78,6 +80,31 @@ final class Settings {
    */
   public static function getAll() {
     return self::$instance->storage;
+  }
+
+  /**
+   * Bootstraps settings.php and the Settings singleton.
+   *
+   * @param string $site_path
+   *   The current site path.
+   */
+  public static function initialize($site_path) {
+    // Export these settings.php variables to the global namespace.
+    global $base_url, $cookie_domain, $config_directories, $config;
+    $settings = array();
+    $config = array();
+    $databases = array();
+
+    // Make conf_path() available as local variable in settings.php.
+    if (is_readable(DRUPAL_ROOT . '/' . $site_path . '/settings.php')) {
+      require DRUPAL_ROOT . '/' . $site_path . '/settings.php';
+    }
+
+    // Initialize Database.
+    Database::setMultipleConnectionInfo($databases);
+
+    // Initialize Settings.
+    new Settings($settings);
   }
 
   /**

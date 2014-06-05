@@ -45,6 +45,14 @@ class ScriptTest extends DrupalUnitTestBase {
    * Tests rebuild_token_calculator.sh.
    */
   public function testRebuildTokenCalculatorSh() {
+    // The script requires a settings.php with a hash salt setting.
+    $filename = $this->siteDirectory . '/settings.php';
+    touch($filename);
+    $settings['settings']['hash_salt'] = (object) array(
+      'value' => 'some_random_key',
+      'required' => TRUE,
+    );
+    drupal_rewrite_settings($settings, $filename);
     $_SERVER['argv'] = array(
       'core/scripts/rebuild_token_calculator.sh',
     );
