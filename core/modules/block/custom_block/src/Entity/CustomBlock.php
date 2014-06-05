@@ -184,8 +184,7 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
     $fields['type'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Block type'))
       ->setDescription(t('The block type.'))
-      ->setSetting('target_type', 'custom_block_type')
-      ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH);
+      ->setSetting('target_type', 'custom_block_type');
 
     $fields['log'] = FieldDefinition::create('string_long')
       ->setLabel(t('Revision log message'))

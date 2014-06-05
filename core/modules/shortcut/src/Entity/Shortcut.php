@@ -167,7 +167,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setLabel(t('Shortcut set'))
       ->setDescription(t('The bundle of the shortcut.'))
       ->setSetting('target_type', 'shortcut_set')
-      ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH)
       ->setRequired(TRUE);
 
     $fields['title'] = FieldDefinition::create('string')

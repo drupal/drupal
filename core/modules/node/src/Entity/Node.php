@@ -357,7 +357,6 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Type'))
       ->setDescription(t('The node type.'))
       ->setSetting('target_type', 'node_type')
-      ->setSetting('max_length', EntityTypeInterface::BUNDLE_MAX_LENGTH)
       ->setReadOnly(TRUE);
 
     $fields['langcode'] = FieldDefinition::create('language')
