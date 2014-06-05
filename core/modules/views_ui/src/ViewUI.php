@@ -1080,13 +1080,6 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getConstraints().
-   */
-  public function getConstraints() {
-    return $this->storage->getConstraints();
-  }
-
-  /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::validate().
    */
   public function validate() {

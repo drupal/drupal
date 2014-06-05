@@ -18,6 +18,7 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests Entity API base functionality.
@@ -578,6 +579,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($violations->count(), 1);
 
     // Test bundle validation.
+    NodeType::create(array('type' => 'article'))
+      ->save();
     $definition = FieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
       ->setSettings(array(

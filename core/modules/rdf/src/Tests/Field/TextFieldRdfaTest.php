@@ -35,7 +35,7 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('text');
+  public static $modules = array('text', 'filter');
 
   public static function getInfo() {
     return array(

@@ -238,7 +238,8 @@ interface FieldStorageDefinitionInterface {
   /**
    * Returns an array of validation constraints.
    *
-   * See \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details.
    *
    * @return array[]
    *   An array of validation constraint definitions, keyed by constraint name.
@@ -252,7 +253,8 @@ interface FieldStorageDefinitionInterface {
   /**
    * Returns a validation constraint.
    *
-   * See \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details.
    *
    * @param string $constraint_name
    *   The name of the the constraint, i.e. its plugin id.

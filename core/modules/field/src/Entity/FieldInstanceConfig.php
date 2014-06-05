@@ -726,14 +726,15 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * {@inheritdoc}
    */
   public function getConstraints() {
-    return array();
+    return \Drupal::typedDataManager()->getDefaultConstraints($this);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConstraint($constraint_name) {
-    return NULL;
+    $constraints = $this->getConstraints();
+    return isset($constraints[$constraint_name]) ? $constraints[$constraint_name] : NULL;
   }
 
   /**

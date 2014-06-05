@@ -101,7 +101,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
    * {@inheritdoc}
    */
   public function getEntityTypeId() {
-    return $this->getConstraint('EntityType');
+    return isset($this->definition['constraints']['EntityType']) ? $this->definition['constraints']['EntityType'] : NULL;
   }
 
   /**
@@ -115,7 +115,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
    * {@inheritdoc}
    */
   public function getBundles() {
-    $bundle = $this->getConstraint('Bundle');
+    $bundle = isset($this->definition['constraints']['Bundle']) ? $this->definition['constraints']['Bundle'] : NULL;
     return is_string($bundle) ? array($bundle) : $bundle;
   }
 
@@ -128,9 +128,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
     }
     else {
       // Remove the constraint.
-      $constraints = $this->getConstraints();
-      unset($constraints['Bundle']);
-      $this->setConstraints($constraints);
+      unset($this->definition['constraints']['Bundle']);
     }
     return $this;
   }

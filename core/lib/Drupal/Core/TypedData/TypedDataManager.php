@@ -94,7 +94,6 @@ class TypedDataManager extends DefaultPluginManager {
     // Allow per-data definition overrides of the used classes, i.e. take over
     // classes specified in the type definition.
     $class = $data_definition->getClass();
-    $class = isset($class) ? $class : $type_definition['class'];
 
     if (!isset($class)) {
       throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $data_type));
@@ -349,88 +348,45 @@ class TypedDataManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets configured constraints from a data definition.
+   * Gets default constraints for the given data definition.
    *
-   * Any constraints defined for the data type, i.e. below the 'constraint' key
-   * of the type's plugin definition, or constraints defined below the data
-   * definition's constraint' key are taken into account.
-   *
-   * Constraints are defined via an array, having constraint plugin IDs as key
-   * and constraint options as values, e.g.
-   * @code
-   * $constraints = array(
-   *   'Range' => array('min' => 5, 'max' => 10),
-   *   'NotBlank' => array(),
-   * );
-   * @endcode
-   * Options have to be specified using another array if the constraint has more
-   * than one or zero options. If it has exactly one option, the value should be
-   * specified without nesting it into another array:
-   * @code
-   * $constraints = array(
-   *   'EntityType' => 'node',
-   *   'Bundle' => 'article',
-   * );
-   * @endcode
-   *
-   * Note that the specified constraints must be compatible with the data type,
-   * e.g. for data of type 'entity' the 'EntityType' and 'Bundle' constraints
-   * may be specified.
-   *
-   * @see \Drupal\Core\Validation\ConstraintManager
+   * This generates default constraint definitions based on the data definition;
+   * e.g. a NotNull constraint is generated if the data is defined as required.
+   * Besides that any constraints defined for the data type, i.e. below the
+   * 'constraint' key of the type's plugin definition, are taken into account.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   A data definition.
    *
    * @return array
-   *   Array of constraints, each being an instance of
-   *   \Symfony\Component\Validator\Constraint.
-   *
-   * @todo: Having this as well as $definition->getConstraints() is confusing.
+   *   An array of validation constraint definitions, keyed by constraint name.
+   *   Each constraint definition can be used for instantiating
+   *   \Symfony\Component\Validator\Constraint objects.
    */
-  public function getConstraints(DataDefinitionInterface $definition) {
+  public function getDefaultConstraints(DataDefinitionInterface $definition) {
     $constraints = array();
-    $validation_manager = $this->getValidationConstraintManager();
-
     $type_definition = $this->getDefinition($definition->getDataType());
     // Auto-generate a constraint for data types implementing a primitive
     // interface.
     if (is_subclass_of($type_definition['class'], '\Drupal\Core\TypedData\PrimitiveInterface')) {
-      $constraints[] = $validation_manager->create('PrimitiveType', array());
+      $constraints['PrimitiveType'] = array();
     }
     // Add in constraints specified by the data type.
     if (isset($type_definition['constraints'])) {
-      foreach ($type_definition['constraints'] as $name => $options) {
-        $constraints[] = $validation_manager->create($name, $options);
-      }
-    }
-    // Add any constraints specified as part of the data definition.
-    $defined_constraints = $definition->getConstraints();
-    foreach ($defined_constraints as $name => $options) {
-      $constraints[] = $validation_manager->create($name, $options);
+      $constraints += $type_definition['constraints'];
     }
     // Add the NotNull constraint for required data.
-    if ($definition->isRequired() && !isset($defined_constraints['NotNull'])) {
-      $constraints[] = $validation_manager->create('NotNull', array());
-    }
-
-    // If the definition does not provide a class use the class from the type
-    // definition for performing interface checks.
-    $class = $definition->getClass();
-    if (!$class) {
-      $class = $type_definition['class'];
+    if ($definition->isRequired()) {
+      $constraints['NotNull'] = array();
     }
     // Check if the class provides allowed values.
-    if (is_subclass_of($class,'Drupal\Core\TypedData\AllowedValuesInterface')) {
-      $constraints[] = $validation_manager->create('AllowedValues', array());
+    if (is_subclass_of($definition->getClass(),'Drupal\Core\TypedData\AllowedValuesInterface')) {
+      $constraints['AllowedValues'] = array();
     }
     // Add any constraints about referenced data.
     if ($definition instanceof DataReferenceDefinitionInterface) {
-      foreach ($definition->getTargetDefinition()->getConstraints() as $name => $options) {
-        $constraints[] = $validation_manager->create($name, $options);
-      }
+      $constraints += $definition->getTargetDefinition()->getConstraints();
     }
-
     return $constraints;
   }
 

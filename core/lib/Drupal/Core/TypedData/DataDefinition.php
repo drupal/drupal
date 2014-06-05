@@ -191,7 +191,13 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    */
   public function getClass() {
-    return isset($this->definition['class']) ? $this->definition['class'] : NULL;
+    if (isset($this->definition['class'])) {
+      return $this->definition['class'];
+    }
+    else {
+      $type_definition = \Drupal::typedDataManager()->getDefinition($this->getDataType());
+      return $type_definition['class'];
+    }
   }
 
   /**
@@ -253,23 +259,20 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Returns an array of validation constraints.
-   *
-   * See \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
-   *
-   * @return array
-   *   Array of constraints, each being an instance of
-   *   \Symfony\Component\Validator\Constraint.
+   * {@inheritdoc}
    */
   public function getConstraints() {
-    return isset($this->definition['constraints']) ? $this->definition['constraints'] : array();
+    $constraints = isset($this->definition['constraints']) ? $this->definition['constraints'] : array();
+    $constraints += \Drupal::typedDataManager()->getDefaultConstraints($this);
+    return $constraints;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConstraint($constraint_name) {
-    return isset($this->definition['constraints'][$constraint_name]) ? $this->definition['constraints'][$constraint_name] : NULL;
+    $constraints = $this->getConstraints();
+    return isset($constraints[$constraint_name]) ? $constraints[$constraint_name] : NULL;
   }
 
   /**
@@ -295,7 +298,8 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * Adds a validation constraint.
    *
-   * See \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
+   * See \Drupal\Core\TypedData\DataDefinitionInterface::getConstraints() for
+   * details.
    *
    * @param string $constraint_name
    *   The name of the constraint to add, i.e. its plugin id.
