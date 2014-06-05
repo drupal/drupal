@@ -126,6 +126,13 @@ abstract class KernelTestBase extends UnitTestBase {
   protected function setUp() {
     $this->keyValueFactory = new KeyValueMemoryFactory();
 
+    // Allow for test-specific overrides.
+    $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSite . '/testing.services.yml';
+    if (file_exists($settings_services_file)) {
+      // Copy the testing-specific service overrides in place.
+      copy($settings_services_file, DRUPAL_ROOT . '/' . $this->siteDirectory . '/services.yml');
+    }
+
     parent::setUp();
 
     // Create and set new configuration directories.
