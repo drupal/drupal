@@ -7,9 +7,7 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
-use Symfony\Component\HttpFoundation\Request;
 
 // Check for $_SERVER['argv'] instead of PHP_SAPI === 'cli' to allow this script
 // to be tested with the Simpletest UI test runner.
@@ -18,11 +16,11 @@ if (!isset($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
   return;
 }
 
-require __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../includes/bootstrap.inc';
+$core = dirname(__DIR__);
+require_once $core . '/vendor/autoload.php';
+require_once $core . '/includes/bootstrap.inc';
 
-$request = Request::createFromGlobals();
-Settings::initialize(DrupalKernel::findSitePath($request));
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
 $timestamp = time();
 $token = Crypt::hmacBase64($timestamp, Settings::get('hash_salt'));

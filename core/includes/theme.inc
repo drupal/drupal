@@ -24,7 +24,6 @@ use Drupal\Core\Template\RenderWrapper;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Element;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @defgroup content_flags Content markers
@@ -92,11 +91,8 @@ function drupal_theme_access($theme) {
 
 /**
  * Initializes the theme system by loading the theme.
- *
- * @param \Symfony\Component\HttpFoundation\Request $request
- *   The request for which to initialize the theme.
  */
-function drupal_theme_initialize(Request $request = NULL) {
+function drupal_theme_initialize() {
   global $theme, $theme_key;
 
   // If $theme is already set, assume the others are set, too, and do nothing
@@ -109,9 +105,7 @@ function drupal_theme_initialize(Request $request = NULL) {
   // @todo Let the theme.negotiator listen to the kernel request event.
   // Determine the active theme for the theme negotiator service. This includes
   // the default theme as well as really specific ones like the ajax base theme.
-  if (!$request) {
-    $request = \Drupal::request();
-  }
+  $request = \Drupal::request();
   $theme = \Drupal::service('theme.negotiator')->determineActiveTheme($request);
 
   // If no theme could be negotiated, or if the negotiated theme is not within

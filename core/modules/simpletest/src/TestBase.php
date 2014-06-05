@@ -15,6 +15,7 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -652,7 +653,7 @@ abstract class TestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    *
    * @see TestBase::prepareEnvironment()
-   * @see \Drupal\Core\DrupalKernel::bootConfiguration()
+   * @see _drupal_bootstrap_configuration()
    */
   protected function assertNoErrorsLogged() {
     // Since PHP only creates the error.log file when an actual error is

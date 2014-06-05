@@ -8,22 +8,13 @@
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
 
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
-use Symfony\Component\HttpFoundation\Request;
 
-$autoloader = require_once __DIR__ . '/core/vendor/autoload.php';
+require_once __DIR__ . '/core/vendor/autoload.php';
+require_once __DIR__ . '/core/includes/bootstrap.inc';
 
 try {
-
-  $request = Request::createFromGlobals();
-  $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
-  $response = $kernel
-    ->handlePageCache($request)
-    ->handle($request)
-      // Handle the response object.
-      ->prepare($request)->send();
-  $kernel->terminate($request, $response);
+  drupal_handle_request();
 }
 catch (Exception $e) {
   $message = 'If you have just changed code (for example deployed a new module or moved an existing one) read <a href="http://drupal.org/documentation/rebuild">http://drupal.org/documentation/rebuild</a>';

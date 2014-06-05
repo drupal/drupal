@@ -8,10 +8,10 @@
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Test\TestRunnerKernel;
+use Drupal\Core\Test\TestKernel;
 use Symfony\Component\HttpFoundation\Request;
 
-$autoloader = require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.
@@ -26,10 +26,7 @@ if ($args['help'] || $count == 0) {
 }
 
 simpletest_script_init();
-
-$request = Request::createFromGlobals();
-$kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
-$kernel->prepareLegacyRequest($request);
+simpletest_script_bootstrap();
 
 if ($args['execute-test']) {
   simpletest_script_setup_database();
@@ -356,6 +353,50 @@ function simpletest_script_init() {
   }
 
   chdir(realpath(__DIR__ . '/../..'));
+  require_once dirname(__DIR__) . '/includes/bootstrap.inc';
+}
+
+/**
+ * Bootstraps a minimal Drupal environment.
+ *
+ * @see install_begin_request()
+ */
+function simpletest_script_bootstrap() {
+  // Load legacy include files.
+  foreach (glob(DRUPAL_ROOT . '/core/includes/*.inc') as $include) {
+    require_once $include;
+  }
+
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  // Remove Drupal's error/exception handlers; they are designed for HTML
+  // and there is no storage nor a (watchdog) logger here.
+  restore_error_handler();
+  restore_exception_handler();
+
+  // In addition, ensure that PHP errors are not hidden away in logs.
+  ini_set('display_errors', TRUE);
+
+  // Ensure that required Settings exist.
+  if (!Settings::getAll()) {
+    new Settings(array(
+      'hash_salt' => 'run-tests',
+    ));
+  }
+
+  $kernel = new TestKernel(drupal_classloader());
+  $kernel->boot();
+
+  $request = Request::createFromGlobals();
+  $container = $kernel->getContainer();
+  $container->enterScope('request');
+  $container->set('request', $request, 'request');
+  $container->get('request_stack')->push($request);
+
+  $module_handler = $container->get('module_handler');
+  $module_handler->loadAll();
+
+  simpletest_classloader_register();
 }
 
 /**

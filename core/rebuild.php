@@ -11,30 +11,25 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
-use Symfony\Component\HttpFoundation\Request;
 
 // Change the directory to the Drupal root.
 chdir('..');
 
-$autoloader = require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/includes/bootstrap.inc';
 require_once __DIR__ . '/includes/utility.inc';
 
-$request = Request::createFromGlobals();
-// Manually resemble early bootstrap of DrupalKernel::boot().
-require_once __DIR__ . '/includes/bootstrap.inc';
-DrupalKernel::bootEnvironment();
-Settings::initialize(DrupalKernel::findSitePath($request));
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
 if (Settings::get('rebuild_access', FALSE) ||
-  ($request->get('token') && $request->get('timestamp') &&
-    ((REQUEST_TIME - $request->get('timestamp')) < 300) &&
-    ($request->get('token') === Crypt::hmacBase64($request->get('timestamp'), Settings::get('hash_salt')))
+  (isset($_GET['token'], $_GET['timestamp']) &&
+    ((REQUEST_TIME - $_GET['timestamp']) < 300) &&
+    ($_GET['token'] === Crypt::hmacBase64($_GET['timestamp'], Settings::get('hash_salt')))
   )) {
 
-  drupal_rebuild($autoloader, $request);
+  drupal_rebuild();
   drupal_set_message('Cache rebuild complete.');
 }
-$base_path = dirname(dirname($request->getBaseUrl()));
-header('Location: ' . $base_path);
+
+header('Location: ' . $GLOBALS['base_url']);
