@@ -1372,7 +1372,7 @@ function system_sort_modules_by_info_name($a, $b) {
 }
 
 /**
- * Sorts themes by their name.
+ * Sorts themes by their names, with the default theme listed first.
  *
  * Callback for uasort() within
  * \Drupal\system\Controller\SystemController::themesPage().
