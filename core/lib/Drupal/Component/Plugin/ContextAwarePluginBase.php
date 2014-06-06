@@ -130,12 +130,6 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
     $context_definition = $this->getContextDefinition($name);
     $this->context[$name] = new Context($context_definition);
     $this->context[$name]->setContextValue($value);
-
-    // Verify the provided value validates.
-    $violations = $this->context[$name]->validate();
-    if (count($violations) > 0) {
-      throw new PluginException("The provided context value does not pass validation.");
-    }
     return $this;
   }
 

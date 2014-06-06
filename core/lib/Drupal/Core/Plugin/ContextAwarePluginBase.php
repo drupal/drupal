@@ -8,7 +8,6 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\ContextAwarePluginBase as ComponentContextAwarePluginBase;
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -48,11 +47,6 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
     // Use the Drupal specific context class.
     $this->context[$name] = new Context($context_definition);
     $this->context[$name]->setContextValue($value);
-
-    // Verify the provided value validates.
-    if ($this->context[$name]->validate()->count() > 0) {
-      throw new PluginException("The provided context value does not pass validation.");
-    }
     return $this;
   }
 

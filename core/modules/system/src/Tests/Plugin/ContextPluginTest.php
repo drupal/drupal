@@ -83,13 +83,9 @@ class ContextPluginTest extends DrupalUnitTestBase {
     }
 
     // Try to pass the wrong class type as a context value.
-    try {
-      $plugin->setContextValue('user', $node);
-      $this->fail('The node context should fail validation for a user context.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The provided context value does not pass validation.');
-    }
+    $plugin->setContextValue('user', $node);
+    $violations = $plugin->validateContexts();
+    $this->assertTrue(!empty($violations), 'The provided context value does not pass validation.');
 
     // Set an appropriate context value appropriately and check to make sure
     // its methods work as expected.
