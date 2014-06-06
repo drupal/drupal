@@ -29,7 +29,7 @@ class DatabaseQueue implements ReliableQueueInterface {
   protected $connection;
 
   /**
-   * Constructs this factory object.
+   * Constructs a \Drupal\Core\Queue\DatabaseQueue object.
    *
    * @param string $name
    *   The name of the queue.
