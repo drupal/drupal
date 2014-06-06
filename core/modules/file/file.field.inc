@@ -198,13 +198,13 @@ function theme_file_upload_help($variables) {
       $descriptions[] = t('Images must be exactly !size pixels.', array('!size' => '<strong>' . $max . '</strong>'));
     }
     elseif ($min && $max) {
-      $descriptions[] = t('Images must be between !min and !max pixels.', array('!min' => '<strong>' . $min . '</strong>', '!max' => '<strong>' . $max . '</strong>'));
+      $descriptions[] = t('Images must be larger than !min pixels. Images larger than !max pixels will be resized.', array('!min' => '<strong>' . $min . '</strong>', '!max' => '<strong>' . $max . '</strong>'));
     }
     elseif ($min) {
       $descriptions[] = t('Images must be larger than !min pixels.', array('!min' => '<strong>' . $min . '</strong>'));
     }
     elseif ($max) {
-      $descriptions[] = t('Images must be smaller than !max pixels.', array('!max' => '<strong>' . $max . '</strong>'));
+      $descriptions[] = t('Images larger than !max pixels will be resized.', array('!max' => '<strong>' . $max . '</strong>'));
     }
   }
 
