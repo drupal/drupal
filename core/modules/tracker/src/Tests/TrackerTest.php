@@ -221,6 +221,72 @@ class TrackerTest extends WebTestBase {
   }
 
   /**
+   * Tests for ordering on a users tracker listing when comments are posted.
+   */
+  function testTrackerOrderingNewComments() {
+    $this->drupalLogin($this->user);
+
+    $node_one = $this->drupalCreateNode(array(
+      'title' => $this->randomName(8),
+    ));
+
+    $node_two = $this->drupalCreateNode(array(
+      'title' => $this->randomName(8),
+    ));
+
+    // Now get other_user to track these pieces of content.
+    $this->drupalLogin($this->other_user);
+
+    // Add a comment to the first page.
+    $comment = array(
+      'subject' => $this->randomName(),
+      'comment_body[0][value]' => $this->randomName(20),
+    );
+    $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, t('Save'));
+
+    // If the comment is posted in the same second as the last one then Drupal
+    // can't tell the difference, so we wait one second here.
+    sleep(1);
+
+    // Add a comment to the second page.
+    $comment = array(
+      'subject' => $this->randomName(),
+      'comment_body[0][value]' => $this->randomName(20),
+    );
+    $this->drupalPostForm('comment/reply/node/' . $node_two->id() . '/comment', $comment, t('Save'));
+
+    // We should at this point have in our tracker for other_user:
+    // 1. node_two
+    // 2. node_one
+    // Because that's the reverse order of the posted comments.
+
+    // Now we're going to post a comment to node_one which should jump it to the
+    // top of the list.
+
+    $this->drupalLogin($this->user);
+    // If the comment is posted in the same second as the last one then Drupal
+    // can't tell the difference, so we wait one second here.
+    sleep(1);
+
+    // Add a comment to the second page.
+    $comment = array(
+      'subject' => $this->randomName(),
+      'comment_body[0][value]' => $this->randomName(20),
+    );
+    $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, t('Save'));
+
+    // Switch back to the other_user and assert that the order has swapped.
+    $this->drupalLogin($this->other_user);
+    $this->drupalGet('user/' . $this->other_user->id() . '/track');
+    // This is a cheeky way of asserting that the nodes are in the right order
+    // on the tracker page.
+    // It's almost certainly too brittle.
+    $pattern = '/' . preg_quote($node_one->getTitle()) . '.+' . preg_quote($node_two->getTitle()) . '/s';
+    $this->verbose($pattern);
+    $this->assertPattern($pattern, 'Most recently commented on node appears at the top of tracker');
+  }
+
+  /**
    * Tests that existing nodes are indexed by cron.
    */
   function testTrackerCronIndexing() {
