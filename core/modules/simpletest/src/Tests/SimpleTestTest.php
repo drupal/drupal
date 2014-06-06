@@ -7,7 +7,6 @@
 
 namespace Drupal\simpletest\Tests;
 
-use Drupal\Core\Database\Driver\pgsql\Select;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -34,6 +33,9 @@ class SimpleTestTest extends WebTestBase {
    */
   protected $test_ids = array();
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'SimpleTest functionality',
@@ -44,11 +46,41 @@ class SimpleTestTest extends WebTestBase {
 
   function setUp() {
     if (!$this->isInChildSite()) {
+      $php = <<<'EOD'
+<?php
+
+# Make sure that the $test_class variable is defined when this file is included.
+if ($test_class) {
+}
+
+# Define a function to be able to check that this file was loaded with
+# function_exists().
+if (!function_exists('simpletest_test_stub_settings_function')) {
+  function simpletest_test_stub_settings_function() {}
+}
+EOD;
+
+      file_put_contents($this->siteDirectory. '/' . 'settings.testing.php', $php);
+      // @see \Drupal\system\Tests\DrupalKernel\DrupalKernelSiteTest
+      $class = __CLASS__;
+      $yaml = <<<EOD
+services:
+  # Add a new service.
+  site.service.yml:
+    class: $class
+  # Swap out a core service.
+  cache.backend.database:
+    class: Drupal\Core\Cache\MemoryBackendFactory
+EOD;
+      file_put_contents($this->siteDirectory . '/testing.services.yml', $yaml);
+
       parent::setUp();
       // Create and log in an admin user.
       $this->drupalLogin($this->drupalCreateUser(array('administer unit tests')));
     }
     else {
+      // This causes three of the five fails that are asserted in
+      // confirmStubResults().
       self::$modules = array('non_existent_module');
       parent::setUp();
     }
@@ -184,23 +216,42 @@ class SimpleTestTest extends WebTestBase {
    * Test to be run and the results confirmed.
    */
   function stubTest() {
+    // This causes the first of the ten passes asserted in confirmStubResults().
     $this->pass($this->pass);
+    // The first three fails are caused by enabling a non-existent module in
+    // setUp(). This causes the fourth of the five fails asserted in
+    // confirmStubResults().
     $this->fail($this->fail);
 
+    // This causes the second to fourth of the ten passes asserted in
+    // confirmStubResults().
     $this->drupalCreateUser(array($this->valid_permission));
+    // This causes the fifth of the five fails asserted in confirmStubResults().
     $this->drupalCreateUser(array($this->invalid_permission));
 
+    // This causes the fifth of the ten passes asserted in confirmStubResults().
     $this->pass(t('Test ID is @id.', array('@id' => $this->testId)));
 
+    // These cause the sixth to ninth of the ten passes asserted in
+    // confirmStubResults().
+    $this->assertTrue(file_exists(conf_path() . '/settings.testing.php'));
+    // Check the settings.testing.php file got included.
+    $this->assertTrue(function_exists('simpletest_test_stub_settings_function'));
+    // Check that the test-specific service file got loaded.
+    $this->assertTrue($this->container->has('site.service.yml'));
+    $this->assertIdentical(get_class($this->container->get('cache.backend.database')), 'Drupal\Core\Cache\MemoryBackendFactory');
+
+    // These cause the two exceptions asserted in confirmStubResults().
     // Call trigger_error() without the required argument to trigger an E_WARNING.
     trigger_error();
-
-    // Call an assert function specific to that class.
-    $this->assertNothing();
-
     // Generates a warning inside a PHP function.
     array_key_exists(NULL, NULL);
 
+    // This causes the tenth of the ten passes asserted in
+    // confirmStubResults().
+    $this->assertNothing();
+
+    // This causes the debug message asserted in confirmStubResults().
     debug('Foo', 'Debug');
   }
 
@@ -237,7 +288,7 @@ class SimpleTestTest extends WebTestBase {
 
     $this->assertAssertion("Debug: 'Foo'", 'Debug', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
-    $this->assertEqual('6 passes, 5 fails, 2 exceptions, 1 debug message', $this->childTestResults['summary']);
+    $this->assertEqual('10 passes, 5 fails, 2 exceptions, 1 debug message', $this->childTestResults['summary']);
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, 'Found test ID in results.');

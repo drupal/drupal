@@ -54,6 +54,13 @@ abstract class TestBase {
   protected $databasePrefix = NULL;
 
   /**
+   * The site directory of the original parent site.
+   *
+   * @var string
+   */
+  protected $originalSite;
+
+  /**
    * The original file directory, before it was changed for testing purposes.
    *
    * @var string
