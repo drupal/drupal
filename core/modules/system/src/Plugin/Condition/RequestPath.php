@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\system\Plugin\Condition\RequestPath.
+ */
+
+namespace Drupal\system\Plugin\Condition;
+
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+/**
+ * Provides a 'Request Path' condition.
+ *
+ * @Condition(
+ *   id = "request_path",
+ *   label = @Translation("Request Path"),
+ * )
+ */
+class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * An alias manager to find the alias for the current system path.
+   *
+   * @var \Drupal\Core\Path\AliasManagerInterface
+   */
+  protected $aliasManager;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * Constructs a RequestPath condition plugin.
+   *
+   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   *   An alias manager to find the alias for the current system path.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   */
+  public function __construct(AliasManagerInterface $alias_manager, RequestStack $request_stack, array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->aliasManager = $alias_manager;
+    $this->requestStack = $request_stack;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $container->get('path.alias_manager.cached'),
+      $container->get('request_stack'),
+      $configuration,
+      $plugin_id,
+      $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array('pages' => '');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $form['pages'] = array(
+      '#type' => 'textarea',
+      '#title' => $this->t('Pages'),
+      '#default_value' => $this->configuration['pages'],
+      '#description' => $this->t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %user for the current user's page and %user-wildcard for every user page. %front is the front page.", array(
+        '%user' => 'user',
+        '%user-wildcard' => 'user/*',
+        '%front' => '<front>',
+      )),
+    );
+    return parent::buildConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, array &$form_state) {
+    $this->configuration['pages'] = $form_state['values']['pages'];
+    parent::submitConfigurationForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function summary() {
+    $pages = array_map('trim', explode("\n", $this->configuration['pages']));
+    $pages = implode(', ', $pages);
+    if (!empty($this->configuration['negate'])) {
+      return $this->t('Do not return true on the following pages: @pages', array('@pages' => $pages));
+    }
+    return $this->t('Return true on the following pages: @pages', array('@pages' => $pages));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function evaluate() {
+    // Convert path to lowercase. This allows comparison of the same path
+    // with different case. Ex: /Page, /page, /PAGE.
+    $pages = Unicode::strtolower($this->configuration['pages']);
+
+    $request = $this->requestStack->getCurrentRequest();
+    // Compare the lowercase path alias (if any) and internal path.
+    $path = $request->attributes->get('_system_path');
+    $path_alias = Unicode::strtolower($this->aliasManager->getAliasByPath($path));
+
+    return $this->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->matchPath($path, $pages));
+  }
+
+  /**
+   * Check if a path matches any pattern in a set of patterns.
+   *
+   * @param string $path
+   *   The path to match.
+   * @param string $patterns
+   *   String containing a set of patterns separated by \n, \r or \r\n.
+   *
+   * @return bool
+   *   TRUE if the path matches a pattern, FALSE otherwise.
+   */
+  protected function matchPath($path, $patterns) {
+    return drupal_match_path($path, $patterns);
+  }
+
+}
