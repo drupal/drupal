@@ -26,27 +26,26 @@ function content_translation_help($route_name, Request $request) {
     case 'help.page.content_translation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Content Translation module allows you to create and manage translations for your Drupal site content. You can specify which elements need to be translated at the content-type level for content items and comments, at the vocabulary level for taxonomy terms, and at the site level for user accounts. Other modules may provide additional elements that can be translated. For more information, see the online handbook entry for <a href="!url">Content Translation</a>.', array('!url' => 'http://drupal.org/documentation/modules/translation_entity')) . '</p>';
+      $output .= '<p>' . t('The Content Translation module allows you to translate content, comments, custom blocks, taxonomy terms, users and other <a href="!entity_help">content entities</a>. Together with the modules <a href="!language">Language</a>, <a href="!config-trans">Configuration Translation</a>, and <a href="!locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see <a href="!translation-entity">the online documentation for the Content Translation module</a>.', array('!locale' => (\Drupal::moduleHandler()->moduleExists('locale')) ? \Drupal::url('help.page', array('name' => 'locale')) : '#', '!config-trans' => (\Drupal::moduleHandler()->moduleExists('config_translation')) ? \Drupal::url('help.page', array('name' => 'config_translation')) : '#', '!language' => \Drupal::url('help.page', array('name' => 'language')), '!translation-entity' => 'https://drupal.org/documentation/modules/translation', '!entity_help' => \Drupal::url('help.page', array('name' => 'entity')))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
-      $output .= '<dd><p>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language'))) . '</p>';
-      $output .= '<p>' . t('After adding languages, <a href="!url">configure translation</a>.', array('!url' => url('admin/config/regional/content-language'))) . '</p>';
+      $output .= '<dd>' . t('In order to translate content, the website must have at least two <a href="!url">languages</a>. When that is the case, you can enable translation for the desired content entities on the <a href="!translation-entity">Content language</a> page. When enabling translation you can choose the default language for content and decide whether to show the language selection field on the content editing forms.', array('!url' => \Drupal::url('language.admin_overview'), '!translation-entity' => \Drupal::url('language.content_settings_page'), '!language-help' => \Drupal::url('help.page', array('name' => 'language')))) . '</dd>';
+      $output .= '<dt>' . t('Enabling field translation') . '</dt>';
+      $output .= '<dd>' . t('You can define which fields of a content entity can be translated. For example, you might want to translate the title and body field while leaving the image field untranslated. If you exclude a field from being translated, it will still show up in the content editing form, but any changes made to that field will be applied to <em>all</em> translations of that content.') . '</dd>';
       $output .= '<dt>' . t('Translating content') . '</dt>';
-      $output .= '<dd>' . t('After enabling translation you can create a new piece of content, or edit existing content and assign it a language. Then, you will see a <em>Translate</em> tab or link that will gives an overview of the translation status for the current content. From there, you can add translations and edit or delete existing translations. This process is similar for every translatable element on your site, such as taxonomy terms, comments or user accounts.') . '</dd>';
-      $output .= '<dt>' . t('Changing source language') . '</dt>';
-      $output .= '<dd>' . t('When there are two or more possible source languages, selecting a <em>Source language</em> will repopulate the form using the specified source\'s values. For example, French is much closer to Spanish than to Chinese, so changing the French translation\'s source language to Spanish can assist translators.') . '</dd>';
-      $output .= '<dt>' . t('Maintaining translations') . '</dt>';
-      $output .= '<dd>' . t('If editing content in one language requires that translated versions also be updated to reflect the change, use the <em>Flag other translations as outdated</em> check box to mark the translations as outdated and in need of revision.') . '</dd>';
-      $output .= '<dt>' . t('Translation permissions') . '</dt>';
-      $output .= '<dd>' . t('The Content Translation module makes a basic set of permissions available. Additional <a href="@permissions">permissions</a> are made available after translation is enabled for each translatable element.', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-content_translation')))) . '</dd>';
+      $output .= '<dd>' . t('If translation is enabled you can translate a content entity via the Translate tab (or Translate link). The Translations page of a content entity gives an overview of the translation status for the current content and lets you add, edit, and delete its translations. This process is similar for every translatable content entity on your site.') . '</dd>';
+      $output .= '<dt>' . t('Changing the source language for a translation') . '</dt>';
+      $output .= '<dd>' . t('When you add a new translation, the original text you are translating is displayed in the edit form as the <em>source</em>. If at least one translation of the original content already exists when you add a new translation, you can choose either the original content (default) or one of the other translations as the source, using the select list in the Source language section. After saving the translation, the chosen source language is then listed on the Translate tab of the content.') . '</dd>';
+      $output .= '<dt>' . t('Setting status of translations') . '</dt>';
+      $output .= '<dd>' . t('If you edit a translation in one language you may want to set the status of the other translations as <em>out-of-date</em>. You can set this status by selecting the <em>Flag other translations as outdated</em> checkbox in the Translation section of the content editing form. The status will be visible on the Translations page.') . '</dd>';
       $output .= '</dl>';
       return $output;
 
     case 'language.content_settings_page':
       $output = '';
       if (!\Drupal::languageManager()->isMultilingual()) {
-        $output .= '<br/>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language')));
+        $output .= '<br/>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => \Drupal::url('language.admin_overview')));
       }
       return $output;
   }
