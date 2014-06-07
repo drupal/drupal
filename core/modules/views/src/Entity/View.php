@@ -195,7 +195,9 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     $display_options = array(
       'display_plugin' => $plugin_id,
       'id' => $id,
-      'display_title' => $title,
+      // Cast the display title to a string since it is an object.
+      // @see \Drupal\Core\StringTranslation\TranslationWrapper
+      'display_title' => (string) $title,
       'position' => $id === 'default' ? 0 : count($this->display),
       'provider' => $plugin['provider'],
       'display_options' => array(),

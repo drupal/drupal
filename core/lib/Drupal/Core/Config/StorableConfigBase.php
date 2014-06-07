@@ -183,7 +183,7 @@ abstract class StorableConfigBase extends ConfigBase {
     if ($element && ($element instanceof Undefined || $element instanceof Ignore)) {
       return $value;
     }
-    if ((is_scalar($value) || $value === NULL)) {
+    if (is_scalar($value) || $value === NULL) {
       if ($element && $element instanceof PrimitiveInterface) {
         // Special handling for integers and floats since the configuration
         // system is primarily concerned with saving values from the Form API

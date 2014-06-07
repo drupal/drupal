@@ -36,7 +36,9 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     }
 
     $definition = $this->getPluginDefinition();
-    return $definition['admin_label'];
+    // Cast the admin label to a string since it is an object.
+    // @see \Drupal\Core\StringTranslation\TranslationWrapper
+    return (string) $definition['admin_label'];
   }
 
   /**

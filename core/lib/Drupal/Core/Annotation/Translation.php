@@ -8,7 +8,7 @@
 namespace Drupal\Core\Annotation;
 
 use Drupal\Component\Annotation\AnnotationBase;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 
 /**
  * @defgroup plugin_translatable Translatable plugin metadata
@@ -52,12 +52,11 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * @ingroup plugin_translatable
  */
 class Translation extends AnnotationBase {
-  use StringTranslationTrait;
 
   /**
-   * The translation of the value passed to the constructor of the class.
+   * The string translation object.
    *
-   * @var string
+   * @var \Drupal\Core\StringTranslation\TranslationWrapper
    */
   protected $translation;
 
@@ -83,11 +82,11 @@ class Translation extends AnnotationBase {
         'context' => $values['context'],
       );
     }
-    $this->translation = $this->t($string, $arguments, $options);
+    $this->translation = new TranslationWrapper($string, $arguments, $options);
   }
 
   /**
-   * Implements Drupal\Core\Annotation\AnnotationInterface::get().
+   * {@inheritdoc}
    */
   public function get() {
     return $this->translation;

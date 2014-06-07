@@ -15,6 +15,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\language\Entity\Language as LanguageEntity;
 use Drupal\Component\Utility\Crypt;
 use Symfony\Component\HttpFoundation\Request;
@@ -209,9 +210,9 @@ function locale_theme() {
 function locale_stream_wrappers() {
   $wrappers = array(
     'translations' => array(
-      'name' => t('Translation files'),
+      'name' => new TranslationWrapper('Translation files'),
       'class' => 'Drupal\locale\TranslationsStream',
-      'description' => t('Translation files'),
+      'description' => new TranslationWrapper('Translation files'),
       'type' => STREAM_WRAPPERS_LOCAL_HIDDEN,
     ),
   );

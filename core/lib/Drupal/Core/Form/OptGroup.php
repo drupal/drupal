@@ -43,7 +43,7 @@ class OptGroup {
    */
   protected static function doFlattenOptions(array $array, array &$options) {
     foreach ($array as $key => $value) {
-      if (is_object($value)) {
+      if (is_object($value) && isset($value->option)) {
         static::doFlattenOptions($value->option, $options);
       }
       elseif (is_array($value)) {

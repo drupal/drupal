@@ -82,7 +82,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
     $this->editorManager->clearCachedDefinitions();
 
     // Case 2: a text editor available.
-    $this->assertIdentical(array('unicorn' => 'Unicorn Editor'), $this->editorManager->listOptions(), 'When some text editor is enabled, the manager works correctly.');
+    $this->assertIdentical('Unicorn Editor', (string) $this->editorManager->listOptions()['unicorn'], 'When some text editor is enabled, the manager works correctly.');
 
     // Case 3: a text editor available & associated (but associated only with
     // the 'Full HTML' text format).

@@ -62,7 +62,7 @@ class TranslationTest extends UnitTestCase {
 
     $annotation = new Translation($values);
 
-    $this->assertSame($expected, $annotation->get());
+    $this->assertSame($expected, (string) $annotation->get());
   }
 
   /**

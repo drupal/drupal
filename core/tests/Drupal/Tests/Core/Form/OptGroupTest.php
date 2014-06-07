@@ -50,11 +50,15 @@ class OptGroupTest extends UnitTestCase {
     $object1->option = array('foo' => 'foo');
     $object2 = new \stdClass();
     $object2->option = array(array('foo' => 'foo'), array('foo' => 'foo'));
+    $object3 = new \stdClass();
     return array(
       array(array('foo' => 'foo')),
       array(array(array('foo' => 'foo'))),
       array(array($object1)),
       array(array($object2)),
+      array(array($object1, $object2)),
+      array(array('foo' => $object3)),
+      array(array('foo' => $object3, $object1, array('foo' => 'foo'))),
     );
   }
 

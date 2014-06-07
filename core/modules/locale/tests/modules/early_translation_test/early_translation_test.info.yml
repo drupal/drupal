@@ -1,0 +1,7 @@
+name: 'Early translation test'
+type: module
+description: 'Support module for testing early bootstrap getting of annotations with translations.'
+core: 8.x
+package: Testing
+version: VERSION
+

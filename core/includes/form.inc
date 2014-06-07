@@ -983,7 +983,7 @@ function form_select_options($element, $choices = NULL) {
       $options .= form_select_options($element, $choice);
       $options .= '</optgroup>';
     }
-    elseif (is_object($choice)) {
+    elseif (is_object($choice) && isset($choice->option)) {
       $options .= form_select_options($element, $choice->option);
     }
     else {

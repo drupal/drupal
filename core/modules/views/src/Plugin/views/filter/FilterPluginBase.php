@@ -1160,11 +1160,13 @@ abstract class FilterPluginBase extends HandlerBase {
       }
       // FAPI has some special value to allow hierarchy.
       // @see _form_options_flatten
-      elseif (is_object($label)) {
+      elseif (is_object($label) && isset($label->option)) {
         $this->prepareFilterSelectOptions($options[$value]->option);
       }
       else {
-        $options[$value] = strip_tags(decode_entities($label));
+        // Cast the label to a string since it can be an object.
+        // @see \Drupal\Core\StringTranslation\TranslationWrapper
+        $options[$value] = strip_tags(decode_entities((string) $label));
       }
     }
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Plugin\Discovery;
 
+use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\simpletest\UnitTestBase;
 
 /**
@@ -49,7 +50,7 @@ abstract class DiscoveryTestBase extends UnitTestBase {
 
     // Ensure that getDefinition() returns the expected definition.
     foreach ($this->expectedDefinitions as $id => $definition) {
-      $this->assertIdentical($this->discovery->getDefinition($id), $definition);
+      $this->assertDefinitionIdentical($this->discovery->getDefinition($id), $definition);
     }
 
     // Ensure that an empty array is returned if no plugin definitions are found.
@@ -58,5 +59,30 @@ abstract class DiscoveryTestBase extends UnitTestBase {
     // Ensure that NULL is returned as the definition of a non-existing plugin.
     $this->assertIdentical($this->emptyDiscovery->getDefinition('non_existing', FALSE), NULL, 'NULL returned as the definition of a non-existing plugin.');
   }
+
+  /**
+   * Asserts a definition against an expected definition.
+   *
+   * Converts any instances of \Drupal\Core\Annotation\Translation to a string.
+   *
+   * @param array $definition
+   *   The definition to test.
+   * @param array $expected_definition
+   *   The expected definition to test against.
+   *
+   * @return bool
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertDefinitionIdentical(array $definition, array $expected_definition) {
+    $func = function (&$item){
+      if ($item instanceof TranslationWrapper) {
+        $item = (string) $item;
+      }
+    };
+    array_walk_recursive($definition, $func);
+    array_walk_recursive($expected_definition, $func);
+    return $this->assertIdentical($definition, $expected_definition);
+  }
+
 }
 
