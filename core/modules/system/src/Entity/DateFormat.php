@@ -9,6 +9,7 @@ namespace Drupal\system\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\system\DateFormatInterface;
 
 /**
@@ -102,6 +103,18 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
    */
   public function isLocked() {
     return (bool) $this->locked;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
+    if ($a->isLocked() == $b->isLocked()) {
+      $a_label = $a->label();
+      $b_label = $b->label();
+      return strnatcasecmp($a_label, $b_label);
+    }
+    return $a->isLocked() ? 1 : -1;
   }
 
 }

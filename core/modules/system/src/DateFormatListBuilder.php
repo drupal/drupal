@@ -58,15 +58,6 @@ class DateFormatListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function load() {
-    return array_filter(parent::load(), function ($entity) {
-      return !$entity->isLocked();
-    });
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildHeader() {
     $header['id'] = t('Machine name');
     $header['label'] = t('Name');
@@ -78,7 +69,12 @@ class DateFormatListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['id'] = $entity->id();
+    if ($entity->isLocked()) {
+      $row['id'] =  $this->t('@entity_id (locked)', array('@entity_id' => $entity->id()));
+    }
+    else {
+      $row['id'] = $entity->id();
+    }
     $row['label'] = $this->getLabel($entity);
     $row['pattern'] = $this->dateService->format(REQUEST_TIME, $entity->id());
     return $row + parent::buildRow($entity);
