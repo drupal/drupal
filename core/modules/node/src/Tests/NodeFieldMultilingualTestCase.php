@@ -133,9 +133,9 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
 
     // Check if node body is showed.
     $this->drupalGet('node/' . $node->id());
-    $body = $this->xpath('//article[@id=:id]//div[@class=:class]/descendant::p', array(
-      ':id' => 'node-' . $node->id(),
-      ':class' => 'content',
+     $body = $this->xpath('//article[contains(concat(" ", normalize-space(@class), " "), :node-class)]//div[contains(concat(" ", normalize-space(@class), " "), :content-class)]/descendant::p', array(
+      ':node-class' => ' node ',
+      ':content-class' => 'node__content',
     ));
     $this->assertEqual(current($body), $node->body->value, 'Node body found.');
   }

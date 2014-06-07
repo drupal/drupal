@@ -579,7 +579,7 @@ function node_is_page(NodeInterface $node) {
 function node_preprocess_html(&$variables) {
   // If on an individual node page, add the node type to body classes.
   if (($node = \Drupal::request()->attributes->get('node')) && $node instanceof NodeInterface) {
-    $variables['attributes']['class'][] = drupal_html_class('node-type-' . $node->getType());
+    $variables['attributes']['class'][] = drupal_html_class('node--type-' . $node->getType());
   }
 }
 
@@ -642,9 +642,9 @@ function template_preprocess_node(&$variables) {
     '#account' => $node->getOwner(),
     '#link_options' => array('attributes' => array('rel' => 'author')),
   );
-  $variables['name'] = drupal_render($username);
+  $variables['author_name'] = drupal_render($username);
 
-  $variables['node_url'] = $node->url('canonical', array(
+  $variables['url'] = $node->url('canonical', array(
     'language' => $node->language(),
   ));
   $variables['label'] = $variables['elements']['title'];
@@ -660,23 +660,17 @@ function template_preprocess_node(&$variables) {
   // Display post information only on certain node types.
   // Avoid loading the entire node type config entity here that may not exist.
   $node_type_config = \Drupal::config('node.type.' . $node->bundle());
+  // Used by RDF to add attributes around the author and date submitted.
+  $variables['author_attributes'] = new Attribute();
   // Display submitted by default.
   $variables['display_submitted'] = $node_type_config->isNew() || $node_type_config->get('settings.node.submitted');
   if ($variables['display_submitted']) {
-    $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
     if (theme_get_setting('features.node_user_picture')) {
       // To change user picture settings (e.g. image style), edit the 'compact'
       // view mode on the User entity. Note that the 'compact' view mode might
       // not be configured, so remember to always check the theme setting first.
-      $variables['user_picture'] = user_view($node->getOwner(), 'compact');
+      $variables['author_picture'] = user_view($node->getOwner(), 'compact');
     }
-    else {
-      $variables['user_picture'] = array();
-    }
-  }
-  else {
-    $variables['submitted'] = '';
-    $variables['user_picture'] = '';
   }
 
   // Add article ARIA role.
@@ -684,23 +678,22 @@ function template_preprocess_node(&$variables) {
 
   // Gather node classes.
   $variables['attributes']['class'][] = 'node';
-  $variables['attributes']['class'][] = drupal_html_class('node-' . $node->bundle());
+  $variables['attributes']['class'][] = drupal_html_class('node--type-' . $node->bundle());
   if ($node->isPromoted()) {
-    $variables['attributes']['class'][] = 'promoted';
+    $variables['attributes']['class'][] = 'node--promoted';
   }
   if ($node->isSticky()) {
-    $variables['attributes']['class'][] = 'sticky';
+    $variables['attributes']['class'][] = 'node--sticky';
   }
   if (!$node->isPublished()) {
-    $variables['attributes']['class'][] = 'unpublished';
+    $variables['attributes']['class'][] = 'node--unpublished';
   }
   if ($variables['view_mode']) {
-    $variables['attributes']['class'][] = drupal_html_class('view-mode-' . $variables['view_mode']);
+    $variables['attributes']['class'][] = drupal_html_class('node--view-mode-' . $variables['view_mode']);
   }
   if (isset($variables['preview'])) {
-    $variables['attributes']['class'][] = 'preview';
+    $variables['attributes']['class'][] = 'node--preview';
   }
-  $variables['content_attributes']['class'][] = 'content';
 }
 
 /**
@@ -1213,9 +1206,9 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  *
  * Next, all implementations of hook_node_access() will be called. Each
  * implementation may explicitly allow, explicitly deny, or ignore the access
- * request. If at least one module says to deny the request, it will be rejected.
- * If no modules deny the request and at least one says to allow it, the request
- * will be permitted.
+ * request. If at least one module says to deny the request, it will be
+ * rejected. If no modules deny the request and at least one says to allow it,
+ * the request will be permitted.
  *
  * If all modules ignore the access request, then the node_access table is used
  * to determine access. All node access modules are queried using
@@ -1550,7 +1543,8 @@ function node_access_rebuild($batch_mode = FALSE) {
       // Try to allocate enough time to rebuild node grants
       drupal_set_time_limit(240);
 
-      // Rebuild newest nodes first so that recent content becomes available quickly.
+      // Rebuild newest nodes first so that recent content becomes available
+      // quickly.
       $entity_query = \Drupal::entityQuery('node');
       $entity_query->sort('nid', 'DESC');
       $nids = $entity_query->execute();

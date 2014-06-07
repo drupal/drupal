@@ -279,7 +279,7 @@ function rdf_preprocess_node(&$variables) {
   $bundle = $variables['node']->bundle();
   $mapping = rdf_get_mapping('node', $bundle);
   $bundle_mapping = $mapping->getPreparedBundleMapping('node', $bundle);
-  $variables['attributes']['about'] = empty($variables['node_url']) ? NULL: $variables['node_url'];
+  $variables['attributes']['about'] = empty($variables['url']) ? NULL: $variables['url'];
   $variables['attributes']['typeof'] = empty($bundle_mapping['types']) ? NULL : $bundle_mapping['types'];
 
   // Adds RDFa markup for the node title as metadata because wrapping the title
@@ -297,20 +297,19 @@ function rdf_preprocess_node(&$variables) {
 
   // Adds RDFa markup for the relation between the node and its author.
   $author_mapping = $mapping->getPreparedFieldMapping('uid');
-  if (!empty($author_mapping['properties']) && $variables['submitted']) {
-    $author_attributes = array('rel' => $author_mapping['properties']);
-    $variables['submitted'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>';
+  if (!empty($author_mapping['properties']) && $variables['display_submitted']) {
+    $variables['author_attributes']['rel'] = $author_mapping['properties'];
   }
 
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
-  if (!empty($created_mapping) && $variables['submitted']) {
+  if (!empty($created_mapping) && $variables['display_submitted']) {
     $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->getCreatedTime());
     $rdf_metadata = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => array($date_attributes),
     );
-    $variables['submitted'] .= drupal_render($rdf_metadata);
+    $variables['metadata'] = drupal_render($rdf_metadata);
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
@@ -323,7 +322,8 @@ function rdf_preprocess_node(&$variables) {
       $count = 0;
       foreach ($valid_fields as $field_name) {
         $count += $variables['node']->get($field_name)->comment_count;
-        // Adds RDFa markup for the comment count near the node title as metadata
+        // Adds RDFa markup for the comment count near the node title as
+        // metadata.
         $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->get($field_name)->comment_count);
         $variables['title_suffix']['rdf_meta_comment_count'] = array(
           '#theme' => 'rdf_metadata',

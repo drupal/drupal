@@ -132,7 +132,7 @@ ul.primary,
 .item-list .pager,
 div.field-type-taxonomy-term-reference,
 div.messages,
-div.meta,
+.node__meta,
 p.comment-time,
 table,
 .breadcrumb,
@@ -665,7 +665,8 @@ h1.site-name {
 
 /* ----------------- Content ------------------ */
 
-.content {
+.content,
+.node__content {
   margin-top: 10px;
 }
 h1#page-title {
@@ -677,44 +678,44 @@ h1#page-title {
   font-size: 1.429em;
   line-height: 1.4;
 }
-.node .content {
+.node__content {
   font-size: 1.071em;
 }
-.view-mode-teaser .content {
+.node--view-mode-teaser .node__content {
   font-size: 1em;
 }
-.view-mode-teaser h2 {
+.node--view-mode-teaser h2 {
   margin-top: 0;
   padding-top: 0.5em;
 }
-.view-mode-teaser h2 a {
+.node--view-mode-teaser h2 a {
   color: #181818;
 }
-.view-mode-teaser {
+.node--view-mode-teaser {
   border-bottom: 1px solid #d3d7d9;
   margin-bottom: 30px;
   padding-bottom: 15px;
 }
-.view-mode-teaser.sticky {
+.node--view-mode-teaser.node--sticky {
   background: #f9f9f9;
   background: rgba(0, 0, 0, 0.024);
   border: 1px solid #d3d7d9;
   padding: 0 15px 15px;
 }
-.view-mode-teaser .content {
+.node--view-mode-teaser .node__content {
   clear: none;
   line-height: 1.6;
 }
-.meta {
+.node__meta {
   font-size: 0.857em;
   color: #68696b;
   margin-bottom: -5px;
 }
-.submitted .field-name-field-user-picture img {
+.node__meta .field-name-field-user-picture img {
   float: left; /* LTR */
   margin: 1px 20px 0 0; /* LTR */
 }
-[dir="rtl"] .submitted .field-name-field-user-picture img {
+[dir="rtl"] .node__meta .field-name-field-user-picture img {
   float: right;
   margin-left: 20px;
   margin-right: 0;
@@ -735,8 +736,8 @@ h1#page-title {
 .field-type-taxonomy-term-reference ul.links {
   font-size: 0.8em;
 }
-.view-mode-teaser .field-type-taxonomy-term-reference .field-label,
-.view-mode-teaser .field-type-taxonomy-term-reference ul.links {
+.node--view-mode-teaser .field-type-taxonomy-term-reference .field-label,
+.node--view-mode-teaser .field-type-taxonomy-term-reference ul.links {
   font-size: 0.821em;
 }
 .field-type-taxonomy-term-reference ul.links {
@@ -753,10 +754,10 @@ h1#page-title {
   padding: 0 0 0 1em;
   float: right;
 }
-.link-wrapper {
+.node__links {
   text-align: right;
 }
-[dir="rtl"] .link-wrapper {
+[dir="rtl"] .node__links {
   text-align: left;
   margin-right: 236px;
   margin-left: 0;
@@ -769,10 +770,12 @@ ul.links {
   color: #68696b;
   font-size: 0.821em;
 }
+.node--unpublished,
 .unpublished {
   margin: -20px -15px 0;
   padding: 20px 15px 0;
 }
+.node--unpublished .comment-text .comment-arrow,
 .unpublished .comment-text .comment-arrow {
   border-left: 1px solid #fff4f4;
   border-right: 1px solid #fff4f4;

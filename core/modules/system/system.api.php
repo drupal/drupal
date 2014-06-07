@@ -1283,7 +1283,7 @@ function hook_mail($key, &$message, $params) {
     $node = $params['node'];
     $variables += array(
       '%uid' => $node->getOwnerId(),
-      '%node_url' => url('node/' . $node->id(), array('absolute' => TRUE)),
+      '%url' => url('node/' . $node->id(), array('absolute' => TRUE)),
       '%node_type' => node_get_type_label($node),
       '%title' => $node->getTitle(),
       '%teaser' => $node->teaser,

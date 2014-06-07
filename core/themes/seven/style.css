@@ -518,6 +518,9 @@ ul.admin-list {
 div.submitted {
   color: #898989;
 }
+.node__submitted {
+  margin: 1em 0;
+}
 
 /**
  * Pagination.

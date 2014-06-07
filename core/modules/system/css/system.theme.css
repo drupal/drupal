@@ -6,10 +6,10 @@
 /**
  * Publishing status.
  */
-.unpublished {
+.node--unpublished {
   background-color: #fff4f4;
 }
-.preview {
+.node--preview {
   background-color: #ffffea;
 }
 

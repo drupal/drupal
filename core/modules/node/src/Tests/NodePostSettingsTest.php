@@ -45,7 +45,7 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $elements = $this->xpath('//*[contains(@class,:class)]', array(':class' => 'submitted'));
+    $elements = $this->xpath('//div[contains(@class, :class)]', array(':class' => 'node__submitted'));
     $this->assertEqual(count($elements), 1, 'Post information is displayed.');
     $node->delete();
 
@@ -61,7 +61,7 @@ class NodePostSettingsTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
-    $elements = $this->xpath('//*[contains(@class,:class)]', array(':class' => 'submitted'));
+    $elements = $this->xpath('//div[contains(@class, :class)]', array(':class' => 'node__submitted'));
     $this->assertEqual(count($elements), 0, 'Post information is not displayed.');
   }
 }
