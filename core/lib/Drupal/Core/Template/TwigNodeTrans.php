@@ -153,8 +153,22 @@ class TwigNodeTrans extends \Twig_Node {
             $args = $args->getNode('node');
           }
           if ($args instanceof \Twig_Node_Expression_GetAttr) {
-            $argName = $args->getNode('attribute')->getAttribute('value');
-            $expr = $n;
+            $argName = array();
+            // Reuse the incoming expression.
+            $expr = $args;
+            // Assemble a valid argument name by walking through the expression.
+            $argName[] = $args->getNode('attribute')->getAttribute('value');
+            while ($args->hasNode('node')) {
+              $args = $args->getNode('node');
+              if ($args instanceof \Twig_Node_Expression_Name) {
+                $argName[] = $args->getAttribute('name');
+              }
+              else {
+                $argName[] = $args->getNode('attribute')->getAttribute('value');
+              }
+            }
+            $argName = array_reverse($argName);
+            $argName = implode('.', $argName);
           }
           else {
             $argName = $n->getAttribute('name');

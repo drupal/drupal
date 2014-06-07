@@ -203,7 +203,7 @@ class TwigTransTest extends WebTestBase {
       '{{ token }}' => '<!-- TRANSLATION: "Escaped: @string" -->',
       '{{ token|passthrough }}' => '<!-- TRANSLATION: "Pass-through: !string" -->',
       '{{ token|placeholder }}' => '<!-- TRANSLATION: "Placeholder: %string" -->',
-      '{{ complex.tokens }}' => '<!-- TRANSLATION: "This @name has a length of: @count. It contains: %numbers and @bad_text. Lets pass the bad text through: !bad_text." -->',
+      '{{ complex.tokens }}' => '<!-- TRANSLATION: "This @token.name has a length of: @count. It contains: %token.numbers and @token.bad_text. Lets pass the bad text through: !token.bad_text." -->',
       '{% trans with {"context": "Lolspeak"} %}I have context.{% endtrans %}' => '<!-- TRANSLATION: "I have context.", CONTEXT: "Lolspeak" -->',
       '{% trans with {"langcode": "zz"} %}Hello new text.{% endtrans %}' => '<!-- TRANSLATION: "Hello new text.", LANGCODE: "zz" -->',
       '{% trans with {"context": "Lolspeak", "langcode": "zz"} %}Hello new text.{% endtrans %}' => '<!-- TRANSLATION: "Hello new text.", CONTEXT: "Lolspeak", LANGCODE: "zz" -->',
@@ -300,8 +300,8 @@ msgstr "PAS-THRU: !string"
 msgid "Placeholder: %string"
 msgstr "PLAYSHOLDR: %string"
 
-msgid "This @name has a length of: @count. It contains: %numbers and @bad_text. Lets pass the bad text through: !bad_text."
-msgstr "DIS @name HAZ LENGTH OV: @count. IT CONTAYNZ: %numbers AN @bad_text. LETS PAS TEH BAD TEXT THRU: !bad_text."
+msgid "This @token.name has a length of: @count. It contains: %token.numbers and @token.bad_text. Lets pass the bad text through: !token.bad_text."
+msgstr "DIS @token.name HAZ LENGTH OV: @count. IT CONTAYNZ: %token.numbers AN @token.bad_text. LETS PAS TEH BAD TEXT THRU: !token.bad_text."
 
 msgctxt "Lolspeak"
 msgid "I have context."
