@@ -74,7 +74,9 @@ services:
 EOD;
       file_put_contents($this->siteDirectory . '/testing.services.yml', $yaml);
 
+      $original_container = \Drupal::getContainer();
       parent::setUp();
+      $this->assertNotIdentical(\Drupal::getContainer(), $original_container, 'WebTestBase test creates a new container.');
       // Create and log in an admin user.
       $this->drupalLogin($this->drupalCreateUser(array('administer unit tests')));
     }
