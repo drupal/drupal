@@ -41,27 +41,12 @@ function drupal_is_front_page() {
  *
  * @return
  *   Boolean value: TRUE if the path matches a pattern, FALSE otherwise.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal\Core\Path\PathMatcherInterface::matchPath() instead.
  */
 function drupal_match_path($path, $patterns) {
-  $regexps = &drupal_static(__FUNCTION__);
-
-  if (!isset($regexps[$patterns])) {
-    // Convert path settings to a regular expression.
-    // Therefore replace newlines with a logical or, /* with asterisks and the <front> with the frontpage.
-    $to_replace = array(
-      '/(\r\n?|\n)/', // newlines
-      '/\\\\\*/',     // asterisks
-      '/(^|\|)\\\\<front\\\\>($|\|)/' // <front>
-    );
-    $replacements = array(
-      '|',
-      '.*',
-      '\1' . preg_quote(\Drupal::config('system.site')->get('page.front'), '/') . '\2'
-    );
-    $patterns_quoted = preg_quote($patterns, '/');
-    $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
-  }
-  return (bool)preg_match($regexps[$patterns], $path);
+  return \Drupal::service('path.matcher')->matchPath($path, $patterns);
 }
 
 /**

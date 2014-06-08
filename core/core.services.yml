@@ -403,6 +403,10 @@ services:
   path.alias_storage:
     class: Drupal\Core\Path\AliasStorage
     arguments: ['@database', '@module_handler']
+  path.matcher:
+    class: Drupal\Core\Path\PathMatcher
+    arguments: ['@config.factory']
+
 # The argument to the hashing service defined in services.yml, to the
 # constructor of PhpassHashedPassword is the log2 number of iterations for
 # password stretching.

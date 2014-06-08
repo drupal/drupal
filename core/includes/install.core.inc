@@ -322,6 +322,9 @@ function install_begin_request(&$install_state) {
   $container
     ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
     ->addArgument(new Reference('language_manager'));
+  $container
+    ->register('path.matcher', 'Drupal\Core\Path\PathMatcher')
+    ->addArgument(new Reference('config.factory'));
 
   \Drupal::setContainer($container);
 
