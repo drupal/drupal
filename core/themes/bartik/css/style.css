@@ -565,6 +565,7 @@ h1.site-name {
   list-style: none;
   margin: 0;
   padding: 0;
+  height: auto;
   width: 100%;
 }
 #main-menu-links a {
@@ -576,7 +577,7 @@ h1.site-name {
   text-decoration: none;
   text-shadow: 0 1px #eee;
   border-radius: 8px;
-  margin-bottom: 4px;
+  margin: 4px 0;
   padding: 0.9em 0 0.9em 10px; /* LTR */
 }
 [dir="rtl"] #main-menu-links a {
@@ -593,6 +594,72 @@ h1.site-name {
 }
 #main-menu-links li a.active {
   border-bottom: none;
+}
+
+/* ---------- Main Menu Toggle ----------- */
+#nav, #no-nav {
+  position: fixed;
+  top: 0;
+}
+.main-menu-reveal {
+  display: none;
+}
+body:not(:target) .main-menu-reveal {
+  color: #333;
+  background: #ccc;
+  background: rgba(255, 255, 255, 0.7);
+  float: none;
+  font-size: 0.929em;
+  display: block;
+  text-decoration: none;
+  text-shadow: 0 1px #eee;
+  padding: 0.9em 10px 0.9em 10px;
+  z-index: 1000;
+}
+body:not(:target) .main-menu-reveal:after {
+  content:"";
+  background: url('../../../misc/icons/ffffff/hamburger.svg') no-repeat;
+  background-size: contain;
+  width: 22px;
+  height: 22px;
+  display: inline-block;
+  position: absolute;
+  right: 10px; /* LTR */
+}
+body:not(:target) #nav:target ~ .main-menu-reveal,
+body:not(:target) .main-menu-reveal--hide {
+  display: none;
+}
+body:not(:target) #nav:target ~ .main-menu-reveal--hide {
+  display: block;
+}
+[dir="rtl"] #secondary-menu-links {
+  left: 10px;
+  right: auto;
+}
+#main-menu-links .menu-hide a {
+  display: none;
+}
+body:not(:target) #nav:target ~ #main-menu-links .menu-hide a {
+  background-color: transparent;
+  border: none;
+  display: block;
+  width: 100%;
+  height: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  z-index: 1001;
+}
+body:not(:target) #main-menu-links li {
+  height: 0;
+  overflow: hidden;
+}
+body:not(:target) #nav:target ~ #main-menu-links li {
+  height: auto;
+  overflow: visible;
 }
 
 /* --------------- Secondary Menu ------------ */
@@ -1805,12 +1872,15 @@ div.admin-panel .description {
     padding: 0;
     text-align: center;
   }
-  #main-menu-links li {
+  #main-menu-links li,
+  body:not(:target) #main-menu-links li {
     float: left; /* LTR */
     margin-right: 5px; /* LTR */
     padding: 0;
     display: inline-block;
     width: 32.75%;
+    height: auto;
+    overflow: visible;
   }
   [dir="rtl"] #main-menu-links li {
     float: right;
@@ -1830,6 +1900,9 @@ div.admin-panel .description {
     border-radius: 8px;
     margin-bottom: 5px;
     padding: 0.9em 5px;
+  }
+  body:not(:target) .main-menu-reveal {
+    display: none;
   }
 }
 
@@ -1864,12 +1937,15 @@ div.admin-panel .description {
     margin: 0;
     padding: 0 15px;
   }
-  #main-menu-links li {
+  #main-menu-links li,
+  body:not(:target) #main-menu-links li {
     float: left; /* LTR */
     list-style: none;
     padding: 0 1px;
     margin: 0 1px;
     width: auto;
+    height: auto;
+    overflow: visible;
   }
   [dir="rtl"] #main-menu-links li {
     float: right;
@@ -1889,6 +1965,9 @@ div.admin-panel .description {
   .featured #main-menu-links li a.active {
     background: #f0f0f0;
     background: rgba(240, 240, 240, 1.0);
+  }
+  body:not(:target) .main-menu-reveal {
+    display: none;
   }
 }
 
