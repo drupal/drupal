@@ -151,6 +151,16 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getModule($name) {
+    if (isset($this->moduleList[$name])) {
+      return $this->moduleList[$name];
+    }
+    throw new \InvalidArgumentException(sprintf('The module %s does not exist.', $name));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setModuleList(array $module_list = array()) {
     $this->moduleList = $module_list;
     // Reset the implementations, so a new call triggers a reloading of the

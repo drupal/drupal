@@ -49,6 +49,8 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
+   *
+   * @covers ::__construct
    */
   protected function setUp() {
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
@@ -149,6 +151,24 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->assertEquals($this->moduleHandler->getModuleList(), array(
       'module_handler_test' => new Extension('module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'),
     ));
+  }
+
+  /**
+   * Confirm we get back a module from the module list
+   *
+   * @covers ::getModule
+   */
+  public function testGetModuleWithExistingModule() {
+    $this->assertEquals($this->moduleHandler->getModule('module_handler_test'), new Extension('module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'));
+  }
+
+  /**
+   * @covers ::getModule
+   *
+   * @expectedException \InvalidArgumentException
+   */
+  public function testGetModuleWithNonExistingModule() {
+    $this->moduleHandler->getModule('claire_alice_watch_my_little_pony_module_that_does_not_exist');
   }
 
   /**
