@@ -29,7 +29,6 @@ class NodeTypePersistenceTest extends NodeTestBase {
     $this->drupalLogin($web_user);
     $forum_key = 'modules[Core][forum][enable]';
     $forum_enable = array($forum_key => "1");
-    $forum_disable = array($forum_key => FALSE);
 
     // Enable forum and verify that the node type exists and is not disabled.
     $this->drupalPostForm('admin/modules', $forum_enable, t('Save configuration'));

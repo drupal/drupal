@@ -90,7 +90,6 @@ class NodeSaveTest extends NodeTestBase {
 
     // Store the timestamps.
     $created = $node->getCreatedTime();
-    $changed = $node->getChangedTime();
 
     $node->save();
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);

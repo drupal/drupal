@@ -300,7 +300,7 @@ class NodeForm extends ContentEntityForm {
     }
 
     // Validate the "authored by" field.
-    if (!empty($form_state['values']['uid']) && !($account = user_load_by_name($form_state['values']['uid']))) {
+    if (!empty($form_state['values']['uid']) && !user_load_by_name($form_state['values']['uid'])) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
