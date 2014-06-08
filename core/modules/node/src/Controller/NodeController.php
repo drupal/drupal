@@ -8,15 +8,54 @@
 namespace Drupal\node\Controller;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\node\Controller\NodeViewController;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\Date;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Returns responses for Node routes.
  */
-class NodeController extends ControllerBase {
+class NodeController extends ControllerBase implements ContainerInjectionInterface {
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * The date service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $date;
+
+  /**
+   * Constructs a NodeController object.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
+   * @param \Drupal\Core\Datetime\Date $date
+   *   The date service.
+   */
+  public function __construct(Connection $database, Date $date) {
+    $this->date = $date;
+    $this->database = $database;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('database'), $container->get('date'));
+  }
+
 
   /**
    * Displays add content links for available content types.
@@ -110,11 +149,128 @@ class NodeController extends ControllerBase {
   }
 
   /**
-   * @todo Remove node_revision_overview().
+   * Generates an overview table of older revisions of a node.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   A node object.
+   *
+   * @return array
+   *   An array as expected by drupal_render().
    */
   public function revisionOverview(NodeInterface $node) {
-    module_load_include('pages.inc', 'node');
-    return node_revision_overview($node);
+    $account = $this->currentUser();
+    $node_storage = $this->entityManager()->getStorage('node');
+    $type = $node->getType();
+
+    $build = array();
+    $build['#title'] = $this->t('Revisions for %title', array('%title' => $node->label()));
+    $header = array($this->t('Revision'), $this->t('Operations'));
+
+    $revert_permission = (($account->hasPermission("revert $type revisions") || $account->hasPermission('revert all revisions') || $account->hasPermission('administer nodes')) && $node->access('update'));
+    $delete_permission =  (($account->hasPermission("delete $type revisions") || $account->hasPermission('delete all revisions') || $account->hasPermission('administer nodes')) && $node->access('delete'));
+
+    $rows = array();
+
+    $vids = $node_storage->revisionIds($node);
+
+    foreach (array_reverse($vids) as $vid) {
+      if ($revision = $node_storage->loadRevision($vid)) {
+        $row = array();
+
+        $revision_author = $revision->uid->entity;
+
+        if ($vid == $node->getRevisionId()) {
+          $username = array(
+            '#theme' => 'username',
+            '#account' => $revision_author,
+          );
+          $row[] = array('data' => $this->t('!date by !username', array('!date' => $this->l($this->date->format($revision->revision_timestamp->value, 'short'), 'node.view', array('node' => $node->id())), '!username' => drupal_render($username)))
+            . (($revision->log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->log->value) . '</p>' : ''),
+            'class' => array('revision-current'));
+          $row[] = array('data' => String::placeholder($this->t('current revision')), 'class' => array('revision-current'));
+        }
+        else {
+          $username = array(
+            '#theme' => 'username',
+            '#account' => $revision_author,
+          );
+          $row[] = $this->t('!date by !username', array('!date' => $this->l($this->date->format($revision->revision_timestamp->value, 'short'), 'node.revision_show', array('node' => $node->id(), 'node_revision' => $vid)), '!username' => drupal_render($username)))
+            . (($revision->log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->log->value) . '</p>' : '');
+
+          if ($revert_permission) {
+            $links['revert'] = array(
+              'title' => $this->t('Revert'),
+              'route_name' => 'node.revision_revert_confirm',
+              'route_parameters' => array('node' => $node->id(), 'node_revision' => $vid),
+            );
+          }
+
+          if ($delete_permission) {
+            $links['delete'] = array(
+              'title' => $this->t('Delete'),
+              'route_name' => 'node.revision_delete_confirm',
+              'route_parameters' => array('node' => $node->id(), 'node_revision' => $vid),
+            );
+          }
+
+          $row[] = array(
+            'data' => array(
+              '#type' => 'operations',
+              '#links' => $links,
+            ),
+          );
+        }
+
+        $rows[] = $row;
+      }
+    }
+
+    $build['node_revisions_table'] = array(
+      '#theme' => 'table',
+      '#rows' => $rows,
+      '#header' => $header,
+      '#attached' => array(
+        'library' => array('node/drupal.node.admin'),
+      ),
+    );
+
+    return $build;
+  }
+
+  /**
+   * Displays a node.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node we are displaying.
+   *
+   * @return array
+   *   An array suitable for drupal_render().
+   */
+  public function page(NodeInterface $node) {
+    $build = $this->buildPage($node);
+
+    foreach ($node->uriRelationships() as $rel) {
+      $uri = $node->urlInfo($rel);
+      // Set the node path as the canonical URL to prevent duplicate content.
+      $build['#attached']['drupal_add_html_head_link'][] = array(
+        array(
+        'rel' => $rel,
+        'href' => $node->url($rel),
+        )
+        , TRUE);
+
+      if ($rel == 'canonical') {
+        // Set the non-aliased canonical path as a default shortlink.
+        $build['#attached']['drupal_add_html_head_link'][] = array(
+          array(
+            'rel' => 'shortlink',
+            'href' => $node->url($rel, array('alias' => TRUE)),
+          )
+        , TRUE);
+      }
+    }
+
+    return $build;
   }
 
   /**

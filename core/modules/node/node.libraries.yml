@@ -25,3 +25,9 @@ drupal.content_types:
     - core/jquery
     - core/drupal
     - core/drupal.form
+
+drupal.node.admin:
+  version: VERSION
+  css:
+    theme:
+      css/node.admin.css: {}
