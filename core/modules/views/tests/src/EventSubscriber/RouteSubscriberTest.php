@@ -16,7 +16,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Tests the views route subscriber.
  *
- * @see \Drupal\views\EventSubscriber\RouteSubscriber
+ * @coversDefaultClass \Drupal\views\EventSubscriber\RouteSubscriber
  */
 class RouteSubscriberTest extends UnitTestCase {
 
@@ -73,11 +73,9 @@ class RouteSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests the onDynamicRoutes method.
-   *
-   * @see \Drupal\views\EventSubscriber\RouteSubscriber::onDynamicRoutes()
+   * @covers ::routeRebuildFinished
    */
-  public function testDynamicRoutes() {
+  public function testRouteRebuildFinished() {
     list($view, $executable, $display_1, $display_2) = $this->setupMocks();
 
     $display_1->expects($this->once())
