@@ -22,6 +22,7 @@ class EntityTestRoutes {
    */
   public function routes() {
     $types = entity_test_entity_types();
+    $types[] = 'entity_test_string_id';
 
     $routes = array();
     foreach ($types as $entity_type) {

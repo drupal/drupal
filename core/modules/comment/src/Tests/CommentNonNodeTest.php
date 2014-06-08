@@ -382,4 +382,20 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field found.');
   }
 
+  /**
+   * Tests comment fields are not available for entity types with string ids.
+   */
+  public function testsStringIdEntities() {
+    // Create a bundle for entity_test.
+    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_string_id');
+    $limited_user = $this->drupalCreateUser(array(
+      'administer entity_test_string_id fields',
+    ));
+    $this->drupalLogin($limited_user);
+    // Visit the Field UI overview.
+    $this->drupalGet('entity_test_string_id/structure/entity_test/fields');
+    // Ensure field isn't shown for string ids.
+    $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
+  }
+
 }
