@@ -1457,10 +1457,6 @@ details.fieldset-no-legend {
   screen and (min-width: 780px),
   (orientation: landscape) and (min-device-height: 780px) {
 
-  [class*="page-node-add-"] #console,
-  .page-node-edit #console {
-    margin: 0 2em;
-  }
   [class*="page-node-add-"] .messages,
   .page-node-edit .messages {
     margin-top: 1em;
