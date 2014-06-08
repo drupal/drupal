@@ -62,22 +62,6 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
   public function getExternalUrl();
 
   /**
-   * Returns the MIME type of the resource.
-   *
-   * @param string $uri
-   *   The URI, path, or filename.
-   * @param array $mapping
-   *   An optional map of extensions to their mimetypes, in the form:
-   *    - 'mimetypes': a list of mimetypes, keyed by an identifier,
-   *    - 'extensions': the mapping itself, an associative array in which
-   *      the key is the extension and the value is the mimetype identifier.
-   *
-   * @return string
-   *   Returns a string containing the MIME type of the resource.
-   */
-  public static function getMimeType($uri, $mapping = NULL);
-
-  /**
    * Returns canonical, absolute path of the resource.
    *
    * Implementation placeholder. PHP's realpath() does not support stream

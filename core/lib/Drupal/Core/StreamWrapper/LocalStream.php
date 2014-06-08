@@ -94,38 +94,6 @@ abstract class LocalStream implements StreamWrapperInterface {
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getMimeType().
-   */
-  static function getMimeType($uri, $mapping = NULL) {
-    if (!isset($mapping)) {
-      // The default file map, defined in file.mimetypes.inc is quite big.
-      // We only load it when necessary.
-      include_once DRUPAL_ROOT . '/core/includes/file.mimetypes.inc';
-      $mapping = file_mimetype_mapping();
-    }
-
-    $extension = '';
-    $file_parts = explode('.', drupal_basename($uri));
-
-    // Remove the first part: a full filename should not match an extension.
-    array_shift($file_parts);
-
-    // Iterate over the file parts, trying to find a match.
-    // For my.awesome.image.jpeg, we try:
-    //   - jpeg
-    //   - image.jpeg, and
-    //   - awesome.image.jpeg
-    while ($additional_part = array_pop($file_parts)) {
-      $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
-      if (isset($mapping['extensions'][$extension])) {
-        return $mapping['mimetypes'][$mapping['extensions'][$extension]];
-      }
-    }
-
-    return 'application/octet-stream';
-  }
-
-  /**
    * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::realpath().
    */
   function realpath() {

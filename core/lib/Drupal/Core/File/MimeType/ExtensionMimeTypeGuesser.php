@@ -2,39 +2,26 @@
 
 /**
  * @file
- * Provides mimetype mappings.
+ * Contains \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
  */
 
-/**
- * Return an array of MIME extension mappings.
- *
- * Returns the mapping after modules have altered the default mapping.
- *
- * @return
- *   Array of mimetypes correlated to the extensions that relate to them.
- *
- * @see file_get_mimetype()
- */
-function file_mimetype_mapping() {
-  $mapping = &drupal_static(__FUNCTION__);
-  if (!isset($mapping)) {
-    $mapping = file_default_mimetype_mapping();
-    // Allow modules to alter the default mapping.
-    \Drupal::moduleHandler()->alter('file_mimetype_mapping', $mapping);
-  }
-  return $mapping;
-}
+namespace Drupal\Core\File\MimeType;
+
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 
 /**
- * Default MIME extension mapping.
- *
- * @return
- *   Array of mimetypes correlated to the extensions that relate to them.
- *
- * @see file_get_mimetype()
+ * Makes possible to guess the MIME type of a file using its extension.
  */
-function file_default_mimetype_mapping() {
-  return array(
+class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
+
+  /**
+   * Default MIME extension mapping.
+   *
+   * @var array
+   *   Array of mimetypes correlated to the extensions that relate to them.
+   */
+  protected $defaultMapping = array(
     'mimetypes' => array(
       0 => 'application/andrew-inset',
       1 => 'application/atom',
@@ -876,4 +863,71 @@ function file_default_mimetype_mapping() {
       'vtt' => 358,
     ),
   );
+
+  /**
+   * The MIME types mapping array after going through the module handler.
+   *
+   * @var array
+   */
+  protected $mapping;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * Constructs a new ExtensionMimeTypeGuesser.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   */
+  public function __construct(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function guess($path) {
+    if ($this->mapping === NULL) {
+      $mapping = $this->defaultMapping;
+      // Allow modules to alter the default mapping.
+      $this->moduleHandler->alter('file_mimetype_mapping', $mapping);
+      $this->mapping = $mapping;
+    }
+
+    $extension = '';
+    $file_parts = explode('.', drupal_basename($path));
+
+    // Remove the first part: a full filename should not match an extension.
+    array_shift($file_parts);
+
+    // Iterate over the file parts, trying to find a match.
+    // For my.awesome.image.jpeg, we try:
+    //   - jpeg
+    //   - image.jpeg, and
+    //   - awesome.image.jpeg
+    while ($additional_part = array_pop($file_parts)) {
+      $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
+      if (isset($this->mapping['extensions'][$extension])) {
+        return $this->mapping['mimetypes'][$this->mapping['extensions'][$extension]];
+      }
+    }
+
+    return 'application/octet-stream';
+  }
+
+  /**
+   * Sets the mimetypes/extension mapping to use when guessing mimetype.
+   *
+   * @param array|null $mapping
+   *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
+   */
+  public function setMapping(array $mapping = NULL) {
+    $this->mapping = $mapping;
+  }
+
 }

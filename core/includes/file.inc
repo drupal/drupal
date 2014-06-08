@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\String;
@@ -1300,17 +1299,11 @@ function file_upload_max_size() {
  *   The internet media type registered for the extension or
  *   application/octet-stream for unknown extensions.
  *
- * @see file_default_mimetype_mapping()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('file.mime_type.guesser')->guess($uri).
  */
 function file_get_mimetype($uri, $mapping = NULL) {
-  if ($wrapper = file_stream_wrapper_get_instance_by_uri($uri)) {
-    return $wrapper->getMimeType($uri, $mapping);
-  }
-  else {
-    // getMimeType() is not implementation specific, so we can directly
-    // call it without an instance.
-    return LocalStream::getMimeType($uri, $mapping);
-  }
+  return \Drupal::service('file.mime_type.guesser')->guess($uri);
 }
 
 /**

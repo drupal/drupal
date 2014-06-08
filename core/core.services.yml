@@ -825,3 +825,12 @@ services:
   element_info:
     class: Drupal\Core\Render\ElementInfo
     arguments: ['@module_handler']
+  file.mime_type.guesser:
+    class: Drupal\Core\File\MimeType\MimeTypeGuesser
+    tags:
+      - { name: service_collector, tag: mime_type_guesser, call: addGuesser }
+  file.mime_type.guesser.extension:
+    class: Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
+    arguments: ['@module_handler']
+    tags:
+      - { name: mime_type_guesser }
