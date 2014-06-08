@@ -1399,8 +1399,9 @@ function template_preprocess_comment(&$variables) {
     $variables['user_picture'] = array();
   }
 
-  if (\Drupal::config('user.settings')->get('signatures') && $account->getSignature()) {
-    $variables['signature'] = check_markup($account->getSignature(), $account->getSignatureFormat(), '', TRUE) ;
+  if (isset($variables['elements']['signature'])) {
+    $variables['signature'] = $variables['elements']['signature']['#markup'];
+    unset($variables['elements']['signature']);
   }
   else {
     $variables['signature'] = '';

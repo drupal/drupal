@@ -58,20 +58,13 @@ class Text extends TokenizeAreaPluginBase {
     $format = isset($this->options['format']) ? $this->options['format'] : filter_default_format();
     if (!$empty || !empty($this->options['empty'])) {
       return array(
-        '#markup' => $this->renderTextarea($this->options['content'], $format),
+        '#type' => 'processed_text',
+        '#text' => $this->tokenizeValue($this->options['content']),
+        '#format' => $format,
       );
     }
 
     return array();
-  }
-
-  /**
-   * Render a text area, using the proper format.
-   */
-  public function renderTextarea($value, $format) {
-    if ($value) {
-      return check_markup($this->tokenizeValue($value), $format, '', FALSE);
-    }
   }
 
 }

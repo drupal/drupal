@@ -7,6 +7,7 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -24,15 +25,11 @@ class FilterTestReplace extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode, $cache, $cache_id) {
+  public function process($text, $langcode) {
     $text = array();
     $text[] = 'Filter: ' . $this->getLabel() . ' (' . $this->getPluginId() . ')';
     $text[] = 'Language: ' . $langcode;
-    $text[] = 'Cache: ' . ($cache ? 'Enabled' : 'Disabled');
-    if ($cache_id) {
-      $text[] = 'Cache ID: ' . $cache_id;
-    }
-    return implode("<br />\n", $text);
+    return new FilterProcessResult(implode("<br />\n", $text));
   }
 
 }

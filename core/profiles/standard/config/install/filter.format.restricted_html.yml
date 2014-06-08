@@ -4,7 +4,6 @@ status: true
 weight: 0
 roles:
   - anonymous
-cache: true
 filters:
   filter_html:
     id: filter_html

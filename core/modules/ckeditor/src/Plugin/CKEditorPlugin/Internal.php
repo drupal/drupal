@@ -9,8 +9,12 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Plugin\FilterInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the "internal" plugin (i.e. core plugins part of our CKEditor build).
@@ -20,7 +24,55 @@ use Drupal\filter\Plugin\FilterInterface;
  *   label = @Translation("CKEditor core")
  * )
  */
-class Internal extends CKEditorPluginBase {
+class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * Constructs a \Drupal\ckeditor\Plugin\CKEditorPlugin\Internal object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CacheBackendInterface $cache_backend) {
+    $this->cache = $cache_backend;
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * Creates an instance of the plugin.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container to pull out services used in the plugin.
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   *
+   * @return static
+   *   Returns an instance of this plugin.
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('cache.default')
+    );
+  }
 
   /**
    * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::isInternal().
@@ -251,22 +303,42 @@ class Internal extends CKEditorPluginBase {
    *   An array containing the "format_tags" configuration.
    */
   protected function generateFormatTagsSetting(Editor $editor) {
-    // The <p> tag is always allowed — HTML without <p> tags is nonsensical.
-    $format_tags = array('p');
-
-    // Given the list of possible format tags, automatically determine whether
-    // the current text format allows this tag, and thus whether it should show
-    // up in the "Format" dropdown.
-    $possible_format_tags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre');
-    foreach ($possible_format_tags as $tag) {
-      $input = '<' . $tag . '>TEST</' . $tag . '>';
-      $output = trim(check_markup($input, $editor->id(), '', TRUE));
-      if ($input == $output) {
-        $format_tags[] = $tag;
-      }
+    // When no text format is associated yet, assume no tag is allowed.
+    // @see \Drupal\Editor\EditorInterface::hasAssociatedFilterFormat()
+    if (!$editor->hasAssociatedFilterFormat()) {
+      return array();
     }
 
-    return implode(';', $format_tags);
+    $format = $editor->getFilterFormat();
+    $cid = 'ckeditor_internal_format_tags:' . $format->id();
+
+    if ($cached = $this->cache->get($cid)) {
+      $format_tags = $cached->data;
+    }
+    else {
+      // The <p> tag is always allowed — HTML without <p> tags is nonsensical.
+      $format_tags = array('p');
+
+      // Given the list of possible format tags, automatically determine whether
+      // the current text format allows this tag, and thus whether it should show
+      // up in the "Format" dropdown.
+      $possible_format_tags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre');
+      foreach ($possible_format_tags as $tag) {
+        $input = '<' . $tag . '>TEST</' . $tag . '>';
+        $output = trim(check_markup($input, $editor->id()));
+        if ($input == $output) {
+          $format_tags[] = $tag;
+        }
+      }
+      $format_tags = implode(';', $format_tags);
+
+      // Cache the "format_tags" configuration. This cache item is infinitely
+      // valid; it only changes whenever the text format is changed, hence it's
+      // tagged with the text format's cache tag.
+      $this->cache->set($cid, $format_tags, Cache::PERMANENT, $format->getCacheTag());
+    }
+
+    return $format_tags;
   }
 
   /**

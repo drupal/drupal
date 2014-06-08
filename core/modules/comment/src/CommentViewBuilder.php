@@ -131,6 +131,21 @@ class CommentViewBuilder extends EntityViewBuilder {
         '#markup' => $placeholder,
       );
 
+      $account = comment_prepare_author($entity);
+      if (\Drupal::config('user.settings')->get('signatures') && $account->getSignature()) {
+        $build[$id]['signature'] = array(
+          '#type' => 'processed_text',
+          '#text' => $account->getSignature(),
+          '#format' => $account->getSignatureFormat(),
+          '#langcode' => $entity->language()->getId(),
+        );
+        // The signature will only be rendered in the theme layer, which means
+        // its associated cache tags will not bubble up. Work around this for
+        // now by already rendering the signature here.
+        // @todo remove this work-around, see https://drupal.org/node/2273277
+        drupal_render($build[$id]['signature'], TRUE);
+      }
+
       if (!isset($build[$id]['#attached'])) {
         $build[$id]['#attached'] = array();
       }

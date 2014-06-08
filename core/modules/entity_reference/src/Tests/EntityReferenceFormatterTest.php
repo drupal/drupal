@@ -60,8 +60,6 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installConfig(array('filter'));
-
     entity_reference_create_instance($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
 
     // Set up a field, so that the entity that'll be referenced bubbles up a
@@ -87,6 +85,11 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
         'settings' => array(),
       ))
       ->save();
+
+    entity_create('filter_format', array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+    ))->save();
 
     // Create the entity to be referenced.
     $this->referencedEntity = entity_create($this->entityType, array('name' => $this->randomName()));
@@ -180,7 +183,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $expected_rendered_body_field = '<div class="field field-entity-test--body field-name-body field-type-text field-label-above">
       <div class="field-label">Body:&nbsp;</div>
     <div class="field-items">
-          <div class="field-item"></div>
+          <div class="field-item"><p>Hello, world!</p></div>
       </div>
 </div>
 ';

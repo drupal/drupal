@@ -4,7 +4,6 @@ weight: 2
 roles:
   - anonymous
   - authenticated
-cache: true
 status: true
 langcode: en
 filters:

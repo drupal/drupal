@@ -65,8 +65,8 @@ class FilterCrudTest extends DrupalUnitTestBase {
     $format->save();
     $this->verifyTextFormat($format);
 
-    // Add a uncacheable filter and save again.
-    $format->setFilterConfig('filter_test_uncacheable', array(
+    // Add a filter_test_replace  filter and save again.
+    $format->setFilterConfig('filter_test_replace', array(
       'status' => 1,
     ));
     $format->save();
@@ -90,22 +90,9 @@ class FilterCrudTest extends DrupalUnitTestBase {
     $filter_format = entity_load('filter_format', $format->format);
     $this->assertEqual($filter_format->format, $format->format, format_string('filter_format_load: Proper format id for text format %format.', $t_args));
     $this->assertEqual($filter_format->name, $format->name, format_string('filter_format_load: Proper title for text format %format.', $t_args));
-    $this->assertEqual($filter_format->cache, $format->cache, format_string('filter_format_load: Proper cache indicator for text format %format.', $t_args));
     $this->assertEqual($filter_format->weight, $format->weight, format_string('filter_format_load: Proper weight for text format %format.', $t_args));
     // Check that the filter was created in site default language.
     $this->assertEqual($format->langcode, $default_langcode, format_string('filter_format_load: Proper language code for text format %format.', $t_args));
-
-    // Verify the 'cache' text format property according to enabled filters.
-    $cacheable = TRUE;
-    foreach ($format->filters() as $name => $filter) {
-      // If this filter is not cacheable, update $cacheable accordingly, so we
-      // can verify $format->cache after iterating over all filters.
-      if ($filter->status && !$filter->cache) {
-        $cacheable = FALSE;
-        break;
-      }
-    }
-    $this->assertEqual($filter_format->cache, $cacheable, 'Text format contains proper cache property.');
   }
 
 }

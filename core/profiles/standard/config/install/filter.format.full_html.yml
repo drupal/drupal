@@ -4,7 +4,6 @@ status: true
 weight: 1
 roles:
   - administrator
-cache: true
 filters:
   filter_caption:
     id: filter_caption
@@ -18,4 +17,13 @@ filters:
     status: true
     weight: 10
     settings: {  }
+  editor_file_reference:
+    id: editor_file_reference
+    provider: editor
+    status: true
+    weight: 11
+    settings: {  }
 langcode: en
+dependencies:
+  module:
+    - editor

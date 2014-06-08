@@ -49,7 +49,6 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
 
     // Verify that format default property values have been added/injected.
     $this->assertTrue($format->uuid());
-    $this->assertEqual($format->get('cache'), 1);
 
     // Verify that the loaded format does not contain any roles.
     $this->assertEqual($format->get('roles'), NULL);

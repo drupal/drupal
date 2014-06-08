@@ -9,7 +9,6 @@ weight: 10
 roles:
   - anonymous
   - authenticated
-cache: true
 filters:
   # Escape all HTML.
   filter_html_escape:

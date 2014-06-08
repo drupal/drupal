@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -25,8 +26,8 @@ class FilterHtmlImageSecure extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode, $cache, $cache_id) {
-    return _filter_html_image_secure_process($text);
+  public function process($text, $langcode) {
+    return new FilterProcessResult(_filter_html_image_secure_process($text));
   }
 
   /**

@@ -68,7 +68,7 @@ class UserSignatureTest extends WebTestBase {
     // Create regular and administrative users.
     $this->web_user = $this->drupalCreateUser(array('post comments'));
 
-    $admin_permissions = array('administer comments');
+    $admin_permissions = array('post comments', 'administer comments');
     foreach (filter_formats() as $format) {
       if ($permission = $format->getPermissionName()) {
         $admin_permissions[] = $permission;
@@ -82,7 +82,14 @@ class UserSignatureTest extends WebTestBase {
    * upon display.
    */
   function testUserSignature() {
-    $node = $this->drupalCreateNode();
+    $node = $this->drupalCreateNode(array(
+      'body' => array(
+        0 => array(
+          'value' => $this->randomName(32),
+          'format' => 'full_html',
+        ),
+      ),
+    ));
 
     // Verify that user signature field is not displayed on registration form.
     $this->drupalGet('user/register');
@@ -98,6 +105,10 @@ class UserSignatureTest extends WebTestBase {
 
     // Verify that values were stored.
     $this->assertFieldByName('signature[value]', $edit['signature[value]'], 'Submitted signature text found.');
+
+    // Verify that the user signature's text format's cache tag is absent.
+    $this->drupalGet('node/' . $node->id());
+    $this->assertTrue(!in_array('filter_format:filtered_html_format', explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'))));
 
     // Create a comment.
     $edit = array();
@@ -121,5 +132,8 @@ class UserSignatureTest extends WebTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertNoRaw($signature_text, 'Unfiltered signature text not found.');
     $this->assertRaw(check_markup($signature_text, $this->filtered_html_format->format), 'Filtered signature text found.');
+    // Verify that the user signature's text format's cache tag is present.
+    $this->drupalGet('node/' . $node->id());
+    $this->assertTrue(in_array('filter_format:filtered_html_format', explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'))));
   }
 }

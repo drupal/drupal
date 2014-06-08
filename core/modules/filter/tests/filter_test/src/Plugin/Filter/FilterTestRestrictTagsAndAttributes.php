@@ -7,6 +7,7 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Component\Utility\Xss;
 
@@ -25,11 +26,11 @@ class FilterTestRestrictTagsAndAttributes extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode, $cache, $cache_id) {
+  public function process($text, $langcode) {
     $allowed_tags = array_filter($this->settings['restrictions']['allowed'], function($value) {
       return is_array($value) || (bool) $value !== FALSE;
     });
-    return Xss::filter($text, array_keys($allowed_tags));
+    return new FilterProcessResult(Xss::filter($text, array_keys($allowed_tags)));
   }
 
   /**

@@ -45,13 +45,6 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   public $weight = 0;
 
   /**
-   * A Boolean indicating whether the text processed by this filter may be cached.
-   *
-   * @var bool
-   */
-  public $cache = TRUE;
-
-  /**
    * An associative array containing the configured settings of this filter.
    *
    * @var array
@@ -72,7 +65,6 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->provider = $this->pluginDefinition['provider'];
-    $this->cache = $this->pluginDefinition['cache'];
 
     $this->setConfiguration($configuration);
   }
@@ -154,7 +146,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * {@inheritdoc}
    */
-  public function prepare($text, $langcode, $cache, $cache_id) {
+  public function prepare($text, $langcode) {
     return $text;
   }
 

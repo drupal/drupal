@@ -3468,7 +3468,6 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
  *
  * @return string
  *   The rendered HTML of all children of the element.
-
  * @see drupal_render()
  */
 function drupal_render_children(&$element, $children_keys = NULL) {
@@ -3662,7 +3661,7 @@ function drupal_render_cache_set(&$markup, array $elements) {
  * placeholders, but should also be called by #post_render_cache callbacks that
  * want to replace the placeholder with the final markup.
  *
- * @param callable $callback
+ * @param string $callback
  *   The #post_render_cache callback that will replace the placeholder with its
  *   eventual markup.
  * @param array $context
@@ -3681,7 +3680,7 @@ function drupal_render_cache_generate_placeholder($callback, array &$context) {
     'token' => \Drupal\Component\Utility\Crypt::randomBytesBase64(55),
   );
 
-  return '<drupal:render-cache-placeholder callback="' . $callback . '" token="' . $context['token'] . '" />';
+  return '<drupal-render-cache-placeholder callback="' . $callback . '" token="' . $context['token'] . '"></drupal-render-cache-placeholder>';
 }
 
 /**

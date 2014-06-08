@@ -1,11 +1,4 @@
 services:
-  cache.filter:
-    class: Drupal\Core\Cache\CacheBackendInterface
-    tags:
-      - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
-    arguments: [filter]
   plugin.manager.filter:
     class: Drupal\filter\FilterPluginManager
     parent: default_plugin_manager

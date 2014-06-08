@@ -93,13 +93,6 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   protected $roles;
 
   /**
-   * Whether processed text of this format can be cached.
-   *
-   * @var bool
-   */
-  public $cache = FALSE;
-
-  /**
    * Configured filters for this text format.
    *
    * An associative array of filters assigned to the text format, keyed by the
@@ -207,15 +200,6 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
 
     // @todo Do not save disabled filters whose properties are identical to
     //   all default properties.
-
-    // Determine whether the format can be cached.
-    // @todo This is a derived/computed definition, not configuration.
-    $this->cache = TRUE;
-    foreach ($this->filters()->getAll() as $filter) {
-      if ($filter->status && !$filter->cache) {
-        $this->cache = FALSE;
-      }
-    }
   }
 
   /**

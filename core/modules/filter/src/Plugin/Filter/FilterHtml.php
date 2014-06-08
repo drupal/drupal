@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -58,8 +59,8 @@ class FilterHtml extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode, $cache, $cache_id) {
-    return _filter_html($text, $this);
+  public function process($text, $langcode) {
+    return new FilterProcessResult(_filter_html($text, $this));
   }
 
   /**

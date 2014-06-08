@@ -30,14 +30,17 @@ filter.format.*:
       sequence:
         - type: string
           label: 'Role'
-    cache:
-      type: boolean
-      label: 'Cache'
     filters:
       type: sequence
       label: 'Enabled filters'
       sequence:
         - type: filter
+    langcode:
+      type: string
+      label: 'Default language'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 filter_settings.*:
   type: sequence

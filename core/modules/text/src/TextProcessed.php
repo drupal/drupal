@@ -34,7 +34,7 @@ class TextProcessed extends TypedData {
     parent::__construct($definition, $name, $parent);
 
     if ($definition->getSetting('text source') === NULL) {
-      throw new \InvalidArgumentException("The definition's 'source' key has to specify the name of the text property to be processed.");
+      throw new \InvalidArgumentException("The definition's 'text source' key has to specify the name of the text property to be processed.");
     }
   }
 

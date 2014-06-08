@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
@@ -98,7 +99,129 @@ function filter_element_info() {
     '#base_type' => 'textarea',
     '#theme_wrappers' => array('text_format_wrapper'),
   );
+  $type['processed_text'] = array(
+    '#text' => '',
+    '#format' => NULL,
+    '#filter_types_to_skip' => array(),
+    '#langcode' => '',
+    '#pre_render' => array('filter_pre_render_text'),
+  );
   return $type;
+}
+
+/**
+ * Pre-render callback: Renders a processed text element into #markup.
+ *
+ * Runs all the enabled filters on a piece of text.
+ *
+ * Note: Because filters can inject JavaScript or execute PHP code, security is
+ * vital here. When a user supplies a text format, you should validate it using
+ * $format->access() before accepting/using it. This is normally done in the
+ * validation stage of the Form API. You should for example never make a
+ * preview of content in a disallowed format.
+ *
+ * @param array $element
+ *   A structured array with the following key-value pairs:
+ *   - #text: containing the text to be filtered
+ *   - #format: containing the machine name of the filter format to be used to
+ *     filter the text. Defaults to the fallback format. See
+ *     filter_fallback_format().
+ *   - #langcode: the language code of the text to be filtered, e.g. 'en' for
+ *     English. This allows filters to be language-aware so language-specific
+ *     text replacement can be implemented. Defaults to an empty string.
+ *   - #filter_types_to_skip: an array of filter types to skip, or an empty
+ *     array (default) to skip no filter types. All of the format's filters will
+ *     be applied, except for filters of the types that are marked to be skipped.
+ *     FilterInterface::TYPE_HTML_RESTRICTOR is the only type that cannot be
+ *     skipped.
+ *
+ * @return array
+ *   The passed-in element with the filtered text in '#markup'.
+ *
+ * @ingroup sanitization
+ */
+function filter_pre_render_text(array $element) {
+  $format_id = $element['#format'];
+  $filter_types_to_skip = $element['#filter_types_to_skip'];
+  $text = $element['#text'];
+  $langcode = $element['#langcode'];
+
+  if (!isset($format_id)) {
+    $format_id = filter_fallback_format();
+  }
+  // If the requested text format does not exist, the text cannot be filtered.
+  /** @var \Drupal\filter\Entity\FilterFormat $format **/
+  if (!$format = entity_load('filter_format', $format_id)) {
+    watchdog('filter', 'Missing text format: %format.', array('%format' => $format_id), WATCHDOG_ALERT);
+    $element['#markup'] = '';
+    return $element;
+  }
+
+  $filter_must_be_applied = function($filter) use ($filter_types_to_skip) {
+    $enabled = $filter->status === TRUE;
+    $type = $filter->getType();
+    // Prevent FilterInterface::TYPE_HTML_RESTRICTOR from being skipped.
+    $filter_type_must_be_applied = $type == FilterInterface::TYPE_HTML_RESTRICTOR || !in_array($type, $filter_types_to_skip);
+    return $enabled && $filter_type_must_be_applied;
+  };
+
+  // Convert all Windows and Mac newlines to a single newline, so filters only
+  // need to deal with one possibility.
+  $text = str_replace(array("\r\n", "\r"), "\n", $text);
+
+  // Get a complete list of filters, ordered properly.
+  /** @var \Drupal\filter\FilterBag $filters **/
+  $filters = $format->filters();
+
+  // Give filters the chance to escape HTML-like data such as code or formulas.
+  /** @var \Drupal\filter\Plugin\FilterInterface $filter **/
+  foreach ($filters as $filter) {
+    if ($filter_must_be_applied($filter)) {
+      $text = $filter->prepare($text, $langcode);
+    }
+  }
+
+  // Perform filtering.
+  $all_cache_tags = array();
+  $all_assets = array();
+  $all_post_render_cache_callbacks = array();
+  foreach ($filters as $filter) {
+    if ($filter_must_be_applied($filter)) {
+      $result = $filter->process($text, $langcode);
+      $all_assets[] = $result->getAssets();
+      $all_cache_tags[] = $result->getCacheTags();
+      $all_post_render_cache_callbacks[] = $result->getPostRenderCacheCallbacks();
+      $text = $result->getProcessedText();
+    }
+  }
+
+  // Filtering done, store in #markup.
+  $element['#markup'] = $text;
+
+  // Collect all cache tags.
+  if (isset($element['#cache']) && isset($element['#cache']['tags'])) {
+    // Prepend the original cache tags array.
+    array_unshift($all_cache_tags, $element['#cache']['tags']);
+  }
+  // Prepend the text format's cache tags array.
+  array_unshift($all_cache_tags, $format->getCacheTag());
+  $element['#cache']['tags'] = NestedArray::mergeDeepArray($all_cache_tags);
+
+  // Collect all attached assets.
+  if (isset($element['#attached'])) {
+    // Prepend the original attached assets array.
+    array_unshift($all_assets, $element['#attached']);
+  }
+  $element['#attached'] = NestedArray::mergeDeepArray($all_assets);
+
+  // Collect all #post_render_cache callbacks.
+  if (isset($element['#post_render_cache'])) {
+    // Prepend the original attached #post_render_cache array.
+    array_unshift($all_assets, $element['#post_render_cache']);
+  }
+  $element['#post_render_cache'] = NestedArray::mergeDeepArray($all_post_render_cache_callbacks);
+
+  return $element;
 }
 
 /**
@@ -301,24 +424,6 @@ function filter_fallback_format() {
 }
 
 /**
- * Checks if the text in a certain text format is allowed to be cached.
- *
- * This function can be used to check whether the result of the filtering
- * process can be cached. A text format may allow caching depending on the
- * filters enabled.
- *
- * @param string $format_id
- *   The text format ID to check.
- *
- * @return bool
- *   TRUE if the given text format allows caching, FALSE otherwise.
- */
-function filter_format_allowcache($format_id) {
-  $format = $format_id ? entity_load('filter_format', $format_id) : FALSE;
-  return !empty($format->cache);
-}
-
-/**
  * Runs all the enabled filters on a piece of text.
  *
  * Note: Because filters can inject JavaScript or execute PHP code, security is
@@ -327,94 +432,46 @@ function filter_format_allowcache($format_id) {
  * validation stage of the Form API. You should for example never make a
  * preview of content in a disallowed format.
  *
- * @param $text
+ * Note: this function should only be used when filtering text for use elsewhere
+ * than on a rendered HTML page. If this is part of a HTML page, then a
+ * renderable array with a #type 'processed_text' element should be used instead
+ * of this, because that will allow cache tags to be set and bubbled up, assets
+ * to be loaded and #post_render_cache callbacks to be associated. In other
+ * words: if you are presenting the filtered text in a HTML page, the only way
+ * this will be presented correctly, is by using the 'processed_text' element.
+ *
+ * @param string $text
  *   The text to be filtered.
- * @param $format_id
+ * @param string|null $format_id
  *   (optional) The machine name of the filter format to be used to filter the
  *   text. Defaults to the fallback format. See filter_fallback_format().
- * @param $langcode
+ * @param string $langcode
  *   (optional) The language code of the text to be filtered, e.g. 'en' for
- *   English. This allows filters to be language aware so language specific
+ *   English. This allows filters to be language-aware so language-specific
  *   text replacement can be implemented. Defaults to an empty string.
- * @param $cache
- *   (optional) A Boolean indicating whether to cache the filtered output in the
- *   {cache_filter} table. The caller may set this to FALSE when the output is
- *   already cached elsewhere to avoid duplicate cache lookups and storage.
- *   Defaults to FALSE.
  * @param array $filter_types_to_skip
  *   (optional) An array of filter types to skip, or an empty array (default)
  *   to skip no filter types. All of the format's filters will be applied,
  *   except for filters of the types that are marked to be skipped.
- *   FilterInterface::TYPE_HTML_RESTRICTOR is the only type that cannot be skipped.
+ *   FilterInterface::TYPE_HTML_RESTRICTOR is the only type that cannot be
+ *   skipped.
  *
- * @return
+ * @return string
  *   The filtered text.
+ *
+ * @see filter_process_text()
  *
  * @ingroup sanitization
  */
-function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, $filter_types_to_skip = array()) {
-  if (!isset($format_id)) {
-    $format_id = filter_fallback_format();
-  }
-  // If the requested text format does not exist, the text cannot be filtered.
-  if (!$format = entity_load('filter_format', $format_id)) {
-    watchdog('filter', 'Missing text format: %format.', array('%format' => $format_id), WATCHDOG_ALERT);
-    return '';
-  }
-
-  // When certain filters should be skipped, don't perform caching.
-  if ($filter_types_to_skip) {
-    $cache = FALSE;
-  }
-
-  // Check for a cached version of this piece of text.
-  $cache = $cache && !empty($format->cache);
-  $cache_id = '';
-  if ($cache) {
-    $cache_id = $format->format . ':' . $langcode . ':' . hash('sha256', $text);
-    if ($cached = \Drupal::cache('filter')->get($cache_id)) {
-      return $cached->data;
-    }
-  }
-
-  // Convert all Windows and Mac newlines to a single newline, so filters only
-  // need to deal with one possibility.
-  $text = str_replace(array("\r\n", "\r"), "\n", $text);
-
-  // Get a complete list of filters, ordered properly.
-  $filters = $format->filters();
-
-  $filter_must_be_applied = function($filter) use ($filter_types_to_skip) {
-    $enabled = $filter->status === TRUE;
-    $type = $filter->getType();
-    // Prevent FilterInterface::TYPE_HTML_RESTRICTOR from being skipped.
-    $filter_type_must_be_applied = $type == FilterInterface::TYPE_HTML_RESTRICTOR || !in_array($type, $filter_types_to_skip);
-    return $enabled && $filter_type_must_be_applied;
-  };
-
-  // Give filters the chance to escape HTML-like data such as code or formulas.
-  foreach ($filters as $filter) {
-    if ($filter_must_be_applied($filter)) {
-      $text = $filter->prepare($text, $langcode, $cache, $cache_id);
-    }
-  }
-
-  // Perform filtering.
-  foreach ($filters as $filter) {
-    if ($filter_must_be_applied($filter)) {
-      $text = $filter->process($text, $langcode, $cache, $cache_id);
-    }
-  }
-
-  // Cache the filtered text. This cache is infinitely valid. It becomes
-  // obsolete when $text changes (which leads to a new $cache_id). It is
-  // automatically flushed when the text format is updated.
-  // @see \Drupal\filter\Entity\FilterFormat::save()
-  if ($cache) {
-    \Drupal::cache('filter')->set($cache_id, $text, Cache::PERMANENT, array('filter_format' => $format->id()));
-  }
-
-  return $text;
+function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to_skip = array()) {
+  $build = array(
+    '#type' => 'processed_text',
+    '#text' => $text,
+    '#format' => $format_id,
+    '#filter_types_to_skip' => $filter_types_to_skip,
+    '#langcode' => $langcode,
+  );
+  return drupal_render($build);
 }
 
 /**
@@ -1139,10 +1196,3 @@ function filter_filter_secure_image_alter(&$image) {
 /**
  * @} End of "defgroup standard_filters".
  */
-
-/**
- * Implements hook_page_build().
- */
-function filter_page_build(&$page) {
-  $page['#attached']['library'][] = 'filter/caption';
-}

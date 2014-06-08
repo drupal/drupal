@@ -36,18 +36,19 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  * should then actually change the content: transform URLs into hyperlinks,
  * convert smileys into images, etc.
  *
- * For performance reasons, content is only filtered once; the result is stored
- * in the cache table and retrieved from the cache the next time the same piece
- * of content is displayed. If a filter's output is dynamic, it can override
- * the cache mechanism, but obviously this should be used with caution: having
- * one filter that does not support caching in a collection of filters disables
- * caching for the entire collection, not just for one filter.
- *
- * Beware of the filter cache when developing your module: it is advised to set
- * your filter to 'cache' to FALSE while developing, but be sure to remove that
- * setting if it's not needed, when you are no longer in development mode.
- *
+ * @see filter_process_text()
  * @see check_markup()
+ *
+ * Typically, only text processing is applied, but in more advanced use cases,
+ * filters may also:
+ * - declare asset libraries to be loaded;
+ * - declare cache tags that the resulting filtered text depends upon, so when
+ *   either of those cache tags is invalidated, the render-cached HTML that the
+ *   filtered text is part of should also be invalidated;
+ * - declare #post_render_cache callbacks to apply uncacheable filtering, for
+ *   example because it differs per user.
+ *
+ * @see \Drupal\filter\Plugin\FilterInterface::process()
  *
  * Filters are discovered through annotations, which may contain the following
  * definition properties:
@@ -67,9 +68,6 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  * - status: The default status for new instances of the filter. Defaults to
  *   FALSE.
  * - weight: A default weight for new instances of the filter. Defaults to 0.
- * - cache: Whether the filtered text can be cached. Defaults to TRUE.
- *   Note that setting this to FALSE disables caching for an entire text format,
- *   which can have a negative impact on the site's overall performance.
  * - settings: An associative array containing default settings for new
  *   instances of the filter.
  *
@@ -151,16 +149,11 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
    *   The text string to be filtered.
    * @param string $langcode
    *   The language code of the text to be filtered.
-   * @param bool $cache
-   *   A Boolean indicating whether the filtered text is going to be cached in
-   *   {cache_filter}.
-   * @param string $cache_id
-   *   The ID of the filtered text in {cache_filter}, if $cache is TRUE.
    *
    * @return string
    *   The prepared, escaped text.
    */
-  public function prepare($text, $langcode, $cache, $cache_id);
+  public function prepare($text, $langcode);
 
   /**
    * Performs the filter processing.
@@ -169,16 +162,14 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
    *   The text string to be filtered.
    * @param string $langcode
    *   The language code of the text to be filtered.
-   * @param bool $cache
-   *   A Boolean indicating whether the filtered text is going to be cached in
-   *   {cache_filter}.
-   * @param string $cache_id
-   *   The ID of the filtered text in {cache_filter}, if $cache is TRUE.
    *
-   * @return string
-   *   The filtered text.
+   * @return \Drupal\filter\FilterProcessResult
+   *   The filtered text, wrapped in a FilterProcessResult object, and possibly
+   *   with associated assets, cache tags and #post_render_cache callbacks.
+   *
+   * @see \Drupal\filter\FilterProcessResult
    */
-  public function process($text, $langcode, $cache, $cache_id);
+  public function process($text, $langcode);
 
   /**
    * Returns HTML allowed by this filter's configuration.

@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -41,8 +42,8 @@ class FilterUrl extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode, $cache, $cache_id) {
-    return _filter_url($text, $this);
+  public function process($text, $langcode) {
+    return new FilterProcessResult(_filter_url($text, $this));
   }
 
   /**

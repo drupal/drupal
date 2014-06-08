@@ -65,16 +65,6 @@ class Filter extends Plugin {
   public $status = FALSE;
 
   /**
-   * Specifies whether the filtered text can be cached.
-   *
-   * Note that setting this to FALSE makes the entire text format not cacheable,
-   * which may have an impact on the site's overall performance.
-   *
-   * @var bool (optional)
-   */
-  public $cache = TRUE;
-
-  /**
    * The default settings for the filter.
    *
    * @var array (optional)

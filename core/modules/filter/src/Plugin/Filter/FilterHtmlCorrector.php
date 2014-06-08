@@ -8,6 +8,7 @@
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -25,8 +26,8 @@ class FilterHtmlCorrector extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode, $cache, $cache_id) {
-    return Html::normalize($text);
+  public function process($text, $langcode) {
+    return new FilterProcessResult(Html::normalize($text));
   }
 
 }

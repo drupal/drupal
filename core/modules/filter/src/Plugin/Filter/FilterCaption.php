@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
+use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -28,9 +29,11 @@ class FilterCaption extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode, $cache, $cache_id) {
+  public function process($text, $langcode) {
+    $result = new FilterProcessResult($text);
 
     if (stristr($text, 'data-caption') !== FALSE || stristr($text, 'data-align') !== FALSE) {
+      $caption_found = FALSE;
       $dom = Html::load($text);
       $xpath = new \DOMXPath($dom);
       foreach ($xpath->query('//*[@data-caption or @data-align]') as $node) {
@@ -71,6 +74,9 @@ class FilterCaption extends FilterBase {
           }
           continue;
         }
+        else {
+          $caption_found = TRUE;
+        }
 
         // Given the updated node, caption and alignment: re-render it with a
         // caption.
@@ -96,10 +102,18 @@ class FilterCaption extends FilterBase {
         $node->parentNode->replaceChild($updated_node, $node);
       }
 
-      return Html::serialize($dom);
+      $result->setProcessedText(Html::serialize($dom));
+
+      if ($caption_found) {
+        $result->addAssets(array(
+          'library' => array(
+            'filter/caption',
+          ),
+        ));
+      }
     }
 
-    return $text;
+    return $result;
   }
 
   /**

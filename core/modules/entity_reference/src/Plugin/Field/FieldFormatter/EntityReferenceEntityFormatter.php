@@ -106,6 +106,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
         // its cache tags to be bubbled up and included with those of the
         // main entity when cache tags are collected for a renderable array
         // in drupal_render().
+        // @todo remove this work-around, see https://drupal.org/node/2273277
         $referenced_entity_build = entity_view($item->entity, $view_mode, $item->getLangcode());
         drupal_render($referenced_entity_build, TRUE);
         $elements[$delta] = $referenced_entity_build;
