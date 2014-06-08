@@ -17,6 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ImageStyleFormBase extends EntityForm {
 
   /**
+   * The entity being used by this form.
+   *
+   * @var \Drupal\image\ImageStyleInterface
+   */
+  protected $entity;
+
+  /**
    * The image style entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface

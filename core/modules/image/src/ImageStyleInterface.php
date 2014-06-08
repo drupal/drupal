@@ -159,7 +159,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @return string
    *   The image effect ID.
    */
-  public function saveImageEffect(array $configuration);
+  public function addImageEffect(array $configuration);
 
   /**
    * Deletes an image effect from this style.

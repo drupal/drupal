@@ -63,9 +63,8 @@ class ScaleImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function getForm() {
-    $form = parent::getForm();
-    $form['#element_validate'] = array(array($this, 'validateScaleEffect'));
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
     $form['width']['#required'] = FALSE;
     $form['height']['#required'] = FALSE;
     $form['upscale'] = array(
@@ -78,12 +77,22 @@ class ScaleImageEffect extends ResizeImageEffect {
   }
 
   /**
-   * Validates to ensure that either a height or a width is specified.
+   * {@inheritdoc}
    */
-  public function validateScaleEffect(array $element, array &$form_state) {
-    if (empty($element['width']['#value']) && empty($element['height']['#value'])) {
-      form_error($element, $form_state, t('Width and height can not both be blank.'));
+  public function validateConfigurationForm(array &$form, array &$form_state) {
+    parent::validateConfigurationForm($form, $form_state);
+    if (empty($form_state['values']['width']) && empty($form_state['values']['height'])) {
+      form_set_error('data', $form_state, $this->t('Width and height can not both be blank.'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, array &$form_state) {
+    parent::submitConfigurationForm($form, $form_state);
+
+    $this->configuration['upscale'] = $form_state['values']['upscale'];
   }
 
 }

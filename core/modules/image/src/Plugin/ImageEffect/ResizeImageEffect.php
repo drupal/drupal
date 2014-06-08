@@ -8,8 +8,7 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Image\ImageInterface;
-use Drupal\image\ConfigurableImageEffectInterface;
-use Drupal\image\ImageEffectBase;
+use Drupal\image\ConfigurableImageEffectBase;
 
 /**
  * Resizes an image resource.
@@ -20,7 +19,7 @@ use Drupal\image\ImageEffectBase;
  *   description = @Translation("Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.")
  * )
  */
-class ResizeImageEffect extends ImageEffectBase implements ConfigurableImageEffectInterface {
+class ResizeImageEffect extends ConfigurableImageEffectBase {
 
   /**
    * {@inheritdoc}
@@ -65,7 +64,7 @@ class ResizeImageEffect extends ImageEffectBase implements ConfigurableImageEffe
   /**
    * {@inheritdoc}
    */
-  public function getForm() {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     $form['width'] = array(
       '#type' => 'number',
       '#title' => t('Width'),
@@ -83,6 +82,16 @@ class ResizeImageEffect extends ImageEffectBase implements ConfigurableImageEffe
       '#min' => 1,
     );
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, array &$form_state) {
+    parent::submitConfigurationForm($form, $form_state);
+
+    $this->configuration['height'] = $form_state['values']['height'];
+    $this->configuration['width'] = $form_state['values']['width'];
   }
 
 }

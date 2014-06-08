@@ -24,29 +24,6 @@ class ImageEffectBag extends DefaultPluginBag {
   }
 
   /**
-   * Updates the configuration for an image effect instance.
-   *
-   * If there is no plugin instance yet, a new will be instantiated. Otherwise,
-   * the existing instance is updated with the new configuration.
-   *
-   * @param array $configuration
-   *   The image effect configuration to set.
-   *
-   * @return string
-   *   The image effect UUID.
-   */
-  public function updateConfiguration(array $configuration) {
-    // Derive the instance ID from the configuration.
-    if (empty($configuration['uuid'])) {
-      $uuid_generator = \Drupal::service('uuid');
-      $configuration['uuid'] = $uuid_generator->generate();
-    }
-    $instance_id = $configuration['uuid'];
-    $this->addInstanceId($instance_id, $configuration);
-    return $instance_id;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function sortHelper($aID, $bID) {

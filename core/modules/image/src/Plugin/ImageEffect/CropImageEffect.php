@@ -56,8 +56,8 @@ class CropImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function getForm() {
-    $form = parent::getForm();
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
     $form['anchor'] = array(
       '#type' => 'radios',
       '#title' => t('Anchor'),

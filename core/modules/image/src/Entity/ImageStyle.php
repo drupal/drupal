@@ -348,10 +348,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function saveImageEffect(array $configuration) {
-    $effect_id = $this->getEffects()->updateConfiguration($configuration);
-    $this->save();
-    return $effect_id;
+  public function addImageEffect(array $configuration) {
+    $configuration['uuid'] = $this->uuidGenerator()->generate();
+    $this->getEffects()->addInstanceId($configuration['uuid'], $configuration);
+    return $configuration['uuid'];
   }
 
   /**

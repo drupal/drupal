@@ -203,7 +203,8 @@ class ImageStyleEditForm extends ImageStyleFormBase {
         'data' => array(),
         'weight' => $form_state['values']['weight'],
       );
-      $effect_id = $this->entity->saveImageEffect($effect);
+      $effect_id = $this->entity->addImageEffect($effect);
+      $this->entity->save();
       if (!empty($effect_id)) {
         drupal_set_message($this->t('The image effect was successfully applied.'));
       }

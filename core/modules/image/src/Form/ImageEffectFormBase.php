@@ -77,7 +77,7 @@ abstract class ImageEffectFormBase extends FormBase {
       '#value' => $this->imageEffect->getPluginId(),
     );
 
-    $form['data'] = $this->imageEffect->getForm();
+    $form['data'] = $this->imageEffect->buildConfigurationForm(array(), $form_state);
     $form['data']['#tree'] = TRUE;
 
     // Check the URL for a weight, then the image effect, otherwise use default.
@@ -101,9 +101,32 @@ abstract class ImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, array &$form_state) {
+    // The image effect configuration is stored in the 'data' key in the form,
+    // pass that through for validation.
+    $effect_data = array(
+      'values' => &$form_state['values']['data']
+    );
+    $this->imageEffect->validateConfigurationForm($form, $effect_data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, array &$form_state) {
     form_state_values_clean($form_state);
-    $this->imageStyle->saveImageEffect($form_state['values']);
+
+    // The image effect configuration is stored in the 'data' key in the form,
+    // pass that through for submission.
+    $effect_data = array(
+      'values' => &$form_state['values']['data']
+    );
+    $this->imageEffect->submitConfigurationForm($form, $effect_data);
+    $this->imageEffect->setWeight($form_state['values']['weight']);
+    if (!$this->imageEffect->getUuid()) {
+      $this->imageStyle->addImageEffect($this->imageEffect->getConfiguration());
+    }
+    $this->imageStyle->save();
 
     drupal_set_message($this->t('The image effect was successfully applied.'));
     $form_state['redirect_route'] = $this->imageStyle->urlInfo('edit-form');

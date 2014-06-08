@@ -8,8 +8,8 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Image\ImageInterface;
-use Drupal\image\ConfigurableImageEffectInterface;
-use Drupal\image\ImageEffectBase;
+use Drupal\Core\Utility\Color;
+use Drupal\image\ConfigurableImageEffectBase;
 
 /**
  * Rotates an image resource.
@@ -20,7 +20,7 @@ use Drupal\image\ImageEffectBase;
  *   description = @Translation("Rotating an image may cause the dimensions of an image to increase to fit the diagonal.")
  * )
  */
-class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffectInterface {
+class RotateImageEffect extends ConfigurableImageEffectBase {
 
   /**
    * {@inheritdoc}
@@ -94,7 +94,7 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
   /**
    * {@inheritdoc}
    */
-  public function getForm() {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     $form['degrees'] = array(
       '#type' => 'number',
       '#default_value' => $this->configuration['degrees'],
@@ -110,7 +110,6 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
       '#description' => t('The background color to use for exposed areas of the image. Use web-style hex colors (#FFFFFF for white, #000000 for black). Leave blank for transparency on image types that support it.'),
       '#size' => 7,
       '#maxlength' => 7,
-      '#element_validate' => array(array($this, 'validateColorEffect')),
     );
     $form['random'] = array(
       '#type' => 'checkbox',
@@ -122,14 +121,23 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
   }
 
   /**
-   * Validates to ensure a hexadecimal color value.
+   * {@inheritdoc}
    */
-  public function validateColorEffect(array $element, array &$form_state) {
-    if ($element['#value'] != '') {
-      if (!preg_match('/^#[0-9A-F]{3}([0-9A-F]{3})?$/', $element['#value'])) {
-        form_error($element, $form_state, t('!name must be a hexadecimal color value.', array('!name' => $element['#title'])));
-      }
+  public function validateConfigurationForm(array &$form, array &$form_state) {
+    if (!Color::validateHex($form_state['values']['bgcolor'])) {
+      form_set_error('bgcolor', $form_state, $this->t('Background color must be a hexadecimal color value.'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, array &$form_state) {
+    parent::submitConfigurationForm($form, $form_state);
+
+    $this->configuration['degrees'] = $form_state['values']['degrees'];
+    $this->configuration['bgcolor'] = $form_state['values']['bgcolor'];
+    $this->configuration['random'] = $form_state['values']['random'];
   }
 
 }

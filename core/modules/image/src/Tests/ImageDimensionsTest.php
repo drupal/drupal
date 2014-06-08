@@ -42,6 +42,7 @@ class ImageDimensionsTest extends WebTestBase {
     $original_uri = file_unmanaged_copy($file->uri, 'public://', FILE_EXISTS_RENAME);
 
     // Create a style.
+    /** @var $style \Drupal\image\ImageStyleInterface */
     $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
     $style->save();
     $generated_uri = 'public://styles/test/public/'. drupal_basename($original_uri);
@@ -69,7 +70,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 0,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="120" height="60" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -90,7 +92,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 1,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="60" height="120" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -112,7 +115,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 2,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="45" height="90" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -134,7 +138,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 3,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="45" height="90" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -152,7 +157,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 4,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="45" height="90" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -173,7 +179,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 5,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -193,7 +200,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 6,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="30" height="30" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -214,7 +222,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 7,
     );
 
-    $effect_id = $style->saveImageEffect($effect);
+    $effect_id = $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" alt="" />' . "\n");
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -233,7 +242,8 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 8,
     );
 
-    $style->saveImageEffect($effect);
+    $style->addImageEffect($effect);
+    $style->save();
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" alt="" />' . "\n");
   }
