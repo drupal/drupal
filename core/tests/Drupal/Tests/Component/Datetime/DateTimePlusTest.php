@@ -202,7 +202,7 @@ class DateTimePlusTest extends UnitTestCase {
    * @expectedException \Exception
    */
   public function testInvalidDates($input, $timezone, $format, $message) {
-    $date = DateTimePlus::createFromFormat($format, $input, $timezone);
+    DateTimePlus::createFromFormat($format, $input, $timezone);
   }
 
   /**

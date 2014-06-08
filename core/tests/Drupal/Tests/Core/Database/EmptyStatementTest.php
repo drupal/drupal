@@ -38,12 +38,7 @@ class EmptyStatementTest extends UnitTestCase {
    */
   function testEmptyIteration() {
     $result = new StatementEmpty();
-
-    $count = 0;
-    foreach ($result as $record) {
-      $count++;
-    }
-    $this->assertSame(0, $count, 'Iterating empty result set should not iterate.');
+    $this->assertSame(0, iterator_count($result), 'Empty result set should not iterate.');
   }
 
   /**

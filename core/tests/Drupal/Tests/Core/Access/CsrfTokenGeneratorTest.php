@@ -99,7 +99,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    */
   public function testValidateParameterTypes($token, $value) {
     // Ensure that there is a valid token seed on the session.
-    $ignored_token = $this->generator->get();
+    $this->generator->get();
 
     // The following check might throw PHP fatals and notices, so we disable
     // error assertions.
@@ -135,7 +135,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    */
   public function testInvalidParameterTypes($token, $value = '') {
     // Ensure that there is a valid token seed on the session.
-    $ignored_token = $this->generator->get();
+    $this->generator->get();
 
     $this->generator->validate($token, $value);
   }

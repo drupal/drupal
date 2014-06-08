@@ -154,18 +154,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    * @see testRender
    */
   function providerTestRender() {
-    // Default for 'browsers' key in CSS asset.
-    $browsers_default = array('IE' => TRUE, '!IE' => TRUE);
-
-    // Defaults for LINK and STYLE elements.
-    $link_element_defaults = array(
-
-    );
-    $style_element_defaults = array(
-      '#type' => 'html_tag',
-      '#tag' => 'style',
-    );
-
     $create_link_element = function($href, $media = 'all', $browsers = array()) {
       return array(
         '#type' => 'html_tag',

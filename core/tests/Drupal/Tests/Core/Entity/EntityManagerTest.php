@@ -149,7 +149,7 @@ class EntityManagerTest extends UnitTestCase {
    */
   protected function setUpEntityManager($definitions = array()) {
     $class = $this->getMockClass('Drupal\Core\Entity\EntityInterface');
-    foreach ($definitions as $entity_type_id => $entity_type) {
+    foreach ($definitions as $entity_type) {
       $entity_type->expects($this->any())
         ->method('getClass')
         ->will($this->returnValue($class));
