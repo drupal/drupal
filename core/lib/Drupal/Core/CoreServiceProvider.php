@@ -15,7 +15,6 @@ use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
-use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAuthenticationPass;
 use Drupal\Core\Plugin\PluginManagerPass;
@@ -62,9 +61,6 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
 
     $container->addCompilerPass(new RegisterAccessChecksPass());
-
-    // Add a compiler pass for upcasting route parameters.
-    $container->addCompilerPass(new RegisterParamConvertersPass());
 
     // Add a compiler pass for registering services needing destruction.
     $container->addCompilerPass(new RegisterServicesForDestructionPass());

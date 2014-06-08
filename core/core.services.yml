@@ -427,8 +427,8 @@ services:
       - { name: route_filter }
   paramconverter_manager:
     class: Drupal\Core\ParamConverter\ParamConverterManager
-    calls:
-      - [setContainer, ['@service_container']]
+    tags:
+      - { name: service_collector, tag: paramconverter, call: addConverter }
   paramconverter_subscriber:
     class: Drupal\Core\EventSubscriber\ParamConverterSubscriber
     tags:

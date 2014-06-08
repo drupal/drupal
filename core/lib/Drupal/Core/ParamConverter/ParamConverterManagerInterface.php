@@ -18,27 +18,19 @@ interface ParamConverterManagerInterface {
   /**
    * Registers a parameter converter with the manager.
    *
-   * @param string $converter
+   * @param \Drupal\Core\ParamConverter\ParamConverterInterface $param_converter
+   *   The added param converter instance.
+   * @param string $id
    *   The parameter converter service id to register.
-   * @param int $priority
-   *   (optional) The priority of the converter. Defaults to 0.
    *
    * @return $this
    */
-  public function addConverter($converter, $priority = 0);
-
-  /**
-   * Sorts the converter service ids and flattens them.
-   *
-   * @return array
-   *   The sorted parameter converter service ids.
-   */
-    public function getConverterIds();
+  public function addConverter(ParamConverterInterface $param_converter, $id);
 
   /**
    * Lazy-loads converter services.
    *
-   * @param string $converter
+   * @param string $id
    *   The service id of converter service to load.
    *
    * @return \Drupal\Core\ParamConverter\ParamConverterInterface
@@ -47,7 +39,7 @@ interface ParamConverterManagerInterface {
    * @throws \InvalidArgumentException
    *   If the given service id is not a registered converter.
    */
-  public function getConverter($converter);
+  public function getConverter($id);
 
   /**
    * Saves a list of applicable converters to each route.

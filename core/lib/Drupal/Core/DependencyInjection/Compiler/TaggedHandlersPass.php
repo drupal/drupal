@@ -85,8 +85,22 @@ class TaggedHandlersPass implements CompilerPassInterface {
         $consumer = $container->getDefinition($consumer_id);
         $method = new \ReflectionMethod($consumer->getClass(), $method_name);
         $params = $method->getParameters();
-        $interface = $params[0]->getClass();
-        $accepts_priority = isset($params[1]) && $params[1]->getName() === 'priority';
+
+        $interface_pos = 0;
+        $id_pos = NULL;
+        $priority_pos = NULL;
+        foreach ($params as $pos => $param) {
+          if ($param->getClass()) {
+            $interface = $param->getClass();
+          }
+          if ($param->getName() == 'id') {
+            $id_pos = $pos;
+          }
+          if ($param->getName() == 'priority') {
+            $priority_pos = $pos;
+          }
+        }
+        // Determine the ID.
 
         if (!isset($interface)) {
           throw new LogicException(vsprintf("Service consumer '%s' class method %s::%s() has to type-hint an interface.", array(
@@ -116,12 +130,17 @@ class TaggedHandlersPass implements CompilerPassInterface {
         // Add a method call for each handler to the consumer service
         // definition.
         foreach ($handlers as $id => $priority) {
-          if ($accepts_priority) {
-            $consumer->addMethodCall($method_name, array(new Reference($id), $priority));
+          $arguments = array();
+          $arguments[$interface_pos] = new Reference($id);
+          if (isset($priority_pos)) {
+            $arguments[$priority_pos] = $priority;
           }
-          else {
-            $consumer->addMethodCall($method_name, array(new Reference($id)));
+          if (isset($id_pos)) {
+            $arguments[$id_pos] = $id;
           }
+          // Sort the arguments by position.
+          ksort($arguments);
+          $consumer->addMethodCall($method_name, $arguments);
         }
       }
     }
