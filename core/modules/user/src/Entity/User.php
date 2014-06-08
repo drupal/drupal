@@ -173,7 +173,7 @@ class User extends ContentEntityBase implements UserInterface {
     $roles = array();
 
     foreach ($this->get('roles') as $role) {
-      if (!($exclude_locked_roles && in_array($role->value, array('anonymoud', 'authenticated')))) {
+      if (!($exclude_locked_roles && in_array($role->value, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)))) {
         $roles[] = $role->value;
       }
     }
