@@ -846,7 +846,7 @@ td.group-title {
 }
 
 .views-ui-dialog .views-add-form-selected.container-inline {
-  padding-top: 0;
+  padding: 0;
 }
 
 .views-ui-dialog .views-add-form-selected.container-inline > div {

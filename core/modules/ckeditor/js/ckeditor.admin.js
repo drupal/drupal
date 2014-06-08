@@ -532,7 +532,7 @@
          *   A jQuery DOM fragment that represents the new button group. It has
          *   not been added to the DOM yet.
          */
-        function insertNewGroup(success, $group) {
+        function insertNewGroup (success, $group) {
           if (success) {
             $group.appendTo($(event.currentTarget).closest('.ckeditor-row').children('.ckeditor-toolbar-groups'));
             // Focus on the new group.
@@ -1171,7 +1171,7 @@
    *   A callback to invoke after the button group naming modal dialog has been
    *   closed.
    */
-  function registerButtonMove(view, $button, callback) {
+  function registerButtonMove (view, $button, callback) {
     var $group = $button.closest('.ckeditor-toolbar-group');
 
     // If dropped in a placeholder button group, the user must name it.
@@ -1201,7 +1201,7 @@
    * @param jQuery $group
    *   A jQuery set that contains an li element that wraps a group of buttons.
    */
-  function registerGroupMove(view, $group) {
+  function registerGroupMove (view, $group) {
     // Remove placeholder classes if necessary.
     var $row = $group.closest('.ckeditor-row');
     if ($row.hasClass('placeholder')) {
@@ -1229,7 +1229,7 @@
    *   A callback to invoke after the button group naming modal dialog has been
    *   closed.
    */
-  function openGroupNameDialog(view, $group, callback) {
+  function openGroupNameDialog (view, $group, callback) {
     callback = callback || function () {};
 
     /**
@@ -1241,7 +1241,7 @@
      * @return Boolean
      *   Returns true when an error exists, otherwise returns false.
      */
-    function validateForm(form) {
+    function validateForm (form) {
       if (form.elements[0].value.length === 0) {
         var $form = $(form);
         if (!$form.hasClass('errors')) {
@@ -1266,12 +1266,12 @@
      *   The form DOM element that contains the input with the new button group
      *   title string.
      */
-    function closeDialog(action, form) {
+    function closeDialog (action, form) {
 
       /**
        * Closes the dialog when the user cancels or supplies valid data.
        */
-      function shutdown() {
+      function shutdown () {
         dialog.close(action);
 
         // The processing marker can be deleted since the dialog has been closed.
@@ -1286,7 +1286,7 @@
        * @param String name
        *   The new name of the CKEditor button group.
        */
-      function namePlaceholderGroup($group, name) {
+      function namePlaceholderGroup ($group, name) {
         // If it's currently still a placeholder, then that means we're creating
         // a new group, and we must do some extra work.
         if ($group.hasClass('placeholder')) {
@@ -1355,14 +1355,13 @@
           click: function () {
             closeDialog('apply', this);
           },
-          'class': 'button-primary button'
+          primary: true
         },
         {
           text: Drupal.t('Cancel'),
           click: function () {
             closeDialog('cancel');
-          },
-          'class': 'button'
+          }
         }
       ],
       open: function () {

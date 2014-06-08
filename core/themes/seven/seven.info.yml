@@ -15,6 +15,9 @@ stylesheets:
 stylesheets-override:
   - vertical-tabs.css
   - jquery.ui.theme.css
+  - css/dialog.theme.css
+stylesheets-remove:
+  - jquery.ui.dialog.css
 quickedit_stylesheets:
   - quickedit.css
 regions:

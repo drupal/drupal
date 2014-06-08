@@ -111,8 +111,9 @@ drupal.debounce:
 drupal.dialog:
   version: VERSION
   js:
-    misc/dialog.js: {}
-    misc/dialog.position.js: {}
+    misc/dialog/dialog.js: {}
+    misc/dialog/dialog.position.js: {}
+    misc/dialog/dialog.jquery-ui.js: {}
   css:
     theme:
       misc/dialog.theme.css: {}
@@ -127,7 +128,7 @@ drupal.dialog:
 drupal.dialog.ajax:
   version: VERSION
   js:
-    misc/dialog.ajax.js: {}
+    misc/dialog/dialog.ajax.js: {}
   dependencies:
     - core/jquery
     - core/drupal

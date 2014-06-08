@@ -325,7 +325,7 @@
       var that = this;
       var discardDialog;
 
-      function closeDiscardDialog(action) {
+      function closeDiscardDialog (action) {
         discardDialog.close(action);
         // The active modal has been removed.
         that.model.set('activeModal', null);
@@ -359,7 +359,8 @@
               text: Drupal.t('Save'),
               click: function () {
                 closeDiscardDialog('save');
-              }
+              },
+              primary: true
             },
             {
               text: Drupal.t('Discard changes'),

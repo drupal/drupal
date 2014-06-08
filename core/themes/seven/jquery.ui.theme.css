@@ -8,10 +8,10 @@
  * Component containers
  */
 .ui-widget {
-  background: #fff;
+  background: none;
 }
 .ui-widget-content {
-  border: solid 1px #ccc;
+  border: none;
 }
 
 /**
