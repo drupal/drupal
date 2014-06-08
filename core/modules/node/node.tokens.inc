@@ -28,7 +28,6 @@ function node_token_info() {
   );
   $node['type'] = array(
     'name' => t("Content type"),
-    'description' => t("The type of the node."),
   );
   $node['type-name'] = array(
     'name' => t("Content type name"),
@@ -36,7 +35,6 @@ function node_token_info() {
   );
   $node['title'] = array(
     'name' => t("Title"),
-    'description' => t("The title of the node."),
   );
   $node['body'] = array(
     'name' => t("Body"),
@@ -62,7 +60,6 @@ function node_token_info() {
   // Chained tokens for nodes.
   $node['created'] = array(
     'name' => t("Date created"),
-    'description' => t("The date the node was posted."),
     'type' => 'date',
   );
   $node['changed'] = array(
@@ -72,7 +69,6 @@ function node_token_info() {
   );
   $node['author'] = array(
     'name' => t("Author"),
-    'description' => t("The author of the node."),
     'type' => 'user',
   );
 

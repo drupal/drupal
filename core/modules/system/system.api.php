@@ -2518,7 +2518,8 @@ function hook_tokens_alter(array &$replacements, array $context) {
  *   - types: An associative array of token types (groups). Each token type is
  *     an associative array with the following components:
  *     - name: The translated human-readable short name of the token type.
- *     - description: A translated longer description of the token type.
+ *     - description (optional): A translated longer description of the token
+ *       type.
  *     - needs-data: The type of data that must be provided to
  *       \Drupal\Core\Utility\Token::replace() in the $data argument (i.e., the
  *       key name in $data) in order for tokens of this type to be used in the
@@ -2534,7 +2535,7 @@ function hook_tokens_alter(array &$replacements, array $context) {
  *     tokens, each token item is keyed by the machine name of the token, and
  *     each token item has the following components:
  *     - name: The translated human-readable short name of the token.
- *     - description: A translated longer description of the token.
+ *     - description (optional): A translated longer description of the token.
  *     - type (optional): A 'needs-data' data type supplied by this token, which
  *       should match a 'needs-data' value from another token type. For example,
  *       the node author token provides a user object, which can then be used
@@ -2558,7 +2559,6 @@ function hook_token_info() {
   );
   $node['title'] = array(
     'name' => t("Title"),
-    'description' => t("The title of the node."),
   );
   $node['edit-url'] = array(
     'name' => t("Edit URL"),
@@ -2568,12 +2568,10 @@ function hook_token_info() {
   // Chained tokens for nodes.
   $node['created'] = array(
     'name' => t("Date created"),
-    'description' => t("The date the node was posted."),
     'type' => 'date',
   );
   $node['author'] = array(
     'name' => t("Author"),
-    'description' => t("The author of the node."),
     'type' => 'user',
   );
 
