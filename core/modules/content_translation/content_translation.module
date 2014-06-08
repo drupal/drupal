@@ -155,7 +155,7 @@ function content_translation_entity_base_field_info_alter(&$fields, EntityTypeIn
     // make it per-instance instead. In that case, we will need to implement
     // hook_bundle_field_info_alter() instead.
     $field_settings = array();
-    foreach ($translation_settings as $bundle => $settings) {
+    foreach ($translation_settings as $settings) {
       $field_settings += !empty($settings['content_translation']['fields']) ? $settings['content_translation']['fields'] : array();
     }
 
