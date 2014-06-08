@@ -34,7 +34,6 @@ class LanguageConfigurationTest extends WebTestBase {
    * Functional tests for adding, editing and deleting languages.
    */
   function testLanguageConfiguration() {
-    global $base_url;
 
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'administer site configuration'));

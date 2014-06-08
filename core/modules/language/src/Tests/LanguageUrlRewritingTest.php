@@ -58,7 +58,6 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $non_existing->id = $this->randomName();
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.', 'URL language negotiation does not work with non-installed languages');
 
-    $request = $this->prepareRequestForGenerator();
     // Check that URL rewriting is not applied to subrequests.
     $this->drupalGet('language_test/subrequest');
     $this->assertText($this->web_user->getUsername(), 'Page correctly retrieved');

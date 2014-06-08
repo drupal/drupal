@@ -319,7 +319,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
     // Loop locked languages to maintain the existing order.
     $locked_languages = $this->getLanguages(Language::STATE_LOCKED);
     $config_ids = array_map(function($language) { return 'language.entity.' . $language->id; }, $locked_languages);
-    foreach ($this->configFactory->loadMultiple($config_ids) as $config_id => $config) {
+    foreach ($this->configFactory->loadMultiple($config_ids) as $config) {
       // Update system languages weight.
       $max_weight++;
       $config->set('weight', $max_weight);

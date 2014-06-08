@@ -35,7 +35,6 @@ class LanguageNegotiationSelected extends LanguageNegotiationMethodBase {
     $langcode = NULL;
 
     if ($this->languageManager) {
-      $languages = $this->languageManager->getLanguages();
       $langcode = $this->config->get('language.negotiation')->get('selected_langcode');
     }
 

@@ -34,7 +34,6 @@ class LanguageListTest extends WebTestBase {
    * Functional tests for adding, editing and deleting languages.
    */
   function testLanguageList() {
-    global $base_url;
 
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'administer site configuration'));
@@ -118,12 +117,9 @@ class LanguageListTest extends WebTestBase {
     $this->assertResponse(404, 'Language no longer found.');
     // Make sure the "language_count" state has been updated correctly.
     $this->container->get('language_manager')->reset();
-    $languages = $this->container->get('language_manager')->getLanguages();
     // Delete French.
     $this->drupalPostForm('admin/config/regional/language/delete/fr', array(), t('Delete'));
-    // Get the count of languages.
     $this->container->get('language_manager')->reset();
-    $languages = $this->container->get('language_manager')->getLanguages();
     // We need raw here because %language and %langcode will add HTML.
     $t_args = array('%language' => 'French', '%langcode' => 'fr');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), 'The French language has been removed.');

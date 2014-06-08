@@ -240,7 +240,6 @@ class LanguageSwitchingTest extends WebTestBase {
    */
   protected function doTestLanguageLinkActiveClassAnonymous() {
     $function_name = '#type link';
-    $path = 'language_test/type-link-active-class';
 
     $this->drupalLogout();
 

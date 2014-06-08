@@ -90,9 +90,6 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // For setting browser language preference to some unknown.
     $http_header_blah = array("Accept-Language: blah;q=1");
 
-    // This domain should switch the UI to Chinese.
-    $language_domain = 'example.cn';
-
     // Setup the site languages by installing two languages.
     // Set the default language in order for the translated string to be registered
     // into database when seen by t(). Without doing this, our target string
