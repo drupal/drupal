@@ -382,6 +382,7 @@ system.admin_config:
   path: '/admin/config'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::overview'
+    path: 'admin/config'
     _title: 'Configuration'
   requirements:
     _permission: 'access administration pages'
@@ -408,3 +409,12 @@ system.batch_page.json:
 
 system.update:
   path: '/core/update.php'
+
+system.admin_content:
+  path: '/admin/content'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::overview'
+    path: 'admin/content'
+    _title: 'Content'
+  requirements:
+    _permission: 'access administration pages'

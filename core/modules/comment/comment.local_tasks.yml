@@ -16,7 +16,7 @@ comment.confirm_delete_tab:
 comment.admin:
   title: Comments
   route_name: comment.admin
-  base_route: node.content_overview
+  base_route: system.admin_content
 
 comment.admin_new:
   title: 'Published comments'

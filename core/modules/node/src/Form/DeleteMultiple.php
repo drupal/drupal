@@ -125,7 +125,7 @@ class DeleteMultiple extends ConfirmFormBase {
       drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
       Cache::invalidateTags(array('content' => TRUE));
     }
-    $form_state['redirect_route']['route_name'] = 'node.content_overview';
+    $form_state['redirect_route']['route_name'] = 'system.admin_content';
   }
 
 }

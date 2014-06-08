@@ -40,11 +40,22 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
    */
   protected $moduleHandler;
 
+  /**
+   * The container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     $container = new ContainerBuilder();
     $config_factory = $this->getConfigFactoryStub(array());
     $container->set('config.factory', $config_factory);
     \Drupal::setContainer($container);
+    $this->container = $container;
   }
 
   /**

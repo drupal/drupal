@@ -7,4 +7,4 @@ node.add_page:
   route_name: node.add_page
   title: 'Add content'
   appears_on:
-    - node.content_overview
+    - system.admin_content

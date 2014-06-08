@@ -184,19 +184,6 @@ function comment_theme() {
 }
 
 /**
- * Implements hook_menu_link_defaults_alter()
- */
-function comment_menu_link_defaults_alter(&$links) {
-  if (isset($links['node.content_overview'])) {
-    // Add comments to the description for admin/content if any.
-    $links['node.content_overview']['description'] = 'Administer content and comments.';
-  }
-  if (\Drupal::moduleHandler()->moduleExists('node')) {
-    $links['comment.admin']['parent'] = 'node.content_overview';
-  }
-}
-
-/**
  * Returns a menu title which includes the number of unapproved comments.
  *
  * @todo Move to the comment manager and replace by a entity query?

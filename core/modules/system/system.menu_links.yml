@@ -3,6 +3,12 @@ system.admin:
   route_name: system.admin
   weight: 9
   menu_name: admin
+system.admin_content:
+  title: Content
+  description: 'Find and manage content.'
+  route_name: system.admin_content
+  parent: system.admin
+  weight: -10
 system.admin_structure:
   route_name: system.admin_structure
   parent: system.admin

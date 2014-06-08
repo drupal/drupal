@@ -11,10 +11,6 @@ node.delete_confirm:
   base_route: node.view
   title: Delete
   weight: 10
-node.content_overview:
-  title: Content
-  route_name: node.content_overview
-  base_route: node.content_overview
 node.revision_overview:
   route_name: node.revision_overview
   base_route: node.view

@@ -1,4 +1,8 @@
 services:
+  node.route_subscriber:
+    class: Drupal\node\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
     arguments: ['@database', '@module_handler']

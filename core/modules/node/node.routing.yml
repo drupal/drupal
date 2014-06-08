@@ -1,10 +1,3 @@
-node.content_overview:
-  path: '/admin/content'
-  defaults:
-    _title: 'Content'
-    _entity_list: 'node'
-  requirements:
-    _permission: 'access content overview'
 
 node.multiple_delete_confirm:
   path: '/admin/content/node/delete'

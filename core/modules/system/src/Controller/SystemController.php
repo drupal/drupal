@@ -94,18 +94,21 @@ class SystemController extends ControllerBase {
   /**
    * Provide the administration overview page.
    *
+   * @param string $path
+   *   The administrative path for which to display child links.
+   *
    * @return array
    *   A renderable array of the administration overview page.
    */
-  public function overview() {
+  public function overview($path) {
     // Check for status report errors.
     if ($this->systemManager->checkRequirements() && $this->currentUser()->hasPermission('administer site configuration')) {
       drupal_set_message($this->t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
     }
     $blocks = array();
-    // Load all links on admin/config and menu links below it.
+    // Load all links on $path and menu links below it.
     $query = $this->queryFactory->get('menu_link')
-      ->condition('link_path', 'admin/config')
+      ->condition('link_path', $path)
       ->condition('module', 'system');
     $result = $query->execute();
     $menu_link_storage = $this->entityManager()->getStorage('menu_link');
