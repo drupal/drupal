@@ -196,6 +196,23 @@ function aggregator_views_data() {
     ),
   );
 
+  $data['aggregator_feed']['url'] = array(
+    'title' => t('URL'),
+    'help' => t('The fully-qualified URL of the feed.'),
+    'field' => array(
+      'id' => 'url',
+     ),
+    'argument' => array(
+      'id' => 'string',
+    ),
+    'sort' => array(
+      'id' => 'standard',
+    ),
+    'filter' => array(
+      'id' => 'string',
+    ),
+  );
+
   $data['aggregator_feed']['link'] = array(
     'title' => t('Link'),
     'help' => t('The link to the source URL of the feed.'),

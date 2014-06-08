@@ -1,0 +1,300 @@
+base_field: fid
+base_table: aggregator_feed
+core: 8
+description: ""
+status: true
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    provider: views
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+        options:
+          items_per_page: 10
+      style:
+        type: default
+      row:
+        type: entity:aggregator_feed
+      fields:
+        title:
+          id: title
+          table: aggregator_feed
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ""
+          dependencies:
+            module:
+            - aggregator
+            - aggregator
+            - aggregator
+          label: Title
+          exclude: false
+          alter:
+            alter_text: false
+            text: ""
+            make_link: false
+            path: ""
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ""
+            rel: ""
+            link_class: ""
+            prefix: ""
+            suffix: ""
+            target: ""
+            nl2br: false
+            max_length: ""
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ""
+            more_link_path: ""
+            strip_tags: false
+            trim: false
+            preserve_tags: ""
+            html: false
+          element_type: ""
+          element_class: ""
+          element_label_type: ""
+          element_label_class: ""
+          element_label_colon: true
+          element_wrapper_type: ""
+          element_wrapper_class: ""
+          element_default_classes: true
+          empty: ""
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_as_link: false
+          plugin_id: aggregator_title_link
+          provider: aggregator
+        url:
+          id: url
+          table: aggregator_feed
+          field: url
+          relationship: none
+          group_type: group
+          admin_label: ""
+          dependencies:
+            module:
+            - views
+          label: URL
+          exclude: false
+          alter:
+            alter_text: false
+            text: ""
+            make_link: false
+            path: ""
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ""
+            rel: ""
+            link_class: ""
+            prefix: ""
+            suffix: ""
+            target: ""
+            nl2br: false
+            max_length: ""
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ""
+            more_link_path: ""
+            strip_tags: false
+            trim: false
+            preserve_tags: ""
+            html: false
+          element_type: ""
+          element_class: ""
+          element_label_type: ""
+          element_label_class: ""
+          element_label_colon: true
+          element_wrapper_type: ""
+          element_wrapper_class: ""
+          element_default_classes: true
+          empty: ""
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          display_as_link: false
+          plugin_id: url
+          provider: views
+        description:
+          id: description
+          table: aggregator_feed
+          field: description
+          relationship: none
+          group_type: group
+          admin_label: ""
+          dependencies:
+            module:
+            - views
+          label: Description
+          exclude: false
+          alter:
+            alter_text: false
+            text: ""
+            make_link: false
+            path: ""
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ""
+            rel: ""
+            link_class: ""
+            prefix: ""
+            suffix: ""
+            target: ""
+            nl2br: false
+            max_length: ""
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ""
+            more_link_path: ""
+            strip_tags: false
+            trim: false
+            preserve_tags: ""
+            html: false
+          element_type: ""
+          element_class: ""
+          element_label_type: ""
+          element_label_class: ""
+          element_label_colon: true
+          element_wrapper_type: ""
+          element_wrapper_class: ""
+          element_default_classes: true
+          empty: ""
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          plugin_id: xss
+          provider: views
+        modified:
+          id: modified
+          table: aggregator_feed
+          field: modified
+          relationship: none
+          group_type: group
+          admin_label: ""
+          dependencies:
+            module:
+            - views
+          label: Last modified
+          exclude: false
+          alter:
+            alter_text: false
+            text: ""
+            make_link: false
+            path: ""
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ""
+            rel: ""
+            link_class: ""
+            prefix: ""
+            suffix: ""
+            target: ""
+            nl2br: false
+            max_length: ""
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ""
+            more_link_path: ""
+            strip_tags: false
+            trim: false
+            preserve_tags: ""
+            html: false
+          element_type: ""
+          element_class: ""
+          element_label_type: ""
+          element_label_class: ""
+          element_label_colon: true
+          element_wrapper_type: ""
+          element_wrapper_class: ""
+          element_default_classes: true
+          empty: ""
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: html_date
+          custom_date_format: ""
+          timezone: ""
+          plugin_id: date
+          provider: views
+      filters: []
+      sorts: []
+      title: test_style_opml
+      header: []
+      footer: []
+      empty: []
+      relationships: []
+      arguments: []
+  page:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    provider: views
+    display_options:
+      path: test-opml-style
+  feed_1:
+    display_plugin: feed
+    id: feed_1
+    display_title: Feed
+    position: 2
+    provider: views
+    display_options:
+      pager:
+        type: some
+      style:
+        type: opml
+        options:
+          grouping: []
+        provider: views
+      row:
+        type: opml_fields
+        options:
+          type_field: rss
+          text_field: title
+          created_field: modified
+          description_field: description
+          html_url_field: ""
+          language_field: ""
+          xml_url_field: url
+          url_field: ""
+        provider: views
+      path: test-feed-opml-style
+      displays: {  }
+label: test_style_opml
+module: views
+id: test_style_opml
+tag: default
+dependencies:
+  module:
+  - aggregator

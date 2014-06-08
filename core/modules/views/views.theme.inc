@@ -999,6 +999,57 @@ function template_preprocess_views_view_row_rss(&$variables) {
 }
 
 /**
+ * Prepares variables for OPML feed templates.
+ *
+ * Default template: views-view-opml.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: A ViewExecutable object.
+ *   - rows: The raw row data.
+ */
+function template_preprocess_views_view_opml(&$variables) {
+  $view  = $variables['view'];
+  $items = $variables['rows'];
+
+  $config = \Drupal::config('system.site');
+
+  if ($view->display_handler->getOption('sitename_title')) {
+    $title = $config->get('name');
+    if ($slogan = $config->get('slogan')) {
+      $title .= ' - ' . $slogan;
+    }
+  }
+  else {
+    $title = $view->getTitle();
+  }
+  $variables['title'] = String::checkPlain($title);
+  $variables['items'] = $items;
+  $variables['updated'] = gmdate(DATE_RFC2822, REQUEST_TIME);
+
+  // During live preview we don't want to output the header since the contents
+  // of the feed are being displayed inside a normal HTML page.
+  if (empty($variables['view']->live_preview)) {
+    $variables['view']->getResponse()->headers->set('Content-Type', 'text/xml; charset=utf-8');
+  }
+}
+
+/**
+ * Prepares variables for views OPML item templates.
+ *
+ * Default template: views-view-row-opml.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - row: The raw results rows.
+ */
+function template_preprocess_views_view_row_opml(&$variables) {
+  $item = $variables['row'];
+
+  $variables['attributes'] = new Attribute($item);
+}
+
+/**
  * Prepares variables for views exposed form templates.
  *
  * Default template: views-exposed-form.html.twig.
