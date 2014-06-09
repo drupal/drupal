@@ -712,10 +712,10 @@ function search_excerpt($keys, $text, $langcode = NULL) {
     $out[] = substr($text, $from, $to - $from);
   }
 
-  // Combine the text chunks with "..." separators. The "..." needs to be
-  // translated. Let translators have the ... separator text as one chunk.
-  $dots = explode('!excerpt', t('... !excerpt ... !excerpt ...'));
-  $text = (isset($new_ranges[0]) ? '' : $dots[0]) . implode($dots[1], $out) . (($max_end < strlen($text) - 1) ? $dots[2] : '');
+  // Combine the text chunks with "…" separators. The "…" needs to be
+  // translated. Let translators have the … separator text as one chunk.
+  $ellipses = explode('!excerpt', t('… !excerpt … !excerpt …'));
+  $text = (isset($new_ranges[0]) ? '' : $ellipses[0]) . implode($ellipses[1], $out) . (($max_end < strlen($text) - 1) ? $ellipses[2] : '');
   $text = check_plain($text);
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
