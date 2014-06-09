@@ -35,6 +35,9 @@
   float: none;
   width: auto;
 }
+.install-page table td {
+  word-break: break-word;
+}
 @media all and (max-width: 1010px) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent,
