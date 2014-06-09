@@ -75,7 +75,7 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('path.alias_manager.cached'),
+      $container->get('path.alias_manager'),
       $container->get('path.matcher'),
       $container->get('request_stack'),
       $configuration,
