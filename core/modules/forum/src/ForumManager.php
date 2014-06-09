@@ -14,7 +14,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\comment\CommentInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -494,44 +493,6 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
       ->addTag('node_access')
       ->execute()
       ->fetchField();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function updateIndex($nid) {
-    $count = $this->connection->query("SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_id = 'node__comment_forum' AND c.entity_type = 'node' AND c.status = :status", array(
-      ':nid' => $nid,
-      ':status' => CommentInterface::PUBLISHED,
-    ))->fetchField();
-
-    if ($count > 0) {
-      // Comments exist.
-      $last_reply = $this->connection->queryRange("SELECT cid, name, created, uid FROM {comment} WHERE entity_id = :nid AND field_id = 'node__comment_forum' AND entity_type = 'node' AND status = :status ORDER BY cid DESC", 0, 1, array(
-        ':nid' => $nid,
-        ':status' => CommentInterface::PUBLISHED,
-      ))->fetchObject();
-      $this->connection->update('forum_index')
-        ->fields( array(
-          'comment_count' => $count,
-          'last_comment_timestamp' => $last_reply->created,
-        ))
-        ->condition('nid', $nid)
-        ->execute();
-    }
-    else {
-      // Comments do not exist.
-      // @todo This should be actually filtering on the desired node language and
-      //   just fall back to the default language.
-      $node = $this->connection->query('SELECT uid, created FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $nid))->fetchObject();
-      $this->connection->update('forum_index')
-        ->fields( array(
-          'comment_count' => 0,
-          'last_comment_timestamp' => $node->created,
-        ))
-        ->condition('nid', $nid)
-        ->execute();
-    }
   }
 
   /**

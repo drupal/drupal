@@ -12,3 +12,6 @@ services:
     arguments: ['@entity.manager', '@config.factory', '@forum_manager']
     tags:
       - { name: breadcrumb_builder, priority: 1001 }
+  forum.index_storage:
+    class: Drupal\forum\ForumIndexStorage
+    arguments: ['@database', '@forum_manager']

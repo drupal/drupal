@@ -96,12 +96,4 @@ interface ForumManagerInterface {
    */
   public function unreadTopics($term, $uid);
 
-  /**
-   * Updates the taxonomy index for a given node.
-   *
-   * @param int $nid
-   *   The ID of the node to update.
-   */
-  public function updateIndex($nid);
-
 }

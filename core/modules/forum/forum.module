@@ -5,6 +5,7 @@
  * Provides discussion forums.
  */
 
+use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
@@ -245,7 +246,7 @@ function forum_node_presave(EntityInterface $node) {
       $node->forum_tid = $node->taxonomy_forums->target_id;
       // Only do a shadow copy check if this is not a new node.
       if (!$node->isNew()) {
-        $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->id()))->fetchField();
+        $old_tid = \Drupal::service('forum.index_storage')->getOriginalTermId($node);
         if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
           // A shadow copy needs to be created. Retain new term and add old term.
           $node->taxonomy_forums[count($node->taxonomy_forums)] = array('target_id' => $old_tid);
@@ -262,73 +263,37 @@ function forum_node_update(EntityInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     // If this is not a new revision and does exist, update the forum record,
     // otherwise insert a new one.
-    if ($node->getRevisionId() == $node->original->getRevisionId() && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->id()))->fetchField()) {
+    /** @var \Drupal\forum\ForumIndexStorageInterface $forum_index_storage */
+    $forum_index_storage = \Drupal::service('forum.index_storage');
+    if ($node->getRevisionId() == $node->original->getRevisionId() && $forum_index_storage->getOriginalTermId($node)) {
       if (!empty($node->forum_tid)) {
-        db_update('forum')
-          ->fields(array('tid' => $node->forum_tid))
-          ->condition('vid', $node->getRevisionId())
-          ->execute();
+        $forum_index_storage->update($node);
       }
       // The node is removed from the forum.
       else {
-        db_delete('forum')
-          ->condition('nid', $node->id())
-          ->execute();
+        $forum_index_storage->delete($node);
       }
     }
     else {
       if (!empty($node->forum_tid)) {
-        db_insert('forum')
-          ->fields(array(
-            'tid' => $node->forum_tid,
-            'vid' => $node->getRevisionId(),
-            'nid' => $node->id(),
-          ))
-          ->execute();
+        $forum_index_storage->create($node);
       }
     }
     // If the node has a shadow forum topic, update the record for this
     // revision.
     if (!empty($node->shadow)) {
-      db_delete('forum')
-        ->condition('nid', $node->id())
-        ->condition('vid', $node->getRevisionId())
-        ->execute();
-      db_insert('forum')
-        ->fields(array(
-          'nid' => $node->id(),
-          'vid' => $node->getRevisionId(),
-          'tid' => $node->forum_tid,
-        ))
-        ->execute();
+      $forum_index_storage->deleteRevision($node);
+      $forum_index_storage->create($node);
     }
 
     // If the node is published, update the forum index.
     if ($node->isPublished()) {
-      db_delete('forum_index')->condition('nid', $node->id())->execute();
-      $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-      foreach ($node->getTranslationLanguages() as $langcode => $language) {
-        $translation = $node->getTranslation($langcode);
-        foreach ($translation->taxonomy_forums as $item) {
-          $query->values(array(
-            'nid' => $node->id(),
-            'title' => $translation->label(),
-            'tid' => $item->target_id,
-            'sticky' => (int) $node->isSticky(),
-            'created' => $node->getCreatedTime(),
-            'comment_count' => 0,
-            'last_comment_timestamp' => $node->getCreatedTime(),
-          ));
-        }
-      }
-      $query->execute();
-      // The logic for determining last_comment_count is fairly complex, so
-      // update the index too.
-      \Drupal::service('forum_manager')->updateIndex($node->id());
+      $forum_index_storage->deleteIndex($node);
+      $forum_index_storage->createIndex($node);
     }
     // When a forum node is unpublished, remove it from the forum_index table.
     else {
-      db_delete('forum_index')->condition('nid', $node->id())->execute();
+      $forum_index_storage->deleteIndex($node);
     }
   }
 }
@@ -338,32 +303,15 @@ function forum_node_update(EntityInterface $node) {
  */
 function forum_node_insert(EntityInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
+    /** @var \Drupal\forum\ForumIndexStorageInterface $forum_index_storage */
+    $forum_index_storage = \Drupal::service('forum.index_storage');
     if (!empty($node->forum_tid)) {
-      db_insert('forum')
-        ->fields(array(
-          'tid' => $node->forum_tid,
-          'vid' => $node->getRevisionId(),
-          'nid' => $node->id(),
-        ))
-        ->execute();
+      $forum_index_storage->create($node);
     }
 
     // If the node is published, update the forum index.
     if ($node->isPublished()) {
-      $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-      foreach ($node->getTranslationLanguages() as $langcode => $language) {
-        $translation = $node->getTranslation($langcode);
-        $query->values(array(
-          'nid' => $node->id(),
-          'title' => $translation->label(),
-          'tid' => $translation->taxonomy_forums->target_id,
-          'sticky' => (int) $node->isSticky(),
-          'created' => $node->getCreatedTime(),
-          'comment_count' => 0,
-          'last_comment_timestamp' => $node->getCreatedTime(),
-        ));
-      }
-      $query->execute();
+      $forum_index_storage->createIndex($node);
     }
   }
 }
@@ -373,12 +321,10 @@ function forum_node_insert(EntityInterface $node) {
  */
 function forum_node_predelete(EntityInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
-    db_delete('forum')
-      ->condition('nid', $node->id())
-      ->execute();
-    db_delete('forum_index')
-      ->condition('nid', $node->id())
-      ->execute();
+    /** @var \Drupal\forum\ForumIndexStorageInterface $forum_index_storage */
+    $forum_index_storage = \Drupal::service('forum.index_storage');
+    $forum_index_storage->delete($node);
+    $forum_index_storage->deleteIndex($node);
   }
 }
 
@@ -393,11 +339,7 @@ function forum_node_load($nodes) {
     }
   }
   if (!empty($node_vids)) {
-    $query = db_select('forum', 'f');
-    $query
-      ->fields('f', array('nid', 'tid'))
-      ->condition('f.vid', $node_vids);
-    $result = $query->execute();
+    $result = \Drupal::service('forum.index_storage')->read($node_vids);
     foreach ($result as $record) {
       $nodes[$record->nid]->forum_tid = $record->tid;
     }
@@ -422,9 +364,9 @@ function forum_permission() {
  * This actually handles the insertion and update of published nodes since
  * $comment->save() calls hook_comment_publish() for all published comments.
  */
-function forum_comment_publish($comment) {
+function forum_comment_publish(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
-    \Drupal::service('forum_manager')->updateIndex($comment->getCommentedEntityId());
+    \Drupal::service('forum.index_storage')->updateIndex($comment->getCommentedEntity());
   }
 }
 
@@ -434,29 +376,29 @@ function forum_comment_publish($comment) {
  * The Comment module doesn't call hook_comment_unpublish() when saving
  * individual comments, so we need to check for those here.
  */
-function forum_comment_update($comment) {
+function forum_comment_update(CommentInterface $comment) {
   // $comment->save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
   if (!$comment->isPublished() && $comment->getCommentedEntityTypeId() == 'node') {
-    \Drupal::service('forum_manager')->updateIndex($comment->getCommentedEntityId());
+    \Drupal::service('forum.index_storage')->updateIndex($comment->getCommentedEntity());
   }
 }
 
 /**
  * Implements hook_comment_unpublish().
  */
-function forum_comment_unpublish($comment) {
+function forum_comment_unpublish(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
-    \Drupal::service('forum_manager')->updateIndex($comment->getCommentedEntityId());
+    \Drupal::service('forum.index_storage')->updateIndex($comment->getCommentedEntity());
   }
 }
 
 /**
  * Implements hook_comment_delete().
  */
-function forum_comment_delete($comment) {
+function forum_comment_delete(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
-    \Drupal::service('forum_manager')->updateIndex($comment->getCommentedEntityId());
+    \Drupal::service('forum.index_storage')->updateIndex($comment->getCommentedEntity());
   }
 }
 
