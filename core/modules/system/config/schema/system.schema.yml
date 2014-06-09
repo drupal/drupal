@@ -340,7 +340,7 @@ system.image.gd:
 
 system.mail:
   type: mapping
-  label: 'Image settings'
+  label: 'Mail system'
   mapping:
     interface:
       type: mapping
