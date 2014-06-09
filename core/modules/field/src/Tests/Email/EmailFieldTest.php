@@ -67,8 +67,7 @@ class EmailFieldTest extends WebTestBase {
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
     ));
     $this->instance->save();

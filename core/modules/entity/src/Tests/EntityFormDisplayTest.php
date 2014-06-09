@@ -64,8 +64,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     ));
     $field->save();
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $field,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -192,8 +191,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     ));
     $field->save();
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $field,
       'bundle' => 'entity_test',
     ));
     $instance->save();

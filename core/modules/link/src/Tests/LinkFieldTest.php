@@ -75,8 +75,7 @@ class LinkFieldTest extends WebTestBase {
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_DISABLED,
@@ -200,8 +199,7 @@ class LinkFieldTest extends WebTestBase {
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
       'label' => 'Read more about this entity',
       'settings' => array(
@@ -320,8 +318,7 @@ class LinkFieldTest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => array(
@@ -463,8 +460,7 @@ class LinkFieldTest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
       'settings' => array(
         'title' => DRUPAL_OPTIONAL,

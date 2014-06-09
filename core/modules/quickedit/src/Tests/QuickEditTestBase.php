@@ -64,8 +64,7 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
 
     $instance = $field_name . '_instance';
     $this->$instance = entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->$field,
       'bundle' => 'entity_test',
       'label' => $label,
       'description' => $label,

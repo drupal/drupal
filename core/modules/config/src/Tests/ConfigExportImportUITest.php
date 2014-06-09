@@ -79,8 +79,7 @@ class ConfigExportImportUITest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $this->field->name,
-      'entity_type' => 'node',
+      'field' => $this->field,
       'bundle' => $this->content_type->type,
     ))->save();
     entity_get_form_display('node', $this->content_type->type, 'default')

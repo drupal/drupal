@@ -61,8 +61,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
     $field_private->save();
 
     entity_create('field_instance_config', array(
-      'field_name' => $field_private->name,
-      'entity_type' => 'node',
+      'field' => $field_private,
       'bundle' => 'page',
       'widget' => array(
         'type' => 'options_buttons',

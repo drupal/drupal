@@ -66,7 +66,7 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
     ));
     $field->save();
     $instance = entity_create('field_instance_config', array(
-      'field_name' => 'test_field',
+      'field' => $field,
       'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
       'settings' => array(

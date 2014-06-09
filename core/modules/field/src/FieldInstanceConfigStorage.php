@@ -108,18 +108,23 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
     if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
       // Optimize for the most frequent case where we do have a specific ID.
       $id = $conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name'];
-      $instances = $this->entityManager->getStorage($this->entityTypeId)->loadMultiple(array($id));
+      $instances = $this->loadMultiple(array($id));
     }
     else {
       // No specific ID, we need to examine all existing instances.
-      $instances = $this->entityManager->getStorage($this->entityTypeId)->loadMultiple();
+      $instances = $this->loadMultiple();
     }
 
     // Merge deleted instances (stored in state) if needed.
     if ($include_deleted) {
       $deleted_instances = $this->state->get('field.instance.deleted') ?: array();
+      $deleted_fields = $this->state->get('field.field.deleted') ?: array();
       foreach ($deleted_instances as $id => $config) {
-        $instances[$id] = $this->entityManager->getStorage($this->entityTypeId)->create($config);
+        // If the field itself is deleted, inject it directly in the instance.
+        if (isset($deleted_fields[$config['field_uuid']])) {
+          $config['field'] = $this->entityManager->getStorage('field_config')->create($deleted_fields[$config['field_uuid']]);
+        }
+        $instances[$id] = $this->create($config);
       }
     }
 

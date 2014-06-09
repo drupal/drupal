@@ -101,18 +101,18 @@ class FieldConfigStorage extends ConfigEntityStorage {
     if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
       // Optimize for the most frequent case where we do have a specific ID.
       $id = $conditions['entity_type'] . $conditions['field_name'];
-      $fields = $this->entityManager->getStorage($this->entityTypeId)->loadMultiple(array($id));
+      $fields = $this->loadMultiple(array($id));
     }
     else {
       // No specific ID, we need to examine all existing fields.
-      $fields = $this->entityManager->getStorage($this->entityTypeId)->loadMultiple();
+      $fields = $this->loadMultiple();
     }
 
     // Merge deleted fields (stored in state) if needed.
     if ($include_deleted) {
       $deleted_fields = $this->state->get('field.field.deleted') ?: array();
       foreach ($deleted_fields as $id => $config) {
-        $fields[$id] = $this->entityManager->getStorage($this->entityTypeId)->create($config);
+        $fields[$id] = $this->create($config);
       }
     }
 

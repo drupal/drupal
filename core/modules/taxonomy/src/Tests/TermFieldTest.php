@@ -60,8 +60,7 @@ class TermFieldTest extends TaxonomyTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')

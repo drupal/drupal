@@ -53,9 +53,8 @@ class RssTest extends TaxonomyTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $this->field_name,
+      'field' => $this->field,
       'bundle' => 'article',
-      'entity_type' => 'node',
     ))->save();
     entity_get_form_display('node', 'article', 'default')
       ->setComponent($this->field_name, array(

@@ -66,8 +66,7 @@ class DateTimeFieldTest extends WebTestBase {
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field_name' => $this->field->name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
       'required' => TRUE,
     ));
@@ -305,8 +304,7 @@ class DateTimeFieldTest extends WebTestBase {
     $field->save();
 
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $field->name,
-      'entity_type' => 'node',
+      'field' => $field,
       'bundle' => 'date_content',
     ));
     $instance->save();

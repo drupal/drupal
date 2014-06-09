@@ -77,8 +77,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $this->$field->save();
     $this->$field_id = $this->{$field}->uuid();
     $this->$instance_definition = array(
-      'field_name' => $this->$field_name,
-      'entity_type' => $entity_type,
+      'field' => $this->$field,
       'bundle' => $bundle,
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',

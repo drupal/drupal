@@ -89,8 +89,7 @@ function custom_block_add_body_field($block_type_id, $label = 'Body') {
   }
   if (empty($instance)) {
     $instance = entity_create('field_instance_config', array(
-      'field_name' => 'body',
-      'entity_type' => 'custom_block',
+      'field' => $field,
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => array('display_summary' => FALSE),

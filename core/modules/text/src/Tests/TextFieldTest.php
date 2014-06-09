@@ -58,8 +58,7 @@ class TextFieldTest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $this->field->name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
     ))->save();
 
@@ -98,8 +97,7 @@ class TextFieldTest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
       'label' => $this->randomName() . '_label',
       'settings' => array(
@@ -165,8 +163,7 @@ class TextFieldTest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $this->field_name,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
       'label' => $this->randomName() . '_label',
       'settings' => array(

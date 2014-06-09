@@ -70,8 +70,7 @@ abstract class OptionsFieldUnitTestBase extends FieldUnitTestBase {
     $this->field->save();
 
     $instance = array(
-      'field_name' => $this->fieldName,
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
     );
     $this->instance = entity_create('field_instance_config', $instance);

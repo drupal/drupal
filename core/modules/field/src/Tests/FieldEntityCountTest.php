@@ -40,8 +40,7 @@ class FieldEntityCountTest extends FieldUnitTestBase {
     ));
     $field->save();
     entity_create('field_instance_config', array(
-      'entity_type' => 'entity_test',
-      'field_name' => 'field_int',
+      'field' => $field,
       'bundle' => 'entity_test',
     ))->save();
 

@@ -207,8 +207,7 @@ class UserRegistrationTest extends WebTestBase {
     ));
     $field->save();
     $instance = entity_create('field_instance_config', array(
-      'field_name' => 'test_user_field',
-      'entity_type' => 'user',
+      'field' => $field,
       'label' => 'Some user field',
       'bundle' => 'user',
       'required' => TRUE,

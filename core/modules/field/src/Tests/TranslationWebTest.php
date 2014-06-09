@@ -73,8 +73,7 @@ class TranslationWebTest extends FieldTestBase {
     $this->field = entity_load('field_config', $this->entity_type . '.' . $this->field_name);
 
     $instance = array(
-      'field_name' => $this->field_name,
-      'entity_type' => $this->entity_type,
+      'field' => $this->field,
       'bundle' => $this->entity_type,
     );
     entity_create('field_instance_config', $instance)->save();

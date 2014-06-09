@@ -74,8 +74,7 @@ class TaggedWithTest extends WizardTestBase {
     // Create an instance of the tag field on one of the content types, and
     // configure it to display an autocomplete widget.
     $this->tag_instance = array(
-      'field_name' => 'field_views_testing_tags',
-      'entity_type' => 'node',
+      'field' => $this->tag_field,
       'bundle' => $this->node_type_with_tags->type,
     );
     entity_create('field_instance_config', $this->tag_instance)->save();

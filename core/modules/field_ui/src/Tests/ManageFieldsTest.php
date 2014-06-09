@@ -425,8 +425,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     ));
     $field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $field->name,
-      'entity_type' => 'node',
+      'field' => $field,
       'bundle' => $this->type,
     ))->save();
     entity_get_form_display('node', $this->type, 'default')

@@ -81,8 +81,7 @@ abstract class FieldTestBase extends ViewTestBase {
   function setUpInstances($bundle = 'page') {
     foreach ($this->fields as $key => $field) {
       $instance = array(
-        'field_name' => $field->getName(),
-        'entity_type' => 'node',
+        'field' => $field,
         'bundle' => 'page',
       );
       $this->instances[$key] = entity_create('field_instance_config', $instance);

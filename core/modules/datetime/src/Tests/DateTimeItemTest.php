@@ -43,8 +43,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field_name' => $this->field->getName(),
-      'entity_type' => 'entity_test',
+      'field' => $this->field,
       'bundle' => 'entity_test',
       'settings' => array(
         'default_value' => 'blank',

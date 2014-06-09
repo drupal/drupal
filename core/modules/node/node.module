@@ -391,8 +391,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
   }
   if (empty($instance)) {
     $instance = entity_create('field_instance_config', array(
-      'field_name' => 'body',
-      'entity_type' => 'node',
+      'field' => $field,
       'bundle' => $type->id(),
       'label' => $label,
       'settings' => array('display_summary' => TRUE),

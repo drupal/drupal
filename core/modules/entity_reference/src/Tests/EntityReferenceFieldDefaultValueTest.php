@@ -56,8 +56,7 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field_name' => $this->field->name,
-      'entity_type' => 'node',
+      'field' => $this->field,
       'bundle' => 'reference_content',
       'settings' => array(
         'handler' => 'default',

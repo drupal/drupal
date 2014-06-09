@@ -396,7 +396,7 @@ class CrudTest extends FieldUnitTestBase {
     ));
     $field->save();
     $instance = entity_create('field_instance_config', array(
-      'field_name' => 'field_update',
+      'field' => $field,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ));

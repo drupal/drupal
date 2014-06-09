@@ -96,8 +96,7 @@ class TranslationTest extends FieldUnitTestBase {
     $this->field->save();
 
     $this->instance_definition = array(
-      'field_name' => $this->field_name,
-      'entity_type' => $this->entity_type,
+      'field' => $this->field,
       'bundle' => 'entity_test',
     );
     $this->instance = entity_create('field_instance_config', $this->instance_definition);
@@ -149,10 +148,11 @@ class TranslationTest extends FieldUnitTestBase {
     $field_name_default = drupal_strtolower($this->randomName() . '_field_name');
     $field_definition = $this->field_definition;
     $field_definition['name'] = $field_name_default;
-    entity_create('field_config', $field_definition)->save();
+    $field = entity_create('field_config', $field_definition);
+    $field->save();
 
     $instance_definition = $this->instance_definition;
-    $instance_definition['field_name'] = $field_name_default;
+    $instance_definition['field'] = $field;
     $instance_definition['default_value'] = array(array('value' => rand(1, 127)));
     $instance = entity_create('field_instance_config', $instance_definition);
     $instance->save();

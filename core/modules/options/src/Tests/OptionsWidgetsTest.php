@@ -127,8 +127,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testRadioButtons() {
     // Create an instance of the 'single value' field.
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $this->card_1->getName(),
-      'entity_type' => 'entity_test',
+      'field' => $this->card_1,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -185,8 +184,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $this->card_2->getName(),
-      'entity_type' => 'entity_test',
+      'field' => $this->card_2,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -275,8 +273,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListSingle() {
     // Create an instance of the 'single value' field.
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $this->card_1->getName(),
-      'entity_type' => 'entity_test',
+      'field' => $this->card_1,
       'bundle' => 'entity_test',
       'required' => TRUE,
     ));
@@ -375,8 +372,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $this->card_2->getName(),
-      'entity_type' => 'entity_test',
+      'field' => $this->card_2,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -496,8 +492,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testOnOffCheckbox() {
     // Create an instance of the 'boolean' field.
     entity_create('field_instance_config', array(
-      'field_name' => $this->bool->getName(),
-      'entity_type' => 'entity_test',
+      'field' => $this->bool,
       'bundle' => 'entity_test',
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')

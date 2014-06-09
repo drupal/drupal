@@ -76,9 +76,8 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     $this->field->save();
 
     $this->instance = entity_create('field_instance_config', array(
-      'entity_type' => $this->entity_type,
+      'field' => $this->field,
       'bundle' => $this->bundle,
-      'field_name' => $this->field_name,
       'label' => $this->randomName(),
       'settings' => $this->instance_settings,
     ));

@@ -263,8 +263,7 @@ class KernelTestBaseTest extends KernelTestBase {
     ));
     $field->save();
     entity_create('field_instance_config', array(
-      'field_name' => $field->name,
-      'entity_type' => 'entity_test',
+      'field' => $field,
       'bundle' => 'entity_test',
     ))->save();
   }

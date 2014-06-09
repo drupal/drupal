@@ -56,10 +56,9 @@ class reEnableModuleFieldTest extends WebTestBase {
     ));
     $field->save();
     entity_create('field_instance_config', array(
-      'field_name' => 'field_telephone',
-      'label' => 'Telephone Number',
-      'entity_type' => 'node',
+      'field' => $field,
       'bundle' => 'article',
+      'label' => 'Telephone Number',
     ))->save();
 
     entity_get_form_display('node', 'article', 'default')

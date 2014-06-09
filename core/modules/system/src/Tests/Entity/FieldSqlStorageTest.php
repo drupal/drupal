@@ -80,8 +80,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field_name' => $this->field_name,
-      'entity_type' => $entity_type,
+      'field' => $this->field,
       'bundle' => $entity_type
     ));
     $this->instance->save();
@@ -306,8 +305,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     ));
     $field->save();
     $instance = entity_create('field_instance_config', array(
-      'field_name' => 'decimal52',
-      'entity_type' => $entity_type,
+      'field' => $field,
       'bundle' => $entity_type,
     ));
     $instance->save();
@@ -373,8 +371,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     ));
     $field->save();
     $instance = entity_create('field_instance_config', array(
-      'field_name' => $field_name,
-      'entity_type' => $entity_type,
+      'field' => $field,
       'bundle' => $entity_type,
     ));
     $instance->save();

@@ -53,8 +53,7 @@ class ContactFieldsTest extends ViewTestBase {
     ))->save();
 
     entity_create('field_instance_config', array(
-      'field_name' => $this->field->name,
-      'entity_type' => 'contact_message',
+      'field' => $this->field,
       'bundle' => 'contact_message',
     ))->save();
 

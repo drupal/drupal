@@ -51,8 +51,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $field->save();
     $tel_field_uuid = $field->uuid();
     entity_create('field_instance_config', array(
-      'entity_type' => 'entity_test',
-      'field_name' => 'field_tel',
+      'field' => $field,
       'bundle' => 'entity_test',
     ))->save();
 
@@ -65,8 +64,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $text_field->save();
     $text_field_uuid = $field->uuid();
     entity_create('field_instance_config', array(
-      'entity_type' => 'entity_test',
-      'field_name' => 'field_text',
+      'field' => $text_field,
       'bundle' => 'entity_test',
     ))->save();
 
