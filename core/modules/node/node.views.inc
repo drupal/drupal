@@ -483,7 +483,7 @@ function node_views_data() {
     );
   }
 
-  $data['node_revision']['log'] = array(
+  $data['node_revision']['revision_log'] = array(
     'title' => t('Log message'),
     'help' => t('The log message entered when the revision was created.'),
     'field' => array(

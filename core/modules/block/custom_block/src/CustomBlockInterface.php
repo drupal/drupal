@@ -37,13 +37,13 @@ interface CustomBlockInterface extends ContentEntityInterface, EntityChangedInte
   /**
    * Sets the block revision log message.
    *
-   * @param string $log
+   * @param string $revision_log
    *   The revision log message.
    *
    * @return \Drupal\custom_block\CustomBlockInterface
    *   The class instance that this method is called on.
    */
-  public function setRevisionLog($log);
+  public function setRevisionLog($revision_log);
 
   /**
    * Sets the theme value.

@@ -185,7 +185,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
             '#account' => $revision_author,
           );
           $row[] = array('data' => $this->t('!date by !username', array('!date' => $this->l($this->date->format($revision->revision_timestamp->value, 'short'), 'node.view', array('node' => $node->id())), '!username' => drupal_render($username)))
-            . (($revision->log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->log->value) . '</p>' : ''),
+            . (($revision->revision_log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->revision_log->value) . '</p>' : ''),
             'class' => array('revision-current'));
           $row[] = array('data' => String::placeholder($this->t('current revision')), 'class' => array('revision-current'));
         }
@@ -195,7 +195,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
             '#account' => $revision_author,
           );
           $row[] = $this->t('!date by !username', array('!date' => $this->l($this->date->format($revision->revision_timestamp->value, 'short'), 'node.revision_show', array('node' => $node->id(), 'node_revision' => $vid)), '!username' => drupal_render($username)))
-            . (($revision->log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->log->value) . '</p>' : '');
+            . (($revision->revision_log->value != '') ? '<p class="revision-log">' . Xss::filter($revision->revision_log->value) . '</p>' : '');
 
           if ($revert_permission) {
             $links['revert'] = array(

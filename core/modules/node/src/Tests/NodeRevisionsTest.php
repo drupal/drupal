@@ -14,7 +14,7 @@ use Drupal\Core\Language\Language;
  */
 class NodeRevisionsTest extends NodeTestBase {
   protected $nodes;
-  protected $logs;
+  protected $revisionLogs;
 
   public static function getInfo() {
     return array(
@@ -55,7 +55,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Create three revisions.
     $revision_count = 3;
     for ($i = 0; $i < $revision_count; $i++) {
-      $logs[] = $node->log = $this->randomName(32);
+      $logs[] = $node->revision_log = $this->randomName(32);
 
       // Create revision with a random title and body and update variables.
       $node->title = $this->randomName();
@@ -71,7 +71,7 @@ class NodeRevisionsTest extends NodeTestBase {
     }
 
     $this->nodes = $nodes;
-    $this->logs = $logs;
+    $this->revisionLogs = $logs;
   }
 
   /**
@@ -79,7 +79,7 @@ class NodeRevisionsTest extends NodeTestBase {
    */
   function testRevisions() {
     $nodes = $this->nodes;
-    $logs = $this->logs;
+    $logs = $this->revisionLogs;
 
     // Get last node for simple checks.
     $node = $nodes[3];
@@ -90,8 +90,8 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
-    foreach ($logs as $log) {
-      $this->assertText($log, 'Log message found.');
+    foreach ($logs as $revision_log) {
+      $this->assertText($revision_log, 'Revision log message found.');
     }
 
     // Confirm that this is the default revision.
@@ -165,8 +165,8 @@ class NodeRevisionsTest extends NodeTestBase {
    */
   function testNodeRevisionWithoutLogMessage() {
     // Create a node with an initial log message.
-    $log = $this->randomName(10);
-    $node = $this->drupalCreateNode(array('log' => $log));
+    $revision_log = $this->randomName(10);
+    $node = $this->drupalCreateNode(array('revision_log' => $revision_log));
 
     // Save over the same revision and explicitly provide an empty log message
     // (for example, to mimic the case of a node form submitted with no text in
@@ -176,17 +176,17 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $node = clone $node;
     $node->title = $new_title;
-    $node->log = '';
+    $node->revision_log = '';
     $node->setNewRevision(FALSE);
 
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
     $node_revision = node_load($node->id(), TRUE);
-    $this->assertEqual($node_revision->log->value, $log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
+    $this->assertEqual($node_revision->revision_log->value, $revision_log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
 
-    // Create another node with an initial log message.
-    $node = $this->drupalCreateNode(array('log' => $log));
+    // Create another node with an initial revision log message.
+    $node = $this->drupalCreateNode(array('revision_log' => $revision_log));
 
     // Save a new node revision without providing a log message, and check that
     // this revision has an empty log message.
@@ -195,12 +195,12 @@ class NodeRevisionsTest extends NodeTestBase {
     $node = clone $node;
     $node->title = $new_title;
     $node->setNewRevision();
-    $node->log = NULL;
+    $node->revision_log = NULL;
 
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
     $node_revision = node_load($node->id(), TRUE);
-    $this->assertTrue(empty($node_revision->log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
+    $this->assertTrue(empty($node_revision->revision_log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
 }

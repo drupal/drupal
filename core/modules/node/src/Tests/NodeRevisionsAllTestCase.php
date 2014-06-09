@@ -14,7 +14,7 @@ use Drupal\Core\Language\Language;
  */
 class NodeRevisionsAllTestCase extends NodeTestBase {
   protected $nodes;
-  protected $logs;
+  protected $revisionLogs;
   protected $profile = "standard";
 
   public static function getInfo() {
@@ -55,7 +55,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
     // Create three revisions.
     $revision_count = 3;
     for ($i = 0; $i < $revision_count; $i++) {
-      $logs[] = $node->log = $this->randomName(32);
+      $logs[] = $node->revision_log = $this->randomName(32);
 
       // Create revision with a random title and body and update variables.
       $node->title = $this->randomName();
@@ -71,7 +71,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
     }
 
     $this->nodes = $nodes;
-    $this->logs = $logs;
+    $this->revisionLogs = $logs;
   }
 
   /**
@@ -79,7 +79,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
    */
   function testRevisions() {
     $nodes = $this->nodes;
-    $logs = $this->logs;
+    $logs = $this->revisionLogs;
 
     // Get last node for simple checks.
     $node = $nodes[3];
@@ -100,10 +100,11 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
     $this->assertText($node->body->value, 'Correct text displays for version.');
 
-    // Confirm the correct log message appears on "revisions overview" page.
+    // Confirm the correct revision log message appears on the "revisions
+    // overview" page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
-    foreach ($logs as $log) {
-      $this->assertText($log, 'Log message found.');
+    foreach ($logs as $revision_log) {
+      $this->assertText($revision_log, 'Revision log message found.');
     }
 
     // Confirm that this is the current revision.

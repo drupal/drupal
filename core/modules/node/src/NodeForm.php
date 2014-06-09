@@ -38,8 +38,8 @@ class NodeForm extends ContentEntityForm {
 
     if (!$node->isNew()) {
       $node->date = format_date($node->getCreatedTime(), 'custom', 'Y-m-d H:i:s O');
-      // Remove the log message from the original node entity.
-      $node->log = NULL;
+      // Remove the revision log message from the original node entity.
+      $node->revision_log = NULL;
     }
   }
 
@@ -91,8 +91,8 @@ class NodeForm extends ContentEntityForm {
       '#weight' => 99,
     );
 
-    // Add a log field if the "Create new revision" option is checked, or if
-    // the current user has the ability to check that option.
+    // Add a revision log field if the "Create new revision" option is checked,
+    // or if the current user has the ability to check that option.
     $form['revision_information'] = array(
       '#type' => 'details',
       '#group' => 'advanced',
@@ -117,11 +117,11 @@ class NodeForm extends ContentEntityForm {
       '#group' => 'revision_information',
     );
 
-    $form['log'] = array(
+    $form['revision_log'] = array(
       '#type' => 'textarea',
       '#title' => t('Revision log message'),
       '#rows' => 4,
-      '#default_value' => !empty($node->log->value) ? $node->log->value : '',
+      '#default_value' => !empty($node->revision_log->value) ? $node->revision_log->value : '',
       '#description' => t('Briefly describe the changes you have made.'),
       '#states' => array(
         'visible' => array(

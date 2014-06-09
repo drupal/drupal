@@ -115,23 +115,11 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if ($this->isNewRevision()) {
-      // When inserting either a new custom block or a new custom_block
-      // revision, $entity->log must be set because {block_custom_revision}.log
-      // is a text column and therefore cannot have a default value. However,
-      // it might not be set at this point (for example, if the user submitting
-      // the form does not have permission to create revisions), so we ensure
-      // that it is at least an empty string in that case.
-      // @todo: Make the {block_custom_revision}.log column nullable so that we
-      // can remove this check.
-      if (!isset($record->log)) {
-        $record->log = '';
-      }
-    }
-    elseif (isset($this->original) && (!isset($record->log) || $record->log === '')) {
+    if (!$this->isNewRevision() && isset($this->original) && (!isset($record->revision_log) || $record->revision_log === '')) {
       // If we are updating an existing custom_block without adding a new
-      // revision and the user did not supply a log, keep the existing one.
-      $record->log = $this->original->getRevisionLog();
+      // revision and the user did not supply a revision log, keep the existing
+      // one.
+      $record->revision_log = $this->original->getRevisionLog();
     }
   }
 
@@ -186,9 +174,9 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
       ->setDescription(t('The block type.'))
       ->setSetting('target_type', 'custom_block_type');
 
-    $fields['log'] = FieldDefinition::create('string_long')
+    $fields['revision_log'] = FieldDefinition::create('string_long')
       ->setLabel(t('Revision log message'))
-      ->setDescription(t('The revision log message.'))
+      ->setDescription(t('The log entry explaining the changes in this revision.'))
       ->setRevisionable(TRUE);
 
     $fields['changed'] = FieldDefinition::create('changed')
@@ -210,7 +198,7 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
    * {@inheritdoc}
    */
   public function getRevisionLog() {
-    return $this->get('log')->value;
+    return $this->get('revision_log')->value;
   }
 
   /**
@@ -224,8 +212,8 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
   /**
    * {@inheritdoc}
    */
-  public function setRevisionLog($log) {
-    $this->set('log', $log);
+  public function setRevisionLog($revision_log) {
+    $this->set('revision_log', $revision_log);
     return $this;
   }
 

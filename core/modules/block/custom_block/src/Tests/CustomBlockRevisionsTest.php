@@ -22,7 +22,7 @@ class CustomBlockRevisionsTest extends CustomBlockTestBase {
    * Stores log messages used during the test.
    * @var array
    */
-  protected $logs;
+  protected $revisionLogs;
 
   /**
    * Declares test information.
@@ -62,7 +62,7 @@ class CustomBlockRevisionsTest extends CustomBlockTestBase {
     }
 
     $this->blocks = $blocks;
-    $this->logs = $logs;
+    $this->revisionLogs = $logs;
   }
 
   /**
@@ -70,12 +70,12 @@ class CustomBlockRevisionsTest extends CustomBlockTestBase {
    */
   public function testRevisions() {
     $blocks = $this->blocks;
-    $logs = $this->logs;
+    $logs = $this->revisionLogs;
 
     foreach ($blocks as $delta => $revision_id) {
       // Confirm the correct revision text appears.
       $loaded = entity_revision_load('custom_block', $revision_id);
-      // Verify log is the same.
+      // Verify revision log is the same.
       $this->assertEqual($loaded->getRevisionLog(), $logs[$delta], format_string('Correct log message found for revision !revision', array(
         '!revision' => $loaded->getRevisionId(),
       )));

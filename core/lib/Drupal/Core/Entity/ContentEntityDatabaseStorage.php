@@ -256,9 +256,11 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       // log.
       // @todo Provide automatic definitions for revision metadata fields in
       //   https://drupal.org/node/2248983.
-      // @todo Rename 'log' to 'revision_log' in
-      //   https://drupal.org/node/2248991.
-      $revision_metadata_fields = array_intersect(array('revision_timestamp', 'revision_uid', 'log'), $all_fields);
+      $revision_metadata_fields = array_intersect(array(
+        'revision_timestamp',
+        'revision_uid',
+        'revision_log',
+      ), $all_fields);
 
       $revisionable = $this->entityType->isRevisionable();
       // @todo Remove the data table check once all entity types are using

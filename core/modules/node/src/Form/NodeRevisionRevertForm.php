@@ -108,7 +108,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase {
     // original one for the confirmation message.
     $original_revision_timestamp = $this->revision->getRevisionCreationTime();
 
-    $this->revision->log = t('Copy of the revision from %date.', array('%date' => format_date($original_revision_timestamp)));
+    $this->revision->revision_log = t('Copy of the revision from %date.', array('%date' => format_date($original_revision_timestamp)));
 
     $this->revision->save();
 

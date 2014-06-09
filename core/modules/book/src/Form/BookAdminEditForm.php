@@ -114,7 +114,7 @@ class BookAdminEditForm extends FormBase {
         // Update the title if changed.
         if ($row['title']['#default_value'] != $values['title']) {
           $node = $this->nodeStorage->load($values['nid']);
-          $node->log = $this->t('Title changed from %original to %current.', array('%original' => $node->label(), '%current' => $values['title']));
+          $node->revision_log = $this->t('Title changed from %original to %current.', array('%original' => $node->label(), '%current' => $values['title']));
           $node->title = $values['title'];
           $node->book['link_title'] = $values['title'];
           $node->setNewRevision();

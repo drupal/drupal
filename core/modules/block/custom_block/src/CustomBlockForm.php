@@ -150,12 +150,12 @@ class CustomBlockForm extends ContentEntityForm {
     if (!$block->isNewRevision()) {
       $form['revision_information']['revision']['#states'] = array(
         'checked' => array(
-          'textarea[name="log"]' => array('empty' => FALSE),
+          'textarea[name="revision_log"]' => array('empty' => FALSE),
         ),
       );
     }
 
-    $form['revision_information']['log'] = array(
+    $form['revision_information']['revision_log'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Revision log message'),
       '#rows' => 4,

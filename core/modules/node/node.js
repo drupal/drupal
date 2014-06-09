@@ -18,7 +18,7 @@
         // or if the checkbox doesn't exist, but the revision log does. For users
         // without the "Administer content" permission the checkbox won't appear,
         // but the revision log will if the content type is set to auto-revision.
-        if (revisionCheckbox.is(':checked') || (!revisionCheckbox.length && $context.find('.form-item-log textarea').length)) {
+        if (revisionCheckbox.is(':checked') || (!revisionCheckbox.length && $context.find('.form-item-revision-log textarea').length)) {
           return Drupal.t('New revision');
         }
 

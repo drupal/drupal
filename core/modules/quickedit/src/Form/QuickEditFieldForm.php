@@ -123,7 +123,7 @@ class QuickEditFieldForm extends FormBase {
       $node_type_settings = $this->nodeTypeStorage->load($entity->bundle())->getModuleSettings('node');
       $options = (isset($node_type_settings['options'])) ? $node_type_settings['options'] : array();
       $entity->setNewRevision(!empty($options['revision']));
-      $entity->log = NULL;
+      $entity->revision_log = NULL;
     }
 
     $form_state['entity'] = $entity;
@@ -186,8 +186,8 @@ class QuickEditFieldForm extends FormBase {
 
     // @todo Refine automated log messages and abstract them to all entity
     //   types: http://drupal.org/node/1678002.
-    if ($entity->getEntityTypeId() == 'node' && $entity->isNewRevision() && !isset($entity->log)) {
-      $entity->log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $entity->get($field_name)->getFieldDefinition()->getLabel()));
+    if ($entity->getEntityTypeId() == 'node' && $entity->isNewRevision() && !isset($entity->revision_log)) {
+      $entity->revision_log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $entity->get($field_name)->getFieldDefinition()->getLabel()));
     }
 
     return $entity;
