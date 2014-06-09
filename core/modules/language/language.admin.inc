@@ -9,77 +9,87 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
 
 /**
- * Returns HTML for the language negotiation configuration form.
+ * Prepares variables for language negotiation configuration form.
  *
- * @param $variables
+ * Default template: language-content-configuration-form.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
- *
- * @ingroup themeable
  */
-function theme_language_negotiation_configure_form($variables) {
-  $form = $variables['form'];
-  $output = '';
+function template_preprocess_language_negotiation_configure_form(&$variables) {
+  $form =& $variables['form'];
+  $variables['language_types'] = array();
 
   foreach ($form['#language_types'] as $type) {
-    $rows = array();
-    $title = '<h2>' . $form[$type]['#title'] . '</h2>';
-    $description = '<div class="description">' . $form[$type]['#description'] . '</div>';
-
-    foreach ($form[$type]['title'] as $id => $element) {
-      // Do not take form control structures.
-      if (is_array($element) && Element::child($id)) {
-        $row = array(
-          'data' => array(
-            '<strong>' . drupal_render($form[$type]['title'][$id]) . '</strong>',
-            drupal_render($form[$type]['description'][$id]),
-            drupal_render($form[$type]['enabled'][$id]),
-            drupal_render($form[$type]['weight'][$id]),
-          ),
-          'class' => array('draggable'),
-        );
-        if ($form[$type]['#show_operations']) {
-          $row['data'][] = drupal_render($form[$type]['operation'][$id]);
-        }
-        $rows[] = $row;
-      }
-    }
-
     $header = array(
-      array('data' => t('Detection method')),
-      array('data' => t('Description')),
-      array('data' => t('Enabled')),
-      array('data' => t('Weight')),
+      t('Detection method'),
+      t('Description'),
+      t('Enabled'),
+      t('Weight'),
     );
 
     // If there is at least one operation enabled show the operation column.
     if ($form[$type]['#show_operations']) {
-      $header[] = array('data' => t('Operations'));
+      $header[] = t('Operations');
     }
 
-    $build = array(
+    $table = array(
       '#type' => 'table',
       '#header' => $header,
-      '#rows' => $rows,
-      '#attributes' => array('id' => "language-negotiation-methods-$type"),
+      '#attributes' => array('id' => 'language-negotiation-methods-' . $type),
       '#tabledrag' => array(
         array(
           'action' => 'order',
           'relationship' => 'sibling',
-          'group' => "language-method-weight-$type",
+          'group' => 'language-method-weight-' . $type,
         ),
       ),
     );
 
-    $table  = drupal_render($form[$type]['configurable']);
-    $table .= drupal_render($build);
-    $table .= drupal_render_children($form[$type]);
+    foreach ($form[$type]['title'] as $id => $element) {
+      // Do not take form control structures.
+      if (is_array($element) && element_child($id)) {
+        $table[$id]['#attributes']['class'][] = 'draggable';
+        $table[$id]['#weight'] = $element['#weight'];
 
-    $output .= '<div class="form-item table-language-group table-' . $type . '-wrapper">' . $title . $description . $table . '</div>';
+        $table[$id]['title'] = array(
+          '#prefix' => '<strong>',
+          $form[$type]['title'][$id],
+          '#suffix' => '</strong>',
+        );
+        $table[$id]['description'] = $form[$type]['description'][$id];
+        $table[$id]['enabled'] = $form[$type]['enabled'][$id];
+        $table[$id]['weight'] = $form[$type]['weight'][$id];
+        if ($form[$type]['#show_operations']) {
+          $table[$id]['operation'] = $form[$type]['operation'][$id];
+        }
+        // Unset to prevent rendering along with children.
+        unset($form[$type]['title'][$id]);
+        unset($form[$type]['description'][$id]);
+        unset($form[$type]['enabled'][$id]);
+        unset($form[$type]['weight'][$id]);
+        unset($form[$type]['operation'][$id]);
+      }
+    }
+
+    // Unset configurable to prevent rendering twice with children.
+    $configurable = isset($form[$type]['configurable']) ? $form[$type]['configurable'] : NULL;
+    unset($form[$type]['configurable']);
+
+    $variables['language_types'][] = array(
+      'type' => $type,
+      'title' => $form[$type]['#title'],
+      'description' => $form[$type]['#description'],
+      'configurable' => $configurable,
+      'table' => $table,
+      'children' => $form[$type],
+    );
+    // Prevent the type from rendering with the remaining form child elements.
+    unset($form[$type]);
   }
 
-  $output .= drupal_render_children($form);
-  return $output;
+  $variables['children'] = $form;
 }
 
 /**
