@@ -7,7 +7,7 @@ dblog.overview:
     _permission: 'access site reports'
 
 dblog.event:
-  path: '/admin/reports/event/{event_id}'
+  path: '/admin/reports/dblog/event/{event_id}'
   defaults:
     _content: '\Drupal\dblog\Controller\DbLogController::eventDetails'
     _title: 'Details'
