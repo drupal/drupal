@@ -399,7 +399,7 @@ ul.menu {
   list-style-type: disc;
 }
 [dir="rtl"] .menu .collapsed {
-  list-style-image: url(../../misc/menu-collapsed-rtl.png);
+  list-style-image: url(../../../misc/menu-collapsed-rtl.png);
 }
 ul.menu li {
   padding-top: 0.2em;
