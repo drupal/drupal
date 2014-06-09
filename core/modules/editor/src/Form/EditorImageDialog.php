@@ -75,11 +75,11 @@ class EditorImageDialog extends FormBase {
     );
 
     $form['attributes']['src'] = array(
-     '#title' => $this->t('URL'),
-     '#type' => 'textfield',
-     '#default_value' => isset($image_element['src']) ? $image_element['src'] : '',
-     '#maxlength' => 2048,
-     '#required' => TRUE,
+      '#title' => $this->t('URL'),
+      '#type' => 'textfield',
+      '#default_value' => isset($image_element['src']) ? $image_element['src'] : '',
+      '#maxlength' => 2048,
+      '#required' => TRUE,
     );
 
     // If the editor has image uploads enabled, show a managed_file form item,
