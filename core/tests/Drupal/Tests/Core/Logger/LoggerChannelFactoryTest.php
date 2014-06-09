@@ -60,7 +60,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
 
     // Ensure that when called with the same argument, always the same instance
     // will be returned.
-    $this->assertEquals($factory->get('test'), $factory->get('test'));
+    $this->assertSame($factory->get('test'), $factory->get('test'));
   }
 
 }
