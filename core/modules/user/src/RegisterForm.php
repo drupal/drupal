@@ -29,6 +29,7 @@ class RegisterForm extends AccountForm {
    */
   public function form(array $form, array &$form_state) {
     $user = $this->currentUser();
+    /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
     $admin = $user->hasPermission('administer users');
     // Pass access information to the submit handler. Running an access check
@@ -46,6 +47,14 @@ class RegisterForm extends AccountForm {
 
     $form['#attached']['library'][] = 'core/jquery.cookie';
     $form['#attributes']['class'][] = 'user-info-from-cookie';
+
+    // Because the user status has security implications, users are blocked by
+    // default when created programmatically and need to be actively activated
+    // if needed. When administrators create users from the user interface,
+    // however, we assume that they should be created as activated by default.
+    if ($admin) {
+      $account->activate();
+    }
 
     // Start with the default user account fields.
     $form = parent::form($form, $form_state, $account);

@@ -84,6 +84,7 @@ function user_install() {
       'uid' => 1,
       'name' => 'placeholder-for-uid-1',
       'mail' => 'placeholder-for-uid-1',
+      'status' => TRUE,
       'langcode' => $langcode,
     ))
     ->save();

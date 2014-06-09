@@ -504,10 +504,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('User status'))
       ->setDescription(t('Whether the user is active or blocked.'))
-      // @todo As the status has access implications users should be created as
-      //   blocked by default and activated explicitly if needed. See
-      //   https://drupal.org/node/2248969.
-      ->setSetting('default_value', TRUE);
+      ->setSetting('default_value', FALSE);
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))

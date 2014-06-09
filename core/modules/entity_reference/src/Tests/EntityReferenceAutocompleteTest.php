@@ -140,9 +140,9 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
    */
   public function testBaseField() {
     // Add two users.
-    $user_1 = entity_create('user', array('name' => 'auto1'));
+    $user_1 = entity_create('user', array('name' => 'auto1', 'status' => TRUE));
     $user_1->save();
-    $user_2 = entity_create('user', array('name' => 'auto2'));
+    $user_2 = entity_create('user', array('name' => 'auto2', 'status' => TRUE));
     $user_2->save();
 
     $request = Request::create('entity_reference/autocomplete/single/user_id/entity_test/entity_test/NULL');

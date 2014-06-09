@@ -46,6 +46,7 @@ class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     // Create a "Llama" user.
     $user = entity_create('user', array(
       'name' => 'Llama',
+      'status' => TRUE,
     ));
     $user->save();
 
