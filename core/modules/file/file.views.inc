@@ -14,11 +14,10 @@ use Drupal\field\FieldConfigInterface;
 function file_views_data() {
   $data = array();
 
-  // file_managed table
-
+  // Sets 'group' index for file_managed table.
   $data['file_managed']['table']['group']  = t('File');
 
-  // Advertise this table as a possible base table
+  // Advertise this table as a possible base table.
   $data['file_managed']['table']['base'] = array(
     'field' => 'fid',
     'title' => t('File'),
@@ -30,7 +29,7 @@ function file_views_data() {
   $data['file_managed']['table']['entity type'] = 'file';
   $data['file_managed']['table']['wizard_id'] = 'file_managed';
 
-  // fid
+  // Describes fid field in file_managed table.
   $data['file_managed']['fid'] = array(
     'title' => t('File ID'),
     'help' => t('The ID of the file.'),
@@ -39,7 +38,8 @@ function file_views_data() {
     ),
     'argument' => array(
       'id' => 'file_fid',
-      'name field' => 'filename', // the field to display in the summary.
+      // The field to display in the summary.
+      'name field' => 'filename',
       'numeric' => TRUE,
     ),
     'filter' => array(
@@ -59,7 +59,7 @@ function file_views_data() {
     ),
   );
 
-  // filename
+  // Describes filename field in file_managed table.
   $data['file_managed']['filename'] = array(
     'title' => t('Name'),
     'help' => t('The name of the file.'),
@@ -77,7 +77,7 @@ function file_views_data() {
     ),
   );
 
-  // uri
+  // Describes uri field in file_managed table.
   $data['file_managed']['uri'] = array(
     'title' => t('Path'),
     'help' => t('The path of the file.'),
@@ -95,7 +95,7 @@ function file_views_data() {
     ),
   );
 
-  // filemime
+  // Describes filemime field in file_managed table.
   $data['file_managed']['filemime'] = array(
     'title' => t('Mime type'),
     'help' => t('The mime type of the file.'),
@@ -113,7 +113,7 @@ function file_views_data() {
     ),
   );
 
-  // extension
+  // Describes extension field in file_managed table.
   $data['file_managed']['extension'] = array(
     'title' => t('Extension'),
     'help' => t('The extension of the file.'),
@@ -124,7 +124,7 @@ function file_views_data() {
      ),
   );
 
-  // filesize
+  // Describes filesize field in file_managed table.
   $data['file_managed']['filesize'] = array(
     'title' => t('Size'),
     'help' => t('The size of the file.'),
@@ -139,7 +139,7 @@ function file_views_data() {
     ),
   );
 
-  // status
+  // Describes status field in file_managed table.
   $data['file_managed']['status'] = array(
     'title' => t('Status'),
     'help' => t('The status of the file.'),
@@ -154,7 +154,7 @@ function file_views_data() {
     ),
   );
 
-  // The created field.
+  // Describes created field in file_managed table.
   $data['file_managed']['created'] = array(
     'title' => t('Upload date'),
     'help' => t('The date the file was uploaded.'),
@@ -169,7 +169,7 @@ function file_views_data() {
     ),
   );
 
-  // The changed field.
+  // Describes changed field in file_managed table.
   $data['file_managed']['changed'] = array(
     'title' => t('Modified date'),
     'help' => t('The date the file was last changed.'),
@@ -184,7 +184,7 @@ function file_views_data() {
     ),
   );
 
-  // uid
+  // Describes uid field in file_managed table.
   $data['file_managed']['uid'] = array(
     'title' => t('User who uploaded'),
     'help' => t('The user that uploaded the file.'),
@@ -196,39 +196,44 @@ function file_views_data() {
     ),
   );
 
-  // file_usage table
-
+  // Sets 'group' index for file_usage table.
   $data['file_usage']['table']['group']  = t('File Usage');
 
-  // Provide field-type-things to several base tables; on the core files table ("file_managed") so
-  // that we can create relationships from files to entities, and then on each core entity type base
-  // table so that we can provide general relationships between entities and files.
+  // Provide field-type-things to several base tables; on the core files table
+  // ("file_managed") so that we can create relationships from files to
+  // entities, and then on each core entity type base table so that we can
+  // provide general relationships between entities and files.
   $data['file_usage']['table']['join'] = array(
-    // Link ourself to the {node} table so we can provide node->file relationships.
+    // Link ourself to the {node} table
+    // so we can provide node->file relationships.
     'node' => array(
       'field' => 'id',
       'left_field' => 'nid',
       'extra' => array(array('field' => 'type', 'value' => 'node')),
     ),
-    // Link ourself to the {users} table so we can provide user->file relationships.
+    // Link ourself to the {users} table
+    // so we can provide user->file relationships.
     'users' => array(
       'field' => 'id',
       'left_field' => 'uid',
       'extra' => array(array('field' => 'type', 'value' => 'user')),
     ),
-    // Link ourself to the {comment} table so we can provide comment->file relationships.
+    // Link ourself to the {comment} table
+    // so we can provide comment->file relationships.
     'comment' => array(
       'field' => 'id',
       'left_field' => 'cid',
       'extra' => array(array('field' => 'type', 'value' => 'comment')),
     ),
-    // Link ourself to the {taxonomy_term_data} table so we can provide taxonomy_term->file relationships.
+    // Link ourself to the {taxonomy_term_data} table
+    // so we can provide taxonomy_term->file relationships.
     'taxonomy_term_data' => array(
       'field' => 'id',
       'left_field' => 'tid',
       'extra' => array(array('field' => 'type', 'value' => 'taxonomy_term')),
     ),
-    // Link ourself to the {taxonomy_vocabulary} table so we can provide taxonomy_vocabulary->file relationships.
+    // Link ourself to the {taxonomy_vocabulary} table
+    // so we can provide taxonomy_vocabulary->file relationships.
     'taxonomy_vocabulary' => array(
       'field' => 'id',
       'left_field' => 'vid',
@@ -236,16 +241,18 @@ function file_views_data() {
     ),
   );
 
-  // Provide a relationship between the files table and each entity type, and between each entity
-  // type and the files table. Entity->file relationships are type-restricted in the joins
-  // declared above, and file->entity relationships are type-restricted in the relationship
+  // Provide a relationship between the files table and each entity type,
+  // and between each entity type and the files table. Entity->file
+  // relationships are type-restricted in the joins declared above, and
+  // file->entity relationships are type-restricted in the relationship
   // declarations below.
 
-  // Relationships between files and nodes.
+  // Describes relationships between files and nodes.
   $data['file_usage']['file_to_node'] = array(
     'title' => t('Content'),
     'help' => t('Content that is associated with this file, usually because this file is in a field on the content.'),
-    // Only provide this field/relationship/etc. when the 'file_managed' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'file_managed' base table is present.
     'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'id',
     'relationship' => array(
@@ -260,7 +267,8 @@ function file_views_data() {
   $data['file_usage']['node_to_file'] = array(
     'title' => t('File'),
     'help' => t('A file that is associated with this node, usually because it is in a field on the node.'),
-    // Only provide this field/relationship/etc. when the 'node' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'node' base table is present.
     'skip base' => array('file_managed', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'fid',
     'relationship' => array(
@@ -272,11 +280,12 @@ function file_views_data() {
     ),
   );
 
-  // Relationships between files and users.
+  // Describes relationships between files and users.
   $data['file_usage']['file_to_user'] = array(
     'title' => t('User'),
     'help' => t('A user that is associated with this file, usually because this file is in a field on the user.'),
-    // Only provide this field/relationship/etc. when the 'file_managed' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'file_managed' base table is present.
     'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'id',
     'relationship' => array(
@@ -291,7 +300,8 @@ function file_views_data() {
   $data['file_usage']['user_to_file'] = array(
     'title' => t('File'),
     'help' => t('A file that is associated with this user, usually because it is in a field on the user.'),
-    // Only provide this field/relationship/etc. when the 'users' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'users' base table is present.
     'skip base' => array('file_managed', 'node', 'node_field_revision', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'fid',
     'relationship' => array(
@@ -303,11 +313,12 @@ function file_views_data() {
     ),
   );
 
-  // Relationships between files and comments.
+  // Describes relationships between files and comments.
   $data['file_usage']['file_to_comment'] = array(
     'title' => t('Comment'),
     'help' => t('A comment that is associated with this file, usually because this file is in a field on the comment.'),
-    // Only provide this field/relationship/etc. when the 'file_managed' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'file_managed' base table is present.
     'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'id',
     'relationship' => array(
@@ -322,7 +333,8 @@ function file_views_data() {
   $data['file_usage']['comment_to_file'] = array(
     'title' => t('File'),
     'help' => t('A file that is associated with this comment, usually because it is in a field on the comment.'),
-    // Only provide this field/relationship/etc. when the 'comment' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'comment' base table is present.
     'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'fid',
     'relationship' => array(
@@ -334,11 +346,12 @@ function file_views_data() {
     ),
   );
 
-  // Relationships between files and taxonomy_terms.
+  // Describes relationships between files and taxonomy_terms.
   $data['file_usage']['file_to_taxonomy_term'] = array(
     'title' => t('Taxonomy Term'),
     'help' => t('A taxonomy term that is associated with this file, usually because this file is in a field on the taxonomy term.'),
-    // Only provide this field/relationship/etc. when the 'file_managed' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'file_managed' base table is present.
     'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'id',
     'relationship' => array(
@@ -353,7 +366,8 @@ function file_views_data() {
   $data['file_usage']['taxonomy_term_to_file'] = array(
     'title' => t('File'),
     'help' => t('A file that is associated with this taxonomy term, usually because it is in a field on the taxonomy term.'),
-    // Only provide this field/relationship/etc. when the 'taxonomy_term_data' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'taxonomy_term_data' base table is present.
     'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'comment', 'taxonomy_vocabulary'),
     'real field' => 'fid',
     'relationship' => array(
@@ -365,11 +379,12 @@ function file_views_data() {
     ),
   );
 
-  // Relationships between files and taxonomy_vocabulary items.
+  // Describes relationships between files and taxonomy_vocabulary items.
   $data['file_usage']['file_to_taxonomy_vocabulary'] = array(
     'title' => t('Taxonomy Vocabulary'),
     'help' => t('A taxonomy vocabulary that is associated with this file, usually because this file is in a field on the taxonomy vocabulary.'),
-    // Only provide this field/relationship/etc. when the 'file_managed' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'file_managed' base table is present.
     'skip base' => array('node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data', 'taxonomy_vocabulary'),
     'real field' => 'id',
     'relationship' => array(
@@ -384,7 +399,8 @@ function file_views_data() {
   $data['file_usage']['taxonomy_vocabulary_to_file'] = array(
     'title' => t('File'),
     'help' => t('A file that is associated with this taxonomy vocabulary, usually because it is in a field on the taxonomy vocabulary.'),
-    // Only provide this field/relationship/etc. when the 'taxonomy_vocabulary' base table is present.
+    // Only provide this field/relationship/etc.,
+    // when the 'taxonomy_vocabulary' base table is present.
     'skip base' => array('file_managed', 'node', 'node_field_revision', 'users', 'comment', 'taxonomy_term_data'),
     'real field' => 'fid',
     'relationship' => array(
@@ -396,8 +412,9 @@ function file_views_data() {
     ),
   );
 
-  // Provide basic fields from the {file_usage} table to all of the base tables we've declared
-  // joins to (because there is no 'skip base' property on these fields).
+  // Provide basic fields from the {file_usage} table to all of the base tables
+  // we've declared joins to, because there is no 'skip base' property on these
+  // fields.
   $data['file_usage']['module'] = array(
     'title' => t('Module'),
     'help' => t('The module managing this file relationship.'),

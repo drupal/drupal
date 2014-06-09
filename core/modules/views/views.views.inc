@@ -13,7 +13,7 @@ use Drupal\system\ActionConfigEntityInterface;
 function views_views_data() {
   $data['views']['table']['group'] = t('Global');
   $data['views']['table']['join'] = array(
-    // #global is a special flag which let's a table appear all the time.
+  // #global is a special flag which allows a table to appear all the time.
   '#global' => array(),
   );
 
@@ -124,7 +124,7 @@ function views_views_data() {
 
   // Registers an entity area handler per entity type.
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    // Exclude entity types, which cannot be rendered.
+    // Excludes entity types, which cannot be rendered.
     if ($entity_type->hasViewBuilderClass()) {
       $label = $entity_type->getLabel();
       $data['views']['entity_' . $entity_type_id] = array(
