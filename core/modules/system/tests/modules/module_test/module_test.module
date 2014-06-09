@@ -18,36 +18,36 @@ function module_test_permission() {
  */
 function module_test_system_info_alter(&$info, Extension $file, $type) {
   if (\Drupal::state()->get('module_test.dependency') == 'missing dependency') {
-    if ($file->getName() == 'forum') {
-      // Make forum module depend on ban.
-      $info['dependencies'][] = 'ban';
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
     }
-    elseif ($file->getName() == 'ban') {
-      // Make ban depend on a made-up module.
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on a non-existing module.
       $info['dependencies'][] = 'foo';
     }
   }
   elseif (\Drupal::state()->get('module_test.dependency') == 'dependency') {
-    if ($file->getName() == 'forum') {
-      // Make the forum module depend on ban.
-      $info['dependencies'][] = 'ban';
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
     }
-    elseif ($file->getName() == 'ban') {
-      // Make ban depend on xmlrpc module.
-      $info['dependencies'][] = 'xmlrpc';
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on help module.
+      $info['dependencies'][] = 'help';
     }
   }
   elseif (\Drupal::state()->get('module_test.dependency') == 'version dependency') {
-    if ($file->getName() == 'forum') {
-      // Make the forum module depend on ban.
-      $info['dependencies'][] = 'ban';
+    if ($file->getName() == 'color') {
+      // Make color module depend on config.
+      $info['dependencies'][] = 'config';
     }
-    elseif ($file->getName() == 'ban') {
-      // Make ban depend on a specific version of xmlrpc module.
-      $info['dependencies'][] = 'xmlrpc (1.x)';
+    elseif ($file->getName() == 'config') {
+      // Make config module depend on a specific version of help module.
+      $info['dependencies'][] = 'help (1.x)';
     }
-    elseif ($file->getName() == 'xmlrpc') {
-      // Set xmlrpc module to a version compatible with the above.
+    elseif ($file->getName() == 'help') {
+      // Set help module to a version compatible with the above.
       $info['version'] = '8.x-1.0';
     }
   }

@@ -111,8 +111,9 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Tests that module dependencies are enabled in the correct order via the
-   * UI. Dependencies should be enabled before their dependents.
+   * Tests that module dependencies are enabled in the correct order in the UI.
+   *
+   * Dependencies should be enabled before their dependents.
    */
   function testModuleEnableOrder() {
     \Drupal::moduleHandler()->install(array('module_test'), FALSE);
@@ -120,34 +121,24 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('module_test'), TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
-    // - forum depends on node, taxonomy, comment, datetime, history, and
-    //   ban (via module_test)
-    // - node depends on text
-    // - text depends on filter
-    // - taxonomy depends on options
-    // - ban depends on xmlrpc (via module_test)
-    // The correct enable order is:
-    $expected_order = array('filter', 'text', 'options', 'xmlrpc', 'ban', 'node', 'datetime', 'comment', 'history', 'taxonomy', 'forum');
+    // - color depends on config
+    // - config depends on help
+    $expected_order = array('help', 'config', 'color');
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
     $edit = array();
-    $edit['modules[Core][forum][enable]'] = 'forum';
+    $edit['modules[Core][color][enable]'] = 'color';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum'), FALSE);
-    $this->assertText(t('You must enable the Node, Text, Filter, History, Taxonomy, Options, Comment, Datetime, Ban, XML-RPC modules to install Forum.'));
-    $edit['modules[Core][node][enable]'] = 'node';
-    $edit['modules[Field types][text][enable]'] = 'text';
-    $edit['modules[Core][filter][enable]'] = 'filter';
-    $edit['modules[Core][history][enable]'] = 'history';
-    $edit['modules[Field types][options][enable]'] = 'options';
-    $edit['modules[Core][taxonomy][enable]'] = 'taxonomy';
-    $edit['modules[Core][comment][enable]'] = 'comment';
-    $edit['modules[Field types][datetime][enable]'] = 'datetime';
-    $edit['modules[Core][ban][enable]'] = 'ban';
-    $edit['modules[Core][xmlrpc][enable]'] = 'xmlrpc';
+    $this->assertModules(array('color'), FALSE);
+    // Note that dependencies are sorted alphabetically in the confirmation
+    // message.
+    $this->assertText(t('You must enable the Configuration Manager, Help modules to install Color.'));
+
+    $edit['modules[Core][config][enable]'] = 'config';
+    $edit['modules[Core][help][enable]'] = 'help';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum', 'ban', 'node', 'text', 'filter', 'xmlrpc', 'datetime', 'comment', 'history', 'taxonomy', 'options'), TRUE);
+    $this->assertModules(array('color', 'config', 'help'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
     $module_order = \Drupal::state()->get('module_test.install_order') ?: array();
