@@ -33,6 +33,11 @@ class ShortcutSetSwitchAccessCheck implements AccessInterface {
       return static::ALLOW;
     }
 
+    if (!$account->hasPermission('access shortcuts')) {
+      // The user has no permission to use shortcuts.
+      return static::DENY;
+    }
+
     if (!$account->hasPermission('switch shortcut sets')) {
       // The user has no permission to switch anyone's shortcut set.
       return static::DENY;

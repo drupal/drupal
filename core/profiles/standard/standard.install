@@ -51,6 +51,9 @@ function standard_install() {
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
 
+  // Allow authenticated users to use shortcuts.
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access shortcuts'));
+
   // Populate the default shortcut set.
   $shortcut = entity_create('shortcut', array(
     'shortcut_set' => 'default',

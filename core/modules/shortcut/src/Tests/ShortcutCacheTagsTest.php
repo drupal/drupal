@@ -37,6 +37,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
     // can verify the cache tags of cached versions of shortcuts.
     $user_role = entity_load('user_role', DRUPAL_ANONYMOUS_RID);
     $user_role->grantPermission('customize shortcut links');
+    $user_role->grantPermission('access shortcuts');
     $user_role->save();
   }
 

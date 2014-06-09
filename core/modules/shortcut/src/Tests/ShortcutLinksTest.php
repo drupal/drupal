@@ -215,4 +215,62 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertTrue(!empty($result), 'Add to shortcuts link was shown on a page the user does have access to.');
   }
 
+  /**
+   * Tests that the 'access shortcuts' permissions works properly.
+   */
+  public function testAccessShortcutsPermission() {
+    // Change to a theme that displays shortcuts.
+    \Drupal::service('theme_handler')->enable(array('seven'));
+    \Drupal::config('system.theme')
+      ->set('default', 'seven')
+      ->save();
+
+    // Add cron to the default shortcut set.
+    $this->drupalLogin($this->root_user);
+    $this->drupalGet('admin/config/system/cron');
+    $this->clickLink('Add to Default shortcuts');
+
+    // Verify that users without the 'access shortcuts' permission can't see the
+    // shortcuts.
+    $this->drupalLogin($this->drupalCreateUser(array('access toolbar')));
+    $this->assertNoLink('Shortcuts', 0, 'Shortcut link not found on page.');
+
+    // Verify that users with the 'access shortcuts' permission can see the
+    // shortcuts.
+    $this->drupalLogin($this->drupalCreateUser(array('access toolbar', 'access shortcuts')));
+    $this->clickLink('Shortcuts', 0, 'Shortcut link found on page.');
+    $this->assertLink('Cron', 0, 'Cron shortcut link found on page.');
+
+    $this->verifyAccessShortcutsPermissionForEditPages();
+  }
+
+  /**
+   * Tests that the 'access shortcuts' permission is required for shortcut set
+   * administration page access.
+   */
+  private function verifyAccessShortcutsPermissionForEditPages() {
+    // Create a user with customize links and switch sets permissions  but
+    // without the 'access shortcuts' permission.
+    $test_permissions = array(
+      'customize shortcut links',
+      'switch shortcut sets',
+    );
+    $noaccess_user = $this->drupalCreateUser($test_permissions);
+    $this->drupalLogin($noaccess_user);
+
+    // Verify that set administration pages are inaccessible without the
+    // 'access shortcuts' permission.
+    $edit_paths = array(
+      'admin/config/user-interface/shortcut/manage/default/customize',
+      'admin/config/user-interface/shortcut/manage/default',
+      'user/' . $noaccess_user->id() . '/shortcuts',
+    );
+
+    foreach ($edit_paths as $path) {
+      $this->drupalGet($path);
+      $message = format_string('Access is denied on %s', array('%s' => $path));
+      $this->assertResponse(403, $message);
+    }
+  }
+
 }

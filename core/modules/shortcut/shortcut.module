@@ -38,7 +38,7 @@ function shortcut_help($route_name, Request $request) {
     case 'shortcut.set_add':
     case 'shortcut.set_edit':
       $user = \Drupal::currentUser();
-      if ($user->hasPermission('switch shortcut sets')) {
+      if ($user->hasPermission('access shortcuts') && $user->hasPermission('switch shortcut sets')) {
         $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->id()}/shortcuts"))) . '</p>';
         return $output;
       }
@@ -61,6 +61,9 @@ function shortcut_permission() {
       'title' => t('Select any shortcut set'),
       'description' => t('From all shortcut sets, select one to be own active set. Without this permission, an administrator selects shortcut sets for users.'),
     ),
+    'access shortcuts' => array(
+      'title' => t('Use shortcuts'),
+    ),
   );
 }
 
@@ -77,11 +80,17 @@ function shortcut_permission() {
  */
 function shortcut_set_edit_access(ShortcutSetInterface $shortcut_set = NULL) {
   $account = \Drupal::currentUser();
-  // Sufficiently-privileged users can edit their currently displayed shortcut
-  // set, but not other sets. Shortcut administrators can edit any set.
+
+  // Shortcut administrators can edit any set.
   if ($account->hasPermission('administer shortcuts')) {
     return TRUE;
   }
+  // Access to shortcuts is required for non-administrators.
+  if (!$account->hasPermission('access shortcuts')) {
+    return FALSE;
+  }
+  // Sufficiently-privileged users can edit their currently displayed shortcut
+  // set, but not other sets.
   if ($account->hasPermission('customize shortcut links')) {
     return !isset($shortcut_set) || $shortcut_set == shortcut_current_displayed_set();
   }
@@ -106,6 +115,11 @@ function shortcut_set_switch_access($account = NULL) {
   if ($user->hasPermission('administer shortcuts')) {
     // Administrators can switch anyone's shortcut set.
     return TRUE;
+  }
+
+  if (!$user->hasPermission('access shortcuts')) {
+    // The user has no permission to use shortcuts.
+    return FALSE;
   }
 
   if (!$user->hasPermission('switch shortcut sets')) {
@@ -397,43 +411,47 @@ function shortcut_preprocess_page(&$variables) {
  * Implements hook_toolbar().
  */
 function shortcut_toolbar() {
+  $user = \Drupal::currentUser();
+
   $items = array();
-  $links = shortcut_renderable_links();
-  $shortcut_set = shortcut_current_displayed_set();
-  $configure_link = NULL;
-  if (shortcut_set_edit_access($shortcut_set)) {
-    $configure_link = array(
-      '#type' => 'link',
-      '#title' => t('Edit shortcuts'),
-      '#route_name' => 'shortcut.set_customize',
-      '#route_parameters' => array('shortcut_set' => $shortcut_set->id()),
-      '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
-    );
-  }
-  if (!empty($links) || !empty($configure_link)) {
-    $items['shortcuts'] = array(
-      '#type' => 'toolbar_item',
-      'tab' => array(
+  if ($user->hasPermission('access shortcuts')) {
+    $links = shortcut_renderable_links();
+    $shortcut_set = shortcut_current_displayed_set();
+    $configure_link = NULL;
+    if (shortcut_set_edit_access($shortcut_set)) {
+      $configure_link = array(
         '#type' => 'link',
-        '#title' => t('Shortcuts'),
-        '#href' => 'admin/config/user-interface/shortcut',
-        '#attributes' => array(
-          'title' => t('Shortcuts'),
-          'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),
+        '#title' => t('Edit shortcuts'),
+        '#route_name' => 'shortcut.set_customize',
+        '#route_parameters' => array('shortcut_set' => $shortcut_set->id()),
+        '#options' => array('attributes' => array('class' => array('edit-shortcuts'))),
+      );
+    }
+    if (!empty($links) || !empty($configure_link)) {
+      $items['shortcuts'] = array(
+        '#type' => 'toolbar_item',
+        'tab' => array(
+          '#type' => 'link',
+          '#title' => t('Shortcuts'),
+          '#href' => 'admin/config/user-interface/shortcut',
+          '#attributes' => array(
+            'title' => t('Shortcuts'),
+            'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),
+          ),
         ),
-      ),
-      'tray' => array(
-        '#heading' => t('User-defined shortcuts'),
-        'shortcuts' => $links,
-        'configure' => $configure_link,
-      ),
-      '#weight' => -10,
-      '#attached' => array(
-        'library' => array(
-          'shortcut/drupal.shortcut',
+        'tray' => array(
+          '#heading' => t('User-defined shortcuts'),
+          'shortcuts' => $links,
+          'configure' => $configure_link,
         ),
-      ),
-    );
+        '#weight' => -10,
+        '#attached' => array(
+          'library' => array(
+            'shortcut/drupal.shortcut',
+          ),
+        ),
+      );
+    }
   }
 
   return $items;
