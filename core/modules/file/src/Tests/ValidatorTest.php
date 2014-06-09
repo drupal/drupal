@@ -91,6 +91,12 @@ class ValidatorTest extends FileManagedUnitTestBase {
       $this->assertTrue($image->getWidth() <= 10, 'Image scaled to correct width.', 'File');
       $this->assertTrue($image->getHeight() <= 5, 'Image scaled to correct height.', 'File');
 
+      // Once again, now with negative width and height to force an error.
+      copy('core/misc/druplicon.png', 'temporary://druplicon.png');
+      $this->image->setFileUri('temporary://druplicon.png');
+      $errors = file_validate_image_resolution($this->image, '-10x-5');
+      $this->assertEqual(count($errors), 1, 'An error reported for an oversized image that can not be scaled down.', 'File');
+
       drupal_unlink('temporary://druplicon.png');
     }
     else {

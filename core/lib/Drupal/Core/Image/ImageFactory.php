@@ -90,4 +90,23 @@ class ImageFactory {
     $toolkit_id = $toolkit_id ?: $this->toolkitId;
     return new Image($this->toolkitManager->createInstance($toolkit_id), $source);
   }
+
+  /**
+   * Returns the image file extensions supported by the toolkit.
+   *
+   * @param string|null $toolkit_id
+   *   (optional) The ID of the image toolkit to use for checking, or NULL
+   *   to use the current toolkit.
+   *
+   * @return array
+   *   An array of supported image file extensions (e.g. png/jpeg/gif).
+   *
+   * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::getSupportedExtensions()
+   */
+  public function getSupportedExtensions($toolkit_id = NULL) {
+    $toolkit_id = $toolkit_id ?: $this->toolkitId;
+    $definition = $this->toolkitManager->getDefinition($toolkit_id);
+    return call_user_func($definition['class'] . '::getSupportedExtensions');
+  }
+
 }

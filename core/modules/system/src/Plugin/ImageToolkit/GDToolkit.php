@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Plugin\ImageToolkit;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 use Drupal\Component\Utility\Image as ImageUtility;
@@ -27,6 +28,13 @@ class GDToolkit extends ImageToolkitBase {
    * @var resource
    */
   protected $resource;
+
+  /**
+   * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
+   *
+   * @var int
+   */
+  protected $type;
 
   /**
    * Sets the GD image resource.
@@ -86,7 +94,11 @@ class GDToolkit extends ImageToolkitBase {
     $width = (int) round($width);
     $height = (int) round($height);
 
-    $res = $this->createTmp($image->getType(), $width, $height);
+    if ($width <= 0 || $height <= 0) {
+      return FALSE;
+    }
+
+    $res = $this->createTmp($this->getType(), $width, $height);
 
     if (!imagecopyresampled($res, $this->getResource(), 0, 0, 0, 0, $width, $height, $this->getWidth($image), $this->getHeight($image))) {
       return FALSE;
@@ -129,7 +141,7 @@ class GDToolkit extends ImageToolkitBase {
 
     // Images are assigned a new color palette when rotating, removing any
     // transparency flags. For GIF images, keep a record of the transparent color.
-    if ($image->getType() == IMAGETYPE_GIF) {
+    if ($this->getType() == IMAGETYPE_GIF) {
       $transparent_index = imagecolortransparent($this->getResource());
       if ($transparent_index != 0) {
         $transparent_gif_color = imagecolorsforindex($this->getResource(), $transparent_index);
@@ -159,7 +171,11 @@ class GDToolkit extends ImageToolkitBase {
     $width = (int) round($width);
     $height = (int) round($height);
 
-    $res = $this->createTmp($image->getType(), $width, $height);
+    if ($width <= 0 || $height <= 0) {
+      return FALSE;
+    }
+
+    $res = $this->createTmp($this->getType(), $width, $height);
 
     if (!imagecopyresampled($res, $this->getResource(), 0, 0, $x, $y, $width, $height, $width, $height)) {
       return FALSE;
@@ -221,31 +237,28 @@ class GDToolkit extends ImageToolkitBase {
   }
 
   /**
-   * Creates a resource from a file.
+   * Loads a GD resource from a file.
    *
-   * @param string $source
-   *   String specifying the path of the image file.
-   * @param array $details
-   *   An array of image details.
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   An image object.
    *
    * @return bool
    *   TRUE or FALSE, based on success.
    */
-  protected function load($source, array $details) {
-    $function = 'imagecreatefrom' . image_type_to_extension($details['type'], FALSE);
-    if (function_exists($function) && $resource = $function($source)) {
+  protected function load($image) {
+    $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
+    if (function_exists($function) && $resource = $function($image->getSource())) {
       $this->setResource($resource);
       if (!imageistruecolor($resource)) {
         // Convert indexed images to true color, so that filters work
         // correctly and don't result in unnecessary dither.
-        $new_image = $this->createTmp($details['type'], imagesx($resource), imagesy($resource));
+        $new_image = $this->createTmp($this->getType(), imagesx($resource), imagesy($resource));
         imagecopy($new_image, $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
         imagedestroy($resource);
         $this->setResource($new_image);
       }
       return (bool) $this->getResource();
     }
-
     return FALSE;
   }
 
@@ -266,16 +279,16 @@ class GDToolkit extends ImageToolkitBase {
       $destination = drupal_realpath($destination);
     }
 
-    $function = 'image' . image_type_to_extension($image->getType(), FALSE);
+    $function = 'image' . image_type_to_extension($this->getType(), FALSE);
     if (!function_exists($function)) {
       return FALSE;
     }
-    if ($image->getType() == IMAGETYPE_JPEG) {
+    if ($this->getType() == IMAGETYPE_JPEG) {
       $success = $function($this->getResource(), $destination, \Drupal::config('system.image.gd')->get('jpeg_quality'));
     }
     else {
       // Always save PNG images with full transparency.
-      if ($image->getType() == IMAGETYPE_PNG) {
+      if ($this->getType() == IMAGETYPE_PNG) {
         imagealphablending($this->getResource(), FALSE);
         imagesavealpha($this->getResource(), TRUE);
       }
@@ -291,15 +304,14 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function getInfo(ImageInterface $image) {
-    $details = array();
-    $data = getimagesize($image->getSource());
-
-    if (isset($data) && is_array($data) && in_array($data[2], static::supportedTypes())) {
-      $details['type'] = $data[2];
-      $this->load($image->getSource(), $details);
+  public function parseFile(ImageInterface $image) {
+    $data = @getimagesize($image->getSource());
+    if ($data && in_array($data[2], static::supportedTypes())) {
+      $this->setType($data[2]);
+      $this->load($image);
+      return (bool) $this->getResource();
     }
-    return $details;
+    return FALSE;
   }
 
   /**
@@ -371,6 +383,40 @@ class GDToolkit extends ImageToolkitBase {
   }
 
   /**
+   * Gets the PHP type of the image.
+   *
+   * @return int
+   *   The image type represented by a PHP IMAGETYPE_* constant (e.g.
+   *   IMAGETYPE_JPEG).
+   */
+  public function getType() {
+    return $this->type;
+  }
+
+  /**
+   * Sets the PHP type of the image.
+   *
+   * @param int $type
+   *   The image type represented by a PHP IMAGETYPE_* constant (e.g.
+   *   IMAGETYPE_JPEG).
+   *
+   * @return this
+   */
+  public function setType($type) {
+    if (in_array($type, static::supportedTypes())) {
+      $this->type = $type;
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMimeType(ImageInterface $image) {
+    return $this->getType() ? image_type_to_mime_type($this->getType()) : '';
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getRequirements() {
@@ -402,7 +448,22 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public static function supportedTypes() {
+  public static function getSupportedExtensions() {
+    $extensions = array();
+    foreach (static::supportedTypes() as $image_type) {
+      $extensions[] = Unicode::strtolower(image_type_to_extension($image_type, FALSE));
+    }
+    return $extensions;
+  }
+
+  /**
+   * Returns a list of image types supported by the toolkit.
+   *
+   * @return array
+   *   An array of available image types. An image type is represented by a PHP
+   *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
+   */
+  protected static function supportedTypes() {
     return array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
   }
 }

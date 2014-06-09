@@ -410,7 +410,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 }
 
 /**
- * Checks that the file is recognized by Image::getInfo() as an image.
+ * Checks that the file is recognized as a valid image.
  *
  * @param \Drupal\file\File $file
  *   A file entity.
@@ -423,13 +423,11 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 function file_validate_is_image(File $file) {
   $errors = array();
 
-  $image = \Drupal::service('image.factory')->get($file->getFileUri());
-  if (!$image->isSupported()) {
-    $extensions = array();
-    foreach ($image->getToolkit()->supportedTypes() as $image_type) {
-      $extensions[] = Unicode::strtoupper(image_type_to_extension($image_type));
-    }
-    $errors[] = t('Image type not supported. Allowed types: @types.', array('@types' => implode(', ', $extensions)));
+  $image_factory = \Drupal::service('image.factory');
+  $image = $image_factory->get($file->getFileUri());
+  if (!$image->isValid()) {
+    $supported_extensions = $image_factory->getSupportedExtensions();
+    $errors[] = t('Image type not supported. Allowed types: %types', array('%types' => implode(' ', $supported_extensions)));
   }
 
   return $errors;
@@ -464,21 +462,19 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
   // Check first that the file is an image.
   $image_factory = \Drupal::service('image.factory');
   $image = $image_factory->get($file->getFileUri());
-  if ($image->isSupported()) {
+  if ($image->isValid()) {
     if ($maximum_dimensions) {
       // Check that it is smaller than the given dimensions.
       list($width, $height) = explode('x', $maximum_dimensions);
       if ($image->getWidth() > $width || $image->getHeight() > $height) {
         // Try to resize the image to fit the dimensions.
-        $image = $image_factory->get($file->getFileUri());
-        if ($image->isExisting()) {
-          $image->scale($width, $height);
+        if ($image->scale($width, $height)) {
           $image->save();
           $file->filesize = $image->getFileSize();
           drupal_set_message(t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $maximum_dimensions)));
         }
         else {
-          $errors[] = t('The image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => $maximum_dimensions));
+          $errors[] = t('The image exceeds the maximum allowed dimensions and an attempt to resize it failed.');
         }
       }
     }

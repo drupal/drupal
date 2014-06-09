@@ -303,7 +303,7 @@ class ImageItem extends FileItem {
     // Determine the dimensions if necessary.
     if (empty($width) || empty($height)) {
       $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
-      if ($image->isSupported()) {
+      if ($image->isValid()) {
         $this->width = $image->getWidth();
         $this->height =$image->getHeight();
       }

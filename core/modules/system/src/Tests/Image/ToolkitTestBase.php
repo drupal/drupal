@@ -68,7 +68,7 @@ abstract class ToolkitTestBase extends WebTestBase {
    */
   protected function getImage() {
     $image = $this->imageFactory->get($this->file, 'test');
-    $this->assertTrue($image->isExisting(), 'Image was loaded.');
+    $this->assertTrue($image->isValid(), 'Image was loaded.');
     return $image;
   }
 
@@ -109,7 +109,7 @@ abstract class ToolkitTestBase extends WebTestBase {
   function imageTestReset() {
     // Keep track of calls to these operations
     $results = array(
-      'load' => array(),
+      'parseFile' => array(),
       'save' => array(),
       'settings' => array(),
       'resize' => array(),
@@ -124,9 +124,9 @@ abstract class ToolkitTestBase extends WebTestBase {
    * Gets an array of calls to the test toolkit.
    *
    * @return array
-   *   An array keyed by operation name ('load', 'save', 'settings', 'resize',
-   *   'rotate', 'crop', 'desaturate') with values being arrays of parameters
-   *   passed to each call.
+   *   An array keyed by operation name ('parseFile', 'save', 'settings',
+   *   'resize', 'rotate', 'crop', 'desaturate') with values being arrays of
+   *   parameters passed to each call.
    */
   function imageTestGetAllCalls() {
     return \Drupal::state()->get('image_test.results') ?: array();

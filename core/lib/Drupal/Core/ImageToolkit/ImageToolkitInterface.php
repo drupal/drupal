@@ -185,19 +185,15 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public function scaleAndCrop(ImageInterface $image, $width, $height);
 
   /**
-   * Gets details about an image.
+   * Determines if a file contains a valid image.
    *
    * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object.
    *
-   * @return array
-   *   If the file could not be found or is not an image, an empty array;
-   *   otherwise, a keyed array containing information about the image:
-   *   - "type": Image type represented as an IMAGETYPE_* constant.
-   *
-   * @see \Drupal\Core\Image\ImageInterface::processInfo()
+   * @return bool
+   *   TRUE if the file could be found and is an image, FALSE otherwise.
    */
-  public function getInfo(ImageInterface $image);
+  public function parseFile(ImageInterface $image);
 
   /**
    * Returns the height of the image.
@@ -222,6 +218,18 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public function getWidth(ImageInterface $image);
 
   /**
+   * Returns the MIME type of the image file.
+   *
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   An image object.
+   *
+   * @return string
+   *   The MIME type of the image file, or an empty string if the image is
+   *   invalid.
+   */
+  public function getMimeType(ImageInterface $image);
+
+  /**
    * Gets toolkit requirements in a format suitable for hook_requirements().
    *
    * @return array
@@ -244,12 +252,11 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public static function isAvailable();
 
   /**
-   * Returns a list of image types supported by the toolkit.
+   * Returns a list of image file extensions supported by the toolkit.
    *
    * @return array
-   *   An array of available image types. An image type is represented by a PHP
-   *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
+   *   An array of supported image file extensions (e.g. png/jpeg/gif).
    */
-  public static function supportedTypes();
+  public static function getSupportedExtensions();
 
 }

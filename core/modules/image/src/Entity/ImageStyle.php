@@ -276,7 +276,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     }
 
     $image = \Drupal::service('image.factory')->get($original_uri);
-    if (!$image->isExisting()) {
+    if (!$image->isValid()) {
       return FALSE;
     }
 

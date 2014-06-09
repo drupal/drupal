@@ -20,11 +20,11 @@ use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 class Image implements ImageInterface {
 
   /**
-   * String specifying the path of the image file.
+   * Path of the image file.
    *
    * @var string
    */
-  protected $source;
+  protected $source = '';
 
   /**
    * An image toolkit object.
@@ -34,25 +34,18 @@ class Image implements ImageInterface {
   protected $toolkit;
 
   /**
-   * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
-   *
-   * @var int
-   */
-  protected $type;
-
-  /**
    * File size in bytes.
    *
    * @var int
    */
-  protected $fileSize = 0;
+  protected $fileSize;
 
   /**
-   * If this image file has been processed.
+   * If this image object is valid.
    *
    * @var bool
    */
-  protected $processed = FALSE;
+  protected $valid = FALSE;
 
   /**
    * Constructs a new Image object.
@@ -67,30 +60,21 @@ class Image implements ImageInterface {
     $this->toolkit = $toolkit;
     if ($source) {
       $this->source = $source;
-      $this->processInfo();
+      $this->parseFile();
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isSupported() {
-    return in_array($this->getType(), $this->toolkit->supportedTypes());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isExisting() {
-    $this->processInfo();
-    return $this->processed;
+  public function isValid() {
+    return $this->valid;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getHeight() {
-    $this->processInfo();
     return $this->toolkit->getHeight($this);
   }
 
@@ -98,7 +82,6 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getWidth() {
-    $this->processInfo();
     return $this->toolkit->getWidth($this);
   }
 
@@ -106,32 +89,14 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getFileSize() {
-    $this->processInfo();
     return $this->fileSize;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getType() {
-    $this->processInfo();
-    return $this->type;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getMimeType() {
-    $this->processInfo();
-    return $this->type ? image_type_to_mime_type($this->type) : '';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setSource($source) {
-    $this->source = $source;
-    return $this;
+    return $this->toolkit->getMimeType($this);
   }
 
   /**
@@ -152,7 +117,6 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getToolkit() {
-    $this->processInfo();
     return $this->toolkit;
   }
 
@@ -160,14 +124,17 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function save($destination = NULL) {
-    if (empty($destination)) {
-      $destination = $this->getSource();
+    // Return immediately if the image is not valid.
+    if (!$this->isValid()) {
+      return FALSE;
     }
+
+    $destination = $destination ?: $this->getSource();
     if ($return = $this->toolkit->save($this, $destination)) {
       // Clear the cached file size and refresh the image information.
       clearstatcache(TRUE, $destination);
-      $this->setSource($destination);
-      $this->processInfo();
+      $this->fileSize = filesize($destination);
+      $this->source = $destination;
 
       // @todo Use File utility when https://drupal.org/node/2050759 is in.
       if ($this->chmod($destination)) {
@@ -178,7 +145,7 @@ class Image implements ImageInterface {
   }
 
   /**
-   * Prepares the image information.
+   * Determines if a file contains a valid image.
    *
    * Drupal supports GIF, JPG and PNG file formats when used with the GD
    * toolkit, and may support others, depending on which toolkits are
@@ -188,23 +155,11 @@ class Image implements ImageInterface {
    *   FALSE, if the file could not be found or is not an image. Otherwise, the
    *   image information is populated.
    */
-  protected function processInfo() {
-    if ($this->processed) {
-      return TRUE;
+  protected function parseFile() {
+    if ($this->valid = $this->toolkit->parseFile($this)) {
+      $this->fileSize = filesize($this->source);
     }
-
-    $destination = $this->getSource();
-    if (!is_file($destination) && !is_uploaded_file($destination)) {
-      return FALSE;
-    }
-
-    if ($details = $this->toolkit->getInfo($this)) {
-      $this->type = $details['type'];
-      $this->fileSize = filesize($destination);
-
-      $this->processed = TRUE;
-    }
-    return TRUE;
+    return $this->valid;
   }
 
   /**
@@ -227,22 +182,23 @@ class Image implements ImageInterface {
    */
   public function __call($method, $arguments) {
     // @todo Temporary to avoid that legacy GD setResource(), getResource(),
-    //  hasResource() methods moved to GD toolkit in #2103621, and setWidth(),
-    //  setHeight() methods moved to ImageToolkitInterface in #2196067 get
+    //  hasResource() methods moved to GD toolkit in #2103621, setWidth(),
+    //  setHeight() methods moved to ImageToolkitInterface in #2196067,
+    //  getType() method moved to GDToolkit in #2211227 get
     //  invoked from this class anyway through the magic __call. Will be
-    //  removed through https://drupal.org/node/2110499, when
+    //  removed through https://drupal.org/node/2073759, when
     //  call_user_func_array() will be replaced by
     //  $this->toolkit->apply($name, $this, $arguments).
-    if (in_array($method, array('setResource', 'getResource', 'hasResource', 'setWidth', 'setHeight'))) {
-      throw new \BadMethodCallException();
+    if (in_array($method, array('setResource', 'getResource', 'hasResource', 'setWidth', 'setHeight', 'getType'))) {
+      throw new \BadMethodCallException($method);
     }
     if (is_callable(array($this->toolkit, $method))) {
-      // @todo In https://drupal.org/node/2110499, call_user_func_array() will
+      // @todo In https://drupal.org/node/2073759, call_user_func_array() will
       //   be replaced by $this->toolkit->apply($name, $this, $arguments).
       array_unshift($arguments, $this);
       return call_user_func_array(array($this->toolkit, $method), $arguments);
     }
-    throw new \BadMethodCallException();
+    throw new \BadMethodCallException($method);
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\image_test\Plugin\ImageToolkit;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 
@@ -19,6 +20,13 @@ use Drupal\Core\ImageToolkit\ImageToolkitBase;
  * )
  */
 class TestToolkit extends ImageToolkitBase {
+
+  /**
+   * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
+   *
+   * @var int
+   */
+  protected $type;
 
   /**
    * The width of the image.
@@ -62,35 +70,16 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function getInfo(ImageInterface $image) {
-    $this->logCall('get_info', array($image));
-
-    $details = array();
-    $data = getimagesize($image->getSource());
-
-    if (isset($data) && is_array($data) && in_array($data[2], static::supportedTypes())) {
-      $details['type'] = $data[2];
+  public function parseFile(ImageInterface $image) {
+    $this->logCall('parseFile', array($image));
+    $data = @getimagesize($image->getSource());
+    if ($data && in_array($data[2], static::supportedTypes())) {
+      $this->setType($data[2]);
       $this->width = $data[0];
       $this->height = $data[1];
-      $this->load($image->getSource(), $details);
+      return TRUE;
     }
-    return $details;
-  }
-
-  /**
-   * Mimick loading the image from a file.
-   *
-   * @param string $source
-   *   String specifying the path of the image file.
-   * @param array $details
-   *   An array of image details.
-   *
-   * @return bool
-   *   TRUE or FALSE, based on success.
-   */
-  protected function load($source, array $details) {
-    $this->logCall('load', array($source, $details));
-    return TRUE;
+    return FALSE;
   }
 
   /**
@@ -155,8 +144,8 @@ class TestToolkit extends ImageToolkitBase {
    * Stores the values passed to a toolkit call.
    *
    * @param string $op
-   *   One of the image toolkit operations: 'get_info', 'load', 'save',
-   *   'settings', 'resize', 'rotate', 'crop', 'desaturate'.
+   *   One of the image toolkit operations: 'parseFile', 'save', 'settings',
+   *   'resize', 'rotate', 'crop', 'desaturate'.
    * @param array $args
    *   Values passed to hook.
    *
@@ -184,6 +173,40 @@ class TestToolkit extends ImageToolkitBase {
   }
 
   /**
+   * Returns the type of the image.
+   *
+   * @return int
+   *   The image type represented by a PHP IMAGETYPE_* constant (e.g.
+   *   IMAGETYPE_JPEG).
+   */
+  public function getType() {
+    return $this->type;
+  }
+
+  /**
+   * Sets the PHP type of the image.
+   *
+   * @param int $type
+   *   The image type represented by a PHP IMAGETYPE_* constant (e.g.
+   *   IMAGETYPE_JPEG).
+   *
+   * @return this
+   */
+  public function setType($type) {
+    if (in_array($type, static::supportedTypes())) {
+      $this->type = $type;
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMimeType(ImageInterface $image) {
+    return $this->getType() ? image_type_to_mime_type($this->getType()) : '';
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function isAvailable() {
@@ -193,7 +216,22 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public static function supportedTypes() {
+  public static function getSupportedExtensions() {
+    $extensions = array();
+    foreach (static::supportedTypes() as $image_type) {
+      $extensions[] = Unicode::strtolower(image_type_to_extension($image_type, FALSE));
+    }
+    return $extensions;
+  }
+
+  /**
+   * Returns a list of image types supported by the toolkit.
+   *
+   * @return array
+   *   An array of available image types. An image type is represented by a PHP
+   *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
+   */
+  protected static function supportedTypes() {
     return array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
   }
 

@@ -247,7 +247,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         $image_truecolor = imageistruecolor($toolkit->getResource());
         $this->assertTrue($image_truecolor, String::format('Image %file after load is a truecolor image.', array('%file' => $file)));
 
-        if ($image->getType() == IMAGETYPE_GIF) {
+        if ($image->getToolkit()->getType() == IMAGETYPE_GIF) {
           if ($op == 'desaturate') {
             // Transparent GIFs and the imagefilter function don't work together.
             $values['corners'][3][3] = 0;
@@ -274,14 +274,14 @@ class ToolkitGdTest extends DrupalUnitTestBase {
 
         $directory = $this->public_files_directory .'/imagetest';
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-        $file_path = $directory . '/' . $op . image_type_to_extension($image->getType());
+        $file_path = $directory . '/' . $op . image_type_to_extension($image->getToolkit()->getType());
         $image->save($file_path);
 
         $this->assertTrue($correct_dimensions_real, String::format('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
         $this->assertTrue($correct_dimensions_object, String::format('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
 
         // JPEG colors will always be messed up due to compression.
-        if ($image->getType() != IMAGETYPE_JPEG) {
+        if ($image->getToolkit()->getType() != IMAGETYPE_JPEG) {
           // Now check each of the corners to ensure color correctness.
           foreach ($values['corners'] as $key => $corner) {
             // Get the location of the corner.

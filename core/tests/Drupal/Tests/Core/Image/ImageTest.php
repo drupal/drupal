@@ -88,10 +88,10 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Core\Image\Image::getType().
+   * Tests \Drupal\Core\Image\Image::getToolkit()->getType().
    */
   public function testGetType() {
-    $this->assertEquals($this->image->getType(), IMAGETYPE_PNG);
+    $this->assertEquals($this->image->getToolkit()->getType(), IMAGETYPE_PNG);
   }
 
   /**
@@ -102,20 +102,11 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Core\Image\Image::isExisting().
+   * Tests \Drupal\Core\Image\Image::isValid().
    */
-  public function testIsExisting() {
-    $this->assertTrue($this->image->isExisting());
+  public function testIsValid() {
+    $this->assertTrue($this->image->isValid());
     $this->assertTrue(is_readable($this->image->getSource()));
-  }
-
-  /**
-   * Tests \Drupal\Core\Image\Image::setSource().
-   */
-  public function testSetSource() {
-    $source = __DIR__ . '/../../../../../misc/grippie.png';
-    $this->image->setSource($source);
-    $this->assertEquals($this->image->getSource(), $source);
   }
 
   /**
@@ -172,13 +163,14 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Core\Image\Image::processInfo().
+   * Tests \Drupal\Core\Image\Image::parseFile().
    */
-  public function testProcessInfoFails() {
+  public function testParseFileFails() {
     $toolkit = $this->getToolkitMock();
     $image = new Image($toolkit, 'magic-foobars.png');
 
-    $this->assertFalse($image->isExisting());
+    $this->assertFalse($image->isValid());
+    $this->assertFalse($image->save());
   }
 
   /**

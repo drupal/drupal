@@ -13,20 +13,12 @@ namespace Drupal\Core\Image;
 interface ImageInterface {
 
   /**
-   * Checks if the image format is supported.
+   * Checks if the image is valid.
    *
    * @return bool
-   *   Returns TRUE if the image format is supported by the toolkit.
+   *   TRUE if the image object contains a valid image, FALSE otherwise.
    */
-  public function isSupported();
-
-  /**
-   * Checks if the image is existing.
-   *
-   * @return bool
-   *   TRUE if the image exists and is a valid image, FALSE otherwise.
-   */
-  public function isExisting();
+  public function isValid();
 
   /**
    * Returns the height of the image.
@@ -47,19 +39,10 @@ interface ImageInterface {
   /**
    * Returns the size of the image file.
    *
-   * @return int
-   *   The size of the file in bytes, or 0 if the file is invalid.
+   * @return int|null
+   *   The size of the file in bytes, or NULL if the image is invalid.
    */
   public function getFileSize();
-
-  /**
-   * Returns the type of the image.
-   *
-   * @return int
-   *   The image type represented by a PHP IMAGETYPE_* constant (e.g.
-   *   IMAGETYPE_JPEG).
-   */
-  public function getType();
 
   /**
    * Returns the MIME type of the image file.
@@ -71,21 +54,11 @@ interface ImageInterface {
   public function getMimeType();
 
   /**
-   * Sets the source path of the image file.
-   *
-   * @param string $source
-   *   A string specifying the path of the image file.
-   *
-   * @return self
-   *   Returns this image file.
-   */
-  public function setSource($source);
-
-  /**
    * Retrieves the source path of the image file.
    *
    * @return string
-   *   The source path of the image file.
+   *   The source path of the image file. An empty string if the source is
+   *   not set.
    */
   public function getSource();
 
