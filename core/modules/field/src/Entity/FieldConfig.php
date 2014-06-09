@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -206,13 +207,13 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
       throw new FieldException('Attempt to create an unnamed field.');
     }
     if (!preg_match('/^[_a-z]+[_a-z0-9]*$/', $values['name'])) {
-      throw new FieldException(format_string('Attempt to create a field @field_name with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character', array('@field_name' => $values['name'])));
+      throw new FieldException(String::format('Attempt to create a field @field_name with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character', array('@field_name' => $values['name'])));
     }
     if (empty($values['type'])) {
-      throw new FieldException(format_string('Attempt to create field @field_name with no type.', array('@field_name' => $values['name'])));
+      throw new FieldException(String::format('Attempt to create field @field_name with no type.', array('@field_name' => $values['name'])));
     }
     if (empty($values['entity_type'])) {
-      throw new FieldException(format_string('Attempt to create a field @field_name with no entity_type.', array('@field_name' => $values['name'])));
+      throw new FieldException(String::format('Attempt to create a field @field_name with no entity_type.', array('@field_name' => $values['name'])));
     }
 
     parent::__construct($values, $entity_type);
@@ -296,7 +297,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     // We use Unicode::strlen() because the DB layer assumes that column widths
     // are given in characters rather than bytes.
     if (Unicode::strlen($this->name) > static::NAME_MAX_LENGTH) {
-      throw new FieldException(format_string(
+      throw new FieldException(String::format(
         'Attempt to create a field with an ID longer than @max characters: %name', array(
           '@max' => static::NAME_MAX_LENGTH,
           '%name' => $this->name,
@@ -307,13 +308,13 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     // Disallow reserved field names.
     $disallowed_field_names = array_keys($entity_manager->getBaseFieldDefinitions($this->entity_type));
     if (in_array($this->name, $disallowed_field_names)) {
-      throw new FieldException(format_string('Attempt to create field %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $this->entity_type)));
+      throw new FieldException(String::format('Attempt to create field %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $this->entity_type)));
     }
 
     // Check that the field type is known.
     $field_type = $field_type_manager->getDefinition($this->type, FALSE);
     if (!$field_type) {
-      throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
+      throw new FieldException(String::format('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
     }
     $this->module = $field_type['provider'];
 
@@ -459,7 +460,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
 
       // Check that the schema does not include forbidden column names.
       if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {
-        throw new FieldException(format_string('Illegal field type @field_type on @field_name.', array('@field_type' => $this->type, '@field_name' => $this->name)));
+        throw new FieldException(String::format('Illegal field type @field_type on @field_name.', array('@field_type' => $this->type, '@field_name' => $this->name)));
       }
 
       // Merge custom indexes with those specified by the field type. Custom
