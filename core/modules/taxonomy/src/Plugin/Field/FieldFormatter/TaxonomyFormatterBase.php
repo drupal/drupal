@@ -21,20 +21,15 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
    * unsets values for invalid terms that do not exist.
    */
   public function prepareView(array $entities_items) {
-    $tids = array();
+    $terms = array();
 
     // Collect every possible term attached to any of the fieldable entities.
     foreach ($entities_items as $items) {
-      foreach ($items as $item) {
-        // Force the array key to prevent duplicates.
-        if ($item->target_id != NULL) {
-          $tids[$item->target_id] = $item->target_id;
-        }
+      foreach ($items->referencedEntities() as $term) {
+        $terms[$term->id()] = $term;
       }
     }
-    if ($tids) {
-      $terms = entity_load_multiple('taxonomy_term', $tids);
-
+    if ($terms) {
       // Iterate through the fieldable entities again to attach the loaded term
       // data.
       foreach ($entities_items as $items) {

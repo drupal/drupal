@@ -7,12 +7,12 @@
 
 namespace Drupal\entity_reference\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\EntityReferenceFieldItemList;
 
 /**
  * Represents a configurable entity_reference entity field.
  */
-class ConfigurableEntityReferenceFieldItemList extends FieldItemList {
+class ConfigurableEntityReferenceFieldItemList extends EntityReferenceFieldItemList {
 
   /**
    * {@inheritdoc}

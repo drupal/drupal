@@ -7,12 +7,12 @@
 
 namespace Drupal\file\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\EntityReferenceFieldItemList;
 
 /**
  * Represents a configurable entity file field.
  */
-class FileFieldItemList extends FieldItemList {
+class FileFieldItemList extends EntityReferenceFieldItemList {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class FileFieldItemList extends FieldItemList {
     $entity = $this->getEntity();
 
     // Add a new usage for newly uploaded files.
-    foreach ($this->targetEntities() as $file) {
+    foreach ($this->referencedEntities() as $file) {
       \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
     }
   }
@@ -40,8 +40,12 @@ class FileFieldItemList extends FieldItemList {
     $entity = $this->getEntity();
 
     // Get current target file entities and file IDs.
-    $files = $this->targetEntities();
-    $fids = array_keys($files);
+    $files = $this->referencedEntities();
+    $fids = array();
+
+    foreach ($files as $file) {
+      $fids[] = $file->id();
+    }
 
     // On new revisions, all files are considered to be a new usage and no
     // deletion of previous file usages are necessary.
@@ -68,8 +72,8 @@ class FileFieldItemList extends FieldItemList {
     }
 
     // Add new usage entries for newly added files.
-    foreach ($files as $fid => $file) {
-      if (!in_array($fid, $original_fids)) {
+    foreach ($files as $file) {
+      if (!in_array($file->id(), $original_fids)) {
         \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
       }
     }
@@ -83,7 +87,7 @@ class FileFieldItemList extends FieldItemList {
     $entity = $this->getEntity();
 
     // Delete all file usages within this entity.
-    foreach ($this->targetEntities() as $file) {
+    foreach ($this->referencedEntities() as $file) {
       \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id(), 0);
     }
   }
@@ -96,31 +100,9 @@ class FileFieldItemList extends FieldItemList {
     $entity = $this->getEntity();
 
     // Decrement the file usage by 1.
-    foreach ($this->targetEntities() as $file) {
+    foreach ($this->referencedEntities() as $file) {
       \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id());
     }
-  }
-
-  /**
-   * Collects target file entities for this field.
-   *
-   * @return array
-   *   An array with the list of target file entities keyed by file ID.
-   *
-   * @todo Drop this when https://drupal.org/node/2073661 lands.
-   */
-  protected function targetEntities() {
-    if (!isset($this->list)) {
-      return array();
-    }
-    $ids = array();
-    foreach ($this->list as $item) {
-      $ids[] = $item->target_id;
-    }
-    // Prevent NULLs as target IDs.
-    $ids = array_filter($ids);
-
-    return $ids ? \Drupal::entityManager()->getStorage('file')->loadMultiple($ids) : array();
   }
 
 }

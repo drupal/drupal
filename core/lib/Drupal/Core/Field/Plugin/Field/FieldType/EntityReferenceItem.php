@@ -28,6 +28,7 @@ use Drupal\Core\TypedData\DataReferenceDefinition;
  *   label = @Translation("Entity reference"),
  *   description = @Translation("An entity field containing an entity reference."),
  *   no_ui = TRUE,
+ *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  *   constraints = {"ValidReference" = {}}
  * )
  */
