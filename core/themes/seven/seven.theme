@@ -40,8 +40,7 @@ function seven_preprocess_page(&$variables) {
  * Overrides theme_menu_local_tasks().
  *
  * Returns HTML for primary and secondary local tasks.
- *
- **/
+ */
 function seven_menu_local_tasks(&$variables) {
   $output = '';
 
@@ -80,8 +79,7 @@ function seven_menu_local_tasks(&$variables) {
  * Overrides theme_menu_local_task().
  *
  * Returns HTML for a local task.
- *
- **/
+ */
 function seven_menu_local_task($variables) {
   $link = $variables['element']['#link'];
   $link += array(
@@ -326,7 +324,7 @@ function seven_form_node_form_alter(&$form, &$form_state) {
   );
 
   $form['advanced']['#type'] = 'container';
-  $form['meta'] = array (
+  $form['meta'] = array(
     '#attributes' => array('class' => array('entity-meta-header')),
     '#type' => 'container',
     '#group' => 'advanced',
