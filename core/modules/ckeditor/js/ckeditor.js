@@ -10,6 +10,15 @@
       format.editorSettings.drupal = {
         format: format.format
       };
+
+      // CKEditor initializes itself in a read-only state if the 'disabled'
+      // attribute is set. It does not respect the 'readonly' attribute,
+      // however, so we set the 'readOnly' configuration property manually in
+      // that case.
+      if (element.hasAttribute('readonly')) {
+        format.editorSettings.readOnly = true;
+      }
+
       return !!CKEDITOR.replace(element, format.editorSettings);
     },
 

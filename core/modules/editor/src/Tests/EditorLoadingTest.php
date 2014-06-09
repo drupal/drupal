@@ -146,11 +146,12 @@ class EditorLoadingTest extends WebTestBase {
     ));
 
     // The untrusted user tries to edit content that is written in a text format
-    // that (s)he is not allowed to use.
+    // that (s)he is not allowed to use. The editor is still loaded. CKEditor,
+    // for example, supports being loaded in a disabled state.
     $this->drupalGet('node/1/edit');
     list( , $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
-    $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
-    $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
+    $this->assertTrue($editor_settings_present, 'Text Editor module settings.');
+    $this->assertTrue($editor_js_present, 'Text Editor JavaScript.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
     $this->assertFieldByXPath('//textarea[@id="edit-body-0-value" and @disabled="disabled"]', t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
     $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page.');

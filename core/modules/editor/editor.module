@@ -257,9 +257,9 @@ function editor_pre_render_format($element) {
   }
 
   // filter_process_format() copies properties to the expanded 'value' child
-  // element. Skip this text format widget, if it contains no 'format' or when
-  // the current user does not have access to edit the value.
-  if (!isset($element['format']) || !empty($element['value']['#disabled'])) {
+  // element, including the #pre_render property. Skip this text format widget,
+  // if it contains no 'format'.
+  if (!isset($element['format'])) {
     return $element;
   }
   $format_ids = array_keys($element['format']['format']['#options']);
