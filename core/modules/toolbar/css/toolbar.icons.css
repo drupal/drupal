@@ -337,25 +337,30 @@
 .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
   background-image: url("../../../misc/icons/bebebe/push-left.svg"); /* LTR */
 }
-.toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+.toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before,
+.toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before
+ {
   background-image: url("../../../misc/icons/787878/push-left.svg"); /* LTR */
 }
 .no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
   background-image: url("../../../misc/icons/bebebe/push-left.png"); /* LTR */
 }
-.no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+.no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before,
+.no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before {
   background-image: url("../../../misc/icons/787878/push-left.png"); /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
   background-image: url("../../../misc/icons/bebebe/push-right.svg");
 }
-[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before,
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before {
   background-image: url("../../../misc/icons/787878/push-right.svg");
 }
 [dir="rtl"].no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
   background-image: url("../../../misc/icons/bebebe/push-right.png");
 }
-[dir="rtl"].no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+[dir="rtl"].no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before,
+[dir="rtl"].no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before {
   background-image: url("../../../misc/icons/787878/push-right.png");
 }
 .toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
@@ -367,7 +372,8 @@
 .no-svg .toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
   background-image: url("../../../misc/icons/bebebe/push-up.png");
 }
-.no-svg .toolbar .toolbar-toggle-orientation [value="horizontal"]:hover:before {
+.no-svg .toolbar .toolbar-toggle-orientation [value="horizontal"]:hover:before,
+.no-svg .toolbar .toolbar-toggle-orientation [value="horizontal"]:focus:before {
   background-image: url("../../../misc/icons/787878/push-up.png");
 }
 

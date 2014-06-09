@@ -20,7 +20,7 @@
   line-height: 1em;
   text-decoration: none;
 }
-.toolbar .toolbar-item:hover {
+.toolbar .toolbar-item:hover, .toolbar .toolbar-item:focus {
   text-decoration: underline;
 }
 
@@ -41,7 +41,8 @@
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-item {
   font-weight: bold;
 }
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover {
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover,
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
   text-decoration: none;
@@ -92,7 +93,9 @@
 }
 .toolbar-tray a:hover,
 .toolbar-tray a:active,
-.toolbar-tray a.active {
+.toolbar-tray a:focus,
+.toolbar-tray a.active
+ {
   color: #000;
   text-decoration: underline;
 }
