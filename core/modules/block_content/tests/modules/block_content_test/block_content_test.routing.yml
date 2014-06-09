@@ -1,0 +1,6 @@
+block_content_test.block_content_view:
+  path: '/block-content/{block_content}'
+  defaults:
+    _entity_view: 'block_content'
+  requirements:
+    _entity_access: 'block_content.view'

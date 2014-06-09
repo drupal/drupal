@@ -1,8 +1,0 @@
-id: custom_block.full
-label: Full
-status: false
-cache: true
-targetEntityType: custom_block
-dependencies:
-  module:
-    - custom_block

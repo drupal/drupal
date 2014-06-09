@@ -434,7 +434,7 @@
    * @param Object contextualLink
    *   An object with the following properties:
    *     - String entityID: a Quick Edit entity identifier, e.g. "node/1" or
-   *       "custom_block/5".
+   *       "block_content/5".
    *     - String entityInstanceID: a Quick Edit entity instance identifier,
    *       e.g. 0, 1 or n (depending on whether it's the first, second, or n+1st
    *       instance of this entity).

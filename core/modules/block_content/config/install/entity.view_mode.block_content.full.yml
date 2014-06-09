@@ -1,0 +1,8 @@
+id: block_content.full
+label: Full
+status: false
+cache: true
+targetEntityType: block_content
+dependencies:
+  module:
+    - block_content

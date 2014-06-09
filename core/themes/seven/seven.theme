@@ -136,11 +136,11 @@ function seven_node_add_list($variables) {
 }
 
 /**
- * Overrides theme_custom_block_add_list().
+ * Overrides theme_block_content_add_list().
  *
  * Displays the list of available custom block types for creation.
  */
-function seven_custom_block_add_list($variables) {
+function seven_block_content_add_list($variables) {
   $output = '';
   if (!empty($variables['types'])) {
     $output = '<ul class="admin-list">';
@@ -150,7 +150,7 @@ function seven_custom_block_add_list($variables) {
       $content .= '<div class="description">' . Xss::filterAdmin($type['description']) . '</div>';
       $options = $type['localized_options'];
       $options['html'] = TRUE;
-      $output .= \Drupal::l($content, 'custom_block.add_form', array('custom_block_type' => $id), $options);
+      $output .= \Drupal::l($content, 'block_content.add_form', array('block_content_type' => $id), $options);
       $output .= '</li>';
     }
     $output .= '</ul>';

@@ -18,7 +18,7 @@ class BlockConfigSchemaTest extends ConfigSchemaTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('block', 'aggregator', 'book', 'custom_block', 'forum', 'statistics');
+  public static $modules = array('block', 'aggregator', 'book', 'block_content', 'forum', 'statistics');
 
   /**
    * The typed config manager.

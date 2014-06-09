@@ -1,0 +1,27 @@
+block_content.list:
+  title: 'Custom block library'
+  route_name: block_content.list
+  base_route: block.admin_display
+block_content.list_sub:
+  title: Blocks
+  route_name: block_content.list
+  parent_id: block_content.list
+block_content.type_list:
+  title: Types
+  route_name: block_content.type_list
+  parent_id: block_content.list
+
+block_content.edit:
+  title: Edit
+  route_name: block_content.edit
+  base_route: block_content.edit
+block_content.delete:
+  title: Delete
+  route_name: block_content.delete
+  base_route: block_content.edit
+
+# Default tab for custom block type editing.
+block_content.type_edit:
+  title: 'Edit'
+  route_name: block_content.type_edit
+  base_route: block_content.type_edit

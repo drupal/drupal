@@ -14,7 +14,7 @@ process:
     source: format
   'body.value': body
 destination:
-  plugin: entity:custom_block
+  plugin: entity:block_content
 migration_dependencies:
   required:
     - d6_filter_format

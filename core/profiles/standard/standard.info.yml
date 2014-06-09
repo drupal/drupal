@@ -15,7 +15,7 @@ dependencies:
   - contextual
   - contact
   - datetime
-  - custom_block
+  - block_content
   - quickedit
   - editor
   - entity_reference

@@ -27,7 +27,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     'block',
     'config_translation',
     'contact',
-    'custom_block',
+    'block_content',
     'field',
     'field_ui',
     'menu_ui',
@@ -62,7 +62,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
       'administer blocks',
       'administer contact forms',
       'administer content types',
-      'administer custom_block fields',
+      'administer block_content fields',
       'administer filters',
       'administer menu',
       'administer node fields',
@@ -187,20 +187,20 @@ class ConfigTranslationListUiTest extends WebTestBase {
   /**
    * Tests the custom block listing for the translate operation.
    */
-  public function doCustomBlockTypeListTest() {
+  public function doCustomContentTypeListTest() {
     // Create a test custom block type to decouple looking for translate
     // operations link so this does not test more than necessary.
-    $custom_block_type = entity_create('custom_block_type', array(
+    $block_content_type = entity_create('block_content_type', array(
       'id' => Unicode::strtolower($this->randomName(16)),
       'label' => $this->randomName(),
       'revision' => FALSE
     ));
-    $custom_block_type->save();
+    $block_content_type->save();
 
     // Get the custom block type listing.
-    $this->drupalGet('admin/structure/block/custom-blocks/types');
+    $this->drupalGet('admin/structure/block/block-content/types');
 
-    $translate_link = 'admin/structure/block/custom-blocks/manage/' . $custom_block_type->id() . '/translate';
+    $translate_link = 'admin/structure/block/block-content/manage/' . $block_content_type->id() . '/translate';
     // Test if the link to translate the custom block type is on the page.
     $this->assertLinkByHref($translate_link);
 
@@ -404,8 +404,8 @@ class ConfigTranslationListUiTest extends WebTestBase {
         'field' => 'node.' . $content_type->id() . '.body',
       ),
       array(
-        'list' => 'admin/structure/block/custom-blocks/manage/basic/fields',
-        'field' => 'custom_block.basic.body',
+        'list' => 'admin/structure/block/block-content/manage/basic/fields',
+        'field' => 'block_content.basic.body',
       ),
     );
 
@@ -466,7 +466,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     $this->doBlockListTest();
     $this->doMenuListTest();
     $this->doVocabularyListTest();
-    $this->doCustomBlockTypeListTest();
+    $this->doCustomContentTypeListTest();
     $this->doContactFormsListTest();
     $this->doContentTypeListTest();
     $this->doFormatsListTest();

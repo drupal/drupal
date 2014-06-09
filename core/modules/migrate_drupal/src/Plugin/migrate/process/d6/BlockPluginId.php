@@ -32,14 +32,14 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $customBlockStorage;
+  protected $blockContentStorage;
 
   /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, MigratePluginManager $process_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->customBlockStorage = $storage;
+    $this->blockContentStorage = $storage;
     $this->migration = $migration;
     $this->processPluginManager = $process_plugin_manager;
   }
@@ -54,7 +54,7 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
       $plugin_id,
       $plugin_definition,
       $migration,
-      $entity_manager->getDefinition('custom_block') ? $entity_manager->getStorage('custom_block') : NULL,
+      $entity_manager->getDefinition('block_content') ? $entity_manager->getStorage('block_content') : NULL,
       $container->get('plugin.manager.migrate.process')
     );
   }
@@ -80,11 +80,11 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
           $value = "system_menu_block:$delta";
           break;
         case 'block':
-          if ($this->customBlockStorage) {
+          if ($this->blockContentStorage) {
             $block_ids = $this->processPluginManager
               ->createInstance('migration', array('migration' => 'd6_custom_block'), $this->migration)
               ->transform($delta, $migrate_executable, $row, $destination_property);
-            $value = 'custom_block:' . $this->customBlockStorage->load($block_ids[0])->uuid();
+            $value = 'block_content:' . $this->blockContentStorage->load($block_ids[0])->uuid();
           }
           else {
             throw new MigrateSkipRowException();
