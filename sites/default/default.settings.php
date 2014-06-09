@@ -621,6 +621,6 @@ ini_set('session.cookie_lifetime', 2000000);
  *
  * Keep this code block at the end of this file to take full effect.
  */
-# if (file_exists(DRUPAL_ROOT . '/' . $conf_path . '/settings.local.php')) {
-#   include DRUPAL_ROOT . '/' . $conf_path . '/settings.local.php';
+# if (file_exists(__DIR__ . '/settings.local.php')) {
+#   include __DIR__ . '/settings.local.php';
 # }
