@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -640,7 +641,7 @@ function template_preprocess_username(&$variables) {
   // that $variables['name'] is safe for printing.
   $name = $variables['name_raw'] = $account->getUsername();
   if (drupal_strlen($name) > 20) {
-    $name = drupal_substr($name, 0, 15) . '...';
+    $name = Unicode::truncate($name, 15, FALSE, TRUE);
     $variables['truncated'] = TRUE;
   }
   else {
