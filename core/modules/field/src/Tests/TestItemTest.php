@@ -94,6 +94,7 @@ class TestItemTest extends FieldUnitTestBase {
           'not null' => FALSE,
         ),
       ),
+      'unique keys' => array(),
       'indexes' => array(
         'value' => array('value'),
       ),

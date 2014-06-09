@@ -456,7 +456,11 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
       $class = $this->getFieldItemClass();
       $schema = $class::schema($this);
       // Fill in default values for optional entries.
-      $schema += array('indexes' => array(), 'foreign keys' => array());
+      $schema += array(
+        'unique keys' => array(),
+        'indexes' => array(),
+        'foreign keys' => array(),
+      );
 
       // Check that the schema does not include forbidden column names.
       if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {

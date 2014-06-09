@@ -1454,6 +1454,14 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       $current['fields'][$real_name] = $attributes;
     }
 
+    // Add unique keys.
+    foreach ($schema['unique keys'] as $unique_key_name => $columns) {
+      $real_name = static::_fieldIndexName($field, $unique_key_name);
+      foreach ($columns as $column_name) {
+        $current['unique keys'][$real_name][] = static::_fieldColumnName($field, $column_name);
+      }
+    }
+
     // Add indexes.
     foreach ($schema['indexes'] as $index_name => $columns) {
       $real_name = static::_fieldIndexName($field, $index_name);

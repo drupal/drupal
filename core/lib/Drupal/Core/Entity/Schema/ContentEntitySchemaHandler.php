@@ -325,13 +325,6 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
       'foreign keys' => array(),
     );
 
-    if ($this->entityType->hasKey('uuid')) {
-      $uuid_key = $this->entityType->getKey('uuid');
-      $schema['unique keys'] = array(
-        $this->getEntityIndexName($uuid_key) => array($uuid_key),
-      );
-    }
-
     if ($this->entityType->hasKey('revision')) {
       $revision_key = $this->entityType->getKey('revision');
       $key_name = $this->getEntityIndexName($revision_key);
@@ -341,6 +334,8 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
         'columns' => array($revision_key => $revision_key),
       );
     }
+
+    $this->addTableDefaults($schema);
 
     return $schema;
   }
@@ -369,6 +364,8 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
     );
 
     $schema['indexes'][$this->getEntityIndexName($id_key)] = array($id_key);
+
+    $this->addTableDefaults($schema);
 
     return $schema;
   }
@@ -402,6 +399,8 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
       $schema['indexes'][$this->getEntityIndexName($key)] = array($key);
     }
 
+    $this->addTableDefaults($schema);
+
     return $schema;
   }
 
@@ -434,7 +433,24 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
       ),
     );
 
+    $this->addTableDefaults($schema);
+
     return $schema;
+  }
+
+  /**
+   * Adds defaults to a table schema definition.
+   *
+   * @param $schema
+   *   The schema definition array for a single table, passed by reference.
+   */
+  protected function addTableDefaults(&$schema) {
+    $schema += array(
+      'fields' => array(),
+      'unique keys' => array(),
+      'indexes' => array(),
+      'foreign keys' => array(),
+    );
   }
 
   /**

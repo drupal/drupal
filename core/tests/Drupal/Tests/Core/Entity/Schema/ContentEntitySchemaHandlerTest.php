@@ -95,13 +95,11 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
   /**
    * Tests the schema for non-revisionable, non-translatable entities.
    *
-   * @param bool $uuid_key
-   *   Whether or not the tested entity type should have a UUID key.
-   *
    * @covers ::__construct()
    * @covers ::getSchema()
    * @covers ::getTables()
    * @covers ::initializeBaseTable()
+   * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
    * @covers ::addFieldSchema()
    * @covers ::getFieldIndexes()
@@ -111,16 +109,11 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
    * @covers ::addDefaultLangcodeSchema()
    * @covers ::processBaseTable()
    * @covers ::processIdentifierSchema()
-   *
-   * @dataProvider providerTestGetSchemaLayoutBase
    */
-  public function testGetSchemaBase($uuid_key) {
+  public function testGetSchemaBase() {
     $this->entityType = new ContentEntityType(array(
       'id' => 'entity_test',
-      'entity_keys' => array(
-        'id' => 'id',
-        'uuid' => $uuid_key ? 'uuid' : NULL,
-      ),
+      'entity_keys' => array('id' => 'id'),
     ));
 
     // Add a field with a 'length' constraint.
@@ -132,16 +125,6 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
         ),
       ),
     ));
-    if ($uuid_key) {
-      $this->setUpStorageDefinition('uuid', array(
-        'columns' => array(
-          'value' => array(
-            'type' => 'varchar',
-            'length' => 128,
-          ),
-        ),
-      ));
-    }
     // Add a multi-column field.
     $this->setUpStorageDefinition('description', array(
       'columns' => array(
@@ -155,11 +138,51 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
         ),
       ),
     ));
+    // Add a field with a unique key.
+    $this->setUpStorageDefinition('uuid', array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => 128,
+        ),
+      ),
+      'unique keys' => array(
+        'value' => array('value'),
+      ),
+    ));
+    // Add a field with a unique key, specified as column name and length.
+    $this->setUpStorageDefinition('hash', array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => 20,
+        ),
+      ),
+      'unique keys' => array(
+        'value' => array(array('value', 10)),
+      ),
+    ));
+    // Add a field with a multi-column unique key.
+    $this->setUpStorageDefinition('email', array(
+      'columns' => array(
+        'username' => array(
+          'type' => 'varchar',
+        ),
+        'hostname' => array(
+          'type' => 'varchar',
+        ),
+        'domain' => array(
+          'type' => 'varchar',
+        )
+      ),
+      'unique keys' => array(
+        'email' => array('username', 'hostname', array('domain', 3)),
+      ),
+    ));
     // Add a field with an index.
     $this->setUpStorageDefinition('owner', array(
       'columns' => array(
         'target_id' => array(
-          'description' => 'The ID of the target entity.',
           'type' => 'int',
         ),
       ),
@@ -171,7 +194,6 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
     $this->setUpStorageDefinition('translator', array(
       'columns' => array(
         'target_id' => array(
-          'description' => 'The ID of the target entity.',
           'type' => 'int',
         ),
       ),
@@ -260,6 +282,28 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
             'description' => 'The description field.',
             'type' => 'varchar',
           ),
+          'uuid' => array(
+            'description' => 'The uuid field.',
+            'type' => 'varchar',
+            'length' => 128,
+          ),
+          'hash' => array(
+            'description' => 'The hash field.',
+            'type' => 'varchar',
+            'length' => 20,
+          ),
+          'email__username' => array(
+            'description' => 'The email field.',
+            'type' => 'varchar',
+          ),
+          'email__hostname' => array(
+            'description' => 'The email field.',
+            'type' => 'varchar',
+          ),
+          'email__domain' => array(
+            'description' => 'The email field.',
+            'type' => 'varchar',
+          ),
           'owner' => array(
             'description' => 'The owner field.',
             'type' => 'int',
@@ -301,6 +345,15 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           ),
         ),
         'primary key' => array('id'),
+        'unique keys' => array(
+          'entity_test_field__uuid__value' => array('uuid'),
+          'entity_test_field__hash__value' => array(array('hash', 10)),
+          'entity_test_field__email__email' => array(
+            'email__username',
+            'email__hostname',
+            array('email__domain', 3),
+          ),
+        ),
         'indexes' => array(
           'entity_test_field__owner__target_id' => array('owner'),
           'entity_test_field__translator__target_id' => array(
@@ -324,33 +377,9 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
         ),
       ),
     );
-    if ($uuid_key) {
-      $expected['entity_test']['fields']['uuid'] = array(
-        'type' => 'varchar',
-        'length' => 128,
-        'description' => 'The uuid field.',
-        'not null' => TRUE,
-      );
-      $expected['entity_test']['unique keys']['entity_test__uuid'] = array('uuid');
-    }
     $actual = $this->schemaHandler->getSchema();
 
     $this->assertEquals($expected, $actual);
-  }
-
-  /**
-   * Provides data for testGetSchemaLayoutBase().
-   *
-   * @return array
-   *   Returns a nested array where each inner array returns a boolean,
-   *   indicating whether or not the tested entity type should include a UUID
-   *   key.
-   */
-  public function providerTestGetSchemaLayoutBase() {
-    return array(
-      array(FALSE),
-      array(TRUE),
-    );
   }
 
   /**
@@ -361,6 +390,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
    * @covers ::getTables()
    * @covers ::initializeBaseTable()
    * @covers ::initializeRevisionTable()
+   * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
    * @covers ::processRevisionTable()
    * @covers ::processIdentifierSchema()
@@ -411,15 +441,15 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           )
         ),
         'primary key' => array('id'),
+        'unique keys' => array(
+          'entity_test__revision_id' => array('revision_id'),
+        ),
         'indexes' => array(),
         'foreign keys' => array(
           'entity_test__revision' => array(
             'table' => 'entity_test_revision',
             'columns' => array('revision_id' => 'revision_id'),
           )
-        ),
-        'unique keys' => array(
-          'entity_test__revision_id' => array('revision_id'),
         ),
       ),
       'entity_test_revision' => array(
@@ -436,6 +466,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           ),
         ),
         'primary key' => array('revision_id'),
+        'unique keys' => array(),
         'indexes' => array(
           'entity_test__id' => array('id'),
         ),
@@ -460,6 +491,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
    * @covers ::getSchema()
    * @covers ::getTables()
    * @covers ::initializeDataTable()
+   * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
    * @covers ::processDataTable()
    */
@@ -509,6 +541,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           )
         ),
         'primary key' => array('id'),
+        'unique keys' => array(),
         'indexes' => array(),
         'foreign keys' => array(),
       ),
@@ -527,6 +560,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           ),
         ),
         'primary key' => array('id', 'langcode'),
+        'unique keys' => array(),
         'indexes' => array(),
         'foreign keys' => array(
           'entity_test' => array(
@@ -549,6 +583,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
    * @covers ::getSchema()
    * @covers ::getTables()
    * @covers ::initializeDataTable()
+   * @covers ::addTableDefaults()
    * @covers ::getEntityIndexName()
    * @covers ::initializeRevisionDataTable()
    * @covers ::processRevisionDataTable()
@@ -619,10 +654,10 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           )
         ),
         'primary key' => array('id'),
-        'indexes' => array(),
         'unique keys' => array(
           'entity_test__revision_id' => array('revision_id'),
         ),
+        'indexes' => array(),
         'foreign keys' => array(
           'entity_test__revision' => array(
             'table' => 'entity_test_revision',
@@ -649,6 +684,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           ),
         ),
         'primary key' => array('revision_id'),
+        'unique keys' => array(),
         'indexes' => array(
           'entity_test__id' => array('id'),
         ),
@@ -678,6 +714,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           ),
         ),
         'primary key' => array('id', 'langcode'),
+        'unique keys' => array(),
         'indexes' => array(
           'entity_test__revision_id' => array('revision_id'),
         ),
@@ -707,6 +744,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
           ),
         ),
         'primary key' => array('revision_id', 'langcode'),
+        'unique keys' => array(),
         'indexes' => array(),
         'foreign keys' => array(
           'entity_test' => array(

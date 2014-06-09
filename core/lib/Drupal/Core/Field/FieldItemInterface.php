@@ -69,6 +69,8 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     definitions depend on field settings when possible. No assumptions
    *     should be made on how storage engines internally use the original
    *     column name to structure their storage.
+   *   - unique keys: (optional) An array of Schema API unique key definitions.
+   *     Only columns that appear in the 'columns' array are allowed.
    *   - indexes: (optional) An array of Schema API index definitions. Only
    *     columns that appear in the 'columns' array are allowed. Those indexes
    *     will be used as default indexes. Callers of field_create_field() can

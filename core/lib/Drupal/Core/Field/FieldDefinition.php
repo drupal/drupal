@@ -480,6 +480,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
       // Fill in default values.
       $schema += array(
         'columns' => array(),
+        'unique keys' => array(),
         'indexes' => array(),
         'foreign keys' => array(),
       );

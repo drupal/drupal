@@ -291,6 +291,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
           ),
         ),
         'primary key' => array('id'),
+        'unique keys' => array(),
         'indexes' => array(),
         'foreign keys' => array(),
       ),
@@ -973,6 +974,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
           'not null' => FALSE,
         ),
       ),
+      'unique keys' => array(),
       'indexes' => array(),
       'foreign keys' => array(),
     );
