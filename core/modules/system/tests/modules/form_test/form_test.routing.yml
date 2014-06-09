@@ -281,7 +281,7 @@ form_test.email:
   path: '/form-test/email'
   defaults:
     _content: '\Drupal\form_test\Form\FormTestForm::testEmail'
-    _title: 'E-Mail fields'
+    _title: 'Email fields'
   requirements:
     _access: 'TRUE'
 

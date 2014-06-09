@@ -18,8 +18,8 @@ class MailCaptureTest extends WebTestBase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'SimpleTest e-mail capturing',
-      'description' => 'Test the SimpleTest e-mail capturing logic, the assertMail assertion and the drupalGetMails function.',
+      'name' => 'SimpleTest email capturing',
+      'description' => 'Test the SimpleTest email capturing logic, the assertMail assertion and the drupalGetMails function.',
       'group' => 'SimpleTest',
     );
   }
@@ -28,7 +28,7 @@ class MailCaptureTest extends WebTestBase {
    * Test to see if the wrapper function is executed correctly.
    */
   function testMailSend() {
-    // Create an e-mail.
+    // Create an email.
     $subject = $this->randomString(64);
     $body = $this->randomString(128);
     $message = array(
@@ -39,24 +39,24 @@ class MailCaptureTest extends WebTestBase {
       'body' => $body,
     );
 
-    // Before we send the e-mail, drupalGetMails should return an empty array.
+    // Before we send the email, drupalGetMails should return an empty array.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 0, 'The captured e-mails queue is empty.', 'E-mail');
+    $this->assertEqual(count($captured_emails), 0, 'The captured emails queue is empty.', 'Email');
 
-    // Send the e-mail.
+    // Send the email.
     drupal_mail_system('simpletest', 'drupal_mail_test')->mail($message);
 
-    // Ensure that there is one e-mail in the captured e-mails array.
+    // Ensure that there is one email in the captured emails array.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 1, 'One e-mail was captured.', 'E-mail');
+    $this->assertEqual(count($captured_emails), 1, 'One email was captured.', 'Email');
 
-    // Assert that the e-mail was sent by iterating over the message properties
+    // Assert that the email was sent by iterating over the message properties
     // and ensuring that they are captured intact.
     foreach ($message as $field => $value) {
-      $this->assertMail($field, $value, format_string('The e-mail was sent and the value for property @field is intact.', array('@field' => $field)), 'E-mail');
+      $this->assertMail($field, $value, format_string('The email was sent and the value for property @field is intact.', array('@field' => $field)), 'Email');
     }
 
-    // Send additional e-mails so more than one e-mail is captured.
+    // Send additional emails so more than one email is captured.
     for ($index = 0; $index < 5; $index++) {
       $message = array(
         'id' => 'drupal_mail_test_' . $index,
@@ -68,23 +68,23 @@ class MailCaptureTest extends WebTestBase {
       drupal_mail_system('drupal_mail_test', $index)->mail($message);
     }
 
-    // There should now be 6 e-mails captured.
+    // There should now be 6 emails captured.
     $captured_emails = $this->drupalGetMails();
-    $this->assertEqual(count($captured_emails), 6, 'All e-mails were captured.', 'E-mail');
+    $this->assertEqual(count($captured_emails), 6, 'All emails were captured.', 'Email');
 
-    // Test different ways of getting filtered e-mails via drupalGetMails().
+    // Test different ways of getting filtered emails via drupalGetMails().
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test'));
-    $this->assertEqual(count($captured_emails), 1, 'Only one e-mail is returned when filtering by id.', 'E-mail');
+    $this->assertEqual(count($captured_emails), 1, 'Only one email is returned when filtering by id.', 'Email');
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test', 'subject' => $subject));
-    $this->assertEqual(count($captured_emails), 1, 'Only one e-mail is returned when filtering by id and subject.', 'E-mail');
+    $this->assertEqual(count($captured_emails), 1, 'Only one email is returned when filtering by id and subject.', 'Email');
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test', 'subject' => $subject, 'from' => 'this_was_not_used@example.com'));
-    $this->assertEqual(count($captured_emails), 0, 'No e-mails are returned when querying with an unused from address.', 'E-mail');
+    $this->assertEqual(count($captured_emails), 0, 'No emails are returned when querying with an unused from address.', 'Email');
 
-    // Send the last e-mail again, so we can confirm that the
-    // drupalGetMails-filter correctly returns all e-mails with a given
+    // Send the last email again, so we can confirm that the
+    // drupalGetMails-filter correctly returns all emails with a given
     // property/value.
     drupal_mail_system('drupal_mail_test', $index)->mail($message);
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test_4'));
-    $this->assertEqual(count($captured_emails), 2, 'All e-mails with the same id are returned when filtering by id.', 'E-mail');
+    $this->assertEqual(count($captured_emails), 2, 'All emails with the same id are returned when filtering by id.', 'Email');
   }
 }

@@ -249,7 +249,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
     $fields['mail'] = FieldDefinition::create('email')
       ->setLabel(t('Email'))
-      ->setDescription(t("The comment author's e-mail address."));
+      ->setDescription(t("The comment author's email address."));
 
     $fields['homepage'] = FieldDefinition::create('uri')
       ->setLabel(t('Homepage'))

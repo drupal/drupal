@@ -15,7 +15,7 @@ use Drupal\Core\Field\WidgetBase;
  *
  * @FieldWidget(
  *   id = "email_default",
- *   label = @Translation("E-mail"),
+ *   label = @Translation("Email"),
  *   field_types = {
  *     "email"
  *   }

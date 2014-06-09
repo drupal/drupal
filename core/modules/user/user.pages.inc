@@ -120,7 +120,7 @@ function template_preprocess_user(&$variables) {
 }
 
 /**
- * Menu callback; Cancel a user account via e-mail confirmation link.
+ * Menu callback; Cancel a user account via email confirmation link.
  *
  * @see user_cancel_confirm_form()
  * @see user_cancel_url()

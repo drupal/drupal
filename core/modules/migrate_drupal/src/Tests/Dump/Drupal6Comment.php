@@ -96,7 +96,7 @@ class Drupal6Comment extends Drupal6DumpBase {
           'type' => 'varchar',
           'length' => 64,
           'not null' => FALSE,
-          'description' => "The comment author's e-mail address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
+          'description' => "The comment author's email address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
         ),
         'homepage' => array(
           'type' => 'varchar',

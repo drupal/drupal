@@ -11,7 +11,7 @@ action.settings:
 
 action.configuration.action_send_email_action:
   type: mapping
-  label: 'Send e-mail configuration'
+  label: 'Send email configuration'
   mapping:
     recipient:
       type: string

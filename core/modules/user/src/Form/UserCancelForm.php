@@ -90,10 +90,10 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     $override_access = $admin_access && ($this->entity->id() != $user->id());
     $form['user_cancel_confirm'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Require e-mail confirmation to cancel account.'),
+      '#title' => $this->t('Require email confirmation to cancel account.'),
       '#default_value' => !$override_access,
       '#access' => $override_access,
-      '#description' => $this->t('When enabled, the user must confirm the account cancellation via e-mail.'),
+      '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
     );
     // Also allow to send account canceled notification mail, if enabled.
     $default_notify = $this->config('user.settings')->get('notify.status_canceled');
@@ -102,7 +102,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       '#title' => $this->t('Notify user when account is canceled.'),
       '#default_value' => ($override_access ? FALSE : $default_notify),
       '#access' => $override_access && $default_notify,
-      '#description' => $this->t('When enabled, the user will receive an e-mail notification after the account has been canceled.'),
+      '#description' => $this->t('When enabled, the user will receive an email notification after the account has been canceled.'),
     );
 
     // Always provide entity id in the same form key as in the entity edit form.
@@ -134,7 +134,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->entity->user_cancel_notify = $form_state['values']['user_cancel_notify'];
       $this->entity->save();
       _user_mail_notify('cancel_confirm', $this->entity);
-      drupal_set_message($this->t('A confirmation request to cancel your account has been sent to your e-mail address.'));
+      drupal_set_message($this->t('A confirmation request to cancel your account has been sent to your email address.'));
       watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>'), WATCHDOG_NOTICE);
 
       $form_state['redirect_route'] = array(

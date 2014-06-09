@@ -110,8 +110,8 @@ function user_views_data() {
 
   // Note that this field implements field level access control.
   $data['users']['mail'] = array(
-    'title' => t('E-mail'),
-    'help' => t('E-mail address for a given user. This field is normally not shown to users, so be cautious when using it.'),
+    'title' => t('Email'),
+    'help' => t('Email address for a given user. This field is normally not shown to users, so be cautious when using it.'),
     'field' => array(
       'id' => 'user_mail',
     ),

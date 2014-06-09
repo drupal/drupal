@@ -100,7 +100,7 @@ class ContactSitewideTest extends WebTestBase {
     $invalid_recipients = array('invalid', 'invalid@', 'invalid@site.', '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
       $this->addCategory($this->randomName(16), $this->randomName(16), $invalid_recipient, '', FALSE);
-      $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)));
+      $this->assertRaw(t('%recipient is an invalid email address.', array('%recipient' => $invalid_recipient)));
     }
 
     // Test validation of empty category and recipients fields.
@@ -149,7 +149,7 @@ class ContactSitewideTest extends WebTestBase {
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
     $this->drupalLogout();
     $this->drupalGet('contact');
-    $this->assertText(t('Your e-mail address'));
+    $this->assertText(t('Your email address'));
     $this->assertNoText(t('Category'));
     $this->drupalLogin($admin_user);
 
@@ -186,10 +186,10 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertText(t('Your name field is required.'));
 
     $this->submitContact($this->randomName(16), '', $this->randomName(16), $id, $this->randomName(64));
-    $this->assertText(t('Your e-mail address field is required.'));
+    $this->assertText(t('Your email address field is required.'));
 
     $this->submitContact($this->randomName(16), $invalid_recipients[0], $this->randomName(16), $id, $this->randomName(64));
-    $this->assertRaw(t('The e-mail address %mail is not valid.', array('%mail' => 'invalid')));
+    $this->assertRaw(t('The email address %mail is not valid.', array('%mail' => 'invalid')));
 
     $this->submitContact($this->randomName(16), $recipients[0], '', $id, $this->randomName(64));
     $this->assertText(t('Subject field is required.'));
@@ -293,7 +293,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->addCategory('bar', 'bar', 'bar@example.com', $bar_autoreply, FALSE);
     $this->addCategory('no_autoreply', 'no_autoreply', 'bar@example.com', '', FALSE);
 
-    // Log the current user out in order to test the name and e-mail fields.
+    // Log the current user out in order to test the name and email fields.
     $this->drupalLogout();
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
 
@@ -302,7 +302,7 @@ class ContactSitewideTest extends WebTestBase {
     $subject = $this->randomName(64);
     $this->submitContact($this->randomName(16), $email, $subject, 'foo', $this->randomString(128));
 
-    // We are testing the auto-reply, so there should be one e-mail going to the sender.
+    // We are testing the auto-reply, so there should be one email going to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($foo_autoreply)));
@@ -311,7 +311,7 @@ class ContactSitewideTest extends WebTestBase {
     $email = $this->randomName(32) . '@example.com';
     $this->submitContact($this->randomName(16), $email, $this->randomString(64), 'bar', $this->randomString(128));
 
-    // Auto-reply for category 'bar' should result in one auto-reply e-mail to the sender.
+    // Auto-reply for category 'bar' should result in one auto-reply email to the sender.
     $captured_emails = $this->drupalGetMails(array('id' => 'contact_page_autoreply', 'to' => $email));
     $this->assertEqual(count($captured_emails), 1);
     $this->assertEqual(trim($captured_emails[0]['body']), trim(drupal_html_to_text($bar_autoreply)));
@@ -331,7 +331,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $label
    *   The category label.
    * @param string $recipients
-   *   The list of recipient e-mail addresses.
+   *   The list of recipient email addresses.
    * @param string $reply
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
@@ -356,7 +356,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $label
    *   The category label.
    * @param string $recipients
-   *   The list of recipient e-mail addresses.
+   *   The list of recipient email addresses.
    * @param string $reply
    *   The auto-reply text that is sent to a user upon completing the contact
    *   form.
@@ -378,7 +378,7 @@ class ContactSitewideTest extends WebTestBase {
    * @param string $name
    *   The name of the sender.
    * @param string $mail
-   *   The e-mail address of the sender.
+   *   The email address of the sender.
    * @param string $subject
    *   The subject of the message.
    * @param string $id

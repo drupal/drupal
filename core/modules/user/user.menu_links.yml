@@ -24,6 +24,6 @@ user.admin_index:
 user.account_settings:
   title: 'Account settings'
   parent: user.admin_index
-  description: 'Configure default behavior of users, including registration requirements, e-mails, and fields.'
+  description: 'Configure default behavior of users, including registration requirements, emails, and fields.'
   weight: -10
   route_name: user.account_settings

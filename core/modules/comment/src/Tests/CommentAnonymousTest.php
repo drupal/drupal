@@ -86,7 +86,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
     // Name should have 'Anonymous' for value by default.
-    $this->assertText(t('E-mail field is required.'), 'E-mail required.');
+    $this->assertText(t('Email field is required.'), 'Email required.');
     $this->assertFalse($this->commentExists($anonymous_comment3), 'Anonymous comment with contact info (required) not found.');
 
     // Post comment with contact info (required).
@@ -99,7 +99,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('comment/' . $anonymous_comment3->id() . '/edit');
     $this->assertRaw($author_name, "The anonymous user's name is correct when editing the comment.");
-    $this->assertRaw($author_mail, "The anonymous user's e-mail address is correct when editing the comment.");
+    $this->assertRaw($author_mail, "The anonymous user's email address is correct when editing the comment.");
 
     // Unpublish comment.
     $this->performCommentOperation($anonymous_comment3, 'unpublish');

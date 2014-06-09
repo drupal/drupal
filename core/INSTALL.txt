@@ -406,7 +406,7 @@ MORE INFORMATION
 
 - For a list of security announcements, see the "Security advisories" page at
   http://drupal.org/security (available as an RSS feed). This page also
-  describes how to subscribe to these announcements via e-mail.
+  describes how to subscribe to these announcements via email.
 
 - For information about the Drupal security process, or to find out how to
   report a potential security issue to the Drupal security team, see the

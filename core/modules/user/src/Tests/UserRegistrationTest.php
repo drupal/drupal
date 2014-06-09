@@ -33,7 +33,7 @@ class UserRegistrationTest extends WebTestBase {
 
   function testRegistrationWithEmailVerification() {
     $config = \Drupal::config('user.settings');
-    // Require e-mail verification.
+    // Require email verification.
     $config->set('verify_mail', TRUE)->save();
 
     // Set registration to administrator only.
@@ -47,7 +47,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('A welcome message with further instructions has been sent to your e-mail address.'), 'User registered successfully.');
+    $this->assertText(t('A welcome message with further instructions has been sent to your email address.'), 'User registered successfully.');
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
@@ -66,7 +66,7 @@ class UserRegistrationTest extends WebTestBase {
 
   function testRegistrationWithoutEmailVerification() {
     $config = \Drupal::config('user.settings');
-    // Don't require e-mail verification and allow registration by site visitors
+    // Don't require email verification and allow registration by site visitors
     // without administrator approval.
     $config
       ->set('verify_mail', FALSE)
@@ -129,7 +129,7 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationEmailDuplicates() {
-    // Don't require e-mail verification and allow registration by site visitors
+    // Don't require email verification and allow registration by site visitors
     // without administrator approval.
     \Drupal::config('user.settings')
       ->set('verify_mail', FALSE)
@@ -143,19 +143,19 @@ class UserRegistrationTest extends WebTestBase {
     $edit['name'] = $this->randomName();
     $edit['mail'] = $duplicate_user->getEmail();
 
-    // Attempt to create a new account using an existing e-mail address.
+    // Attempt to create a new account using an existing email address.
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying an exact duplicate email address displays an error message');
+    $this->assertText(t('The email address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying an exact duplicate email address displays an error message');
 
     // Attempt to bypass duplicate email registration validation by adding spaces.
     $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying a duplicate email address with added whitespace displays an error message');
+    $this->assertText(t('The email address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying a duplicate email address with added whitespace displays an error message');
   }
 
   function testRegistrationDefaultValues() {
-    // Don't require e-mail verification and allow registration by site visitors
+    // Don't require email verification and allow registration by site visitors
     // without administrator approval.
     $config_user_settings = \Drupal::config('user.settings')
       ->set('verify_mail', FALSE)
@@ -184,7 +184,7 @@ class UserRegistrationTest extends WebTestBase {
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
     $this->assertEqual($new_user->getUsername(), $name, 'Username matches.');
-    $this->assertEqual($new_user->getEmail(), $mail, 'E-mail address matches.');
+    $this->assertEqual($new_user->getEmail(), $mail, 'Email address matches.');
     $this->assertEqual($new_user->getSignature(), '', 'Correct signature field.');
     $this->assertTrue(($new_user->getCreatedTime() > REQUEST_TIME - 20 ), 'Correct creation time.');
     $this->assertEqual($new_user->isActive(), $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');

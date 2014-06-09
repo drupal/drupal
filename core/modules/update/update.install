@@ -18,7 +18,7 @@
  *   optionally 'description'), this array will contain a 'reason' attribute,
  *   which is an integer constant to indicate why the given status is being
  *   returned (UPDATE_NOT_SECURE, UPDATE_NOT_CURRENT, or UPDATE_UNKNOWN). This
- *   is used for generating the appropriate e-mail notification messages during
+ *   is used for generating the appropriate email notification messages during
  *   update_cron(), and might be useful for other modules that invoke
  *   update_requirements() to find out if the site is up to date or not.
  *

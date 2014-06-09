@@ -10,7 +10,7 @@ namespace Drupal\field\Tests\Email;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests e-mail field functionality.
+ * Tests email field functionality.
  */
 class EmailFieldTest extends WebTestBase {
 
@@ -37,8 +37,8 @@ class EmailFieldTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name'  => 'E-mail field',
-      'description'  => 'Tests e-mail field functionality.',
+      'name'  => 'Email field',
+      'description'  => 'Tests email field functionality.',
       'group' => 'Field types',
     );
   }
@@ -55,7 +55,7 @@ class EmailFieldTest extends WebTestBase {
   }
 
   /**
-   * Tests e-mail field.
+   * Tests email field.
    */
   function testEmailField() {
     // Create a field with settings to validate.
@@ -93,7 +93,7 @@ class EmailFieldTest extends WebTestBase {
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget found.');
     $this->assertRaw('placeholder="example@example.com"');
 
-    // Submit a valid e-mail address and ensure it is accepted.
+    // Submit a valid email address and ensure it is accepted.
     $value = 'test@example.com';
     $edit = array(
       'user_id' => 1,

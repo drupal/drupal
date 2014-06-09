@@ -36,7 +36,7 @@ class Drupal6ContactCategory extends Drupal6DumpBase {
           'type' => 'text',
           'not null' => TRUE,
           'size' => 'big',
-          'description' => 'Comma-separated list of recipient e-mail addresses.',
+          'description' => 'Comma-separated list of recipient email addresses.',
         ),
         'reply' => array(
           'type' => 'text',

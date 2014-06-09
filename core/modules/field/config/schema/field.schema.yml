@@ -92,13 +92,13 @@ entity_form_display.field.hidden:
 
 field.email.settings:
   type: sequence
-  label: 'E-mail settings'
+  label: 'Email settings'
   sequence:
     - type: string
 
 field.email.instance_settings:
   type: sequence
-  label: 'E-mail settings'
+  label: 'Email settings'
   sequence:
     - type: string
       label: 'Setting'

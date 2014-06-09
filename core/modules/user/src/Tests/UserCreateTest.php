@@ -103,12 +103,12 @@ class UserCreateTest extends WebTestBase {
       $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
 
       if ($notify) {
-        $this->assertText(t('A welcome message with further instructions has been e-mailed to the new user @name.', array('@name' => $edit['name'])), 'User created');
-        $this->assertEqual(count($this->drupalGetMails()), 1, 'Notification e-mail sent');
+        $this->assertText(t('A welcome message with further instructions has been emailed to the new user @name.', array('@name' => $edit['name'])), 'User created');
+        $this->assertEqual(count($this->drupalGetMails()), 1, 'Notification email sent');
       }
       else {
-        $this->assertText(t('Created a new user account for @name. No e-mail has been sent.', array('@name' => $edit['name'])), 'User created');
-        $this->assertEqual(count($this->drupalGetMails()), 0, 'Notification e-mail not sent');
+        $this->assertText(t('Created a new user account for @name. No email has been sent.', array('@name' => $edit['name'])), 'User created');
+        $this->assertEqual(count($this->drupalGetMails()), 0, 'Notification email not sent');
       }
 
       $this->drupalGet('admin/people');

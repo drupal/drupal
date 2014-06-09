@@ -86,19 +86,19 @@ class MailTest extends WebTestBase {
     \Drupal::config('system.mail')->set('interface.default', 'test_mail_collector')->save();
     // Reset the state variable that holds sent messages.
     \Drupal::state()->set('system.test_mail_collector', array());
-    // Send an e-mail with a reply-to address specified.
+    // Send an email with a reply-to address specified.
     $from_email = 'Drupal <simpletest@example.com>';
     $reply_email = 'someone_else@example.com';
     drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $reply_email);
-    // Test that the reply-to e-mail is just the e-mail and not the site name
-    // and default sender e-mail.
+    // Test that the reply-to email is just the email and not the site name
+    // and default sender email.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
     $this->assertEqual($from_email, $sent_message['headers']['From'], 'Message is sent from the site email account.');
     $this->assertEqual($reply_email, $sent_message['headers']['Reply-to'], 'Message reply-to headers are set.');
     $this->assertFalse(isset($sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
 
-    // Send an e-mail and check that the From-header contains the site name.
+    // Send an email and check that the From-header contains the site name.
     drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language);
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);

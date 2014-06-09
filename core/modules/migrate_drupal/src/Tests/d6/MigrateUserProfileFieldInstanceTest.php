@@ -68,7 +68,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupalTestBase {
 
     // Migrated checkbox field.
     $field = entity_load('field_instance_config', 'user.user.profile_sell_address');
-    $this->assertEqual($field->label(), 'Sell your e-mail address?');
+    $this->assertEqual($field->label(), 'Sell your email address?');
     $this->assertEqual($field->getDescription(), "If you check this box, we'll sell your address to spammers to help line the pockets of our shareholders. Thanks!");
 
     // Migrated selection field.

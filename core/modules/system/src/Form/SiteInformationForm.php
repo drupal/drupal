@@ -84,9 +84,9 @@ class SiteInformationForm extends ConfigFormBase {
     );
     $form['site_information']['site_mail'] = array(
       '#type' => 'email',
-      '#title' => t('E-mail address'),
+      '#title' => t('Email address'),
       '#default_value' => $site_mail,
-      '#description' => t("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
+      '#description' => t("The <em>From</em> address in automated emails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this email being flagged as spam.)"),
       '#required' => TRUE,
     );
     $form['front_page'] = array(

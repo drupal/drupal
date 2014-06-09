@@ -47,21 +47,21 @@ class UpdateSettingsForm extends ConfigFormBase {
     $notification_emails = $config->get('notification.emails');
     $form['update_notify_emails'] = array(
       '#type' => 'textarea',
-      '#title' => t('E-mail addresses to notify when updates are available'),
+      '#title' => t('Email addresses to notify when updates are available'),
       '#rows' => 4,
       '#default_value' => implode("\n", $notification_emails),
-      '#description' => t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via e-mail. Put each address on a separate line. If blank, no e-mails will be sent.'),
+      '#description' => t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via email. Put each address on a separate line. If blank, no emails will be sent.'),
     );
 
     $form['update_notification_threshold'] = array(
       '#type' => 'radios',
-      '#title' => t('E-mail notification threshold'),
+      '#title' => t('Email notification threshold'),
       '#default_value' => $config->get('notification.threshold'),
       '#options' => array(
         'all' => t('All newer versions'),
         'security' => t('Only security updates'),
       ),
-      '#description' => t('You can choose to send e-mail only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will always print a message on the <a href="@status_report">status report</a> page, and will also display an error message on administration pages if there is a security update.', array('@status_report' => url('admin/reports/status')))
+      '#description' => t('You can choose to send email only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will always print a message on the <a href="@status_report">status report</a> page, and will also display an error message on administration pages if there is a security update.', array('@status_report' => url('admin/reports/status')))
     );
 
     return parent::buildForm($form, $form_state);
@@ -90,10 +90,10 @@ class UpdateSettingsForm extends ConfigFormBase {
         $form_state['notify_emails'] = $valid;
       }
       elseif (count($invalid) == 1) {
-        $this->setFormError('update_notify_emails', $form_state, $this->t('%email is not a valid e-mail address.', array('%email' => reset($invalid))));
+        $this->setFormError('update_notify_emails', $form_state, $this->t('%email is not a valid email address.', array('%email' => reset($invalid))));
       }
       else {
-        $this->setFormError('update_notify_emails', $form_state, $this->t('%emails are not valid e-mail addresses.', array('%emails' => implode(', ', $invalid))));
+        $this->setFormError('update_notify_emails', $form_state, $this->t('%emails are not valid email addresses.', array('%emails' => implode(', ', $invalid))));
       }
     }
 

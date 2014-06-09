@@ -22,7 +22,7 @@ use Drupal\Core\Site\Settings;
 class PhpMail implements MailInterface {
 
   /**
-   * Concatenates and wraps the e-mail body for plain-text mails.
+   * Concatenates and wraps the email body for plain-text mails.
    *
    * @param array $message
    *   A message array, as described in hook_mail_alter().
@@ -42,7 +42,7 @@ class PhpMail implements MailInterface {
   }
 
   /**
-   * Sends an e-mail message.
+   * Sends an email message.
    *
    * @param array $message
    *   A message array, as described in hook_mail_alter().
@@ -70,7 +70,7 @@ class PhpMail implements MailInterface {
     $line_endings = Settings::get('mail_line_endings', PHP_EOL);
     // Prepare mail commands.
     $mail_subject = mime_header_encode($message['subject']);
-    // Note: e-mail uses CRLF for line-endings. PHP's API requires LF
+    // Note: email uses CRLF for line-endings. PHP's API requires LF
     // on Unix and CRLF on Windows. Drupal automatically guesses the
     // line-ending format appropriate for your system. If you need to
     // override this, adjust $settings['mail_line_endings'] in settings.php.

@@ -84,11 +84,11 @@ abstract class AccountForm extends ContentEntityForm {
 
     // The mail field is NOT required if account originally had no mail set
     // and the user performing the edit has 'administer users' permission.
-    // This allows users without e-mail address to be edited and deleted.
+    // This allows users without email address to be edited and deleted.
     $form['account']['mail'] = array(
       '#type' => 'email',
-      '#title' => $this->t('E-mail address'),
-      '#description' => $this->t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
+      '#title' => $this->t('Email address'),
+      '#description' => $this->t('A valid email address. All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email.'),
       '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
       '#default_value' => (!$register ? $account->getEmail() : ''),
     );
@@ -131,7 +131,7 @@ abstract class AccountForm extends ContentEntityForm {
       if (!$pass_reset) {
         $protected_values['mail'] = $form['account']['mail']['#title'];
         $protected_values['pass'] = $this->t('Password');
-        $request_new = l($this->t('Request new password'), 'user/password', array('attributes' => array('title' => $this->t('Request new password via e-mail.'))));
+        $request_new = l($this->t('Request new password'), 'user/password', array('attributes' => array('title' => $this->t('Request new password via email.'))));
         $current_pass_description = $this->t('Required if you want to change the %mail or %pass below. !request_new.', array('%mail' => $protected_values['mail'], '%pass' => $protected_values['pass'], '!request_new' => $request_new));
       }
 
@@ -269,7 +269,7 @@ abstract class AccountForm extends ContentEntityForm {
       '#title' => $this->t('Site language'),
       '#languages' => Language::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_langcode,
-      '#description' => $user_language_added ? $this->t("This account's preferred language for e-mails and site presentation.") : $this->t("This account's preferred language for e-mails."),
+      '#description' => $user_language_added ? $this->t("This account's preferred language for emails and site presentation.") : $this->t("This account's preferred language for emails."),
     );
 
     // Only show the account setting for Administration pages language to users
@@ -362,10 +362,10 @@ abstract class AccountForm extends ContentEntityForm {
       if ($mail_taken) {
         // Format error message dependent on whether the user is logged in or not.
         if (\Drupal::currentUser()->isAuthenticated()) {
-          $this->setFormError('mail', $form_state, $this->t('The e-mail address %email is already taken.', array('%email' => $mail)));
+          $this->setFormError('mail', $form_state, $this->t('The email address %email is already taken.', array('%email' => $mail)));
         }
         else {
-          $this->setFormError('mail', $form_state, $this->t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
+          $this->setFormError('mail', $form_state, $this->t('The email address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
         }
       }
     }

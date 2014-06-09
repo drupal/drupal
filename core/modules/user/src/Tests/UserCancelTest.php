@@ -127,7 +127,7 @@ class UserCancelTest extends WebTestBase {
     // Confirm account cancellation.
     $timestamp = time();
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
+    $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Attempt bogus account cancellation request confirmation.
     $bogus_timestamp = $timestamp + 60;
@@ -172,7 +172,7 @@ class UserCancelTest extends WebTestBase {
     $timestamp = time();
 
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
+    $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
@@ -226,7 +226,7 @@ class UserCancelTest extends WebTestBase {
     // Confirm account cancellation.
     $timestamp = time();
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
+    $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
@@ -281,7 +281,7 @@ class UserCancelTest extends WebTestBase {
     // Confirm account cancellation.
     $timestamp = time();
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
+    $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
@@ -347,7 +347,7 @@ class UserCancelTest extends WebTestBase {
     // Confirm account cancellation.
     $timestamp = time();
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
-    $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
+    $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
@@ -389,14 +389,14 @@ class UserCancelTest extends WebTestBase {
   }
 
   /**
-   * Tests deletion of a user account without an e-mail address.
+   * Tests deletion of a user account without an email address.
    */
   function testUserWithoutEmailCancelByAdmin() {
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a regular user.
     $account = $this->drupalCreateUser(array());
-    // This user has no e-mail address.
+    // This user has no email address.
     $account->mail = '';
     $account->save();
 
@@ -404,7 +404,7 @@ class UserCancelTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
 
-    // Delete regular user without e-mail address.
+    // Delete regular user without email address.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->getUsername())), 'Confirmation form to cancel account displayed.');
@@ -445,7 +445,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalPostForm('admin/people', $edit, t('Apply'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), 'Confirmation form to cancel accounts displayed.');
     $this->assertText(t('When cancelling these accounts'), 'Allows to select account cancellation method.');
-    $this->assertText(t('Require e-mail confirmation to cancel account.'), 'Allows to send confirmation mail.');
+    $this->assertText(t('Require email confirmation to cancel account.'), 'Allows to send confirmation mail.');
     $this->assertText(t('Notify user when account is canceled.'), 'Allows to send notification mail.');
 
     // Confirm deletion.
@@ -458,7 +458,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($status, 'Users deleted and not found in the database.');
 
     // Ensure that admin account was not cancelled.
-    $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
+    $this->assertText(t('A confirmation request to cancel your account has been sent to your email address.'), 'Account cancellation request mailed message displayed.');
     $admin_user = user_load($admin_user->id());
     $this->assertTrue($admin_user->isActive(), 'Administrative user is found in the database and enabled.');
 

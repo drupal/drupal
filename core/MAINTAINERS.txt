@@ -279,7 +279,7 @@ Database Logging module
 DateTime module
 - ?
 
-E-mail module
+Email module
 - Nils Destoop 'zuuperman' https://drupal.org/user/361625
 
 Editor module

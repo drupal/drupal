@@ -135,12 +135,12 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   public function setAuthorName($name);
 
   /**
-   * Returns the comment author's e-mail address.
+   * Returns the comment author's email address.
    *
    * For anonymous authors, this is the value as typed in the comment form.
    *
    * @return string
-   *   The e-mail address of the author of the comment.
+   *   The email address of the author of the comment.
    */
   public function getAuthorEmail();
 

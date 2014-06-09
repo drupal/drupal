@@ -156,10 +156,10 @@ class CommentForm extends ContentEntityForm {
       $form['author']['name']['#account'] = $this->currentUser;
     }
 
-    // Add author e-mail and homepage fields depending on the current user.
+    // Add author email and homepage fields depending on the current user.
     $form['author']['mail'] = array(
       '#type' => 'email',
-      '#title' => $this->t('E-mail'),
+      '#title' => $this->t('Email'),
       '#default_value' => $comment->getAuthorEmail(),
       '#required' => ($this->currentUser->isAnonymous() && $anonymous_contact == COMMENT_ANONYMOUS_MUST_CONTACT),
       '#maxlength' => 64,

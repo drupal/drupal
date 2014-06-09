@@ -11,7 +11,7 @@ register_no_approval_required:
   body: "[user:name],\n\nThank you for registering at [site:name]. You may now log in by clicking this link or copying and pasting it to your browser:\n\n[user:one-time-login-url]\n\nThis link can only be used once to log in and will lead you to a page where you can set your password.\n\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\n\nusername: [user:name]\npassword: Your password\n\n--  [site:name] team"
   subject: 'Account details for [user:name] at [site:name]'
 register_pending_approval:
-  body: "[user:name],\n\nThank you for registering at [site:name]. Your application for an account is currently pending approval. Once it has been approved, you will receive another e-mail containing information about how to log in, set your password, and other details.\n\n\n--  [site:name] team"
+  body: "[user:name],\n\nThank you for registering at [site:name]. Your application for an account is currently pending approval. Once it has been approved, you will receive another email containing information about how to log in, set your password, and other details.\n\n\n--  [site:name] team"
   subject: 'Account details for [user:name] at [site:name] (pending admin approval)'
 register_pending_approval_admin:
   body: "[user:name] has applied for an account.\n\n[user:edit-url]"

@@ -45,7 +45,7 @@ class CategoryForm extends EntityForm {
       '#type' => 'textarea',
       '#title' => t('Recipients'),
       '#default_value' => implode(', ', $category->recipients),
-      '#description' => t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each e-mail address with a comma."),
+      '#description' => t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each email address with a comma."),
       '#required' => TRUE,
     );
     $form['reply'] = array(
@@ -80,13 +80,13 @@ class CategoryForm extends EntityForm {
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    // Validate and each e-mail recipient.
+    // Validate and each email recipient.
     $recipients = explode(',', $form_state['values']['recipients']);
 
     foreach ($recipients as &$recipient) {
       $recipient = trim($recipient);
       if (!valid_email_address($recipient)) {
-        $this->setFormError('recipients', $form_state, $this->t('%recipient is an invalid e-mail address.', array('%recipient' => $recipient)));
+        $this->setFormError('recipients', $form_state, $this->t('%recipient is an invalid email address.', array('%recipient' => $recipient)));
       }
     }
     $form_state['values']['recipients'] = $recipients;

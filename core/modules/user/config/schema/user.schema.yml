@@ -12,7 +12,7 @@ user.settings:
       label: 'Name'
     verify_mail:
       type: boolean
-      label: 'Require e-mail verification when a visitor creates an account.'
+      label: 'Require email verification when a visitor creates an account.'
     notify:
       type: mapping
       label: 'Notify user'
@@ -62,7 +62,7 @@ user.settings:
 
 user.mail:
  type: mapping
- label: 'E-mail settings'
+ label: 'Email settings'
  mapping:
   cancel_confirm:
     type: mail

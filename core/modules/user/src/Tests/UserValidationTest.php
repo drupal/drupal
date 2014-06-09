@@ -116,16 +116,16 @@ class UserValidationTest extends DrupalUnitTestBase {
     //   https://drupal.org/node/2023465.
     $this->assertEqual(count($violations), 2, 'Violations found when email is too long');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: the e-mail address can not be longer than @max characters.', array('%name' => $user->get('mail')->getFieldDefinition()->getLabel(), '@max' => EMAIL_MAX_LENGTH)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: the email address can not be longer than @max characters.', array('%name' => $user->get('mail')->getFieldDefinition()->getLabel(), '@max' => EMAIL_MAX_LENGTH)));
     $this->assertEqual($violations[1]->getPropertyPath(), 'mail.0.value');
     $this->assertEqual($violations[1]->getMessage(), t('This value is not a valid email address.'));
 
-    // Provoke a e-mail collision with an exsiting user.
+    // Provoke a email collision with an exsiting user.
     $user->set('mail', 'existing@example.com');
     $violations = $user->validate();
-    $this->assertEqual(count($violations), 1, 'Violation found when e-mail already exists.');
+    $this->assertEqual(count($violations), 1, 'Violation found when email already exists.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('The e-mail address %mail is already taken.', array('%mail' => 'existing@example.com')));
+    $this->assertEqual($violations[0]->getMessage(), t('The email address %mail is already taken.', array('%mail' => 'existing@example.com')));
     $user->set('mail', NULL);
 
     $user->set('signature', $this->randomString(256));

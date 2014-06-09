@@ -9,7 +9,7 @@ contact.category.*:
       label: 'Recipients'
       sequence:
         - type: email
-          label: 'E-mail address'
+          label: 'Email address'
     reply:
       type: text
       label: 'Auto-reply'

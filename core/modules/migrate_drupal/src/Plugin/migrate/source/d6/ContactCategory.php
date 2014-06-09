@@ -52,7 +52,7 @@ class ContactCategory extends DrupalSqlBase {
     return array(
       'cid' => $this->t('Primary Key: Unique category ID.'),
       'category' => $this->t('Category name.'),
-      'recipients' => $this->t('Comma-separated list of recipient e-mail addresses.'),
+      'recipients' => $this->t('Comma-separated list of recipient email addresses.'),
       'reply' => $this->t('Text of the auto-reply message.'),
       'weight' => $this->t("The category's weight."),
       'selected' => $this->t('Flag to indicate whether or not category is selected by default. (1 = Yes, 0 = No)'),

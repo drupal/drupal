@@ -12,7 +12,7 @@ system.site:
       label: 'Site name'
     mail:
       type: email
-      label: 'E-mail address'
+      label: 'Email address'
     slogan:
       type: label
       label: 'Slogan'

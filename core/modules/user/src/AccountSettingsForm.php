@@ -126,9 +126,9 @@ class AccountSettingsForm extends ConfigFormBase {
     );
     $form['registration_cancellation']['user_email_verification'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Require e-mail verification when a visitor creates an account.'),
+      '#title' => $this->t('Require email verification when a visitor creates an account.'),
       '#default_value' => $config->get('verify_mail'),
-      '#description' => $this->t('New users will be required to validate their e-mail address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
+      '#description' => $this->t('New users will be required to validate their email address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.')
     );
     $form['registration_cancellation']['user_password_strength'] = array(
       '#type' => 'checkbox',
@@ -169,15 +169,15 @@ class AccountSettingsForm extends ConfigFormBase {
     // Default notifications address.
     $form['mail_notification_address'] = array(
       '#type' => 'email',
-      '#title' => $this->t('Notification e-mail address'),
+      '#title' => $this->t('Notification email address'),
       '#default_value' => $site_config->get('mail_notification'),
-      '#description' => $this->t("The e-mail address to be used as the 'from' address for all account notifications listed below. If <em>'Visitors, but administrator approval is required'</em> is selected above, a notification email will also be sent to this address for any new registrations. Leave empty to use the default system e-mail address <em>(%site-email).</em>", array('%site-email' => $site_config->get('mail'))),
+      '#description' => $this->t("The email address to be used as the 'from' address for all account notifications listed below. If <em>'Visitors, but administrator approval is required'</em> is selected above, a notification email will also be sent to this address for any new registrations. Leave empty to use the default system email address <em>(%site-email).</em>", array('%site-email' => $site_config->get('mail'))),
       '#maxlength' => 180,
     );
 
     $form['email'] = array(
       '#type' => 'vertical_tabs',
-      '#title' => $this->t('E-mails'),
+      '#title' => $this->t('Emails'),
     );
     // These email tokens are shared for all settings, so just define
     // the list once to help ensure they stay in sync.
@@ -187,7 +187,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => $this->t('Welcome (new user created by administrator)'),
       '#open' => $config->get('register') == USER_REGISTER_ADMINISTRATORS_ONLY,
-      '#description' => $this->t('Edit the welcome e-mail messages sent to new member accounts created by an administrator.') . ' ' . $email_token_help,
+      '#description' => $this->t('Edit the welcome email messages sent to new member accounts created by an administrator.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_admin_created']['user_mail_register_admin_created_subject'] = array(
@@ -207,7 +207,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => $this->t('Welcome (awaiting approval)'),
       '#open' => $config->get('register') == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL,
-      '#description' => $this->t('Edit the welcome e-mail messages sent to new members upon registering, when administrative approval is required.') . ' ' . $email_token_help,
+      '#description' => $this->t('Edit the welcome email messages sent to new members upon registering, when administrative approval is required.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_pending_approval']['user_mail_register_pending_approval_subject'] = array(
@@ -227,7 +227,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => $this->t('Admin (user awaiting approval)'),
       '#open' => $config->get('register') == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL,
-      '#description' => $this->t('Edit the e-mail notifying the site administrator that there are new members awaiting administrative approval.') . ' ' . $email_token_help,
+      '#description' => $this->t('Edit the email notifying the site administrator that there are new members awaiting administrative approval.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_pending_approval_admin']['register_pending_approval_admin_subject'] = array(
@@ -247,7 +247,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => $this->t('Welcome (no approval required)'),
       '#open' => $config->get('register') == USER_REGISTER_VISITORS,
-      '#description' => $this->t('Edit the welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') . ' ' . $email_token_help,
+      '#description' => $this->t('Edit the welcome email messages sent to new members upon registering, when no administrator approval is required.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_no_approval_required']['user_mail_register_no_approval_required_subject'] = array(
@@ -266,7 +266,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_password_reset'] = array(
       '#type' => 'details',
       '#title' => $this->t('Password recovery'),
-      '#description' => $this->t('Edit the e-mail messages sent to users who request a new password.') . ' ' . $email_token_help,
+      '#description' => $this->t('Edit the email messages sent to users who request a new password.') . ' ' . $email_token_help,
       '#group' => 'email',
       '#weight' => 10,
     );
@@ -286,7 +286,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account activation'),
-      '#description' => $this->t('Enable and edit e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') . ' ' . $email_token_help,
+      '#description' => $this->t('Enable and edit email messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_activated']['user_mail_status_activated_notify'] = array(
@@ -319,7 +319,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_blocked'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account blocked'),
-      '#description' => $this->t('Enable and edit e-mail messages sent to users when their accounts are blocked.') . ' ' . $email_token_help,
+      '#description' => $this->t('Enable and edit email messages sent to users when their accounts are blocked.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_blocked']['user_mail_status_blocked_notify'] = array(
@@ -352,7 +352,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_cancel_confirm'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account cancellation confirmation'),
-      '#description' => $this->t('Edit the e-mail messages sent to users when they attempt to cancel their accounts.') . ' ' . $email_token_help,
+      '#description' => $this->t('Edit the email messages sent to users when they attempt to cancel their accounts.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_cancel_confirm']['user_mail_cancel_confirm_subject'] = array(
@@ -371,7 +371,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_canceled'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account canceled'),
-      '#description' => $this->t('Enable and edit e-mail messages sent to users when their accounts are canceled.') . ' ' . $email_token_help,
+      '#description' => $this->t('Enable and edit email messages sent to users when their accounts are canceled.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
     $form['email_canceled']['user_mail_status_canceled_notify'] = array(

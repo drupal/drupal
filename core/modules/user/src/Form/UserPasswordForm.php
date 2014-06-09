@@ -73,7 +73,7 @@ class UserPasswordForm extends FormBase {
   public function buildForm(array $form, array &$form_state) {
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Username or e-mail address'),
+      '#title' => $this->t('Username or email address'),
       '#size' => 60,
       '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
       '#required' => TRUE,
@@ -91,7 +91,7 @@ class UserPasswordForm extends FormBase {
       $form['name']['#value'] = $user->getEmail();
       $form['mail'] = array(
         '#prefix' => '<p>',
-        '#markup' =>  $this->t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the e-mail.', array('%email' => $user->getEmail())),
+        '#markup' =>  $this->t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the email.', array('%email' => $user->getEmail())),
         '#suffix' => '</p>',
       );
     }
@@ -99,7 +99,7 @@ class UserPasswordForm extends FormBase {
       $form['name']['#default_value'] = $this->getRequest()->query->get('name');
     }
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('E-mail new password'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Email new password'));
 
     return $form;
   }
@@ -120,7 +120,7 @@ class UserPasswordForm extends FormBase {
       form_set_value(array('#parents' => array('account')), $account, $form_state);
     }
     else {
-      $this->setFormError('name', $form_state, $this->t('Sorry, %name is not recognized as a username or an e-mail address.', array('%name' => $name)));
+      $this->setFormError('name', $form_state, $this->t('Sorry, %name is not recognized as a username or an email address.', array('%name' => $name)));
     }
   }
 
@@ -135,7 +135,7 @@ class UserPasswordForm extends FormBase {
     $mail = _user_mail_notify('password_reset', $account, $langcode);
     if (!empty($mail)) {
       watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->getUsername(), '%email' => $account->getEmail()));
-      drupal_set_message($this->t('Further instructions have been sent to your e-mail address.'));
+      drupal_set_message($this->t('Further instructions have been sent to your email address.'));
     }
 
     $form_state['redirect_route']['route_name'] = 'user.page';

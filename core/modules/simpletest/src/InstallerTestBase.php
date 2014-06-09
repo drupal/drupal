@@ -125,7 +125,7 @@ abstract class InstallerTestBase extends WebTestBase {
     $this->rebuildContainer();
 
     // Manually configure the test mail collector implementation to prevent
-    // tests from sending out e-mails and collect them in state instead.
+    // tests from sending out emails and collect them in state instead.
     \Drupal::config('system.mail')
       ->set('interface.default', 'test_mail_collector')
       ->save();

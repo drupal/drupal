@@ -80,7 +80,7 @@ class UserSession implements AccountInterface {
   protected $preferred_admin_langcode;
 
   /**
-   * The e-mail address of this account.
+   * The email address of this account.
    *
    * @var string
    */

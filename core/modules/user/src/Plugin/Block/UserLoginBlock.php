@@ -53,7 +53,7 @@ class UserLoginBlock extends BlockBase {
     }
     $items['request_password'] = l(t('Request new password'), 'user/password', array(
       'attributes' => array(
-        'title' => t('Request new password via e-mail.'),
+        'title' => t('Request new password via email.'),
         'class' => array('request-password-link'),
       ),
     ));

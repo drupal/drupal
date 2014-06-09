@@ -686,7 +686,7 @@ display:
           exposed: true
           expose:
             operator_id: combine_op
-            label: 'Name or e-mail contains'
+            label: 'Name or email contains'
             description: ''
             use_operator: false
             operator: combine_op

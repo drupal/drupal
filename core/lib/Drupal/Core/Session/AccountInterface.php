@@ -130,10 +130,10 @@ interface AccountInterface {
   public function getUsername();
 
   /**
-   * Returns the e-mail address of this account.
+   * Returns the email address of this account.
    *
    * @return string
-   *   The e-mail address.
+   *   The email address.
    */
   public function getEmail();
 

@@ -115,7 +115,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
         forms for any configuration.
       * Reworked Gettext PO support to use pluggable read/write handlers.
       * Added language select form element in the Form API.
-- Added E-mail field type to core.
+- Added Email field type to core.
 - Added Link field type to core.
 - Added Phone number field type to core.
 - Added local image input filter, to enable secure image posting.
@@ -223,7 +223,7 @@ Drupal 7.0, 2011-01-05
       user roles and permissions.
     * Refactored the "access rules" component of user module: The user module
       now provides a simple interface for blocking single IP addresses. The
-      previous functionality in the user module for restricting certain e-mail
+      previous functionality in the user module for restricting certain email
       addresses and usernames is now available as a contributed module. Further,
       IP address range blocking is no longer supported and should be implemented
       at the operating system level.
@@ -359,7 +359,7 @@ Drupal 6.0, 2008-02-13
      default in the default installation profile.
    * Extended the database log module so log messages can be filtered.
    * Added syslog module: useful for monitoring large Drupal installations.
-- Added optional e-mail notifications when users are approved, blocked, or
+- Added optional email notifications when users are approved, blocked, or
   deleted.
 - Drupal works with error reporting set to E_ALL.
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful
@@ -541,7 +541,7 @@ Drupal 5.0, 2007-01-15
     * 'Blogapi new' and 'blogapi edit' nodeapi operations.
 - User module:
     * Added hook_profile_alter().
-    * E-mail verification is made optional.
+    * Email verification is made optional.
     * Added mass editing and filtering on admin/user/user.
 - PHP Template engine:
     * Add the ability to look for a series of suggested templates.
@@ -766,7 +766,7 @@ Drupal 4.6.0, 2005-04-15
     * Introduced forum configuration pages.
     * Added a 'add child page' link to book pages.
 - Contact module:
-    * Added a simple contact module that allows users to contact each other using e-mail.
+    * Added a simple contact module that allows users to contact each other using email.
 - Multi-site configuration:
     * Made it possible to run multiple sites from a single code base.
 - Added an image API: enables better image handling.
@@ -1113,7 +1113,7 @@ Drupal 3.0.0, 2001-09-15
     * Improved scheduler:
         + Content can be scheduled to be 'posted', 'queued' and 'hidden'.
     * Improved account module:
-        + Added "access control" to allow/deny certain usernames/e-mail addresses/hostnames.
+        + Added "access control" to allow/deny certain usernames/email addresses/hostnames.
     * Improved locale module:
         + Added new overview to easy the translation process.
     * Improved comment module:

@@ -59,7 +59,7 @@ class Comment extends DrupalSqlBase {
       'format' => $this->t('The {filter_formats}.format of the comment body.'),
       'thread' => $this->t("The vancode representation of the comment's place in a thread."),
       'name' => $this->t("The comment author's name. Uses {users}.name if the user is logged in, otherwise uses the value typed into the comment form."),
-      'mail' => $this->t("The comment author's e-mail address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
+      'mail' => $this->t("The comment author's email address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
       'homepage' => $this->t("The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
       'type' => $this->t("The {node}.type to which this comment is a reply.")
     );

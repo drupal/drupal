@@ -753,7 +753,7 @@ function template_preprocess_text_format_wrapper(&$variables) {
  *       array(
  *         'Full HTML' => array(
  *           0 => array(
- *             'tip' => 'Web page addresses and e-mail addresses turn into links automatically.',
+ *             'tip' => 'Web page addresses and email addresses turn into links automatically.',
  *             'id' => 'filter/2',
  *           ),
  *         ),
@@ -823,7 +823,7 @@ function _filter_html($text, $filter) {
  *
  * This filter identifies and makes clickable three types of "links".
  * - URLs like http://example.com.
- * - E-mail addresses like name@example.com.
+ * - Email addresses like name@example.com.
  * - Web addresses without the "http://" protocol defined, like
  *   www.example.com.
  * Each type must be processed separately, as there is no one regular
@@ -884,7 +884,7 @@ function _filter_url($text, $filter) {
   $pattern = "`((?:$protocols)(?:$url_pattern))`u";
   $tasks['_filter_url_parse_full_links'] = $pattern;
 
-  // Match e-mail addresses.
+  // Match email addresses.
   $url_pattern = "[\p{L}\p{M}\p{N}._-]{1,254}@(?:$domain)";
   $pattern = "`($url_pattern)`u";
   $tasks['_filter_url_parse_email_links'] = $pattern;
@@ -970,7 +970,7 @@ function _filter_url_parse_full_links($match) {
 }
 
 /**
- * Makes links out of e-mail addresses.
+ * Makes links out of email addresses.
  *
  * Callback for preg_replace_callback() within _filter_url().
  */

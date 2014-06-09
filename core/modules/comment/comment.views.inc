@@ -109,8 +109,8 @@ function comment_views_data() {
   );
 
   $data['comment']['mail'] = array(
-    'title' => t('E-mail'),
-    'help' => t('E-mail of user that posted the comment. Will be empty if the author is a registered user.'),
+    'title' => t('Email'),
+    'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
       'id' => 'standard',
     ),

@@ -392,7 +392,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
     // - absolute, mail, partial
     // - characters/encoding, surrounding markup, security
 
-    // Create a e-mail that is too long.
+    // Create a email that is too long.
     $long_email = str_repeat('a', 254) . '@example.com';
     $too_long_email = str_repeat('b', 255) . '@example.com';
 
@@ -505,11 +505,11 @@ not foo://disallowed.com.
     $tests = array(
       '
 Partial URL with trailing period www.partial.com.
-E-mail with trailing comma person@example.com,
+Email with trailing comma person@example.com,
 Absolute URL with trailing question http://www.absolute.com?
 Query string with trailing exclamation www.query.com/index.php?a=!
 Partial URL with 3 trailing www.partial.periods...
-E-mail with 3 trailing exclamations@example.com!!!
+Email with 3 trailing exclamations@example.com!!!
 Absolute URL and query string with 2 different punctuation characters (http://www.example.com/q=abc).
 Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com/more_(than)_one_(parens)).
 Absolute URL with square brackets in the URL as well as surrounded brackets [http://www.drupal.org/?class[]=1]
@@ -751,7 +751,7 @@ www.example.com with a newline in comments -->
    * - Mix of several HTML tags, invalid non-HTML tags, tags to ignore and HTML
    *   comments.
    * - Empty HTML tags (BR, IMG).
-   * - Mix of absolute and partial URLs, and e-mail addresses in one content.
+   * - Mix of absolute and partial URLs, and email addresses in one content.
    */
   function testUrlFilterContent() {
     // Get FilterUrl object.

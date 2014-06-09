@@ -97,7 +97,7 @@ class ContactPersonalTest extends WebTestBase {
       '@sender_email' => $this->web_user->getEmail(),
       '@recipient_name' => $this->contact_user->getUsername()
     );
-    $this->assertText(String::format('@sender_name (@sender_email) sent @recipient_name an e-mail.', $placeholders));
+    $this->assertText(String::format('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
   }
 
   /**

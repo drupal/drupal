@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Validates the unique user property constraint, such as name and e-mail.
+ * Validates the unique user property constraint, such as name and email.
  */
 class UserUniqueValidator extends ConstraintValidator {
 

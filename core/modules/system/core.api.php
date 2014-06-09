@@ -721,7 +721,7 @@
  *   of content or configuration in Drupal. See the
  *   @link entity_api Entity API topic @endlink for more information.
  * - Services: Classes that perform basic operations within Drupal, such as
- *   accessing the database and sending e-mail. See the
+ *   accessing the database and sending email. See the
  *   @link container Dependency Injection Container and Services topic @endlink
  *   for more information.
  * - Routing: Providing or altering "routes", which are URLs that Drupal

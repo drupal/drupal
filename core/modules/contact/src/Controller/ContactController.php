@@ -61,7 +61,7 @@ class ContactController extends ControllerBase {
    *   contact category form.
    */
   public function contactSitePage(CategoryInterface $contact_category = NULL) {
-    // Check if flood control has been activated for sending e-mails.
+    // Check if flood control has been activated for sending emails.
     if (!$this->currentUser()->hasPermission('administer contact forms')) {
       $this->contactFloodControl();
     }
@@ -105,7 +105,7 @@ class ContactController extends ControllerBase {
    *   The personal contact form as render array as expected by drupal_render().
    */
   public function contactPersonalPage(UserInterface $user) {
-    // Check if flood control has been activated for sending e-mails.
+    // Check if flood control has been activated for sending emails.
     if (!$this->currentUser()->hasPermission('administer contact forms') && !$this->currentUser()->hasPermission('administer users')) {
       $this->contactFloodControl();
     }

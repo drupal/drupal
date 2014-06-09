@@ -36,20 +36,20 @@ interface MailInterface {
    *
    * @param array $message
    *   Message array with at least the following elements:
-   *   - id: A unique identifier of the e-mail type. Examples: 'contact_user_copy',
+   *   - id: A unique identifier of the email type. Examples: 'contact_user_copy',
    *     'user_password_reset'.
    *   - to: The mail address or addresses where the message will be sent to.
    *     The formatting of this string will be validated with the
-   *     @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
+   *     @link http://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink
    *     Some examples:
    *     - user@example.com
    *     - user@example.com, anotheruser@example.com
    *     - User <user@example.com>
    *     - User <user@example.com>, Another User <anotheruser@example.com>
-   *   - subject: Subject of the e-mail to be sent. This must not contain any
+   *   - subject: Subject of the email to be sent. This must not contain any
    *     newline characters, or the mail may not be sent properly.
    *   - body: Message to be sent. Accepts both CRLF and LF line-endings.
-   *     E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
+   *     Email bodies must be wrapped. You can use drupal_wrap_mail() for
    *     smart plain text wrapping.
    *   - headers: Associative array containing all additional mail headers not
    *     defined by one of the other parameters.  PHP's mail() looks for Cc and

@@ -53,7 +53,7 @@ class UserEditTest extends WebTestBase {
     $edit = array();
     $edit['mail'] = $this->randomName() . '@new.example.com';
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
-    $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => t('E-mail address'))));
+    $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => t('Email address'))));
 
     $edit['current_pass'] = $user1->pass_raw;
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
@@ -91,15 +91,15 @@ class UserEditTest extends WebTestBase {
   }
 
   /**
-   * Tests editing of a user account without an e-mail address.
+   * Tests editing of a user account without an email address.
    */
   function testUserWithoutEmailEdit() {
-    // Test that an admin can edit users without an e-mail address.
+    // Test that an admin can edit users without an email address.
     $admin = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin);
     // Create a regular user.
     $user1 = $this->drupalCreateUser(array());
-    // This user has no e-mail address.
+    // This user has no email address.
     $user1->mail = '';
     $user1->save();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", array('mail' => ''), t('Save'));

@@ -89,7 +89,7 @@ function _update_create_fetch_task($project) {
  * Performs any notifications that should be done once cron fetches new data.
  *
  * This method checks the status of the site using the new data and, depending
- * on the configuration of the site, notifies administrators via e-mail if there
+ * on the configuration of the site, notifies administrators via email if there
  * are new releases or missing security updates.
  *
  * @see update_requirements()
@@ -120,7 +120,7 @@ function _update_cron_notify() {
         }
         $message = drupal_mail('update', 'status_notify', $target, $target_langcode, $params);
         // Track when the last mail was successfully sent to avoid sending
-        // too many e-mails.
+        // too many emails.
         if ($message['result']) {
           \Drupal::state()->set('update.last_email_notification', REQUEST_TIME);
         }

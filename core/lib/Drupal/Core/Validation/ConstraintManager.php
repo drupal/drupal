@@ -102,7 +102,7 @@ class ConstraintManager extends DefaultPluginManager {
       'type' => FALSE,
     ));
     $this->discovery->setDefinition('Email', array(
-      'label' => t('E-mail'),
+      'label' => t('Email'),
       'class' => '\Symfony\Component\Validator\Constraints\Email',
       'type' => array('string'),
     ));

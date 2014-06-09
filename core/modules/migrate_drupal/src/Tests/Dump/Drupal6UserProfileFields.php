@@ -160,7 +160,7 @@ class Drupal6UserProfileFields extends Drupal6DumpBase {
         ),
         array(
           'fid' => '10',
-          'title' => 'Sell your e-mail address?',
+          'title' => 'Sell your email address?',
           'name' => 'profile_sell_address',
           'explanation' => "If you check this box, we'll sell your address to spammers to help line the pockets of our shareholders. Thanks!",
           'category' => 'Communication preferences',

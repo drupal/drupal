@@ -83,14 +83,14 @@ class MessageForm extends ContentEntityForm {
     );
     $form['mail'] = array(
       '#type' => 'email',
-      '#title' => t('Your e-mail address'),
+      '#title' => t('Your email address'),
       '#required' => TRUE,
     );
     if ($user->isAnonymous()) {
       $form['#attached']['library'][] = 'core/jquery.cookie';
       $form['#attributes']['class'][] = 'user-info-from-cookie';
     }
-    // Do not allow authenticated users to alter the name or e-mail values to
+    // Do not allow authenticated users to alter the name or email values to
     // prevent the impersonation of other users.
     else {
       $form['name']['#type'] = 'item';
@@ -185,12 +185,12 @@ class MessageForm extends ContentEntityForm {
       $sender->mail = $message->getSenderMail();
       // Save the anonymous user information to a cookie for reuse.
       user_cookie_save(array('name' => $message->getSenderName(), 'mail' => $message->getSenderMail()));
-      // For the e-mail message, clarify that the sender name is not verified; it
+      // For the email message, clarify that the sender name is not verified; it
       // could potentially clash with a username on this site.
       $sender->name = t('!name (not verified)', array('!name' => $message->getSenderName()));
     }
 
-    // Build e-mail parameters.
+    // Build email parameters.
     $params['contact_message'] = $message;
     $params['sender'] = $sender;
 
@@ -212,7 +212,7 @@ class MessageForm extends ContentEntityForm {
       throw new \RuntimeException(t('Unable to determine message recipient.'));
     }
 
-    // Send e-mail to the recipient(s).
+    // Send email to the recipient(s).
     $key_prefix = $message->isPersonal() ? 'user' : 'page';
     drupal_mail('contact', $key_prefix . '_mail', $to, $recipient_langcode, $params, $sender->getEmail());
 
@@ -231,14 +231,14 @@ class MessageForm extends ContentEntityForm {
     $config = $this->config('contact.settings');
     $this->flood->register('contact', $config->get('flood.interval'));
     if (!$message->isPersonal()) {
-      watchdog('contact', '%sender-name (@sender-from) sent an e-mail regarding %category.', array(
+      watchdog('contact', '%sender-name (@sender-from) sent an email regarding %category.', array(
         '%sender-name' => $sender->getUsername(),
         '@sender-from' => $sender->getEmail(),
         '%category' => $category->label(),
       ));
     }
     else {
-      watchdog('contact', '%sender-name (@sender-from) sent %recipient-name an e-mail.', array(
+      watchdog('contact', '%sender-name (@sender-from) sent %recipient-name an email.', array(
         '%sender-name' => $sender->getUsername(),
         '@sender-from' => $sender->getEmail(),
         '%recipient-name' => $message->getPersonalRecipient()->getUsername(),

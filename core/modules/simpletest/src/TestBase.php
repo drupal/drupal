@@ -1163,8 +1163,8 @@ abstract class TestBase {
       $captured_emails = $state->get('system.test_mail_collector') ?: array();
       $emailCount = count($captured_emails);
       if ($emailCount) {
-        $message = $emailCount == 1 ? '1 e-mail was sent during this test.' : $emailCount . ' e-mails were sent during this test.';
-        $this->pass($message, 'E-mail');
+        $message = $emailCount == 1 ? '1 email was sent during this test.' : $emailCount . ' emails were sent during this test.';
+        $this->pass($message, 'Email');
       }
     }
 

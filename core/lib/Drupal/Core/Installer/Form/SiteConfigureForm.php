@@ -135,9 +135,9 @@ class SiteConfigureForm extends FormBase {
     );
     $form['site_information']['site_mail'] = array(
       '#type' => 'email',
-      '#title' => $this->t('Site e-mail address'),
+      '#title' => $this->t('Site email address'),
       '#default_value' => ini_get('sendmail_from'),
-      '#description' => $this->t("Automated e-mails, such as registration information, will be sent from this address. Use an address ending in your site's domain to help prevent these e-mails from being flagged as spam."),
+      '#description' => $this->t("Automated emails, such as registration information, will be sent from this address. Use an address ending in your site's domain to help prevent these emails from being flagged as spam."),
       '#required' => TRUE,
       '#weight' => -15,
     );
@@ -149,7 +149,7 @@ class SiteConfigureForm extends FormBase {
     $form['admin_account']['account']['#tree'] = TRUE;
     $form['admin_account']['account']['mail'] = array(
       '#type' => 'email',
-      '#title' => $this->t('E-mail address'),
+      '#title' => $this->t('Email address'),
       '#required' => TRUE,
     );
     $form['admin_account']['account']['name'] = array(
@@ -199,7 +199,7 @@ class SiteConfigureForm extends FormBase {
       '#title' => $this->t('Update notifications'),
       '#options' => array(
         1 => $this->t('Check for updates automatically'),
-        2 => $this->t('Receive e-mail notifications'),
+        2 => $this->t('Receive email notifications'),
       ),
       '#default_value' => array(1, 2),
       '#description' => $this->t('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href="@drupal">Drupal.org</a>.', array('@drupal' => 'http://drupal.org')),

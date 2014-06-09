@@ -260,14 +260,14 @@ class TypedDataTest extends DrupalUnitTestBase {
     $value = $this->randomString();
     $typed_data = $this->createTypedData(array('type' => 'email'), $value);
     $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\StringInterface, 'Typed data object is an instance of StringInterface.');
-    $this->assertIdentical($typed_data->getValue(), $value, 'E-mail value was fetched.');
+    $this->assertIdentical($typed_data->getValue(), $value, 'Email value was fetched.');
     $new_value = 'test@example.com';
     $typed_data->setValue($new_value);
-    $this->assertIdentical($typed_data->getValue(), $new_value, 'E-mail value was changed.');
-    $this->assertTrue(is_string($typed_data->getString()), 'E-mail value was converted to string');
+    $this->assertIdentical($typed_data->getValue(), $new_value, 'Email value was changed.');
+    $this->assertTrue(is_string($typed_data->getString()), 'Email value was converted to string');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
-    $this->assertNull($typed_data->getValue(), 'E-mail wrapper is null-able.');
+    $this->assertNull($typed_data->getValue(), 'Email wrapper is null-able.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue('invalidATexample.com');
     $this->assertEqual($typed_data->validate()->count(), 1, 'Validation detected invalid value.');

@@ -25,7 +25,7 @@ class EmailItemTest extends FieldUnitTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'E-mail field item',
+      'name' => 'Email field item',
       'description' => 'Tests the new entity API for the email field type.',
       'group' => 'Field types',
     );

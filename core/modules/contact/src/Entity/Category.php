@@ -57,7 +57,7 @@ class Category extends ConfigEntityBundleBase implements CategoryInterface {
   public $label;
 
   /**
-   * List of recipient e-mail addresses.
+   * List of recipient email addresses.
    *
    * @var array
    */

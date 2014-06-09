@@ -1338,14 +1338,14 @@ function form_test_email($form, &$form_state) {
   $form['#submit'] = array('_form_test_submit_values_json');
   $form['email'] = array(
     '#type' => 'email',
-    '#title' => 'E-Mail address',
-    '#description' => 'An e-mail address.',
+    '#title' => 'Email address',
+    '#description' => 'An email address.',
   );
   $form['email_required'] = array(
     '#type' => 'email',
     '#title' => 'Address',
     '#required' => TRUE,
-    '#description' => 'A required e-mail address field.',
+    '#description' => 'A required email address field.',
   );
   $form['submit'] = array(
     '#type' => 'submit',

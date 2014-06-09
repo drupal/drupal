@@ -67,7 +67,7 @@ class Drupal6UserMail extends Drupal6DumpBase {
     ))
     ->values(array(
       'name' => 'user_mail_user_mail_register_pending_approval_body',
-      'value' => "s:268:\"!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been approved, you will receive another e-mail containing information about how to log in, set your password, and other details.\n\n\n--  !site team\";",
+      'value' => "s:267:\"!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been approved, you will receive another email containing information about how to log in, set your password, and other details.\n\n\n--  !site team\";",
     ))
     ->values(array(
       'name' => 'user_mail_status_blocked_subject',

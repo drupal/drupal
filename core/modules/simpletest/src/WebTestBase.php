@@ -897,7 +897,7 @@ abstract class WebTestBase extends TestBase {
       ->save();
 
     // Manually configure the test mail collector implementation to prevent
-    // tests from sending out e-mails and collect them in state instead.
+    // tests from sending out emails and collect them in state instead.
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
     \Drupal::config('system.mail')
@@ -2679,14 +2679,14 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Gets an array containing all e-mails sent during this test case.
+   * Gets an array containing all emails sent during this test case.
    *
    * @param $filter
-   *   An array containing key/value pairs used to filter the e-mails that are
+   *   An array containing key/value pairs used to filter the emails that are
    *   returned.
    *
    * @return
-   *   An array containing e-mail messages captured during the current test.
+   *   An array containing email messages captured during the current test.
    */
   protected function drupalGetMails($filter = array()) {
     $captured_emails = \Drupal::state()->get('system.test_mail_collector') ?: array();
@@ -3664,7 +3664,7 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Asserts that the most recently sent e-mail message has the given value.
+   * Asserts that the most recently sent email message has the given value.
    *
    * The field in $name must have the content described in $value.
    *
@@ -3680,20 +3680,20 @@ abstract class WebTestBase extends TestBase {
    * @param $group
    *   (optional) The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'E-mail'; most tests do not override
+   *   translate this string. Defaults to 'Email'; most tests do not override
    *   this default.
    *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertMail($name, $value = '', $message = '', $group = 'E-mail') {
+  protected function assertMail($name, $value = '', $message = '', $group = 'Email') {
     $captured_emails = \Drupal::state()->get('system.test_mail_collector') ?: array();
     $email = end($captured_emails);
     return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, $group);
   }
 
   /**
-   * Asserts that the most recently sent e-mail message has the string in it.
+   * Asserts that the most recently sent email message has the string in it.
    *
    * @param $field_name
    *   Name of field or message property to assert: subject, body, id, ...
@@ -3735,7 +3735,7 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Asserts that the most recently sent e-mail message has the pattern in it.
+   * Asserts that the most recently sent email message has the pattern in it.
    *
    * @param $field_name
    *   Name of field or message property to assert: subject, body, id, ...

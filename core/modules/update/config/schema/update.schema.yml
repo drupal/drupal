@@ -33,10 +33,10 @@ update.settings:
       mapping:
         emails:
           type: sequence
-          label: 'E-mail addresses to notify when updates are available'
+          label: 'Email addresses to notify when updates are available'
           sequence:
             - type: email
-              label: 'E-mail'
+              label: 'Email'
         threshold:
           type: string
-          label: 'E-mail notification threshold'
+          label: 'Email notification threshold'

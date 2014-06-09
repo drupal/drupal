@@ -14,11 +14,11 @@ use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Sends an e-mail message.
+ * Sends an email message.
  *
  * @Action(
  *   id = "action_send_email_action",
- *   label = @Translation("Send e-mail"),
+ *   label = @Translation("Send email"),
  *   type = "system"
  * )
  */
@@ -120,7 +120,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
       '#title' => t('Recipient'),
       '#default_value' => $this->configuration['recipient'],
       '#maxlength' => '254',
-      '#description' => t('The e-mail address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
+      '#description' => t('The email address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an email to the author of the original post.'),
     );
     $form['subject'] = array(
       '#type' => 'textfield',
@@ -146,7 +146,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   public function validateConfigurationForm(array &$form, array &$form_state) {
     if (!valid_email_address($form_state['values']['recipient']) && strpos($form_state['values']['recipient'], ':mail') === FALSE) {
       // We want the literal %author placeholder to be emphasized in the error message.
-      form_set_error('recipient', $form_state, t('Enter a valid email address or use a token e-mail address such as %author.', array('%author' => '[node:author:mail]')));
+      form_set_error('recipient', $form_state, t('Enter a valid email address or use a token email address such as %author.', array('%author' => '[node:author:mail]')));
     }
   }
 

@@ -50,7 +50,7 @@ class FilterUrl extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    return $this->t('Web page addresses and e-mail addresses turn into links automatically.');
+    return $this->t('Web page addresses and email addresses turn into links automatically.');
   }
 
 }
