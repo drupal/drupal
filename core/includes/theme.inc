@@ -1423,32 +1423,32 @@ function drupal_pre_render_table(array $element) {
  *   - header: An array containing the table headers. Each element of the array
  *     can be either a localized string or an associative array with the
  *     following keys:
- *     - "data": The localized title of the table column.
- *     - "field": The database field represented in the table column (required
+ *     - data: The localized title of the table column.
+ *     - field: The database field represented in the table column (required
  *       if user is to be able to sort on this column).
- *     - "sort": A default sort order for this column ("asc" or "desc"). Only
- *        one column should be given a default sort order because table sorting
- *        only applies to one column at a time.
- *     - "class": An array of values for the 'class' attribute. In particular,
- *        the least important columns that can be hidden on narrow and medium
- *        width screens should have a 'priority-low' class, referenced with the
- *        RESPONSIVE_PRIORITY_LOW constant. Columns that should be shown on
- *        medium+ wide screens should be marked up with a class of
- *        'priority-medium', referenced by with the RESPONSIVE_PRIORITY_MEDIUM
- *        constant. Themes may hide columns with one of these two classes on
- *        narrow viewports to save horizontal space.
+ *     - sort: A default sort order for this column ("asc" or "desc"). Only
+ *       one column should be given a default sort order because table sorting
+ *       only applies to one column at a time.
+ *     - class: An array of values for the 'class' attribute. In particular,
+ *       the least important columns that can be hidden on narrow and medium
+ *       width screens should have a 'priority-low' class, referenced with the
+ *       RESPONSIVE_PRIORITY_LOW constant. Columns that should be shown on
+ *       medium+ wide screens should be marked up with a class of
+ *       'priority-medium', referenced by with the RESPONSIVE_PRIORITY_MEDIUM
+ *       constant. Themes may hide columns with one of these two classes on
+ *       narrow viewports to save horizontal space.
  *     - Any HTML attributes, such as "colspan", to apply to the column header
  *       cell.
  *   - rows: An array of table rows. Every row is an array of cells, or an
  *     associative array with the following keys:
- *     - "data": an array of cells
+ *     - data: An array of cells.
  *     - Any HTML attributes, such as "class", to apply to the table row.
- *     - "no_striping": a boolean indicating that the row should receive no
+ *     - no_striping: A Boolean indicating that the row should receive no
  *       'even / odd' styling. Defaults to FALSE.
  *     Each cell can be either a string or an associative array with the
  *     following keys:
- *     - "data": The string to display in the table cell.
- *     - "header": Indicates this cell is a header.
+ *     - data: The string to display in the table cell.
+ *     - header: Indicates this cell is a header.
  *     - Any HTML attributes, such as "colspan", to apply to the table cell.
  *     Here's an example for $rows:
  *     @code
@@ -1460,9 +1460,11 @@ function drupal_pre_render_table(array $element) {
  *       // Row with attributes on the row and some of its cells.
  *       array(
  *         'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => array('funky')
- *       )
+ *       ),
  *     );
  *     @endcode
+ *   - footer: An array of table rows which will be printed within a <tfoot>
+ *     tag, in the same format as the rows element (see above).
  *   - attributes: An array of HTML attributes to apply to the table tag.
  *   - caption: A localized string to use for the <caption> tag.
  *   - colgroups: An array of column groups. Each element of the array can be
@@ -1601,72 +1603,75 @@ function template_preprocess_table(&$variables) {
     }
   }
 
-  if (!empty($variables['rows'])) {
-    $flip = array('even' => 'odd', 'odd' => 'even');
-    $class = 'even';
-    foreach ($variables['rows'] as $row_key => $row) {
-      // Check if we're dealing with a simple or complex row
-      if (isset($row['data'])) {
-        $cells = $row['data'];
-        $no_striping = isset($row['no_striping']) ? $row['no_striping'] : FALSE;
-
-        // Set the attributes array and exclude 'data' and 'no_striping'.
-        $row_attributes = $row;
-        unset($row_attributes['data']);
-        unset($row_attributes['no_striping']);
-      }
-      else {
+  // Rows and footer have the same structure.
+  $sections = array('rows' , 'footer');
+  foreach ($sections as $section) {
+    if (!empty($variables[$section])) {
+      $flip = array('even' => 'odd', 'odd' => 'even');
+      $class = 'even';
+      foreach ($variables[$section] as $row_key => $row) {
         $cells = $row;
         $row_attributes = array();
-        $no_striping = FALSE;
-      }
+        $no_striping = $section === 'footer';
 
-      // Add odd/even class.
-      if (!$no_striping) {
-        $class = $flip[$class];
-        $row_attributes['class'][] = $class;
-      }
+        // Check if we're dealing with a simple or complex row
+        if (isset($row['data'])) {
+          $cells = $row['data'];
+          $no_striping = isset($row['no_striping']) ? $row['no_striping'] : $no_striping;
 
-      // Build row.
-      $variables['rows'][$row_key] = array();
-      $variables['rows'][$row_key]['attributes'] = new Attribute($row_attributes);
-      $variables['rows'][$row_key]['cells'] = array();
-      if (!empty($cells)) {
-        foreach ($cells as $col_key => $cell) {
-          if (!is_array($cell)) {
-            $cell_content = $cell;
-            $cell_attributes = array();
-            $is_header = FALSE;
-          }
-          else {
-            $cell_content = '';
-            if (isset($cell['data'])) {
-              $cell_content = $cell['data'];
-              unset($cell['data']);
+          // Set the attributes array and exclude 'data' and 'no_striping'.
+          $row_attributes = $row;
+          unset($row_attributes['data']);
+          unset($row_attributes['no_striping']);
+        }
+
+        // Add odd/even class.
+        if (!$no_striping) {
+          $class = $flip[$class];
+          $row_attributes['class'][] = $class;
+        }
+
+        // Build row.
+        $variables[$section][$row_key] = array();
+        $variables[$section][$row_key]['attributes'] = new Attribute($row_attributes);
+        $variables[$section][$row_key]['cells'] = array();
+        if (!empty($cells)) {
+          foreach ($cells as $col_key => $cell) {
+            if (!is_array($cell)) {
+              $cell_content = $cell;
+              $cell_attributes = array();
+              $is_header = FALSE;
             }
-            // Flag the cell as a header or not and remove the flag.
-            $is_header = !empty($cell['header']);
-            unset($cell['header']);
+            else {
+              $cell_content = '';
+              if (isset($cell['data'])) {
+                $cell_content = $cell['data'];
+                unset($cell['data']);
+              }
+              // Flag the cell as a header or not and remove the flag.
+              $is_header = !empty($cell['header']);
+              unset($cell['header']);
 
-            $cell_attributes = $cell;
+              $cell_attributes = $cell;
 
-            if (is_array($cell_content)) {
-              $cell_content = drupal_render($cell_content);
+              if (is_array($cell_content)) {
+                $cell_content = drupal_render($cell_content);
+              }
             }
-          }
-          // Add active class if needed for sortable tables.
-          if (isset($variables['header'][$col_key]['data']) && $variables['header'][$col_key]['data'] == $ts['name'] && !empty($variables['header'][$col_key]['field'])) {
-            $cell_attributes['class'][] = 'active';
-          }
-          // Copy RESPONSIVE_PRIORITY_LOW/RESPONSIVE_PRIORITY_MEDIUM
-          // class from header to cell as needed.
-          if (isset($responsive_classes[$col_key])) {
-            $cell_attributes['class'][] = $responsive_classes[$col_key];
-          }
+            // Add active class if needed for sortable tables.
+            if (isset($variables['header'][$col_key]['data']) && $variables['header'][$col_key]['data'] == $ts['name'] && !empty($variables['header'][$col_key]['field'])) {
+              $cell_attributes['class'][] = 'active';
+            }
+            // Copy RESPONSIVE_PRIORITY_LOW/RESPONSIVE_PRIORITY_MEDIUM
+            // class from header to cell as needed.
+            if (isset($responsive_classes[$col_key])) {
+              $cell_attributes['class'][] = $responsive_classes[$col_key];
+            }
 
-          $variables['rows'][$row_key]['cells'][$col_key]['tag'] = $is_header ? 'th' : 'td';
-          $variables['rows'][$row_key]['cells'][$col_key]['attributes'] = new Attribute($cell_attributes);
-          $variables['rows'][$row_key]['cells'][$col_key]['content'] = $cell_content;
+            $variables[$section][$row_key]['cells'][$col_key]['tag'] = $is_header ? 'th' : 'td';
+            $variables[$section][$row_key]['cells'][$col_key]['attributes'] = new Attribute($cell_attributes);
+            $variables[$section][$row_key]['cells'][$col_key]['content'] = $cell_content;
+          }
         }
       }
     }
@@ -2560,7 +2565,7 @@ function drupal_common_theme() {
       'template' => 'breadcrumb',
     ),
     'table' => array(
-      'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''),
+      'variables' => array('header' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''),
       'template' => 'table',
     ),
     'tablesort_indicator' => array(

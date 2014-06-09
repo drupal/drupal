@@ -28,6 +28,7 @@
  *     - attributes: Any HTML attributes, such as "colspan", to apply to the
  *       table cell.
  *     - content: The string to display in the table cell.
+ * - footer: Table footer rows, in the same format as the rows variable.
  * - empty: The message to display in an extra row if table does not have
  *   any rows.
  *
@@ -77,5 +78,18 @@
         </tr>
       {% endfor %}
     </tbody>
+  {% endif %}
+  {% if footer %}
+    <tfoot>
+      {% for row in footer %}
+        <tr{{ row.attributes }}>
+          {% for cell in row.cells %}
+            <{{ cell.tag }}{{ cell.attributes }}>
+              {{- cell.content -}}
+            </{{ cell.tag }}>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tfoot>
   {% endif %}
 </table>
