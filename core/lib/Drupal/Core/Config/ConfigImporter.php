@@ -11,7 +11,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
-use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -159,15 +158,15 @@ class ConfigImporter extends DependencySerialization {
    * Constructs a configuration import object.
    *
    * @param \Drupal\Core\Config\StorageComparerInterface $storage_comparer
-   *   A storage comparer object used to determin configuration changes and
+   *   A storage comparer object used to determine configuration changes and
    *   access the source and target storage objects.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher used to notify subscribers of config import events.
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   The configuration manager.
-   * @param \Drupal\Core\Lock\LockBackendInterface
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend to ensure multiple imports do not occur at the same time.
-   * @param \Drupal\Core\Config\TypedConfigManager $typed_config
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler
@@ -265,10 +264,11 @@ class ConfigImporter extends DependencySerialization {
    *   TRUE if there are changes to process and FALSE if not.
    */
   public function hasUnprocessedConfigurationChanges() {
-    foreach ($this->storageComparer->getAllCollectionNames() as $collection)
-    foreach (array('delete', 'create', 'rename', 'update') as $op) {
-      if (count($this->getUnprocessedConfiguration($op, $collection))) {
-        return TRUE;
+    foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
+      foreach (array('delete', 'create', 'rename', 'update') as $op) {
+        if (count($this->getUnprocessedConfiguration($op, $collection))) {
+          return TRUE;
+        }
       }
     }
     return FALSE;
@@ -327,17 +327,6 @@ class ConfigImporter extends DependencySerialization {
    */
   public function getProcessedExtensions() {
     return $this->processedExtensions;
-  }
-
-  /**
-   * Determines if the current import has processed extensions.
-   *
-   * @return bool
-   *   TRUE if the ConfigImporter has processed extensions.
-   */
-  protected function hasProcessedExtensions() {
-    $compare = array_diff($this->processedExtensions, getEmptyExtensionsProcessedList());
-    return !empty($compare);
   }
 
   /**
@@ -449,7 +438,7 @@ class ConfigImporter extends DependencySerialization {
    * @return array
    *   An array of extension names.
    */
-  public function getUnprocessedExtensions($type) {
+  protected function getUnprocessedExtensions($type) {
     $changelist = $this->getExtensionChangelist($type);
 
     if ($type == 'theme') {
@@ -565,7 +554,7 @@ class ConfigImporter extends DependencySerialization {
    * @param array $context.
    *   The batch context.
    */
-  public function processExtensions(array &$context) {
+  protected function processExtensions(array &$context) {
     $operation = $this->getNextExtensionOperation();
     if (!empty($operation)) {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
@@ -585,7 +574,7 @@ class ConfigImporter extends DependencySerialization {
    * @param array $context.
    *   The batch context.
    */
-  public function processConfigurations(array &$context) {
+  protected function processConfigurations(array &$context) {
     // The first time this is called we need to calculate the total to process.
     // This involves recalculating the changelist which will ensure that if
     // extensions have been processed any configuration affected will be taken
@@ -628,7 +617,7 @@ class ConfigImporter extends DependencySerialization {
    * @param array $context.
    *   The batch context.
    */
-  public function finish(array &$context) {
+  protected function finish(array &$context) {
     $this->eventDispatcher->dispatch(ConfigEvents::IMPORT, new ConfigImporterEvent($this));
     // The import is now complete.
     $this->lock->release(static::LOCK_ID);
@@ -702,7 +691,7 @@ class ConfigImporter extends DependencySerialization {
    * @throws \Drupal\Core\Config\ConfigImporterException
    *   Exception thrown if the validate event logged any errors.
    */
-  public function validate() {
+  protected function validate() {
     if (!$this->validated) {
       // Validate renames.
       foreach ($this->getUnprocessedConfiguration('rename') as $name) {
@@ -982,6 +971,10 @@ class ConfigImporter extends DependencySerialization {
    *   The rename configuration name, as provided by
    *   \Drupal\Core\Config\StorageComparer::createRenameName().
    *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   Thrown if the data is owned by an entity type, but the entity storage
+   *   does not support imports.
+   *
    * @return bool
    *   TRUE if the configuration was imported as a configuration entity. FALSE
    *   otherwise.
@@ -1024,16 +1017,6 @@ class ConfigImporter extends DependencySerialization {
   }
 
   /**
-   * Returns the identifier for events and locks.
-   *
-   * @return string
-   *   The identifier for events and locks.
-   */
-  public function getId() {
-    return static::LOCK_ID;
-  }
-
-  /**
    * Gets all the service dependencies from \Drupal.
    *
    * Since the ConfigImporter handles module installation the kernel and the
@@ -1042,8 +1025,7 @@ class ConfigImporter extends DependencySerialization {
    */
   protected function reInjectMe() {
     $this->eventDispatcher = \Drupal::service('event_dispatcher');
-    $this->configFactory = \Drupal::configFactory();
-    $this->entityManager = \Drupal::entityManager();
+    $this->configManager = \Drupal::service('config.manager');
     $this->lock = \Drupal::lock();
     $this->typedConfigManager = \Drupal::service('config.typed');
     $this->moduleHandler = \Drupal::moduleHandler();
