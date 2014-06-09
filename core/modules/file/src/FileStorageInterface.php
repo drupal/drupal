@@ -28,16 +28,4 @@ interface FileStorageInterface extends EntityStorageInterface {
    *   An integer containing the number of bytes used.
    */
   public function spaceUsed($uid = NULL, $status = FILE_STATUS_PERMANENT);
-
-  /**
-   * Retrieves old temporary files.
-   *
-   * Get files older than the temporary maximum age,
-   * \Drupal::config('system.file')->get('temporary_maximum_age').
-   *
-   *  @return int[]
-   *    A list of file IDs of the files to be deleted.
-   */
-  public function retrieveTemporaryFiles();
-
 }
