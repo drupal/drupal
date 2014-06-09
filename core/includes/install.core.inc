@@ -2044,12 +2044,16 @@ function install_display_requirements($install_state, $requirements) {
   // and indicating a desire to continue anyway. See drupal_requirements_url().
   if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($install_state['parameters']['continue']))) {
     if ($install_state['interactive']) {
-      $build['#title'] = t('Requirements problem');
-      $build['report'] = array(
-        '#theme' => 'status_report',
-        '#requirements' => $requirements,
-        '#suffix' => t('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity)))),
-      );
+      $build['report']['#theme'] = 'status_report';
+      $build['report']['#requirements'] = $requirements;
+      if ($severity == REQUIREMENT_WARNING) {
+        $build['#title'] = t('Requirements review');
+        $build['#suffix'] = t('Check the messages and <a href="!retry">retry</a>, or you may choose to <a href="!cont">continue anyway</a>.', array('!retry' => check_url(drupal_requirements_url(REQUIREMENT_ERROR)), '!cont' => check_url(drupal_requirements_url($severity))));
+      }
+      else {
+        $build['#title'] = t('Requirements problem');
+        $build['#suffix'] = t('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
+      }
       return $build;
     }
     else {
