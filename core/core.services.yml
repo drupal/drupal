@@ -115,6 +115,9 @@ services:
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
     arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery']
+  context.handler:
+    class: Drupal\Core\Plugin\Context\ContextHandler
+    arguments: ['@typed_data_manager']
   cron:
     class: Drupal\Core\Cron
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@current_user', '@session_manager']

@@ -10,6 +10,7 @@ namespace Drupal\block;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\Context\ContextAwarePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -24,6 +25,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 class BlockManager extends DefaultPluginManager implements BlockManagerInterface {
 
   use StringTranslationTrait;
+  use ContextAwarePluginManagerTrait;
 
   /**
    * An array of all available modules and their data.
@@ -106,7 +108,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    */
   public function getSortedDefinitions() {
     // Sort the plugins first by category, then by label.
-    $definitions = $this->getDefinitions();
+    $definitions = $this->getDefinitionsForContexts();
     uasort($definitions, function ($a, $b) {
       if ($a['category'] != $b['category']) {
         return strnatcasecmp($a['category'], $b['category']);

@@ -12,12 +12,15 @@ use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Executable\ExecutableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\Context\ContextAwarePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * A plugin manager for condition plugins.
  */
 class ConditionManager extends DefaultPluginManager implements ExecutableManagerInterface {
+
+  use ContextAwarePluginManagerTrait;
 
   /**
    * Constructs a ConditionManager object.

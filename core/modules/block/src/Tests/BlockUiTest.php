@@ -158,6 +158,24 @@ class BlockUiTest extends WebTestBase {
   }
 
   /**
+   * Tests the behavior of context-aware blocks.
+   */
+  public function testContextAwareBlocks() {
+    $arguments = array(
+      ':ul_class' => 'block-list',
+      ':li_class' => 'test-context-aware',
+      ':href' => 'admin/structure/block/add/test_context_aware/stark',
+      ':text' => 'Test context-aware block',
+    );
+
+    $this->drupalGet('admin/structure/block');
+    $elements = $this->xpath('//details[@id="edit-category-block-test"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->assertTrue(empty($elements), 'The context-aware test block does not appear.');
+    $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware');
+    $this->assertTrue(!empty($definition), 'The context-aware test block exists.');
+  }
+
+  /**
    * Tests that the BlockForm populates machine name correctly.
    */
   public function testMachineNameSuggestion() {

@@ -7,12 +7,12 @@
 
 namespace Drupal\block;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Plugin\Context\ContextAwarePluginManagerInterface;
 
 /**
  * Provides an interface for the discovery and instantiation of block plugins.
  */
-interface BlockManagerInterface extends PluginManagerInterface {
+interface BlockManagerInterface extends ContextAwarePluginManagerInterface {
 
   /**
    * Gets the names of all block categories.
