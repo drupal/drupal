@@ -8,7 +8,6 @@
 namespace Drupal\user\Tests;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**

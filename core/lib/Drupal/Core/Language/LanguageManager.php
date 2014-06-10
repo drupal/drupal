@@ -40,7 +40,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
   /**
    * Constructs the language manager.
    *
-   * @param \Drupal\Core\Language\Language $default_language
+   * @param \Drupal\Core\Language\LanguageDefault $default_language
    *   The default language.
    */
   public function __construct(LanguageDefault $default_language) {
@@ -80,13 +80,13 @@ class LanguageManager extends DependencySerialization implements LanguageManager
    * {@inheritdoc}
    */
   public function getLanguageTypes() {
-    return array(Language::TYPE_INTERFACE, Language::TYPE_CONTENT, Language::TYPE_URL);
+    return array(LanguageInterface::TYPE_INTERFACE, LanguageInterface::TYPE_CONTENT, LanguageInterface::TYPE_URL);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCurrentLanguage($type = Language::TYPE_INTERFACE) {
+  public function getCurrentLanguage($type = LanguageInterface::TYPE_INTERFACE) {
     return $this->getDefaultLanguage();
   }
 
@@ -107,7 +107,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
   /**
    * {@inheritdoc}
    */
-  public function getLanguages($flags = Language::STATE_CONFIGURABLE) {
+  public function getLanguages($flags = LanguageInterface::STATE_CONFIGURABLE) {
     // Initialize master language list.
     if (!isset($this->languages)) {
       // No language module, so use the default language only.
@@ -123,7 +123,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
     $filtered_languages = array();
 
     // Add the site's default language if flagged as allowed value.
-    if ($flags & Language::STATE_SITE_DEFAULT) {
+    if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
       $default = isset($default) ? $default : $this->getDefaultLanguage();
       // Rename the default language.
       $default->name = $this->t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
@@ -131,7 +131,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
     }
 
     foreach ($this->languages as $id => $language) {
-      if (($language->locked && ($flags & Language::STATE_LOCKED)) || (!$language->locked && ($flags & Language::STATE_CONFIGURABLE))) {
+      if (($language->locked && ($flags & LanguageInterface::STATE_LOCKED)) || (!$language->locked && ($flags & LanguageInterface::STATE_CONFIGURABLE))) {
         $filtered_languages[$id] = $language;
       }
     }
@@ -143,7 +143,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
    * {@inheritdoc}
    */
   public function getLanguage($langcode) {
-    $languages = $this->getLanguages(Language::STATE_ALL);
+    $languages = $this->getLanguages(LanguageInterface::STATE_ALL);
     return isset($languages[$langcode]) ? $languages[$langcode] : NULL;
   }
 
@@ -151,7 +151,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
    * {@inheritdoc}
    */
   public function getLanguageName($langcode) {
-    if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
+    if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       return $this->t('None');
     }
     if ($language = $this->getLanguage($langcode)) {
@@ -173,14 +173,14 @@ class LanguageManager extends DependencySerialization implements LanguageManager
       'default' => FALSE,
       'locked' => TRUE,
     );
-    $languages[Language::LANGCODE_NOT_SPECIFIED] = new Language(array(
-      'id' => Language::LANGCODE_NOT_SPECIFIED,
+    $languages[LanguageInterface::LANGCODE_NOT_SPECIFIED] = new Language(array(
+      'id' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'name' => $this->t('Not specified'),
       'weight' => ++$weight,
     ) + $locked_language);
 
-    $languages[Language::LANGCODE_NOT_APPLICABLE] = new Language(array(
-      'id' => Language::LANGCODE_NOT_APPLICABLE,
+    $languages[LanguageInterface::LANGCODE_NOT_APPLICABLE] = new Language(array(
+      'id' => LanguageInterface::LANGCODE_NOT_APPLICABLE,
       'name' => $this->t('Not applicable'),
       'weight' => ++$weight,
     ) + $locked_language);
@@ -200,7 +200,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
    * {@inheritdoc}
    */
   public function getFallbackCandidates($langcode = NULL, array $context = array()) {
-    return array(Language::LANGCODE_DEFAULT);
+    return array(LanguageInterface::LANGCODE_DEFAULT);
   }
 
   /**
@@ -235,7 +235,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
     return array(
       'af' => array('Afrikaans', 'Afrikaans'),
       'am' => array('Amharic', 'አማርኛ'),
-      'ar' => array('Arabic', /* Left-to-right marker "‭" */ 'العربية', Language::DIRECTION_RTL),
+      'ar' => array('Arabic', /* Left-to-right marker "‭" */ 'العربية', LanguageInterface::DIRECTION_RTL),
       'ast' => array('Asturian', 'Asturianu'),
       'az' => array('Azerbaijani', 'Azərbaycanca'),
       'be' => array('Belarusian', 'Беларуская'),
@@ -255,7 +255,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
       'es' => array('Spanish', 'Español'),
       'et' => array('Estonian', 'Eesti'),
       'eu' => array('Basque', 'Euskera'),
-      'fa' => array('Persian, Farsi', /* Left-to-right marker "‭" */ 'فارسی', Language::DIRECTION_RTL),
+      'fa' => array('Persian, Farsi', /* Left-to-right marker "‭" */ 'فارسی', LanguageInterface::DIRECTION_RTL),
       'fi' => array('Finnish', 'Suomi'),
       'fil' => array('Filipino', 'Filipino'),
       'fo' => array('Faeroese', 'Føroyskt'),
@@ -266,7 +266,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
       'gl' => array('Galician', 'Galego'),
       'gsw-berne' => array('Swiss German', 'Schwyzerdütsch'),
       'gu' => array('Gujarati', 'ગુજરાતી'),
-      'he' => array('Hebrew', /* Left-to-right marker "‭" */ 'עברית', Language::DIRECTION_RTL),
+      'he' => array('Hebrew', /* Left-to-right marker "‭" */ 'עברית', LanguageInterface::DIRECTION_RTL),
       'hi' => array('Hindi', 'हिन्दी'),
       'hr' => array('Croatian', 'Hrvatski'),
       'ht' => array('Haitian Creole', 'Kreyòl ayisyen'),
@@ -322,7 +322,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
       'tyv' => array('Tuvan', 'Тыва дыл'),
       'ug' => array('Uyghur', 'Уйғур'),
       'uk' => array('Ukrainian', 'Українська'),
-      'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', Language::DIRECTION_RTL),
+      'ur' => array('Urdu', /* Left-to-right marker "‭" */ 'اردو', LanguageInterface::DIRECTION_RTL),
       'vi' => array('Vietnamese', 'Tiếng Việt'),
       'xx-lolspeak' => array('Lolspeak', 'Lolspeak'),
       'zh-hans' => array('Chinese, Simplified', '简体中文'),
@@ -339,7 +339,7 @@ class LanguageManager extends DependencySerialization implements LanguageManager
    *
    * @see \Drupal\language\ConfigurableLanguageManager::setConfigOverrideLanguage()
    */
-  public function setConfigOverrideLanguage(Language $language = NULL) {
+  public function setConfigOverrideLanguage(LanguageInterface $language = NULL) {
     return $this;
   }
 

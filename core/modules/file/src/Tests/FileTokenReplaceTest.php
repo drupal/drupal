@@ -7,8 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the file token replacement in strings.
  */

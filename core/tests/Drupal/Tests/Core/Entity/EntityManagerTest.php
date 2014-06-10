@@ -18,6 +18,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -980,7 +981,7 @@ class EntityManagerTest extends UnitTestCase {
     $entity->expects($this->exactly(2))
       ->method('hasTranslation')
       ->will($this->returnValueMap(array(
-        array(Language::LANGCODE_DEFAULT, FALSE),
+        array(LanguageInterface::LANGCODE_DEFAULT, FALSE),
         array('custom_langcode', TRUE),
       )));
 

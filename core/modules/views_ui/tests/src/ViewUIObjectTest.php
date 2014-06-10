@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewExecutable;
 use Drupal\views_ui\ViewUI;
@@ -37,7 +37,7 @@ class ViewUIObjectTest extends UnitTestCase {
     $method_args['setOriginalId'] = array(12);
     $method_args['setStatus'] = array(TRUE);
     $method_args['enforceIsNew'] = array(FALSE);
-    $method_args['label'] = array(Language::LANGCODE_NOT_SPECIFIED);
+    $method_args['label'] = array(LanguageInterface::LANGCODE_NOT_SPECIFIED);
 
     $reflection = new \ReflectionClass('Drupal\Core\Config\Entity\ConfigEntityInterface');
     $interface_methods = array();

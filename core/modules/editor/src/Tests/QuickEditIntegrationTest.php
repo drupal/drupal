@@ -8,7 +8,7 @@
 namespace Drupal\editor\Tests;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\quickedit\EditorSelector;
 use Drupal\quickedit\MetadataGenerator;
 use Drupal\quickedit\Plugin\InPlaceEditorManager;
@@ -119,7 +119,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
    */
   protected function getSelectedEditor($entity_id, $field_name, $view_mode = 'default') {
     $entity = entity_load('entity_test', $entity_id, TRUE);
-    $items = $entity->getTranslation(Language::LANGCODE_NOT_SPECIFIED)->get($field_name);
+    $items = $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED)->get($field_name);
     $options = entity_get_display('entity_test', 'entity_test', $view_mode)->getComponent($field_name);
     return $this->editorSelector->getEditor($options['type'], $items);
   }
@@ -172,7 +172,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $entity = entity_load('entity_test', $this->entity->id());
 
     // Verify metadata.
-    $items = $entity->getTranslation(Language::LANGCODE_NOT_SPECIFIED)->get($this->field_name);
+    $items = $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED)->get($this->field_name);
     $metadata = $this->metadataGenerator->generateFieldMetadata($items, 'default');
     $expected = array(
       'access' => TRUE,
@@ -212,7 +212,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     // Verify AJAX response.
     $controller = new EditorController();
     $request = new Request();
-    $response = $controller->getUntransformedText($entity, $this->field_name, Language::LANGCODE_NOT_SPECIFIED, 'default');
+    $response = $controller->getUntransformedText($entity, $this->field_name, LanguageInterface::LANGCODE_NOT_SPECIFIED, 'default');
     $expected = array(
       array(
         'command' => 'editorGetUntransformedText',

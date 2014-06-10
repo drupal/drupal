@@ -7,7 +7,6 @@
 
 namespace Drupal\text\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;

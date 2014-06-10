@@ -7,7 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -106,7 +106,7 @@ class LocalePathTest extends WebTestBase {
     $edit = array(
       'source'   => 'node/' . $node->id(),
       'alias'    => $custom_path,
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
     $lookup_path = $this->container->get('path.alias_manager')->getAliasByPath('node/' . $node->id(), 'en');
@@ -118,7 +118,7 @@ class LocalePathTest extends WebTestBase {
 
     // Create language nodes to check priority of aliases.
     $first_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1, 'langcode' => 'en'));
-    $second_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1, 'langcode' => Language::LANGCODE_NOT_SPECIFIED));
+    $second_node = $this->drupalCreateNode(array('type' => 'page', 'promote' => 1, 'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED));
 
     // Assign a custom path alias to the first node with the English language.
     $edit = array(
@@ -128,7 +128,8 @@ class LocalePathTest extends WebTestBase {
     );
     $this->container->get('path.alias_storage')->save($edit['source'], $edit['alias'], $edit['langcode']);
 
-    // Assign a custom path alias to second node with Language::LANGCODE_NOT_SPECIFIED.
+    // Assign a custom path alias to second node with
+    // LanguageInterface::LANGCODE_NOT_SPECIFIED.
     $edit = array(
       'source'   => 'node/' . $second_node->id(),
       'alias'    => $custom_path,

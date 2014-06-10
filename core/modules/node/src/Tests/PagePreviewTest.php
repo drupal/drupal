@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the node entity preview functionality.
@@ -47,7 +47,7 @@ class PagePreviewTest extends NodeTestBase {
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => $this->randomName(),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
     ));
     $vocabulary->save();
@@ -59,7 +59,7 @@ class PagePreviewTest extends NodeTestBase {
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => $this->vocabulary->id(),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $term->save();
 

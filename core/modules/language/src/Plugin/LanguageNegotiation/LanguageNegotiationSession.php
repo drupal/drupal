@@ -7,7 +7,7 @@
 
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Drupal\language\LanguageSwitcherInterface;
@@ -68,7 +68,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
   /**
    * {@inheritdoc}
    */
-  public function persist(Language $language) {
+  public function persist(LanguageInterface $language) {
     parent::persist($language);
 
     // We need to update the session parameter with the request value only if we

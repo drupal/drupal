@@ -8,7 +8,6 @@
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
 
 /**
  * Clears the entity render cache for all entity types.

@@ -9,7 +9,7 @@ namespace Drupal\locale\Form;
 
 use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\locale\PoDatabaseReader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -69,7 +69,7 @@ class ExportForm extends FormBase {
     if (empty($language_options)) {
       $form['langcode'] = array(
         '#type' => 'value',
-        '#value' => Language::LANGCODE_SYSTEM,
+        '#value' => LanguageInterface::LANGCODE_SYSTEM,
       );
       $form['langcode_text'] = array(
         '#type' => 'item',
@@ -84,7 +84,7 @@ class ExportForm extends FormBase {
         '#options' => $language_options,
         '#default_value' => $language_default->id,
         '#empty_option' => $this->t('Source text only, no translations'),
-        '#empty_value' => Language::LANGCODE_SYSTEM,
+        '#empty_value' => LanguageInterface::LANGCODE_SYSTEM,
       );
       $form['content_options'] = array(
         '#type' => 'details',
@@ -93,7 +93,7 @@ class ExportForm extends FormBase {
         '#tree' => TRUE,
         '#states' => array(
           'invisible' => array(
-            ':input[name="langcode"]' => array('value' => Language::LANGCODE_SYSTEM),
+            ':input[name="langcode"]' => array('value' => LanguageInterface::LANGCODE_SYSTEM),
           ),
         ),
       );
@@ -129,7 +129,7 @@ class ExportForm extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     // If template is required, language code is not given.
-    if ($form_state['values']['langcode'] != Language::LANGCODE_SYSTEM) {
+    if ($form_state['values']['langcode'] != LanguageInterface::LANGCODE_SYSTEM) {
       $language = $this->languageManager->getLanguage($form_state['values']['langcode']);
     }
     else {

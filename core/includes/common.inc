@@ -19,7 +19,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -415,7 +415,7 @@ function check_url($uri) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  $langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT)->id;
+  $langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
 
   $output = "<channel>\n";
   $output .= ' <title>' . String::checkPlain($title) . "</title>\n";
@@ -1773,7 +1773,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
             'currentPath' => $current_path,
             'currentPathIsAdmin' => $current_path_is_admin,
             'isFront' => drupal_is_front_page(),
-            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_URL)->id,
+            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->id,
           );
           if (!empty($current_query)) {
             ksort($current_query);

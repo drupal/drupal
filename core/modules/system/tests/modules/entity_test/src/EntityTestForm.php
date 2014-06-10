@@ -7,7 +7,7 @@
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Form controller for the test entity edit forms.
@@ -45,7 +45,7 @@ class EntityTestForm extends ContentEntityForm {
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $entity->getUntranslated()->language()->id,
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
     );
 
     // @todo: Is there a better way to check if an entity type is revisionable?

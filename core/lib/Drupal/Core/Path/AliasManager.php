@@ -9,7 +9,7 @@ namespace Drupal\Core\Path;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\CacheDecorator\CacheDecoratorInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\LanguageManagerInterface;
 
@@ -158,7 +158,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
     // alias matching the URL path.
-    $langcode = $langcode ?: $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id;
+    $langcode = $langcode ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL)->id;
 
     // If we already know that there are no paths for this alias simply return.
     if (empty($alias) || !empty($this->noPath[$langcode][$alias])) {
@@ -192,7 +192,7 @@ class AliasManager implements AliasManagerInterface, CacheDecoratorInterface {
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
     // alias matching the URL path.
-    $langcode = $langcode ?: $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id;
+    $langcode = $langcode ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL)->id;
 
     // Check the path whitelist, if the top-level part before the first /
     // is not in the list, then there is no need to do anything further,

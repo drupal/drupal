@@ -8,7 +8,7 @@
 namespace Drupal\content_translation\Access;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
@@ -70,7 +70,7 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
       switch ($operation) {
         case 'create':
           $source = language_load($source) ?: $entity->language();
-          $target = language_load($target) ?: \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
+          $target = language_load($target) ?: \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
           return ($source->id != $target->id
             && isset($languages[$source->id])
             && isset($languages[$target->id])
@@ -80,7 +80,7 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
 
         case 'update':
         case 'delete':
-          $language = language_load($language) ?: \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
+          $language = language_load($language) ?: \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
           return isset($languages[$language->id])
             && $language->id != $entity->getUntranslated()->language()->id
             && isset($translations[$language->id])

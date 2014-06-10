@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -33,7 +33,7 @@ class ConfigModuleOverridesEvent extends Event {
   /**
    * The Language object used to override configuration data.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $language;
 
@@ -42,10 +42,10 @@ class ConfigModuleOverridesEvent extends Event {
    *
    * @param array $names
    *   A list of configuration names.
-   * @param \Drupal\Core\Language\Language
+   * @param \Drupal\Core\Language\LanguageInterface
    *   (optional) The language for this configuration.
    */
-  public function __construct(array $names, Language $language = NULL) {
+  public function __construct(array $names, LanguageInterface $language = NULL) {
     $this->names = $names;
     $this->language = $language;
     $this->overrides = array();
@@ -64,7 +64,7 @@ class ConfigModuleOverridesEvent extends Event {
   /**
    * Gets configuration language.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   The configuration language object.
    */
   public function getLanguage() {

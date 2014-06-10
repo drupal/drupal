@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;

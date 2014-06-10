@@ -55,7 +55,8 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   - 'language': An optional language object. If the path being linked to is
    *     internal to the site, $options['language'] is used to look up the alias
    *     for the URL. If $options['language'] is omitted, the language will be
-   *     obtained from \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_URL).
+   *     obtained from
+   *     \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL).
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
@@ -122,7 +123,7 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *     displayed outside the site, such as in an RSS feed.
    *   - 'language': An optional language object used to look up the alias
    *     for the URL. If $options['language'] is omitted, it defaults to the
-   *     current language for the language type Language::TYPE_URL.
+   *     current language for the language type LanguageInterface::TYPE_URL.
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. if mixed mode sessions are permitted, TRUE enforces HTTPS

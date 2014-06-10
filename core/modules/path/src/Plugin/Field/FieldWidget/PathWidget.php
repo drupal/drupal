@@ -9,7 +9,7 @@ namespace Drupal\path\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -33,7 +33,7 @@ class PathWidget extends WidgetBase {
     $path = array();
     if (!$entity->isNew()) {
       $conditions = array('source' => $entity->getSystemPath());
-      if ($items->getLangcode() != Language::LANGCODE_NOT_SPECIFIED) {
+      if ($items->getLangcode() != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
         $conditions['langcode'] = $items->getLangcode();
       }
       $path = \Drupal::service('path.alias_storage')->load($conditions);

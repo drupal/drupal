@@ -8,7 +8,7 @@
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests creating and saving a node.
@@ -84,7 +84,7 @@ class NodeCreationTest extends NodeTestBase {
       'uid'      => $this->loggedInUser->id(),
       'name'     => $this->loggedInUser->name,
       'type'     => 'page',
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'title'    => 'testing_transaction_exception',
     );
 

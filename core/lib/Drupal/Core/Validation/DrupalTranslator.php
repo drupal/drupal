@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Validation;
 
-use Drupal\Core\Language\Language;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

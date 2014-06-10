@@ -7,7 +7,6 @@
 
 namespace Drupal\content_translation\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\content_translation\FieldTranslationSynchronizer;
 

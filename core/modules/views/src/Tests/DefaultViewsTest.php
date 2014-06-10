@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\comment\CommentInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -54,7 +54,7 @@ class DefaultViewsTest extends ViewTestBase {
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => array('page' => 'page'),
       'weight' => mt_rand(0, 10),
@@ -164,7 +164,7 @@ class DefaultViewsTest extends ViewTestBase {
       // Use the first available text format.
       'format' => $format->format,
       'vid' => $vocabulary->id(),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $term->save();
     return $term;

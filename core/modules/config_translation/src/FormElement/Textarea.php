@@ -7,7 +7,7 @@
 
 namespace Drupal\config_translation\FormElement;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -19,7 +19,7 @@ class Textarea implements ElementInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormElement(array $definition, Language $language, $value) {
+  public function getFormElement(array $definition, LanguageInterface $language, $value) {
     // Estimate a comfortable size of the input textarea.
     $rows_words = ceil(str_word_count($value) / 5);
     $rows_newlines = substr_count($value, "\n" ) + 1;

@@ -16,7 +16,7 @@ use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\FieldConfigUpdateForbiddenException;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -381,12 +381,12 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
         // that store several properties).
         if ($field_name = strstr($name, '__', TRUE)) {
           $property_name = substr($name, strpos($name, '__') + 2);
-          $entities[$id][$field_name][Language::LANGCODE_DEFAULT][$property_name] = $value;
+          $entities[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = $value;
         }
         else {
           // Handle columns named directly after the field (e.g if the field
           // type only stores one property).
-          $entities[$id][$name][Language::LANGCODE_DEFAULT] = $value;
+          $entities[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = $value;
         }
       }
       // If we have no multilingual values we can instantiate entity objecs
@@ -427,7 +427,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
         // Get the revision IDs.
         $revision_ids = array();
         foreach ($entities as $values) {
-          $revision_ids[] = is_object($values) ? $values->getRevisionId() : $values[$this->revisionKey][Language::LANGCODE_DEFAULT];
+          $revision_ids[] = is_object($values) ? $values->getRevisionId() : $values[$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT];
         }
         $query->condition($this->revisionKey, $revision_ids);
       }
@@ -447,8 +447,8 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
         $id = $values[$this->idKey];
 
         // Field values in default language are stored with
-        // Language::LANGCODE_DEFAULT as key.
-        $langcode = empty($values['default_langcode']) ? $values['langcode'] : Language::LANGCODE_DEFAULT;
+        // LanguageInterface::LANGCODE_DEFAULT as key.
+        $langcode = empty($values['default_langcode']) ? $values['langcode'] : LanguageInterface::LANGCODE_DEFAULT;
         $translations[$id][$langcode] = TRUE;
 
 
@@ -467,7 +467,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       }
 
       foreach ($entities as $id => $values) {
-        $bundle = $this->bundleKey ? $values[$this->bundleKey][Language::LANGCODE_DEFAULT] : FALSE;
+        $bundle = $this->bundleKey ? $values[$this->bundleKey][LanguageInterface::LANGCODE_DEFAULT] : FALSE;
         // Turn the record into an entity class.
         $entities[$id] = new $this->entityClass($values, $this->entityTypeId, $bundle, array_keys($translations[$id]));
       }
@@ -962,7 +962,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
     }
 
     // Load field data.
-    $langcodes = array_keys(language_list(Language::STATE_ALL));
+    $langcodes = array_keys(language_list(LanguageInterface::STATE_ALL));
     foreach ($fields as $field_name => $field) {
       $table = $load_current ? static::_fieldTableName($field) : static::_fieldRevisionTableName($field);
 

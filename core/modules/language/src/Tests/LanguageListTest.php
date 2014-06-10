@@ -9,6 +9,7 @@ namespace Drupal\language\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Functional tests for the language list configuration forms.
@@ -175,10 +176,10 @@ class LanguageListTest extends WebTestBase {
     $expected_all_languages = array('l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx');
     $expected_conf_languages = array('l3' => 'l3', 'l1' => 'l1', 'en' => 'en');
 
-    $locked_languages = $this->container->get('language_manager')->getLanguages(Language::STATE_LOCKED);
+    $locked_languages = $this->container->get('language_manager')->getLanguages(LanguageInterface::STATE_LOCKED);
     $this->assertEqual(array_diff_key($expected_locked_languages, $locked_languages), array(), 'Locked languages loaded correctly.');
 
-    $all_languages = $this->container->get('language_manager')->getLanguages(Language::STATE_ALL);
+    $all_languages = $this->container->get('language_manager')->getLanguages(LanguageInterface::STATE_ALL);
     $this->assertEqual(array_diff_key($expected_all_languages, $all_languages), array(), 'All languages loaded correctly.');
 
     $conf_languages = $this->container->get('language_manager')->getLanguages();

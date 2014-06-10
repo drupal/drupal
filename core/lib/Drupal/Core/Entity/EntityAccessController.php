@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -54,7 +54,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
     $account = $this->prepareUser($account);
 
     if (($access = $this->getCache($entity->uuid(), $operation, $langcode, $account)) !== NULL) {
@@ -203,7 +203,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
   public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = array()) {
     $account = $this->prepareUser($account);
     $context += array(
-      'langcode' => Language::LANGCODE_DEFAULT,
+      'langcode' => LanguageInterface::LANGCODE_DEFAULT,
     );
 
     $cid = $entity_bundle ? 'create:' . $entity_bundle : 'create';

@@ -17,7 +17,7 @@ interface TranslatableInterface {
   /**
    * Returns the default language.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   The language object.
    */
   public function language();
@@ -42,7 +42,8 @@ interface TranslatableInterface {
    * instantiated.
    *
    * @param $langcode
-   *   The language code of the translation to get or Language::LANGCODE_DEFAULT
+   *   The language code of the translation to get or
+   *   LanguageInterface::LANGCODE_DEFAULT
    *   to get the data in default language.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface

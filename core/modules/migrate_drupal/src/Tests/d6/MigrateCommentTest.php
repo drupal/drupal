@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\comment\Entity\Comment;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -76,7 +76,7 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
     $this->assertEqual(0, $comment->pid->target_id);
     $this->assertEqual(1, $comment->entity_id->target_id);
     $this->assertEqual('node', $comment->entity_type->value);
-    $this->assertEqual(Language::LANGCODE_NOT_SPECIFIED, $comment->language()->id);
+    $this->assertEqual(LanguageInterface::LANGCODE_NOT_SPECIFIED, $comment->language()->id);
 
     $comment = entity_load('comment', 2);
     $this->assertEqual('The response to the second comment.', $comment->subject->value);

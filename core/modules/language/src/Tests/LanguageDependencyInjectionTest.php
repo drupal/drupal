@@ -30,7 +30,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
   /**
    * Test dependency injected languages against a new Language object.
    *
-   * @see \Drupal\Core\Language\Language
+   * @see \Drupal\Core\Language\LanguageInterface
    */
   function testDependencyInjectedNewLanguage() {
     $expected = $this->languageManager->getDefaultLanguage();

@@ -16,7 +16,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
@@ -252,7 +252,7 @@ abstract class WebTestBase extends TestBase {
    *   - status: NODE_PUBLISHED.
    *   - sticky: NODE_NOT_STICKY.
    *   - type: 'page'.
-   *   - langcode: Language::LANGCODE_NOT_SPECIFIED.
+   *   - langcode: LanguageInterface::LANGCODE_NOT_SPECIFIED.
    *   - uid: The currently logged in user, or the user running test.
    *   - revision: 1. (Backwards-compatible binary flag indicating whether a
    *     new revision should be created; use 1 to specify a new revision.)
@@ -271,7 +271,7 @@ abstract class WebTestBase extends TestBase {
       'status'    => NODE_PUBLISHED,
       'sticky'    => NODE_NOT_STICKY,
       'type'      => 'page',
-      'langcode'  => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode'  => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
 
     // Use the original node's created time for existing nodes.

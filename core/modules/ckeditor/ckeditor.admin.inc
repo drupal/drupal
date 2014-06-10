@@ -5,7 +5,6 @@
  * Callbacks and theming for the CKEditor toolbar configuration UI.
  */
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 
 /**

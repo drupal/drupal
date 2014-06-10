@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Language\Language;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 

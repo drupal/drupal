@@ -7,8 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests comment threading.
  */

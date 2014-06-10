@@ -9,7 +9,7 @@ namespace Drupal\node;
 
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Defines the controller class for nodes.
@@ -54,7 +54,7 @@ class NodeStorage extends ContentEntityDatabaseStorage implements NodeStorageInt
    */
   public function clearRevisionsLanguage($language) {
     return $this->database->update('node_revision')
-      ->fields(array('langcode' => Language::LANGCODE_NOT_SPECIFIED))
+      ->fields(array('langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED))
       ->condition('langcode', $language->id)
       ->execute();
   }

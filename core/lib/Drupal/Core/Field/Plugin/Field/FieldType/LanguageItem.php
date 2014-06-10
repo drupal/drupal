@@ -9,7 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 
@@ -92,7 +92,7 @@ class LanguageItem extends FieldItemBase {
    */
   public function applyDefaultValue($notify = TRUE) {
     // Default to LANGCODE_NOT_SPECIFIED.
-    $this->setValue(array('value' => Language::LANGCODE_NOT_SPECIFIED), $notify);
+    $this->setValue(array('value' => LanguageInterface::LANGCODE_NOT_SPECIFIED), $notify);
     return $this;
   }
 

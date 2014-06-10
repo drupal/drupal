@@ -7,9 +7,9 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Language\Language;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests Entity API default field value functionality.
@@ -55,7 +55,7 @@ class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
    */
   protected function assertDefaultValues($entity_type) {
     $entity = entity_create($entity_type);
-    $this->assertEqual($entity->langcode->value, Language::LANGCODE_NOT_SPECIFIED, String::format('%entity_type: Default language', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->langcode->value, LanguageInterface::LANGCODE_NOT_SPECIFIED, String::format('%entity_type: Default language', array('%entity_type' => $entity_type)));
     $this->assertTrue(Uuid::isValid($entity->uuid->value), String::format('%entity_type: Default UUID', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->name->getValue(), array(0 => array('value' => NULL)), 'Field has one empty value by default.');
   }

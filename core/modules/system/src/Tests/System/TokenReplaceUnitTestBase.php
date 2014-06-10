@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Core\Language\Language;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
@@ -18,7 +17,7 @@ abstract class TokenReplaceUnitTestBase extends EntityUnitTestBase {
   /**
    * The interface language.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $interfaceLanguage;
 

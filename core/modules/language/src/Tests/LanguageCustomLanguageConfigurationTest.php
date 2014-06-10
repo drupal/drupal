@@ -9,6 +9,7 @@ namespace Drupal\language\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Functional tests for language configuration.
@@ -56,7 +57,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => 'white space',
       'name' => '<strong>evil markup</strong>',
-      'direction' => Language::DIRECTION_LTR,
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertRaw(t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => t('Language code'))));
@@ -68,7 +69,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => 'de',
       'name' => 'German',
-      'direction' => Language::DIRECTION_LTR,
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
 
     // Add the language the first time.

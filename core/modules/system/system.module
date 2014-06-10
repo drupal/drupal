@@ -6,10 +6,10 @@
  */
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\block\BlockPluginInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -514,7 +514,7 @@ function system_element_info() {
   );
   $types['language_select'] = array(
     '#input' => TRUE,
-    '#default_value' => Language::LANGCODE_NOT_SPECIFIED,
+    '#default_value' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
   );
   $types['weight'] = array(
     '#input' => TRUE,
@@ -976,7 +976,7 @@ function system_page_build(&$page) {
       array(
         'path' => current_path(),
         'front' => drupal_is_front_page(),
-        'language' => \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\Language::TYPE_URL)->id,
+        'language' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->id,
         'query' => \Drupal::service('request')->query->all(),
       )
     );

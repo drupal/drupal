@@ -10,7 +10,7 @@ namespace Drupal\hal\Normalizer;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\rest\LinkManager\LinkManagerInterface;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
@@ -136,7 +136,7 @@ class ContentEntityNormalizer extends NormalizerBase {
       $langcode = language_get_default_langcode($typed_data_ids['entity_type'], $typed_data_ids['bundle']);
     }
     else {
-      $langcode = Language::LANGCODE_NOT_SPECIFIED;
+      $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
     }
 
     $entity_type = $this->entityManager->getDefinition($typed_data_ids['entity_type']);

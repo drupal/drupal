@@ -9,7 +9,7 @@ namespace Drupal\Core\Path;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides a class for CRUD operations on path aliases.
@@ -46,7 +46,7 @@ class AliasStorage implements AliasStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function save($source, $alias, $langcode = Language::LANGCODE_NOT_SPECIFIED, $pid = NULL) {
+  public function save($source, $alias, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $pid = NULL) {
 
     $fields = array(
       'source' => $source,
@@ -114,7 +114,7 @@ class AliasStorage implements AliasStorageInterface {
     $args = array(
       ':system' => $preloaded,
       ':langcode' => $langcode,
-      ':langcode_undetermined' => Language::LANGCODE_NOT_SPECIFIED,
+      ':langcode_undetermined' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
     // Always get the language-specific alias before the language-neutral one.
     // For example 'de' is less than 'und' so the order needs to be ASC, while
@@ -123,12 +123,12 @@ class AliasStorage implements AliasStorageInterface {
     // created alias for each source. Subsequent queries using fetchField() must
     // use pid DESC to have the same effect. For performance reasons, the query
     // builder is not used here.
-    if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
+    if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       // Prevent PDO from complaining about a token the query doesn't use.
       unset($args[':langcode']);
       $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode = :langcode_undetermined ORDER BY pid ASC', $args);
     }
-    elseif ($langcode < Language::LANGCODE_NOT_SPECIFIED) {
+    elseif ($langcode < LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       $result = $this->connection->query('SELECT source, alias FROM {url_alias} WHERE source IN (:system) AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode ASC, pid ASC', $args);
     }
     else {
@@ -145,14 +145,14 @@ class AliasStorage implements AliasStorageInterface {
     $args = array(
       ':source' => $path,
       ':langcode' => $langcode,
-      ':langcode_undetermined' => Language::LANGCODE_NOT_SPECIFIED,
+      ':langcode_undetermined' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
     // See the queries above.
-    if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
+    if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       unset($args[':langcode']);
       $alias = $this->connection->query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode = :langcode_undetermined ORDER BY pid DESC", $args)->fetchField();
     }
-    elseif ($langcode > Language::LANGCODE_NOT_SPECIFIED) {
+    elseif ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       $alias = $this->connection->query("SELECT alias FROM {url_alias} WHERE source = :source AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args)->fetchField();
     }
     else {
@@ -169,14 +169,14 @@ class AliasStorage implements AliasStorageInterface {
     $args = array(
       ':alias' => $path,
       ':langcode' => $langcode,
-      ':langcode_undetermined' => Language::LANGCODE_NOT_SPECIFIED,
+      ':langcode_undetermined' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
     // See the queries above.
-    if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
+    if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       unset($args[':langcode']);
       $result = $this->connection->query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode = :langcode_undetermined ORDER BY pid DESC", $args);
     }
-    elseif ($langcode > Language::LANGCODE_NOT_SPECIFIED) {
+    elseif ($langcode > LanguageInterface::LANGCODE_NOT_SPECIFIED) {
       $result = $this->connection->query("SELECT source FROM {url_alias} WHERE alias = :alias AND langcode IN (:langcode, :langcode_undetermined) ORDER BY langcode DESC, pid DESC", $args);
     }
     else {
@@ -217,7 +217,7 @@ class AliasStorage implements AliasStorageInterface {
    *   TRUE if aliases with language exist.
    */
   public function languageAliasExists() {
-    return (bool) $this->connection->queryRange('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => Language::LANGCODE_NOT_SPECIFIED))->fetchField();
+    return (bool) $this->connection->queryRange('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED))->fetchField();
   }
 
   /**

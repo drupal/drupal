@@ -8,7 +8,6 @@
 namespace Drupal\aggregator\Tests;
 
 use Drupal\aggregator\Entity\Feed;
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\aggregator\FeedInterface;
 

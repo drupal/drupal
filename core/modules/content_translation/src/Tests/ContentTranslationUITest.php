@@ -9,7 +9,7 @@ namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the Content Translation UI.
@@ -251,7 +251,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    */
   protected function getEditValues($values, $langcode, $new = FALSE) {
     $edit = $values[$langcode];
-    $langcode = $new ? Language::LANGCODE_NOT_SPECIFIED : $langcode;
+    $langcode = $new ? LanguageInterface::LANGCODE_NOT_SPECIFIED : $langcode;
     foreach ($values[$langcode] as $property => $value) {
       if (is_array($value)) {
         $edit["{$property}[0][value]"] = $value[0]['value'];

@@ -8,7 +8,7 @@ namespace Drupal\rdf\Tests\Field;
 
 use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the RDFa output of the taxonomy term reference field formatter.
@@ -55,7 +55,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
 
@@ -82,7 +82,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
     $this->term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
       'vid' => $vocabulary->id(),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->term->save();
 

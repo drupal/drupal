@@ -8,7 +8,7 @@
 namespace Drupal\path\Form;
 
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Path\AliasStorageInterface;
 use Drupal\Core\Url;
@@ -109,7 +109,7 @@ abstract class PathFormBase extends FormBase {
         '#type' => 'select',
         '#title' => $this->t('Language'),
         '#options' => $language_options,
-        '#empty_value' => Language::LANGCODE_NOT_SPECIFIED,
+        '#empty_value' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
         '#empty_option' => $this->t('- None -'),
         '#default_value' => $this->path['langcode'],
         '#weight' => -10,
@@ -141,7 +141,7 @@ abstract class PathFormBase extends FormBase {
     $alias = $form_state['values']['alias'];
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.
-    $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : Language::LANGCODE_NOT_SPECIFIED;
+    $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LanguageInterface::LANGCODE_NOT_SPECIFIED;
 
     if ($this->aliasStorage->aliasExists($alias, $langcode, $source)) {
       $this->setFormError('alias', $form_state, t('The alias %alias is already in use in this language.', array('%alias' => $alias)));
@@ -164,7 +164,7 @@ abstract class PathFormBase extends FormBase {
     $alias = $form_state['values']['alias'];
     // Language is only set if language.module is enabled, otherwise save for all
     // languages.
-    $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : Language::LANGCODE_NOT_SPECIFIED;
+    $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : LanguageInterface::LANGCODE_NOT_SPECIFIED;
 
     $this->aliasStorage->save($source, $alias, $langcode, $pid);
 

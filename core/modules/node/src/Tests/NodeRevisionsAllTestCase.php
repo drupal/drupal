@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests actions against revisions for user with access to all revisions.
  */

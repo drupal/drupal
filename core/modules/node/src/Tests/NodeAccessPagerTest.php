@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 

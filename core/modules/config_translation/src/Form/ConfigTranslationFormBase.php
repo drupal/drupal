@@ -14,7 +14,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Config\LanguageConfigOverride;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\locale\StringStorageInterface;
@@ -72,14 +72,14 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   /**
    * The language of the configuration translation.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $language;
 
   /**
    * The language of the configuration translation source.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $sourceLanguage;
 
@@ -349,7 +349,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   /**
    * Sets configuration based on a nested form value array.
    *
-   * @param \Drupal\Core\Language\Language $language
+   * @param \Drupal\Core\Language\LanguageInterface $language
    *   Set the configuration in this language.
    * @param \Drupal\Core\Config\Config $base_config
    *   Base configuration values, in the source language.
@@ -373,7 +373,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    * @return array
    *   Translation configuration override data.
    */
-  protected function setConfig(Language $language, Config $base_config, LanguageConfigOverride $config_translation, array $config_values, $shipped_config = FALSE) {
+  protected function setConfig(LanguageInterface $language, Config $base_config, LanguageConfigOverride $config_translation, array $config_values, $shipped_config = FALSE) {
     foreach ($config_values as $key => $value) {
       if (is_array($value) && !isset($value['translation'])) {
         // Traverse into this level in the configuration.

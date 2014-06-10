@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 
 /**
@@ -59,8 +59,8 @@ class CommentCSSTest extends CommentTestBase {
         'uid' => $case['comment_uid'],
         'status' => $case['comment_status'],
         'subject' => $this->randomName(),
-        'language' => Language::LANGCODE_NOT_SPECIFIED,
-        'comment_body' => array(Language::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
+        'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
       ));
       $comment->save();
 

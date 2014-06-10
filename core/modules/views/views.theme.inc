@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views\ViewExecutable;

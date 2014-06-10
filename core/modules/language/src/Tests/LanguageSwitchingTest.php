@@ -7,7 +7,7 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -43,7 +43,7 @@ class LanguageSwitchingTest extends WebTestBase {
    */
   function testLanguageBlock() {
     // Enable the language switching block..
-    $block = $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array(
+    $block = $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, array(
       'id' => 'test_language_block',
       // Ensure a 2-byte UTF-8 sequence is in the tested output.
       'label' => $this->randomName(8) . '×',

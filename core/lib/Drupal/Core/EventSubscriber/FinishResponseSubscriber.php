@@ -9,7 +9,6 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;

@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -278,7 +278,7 @@ function content_translation_form_language_content_settings_validate(array $form
 
         $values = $bundle_settings['settings']['language'];
         if (empty($values['language_show']) && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-          foreach (\Drupal::languageManager()->getLanguages(Language::STATE_LOCKED) as $language) {
+          foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
             $locked_languages[] = $language->name;
           }
           form_set_error($name, $form_state, t('Translation is not supported if language is always one of: @locked_languages', array('@locked_languages' => implode(', ', $locked_languages))));

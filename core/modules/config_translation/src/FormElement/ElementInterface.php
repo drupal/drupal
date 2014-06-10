@@ -7,7 +7,7 @@
 
 namespace Drupal\config_translation\FormElement;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides an interface for configuration translation form elements.
@@ -19,7 +19,7 @@ interface ElementInterface {
    *
    * @param array $definition
    *   Configuration schema type definition of the element.
-   * @param \Drupal\Core\Language\Language $language
+   * @param \Drupal\Core\Language\LanguageInterface $language
    *   Language object to display the translation form for.
    * @param string $value
    *   Default value for the form element.
@@ -27,6 +27,6 @@ interface ElementInterface {
    * @return array
    *   Form API array to represent the form element.
    */
-  public function getFormElement(array $definition, Language $language, $value);
+  public function getFormElement(array $definition, LanguageInterface $language, $value);
 
 }

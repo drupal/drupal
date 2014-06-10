@@ -7,7 +7,7 @@
 
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\language\LanguageNegotiationMethodBase;
@@ -19,7 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Plugin(
  *   id = \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID,
- *   types = {\Drupal\Core\Language\Language::TYPE_INTERFACE, \Drupal\Core\Language\Language::TYPE_CONTENT, \Drupal\Core\Language\Language::TYPE_URL},
+ *   types = {\Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE,
+ *   \Drupal\Core\Language\LanguageInterface::TYPE_CONTENT,
+ *   \Drupal\Core\Language\LanguageInterface::TYPE_URL},
  *   weight = -8,
  *   name = @Translation("URL"),
  *   description = @Translation("Language from the URL (Path prefix or domain)."),
@@ -129,7 +131,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
     $languages = array_flip(array_keys($this->languageManager->getLanguages()));
     // Language can be passed as an option, or we go for current URL language.
     if (!isset($options['language'])) {
-      $language_url = $this->languageManager->getCurrentLanguage(Language::TYPE_URL);
+      $language_url = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL);
       $options['language'] = $language_url;
     }
     // We allow only added languages here.

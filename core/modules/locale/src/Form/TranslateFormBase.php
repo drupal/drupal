@@ -8,7 +8,6 @@
 namespace Drupal\locale\Form;
 
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\locale\StringStorageInterface;
 use Drupal\Core\State\StateInterface;

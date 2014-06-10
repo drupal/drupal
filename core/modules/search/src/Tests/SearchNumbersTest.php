@@ -7,7 +7,7 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests that numbers with different formats can be searched.
@@ -55,7 +55,7 @@ class SearchNumbersTest extends SearchTestBase {
       $info = array(
         'body' => array(array('value' => $num)),
         'type' => 'page',
-        'language' => Language::LANGCODE_NOT_SPECIFIED,
+        'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
         'title' => $doc . ' number',
       );
       $this->nodes[$doc] = $this->drupalCreateNode($info);

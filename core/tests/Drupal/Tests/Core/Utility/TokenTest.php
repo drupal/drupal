@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Utility;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\Tests\UnitTestCase;
 
@@ -87,7 +87,7 @@ class TokenTest extends UnitTestCase {
 
     $this->languageManager->expects($this->once())
       ->method('getCurrentLanguage')
-      ->with(Language::TYPE_CONTENT)
+      ->with(LanguageInterface::TYPE_CONTENT)
       ->will($this->returnValue($language));
 
     // The persistent cache must only be hit once, after which the info is

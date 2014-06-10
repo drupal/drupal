@@ -8,7 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 
 /**
@@ -100,8 +100,8 @@ class CommentNewIndicatorTest extends CommentTestBase {
       'status' => CommentInterface::PUBLISHED,
       'subject' => $this->randomName(),
       'hostname' => '127.0.0.1',
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
-      'comment_body' => array(Language::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'comment_body' => array(LanguageInterface::LANGCODE_NOT_SPECIFIED => array($this->randomName())),
     ));
     $comment->save();
     $this->drupalLogout();

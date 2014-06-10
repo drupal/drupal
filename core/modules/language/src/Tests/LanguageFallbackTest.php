@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the language fallback behavior.
@@ -41,7 +42,7 @@ class LanguageFallbackTest extends LanguageTestBase {
    */
   public function testCandidates() {
     $language_list = $this->languageManager->getLanguages();
-    $expected = array_keys($language_list + array(Language::LANGCODE_NOT_SPECIFIED => NULL));
+    $expected = array_keys($language_list + array(LanguageInterface::LANGCODE_NOT_SPECIFIED => NULL));
 
     // Check that language fallback candidates by default are all the available
     // languages sorted by weight.
@@ -57,8 +58,8 @@ class LanguageFallbackTest extends LanguageTestBase {
     // Check that candidates are alterable for specific operations.
     $this->state->set('language_test.fallback_alter.candidates', FALSE);
     $this->state->set('language_test.fallback_operation_alter.candidates', TRUE);
-    $expected[] = Language::LANGCODE_NOT_SPECIFIED;
-    $expected[] = Language::LANGCODE_NOT_APPLICABLE;
+    $expected[] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    $expected[] = LanguageInterface::LANGCODE_NOT_APPLICABLE;
     $candidates = $this->languageManager->getFallbackCandidates(NULL, array('operation' => 'test'));
     $this->assertEqual(array_values($candidates), $expected, 'Language fallback candidates are alterable for specific operations.');
 
@@ -70,7 +71,7 @@ class LanguageFallbackTest extends LanguageTestBase {
       }
     }
     $candidates = $this->languageManager->getFallbackCandidates();
-    $this->assertEqual(array_values($candidates), array(Language::LANGCODE_DEFAULT), 'Language fallback is not applied when the Language module is not enabled.');
+    $this->assertEqual(array_values($candidates), array(LanguageInterface::LANGCODE_DEFAULT), 'Language fallback is not applied when the Language module is not enabled.');
   }
 
 }

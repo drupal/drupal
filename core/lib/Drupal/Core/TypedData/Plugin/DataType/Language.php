@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
-use Drupal\Core\Language\Language as LanguageObject;
 use Drupal\Core\TypedData\TypedData;
 
 /**
@@ -40,7 +39,7 @@ class Language extends TypedData {
   /**
    * Overrides TypedData::getValue().
    *
-   * @return \Drupal\Core\Language\Language|null
+   * @return \Drupal\Core\Language\LanguageInterface|null
    */
   public function getValue() {
     if (!isset($this->language) && $this->id) {

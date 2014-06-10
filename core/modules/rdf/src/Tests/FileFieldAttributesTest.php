@@ -7,7 +7,6 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\file\Tests\FileFieldTestBase;
 
 /**

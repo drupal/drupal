@@ -7,8 +7,6 @@
 
 namespace Drupal\block_content\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the block edit functionality.
  */

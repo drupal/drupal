@@ -5,6 +5,8 @@
  * Describes hooks and plugins provided by the Views module.
  */
 
+use Drupal\Core\Language\LanguageInterface;
+
 /**
  * @defgroup views_plugins Views plugins
  *
@@ -341,7 +343,7 @@ function hook_views_query_substitutions(ViewExecutable $view) {
   return array(
     '***CURRENT_VERSION***' => \Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\Language::TYPE_CONTENT)->id,
+    '***CURRENT_LANGUAGE***' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id,
     '***DEFAULT_LANGUAGE***' => \Drupal::languageManager()->getDefaultLanguage()->id,
   );
 }

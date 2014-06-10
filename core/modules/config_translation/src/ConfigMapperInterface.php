@@ -7,7 +7,7 @@
 
 namespace Drupal\config_translation;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -211,7 +211,7 @@ interface ConfigMapperInterface {
    * the site and it is English, we return a dummy language object to represent
    * the built-in language.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   A configured language object instance or a dummy English language object.
    *
    * @throws \RuntimeException
@@ -269,14 +269,14 @@ interface ConfigMapperInterface {
   /**
    * Checks whether there is already a translation for this mapper.
    *
-   * @param \Drupal\Core\Language\Language $language
+   * @param \Drupal\Core\Language\LanguageInterface $language
    *   A language object.
    *
    * @return bool
    *   TRUE if any of the configuration elements have a translation in the
    *   given language, FALSE otherwise.
    */
-  public function hasTranslation(Language $language);
+  public function hasTranslation(LanguageInterface $language);
 
   /**
    * Populate the config mapper with request data.

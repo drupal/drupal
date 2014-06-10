@@ -9,6 +9,7 @@ namespace Drupal\config_translation;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -432,7 +433,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function hasTranslation(Language $language) {
+  public function hasTranslation(LanguageInterface $language) {
     foreach ($this->getConfigNames() as $name) {
       if ($this->localeConfigManager->hasTranslation($name, $language)) {
         return TRUE;

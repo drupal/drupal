@@ -5,7 +5,7 @@
  * The content translation user interface.
  */
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 
@@ -171,12 +171,12 @@ function content_translation_overview(EntityInterface $entity) {
  *   A renderable array of language switch links.
  */
 function _content_translation_get_switch_links($path) {
-  $links = \Drupal::languageManager()->getLanguageSwitchLinks(Language::TYPE_CONTENT, $path);
+  $links = \Drupal::languageManager()->getLanguageSwitchLinks(LanguageInterface::TYPE_CONTENT, $path);
   if (empty($links)) {
     // If content language is set up to fall back to the interface language,
-    // then there will be no switch links for Language::TYPE_CONTENT, ergo we
-    // also need to use interface switch links.
-    $links = \Drupal::languageManager()->getLanguageSwitchLinks(Language::TYPE_INTERFACE, $path);
+    // then there will be no switch links for LanguageInterface::TYPE_CONTENT,
+    // ergo we also need to use interface switch links.
+    $links = \Drupal::languageManager()->getLanguageSwitchLinks(LanguageInterface::TYPE_INTERFACE, $path);
   }
   return $links;
 }
@@ -186,10 +186,10 @@ function _content_translation_get_switch_links($path) {
  *
  * @param EntityInterface $entity
  *   The entity being translated.
- * @param Language $source
+ * @param \Drupal\Core\Language\LanguageInterface $source
  *   (optional) The language of the values being translated. Defaults to the
  *   entity language.
- * @param Language $target
+ * @param \Drupal\Core\Language\LanguageInterface $target
  *   (optional) The language of the translated values. Defaults to the current
  *   content language.
  *
@@ -199,9 +199,9 @@ function _content_translation_get_switch_links($path) {
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal\content_translation\Controller\ContentTranslationController::add().
  */
-function content_translation_add_page(EntityInterface $entity, Language $source = NULL, Language $target = NULL) {
+function content_translation_add_page(EntityInterface $entity, LanguageInterface $source = NULL, LanguageInterface $target = NULL) {
   $source = !empty($source) ? $source : $entity->language();
-  $target = !empty($target) ? $target : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
+  $target = !empty($target) ? $target : \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
   // @todo Exploit the upcoming hook_entity_prepare() when available.
   content_translation_prepare_translation($entity, $source, $target);
   $form_state['langcode'] = $target->id;
@@ -216,7 +216,7 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity being translated.
- * @param \Drupal\Core\Language\Language $language
+ * @param \Drupal\Core\Language\LanguageInterface $language
  *   (optional) The language of the translated values. Defaults to the current
  *   content language.
  *
@@ -226,8 +226,8 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal\content_translation\Controller\ContentTranslationController::edit().
  */
-function content_translation_edit_page(EntityInterface $entity, Language $language = NULL) {
-  $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
+function content_translation_edit_page(EntityInterface $entity, LanguageInterface $language = NULL) {
+  $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
   $form_state['langcode'] = $language->id;
   $form_state['content_translation']['translation_form'] = TRUE;
   return \Drupal::service('entity.form_builder')->getForm($entity, 'default', $form_state);
@@ -238,12 +238,12 @@ function content_translation_edit_page(EntityInterface $entity, Language $langua
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entitiy being translated.
- * @param \Drupal\Core\Language\Language $source
+ * @param \Drupal\Core\Language\LanguageInterface $source
  *   The language to be used as source.
- * @param \Drupal\Core\Language\Language $target
+ * @param \Drupal\Core\Language\LanguageInterface $target
  *   The language to be used as target.
  */
-function content_translation_prepare_translation(EntityInterface $entity, Language $source, Language $target) {
+function content_translation_prepare_translation(EntityInterface $entity, LanguageInterface $source, LanguageInterface $target) {
   if ($entity instanceof ContentEntityInterface) {
     $source_translation = $entity->getTranslation($source->id);
     $entity->addTranslation($target->id, $source_translation->toArray());

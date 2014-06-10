@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\comment\CommentInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;

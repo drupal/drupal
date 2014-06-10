@@ -7,8 +7,8 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the Term Translation UI.
@@ -60,7 +60,7 @@ class TermTranslationUITest extends ContentTranslationUITest {
       'name' => $this->bundle,
       'description' => $this->randomName(),
       'vid' => $this->bundle,
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ));
     $this->vocabulary->save();
@@ -131,7 +131,7 @@ class TermTranslationUITest extends ContentTranslationUITest {
       'name' => 'untranslatable_voc',
       'description' => $this->randomName(),
       'vid' => 'untranslatable_voc',
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ));
     $untranslatable_vocabulary->save();

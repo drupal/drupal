@@ -9,7 +9,7 @@ namespace Drupal\text\Tests\Formatter;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -91,7 +91,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
       ));
     $this->display->save();
 
-    $this->langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $this->langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
   }
 
   /**

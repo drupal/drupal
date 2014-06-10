@@ -7,7 +7,6 @@
 
 namespace Drupal\locale;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\Config\Schema\Element;
 use Drupal\Core\Config\Schema\ArrayElement;

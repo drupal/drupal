@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException as Dependen
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -1812,8 +1813,8 @@ function language($type) {
  *
  * @param $flags
  *   (optional) Specifies the state of the languages that have to be returned.
- *   It can be: Language::STATE_CONFIGURABLE, Language::STATE_LOCKED,
- *   Language::STATE_ALL.
+ *   It can be: LanguageInterface::STATE_CONFIGURABLE,
+ *   LanguageInterface::STATE_LOCKED, LanguageInterface::STATE_ALL.
  *
  * @return array
  *   An associative array of languages, keyed by the language code, ordered by
@@ -1822,7 +1823,7 @@ function language($type) {
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::languageManager()->getLanguages().
  */
-function language_list($flags = Language::STATE_CONFIGURABLE) {
+function language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
   return \Drupal::languageManager()->getLanguages($flags);
 }
 
@@ -1832,7 +1833,7 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
  * @param string $langcode
  *   The language code.
  *
- * @return \Drupal\core\Language\Language|null
+ * @return \Drupal\core\Language\LanguageInterface|null
  *   A fully-populated language object or NULL.
  *
  * @see \Drupal\Core\Language\LanguageManager::getLanguage()
@@ -1847,7 +1848,7 @@ function language_load($langcode) {
 /**
  * Returns the default language used on the site.
  *
- * @return \Drupal\Core\Language\Language
+ * @return \Drupal\Core\Language\LanguageInterface
  *   A language object.
  *
  * @see \Drupal\Core\Language\LanguageManager::getLanguage()

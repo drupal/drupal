@@ -10,7 +10,7 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
@@ -47,7 +47,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
 
@@ -73,7 +73,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $this->term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
       'vid' => $vocabulary->id(),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $this->term->save();
   }
@@ -109,7 +109,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $term2 = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
       'vid' => $this->term->getVocabularyId(),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $term2->save();
 

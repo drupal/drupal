@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
@@ -71,8 +71,8 @@ function content_translation_module_implements_alter(&$implementations, $hook) {
 function content_translation_language_types_info_alter(array &$language_types) {
   // Make content language negotiation configurable by removing the 'locked'
   // flag.
-  $language_types[Language::TYPE_CONTENT]['locked'] = FALSE;
-  unset($language_types[Language::TYPE_CONTENT]['fixed']);
+  $language_types[LanguageInterface::TYPE_CONTENT]['locked'] = FALSE;
+  unset($language_types[LanguageInterface::TYPE_CONTENT]['fixed']);
 }
 
 /**
@@ -791,7 +791,7 @@ function content_translation_language_configuration_element_validate($element, a
   $key = $form_state['content_translation']['key'];
   $values = $form_state['values'][$key];
   if (!$values['language_show'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-    foreach (\Drupal::languageManager()->getLanguages(Language::STATE_LOCKED) as $language) {
+    foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
     }
     // @todo Set the correct form element name as soon as the element parents

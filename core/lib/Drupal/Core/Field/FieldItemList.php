@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Represents an entity field; that is, a list of field item objects.
@@ -36,7 +36,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    *
    * @var string
    */
-  protected $langcode = Language::LANGCODE_NOT_SPECIFIED;
+  protected $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
 
   /**
    * {@inheritdoc}

@@ -16,7 +16,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -732,7 +732,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
     if ($entity instanceof TranslatableInterface) {
       if (empty($langcode)) {
-        $langcode = $this->languageManager->getCurrentLanguage(Language::TYPE_CONTENT)->id;
+        $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
       }
 
       // Retrieve language fallback candidates to perform the entity language
@@ -743,7 +743,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
 
       // Ensure the default language has the proper language code.
       $default_language = $entity->getUntranslated()->language();
-      $candidates[$default_language->id] = Language::LANGCODE_DEFAULT;
+      $candidates[$default_language->id] = LanguageInterface::LANGCODE_DEFAULT;
 
       // Return the most fitting entity translation.
       foreach ($candidates as $candidate) {
@@ -797,7 +797,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected function getAllDisplayModesByEntityType($display_type) {
     if (!isset($this->displayModeInfo[$display_type])) {
       $key = 'entity_' . $display_type . '_info';
-      $langcode = $this->languageManager->getCurrentLanguage(Language::TYPE_INTERFACE)->id;
+      $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_INTERFACE)->id;
       if ($cache = $this->cacheBackend->get("$key:$langcode")) {
         $this->displayModeInfo[$display_type] = $cache->data;
       }

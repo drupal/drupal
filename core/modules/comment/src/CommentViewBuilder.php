@@ -15,7 +15,6 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\entity\Entity\EntityViewDisplay;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

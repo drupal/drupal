@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\user\Entity\User;
 
@@ -46,7 +46,7 @@ class UserEntityTest extends DrupalUnitTestBase {
     $role_storage->create(array('id' => 'test_role_two'))->save();
     $role_storage->create(array('id' => 'test_role_three'))->save();
 
-    $values = array('roles' => array(Language::LANGCODE_DEFAULT => array('test_role_one')));
+    $values = array('roles' => array(LanguageInterface::LANGCODE_DEFAULT => array('test_role_one')));
     $user = new User($values, 'user');
 
     $this->assertTrue($user->hasRole('test_role_one'));

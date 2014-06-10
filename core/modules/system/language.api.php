@@ -5,6 +5,8 @@
  * Hooks provided by the base system for language support.
  */
 
+use Drupal\Core\Language\LanguageInterface;
+
 /**
  * @addtogroup hooks
  * @{
@@ -27,7 +29,7 @@
 function hook_language_switch_links_alter(array &$links, $type, $path) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
-  if ($type == \Drupal\Core\Language\Language::TYPE_CONTENT && isset($links[$language_interface->id])) {
+  if ($type == LanguageInterface::TYPE_CONTENT && isset($links[$language_interface->id])) {
     foreach ($links[$language_interface->id] as $link) {
       $link['attributes']['class'][] = 'active-language';
     }

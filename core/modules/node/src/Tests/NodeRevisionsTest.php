@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the node revision functionality.
  */

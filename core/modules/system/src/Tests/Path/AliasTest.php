@@ -154,7 +154,7 @@ class AliasTest extends PathUnitTestBase {
     $aliasStorage->save('user/2', 'bar');
     // Hook that clears cache is not executed with unit tests.
     $aliasManager->cacheClear();
-    $this->assertEqual($aliasManager->getPathByAlias('bar'), 'user/2', 'Newer alias record is returned when comparing two Language::LANGCODE_NOT_SPECIFIED paths with the same alias.');
+    $this->assertEqual($aliasManager->getPathByAlias('bar'), 'user/2', 'Newer alias record is returned when comparing two LanguageInterface::LANGCODE_NOT_SPECIFIED paths with the same alias.');
   }
 
   /**

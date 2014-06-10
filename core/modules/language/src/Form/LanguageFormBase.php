@@ -9,7 +9,7 @@ namespace Drupal\language\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -85,8 +85,8 @@ abstract class LanguageFormBase extends EntityForm {
       '#description' => $this->t('Direction that text in this language is presented.'),
       '#default_value' => $language->direction,
       '#options' => array(
-        Language::DIRECTION_LTR => $this->t('Left to right'),
-        Language::DIRECTION_RTL => $this->t('Right to left'),
+        LanguageInterface::DIRECTION_LTR => $this->t('Left to right'),
+        LanguageInterface::DIRECTION_RTL => $this->t('Right to left'),
       ),
     );
 

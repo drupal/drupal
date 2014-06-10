@@ -37,7 +37,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns the language of the entity.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   The language object.
    */
   public function language();

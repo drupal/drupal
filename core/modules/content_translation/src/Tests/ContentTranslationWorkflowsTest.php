@@ -7,7 +7,7 @@
 
 namespace Drupal\content_translation\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -183,7 +183,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    * Assert that the current page does not contain shared form elements.
    */
   protected function assertNoSharedElements() {
-    $language_none = Language::LANGCODE_NOT_SPECIFIED;
+    $language_none = LanguageInterface::LANGCODE_NOT_SPECIFIED;
     return $this->assertNoFieldByXPath("//input[@name='field_test_text[$language_none][0][value]']", NULL, 'Shared elements are not available on the translation form.');
   }
 

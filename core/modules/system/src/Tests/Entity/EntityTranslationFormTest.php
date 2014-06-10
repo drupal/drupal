@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
@@ -59,7 +60,7 @@ class EntityTranslationFormTest extends WebTestBase {
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer content types'));
     $this->drupalLogin($web_user);
 
-    // Create a node with language Language::LANGCODE_NOT_SPECIFIED.
+    // Create a node with language LanguageInterface::LANGCODE_NOT_SPECIFIED.
     $edit = array();
     $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
@@ -85,7 +86,7 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Enable language selector.
     $this->drupalGet('admin/structure/types/manage/page');
-    $edit = array('language_configuration[language_show]' => TRUE, 'language_configuration[langcode]' => Language::LANGCODE_NOT_SPECIFIED);
+    $edit = array('language_configuration[language_show]' => TRUE, 'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 

@@ -8,7 +8,7 @@
 namespace Drupal\language\Config;
 
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageDefault;
 
 /**
@@ -19,7 +19,7 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
   /**
    * Gets the language object used to override configuration data.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   The language object used to override configuration data.
    */
   public function getLanguage();
@@ -27,12 +27,12 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
   /**
    * Sets the language to be used in configuration overrides.
    *
-   * @param \Drupal\Core\Language\Language $language
+   * @param \Drupal\Core\Language\LanguageInterface $language
    *   The language object used to override configuration data.
    *
    * @return $this
    */
-  public function setLanguage(Language $language = NULL);
+  public function setLanguage(LanguageInterface $language = NULL);
 
   /**
    * Sets the language to be used in configuration overrides from the default.

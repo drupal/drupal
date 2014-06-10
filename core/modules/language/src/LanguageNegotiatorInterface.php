@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\Request;
  * configurable:
  * @code
  * function mymodule_language_types_info_alter(&$language_types) {
- *   unset($language_types[Language::TYPE_CONTENT]['fixed']);
+ *   unset($language_types[LanguageInterface::TYPE_CONTENT]['fixed']);
  * }
  * @endcode
  *
@@ -137,7 +137,7 @@ interface LanguageNegotiatorInterface {
    * @param string $type
    *   The language type to be initialized.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   Return either the language of the specified type or the default language.
    */
   public function initializeType($type);

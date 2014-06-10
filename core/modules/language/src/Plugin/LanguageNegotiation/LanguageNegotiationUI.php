@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Plugin(
  *   id = Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI::METHOD_ID,
- *   types = {Drupal\Core\Language\Language::TYPE_CONTENT},
+ *   types = {Drupal\Core\Language\LanguageInterface::TYPE_CONTENT},
  *   weight = 9,
  *   name = @Translation("Interface"),
  *   description = @Translation("Use the detected interface language.")

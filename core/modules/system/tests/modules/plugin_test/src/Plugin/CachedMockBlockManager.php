@@ -7,7 +7,6 @@
 
 namespace Drupal\plugin_test\Plugin;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 
 /**

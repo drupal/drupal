@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for node-related data.
  */
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Implements hook_token_info().
@@ -90,7 +90,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
     $langcode = $options['langcode'];
   }
   else {
-    $langcode = Language::LANGCODE_DEFAULT;
+    $langcode = LanguageInterface::LANGCODE_DEFAULT;
   }
   $sanitize = !empty($options['sanitize']);
 

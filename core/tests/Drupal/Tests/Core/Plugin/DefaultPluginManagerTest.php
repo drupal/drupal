@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -169,7 +170,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->once())
       ->method('getCurrentLanguage')
-      ->with(Language::TYPE_INTERFACE)
+      ->with(LanguageInterface::TYPE_INTERFACE)
       ->will($this->returnValue($language));
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
@@ -200,7 +201,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->once())
       ->method('getCurrentLanguage')
-      ->with(Language::TYPE_INTERFACE)
+      ->with(LanguageInterface::TYPE_INTERFACE)
       ->will($this->returnValue($language));
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
@@ -231,7 +232,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->once())
       ->method('getCurrentLanguage')
-      ->with(Language::TYPE_INTERFACE)
+      ->with(LanguageInterface::TYPE_INTERFACE)
       ->will($this->returnValue($language));
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);

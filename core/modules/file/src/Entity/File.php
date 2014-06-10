@@ -11,7 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\file\FileInterface;
 use Drupal\user\UserInterface;
 
@@ -43,7 +43,7 @@ class File extends ContentEntityBase implements FileInterface {
    * @var array
    */
   protected $values = array(
-    'langcode' => array(Language::LANGCODE_DEFAULT => array(0 => array('value' => Language::LANGCODE_NOT_SPECIFIED))),
+    'langcode' => array(LanguageInterface::LANGCODE_DEFAULT => array(0 => array('value' => LanguageInterface::LANGCODE_NOT_SPECIFIED))),
   );
 
   /**

@@ -7,7 +7,6 @@
 
 namespace Drupal\language;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 

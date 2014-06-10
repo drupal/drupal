@@ -10,7 +10,7 @@ namespace Drupal\user;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
@@ -253,7 +253,7 @@ abstract class AccountForm extends ContentEntityForm {
     $user_language_added = FALSE;
     if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
       $negotiator = $this->languageManager->getNegotiator();
-      $user_language_added = $negotiator && $negotiator->isNegotiationMethodEnabled(LanguageNegotiationUser::METHOD_ID, Language::TYPE_INTERFACE);
+      $user_language_added = $negotiator && $negotiator->isNegotiationMethodEnabled(LanguageNegotiationUser::METHOD_ID, LanguageInterface::TYPE_INTERFACE);
     }
     $form['language'] = array(
       '#type' => $this->languageManager->isMultilingual() ? 'details' : 'container',
@@ -267,7 +267,7 @@ abstract class AccountForm extends ContentEntityForm {
     $form['language']['preferred_langcode'] = array(
       '#type' => 'language_select',
       '#title' => $this->t('Site language'),
-      '#languages' => Language::STATE_CONFIGURABLE,
+      '#languages' => LanguageInterface::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_langcode,
       '#description' => $user_language_added ? $this->t("This account's preferred language for emails and site presentation.") : $this->t("This account's preferred language for emails."),
     );
@@ -282,7 +282,7 @@ abstract class AccountForm extends ContentEntityForm {
     $form['language']['preferred_admin_langcode'] = array(
       '#type' => 'language_select',
       '#title' => $this->t('Administration pages language'),
-      '#languages' => Language::STATE_CONFIGURABLE,
+      '#languages' => LanguageInterface::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_admin_langcode,
       '#access' => $show_admin_language,
     );

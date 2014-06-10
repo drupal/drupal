@@ -8,8 +8,8 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\views\Tests\ViewTestBase;
-use Drupal\Core\Language\Language;
 
 /**
  * Tests the views taxonomy complete menu callback.
@@ -105,7 +105,7 @@ class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
       'name' => $name ?: $this->randomName(),
       'description' => $this->randomName(),
       'vid' => $this->vocabulary->id(),
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $term->save();
     return $term;

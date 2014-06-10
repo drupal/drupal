@@ -800,14 +800,14 @@ function update_replace_permissions($replace) {
  *
  * @param $flags
  *   (optional) Specifies the state of the languages that have to be returned.
- *   It can be: Language::STATE_CONFIGURABLE, Language::STATE_LOCKED,
- *   Language::STATE_ALL.
+ *   It can be: LanguageInterface::STATE_CONFIGURABLE,
+ *   LanguageInterface::STATE_LOCKED, LanguageInterface::STATE_ALL.
  *
  * @return array
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  */
-function update_language_list($flags = Language::STATE_CONFIGURABLE) {
+function update_language_list($flags = LanguageInterface::STATE_CONFIGURABLE) {
 
   $languages = &drupal_static(__FUNCTION__);
 
@@ -853,7 +853,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
   $filtered_languages = array();
 
   // Add the site's default language if flagged as allowed value.
-  if ($flags & Language::STATE_SITE_DEFAULT) {
+  if ($flags & LanguageInterface::STATE_SITE_DEFAULT) {
     $default = isset($default) ? $default : \Drupal::languageManager()->getDefaultLanguage();
     // Rename the default language.
     $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
@@ -861,7 +861,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
   }
 
   foreach ($languages as $langcode => $language) {
-    if (($language->locked && !($flags & Language::STATE_LOCKED)) || (!$language->locked && !($flags & Language::STATE_CONFIGURABLE))) {
+    if (($language->locked && !($flags & LanguageInterface::STATE_LOCKED)) || (!$language->locked && !($flags & LanguageInterface::STATE_CONFIGURABLE))) {
       continue;
      }
     $filtered_languages[$langcode] = $language;

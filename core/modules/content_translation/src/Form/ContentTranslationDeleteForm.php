@@ -25,7 +25,7 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
   /**
    * The language of the translation being deleted.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $language;
 

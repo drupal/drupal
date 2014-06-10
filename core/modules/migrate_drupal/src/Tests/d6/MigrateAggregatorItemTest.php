@@ -8,7 +8,7 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\aggregator\Entity\Item;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -76,7 +76,7 @@ class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
     $this->assertEqual($item->getDescription(), "<h2 id='new'>What's new with Drupal 8?</h2>");
     $this->assertEqual($item->getLink(), 'https://groups.drupal.org/node/395218');
     $this->assertEqual($item->getPostedTime(), 1389297196);
-    $this->assertEqual($item->language()->id, Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertEqual($item->language()->id, LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $this->assertEqual($item->getGuid(), '395218 at https://groups.drupal.org');
 
   }

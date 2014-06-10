@@ -53,7 +53,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
   /**
    * The language of configuration translation.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $language;
 

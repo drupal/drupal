@@ -8,7 +8,6 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
 
 /**
  * Tests the Content Translation image field synchronization capability.

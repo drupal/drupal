@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Form;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
@@ -52,10 +53,12 @@ class LanguageSelectElementTest extends WebTestBase {
 
     $this->drupalGet('form-test/language_select');
     // Check that the language fields were rendered on the page.
-    $ids = array('edit-languages-all' => Language::STATE_ALL,
-                 'edit-languages-configurable' => Language::STATE_CONFIGURABLE,
-                 'edit-languages-locked' => Language::STATE_LOCKED,
-                 'edit-languages-config-and-locked' => Language::STATE_CONFIGURABLE | Language::STATE_LOCKED);
+    $ids = array(
+        'edit-languages-all' => LanguageInterface::STATE_ALL,
+        'edit-languages-configurable' => LanguageInterface::STATE_CONFIGURABLE,
+        'edit-languages-locked' => LanguageInterface::STATE_LOCKED,
+        'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED
+    );
     foreach ($ids as $id => $flags) {
       $this->assertField($id, format_string('The @id field was found on the page.', array('@id' => $id)));
       $options = array();
@@ -93,7 +96,7 @@ class LanguageSelectElementTest extends WebTestBase {
     $values = Json::decode($this->drupalGetContent());
     $this->assertEqual($values['languages_all'], 'xx');
     $this->assertEqual($values['languages_configurable'], 'en');
-    $this->assertEqual($values['languages_locked'], Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertEqual($values['languages_locked'], LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $this->assertEqual($values['languages_config_and_locked'], 'dummy_value');
     $this->assertEqual($values['language_custom_options'], 'opt2');
   }

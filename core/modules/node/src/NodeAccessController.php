@@ -11,7 +11,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -58,7 +58,7 @@ class NodeAccessController extends EntityAccessController implements NodeAccessC
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = LanguageInterface::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
     if (user_access('bypass node access', $account)) {
       return TRUE;
     }

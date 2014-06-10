@@ -12,7 +12,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\Core\Template\AttributeArray;
@@ -507,15 +507,15 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
  *   array.
  * @param int $flags
  *   (optional) Specifies the state of the languages that have to be returned.
- *   It can be: Language::STATE_CONFIGURABLE, Language::STATE_LOCKED,
- *   Language::STATE_ALL.
+ *   It can be: LanguageInterface::STATE_CONFIGURABLE,
+ *   LanguageInterface::STATE_LOCKED, LanguageInterface::STATE_ALL.
  *
  * @return array
  *   An array of language names (or $field) keyed by the langcode.
  *
  * @see locale_language_list()
  */
-function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
+function views_language_list($field = 'name', $flags = LanguageInterface::STATE_ALL) {
   $languages = \Drupal::languageManager()->getLanguages($flags);
   $list = array();
   foreach ($languages as $language) {

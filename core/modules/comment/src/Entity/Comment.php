@@ -13,7 +13,6 @@ use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\user\UserInterface;
 

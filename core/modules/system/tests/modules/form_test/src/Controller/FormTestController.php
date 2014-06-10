@@ -7,7 +7,7 @@
 namespace Drupal\form_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Controller routines for form_test routes.
@@ -26,7 +26,7 @@ class FormTestController extends ControllerBase {
       'uid' => $user->id(),
       'name' => $user->getUsername(),
       'type' => 'page',
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     );
     $node1 = $this->entityManager()->getStorage('node')->create($values);
     $node2 = clone($node1);

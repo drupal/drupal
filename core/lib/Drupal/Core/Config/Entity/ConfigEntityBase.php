@@ -14,7 +14,7 @@ use Drupal\Core\Entity\Entity;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginBagsInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 
 /**
@@ -83,7 +83,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    *
    * @var string
    */
-  public $langcode = Language::LANGCODE_NOT_SPECIFIED;
+  public $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
 
   /**
    * Overrides Entity::__construct().

@@ -7,7 +7,7 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 // The search index can contain different types of content. Typically the type
 // is 'node'. Here we test with _test_ and _test2_ as the type.
@@ -42,10 +42,10 @@ class SearchMatchTest extends SearchTestBase {
     \Drupal::config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     for ($i = 1; $i <= 7; ++$i) {
-      search_index($i, SEARCH_TYPE, $this->getText($i), Language::LANGCODE_NOT_SPECIFIED);
+      search_index($i, SEARCH_TYPE, $this->getText($i), LanguageInterface::LANGCODE_NOT_SPECIFIED);
     }
     for ($i = 1; $i <= 5; ++$i) {
-      search_index($i + 7, SEARCH_TYPE_2, $this->getText2($i), Language::LANGCODE_NOT_SPECIFIED);
+      search_index($i + 7, SEARCH_TYPE_2, $this->getText2($i), LanguageInterface::LANGCODE_NOT_SPECIFIED);
     }
     // No getText builder function for Japanese text; just a simple array.
     foreach (array(
@@ -53,7 +53,7 @@ class SearchMatchTest extends SearchTestBase {
       14 => 'ドルーパルが大好きよ！',
       15 => 'コーヒーとケーキ',
     ) as $i => $jpn) {
-      search_index($i, SEARCH_TYPE_JPN, $jpn, Language::LANGCODE_NOT_SPECIFIED);
+      search_index($i, SEARCH_TYPE_JPN, $jpn, LanguageInterface::LANGCODE_NOT_SPECIFIED);
     }
     search_update_totals();
   }

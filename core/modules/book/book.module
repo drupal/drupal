@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\Request;
@@ -491,7 +491,7 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['title'] = String::checkPlain($variables['title']);
   $variables['base_url'] = $base_url;
   $variables['language'] = $language_interface;
-  $variables['language_rtl'] = ($language_interface->direction == Language::DIRECTION_RTL);
+  $variables['language_rtl'] = ($language_interface->direction == LanguageInterface::DIRECTION_RTL);
   $variables['head'] = drupal_get_html_head();
 
   // HTML element attributes.

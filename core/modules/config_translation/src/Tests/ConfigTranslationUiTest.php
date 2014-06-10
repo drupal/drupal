@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -494,7 +495,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     $this->container
       ->get('config.factory')
       ->get('system.site')
-      ->set('langcode', Language::LANGCODE_NOT_SPECIFIED)
+      ->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->save();
 
     // Make sure translation tab does not exist on the configuration page.

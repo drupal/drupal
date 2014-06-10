@@ -187,7 +187,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    *   The string identifier of the language negotiation method to use to detect
    *   language.
    *
-   * @return \Drupal\Core\Language\Language|NULL
+   * @return \Drupal\Core\Language\LanguageInterface|null
    *   Negotiated language object for given type and method, FALSE otherwise.
    */
   protected function negotiateLanguage($type, $method_id) {

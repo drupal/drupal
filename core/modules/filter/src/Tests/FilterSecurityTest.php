@@ -7,7 +7,6 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Plugin\FilterInterface;
 

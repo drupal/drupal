@@ -14,6 +14,7 @@ use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\language\LanguageNegotiatorInterface;
 
@@ -240,7 +241,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Unknown language prefix should return 404.
     $definitions = \Drupal::languageManager()->getNegotiator()->getNegotiationMethods();
     \Drupal::config('language.types')
-      ->set('negotiation.' . Language::TYPE_INTERFACE . '.enabled', array_flip(array_keys($definitions)))
+      ->set('negotiation.' . LanguageInterface::TYPE_INTERFACE . '.enabled', array_flip(array_keys($definitions)))
       ->save();
     $this->drupalGet("$langcode_unknown/admin/config", array(), $http_header_browser_fallback);
     $this->assertResponse(404, "Unknown language path prefix should return 404");
@@ -335,7 +336,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   protected function runTest($test) {
     if (!empty($test['language_negotiation'])) {
       $method_weights = array_flip($test['language_negotiation']);
-      $this->container->get('language_negotiator')->saveConfiguration(Language::TYPE_INTERFACE, $method_weights);
+      $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_INTERFACE, $method_weights);
     }
     if (!empty($test['language_negotiation_url_part'])) {
       \Drupal::config('language.negotiation')
@@ -379,7 +380,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable the language switcher block.
-    $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('id' => 'test_language_block'));
+    $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, array('id' => 'test_language_block'));
 
     // Log out, because for anonymous users, the "active" class is set by PHP
     // (which means we can easily test it here), whereas for authenticated users

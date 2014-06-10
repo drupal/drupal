@@ -8,7 +8,7 @@
 namespace Drupal\language;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface as BaseLanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -61,7 +61,7 @@ abstract class LanguageNegotiationMethodBase implements LanguageNegotiationMetho
   /**
    * {@inheritdoc}
    */
-  public function persist(Language $language) {
+  public function persist(BaseLanguageInterface $language) {
     // Remember the method ID used to detect the language.
     $language->method_id = static::METHOD_ID;
   }

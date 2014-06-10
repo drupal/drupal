@@ -10,7 +10,7 @@ namespace Drupal\aggregator;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,7 +31,7 @@ class FeedForm extends ContentEntityForm {
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
       '#default_value' => $feed->language()->id,
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
       '#weight' => -4,
     );
 

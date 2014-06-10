@@ -7,7 +7,7 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests that various number formats match each other in searching.
@@ -49,7 +49,7 @@ class SearchNumberMatchingTest extends SearchTestBase {
       $info = array(
         'body' => array(array('value' => $num)),
         'type' => 'page',
-        'language' => Language::LANGCODE_NOT_SPECIFIED,
+        'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       );
       $this->nodes[] = $this->drupalCreateNode($info);
     }

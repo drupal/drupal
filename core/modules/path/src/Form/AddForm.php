@@ -7,7 +7,7 @@
 
 namespace Drupal\path\Form;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides the path add form.
@@ -28,7 +28,7 @@ class AddForm extends PathFormBase {
     return array(
       'source' => '',
       'alias' => '',
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'pid' => NULL,
     );
   }

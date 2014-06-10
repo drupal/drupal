@@ -7,8 +7,6 @@
 
 namespace Drupal\statistics\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests statistics token replacement in strings.
  */

@@ -8,7 +8,6 @@
 namespace Drupal\dblog\Tests;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Language\Language;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\simpletest\WebTestBase;
 

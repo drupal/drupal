@@ -9,7 +9,7 @@ namespace Drupal\Core\Utility;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
@@ -311,7 +311,7 @@ class Token {
    */
   public function getInfo() {
     if (is_null($this->tokenInfo)) {
-      $cache_id = 'token_info:' . $this->languageManager->getCurrentLanguage(Language::TYPE_CONTENT)->id;
+      $cache_id = 'token_info:' . $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
       $cache = $this->cache->get($cache_id);
       if ($cache) {
         $this->tokenInfo = $cache->data;

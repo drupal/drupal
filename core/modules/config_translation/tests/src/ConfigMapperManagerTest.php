@@ -9,6 +9,7 @@ namespace Drupal\config_translation\Tests;
 
 use Drupal\config_translation\ConfigMapperManager;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -50,7 +51,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->once())
       ->method('getCurrentLanguage')
-      ->with(Language::TYPE_INTERFACE)
+      ->with(LanguageInterface::TYPE_INTERFACE)
       ->will($this->returnValue($language));
 
     $this->typedConfigManager = $this->getMockBuilder('Drupal\Core\Config\TypedConfigManagerInterface')

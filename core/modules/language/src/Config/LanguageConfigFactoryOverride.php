@@ -12,8 +12,8 @@ use Drupal\Core\Config\ConfigCollectionInfo;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -56,7 +56,7 @@ class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInte
   /**
    * The language object used to override configuration data.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $language;
 
@@ -127,7 +127,7 @@ class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInte
   /**
    * {@inheritdoc}
    */
-  public function setLanguage(Language $language = NULL) {
+  public function setLanguage(LanguageInterface $language = NULL) {
     $this->language = $language;
     return $this;
   }

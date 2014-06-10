@@ -10,7 +10,6 @@ namespace Drupal\ckeditor\Plugin\Editor;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Render\Element;
 use Drupal\editor\Plugin\EditorBase;

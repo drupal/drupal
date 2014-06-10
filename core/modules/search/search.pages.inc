@@ -5,7 +5,7 @@
  * User page callbacks for the Search module.
  */
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Implements hook_theme_suggestions_HOOK().
@@ -36,7 +36,7 @@ function template_preprocess_search_result(&$variables) {
   $result = $variables['result'];
   $variables['url'] = check_url($result['link']);
   $variables['title'] = check_plain($result['title']);
-  if (isset($result['language']) && $result['language'] != $language_interface->id && $result['language'] != Language::LANGCODE_NOT_SPECIFIED) {
+  if (isset($result['language']) && $result['language'] != $language_interface->id && $result['language'] != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
     $variables['title_attributes']['lang'] = $result['language'];
     $variables['content_attributes']['lang'] = $result['language'];
   }

@@ -8,7 +8,7 @@
 namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Form controller for the shortcut entity forms.
@@ -41,7 +41,7 @@ class ShortcutForm extends ContentEntityForm {
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $this->entity->getUntranslated()->language()->id,
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
     );
 
     return $form;

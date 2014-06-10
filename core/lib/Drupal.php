@@ -461,7 +461,8 @@ class Drupal {
    *     displayed outside the site, such as in an RSS feed.
    *   - 'language': An optional language object used to look up the alias
    *     for the URL. If $options['language'] is omitted, the language will be
-   *     obtained from \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_URL).
+   *     obtained from
+   *     \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL).
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. if mixed mode sessions are permitted, TRUE enforces HTTPS

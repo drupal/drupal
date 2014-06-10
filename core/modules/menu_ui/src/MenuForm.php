@@ -10,7 +10,7 @@ namespace Drupal\menu_ui;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\menu_link\MenuLinkStorageInterface;
 use Drupal\menu_link\MenuTreeInterface;
@@ -117,7 +117,7 @@ class MenuForm extends EntityForm {
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Menu language'),
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => $menu->langcode,
     );
     // Unlike the menu langcode, the default language configuration for menu

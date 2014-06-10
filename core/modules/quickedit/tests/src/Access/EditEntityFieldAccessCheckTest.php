@@ -12,8 +12,8 @@ use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Drupal\field\FieldConfigInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the edit entity field access controller.
@@ -127,14 +127,14 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue($field));
     $entity_with_field->expects($this->once())
       ->method('hasTranslation')
-      ->with(Language::LANGCODE_NOT_SPECIFIED)
+      ->with(LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->will($this->returnValue(TRUE));
 
     // Prepare the request to be valid.
     $request->attributes->set('entity_type', 'test_entity');
     $request->attributes->set('entity', $entity_with_field);
     $request->attributes->set('field_name', $field_name);
-    $request->attributes->set('langcode', Language::LANGCODE_NOT_SPECIFIED);
+    $request->attributes->set('langcode', LanguageInterface::LANGCODE_NOT_SPECIFIED);
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $access = $this->editAccessCheck->access($request, $field_name, $account);

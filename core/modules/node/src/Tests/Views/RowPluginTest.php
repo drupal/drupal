@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Tests\Views;
 
-use Drupal\Core\Language\Language;
 use Drupal\views\Views;
 
 /**

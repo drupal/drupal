@@ -8,7 +8,6 @@
 namespace Drupal\field\Tests\Views;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\Language;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 

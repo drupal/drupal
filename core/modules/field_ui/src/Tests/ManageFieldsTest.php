@@ -8,7 +8,7 @@
 namespace Drupal\field_ui\Tests;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\String;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
@@ -42,7 +42,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => 'Tags',
       'vid' => 'tags',
-      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ));
     $vocabulary->save();
 

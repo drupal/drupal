@@ -11,7 +11,7 @@ use Drupal\Core\Plugin\ContextAwarePluginBase;
 use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -264,7 +264,7 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     //   \Drupal\system\MachineNameController::transliterate(), so it might make
     //   sense to provide a common service for the two.
     $transliteration_service = \Drupal::transliteration();
-    $transliterated = $transliteration_service->transliterate($admin_label, Language::LANGCODE_DEFAULT, '_');
+    $transliterated = $transliteration_service->transliterate($admin_label, LanguageInterface::LANGCODE_DEFAULT, '_');
 
     $replace_pattern = '[^a-z0-9_.]+';
 

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Page;
 
 use Drupal\Core\Cache\CacheableInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 
 /**

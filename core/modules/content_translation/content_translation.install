@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
 /**
@@ -87,7 +87,7 @@ function content_translation_install() {
   // Assign a fairly low weight to ensure our implementation of
   // hook_module_implements_alter() is run among the last ones.
   module_set_weight('content_translation', 10);
-  \Drupal::service('language_negotiator')->saveConfiguration(Language::TYPE_CONTENT, array(LanguageNegotiationUrl::METHOD_ID => 0));
+  \Drupal::service('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_CONTENT, array(LanguageNegotiationUrl::METHOD_ID => 0));
 
   $config_names = \Drupal::configFactory()->listAll('field.field.');
   foreach ($config_names as $name) {

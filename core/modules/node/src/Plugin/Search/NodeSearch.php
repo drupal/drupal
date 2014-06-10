@@ -13,7 +13,7 @@ use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
@@ -452,7 +452,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     // Add languages.
     $language_options = array();
-    $language_list = \Drupal::languageManager()->getLanguages(Language::STATE_ALL);
+    $language_list = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
     foreach ($language_list as $langcode => $language) {
       // Make locked languages appear special in the list.
       $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;

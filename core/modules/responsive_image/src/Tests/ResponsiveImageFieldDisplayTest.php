@@ -7,7 +7,6 @@
 
 namespace Drupal\responsive_image\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\image\Tests\ImageFieldTestBase;
 

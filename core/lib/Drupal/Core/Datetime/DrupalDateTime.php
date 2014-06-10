@@ -7,7 +7,6 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Datetime\DateTimePlus;
-use Drupal\Core\Language\Language;
 
 /**
  * Extends DateTimePlus().

@@ -13,7 +13,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\Core\Page\FeedLinkElement;

@@ -9,7 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Base for controller for taxonomy term edit forms.
@@ -32,7 +32,7 @@ class TermForm extends ContentEntityForm {
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => $this->t('Language'),
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => $term->getUntranslated()->language()->id,
       '#access' => !empty($language_configuration['language_show']),
     );

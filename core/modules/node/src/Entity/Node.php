@@ -11,7 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
@@ -167,7 +167,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       // Load languages the node exists in.
       $node_translations = $this->getTranslationLanguages();
       // Load the language from content negotiation.
-      $content_negotiation_langcode = \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT)->id;
+      $content_negotiation_langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->id;
       // If there is a translation available, use it.
       if (isset($node_translations[$content_negotiation_langcode])) {
         $langcode = $content_negotiation_langcode;

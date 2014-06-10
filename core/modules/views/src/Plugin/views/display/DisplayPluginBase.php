@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
@@ -1243,7 +1243,7 @@ abstract class DisplayPluginBase extends PluginBase {
     $languages = array(
         '***CURRENT_LANGUAGE***' => t("Current user's language"),
         '***DEFAULT_LANGUAGE***' => t("Default site language"),
-        Language::LANGCODE_NOT_SPECIFIED => t('Language neutral'),
+        LanguageInterface::LANGCODE_NOT_SPECIFIED => t('Language neutral'),
     );
     if (\Drupal::moduleHandler()->moduleExists('language')) {
       $languages = array_merge($languages, language_list());
@@ -1617,7 +1617,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $languages = array(
             '***CURRENT_LANGUAGE***' => t("Current user's language"),
             '***DEFAULT_LANGUAGE***' => t("Default site language"),
-            Language::LANGCODE_NOT_SPECIFIED => t('Language neutral'),
+            LanguageInterface::LANGCODE_NOT_SPECIFIED => t('Language neutral'),
           );
           $languages = array_merge($languages, views_language_list());
 

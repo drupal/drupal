@@ -7,7 +7,7 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\simpletest\WebTestBase;
 
@@ -81,7 +81,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
       'language_test.language_types' => TRUE,
       // Enable language_test negotiation info (not altered yet).
       'language_test.language_negotiation_info' => TRUE,
-      // Alter Language::TYPE_CONTENT to be configurable.
+      // Alter LanguageInterface::TYPE_CONTENT to be configurable.
       'language_test.content_language_type' => TRUE,
     ));
     $this->container->get('module_handler')->install(array('language_test'));
@@ -91,7 +91,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     // of saving the language negotiation settings.
     $this->checkFixedLanguageTypes();
 
-    $type = Language::TYPE_CONTENT;
+    $type = LanguageInterface::TYPE_CONTENT;
     $language_types = $this->languageManager()->getLanguageTypes();
     $this->assertTrue(in_array($type, $language_types), 'Content language type is configurable.');
 
@@ -138,7 +138,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     $last = $this->container->get('state')->get('language_test.language_negotiation_last');
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
       $langcode = $last[$type];
-      $value = $type == Language::TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
+      $value = $type == LanguageInterface::TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
       $this->assertEqual($langcode, $value, format_string('The negotiated language for %type is %language', array('%type' => $type, '%language' => $value)));
     }
 

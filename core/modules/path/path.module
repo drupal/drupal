@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinition;

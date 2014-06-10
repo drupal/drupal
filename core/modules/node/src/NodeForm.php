@@ -11,7 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\String;
 
 /**
@@ -81,7 +81,7 @@ class NodeForm extends ContentEntityForm {
       '#title' => t('Language'),
       '#type' => 'language_select',
       '#default_value' => $node->getUntranslated()->language()->id,
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 

@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\PhpStorage\PhpStorageFactory;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\Language as LanguageEntity;
@@ -147,7 +147,7 @@ function language_element_info_alter(&$type) {
     $type['language_select']['#process'] = array_merge($type['language_select']['#process'], array('language_process_language_select', 'form_process_select', 'ajax_process_form'));
     $type['language_select']['#theme'] = 'select';
     $type['language_select']['#theme_wrappers'] = array_merge($type['language_select']['#theme_wrappers'], array('form_element'));
-    $type['language_select']['#languages'] = Language::STATE_CONFIGURABLE;
+    $type['language_select']['#languages'] = LanguageInterface::STATE_CONFIGURABLE;
     $type['language_select']['#multiple'] = FALSE;
   }
 }
@@ -213,7 +213,7 @@ function language_configuration_element_default_options() {
     'authors_default' => t("Author's preferred language"),
   );
 
-  $languages = \Drupal::languageManager()->getLanguages(Language::STATE_ALL);
+  $languages = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
   foreach ($languages as $langcode => $language) {
     $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
   }
@@ -461,7 +461,7 @@ function language_save($language) {
  *   TRUE if language is successfully deleted. Otherwise FALSE.
  */
 function language_delete($langcode) {
-  $languages = \Drupal::languageManager()->getLanguages(Language::STATE_ALL);
+  $languages = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
   if (isset($languages[$langcode]) && !$languages[$langcode]->locked) {
     $language = $languages[$langcode];
 
@@ -503,18 +503,18 @@ function language_delete($langcode) {
  */
 function language_language_types_info() {
   return array(
-    Language::TYPE_INTERFACE => array(
+    LanguageInterface::TYPE_INTERFACE => array(
       'name' => t('User interface text'),
       'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
       'locked' => TRUE,
     ),
-    Language::TYPE_CONTENT => array(
+    LanguageInterface::TYPE_CONTENT => array(
       'name' => t('Content'),
       'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
       'fixed' => array(LanguageNegotiationUI::METHOD_ID),
       'locked' => TRUE,
     ),
-    Language::TYPE_URL => array(
+    LanguageInterface::TYPE_URL => array(
       'fixed' => array(LanguageNegotiationUrl::METHOD_ID, LanguageNegotiationUrlFallback::METHOD_ID),
       'locked' => TRUE,
     ),

@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\PathProcessor;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
 use Drupal\Core\PathProcessor\PathProcessorFront;
@@ -78,7 +78,7 @@ class PathProcessorTest extends UnitTestCase {
       ->will($this->returnValue($this->languages));
     $language_manager->expects($this->any())
       ->method('getLanguageTypes')
-      ->will($this->returnValue(array(Language::TYPE_INTERFACE)));
+      ->will($this->returnValue(array(LanguageInterface::TYPE_INTERFACE)));
     $language_manager->expects($this->any())
       ->method('getNegotiationMethods')
       ->will($this->returnValue($method_definitions));

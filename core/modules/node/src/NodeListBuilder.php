@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -99,7 +99,7 @@ class NodeListBuilder extends EntityListBuilder {
     $langcode = $entity->language()->id;
     $uri = $entity->urlInfo();
     $options = $uri->getOptions();
-    $options += ($langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$langcode]) ? array('language' => $languages[$langcode]) : array());
+    $options += ($langcode != LanguageInterface::LANGCODE_NOT_SPECIFIED && isset($languages[$langcode]) ? array('language' => $languages[$langcode]) : array());
     $uri->setOptions($options);
     $row['title']['data'] = array(
       '#type' => 'link',

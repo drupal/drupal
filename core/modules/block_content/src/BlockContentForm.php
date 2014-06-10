@@ -11,7 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -110,7 +110,7 @@ class BlockContentForm extends ContentEntityForm {
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
       '#default_value' => $block->getUntranslated()->language()->id,
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 

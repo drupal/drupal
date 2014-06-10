@@ -10,7 +10,6 @@ namespace Drupal\filter;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;

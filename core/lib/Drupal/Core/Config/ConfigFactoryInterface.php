@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageDefault;
 
 /**

@@ -17,6 +17,7 @@ use Drupal\Core\Entity\Exception\AmbiguousEntityClassException;
 use Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 
@@ -283,7 +284,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
     }
     return $this->entityManager()
       ->getAccessController($this->entityTypeId)
-      ->access($this, $operation, Language::LANGCODE_DEFAULT, $account);
+      ->access($this, $operation, LanguageInterface::LANGCODE_DEFAULT, $account);
   }
 
   /**
@@ -293,7 +294,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
     $language = $this->languageManager()->getLanguage($this->langcode);
     if (!$language) {
       // Make sure we return a proper language object.
-      $language = new Language(array('id' => Language::LANGCODE_NOT_SPECIFIED));
+      $language = new Language(array('id' => LanguageInterface::LANGCODE_NOT_SPECIFIED));
     }
     return $language;
   }

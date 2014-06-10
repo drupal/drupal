@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\System;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Language\Language;
 
 /**
  * Tests generic date and time handling capabilities of Drupal.

@@ -5,9 +5,9 @@
  * Helper module for the Quick Edit tests.
  */
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Implements hook_entity_view_alter().
@@ -21,7 +21,7 @@ function quickedit_test_entity_view_alter(&$build, EntityInterface $entity, Enti
       '#label_display' => 'Label',
       '#entity_type' => $entity->getEntityTypeId(),
       '#bundle' => $entity->bundle(),
-      '#language' => Language::LANGCODE_NOT_SPECIFIED,
+      '#language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       '#field_type' => 'pseudo',
       '#view_mode' => 'default',
       '#object' => $entity,

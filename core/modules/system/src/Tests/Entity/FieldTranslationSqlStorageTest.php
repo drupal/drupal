@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -48,7 +48,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
     $entity->langcode->value = $langcode;
     $entity->save();
     $this->assertFieldStorageLangcode($entity, 'Field language successfully changed.');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
     $entity->langcode->value = $langcode;
     $entity->save();
     $this->assertFieldStorageLangcode($entity, 'Field language successfully changed to language neutral.');

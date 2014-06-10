@@ -5,7 +5,7 @@
  * Mock module for language layer tests.
  */
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 
 /**
@@ -41,13 +41,13 @@ function language_test_language_types_info() {
  */
 function language_test_language_types_info_alter(array &$language_types) {
   if (\Drupal::state()->get('language_test.content_language_type')) {
-    $language_types[Language::TYPE_CONTENT]['locked'] = FALSE;
-    unset($language_types[Language::TYPE_CONTENT]['fixed']);
-    // By default languages are not configurable. Make Language::TYPE_CONTENT
-    // configurable.
+    $language_types[LanguageInterface::TYPE_CONTENT]['locked'] = FALSE;
+    unset($language_types[LanguageInterface::TYPE_CONTENT]['fixed']);
+    // By default languages are not configurable. Make
+    // LanguageInterface::TYPE_CONTENT configurable.
     $configurable = \Drupal::config('language.types')->get('configurable');
-    if (!in_array(Language::TYPE_CONTENT, $configurable)) {
-      $configurable[] = Language::TYPE_CONTENT;
+    if (!in_array(LanguageInterface::TYPE_CONTENT, $configurable)) {
+      $configurable[] = LanguageInterface::TYPE_CONTENT;
       \Drupal::config('language.types')->set('configurable', $configurable)->save();
     }
   }
@@ -80,7 +80,7 @@ function language_test_store_language_negotiation() {
  */
 function language_test_language_fallback_candidates_alter(array &$candidates, array $context) {
   if (Drupal::state()->get('language_test.fallback_alter.candidates')) {
-    unset($candidates[Language::LANGCODE_NOT_SPECIFIED]);
+    unset($candidates[LanguageInterface::LANGCODE_NOT_SPECIFIED]);
   }
 }
 
@@ -89,7 +89,7 @@ function language_test_language_fallback_candidates_alter(array &$candidates, ar
  */
 function language_test_language_fallback_candidates_test_alter(array &$candidates, array $context) {
   if (Drupal::state()->get('language_test.fallback_operation_alter.candidates')) {
-    $langcode = Language::LANGCODE_NOT_APPLICABLE;
+    $langcode = LanguageInterface::LANGCODE_NOT_APPLICABLE;
     $candidates[$langcode] = $langcode;
   }
 }

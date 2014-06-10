@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Mail;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**

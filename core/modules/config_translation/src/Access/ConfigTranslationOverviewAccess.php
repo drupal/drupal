@@ -28,7 +28,7 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
   /**
    * The source language.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $sourceLanguage;
 

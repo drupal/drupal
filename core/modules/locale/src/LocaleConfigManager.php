@@ -8,10 +8,10 @@
 namespace Drupal\locale;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 
 /**
@@ -307,13 +307,13 @@ class LocaleConfigManager extends TypedConfigManager {
    *
    * @param string $name
    *   Configuration name.
-   * @param \Drupal\Core\Language\Language $language
+   * @param \Drupal\Core\Language\LanguageInterface $language
    *   A language object.
    *
    * @return bool
    *   A boolean indicating if a language has configuration translations.
    */
-  public function hasTranslation($name, Language $language) {
+  public function hasTranslation($name, LanguageInterface $language) {
     $translation = $this->languageManager->getLanguageConfigOverride($language->id, $name);
     return !$translation->isNew();
   }

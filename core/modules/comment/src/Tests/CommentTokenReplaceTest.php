@@ -8,7 +8,6 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Language\Language;
 
 /**
  * Tests comment token replacement in strings.

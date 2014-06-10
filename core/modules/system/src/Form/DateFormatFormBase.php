@@ -11,7 +11,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Datetime\Date;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityForm;
@@ -146,7 +146,7 @@ abstract class DateFormatFormBase extends EntityForm {
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),
-      '#languages' => Language::STATE_ALL,
+      '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => $this->entity->langcode,
     );
 

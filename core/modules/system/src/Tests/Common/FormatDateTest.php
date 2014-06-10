@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -113,7 +114,7 @@ class FormatDateTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => self::LANGCODE,
       'name' => self::LANGCODE,
-      'direction' => Language::DIRECTION_LTR,
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 

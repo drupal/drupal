@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Unit test class for non-storage related field_attach_* functions.
@@ -180,7 +180,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   function testFieldAttachCache() {
     // Initialize random values and a test entity.
     $entity_init = entity_create('entity_test', array('type' => $this->instance->bundle));
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field->getCardinality());
 
     // Non-cacheable entity type.

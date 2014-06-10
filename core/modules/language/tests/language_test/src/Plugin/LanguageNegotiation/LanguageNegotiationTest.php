@@ -18,7 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
  *   weight = -10,
  *   name = @Translation("Test"),
  *   description = @Translation("This is a test language negotiation method."),
- *   types = {Drupal\Core\Language\Language::TYPE_CONTENT, "test_language_type", "fixed_test_language_type"}
+ *   types = {Drupal\Core\Language\LanguageInterface::TYPE_CONTENT,
+ *   "test_language_type", "fixed_test_language_type"}
  * )
  */
 class LanguageNegotiationTest extends LanguageNegotiationMethodBase {

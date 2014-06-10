@@ -184,7 +184,7 @@ class Language extends ConfigEntityBase implements LanguageInterface {
    * @todo fix return type hint after https://drupal.org/node/2246665 and
    *   https://drupal.org/node/2246679.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   The language configuration entity expressed as a Language value object.
    */
   protected function toLanguageObject() {

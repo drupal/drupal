@@ -10,6 +10,7 @@ namespace Drupal\locale\Tests;
 use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\String;
 
 /**
@@ -152,7 +153,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->container->get('string_translation')->reset();
     // Now we should get the proper fresh translation from t().
     $this->assertTrue($name != $translation_to_en && t($name, array(), array('langcode' => 'en')) == $translation_to_en, 't() works for English.');
-    $this->assertTrue(t($name, array(), array('langcode' => Language::LANGCODE_SYSTEM)) == $name, 't() works for Language::LANGCODE_SYSTEM.');
+    $this->assertTrue(t($name, array(), array('langcode' => LanguageInterface::LANGCODE_SYSTEM)) == $name, 't() works for LanguageInterface::LANGCODE_SYSTEM.');
 
     $search = array(
       'string' => $name,

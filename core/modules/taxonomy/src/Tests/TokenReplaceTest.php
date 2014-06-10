@@ -9,7 +9,6 @@ namespace Drupal\taxonomy\Tests;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\String;
 
 /**

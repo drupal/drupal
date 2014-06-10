@@ -9,7 +9,7 @@ namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -129,7 +129,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
           '#submit' => array(array($this, 'entityFormSourceChange')),
         ),
       );
-      foreach (language_list(Language::STATE_CONFIGURABLE) as $language) {
+      foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
         if (isset($translations[$language->id])) {
           $form['source_langcode']['source']['#options'][$language->id] = $language->name;
         }
@@ -142,7 +142,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     $language_widget = isset($form['langcode']) && $form['langcode']['#type'] == 'language_select';
     if ($language_widget && $has_translations) {
       $form['langcode']['#options'] = array();
-      foreach (language_list(Language::STATE_CONFIGURABLE) as $language) {
+      foreach (language_list(LanguageInterface::STATE_CONFIGURABLE) as $language) {
         if (empty($translations[$language->id]) || $language->id == $entity_langcode) {
           $form['langcode']['#options'][$language->id] = $language->name;
         }

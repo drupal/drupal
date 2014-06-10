@@ -6,7 +6,7 @@
  */
 
 use Drupal\locale\Gettext;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\file\FileInterface;
 
 /**
@@ -167,8 +167,9 @@ function locale_translate_batch_build($files, $options) {
  *
  * @param object $file
  *   A file object of the gettext file to be imported. The file object must
- *   contain a language parameter (other than Language::LANGCODE_NOT_SPECIFIED). This
- *   is used as the language of the import.
+ *   contain a language parameter
+ *   (other than LanguageInterface::LANGCODE_NOT_SPECIFIED). This is used as
+ *   the language of the import.
  *
  * @param array $options
  *   An array with options that can have the following elements:
@@ -192,7 +193,7 @@ function locale_translate_batch_import($file, $options, &$context) {
     'customized' => LOCALE_NOT_CUSTOMIZED,
   );
 
-  if (isset($file->langcode) && $file->langcode != Language::LANGCODE_NOT_SPECIFIED) {
+  if (isset($file->langcode) && $file->langcode != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
 
     try {
       if (empty($context['sandbox'])) {
@@ -459,7 +460,7 @@ function locale_translate_file_attach_properties($file, $options = array()) {
     $file->langcode = isset($options['langcode']) ? $options['langcode'] : $matches[5];
   }
   else {
-    $file->langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $file->langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
   }
   return $file;
 }

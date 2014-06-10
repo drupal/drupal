@@ -14,7 +14,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -62,7 +62,7 @@ class CommentForm extends ContentEntityForm {
     // Make the comment inherit the current content language unless specifically
     // set.
     if ($comment->isNew()) {
-      $language_content = \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
+      $language_content = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
       $comment->langcode->value = $language_content->id;
     }
 

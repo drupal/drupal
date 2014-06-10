@@ -22,7 +22,7 @@ class LanguageDefault {
   /**
    * The default language.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageInterface
    */
   protected $language;
 
@@ -39,7 +39,7 @@ class LanguageDefault {
   /**
    * Gets the default language.
    *
-   * @return \Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\LanguageInterface
    *   The default language.
    */
   public function get() {
@@ -49,10 +49,10 @@ class LanguageDefault {
   /**
    * Sets the default language.
    *
-   * @param \Drupal\Core\Language\Language $language
+   * @param \Drupal\Core\Language\LanguageInterface $language
    *   The default language.
    */
-  public function set(Language $language) {
+  public function set(LanguageInterface $language) {
     $language->default = TRUE;
     $this->language = $language;
   }
