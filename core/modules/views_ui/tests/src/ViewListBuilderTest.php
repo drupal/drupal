@@ -54,6 +54,7 @@ class ViewListBuilderTest extends UnitTestCase {
             'title' => 'Master',
             'theme' => 'views_view',
             'no_ui' => TRUE,
+            'admin' => '',
           )
         ),
         array(

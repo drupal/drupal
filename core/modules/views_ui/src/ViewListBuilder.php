@@ -229,7 +229,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
     $displays = array();
     foreach ($view->get('display') as $display) {
       $definition = $this->displayManager->getDefinition($display['display_plugin']);
-      if (isset($definition['admin'])) {
+      if (!empty($definition['admin'])) {
         // Cast the admin label to a string since it is an object.
         // @see \Drupal\Core\StringTranslation\TranslationWrapper
         $displays[] = (string) $definition['admin'];
