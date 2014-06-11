@@ -2903,7 +2903,7 @@ abstract class WebTestBase extends TestBase {
     if (!$message) {
       $message = !$not_exists ? String::format('"@text" found', array('@text' => $text)) : String::format('"@text" not found', array('@text' => $text));
     }
-    return $this->assert($not_exists == (strpos($this->plainTextContent, $text) === FALSE), $message, $group);
+    return $this->assert($not_exists == (strpos($this->plainTextContent, (string) $text) === FALSE), $message, $group);
   }
 
   /**
