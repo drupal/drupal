@@ -2,7 +2,6 @@ type: article
 name: Article
 description: 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'
 help: ''
-has_title: true
 title_label: Title
 settings:
   node:

@@ -2,7 +2,6 @@ type: import
 name: Import
 description: 'Import description.'
 help: ''
-has_title: true
 title_label: Title
 settings:
   node:

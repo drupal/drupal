@@ -2,7 +2,6 @@ type: page
 name: 'Basic page'
 description: 'Use <em>basic pages</em> for your static content, such as an ''About us'' page.'
 help: ''
-has_title: true
 title_label: Title
 settings:
   node:

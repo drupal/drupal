@@ -83,13 +83,6 @@ class NodeTypeForm extends EntityForm {
       '#default_value' => $type->title_label,
       '#required' => TRUE,
     );
-    if (!$type->has_title) {
-      // Avoid overwriting a content type that intentionally does not have a
-      // title field.
-      $form['submission']['title_label']['#attributes'] = array('disabled' => 'disabled');
-      $form['submission']['title_label']['#description'] = t('This content type does not have a title field.');
-      $form['submission']['title_label']['#required'] = FALSE;
-    }
     $form['submission']['preview'] = array(
       '#type' => 'radios',
       '#title' => t('Preview before submitting'),
@@ -186,10 +179,6 @@ class NodeTypeForm extends EntityForm {
     $type = $this->entity;
     $type->type = trim($type->id());
     $type->name = trim($type->name);
-
-    // title_label is required in core; has_title will always be TRUE, unless a
-    // module alters the title field.
-    $type->has_title = ($type->title_label != '');
 
     $status = $type->save();
 

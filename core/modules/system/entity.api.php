@@ -984,13 +984,6 @@ function hook_entity_extra_field_info() {
   $description = t('Node module element');
 
   foreach (node_type_get_types() as $bundle) {
-    if ($bundle->has_title) {
-      $extra['node'][$bundle->type]['form']['title'] = array(
-        'label' => String::checkPlain($bundle->title_label),
-        'description' => $description,
-        'weight' => -5,
-      );
-    }
 
     // Add also the 'language' select if Language module is enabled and the
     // bundle has multilingual support.

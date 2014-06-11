@@ -209,11 +209,6 @@ function node_entity_view_display_alter(EntityViewDisplayInterface $display, $co
 function node_entity_form_display_alter(EntityFormDisplayInterface $form_display, $context) {
   if ($context['entity_type'] == 'node') {
     $node_type = node_type_load($context['bundle']);
-    // @todo Reconsider when per-bundle overrides of field definitions are
-    //   possible - https://drupal.org/node/2114707.
-    if (!$node_type->has_title) {
-      $form_display->removeComponent('title');
-    }
   }
 }
 

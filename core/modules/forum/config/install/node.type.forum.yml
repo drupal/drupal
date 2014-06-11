@@ -2,7 +2,6 @@ type: forum
 name: 'Forum topic'
 description: 'A <em>forum topic</em> starts a new discussion thread within a forum.'
 help: ''
-has_title: true
 title_label: Subject
 settings:
   node:

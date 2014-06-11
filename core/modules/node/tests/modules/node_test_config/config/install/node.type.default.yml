@@ -2,7 +2,6 @@ type: default
 name: Default
 description: 'Default description.'
 help: ''
-has_title: true
 title_label: Title
 settings:
   node:

@@ -76,15 +76,6 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
   public $help;
 
   /**
-   * Indicates whether the Node entity of this type has a title.
-   *
-   * @var bool
-   *
-   * @todo Rename to $node_has_title.
-   */
-  public $has_title = TRUE;
-
-  /**
    * The label to use for the title of a Node of this type in the user interface.
    *
    * @var string

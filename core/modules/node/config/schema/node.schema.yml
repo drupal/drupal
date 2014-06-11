@@ -27,9 +27,6 @@ node.type.*:
     help:
       type: text
       label: 'Explanation or submission guidelines'
-    has_title:
-      type: boolean
-      label: 'Has title'
     title_label:
       type: label
       label: 'Title field label'
