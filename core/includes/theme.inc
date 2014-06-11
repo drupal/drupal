@@ -2646,9 +2646,6 @@ function drupal_common_theme() {
       'render element' => 'element',
       'template' => 'radios',
     ),
-    'date' => array(
-      'render element' => 'element',
-    ),
     'checkboxes' => array(
       'render element' => 'element',
       'template' => 'checkboxes',

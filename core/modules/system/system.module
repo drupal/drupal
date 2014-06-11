@@ -524,7 +524,8 @@ function system_element_info() {
   );
   $types['date'] = array(
     '#input' => TRUE,
-    '#theme' => 'date',
+    '#theme' => 'input__date',
+    '#pre_render' => array('form_pre_render_date'),
     '#theme_wrappers' => array('form_element'),
   );
   $types['file'] = array(

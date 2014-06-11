@@ -1232,29 +1232,32 @@ function password_confirm_validate($element, &$element_state) {
 }
 
 /**
- * Returns HTML for an #date form element.
+ * Adds form-specific attributes to a 'date' #type element.
  *
  * Supports HTML5 types of 'date', 'datetime', 'datetime-local', and 'time'.
  * Falls back to a plain textfield. Used as a sub-element by the datetime
  * element type.
  *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #options, #description, #required,
- *     #attributes, #id, #name, #type, #min, #max, #step, #value, #size.
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #value, #options, #description, #required,
+ *   #attributes, #id, #name, #type, #min, #max, #step, #value, #size.
  *
- * @ingroup themeable
+ * Note: The input "name" attribute needs to be sanitized before output, which
+ *       is currently done by initializing Drupal\Core\Template\Attribute with
+ *       all the attributes.
+ *
+ * @return array
+ *   The $element with prepared variables ready for #theme 'input__date'.
  */
-function theme_date($variables) {
-  $element = $variables['element'];
-  if (empty($element['attribute']['type'])) {
-    $element['attribute']['type'] = 'date';
+function form_pre_render_date($element) {
+  if (empty($element['#attributes']['type'])) {
+    $element['#attributes']['type'] = 'date';
   }
   Element::setAttributes($element, array('id', 'name', 'type', 'min', 'max', 'step', 'value', 'size'));
-  _form_set_attributes($element, array('form-' . $element['attribute']['type']));
+  _form_set_attributes($element, array('form-' . $element['#attributes']['type']));
 
-  return '<input' . new Attribute($element['#attributes']) . ' />';
+  return $element;
 }
 
 /**
