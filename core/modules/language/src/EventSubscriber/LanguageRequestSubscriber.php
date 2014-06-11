@@ -38,7 +38,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   /**
    * The translation service.
    *
-   * @var \Drupal\Core\Translation\Translator\TranslatorInterface
+   * @var \Drupal\Core\StringTranslation\Translator\TranslatorInterface;
    */
   protected $translation;
 
@@ -56,7 +56,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   The language manager service.
    * @param \Drupal\language\LanguageNegotiatorInterface
    *   The language negotiator.
-   * @param \Drupal\Core\Translation\Translator\TranslatorInterface $translation
+   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translation;
    *   The translation service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current active user.

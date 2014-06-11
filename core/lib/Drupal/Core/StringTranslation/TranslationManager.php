@@ -27,7 +27,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * An array of active translators keyed by priority.
    *
    * @var array
-   *   Array of \Drupal\Core\Translation\Translator\TranslatorInterface objects
+   *   Array of \Drupal\Core\StringTranslation\Translator\TranslatorInterface objects
    */
   protected $translators = array();
 
@@ -77,12 +77,12 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
   /**
    * Appends a translation system to the translation chain.
    *
-   * @param \Drupal\Core\Translation\Translator\TranslatorInterface $translator
+   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translator
    *   The translation interface to be appended to the translation chain.
    * @param int $priority
    *   The priority of the logger being added.
    *
-   * @return \Drupal\Core\Translation\TranslationManager
+   * @return \Drupal\Core\StringTranslation\TranslationManager
    *   The called object.
    */
   public function addTranslator(TranslatorInterface $translator, $priority = 0) {
