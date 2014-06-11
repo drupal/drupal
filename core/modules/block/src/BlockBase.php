@@ -112,8 +112,23 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    // By default, the block is visible unless user-configured rules indicate
-    // that it should be hidden.
+    // @todo Move block visibility here in https://drupal.org/node/2278541.
+    return $this->blockAccess($account);
+  }
+
+  /**
+   * Indicates whether the block should be shown.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user session for which to check access.
+   *
+   * @return bool
+   *   TRUE if the block should be shown, or FALSE otherwise.
+   *
+   * @see self::access()
+   */
+  protected function blockAccess(AccountInterface $account) {
+    // By default, the block is visible.
     return TRUE;
   }
 

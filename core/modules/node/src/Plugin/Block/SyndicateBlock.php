@@ -33,7 +33,7 @@ class SyndicateBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account) {
     return $account->hasPermission('access content');
   }
 

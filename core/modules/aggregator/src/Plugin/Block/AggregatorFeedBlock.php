@@ -100,7 +100,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account) {
     // Only grant access to users with the 'access news feeds' permission.
     return $account->hasPermission('access news feeds');
   }

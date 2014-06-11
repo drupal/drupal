@@ -25,7 +25,7 @@ class UserLoginBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account) {
     $route_name = \Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
     return ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login', 'user.logout')));
   }

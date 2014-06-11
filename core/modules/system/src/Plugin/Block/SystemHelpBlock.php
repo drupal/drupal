@@ -78,7 +78,7 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account) {
     $this->help = $this->getActiveHelp($this->request);
     return (bool) $this->help;
   }

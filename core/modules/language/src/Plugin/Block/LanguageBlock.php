@@ -66,7 +66,7 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
   /**
    * {@inheritdoc}
    */
-  function access(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account) {
     return $this->languageManager->isMultilingual();
   }
 

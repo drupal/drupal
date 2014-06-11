@@ -91,7 +91,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account) {
     return $this->view->access($this->displayID);
   }
 

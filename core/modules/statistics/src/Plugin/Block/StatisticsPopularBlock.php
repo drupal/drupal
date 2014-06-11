@@ -55,7 +55,7 @@ class StatisticsPopularBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
+  protected function blockAccess(AccountInterface $account) {
     if ($account->hasPermission('access content')) {
       $daytop = $this->configuration['top_day_num'];
       if (!$daytop || !($result = statistics_title_list('daycount', $daytop)) || !($this->day_list = node_title_list($result, t("Today's:")))) {
