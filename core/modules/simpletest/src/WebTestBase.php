@@ -286,7 +286,7 @@ abstract class WebTestBase extends TestBase {
         $settings['uid'] = $this->loggedInUser->id();
       }
       else {
-        $user = \Drupal::currentUser() ?: drupal_anonymous_user();
+        $user = \Drupal::currentUser() ?: new AnonymousUserSession();
         $settings['uid'] = $user->id();
       }
     }

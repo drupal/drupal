@@ -1243,20 +1243,6 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
 }
 
 /**
- * Generates a default anonymous $user object.
- *
- * @return \Drupal\Core\Session\AccountInterface
- *   The user session object.
- *
- * @deprecated in Drupal 8.x-dev. Will be removed before Drupal 8.0 by
- *   https://drupal.org/node/2185315. Use
- *   \Drupal\Core\Session\AnonymousUserSession.
- */
-function drupal_anonymous_user() {
-  return new AnonymousUserSession();
-}
-
-/**
  * Ensures Drupal is bootstrapped to the specified phase.
  *
  * In order to bootstrap Drupal from another PHP script, you can use this code:
