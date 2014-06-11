@@ -2629,6 +2629,7 @@ function drupal_common_theme() {
     // From form.inc.
     'input' => array(
       'render element' => 'element',
+      'template' => 'input',
     ),
     'select' => array(
       'render element' => 'element',

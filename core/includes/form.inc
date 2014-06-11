@@ -2326,31 +2326,18 @@ function form_process_autocomplete($element, &$form_state) {
 }
 
 /**
- * Preprocesses variables for theme_input().
+ * Prepares variables for input templates.
  *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- */
-function template_preprocess_input(&$variables) {
-  $element = $variables['element'];
-  $variables['attributes'] = new Attribute($element['#attributes']);
-}
-
-/**
- * Returns HTML for an input form element.
+ * Default template: input.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #attributes.
- *
- * @ingroup themeable
  */
-function theme_input($variables) {
+function template_preprocess_input(&$variables) {
   $element = $variables['element'];
-  $attributes = $variables['attributes'];
-  return '<input' . $attributes . ' />' . drupal_render_children($element);
+  $variables['children'] = $element['#children'];
 }
 
 /**
