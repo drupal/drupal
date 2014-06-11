@@ -299,9 +299,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
 
     // Additionally, include the field type, that is needed to be able to
     // generate the field-type-dependant parts of the config schema.
-    if (isset($this->field->type)) {
-      $properties['field_type'] = $this->field->type;
-    }
+    $properties['field_type'] = $this->getType();
 
     return $properties;
   }
@@ -506,7 +504,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * {@inheritdoc}
    */
   public function getType() {
-    return $this->getField()->type;
+    return $this->getField()->getType();
   }
 
   /**

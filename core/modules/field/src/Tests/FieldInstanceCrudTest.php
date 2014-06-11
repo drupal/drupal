@@ -90,6 +90,9 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     // Check that default settings are set.
     $this->assertEqual($config['settings'], $field_type_manager->getDefaultInstanceSettings($this->field_definition['type']) , 'Default instance settings have been written.');
 
+    // Check that the denormalized 'field_type' was properly written.
+    $this->assertEqual($config['field_type'], $this->field_definition['type']);
+
     // Guarantee that the field/bundle combination is unique.
     try {
       entity_create('field_instance_config', $this->instance_definition)->save();
