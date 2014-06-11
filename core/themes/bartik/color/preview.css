@@ -52,14 +52,13 @@
 }
 #preview-main-menu-links a:hover,
 #preview-main-menu-links a:focus {
-  background: #fff;
+  background: #eee;
   background: rgba(255, 255, 255, 0.95);
-}
-#preview-main-menu-links a:active {
-  background: #b3b3b3;
-  background: rgba(255, 255, 255, 1);
+  text-decoration: none;
+  cursor: pointer;
 }
 #preview-main-menu-links li a.active {
+  background: #fff;
   border-bottom: none;
 }
 #preview-main-menu-links li {
