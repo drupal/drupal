@@ -100,6 +100,10 @@ class MigrateUserRoleTest extends MigrateDrupalTestBase {
     ));
     $this->assertEqual($migrate_test_role_2->id(), $rid);
     $this->assertEqual(array($rid), $migration->getIdMap()->lookupDestinationId(array(4)));
+    $rid = 'migrate_test_role_3_that_is_long';
+    $migrate_test_role_3 = entity_load('user_role', $rid);
+    $this->assertEqual($migrate_test_role_3->id(), $rid);
+    $this->assertEqual(array($rid), $migration->getIdMap()->lookupDestinationId(array(5)));
   }
 
 }

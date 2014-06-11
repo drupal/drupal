@@ -11,6 +11,7 @@ process:
       plugin: dedupe_entity
       entity_type: user_role
       field: id
+      length: 32
     -
       plugin: user_update_8002
   label: name

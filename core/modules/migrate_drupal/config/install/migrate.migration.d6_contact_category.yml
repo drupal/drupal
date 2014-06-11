@@ -11,6 +11,7 @@ process:
       plugin: dedupe_entity
       entity_type: user_role
       field: cid
+      length: 32
   label: category
   recipients: recipients
   reply: reply

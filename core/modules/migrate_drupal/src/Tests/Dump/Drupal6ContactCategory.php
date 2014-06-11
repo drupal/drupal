@@ -83,6 +83,14 @@ class Drupal6ContactCategory extends Drupal6DumpBase {
         'weight' => '1',
         'selected' => '1',
       ))
+      ->values(array(
+        'cid' => '3',
+        'category' => 'A category much longer than thirty two characters',
+        'recipients' => 'fortyninechars@example.com',
+        'reply' => '',
+        'weight' => '2',
+        'selected' => '0',
+      ))
       ->execute();
     $this->setModuleVersion('contact', '6001');
   }

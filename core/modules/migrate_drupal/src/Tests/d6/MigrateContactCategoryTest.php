@@ -64,6 +64,12 @@ class MigrateContactCategoryTest extends MigrateDrupalTestBase {
     $this->assertEqual($contact_category->recipients, array('test@example.com'));
     $this->assertEqual($contact_category->reply, 'Thanks for contacting us, we will reply ASAP!');
     $this->assertEqual($contact_category->weight, 1);
+
+    $contact_category = entity_load('contact_category', 'a_category_much_longer_than_thir');
+    $this->assertEqual($contact_category->label, 'A category much longer than thirty two characters');
+    $this->assertEqual($contact_category->recipients, array('fortyninechars@example.com'));
+    $this->assertEqual($contact_category->reply, '');
+    $this->assertEqual($contact_category->weight, 2);
   }
 
 }

@@ -117,7 +117,7 @@ class Drupal6UserRole extends Drupal6DumpBase {
         array('rid' => 2, 'name' => 'authenticated user'),
         array('rid' => 3, 'name' => 'migrate test role 1'),
         array('rid' => 4, 'name' => 'migrate test role 2'),
-        array('rid' => 5, 'name' => 'migrate test role 3'),
+        array('rid' => 5, 'name' => 'migrate test role 3 that is longer than thirty two characters'),
       ),
     );
 

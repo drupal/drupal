@@ -7,6 +7,7 @@
 namespace Drupal\migrate\Tests\process;
 
 use Drupal\migrate\Plugin\migrate\process\DedupeEntity;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Test the deduplication entity process plugin.
@@ -74,7 +75,7 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTestDedupe
    */
-  public function testDedupe($count, $postfix = '') {
+  public function testDedupe($count, $postfix = '', $start = NULL, $length = NULL) {
     $configuration = array(
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
@@ -82,10 +83,43 @@ class DedupeEntityTest extends MigrateProcessTestCase {
     if ($postfix) {
       $configuration['postfix'] = $postfix;
     }
+    $configuration['start'] = isset($start) ? $start : NULL;
+    $configuration['length'] = isset($length) ? $length : NULL;
     $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityQueryFactory);
     $this->entityQueryExpects($count);
-    $return = $plugin->transform('test', $this->migrateExecutable, $this->row, 'testproperty');
-    $this->assertSame($return, 'test' . ($count ? $postfix . $count : ''));
+    $value = $this->randomName(32);
+    $actual = $plugin->transform($value, $this->migrateExecutable, $this->row, 'testproperty');
+    $expected = Unicode::substr($value, $start, $length);
+    $expected .= $count ? $postfix . $count : '';
+    $this->assertSame($expected, $actual);
+  }
+
+  /**
+   * Tests that invalid start position throws an exception.
+   */
+  public function testDedupeEntityInvalidStart() {
+    $configuration = array(
+      'entity_type' => 'test_entity_type',
+      'field' => 'test_field',
+      'start' => 'foobar',
+    );
+    $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityQueryFactory);
+    $this->setExpectedException('Drupal\migrate\MigrateException', 'The start position configuration key should be an integer. Omit this key to capture from the beginning of the string.');
+    $plugin->transform('test_start', $this->migrateExecutable, $this->row, 'testproperty');
+  }
+
+  /**
+   * Tests that invalid length option throws an exception.
+   */
+  public function testDedupeEntityInvalidLength() {
+    $configuration = array(
+      'entity_type' => 'test_entity_type',
+      'field' => 'test_field',
+      'length' => 'foobar',
+    );
+    $plugin = new DedupeEntity($configuration, 'dedupe_entity', array(), $this->getMigration(), $this->entityQueryFactory);
+    $this->setExpectedException('Drupal\migrate\MigrateException', 'The character length configuration key should be an integer. Omit this key to capture the entire string.');
+    $plugin->transform('test_length', $this->migrateExecutable, $this->row, 'testproperty');
   }
 
   /**
@@ -93,18 +127,38 @@ class DedupeEntityTest extends MigrateProcessTestCase {
    */
   public function providerTestDedupe() {
     return array(
-      // Tests the entity deduplication plugin when there is no duplication
-      // and no postfix.
+      // Tests no duplication.
       array(0),
-      // Tests the entity deduplication plugin when there is duplication but
-      // no postfix.
+      // Tests no duplication and start position.
+      array(0, NULL, 10),
+      // Tests no duplication, start position, and length.
+      array(0, NULL, 5, 10),
+      // Tests no duplication and length.
+      array(0, NULL, NULL, 10),
+      // Tests duplication.
       array(3),
-      // Tests the entity deduplication plugin when there is no duplication
-      // but there is a postfix.
+      // Tests duplication and start position.
+      array(3, NULL, 10),
+      // Tests duplication, start position, and length.
+      array(3, NULL, 5, 10),
+      // Tests duplication and length.
+      array(3, NULL, NULL, 10),
+      // Tests no duplication and postfix.
       array(0, '_'),
-      // Tests the entity deduplication plugin when there is duplication and
-      // there is a postfix.
+      // Tests no duplication, postfix, and start position.
+      array(0, '_', 5),
+      // Tests no duplication, postfix, start position, and length.
+      array(0, '_', 5, 10),
+      // Tests no duplication, postfix, and length.
+      array(0, '_', NULL, 10),
+      // Tests duplication and postfix.
       array(2, '_'),
+      // Tests duplication, postfix, and start position.
+      array(2, '_', 5),
+      // Tests duplication, postfix, start position, and length.
+      array(2, '_', 5, 10),
+      // Tests duplication, postfix, and length.
+      array(2, '_', NULL, 10),
     );
   }
 

@@ -179,6 +179,22 @@ class Drupal6TaxonomyVocabulary extends Drupal6DumpBase {
       'module' => 'taxonomy',
       'weight' => '6',
     ))
+    ->values(array(
+      // Skipping vid 4 here, since it is already in use by
+      // Drupal6VocabularyField::load() and throws an
+      // IntegrityConstraintViolationException during MigrateDrupal6Test.
+      'vid' => '5',
+      'name' => 'vocabulary name much longer than thirty two characters',
+      'description' => 'description of vocabulary name much longer than thirty two characters',
+      'help' => '',
+      'relations' => '1',
+      'hierarchy' => '3',
+      'multiple' => '1',
+      'required' => '0',
+      'tags' => '0',
+      'module' => 'taxonomy',
+      'weight' => '7',
+    ))
     ->execute();
     $this->setModuleVersion('taxonomy', 6001);
   }

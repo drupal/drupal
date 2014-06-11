@@ -11,6 +11,7 @@ process:
       plugin: dedupe_entity
       entity_type: taxonomy_vocabulary
       field: vid
+      length: 32
   label: name
   name: name
   description: description

@@ -59,8 +59,13 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupalTestBase {
       $this->assertEqual($vocabulary->name, "vocabulary $j (i=$i)");
       $this->assertEqual($vocabulary->description, "description of vocabulary $j (i=$i)");
       $this->assertEqual($vocabulary->hierarchy, $i);
-      $this->assertEqual($vocabulary->weight, 4   + $i);
+      $this->assertEqual($vocabulary->weight, 4 + $i);
     }
+    $vocabulary = entity_load('taxonomy_vocabulary', 'vocabulary_name_much_longer_than');
+    $this->assertEqual($vocabulary->name, 'vocabulary name much longer than thirty two characters');
+    $this->assertEqual($vocabulary->description, 'description of vocabulary name much longer than thirty two characters');
+    $this->assertEqual($vocabulary->hierarchy, 3);
+    $this->assertEqual($vocabulary->weight, 7);
   }
 
 }
