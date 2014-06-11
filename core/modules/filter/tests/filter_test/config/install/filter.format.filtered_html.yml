@@ -1,0 +1,15 @@
+format: filtered_html
+name: 'Filtered HTML'
+weight: 1
+filters:
+  filter_url:
+    id: filter_url
+    provider: filter
+    weight: -1
+    status: true
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    settings:
+      allowed_html: '<p> <br> <strong> <a>'

@@ -496,8 +496,11 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  *   The form element to process. Properties used:
  *   - #base_type: The form element #type to use for the 'value' element.
  *     'textarea' by default.
- *   - #format: (optional) The text format ID to preselect. If NULL or not set,
- *     the default format for the current user will be used.
+ *   - #format: (optional) The text format ID to preselect. If omitted, the
+ *     default format for the current user will be used.
+ *   - #allowed_formats: (optional) An array of text format IDs that are
+ *     available for this element. If omitted, all text formats that the current
+ *     user has access to will be allowed.
  *
  * @return
  *   The expanded element.
@@ -536,6 +539,8 @@ function filter_process_format($element) {
 
   $element['value']['#type'] = $element['#base_type'];
   $element['value'] += element_info($element['#base_type']);
+  // Make sure the #default_value key is set, so we can use it below.
+  $element['value'] += array('#default_value' => '');
 
   // Turn original element into a text format wrapper.
   $element['#attached']['library'][] = 'filter/drupal.filter';
@@ -549,15 +554,30 @@ function filter_process_format($element) {
   // Get a list of formats that the current user has access to.
   $formats = filter_formats($user);
 
-  // Use the default format for this user if none was selected.
-  if (!isset($element['#format'])) {
-    $element['#format'] = filter_default_format($user);
+  // Allow the list of formats to be restricted.
+  if (isset($element['#allowed_formats'])) {
+    // We do not add the fallback format here to allow the use-case of forcing
+    // certain text formats to be used for certain text areas. In case the
+    // fallback format is supposed to be allowed as well, it must be added to
+    // $element['#allowed_formats'] explicitly.
+    $formats = array_intersect_key($formats, array_flip($element['#allowed_formats']));
   }
 
-  // If multiple text formats are available, remove the fallback. The
-  // "always_show_fallback_choice" is a hidden variable that has no UI. It
-  // defaults to false.
-  if (!\Drupal::config('filter.settings')->get('always_show_fallback_choice')) {
+  if (!isset($element['#format']) && !empty($formats)) {
+    // If no text format was selected, use the allowed format with the highest
+    // weight. This is equivalent to calling filter_default_format().
+    $element['#format'] = reset($formats)->format;
+  }
+
+  // If #allowed_formats is set, the list of formats must not be modified in any
+  // way. Otherwise, however, if all of the following conditions are true,
+  // remove the fallback format from the list of formats:
+  // 1. The 'always_show_fallback_choice' filter setting has not been activated.
+  // 2. Multiple text formats are available.
+  // 3. The fallback format is not the default format.
+  // The 'always_show_fallback_choice' filter setting is a hidden setting that
+  // has no UI. It defaults to FALSE.
+  if (!isset($element['#allowed_formats']) && !\Drupal::config('filter.settings')->get('always_show_fallback_choice')) {
     $fallback_format = filter_fallback_format();
     if ($element['#format'] !== $fallback_format && count($formats) > 1) {
       unset($formats[$fallback_format]);
@@ -599,12 +619,13 @@ function filter_process_format($element) {
 
   $all_formats = filter_formats();
   $format_exists = isset($all_formats[$element['#format']]);
+  $format_allowed = !isset($element['#allowed_formats']) || in_array($element['#format'], $element['#allowed_formats']);
   $user_has_access = isset($formats[$element['#format']]);
   $user_is_admin = user_access('administer filters');
 
-  // If the stored format does not exist, administrators have to assign a new
-  // format.
-  if (!$format_exists && $user_is_admin) {
+  // If the stored format does not exist or if it is not among the allowed
+  // formats for this textarea, administrators have to assign a new format.
+  if ((!$format_exists || !$format_allowed) && $user_is_admin) {
     $element['format']['format']['#required'] = TRUE;
     $element['format']['format']['#default_value'] = NULL;
     // Force access to the format selector (it may have been denied above if

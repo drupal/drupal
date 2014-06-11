@@ -24,7 +24,7 @@ class FilterAPITest extends EntityUnitTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'API',
+      'name' => 'Filter API',
       'description' => 'Test the behavior of the API of the Filter module.',
       'group' => 'Filter',
     );
@@ -34,36 +34,6 @@ class FilterAPITest extends EntityUnitTestBase {
     parent::setUp();
 
     $this->installConfig(array('system', 'filter'));
-
-    // Create Filtered HTML format.
-    $filtered_html_format = entity_create('filter_format', array(
-      'format' => 'filtered_html',
-      'name' => 'Filtered HTML',
-      'filters' => array(
-        // Note that the filter_html filter is of the type FilterInterface::TYPE_MARKUP_LANGUAGE.
-        'filter_url' => array(
-          'weight' => -1,
-          'status' => 1,
-        ),
-        // Note that the filter_html filter is of the type FilterInterface::TYPE_HTML_RESTRICTOR.
-        'filter_html' => array(
-          'status' => 1,
-          'settings' => array(
-            'allowed_html' => '<p> <br> <strong> <a>',
-          ),
-        ),
-      )
-    ));
-    $filtered_html_format->save();
-
-    // Create Full HTML format.
-    $full_html_format = entity_create('filter_format', array(
-      'format' => 'full_html',
-      'name' => 'Full HTML',
-      'weight' => 1,
-      'filters' => array(),
-    ));
-    $full_html_format->save();
   }
 
   /**
@@ -105,13 +75,17 @@ class FilterAPITest extends EntityUnitTestBase {
     $expected_filtered_text = "Text with evil content and a URL: <a href=\"http://drupal.org\">http://drupal.org</a>!";
     $expected_filter_text_without_html_generators = "Text with evil content and a URL: http://drupal.org!";
 
+    $actual_filtered_text = check_markup($text, 'filtered_html', '', array());
+    $this->verbose("Actual:<pre>$actual_filtered_text</pre>Expected:<pre>$expected_filtered_text</pre>");
     $this->assertIdentical(
-      check_markup($text, 'filtered_html', '', array()),
+      $actual_filtered_text,
       $expected_filtered_text,
       'Expected filter result.'
     );
+    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_MARKUP_LANGUAGE));
+    $this->verbose("Actual:<pre>$actual_filtered_text_without_html_generators</pre>Expected:<pre>$expected_filter_text_without_html_generators</pre>");
     $this->assertIdentical(
-      check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_MARKUP_LANGUAGE)),
+      $actual_filtered_text_without_html_generators,
       $expected_filter_text_without_html_generators,
       'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters.'
     );
@@ -119,8 +93,10 @@ class FilterAPITest extends EntityUnitTestBase {
     // this check focuses on the ability to filter multiple filter types at once.
     // Drupal core only ships with these two types of filters, so this is the
     // most extensive test possible.
+    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE));
+    $this->verbose("Actual:<pre>$actual_filtered_text_without_html_generators</pre>Expected:<pre>$expected_filter_text_without_html_generators</pre>");
     $this->assertIdentical(
-      check_markup($text, 'filtered_html', '', array(FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE)),
+      $actual_filtered_text_without_html_generators,
       $expected_filter_text_without_html_generators,
       'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.'
     );
