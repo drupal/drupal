@@ -367,3 +367,9 @@ block.settings.system_branding_block:
     use_site_slogan:
       type: boolean
       label: 'Use site slogan'
+
+condition.plugin.request_path:
+  type: condition.plugin
+  mapping:
+    pages:
+      type: string

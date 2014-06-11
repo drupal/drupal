@@ -8,7 +8,7 @@
 namespace Drupal\language\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Core\Language\Language as Lang;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides a 'Language' condition.
@@ -32,23 +32,23 @@ class Language extends ConditionPluginBase {
     $form = parent::buildConfigurationForm($form, $form_state);
     if (\Drupal::languageManager()->isMultilingual()) {
       // Fetch languages.
-      $languages = language_list(Lang::STATE_ALL);
+      $languages = language_list(LanguageInterface::STATE_ALL);
       $langcodes_options = array();
       foreach ($languages as $language) {
-        $langcodes_options[$language->id] = $language->label();
+        $langcodes_options[$language->id] = $language->getName();
       }
       $form['langcodes'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Language selection'),
-        '#default_value' => !empty($this->configuration['langcodes']) ? $this->configuration['langcodes'] : array(),
+        '#default_value' => $this->configuration['langcodes'],
         '#options' => $langcodes_options,
         '#description' => t('Select languages to enforce. If none are selected, all languages will be allowed.'),
       );
     }
     else {
-      $form['language']['langcodes'] = array(
+      $form['langcodes'] = array(
         '#type' => 'value',
-        '#value' => !empty($this->configuration['langcodes']) ? $this->configuration['langcodes'] : array()
+        '#value' => $this->configuration['langcodes'],
       );
     }
     return $form;
@@ -66,7 +66,7 @@ class Language extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function summary() {
-    $language_list = language_list(Lang::STATE_ALL);
+    $language_list = language_list(LanguageInterface::STATE_ALL);
     $selected = $this->configuration['langcodes'];
     // Reduce the language list to an array of language names.
     $language_names = array_reduce($language_list, function(&$result, $item) use ($selected) {
@@ -96,12 +96,20 @@ class Language extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function evaluate() {
+    if (empty($this->configuration['langcodes']) && !$this->isNegated()) {
+      return TRUE;
+    }
+
     $language = $this->getContextValue('language');
     // Language visibility settings.
-    if (!empty($this->configuration['langcodes'])) {
-      return !empty($this->configuration['langcodes'][$language->id]);
-    }
-    return TRUE;
+    return !empty($this->configuration['langcodes'][$language->id]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array('langcodes' => array()) + parent::defaultConfiguration();
   }
 
 }

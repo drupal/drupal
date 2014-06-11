@@ -123,3 +123,11 @@ language.settings:
                         language_show:
                           type: boolean
                           label: 'Show language selector on create and edit pages'
+
+condition.plugin.language:
+  type: condition.plugin
+  mapping:
+    langcodes:
+      type: sequence
+      sequence:
+        - type: string

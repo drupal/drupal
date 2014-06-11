@@ -37,21 +37,9 @@ class NodeType extends ConditionPluginBase {
       '#title' => t('Node types'),
       '#type' => 'checkboxes',
       '#options' => $options,
-      '#required' => TRUE,
-      '#default_value' => isset($this->configuration['bundles']) ? $this->configuration['bundles'] : array(),
+      '#default_value' => $this->configuration['bundles'],
     );
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
-    foreach ($form_state['values']['bundles'] as $bundle) {
-      if (!in_array($bundle, array_keys(node_type_get_types()))) {
-        form_set_error('bundles', $form_state, t('You have chosen an invalid node bundle, please check your selection and try again.'));
-      }
-    }
   }
 
   /**
@@ -80,8 +68,18 @@ class NodeType extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function evaluate() {
+    if (empty($this->configuration['bundles']) && !$this->isNegated()) {
+      return TRUE;
+    }
     $node = $this->getContextValue('node');
     return !empty($this->configuration['bundles'][$node->getType()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array('bundles' => array()) + parent::defaultConfiguration();
   }
 
 }

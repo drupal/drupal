@@ -162,3 +162,11 @@ search.plugin.user_search:
   label: 'User search'
   sequence:
     - type: undefined
+
+condition.plugin.user_role:
+  type: condition.plugin
+  mapping:
+    roles:
+      type: sequence
+      sequence:
+        - type: string

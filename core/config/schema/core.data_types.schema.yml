@@ -292,3 +292,14 @@ block_settings:
     provider:
       type: string
       label: 'Provider'
+
+condition.plugin:
+  type: mapping
+  label: 'Condition'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    negate:
+      type: boolean
+      label: 'Negate'

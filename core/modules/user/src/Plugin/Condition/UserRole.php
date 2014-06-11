@@ -35,7 +35,6 @@ class UserRole extends ConditionPluginBase {
       '#default_value' => $this->configuration['roles'],
       '#options' => array_map('\Drupal\Component\Utility\String::checkPlain', user_role_names()),
       '#description' => $this->t('If you select no roles, the condition will evaluate to TRUE for all users.'),
-      '#required' => TRUE,
     );
     return $form;
   }
@@ -46,7 +45,7 @@ class UserRole extends ConditionPluginBase {
   public function defaultConfiguration() {
     return array(
       'roles' => array(),
-    );
+    ) + parent::defaultConfiguration();
   }
 
   /**
@@ -81,6 +80,9 @@ class UserRole extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function evaluate() {
+    if (empty($this->configuration['roles']) && !$this->isNegated()) {
+      return TRUE;
+    }
     $user = $this->getContextValue('user');
     return (bool) array_intersect($this->configuration['roles'], $user->getRoles());
   }
