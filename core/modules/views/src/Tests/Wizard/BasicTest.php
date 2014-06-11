@@ -44,7 +44,7 @@ class BasicTest extends WizardTestBase {
     $this->assertText($view1['description']);
     $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id']));
     $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/delete'));
-    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/clone'));
+    $this->assertLinkByHref(url('admin/structure/views/view/' . $view1['id'] . '/duplicate'));
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');

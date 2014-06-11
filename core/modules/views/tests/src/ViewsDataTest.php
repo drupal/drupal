@@ -102,7 +102,7 @@ class ViewsDataTest extends UnitTestCase {
     $data['views_test_data']['job']['area']['id'] = 'text';
     $data['views_test_data']['job']['area']['sub_type'] = array('header', 'footer');
 
-    // Clone the example views test data for different weight, different title,
+    // Duplicate the example views test data for different weight, different title,
     // and matching data.
     $data['views_test_data_2'] = $data['views_test_data'];
     $data['views_test_data_2']['table']['base']['weight'] = 50;

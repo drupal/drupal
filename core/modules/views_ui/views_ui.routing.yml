@@ -64,11 +64,11 @@ views_ui.disable:
     _entity_access: view.disable
     _csrf_token: 'TRUE'
 
-views_ui.clone:
-  path: '/admin/structure/views/view/{view}/clone'
+views_ui.duplicate:
+  path: '/admin/structure/views/view/{view}/duplicate'
   defaults:
-    _entity_form: 'view.clone'
-    _title: 'Clone view'
+    _entity_form: 'view.duplicate'
+    _title: 'Duplicate view'
   requirements:
     _entity_access: view.duplicate
 

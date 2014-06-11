@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\ViewCloneForm.
+ * Contains \Drupal\views_ui\ViewDuplicateForm.
  */
 
 namespace Drupal\views_ui;
 
 /**
- * Form controller for the Views clone form.
+ * Form controller for the Views duplicate form.
  */
-class ViewCloneForm extends ViewFormBase {
+class ViewDuplicateForm extends ViewFormBase {
 
   /**
    * {@inheritdoc}
@@ -25,7 +25,7 @@ class ViewCloneForm extends ViewFormBase {
   public function form(array $form, array &$form_state) {
     parent::form($form, $form_state);
 
-    $form['#title'] = $this->t('Clone of @label', array('@label' => $this->entity->label()));
+    $form['#title'] = $this->t('Duplicate of @label', array('@label' => $this->entity->label()));
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -33,7 +33,7 @@ class ViewCloneForm extends ViewFormBase {
       '#required' => TRUE,
       '#size' => 32,
       '#maxlength' => 255,
-      '#default_value' => $this->t('Clone of @label', array('@label' => $this->entity->label())),
+      '#default_value' => $this->t('Duplicate of @label', array('@label' => $this->entity->label())),
     );
     $form['id'] = array(
       '#type' => 'machine_name',
@@ -55,7 +55,7 @@ class ViewCloneForm extends ViewFormBase {
   protected function actions(array $form, array &$form_state) {
     $actions['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->t('Clone'),
+      '#value' => $this->t('Duplicate'),
       '#submit' => array(
         array($this, 'submit'),
       ),

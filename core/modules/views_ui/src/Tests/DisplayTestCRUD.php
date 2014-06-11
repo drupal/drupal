@@ -109,15 +109,15 @@ class DisplayTestCRUD extends UITestBase {
   }
 
   /**
-   * Tests the cloning of a display.
+   * Tests the duplicating of a display.
    */
-  public function testCloneDisplay() {
+  public function testDuplicateDisplay() {
     $view = $this->randomView();
     $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->drupalGet($path_prefix);
-    $this->drupalPostForm(NULL, array(), 'Clone Page');
-    $this->assertLinkByHref($path_prefix . '/page_2', 0, 'Make sure after cloning the new display appears in the UI');
+    $this->drupalPostForm(NULL, array(), 'Duplicate Page');
+    $this->assertLinkByHref($path_prefix . '/page_2', 0, 'Make sure after duplicating the new display appears in the UI');
     $this->assertUrl($path_prefix . '/page_2', array(), 'The user got redirected to the new display.');
 
     // Set the title and override the css classes.
@@ -126,9 +126,9 @@ class DisplayTestCRUD extends UITestBase {
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/title", array('title' => $random_title), t('Apply'));
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", array('override[dropdown]' => 'page_2', 'css_class' => $random_css), t('Apply'));
 
-    // Clone as a different display type.
-    $this->drupalPostForm(NULL, array(), 'Clone as Block');
-    $this->assertLinkByHref($path_prefix . '/block_1', 0, 'Make sure after cloning the new display appears in the UI');
+    // Duplicate as a different display type.
+    $this->drupalPostForm(NULL, array(), 'Duplicate as Block');
+    $this->assertLinkByHref($path_prefix . '/block_1', 0, 'Make sure after duplicating the new display appears in the UI');
     $this->assertUrl($path_prefix . '/block_1', array(), 'The user got redirected to the new display.');
     $this->assertText(t('Block settings'));
     $this->assertNoText(t('Page settings'));
@@ -144,8 +144,8 @@ class DisplayTestCRUD extends UITestBase {
     $this->assertTrue($block_1, 'The new block display got saved.');
     $this->assertEqual($block_1->display['display_plugin'], 'block');
     $this->assertEqual($block_1->display['display_title'], 'Block', 'The new display title got generated as expected.');
-    $this->assertEqual($block_1->getOption('title'), $random_title, 'The overridden title option from the display got copied into the clone');
-    $this->assertEqual($block_1->getOption('css_class'), $random_css, 'The overridden css_class option from the display got copied into the clone');
+    $this->assertEqual($block_1->getOption('title'), $random_title, 'The overridden title option from the display got copied into the duplicate');
+    $this->assertEqual($block_1->getOption('css_class'), $random_css, 'The overridden css_class option from the display got copied into the duplicate');
   }
 
 }

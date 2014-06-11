@@ -80,21 +80,21 @@ class DefaultViewsTest extends UITestBase {
     // $this->drupalGet('glossary');
     // $this->assertNoText($new_title);
 
-    // Clone the view and check that the normal schema of cloned views is used.
+    // Duplicate the view and check that the normal schema of duplicated views is used.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Clone'), '/glossary');
+    $this->clickViewsOperationLink(t('Duplicate'), '/glossary');
     $edit = array(
-      'id' => 'clone_of_glossary',
+      'id' => 'duplicate_of_glossary',
     );
-    $this->assertTitle(t('Clone of @label | @site-name', array('@label' => 'Glossary', '@site-name' => \Drupal::config('system.site')->get('name'))));
-    $this->drupalPostForm(NULL, $edit, t('Clone'));
-    $this->assertUrl('admin/structure/views/view/clone_of_glossary', array(), 'The normal cloning name schema is applied.');
+    $this->assertTitle(t('Duplicate of @label | @site-name', array('@label' => 'Glossary', '@site-name' => \Drupal::config('system.site')->get('name'))));
+    $this->drupalPostForm(NULL, $edit, t('Duplicate'));
+    $this->assertUrl('admin/structure/views/view/duplicate_of_glossary', array(), 'The normal duplicating name schema is applied.');
 
-    // Clone a view and set a custom name.
+    // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink(t('Clone'), '/glossary');
+    $this->clickViewsOperationLink(t('Duplicate'), '/glossary');
     $random_name = strtolower($this->randomName());
-    $this->drupalPostForm(NULL, array('id' => $random_name), t('Clone'));
+    $this->drupalPostForm(NULL, array('id' => $random_name), t('Duplicate'));
     $this->assertUrl("admin/structure/views/view/$random_name", array(), 'The custom view name got saved.');
 
     // Now disable the view, and make sure it stops appearing on the main view

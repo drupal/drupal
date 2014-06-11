@@ -226,7 +226,7 @@ class DisplayTest extends UITestBase {
 
     $placeholder = array('!display_title' => $display_title);
     // Ensure that the dropdown buttons are displayed correctly.
-    $this->assertFieldByXpath('//input[@type="submit"]', t('Clone !display_title', $placeholder));
+    $this->assertFieldByXpath('//input[@type="submit"]', t('Duplicate !display_title', $placeholder));
     $this->assertFieldByXpath('//input[@type="submit"]', t('Delete !display_title', $placeholder));
     $this->assertFieldByXpath('//input[@type="submit"]', t('Disable !display_title', $placeholder));
     $this->assertNoFieldByXpath('//input[@type="submit"]', t('Enable !display_title', $placeholder));
