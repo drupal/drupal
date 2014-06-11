@@ -118,18 +118,18 @@ class DateHelper {
     // Force the key to use the correct month value, rather than
     // starting with zero.
     $monthnames = array(
-      1  => t('Jan'),
-      2  => t('Feb'),
-      3  => t('Mar'),
-      4  => t('Apr'),
-      5  => t('May'),
-      6  => t('Jun'),
-      7  => t('Jul'),
-      8  => t('Aug'),
-      9  => t('Sep'),
-      10 => t('Oct'),
-      11 => t('Nov'),
-      12 => t('Dec'),
+      1  => t('Jan', array(), array('context' => 'Abbreviated month name')),
+      2  => t('Feb', array(), array('context' => 'Abbreviated month name')),
+      3  => t('Mar', array(), array('context' => 'Abbreviated month name')),
+      4  => t('Apr', array(), array('context' => 'Abbreviated month name')),
+      5  => t('May', array(), array('context' => 'Abbreviated month name')),
+      6  => t('Jun', array(), array('context' => 'Abbreviated month name')),
+      7  => t('Jul', array(), array('context' => 'Abbreviated month name')),
+      8  => t('Aug', array(), array('context' => 'Abbreviated month name')),
+      9  => t('Sep', array(), array('context' => 'Abbreviated month name')),
+      10 => t('Oct', array(), array('context' => 'Abbreviated month name')),
+      11 => t('Nov', array(), array('context' => 'Abbreviated month name')),
+      12 => t('Dec', array(), array('context' => 'Abbreviated month name')),
     );
     $none = array('' => '');
     return !$required ? $none + $monthnames : $monthnames;
@@ -189,13 +189,13 @@ class DateHelper {
    */
   public static function weekDaysAbbr($required = FALSE) {
     $weekdays = array(
-      t('Sun', array(), array('context' => 'Sunday abbreviation')),
-      t('Mon', array(), array('context' => 'Monday abbreviation')),
-      t('Tue', array(), array('context' => 'Tuesday abbreviation')),
-      t('Wed', array(), array('context' => 'Wednesday abbreviation')),
-      t('Thu', array(), array('context' => 'Thursday abbreviation')),
-      t('Fri', array(), array('context' => 'Friday abbreviation')),
-      t('Sat', array(), array('context' => 'Saturday abbreviation')),
+      t('Sun', array(), array('context' => 'Abbreviated weekday')),
+      t('Mon', array(), array('context' => 'Abbreviated weekday')),
+      t('Tue', array(), array('context' => 'Abbreviated weekday')),
+      t('Wed', array(), array('context' => 'Abbreviated weekday')),
+      t('Thu', array(), array('context' => 'Abbreviated weekday')),
+      t('Fri', array(), array('context' => 'Abbreviated weekday')),
+      t('Sat', array(), array('context' => 'Abbreviated weekday')),
     );
     $none = array('' => '');
     return !$required ? $none + $weekdays : $weekdays;
@@ -213,13 +213,13 @@ class DateHelper {
    */
   public static function weekDaysAbbr2($required = FALSE) {
     $weekdays = array(
-      t('Su', array(), array('context' => 'Sunday 2 letter abbreviation')),
-      t('Mo', array(), array('context' => 'Monday 2 letter abbreviation')),
-      t('Tu', array(), array('context' => 'Tuesday 2 letter abbreviation')),
-      t('We', array(), array('context' => 'Wednesday 2 letter abbreviation')),
-      t('Th', array(), array('context' => 'Thursday 2 letter abbreviation')),
-      t('Fr', array(), array('context' => 'Friday 2 letter abbreviation')),
-      t('Sa', array(), array('context' => 'Saturday 2 letter abbreviation')),
+      t('Su', array(), array('context' => 'Abbreviated weekday')),
+      t('Mo', array(), array('context' => 'Abbreviated weekday')),
+      t('Tu', array(), array('context' => 'Abbreviated weekday')),
+      t('We', array(), array('context' => 'Abbreviated weekday')),
+      t('Th', array(), array('context' => 'Abbreviated weekday')),
+      t('Fr', array(), array('context' => 'Abbreviated weekday')),
+      t('Sa', array(), array('context' => 'Abbreviated weekday')),
     );
     $none = array('' => '');
     return !$required ? $none + $weekdays : $weekdays;
@@ -237,13 +237,13 @@ class DateHelper {
    */
   public static function weekDaysAbbr1($required = FALSE) {
     $weekdays = array(
-      t('S', array(), array('context' => 'Sunday 1 letter abbreviation')),
-      t('M', array(), array('context' => 'Monday 1 letter abbreviation')),
-      t('T', array(), array('context' => 'Tuesday 1 letter abbreviation')),
-      t('W', array(), array('context' => 'Wednesday 1 letter abbreviation')),
-      t('T', array(), array('context' => 'Thursday 1 letter abbreviation')),
-      t('F', array(), array('context' => 'Friday 1 letter abbreviation')),
-      t('S', array(), array('context' => 'Saturday 1 letter abbreviation')),
+      t('S', array(), array('context' => 'Abbreviated 1 letter weekday Sunday')),
+      t('M', array(), array('context' => 'Abbreviated 1 letter weekday Monday')),
+      t('T', array(), array('context' => 'Abbreviated 1 letter weekday Tuesday')),
+      t('W', array(), array('context' => 'Abbreviated 1 letter weekday Wednesday')),
+      t('T', array(), array('context' => 'Abbreviated 1 letter weekday Thursday')),
+      t('F', array(), array('context' => 'Abbreviated 1 letter weekday Friday')),
+      t('S', array(), array('context' => 'Abbreviated 1 letter weekday Saturday')),
     );
     $none = array('' => '');
     return !$required ? $none + $weekdays : $weekdays;
