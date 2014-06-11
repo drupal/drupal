@@ -707,6 +707,7 @@ function node_permission() {
     ),
     'administer content types' => array(
       'title' => t('Administer content types'),
+      'description' => t('Promote, change ownership, edit revisions, and perform other tasks across all content types.'),
       'restrict access' => TRUE,
     ),
     'administer nodes' => array(
