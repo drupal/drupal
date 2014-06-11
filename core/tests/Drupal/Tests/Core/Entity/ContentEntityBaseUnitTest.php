@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Language\Language;
 
@@ -217,10 +218,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->getMock();
     $field_item = $this->getMockBuilder('\Drupal\Core\Field\FieldItemBase')
       ->disableOriginalConstructor()
-      ->getMock();
-    $field_item->staticExpects($this->once())
-      ->method('mainPropertyName')
-      ->will($this->returnValue('value'));
+      ->getMockForAbstractClass();
 
     $this->typedDataManager->expects($this->any())
       ->method('getPropertyInstance')

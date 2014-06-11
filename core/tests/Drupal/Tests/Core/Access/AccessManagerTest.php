@@ -461,11 +461,6 @@ class AccessManagerTest extends UnitTestCase {
 
 
     $subrequest = Request::create('/test-route-1/example');
-    $class = $this->getMockClass('Symfony\Component\HttpFoundation\Request', array('create'));
-    $class::staticExpects($this->any())
-      ->method('create')
-      ->with('/test-route-1/example')
-      ->will($this->returnValue($subrequest));
 
     $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver);
     $this->accessManager->setContainer($this->container);
@@ -520,11 +515,6 @@ class AccessManagerTest extends UnitTestCase {
       ->will($this->returnValue(array('value' => 'upcasted_value')));
 
     $subrequest = Request::create('/test-route-1/example');
-    $class = $this->getMockClass('Symfony\Component\HttpFoundation\Request', array('create'));
-    $class::staticExpects($this->any())
-      ->method('create')
-      ->with('/test-route-1/example')
-      ->will($this->returnValue($subrequest));
 
     $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->argumentsResolver);
     $this->accessManager->setContainer($this->container);
