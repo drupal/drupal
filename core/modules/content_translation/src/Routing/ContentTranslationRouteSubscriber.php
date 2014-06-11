@@ -46,8 +46,14 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
       }
       $path = $entity_route->getPath() . '/translations';
 
+      // Inherit admin route status from edit route, if exists.
+      $is_admin = FALSE;
+      if ($edit_route = $collection->get($entity_type->getLinkTemplate('edit-form'))) {
+        $is_admin = (bool) $edit_route->getOption('_admin_route');
+      }
+
       $route = new Route(
-       $path,
+        $path,
         array(
           '_content' => '\Drupal\content_translation\Controller\ContentTranslationController::overview',
           '_entity_type_id' => $entity_type_id,
@@ -63,6 +69,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
               'type' => 'entity:' . $entity_type_id,
             ),
           ),
+          '_admin_route' => $is_admin,
         )
       );
       $collection->add($entity_type->getLinkTemplate('drupal:content-translation-overview'), $route);
@@ -88,6 +95,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
               'type' => 'entity:' . $entity_type_id,
             ),
           ),
+          '_admin_route' => $is_admin,
         )
       );
       $collection->add("content_translation.translation_add_$entity_type_id", $route);
@@ -111,6 +119,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
               'type' => 'entity:' . $entity_type_id,
             ),
           ),
+          '_admin_route' => $is_admin,
         )
       );
       $collection->add("content_translation.translation_edit_$entity_type_id", $route);
@@ -134,6 +143,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
             ),
           ),
           '_access_mode' => 'ANY',
+          '_admin_route' => $is_admin,
         )
       );
       $collection->add("content_translation.delete_$entity_type_id", $route);
