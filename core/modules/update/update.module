@@ -177,7 +177,8 @@ function update_theme() {
       'file' => 'update.manager.inc',
     ),
     'update_last_check' => array(
-      'variables' => array('last' => NULL),
+      'variables' => array('last' => 0),
+      'template' => 'update-last-check',
     ),
     'update_report' => array(
       'variables' => array('data' => NULL),
@@ -555,7 +556,9 @@ function _update_project_status_sort($a, $b) {
 }
 
 /**
- * Returns HTML for the last time we checked for update data.
+ * Prepares variables for last time update data was checked templates.
+ *
+ * Default template: update-last-check.html.twig.
  *
  * In addition to properly formatting the given timestamp, this function also
  * provides a "Check manually" link that refreshes the available update and
@@ -566,16 +569,10 @@ function _update_project_status_sort($a, $b) {
  *   - last: The timestamp when the site last checked for available updates.
  *
  * @see theme_update_report()
- * @see theme_update_available_updates_form()
- * @ingroup themeable
  */
-function theme_update_last_check($variables) {
-  $last = $variables['last'];
-  $output = '<div class="update checked">';
-  $output .= $last ? t('Last checked: @time ago', array('@time' => format_interval(REQUEST_TIME - $last))) : t('Last checked: never');
-  $output .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/updates/check', array('query' => drupal_get_destination())) . ')</span>';
-  $output .= "</div>\n";
-  return $output;
+function template_preprocess_update_last_check(&$variables) {
+  $variables['time'] = \Drupal::service('date')->formatInterval(REQUEST_TIME - $variables['last']);
+  $variables['link'] = \Drupal::l(t('Check manually'), 'update.manual_status', array(), array('query' => drupal_get_destination()));
 }
 
 /**

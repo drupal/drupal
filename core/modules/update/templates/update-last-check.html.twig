@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the last time update data was checked.
+ *
+ * Available variables:
+ * - last: The timestamp that the site was last checked for updates.
+ * - time: The formatted time since the site last checked for updates.
+ * - link: A link to check for updates manually.
+ *
+ * @see template_preprocess_update_last_check()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="update checked">
+  {% if last %}
+    {{ 'Last checked: @time ago'|t({'@time': time}) }}
+  {% else %}
+    {{ 'Last checked: never'|t }}
+  {% endif %}
+  <span class="check-manually">({{ link }})</span>
+</div>
