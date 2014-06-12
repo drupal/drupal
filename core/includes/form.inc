@@ -2936,7 +2936,7 @@ function template_preprocess_form_element(&$variables) {
 }
 
 /**
- * Returns HTML for a form element label and required marker.
+ * Prepares variables for form label templates.
  *
  * Form element labels include the #title and a #required marker. The label is
  * associated with the element itself by the element #id. Labels may appear
@@ -2951,53 +2951,46 @@ function template_preprocess_form_element(&$variables) {
  * required. That is especially important for screenreader users to know
  * which field is required.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #required, #title, #id, #value, #description.
- *
- * @ingroup themeable
  */
-function theme_form_element_label($variables) {
+function template_preprocess_form_element_label(&$variables) {
   $element = $variables['element'];
   // If title and required marker are both empty, output no label.
-  if ((!isset($element['#title']) || $element['#title'] === '') && empty($element['#required'])) {
-    return '';
-  }
-
-  $title = Xss::filterAdmin($element['#title']);
-
-  $attributes = array();
+  $variables['title'] = (isset($element['#title']) && $element['#title'] !== '') ? Xss::filterAdmin($element['#title']) : '';
+  $variables['attributes'] = array();
   // Style the label as class option to display inline with the element.
   if ($element['#title_display'] == 'after') {
-    $attributes['class'][] = 'option';
+    $variables['attributes']['class'][] = 'option';
   }
   // Show label only to screen readers to avoid disruption in visual flows.
   elseif ($element['#title_display'] == 'invisible') {
-    $attributes['class'][] = 'visually-hidden';
+    $variables['attributes']['class'][] = 'visually-hidden';
   }
 
   // A #for property of a dedicated #type 'label' element as precedence.
   if (!empty($element['#for'])) {
-    $attributes['for'] = $element['#for'];
+    $variables['attributes']['for'] = $element['#for'];
     // A custom #id allows the referenced form input element to refer back to
     // the label element; e.g., in the 'aria-labelledby' attribute.
     if (!empty($element['#id'])) {
-      $attributes['id'] = $element['#id'];
+      $variables['attributes']['id'] = $element['#id'];
     }
   }
   // Otherwise, point to the #id of the form input element.
   elseif (!empty($element['#id'])) {
-    $attributes['for'] = $element['#id'];
+    $variables['attributes']['for'] = $element['#id'];
   }
 
   // For required elements a 'form-required' class is appended to the
   // label attributes.
+  $variables['required'] = FALSE;
   if (!empty($element['#required'])) {
-    $attributes['class'][] = 'form-required';
+    $variables['required'] = TRUE;
+    $variables['attributes']['class'][] = 'form-required';
   }
-
-  return '<label' . new Attribute($attributes) . '>' . $title . '</label>';
 }
 
 /**

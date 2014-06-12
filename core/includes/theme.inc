@@ -2668,6 +2668,7 @@ function drupal_common_theme() {
     ),
     'form_element_label' => array(
       'render element' => 'element',
+      'template' => 'form-element-label',
     ),
     'vertical_tabs' => array(
       'render element' => 'element',
