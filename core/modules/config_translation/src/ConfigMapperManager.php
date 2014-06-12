@@ -97,7 +97,9 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     $this->themeHandler = $theme_handler;
 
     $this->alterInfo('config_translation_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'config_translation_info_plugins');
+    // Config translation only uses an info hook discovery, cache by language.
+    $cache_key = 'config_translation_info_plugins' . ':' . $language_manager->getCurrentLanguage()->getId();
+    $this->setCacheBackend($cache_backend, $cache_key, array('config_translation_info_plugins' => TRUE));
   }
 
   /**

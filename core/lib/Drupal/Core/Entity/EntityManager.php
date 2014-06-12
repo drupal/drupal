@@ -104,6 +104,13 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   protected $typedDataManager;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Static cache of bundle information.
    *
    * @var array
@@ -147,9 +154,10 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
   public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, TranslationInterface $translation_manager, ClassResolverInterface $class_resolver, TypedDataManager $typed_data_manager) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\Annotation\EntityType');
 
-    $this->setCacheBackend($cache, $language_manager, 'entity_type:', array('entity_types' => TRUE));
+    $this->setCacheBackend($cache, 'entity_type', array('entity_types' => TRUE));
     $this->alterInfo('entity_type');
 
+    $this->languageManager = $language_manager;
     $this->translationManager = $translation_manager;
     $this->classResolver = $class_resolver;
     $this->typedDataManager = $typed_data_manager;

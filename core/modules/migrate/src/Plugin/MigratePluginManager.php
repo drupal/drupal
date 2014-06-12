@@ -8,13 +8,10 @@
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\MigrateException;
 
 /**
  * Manages migrate plugins.
@@ -34,17 +31,15 @@ class MigratePluginManager extends DefaultPluginManager {
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    * @param string $annotation
    *   The annotation class name.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
     parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, $annotation);
     $this->alterInfo('migrate_' . $type . '_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'migrate_plugins_' . $type);
+    $this->setCacheBackend($cache_backend, 'migrate_plugins_' . $type);
   }
 
   /**

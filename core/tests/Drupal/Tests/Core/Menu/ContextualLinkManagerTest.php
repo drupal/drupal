@@ -133,7 +133,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $method->setAccessible(TRUE);
     $method->invoke($this->contextualLinkManager, 'contextual_links_plugins');
 
-    $this->contextualLinkManager->setCacheBackend($this->cacheBackend, $language_manager, 'contextual_links_plugins');
+    $this->contextualLinkManager->setCacheBackend($this->cacheBackend, 'contextual_links_plugins:en');
   }
 
   /**

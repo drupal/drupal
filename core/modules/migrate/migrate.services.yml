@@ -8,19 +8,19 @@ services:
     arguments: [migrate]
   plugin.manager.migrate.source:
     class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [source, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler', 'Drupal\migrate\Annotation\MigrateSource']
+    arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateSource']
   plugin.manager.migrate.process:
     class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [process, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler', 'Drupal\migrate\Annotation\MigrateProcessPlugin']
+    arguments: [process, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateProcessPlugin']
   plugin.manager.migrate.destination:
     class: Drupal\migrate\Plugin\MigrateDestinationPluginManager
-    arguments: [destination, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler', '@entity.manager']
+    arguments: [destination, '@container.namespaces', '@cache.discovery', '@module_handler', '@entity.manager']
   plugin.manager.migrate.id_map:
     class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [id_map, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [id_map, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.migrate.entity_field:
     class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [entity_field, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [entity_field, '@container.namespaces', '@cache.discovery', '@module_handler']
   password_migrate:
     class: Drupal\migrate\MigratePassword
     arguments: ['@password_original']

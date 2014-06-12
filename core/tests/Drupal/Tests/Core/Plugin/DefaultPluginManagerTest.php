@@ -7,8 +7,6 @@
 
 namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -159,22 +157,15 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $cache_backend
       ->expects($this->once())
       ->method('get')
-      ->with($cid . ':en')
+      ->with($cid)
       ->will($this->returnValue(FALSE));
     $cache_backend
       ->expects($this->once())
       ->method('set')
-      ->with($cid . ':en', $this->expectedDefinitions);
-
-    $language = new Language(array('id' => 'en'));
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $language_manager->expects($this->once())
-      ->method('getCurrentLanguage')
-      ->with(LanguageInterface::TYPE_INTERFACE)
-      ->will($this->returnValue($language));
+      ->with($cid, $this->expectedDefinitions);
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
-    $plugin_manager->setCacheBackend($cache_backend, $language_manager, $cid);
+    $plugin_manager->setCacheBackend($cache_backend, $cid);
 
     $this->assertEquals($this->expectedDefinitions, $plugin_manager->getDefinitions());
     $this->assertEquals($this->expectedDefinitions['banana'], $plugin_manager->getDefinition('banana'));
@@ -191,21 +182,14 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $cache_backend
       ->expects($this->once())
       ->method('get')
-      ->with($cid . ':en')
+      ->with($cid)
       ->will($this->returnValue((object) array('data' => $this->expectedDefinitions)));
     $cache_backend
       ->expects($this->never())
       ->method('set');
 
-    $language = new Language(array('id' => 'en'));
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $language_manager->expects($this->once())
-      ->method('getCurrentLanguage')
-      ->with(LanguageInterface::TYPE_INTERFACE)
-      ->will($this->returnValue($language));
-
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
-    $plugin_manager->setCacheBackend($cache_backend, $language_manager, $cid);
+    $plugin_manager->setCacheBackend($cache_backend, $cid);
 
     $this->assertEquals($this->expectedDefinitions, $plugin_manager->getDefinitions());
   }
@@ -228,15 +212,8 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
     $this->getContainerWithCacheBins($cache_backend);
 
-    $language = new Language(array('id' => 'en'));
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $language_manager->expects($this->once())
-      ->method('getCurrentLanguage')
-      ->with(LanguageInterface::TYPE_INTERFACE)
-      ->will($this->returnValue($language));
-
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
-    $plugin_manager->setCacheBackend($cache_backend, $language_manager, $cid, array('tag' => TRUE));
+    $plugin_manager->setCacheBackend($cache_backend, $cid, array('tag' => TRUE));
 
     $plugin_manager->clearCachedDefinitions();
   }

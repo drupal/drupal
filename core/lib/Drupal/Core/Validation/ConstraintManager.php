@@ -10,8 +10,8 @@ namespace Drupal\Core\Validation;
 use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\StringTranslation\TranslationWrapper;
 
 /**
  * Constraint plugin manager.
@@ -41,16 +41,14 @@ class ConstraintManager extends DefaultPluginManager {
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Validation/Constraint', $namespaces, $module_handler);
     $this->discovery = new StaticDiscoveryDecorator($this->discovery, array($this, 'registerDefinitions'));
     $this->alterInfo('validation_constraint');
-    $this->setCacheBackend($cache_backend, $language_manager, 'validation_constraint_plugins');
+    $this->setCacheBackend($cache_backend, 'validation_constraint_plugins');
   }
 
   /**
@@ -82,27 +80,27 @@ class ConstraintManager extends DefaultPluginManager {
    */
   public function registerDefinitions() {
     $this->discovery->setDefinition('Null', array(
-      'label' => t('Null'),
+      'label' => new TranslationWrapper('Null'),
       'class' => '\Symfony\Component\Validator\Constraints\Null',
       'type' => FALSE,
     ));
     $this->discovery->setDefinition('NotNull', array(
-      'label' => t('Not null'),
+      'label' => new TranslationWrapper('Not null'),
       'class' => '\Symfony\Component\Validator\Constraints\NotNull',
       'type' => FALSE,
     ));
     $this->discovery->setDefinition('Blank', array(
-      'label' => t('Blank'),
+      'label' => new TranslationWrapper('Blank'),
       'class' => '\Symfony\Component\Validator\Constraints\Blank',
       'type' => FALSE,
     ));
     $this->discovery->setDefinition('NotBlank', array(
-      'label' => t('Not blank'),
+      'label' => new TranslationWrapper('Not blank'),
       'class' => '\Symfony\Component\Validator\Constraints\NotBlank',
       'type' => FALSE,
     ));
     $this->discovery->setDefinition('Email', array(
-      'label' => t('Email'),
+      'label' => new TranslationWrapper('Email'),
       'class' => '\Symfony\Component\Validator\Constraints\Email',
       'type' => array('string'),
     ));

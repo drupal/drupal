@@ -10,7 +10,6 @@ namespace Drupal\views\Plugin;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\Container;
@@ -48,16 +47,14 @@ class ViewsHandlerManager extends DefaultPluginManager {
    *   The views data cache.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct($handler_type, \Traversable $namespaces, ViewsData $views_data, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct($handler_type, \Traversable $namespaces, ViewsData $views_data, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($handler_type);
     parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_definition_annotation_name);
 
-    $this->setCacheBackend($cache_backend, $language_manager, "views:$handler_type", array('extension' => array(TRUE, 'views')));
+    $this->setCacheBackend($cache_backend, "views:$handler_type", array('extension' => array(TRUE, 'views')));
 
     $this->viewsData = $views_data;
     $this->handlerType = $handler_type;

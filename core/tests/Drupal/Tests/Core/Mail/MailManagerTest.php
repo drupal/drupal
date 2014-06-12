@@ -28,13 +28,6 @@ class MailManagerTest extends UnitTestCase {
   protected $cache;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $languageManager;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -90,11 +83,6 @@ class MailManagerTest extends UnitTestCase {
     // Prepare the default constructor arguments required by MailManager.
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
 
-    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $this->languageManager->expects($this->any())
-      ->method('getCurrentLanguage')
-      ->will($this->returnValue((object) array('id' => 'en')));
-
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     // Mock a Discovery object to replace AnnotationClassDiscovery.
@@ -113,7 +101,7 @@ class MailManagerTest extends UnitTestCase {
       'interface' => $interface,
     )));
     // Construct the manager object and override its discovery.
-    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->languageManager, $this->moduleHandler, $this->configFactory);
+    $this->mailManager = new TestMailManager(new \ArrayObject(), $this->cache, $this->moduleHandler, $this->configFactory);
     $this->mailManager->setDiscovery($this->discovery);
   }
 

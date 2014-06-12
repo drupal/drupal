@@ -291,7 +291,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
-    $this->manager->setCacheBackend($this->cacheBackend, $language_manager, 'local_task', array('local_task' => 1));
+    $this->manager->setCacheBackend($this->cacheBackend, 'local_task:en', array('local_task' => 1));
   }
 
   /**

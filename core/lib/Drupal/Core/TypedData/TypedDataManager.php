@@ -11,7 +11,6 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\TypedData\Validation\MetadataFactory;
 use Drupal\Core\Validation\ConstraintManager;
@@ -53,14 +52,12 @@ class TypedDataManager extends DefaultPluginManager {
   *   keyed by the corresponding namespace to look for plugin implementations.
   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
   *   Cache backend instance to use.
-  * @param \Drupal\Core\Language\LanguageManager $language_manager
-  *   The language manager.
   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
   *   The module handler.
   */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $this->alterInfo('data_type_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'typed_data_types_plugins');
+    $this->setCacheBackend($cache_backend, 'typed_data_types_plugins');
 
     parent::__construct('Plugin/DataType', $namespaces, $module_handler, 'Drupal\Core\TypedData\Annotation\DataType');
   }

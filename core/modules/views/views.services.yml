@@ -1,61 +1,61 @@
 services:
   plugin.manager.views.access:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [access, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [access, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.area:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [area, '@container.namespaces', '@views.views_data', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [area, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
   plugin.manager.views.argument:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [argument, '@container.namespaces', '@views.views_data', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [argument, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
   plugin.manager.views.argument_default:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [argument_default, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [argument_default, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.argument_validator:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [argument_validator, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [argument_validator, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.cache:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [cache, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [cache, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.display_extender:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [display_extender, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [display_extender, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.display:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [display, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [display, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.exposed_form:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [exposed_form, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [exposed_form, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.field:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [field, '@container.namespaces', '@views.views_data', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [field, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
   plugin.manager.views.filter:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [filter, '@container.namespaces', '@views.views_data', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [filter, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
   plugin.manager.views.join:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [join, '@container.namespaces', '@views.views_data', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [join, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
   plugin.manager.views.pager:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [pager, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [pager, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.query:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [query, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [query, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.relationship:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [relationship, '@container.namespaces', '@views.views_data', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [relationship, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
   plugin.manager.views.row:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [row, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [row, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.sort:
     class: Drupal\views\Plugin\ViewsHandlerManager
-    arguments: [sort, '@container.namespaces', '@views.views_data', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [sort, '@container.namespaces', '@views.views_data', '@cache.discovery', '@module_handler']
   plugin.manager.views.style:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [style, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [style, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.views.wizard:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [wizard, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [wizard, '@container.namespaces', '@cache.discovery', '@module_handler']
   views.views_data:
     class: Drupal\views\ViewsData
     arguments: ['@cache.discovery', '@config.factory', '@module_handler', '@language_manager']

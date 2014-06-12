@@ -35,10 +35,6 @@ abstract class FieldDefinitionTestBase extends UnitTestCase {
     $namespaces = new \ArrayObject();
     $namespaces["Drupal\\$module_name"] = $module_dir . '/src';
 
-    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $language_manager->expects($this->once())
-      ->method('getCurrentLanguage')
-      ->will($this->returnValue(new Language(array('id' => 'en'))));
     $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->once())
       ->method('moduleExists')
@@ -47,7 +43,6 @@ abstract class FieldDefinitionTestBase extends UnitTestCase {
     $plugin_manager = new FieldTypePluginManager(
       $namespaces,
       $this->getMock('Drupal\Core\Cache\CacheBackendInterface'),
-      $language_manager,
       $module_handler
     );
 

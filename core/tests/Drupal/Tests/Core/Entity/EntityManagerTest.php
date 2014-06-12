@@ -556,11 +556,11 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(1))
       ->method('get')
-      ->with('entity_type::en', FALSE)
+      ->with('entity_type', FALSE)
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
       ->method('set')
-      ->with('entity_type::en');
+      ->with('entity_type');
     $this->cache->expects($this->at(3))
       ->method('set')
       ->with('entity_base_field_definitions:test_entity_type:en');
@@ -594,7 +594,7 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
       ->method('get')
-      ->with('entity_type::en', FALSE)
+      ->with('entity_type', FALSE)
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(3))
       ->method('set');
@@ -653,11 +653,11 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
       ->method('get')
-      ->with('entity_type::en', FALSE)
+      ->with('entity_type', FALSE)
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(3))
       ->method('set')
-      ->with('entity_type::en');
+      ->with('entity_type');
     $this->cache->expects($this->at(4))
       ->method('set')
       ->with('entity_field_storage_definitions:test_entity_type:en');
@@ -880,11 +880,11 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(1))
       ->method('get')
-      ->with("entity_type::en", FALSE)
+      ->with("entity_type", FALSE)
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(2))
       ->method('set')
-      ->with("entity_type::en");
+      ->with("entity_type");
     $this->cache->expects($this->at(3))
       ->method('set')
       ->with("entity_bundle_info:en");

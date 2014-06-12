@@ -1,4 +1,4 @@
 services:
   plugin.manager.migrate.load:
     class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [load, '@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: [load, '@container.namespaces', '@cache.discovery', '@module_handler']

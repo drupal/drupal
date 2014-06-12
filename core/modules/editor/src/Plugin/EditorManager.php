@@ -10,7 +10,6 @@ namespace Drupal\editor\Plugin;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManager;
 
 /**
  * Configurable text editor manager.
@@ -25,15 +24,13 @@ class EditorManager extends DefaultPluginManager {
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Editor', $namespaces, $module_handler, 'Drupal\editor\Annotation\Editor');
     $this->alterInfo('editor_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'editor_plugins');
+    $this->setCacheBackend($cache_backend, 'editor_plugins');
   }
 
   /**

@@ -1,7 +1,7 @@
 services:
   plugin.manager.rest:
     class: Drupal\rest\Plugin\Type\ResourcePluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@language_manager', '@module_handler']
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   cache.rest:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
