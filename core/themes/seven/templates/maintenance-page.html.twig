@@ -9,7 +9,7 @@
  * @see template_preprocess_maintenance_page()
  */
 #}
-<div class="l-container">
+<div class="layout-container">
 
   <header role="banner">
     {% if site_name or site_slogan %}
@@ -25,9 +25,9 @@
   </header>
 
   {% if page.sidebar_first %}
-    <aside class="l-sidebar-first" role="complementary">
+    <aside class="layout-sidebar-first" role="complementary">
       {{ page.sidebar_first }}
-    </aside>{# /.l-sidebar-first #}
+    </aside>{# /.layout-sidebar-first #}
   {% endif %}
 
   <main role="main">
@@ -44,4 +44,4 @@
     </footer>
   {% endif %}
 
-</div>{# /.l-container #}
+</div>{# /.layout-container #}

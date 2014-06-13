@@ -42,11 +42,11 @@ class BlockContentListTest extends WebTestBase {
     $this->assertTitle(t('Custom block library') . ' | Drupal');
 
     // Test for the table.
-    $element = $this->xpath('//div[@class="l-content"]//table');
+    $element = $this->xpath('//div[@class="layout-content"]//table');
     $this->assertTrue($element, 'Configuration entity list table found.');
 
     // Test the table header.
-    $elements = $this->xpath('//div[@class="l-content"]//table/thead/tr/th');
+    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
     $this->assertEqual(count($elements), 2, 'Correct number of table header cells found.');
 
     // Test the contents of each th cell.
@@ -72,7 +72,7 @@ class BlockContentListTest extends WebTestBase {
     $this->assertFieldByXpath('//td', $label, 'Label found for added block.');
 
     // Check the number of table row cells.
-    $elements = $this->xpath('//div[@class="l-content"]//table/tbody/tr[@class="odd"]/td');
+    $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td');
     $this->assertEqual(count($elements), 2, 'Correct number of table row cells found.');
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the

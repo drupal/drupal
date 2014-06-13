@@ -63,7 +63,7 @@
  * @ingroup themeable
  */
 #}
-<div class="l-container">
+<div class="layout-container">
 
   <header role="banner">
     {% if logo %}
@@ -111,7 +111,7 @@
   <main role="main">
     <a id="main-content"></a>{# link is in html.html.twig #}
 
-    <div class="l-content">
+    <div class="layout-content">
       {{ page.highlighted }}
 
       {{ title_prefix }}
@@ -129,16 +129,16 @@
       {{ page.content }}
 
       {{ feed_icons }}
-    </div>{# /.l-content #}
+    </div>{# /.layout-content #}
 
     {% if page.sidebar_first %}
-      <aside class="l-sidebar-first" role="complementary">
+      <aside class="layout-sidebar-first" role="complementary">
         {{ page.sidebar_first }}
       </aside>
     {% endif %}
 
     {% if page.sidebar_second %}
-      <aside class="l-sidebar-second" role="complementary">
+      <aside class="layout-sidebar-second" role="complementary">
         {{ page.sidebar_second }}
       </aside>
     {% endif %}
@@ -151,4 +151,4 @@
     </footer>
   {% endif %}
 
-</div>{# /.l-container #}
+</div>{# /.layout-container #}

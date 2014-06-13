@@ -188,30 +188,30 @@ body,
   [dir="rtl"] .region-footer-fourthcolumn {
     float: right;
   }
-  .two-sidebars #content {
+  .layout-two-sidebars #content {
     margin-left: 25%;
     margin-right: 25%;
     width: 50%;
   }
-  .one-sidebar #content {
+  .layout-one-sidebar #content {
     width: 75%;
   }
-  .no-sidebars #content {
+  .layout-no-sidebars #content {
     width: 100%;
   }
-  .sidebar-first #content {
+  .layout-sidebar-first #content {
     margin-left: 25%; /* LTR */
     margin-right: 0; /* LTR */
   }
-  [dir="rtl"] .sidebar-first #content {
+  [dir="rtl"] .layout-sidebar-first #content {
     margin-left: 0;
     margin-right: 25%;
   }
-  .sidebar-second #content {
+  .layout-sidebar-second #content {
     margin-right: 25%; /* LTR */
     margin-left: 0; /* LTR */
   }
-  [dir="rtl"] .sidebar-second #content {
+  [dir="rtl"] .layout-sidebar-second #content {
     margin-right: 0;
     margin-left: 25%;
   }

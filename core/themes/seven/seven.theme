@@ -20,11 +20,11 @@ function seven_preprocess_page(&$variables) {
   // Add information about the number of sidebars.
 
   if (!empty($variables['page']['sidebar_first'])) {
-    $classes[] = 'one-sidebar';
-    $classes[] = 'sidebar-first';
+    $classes[] = 'layout-one-sidebar';
+    $classes[] = 'layout-sidebar-first';
   }
   else {
-    $classes[] = 'no-sidebars';
+    $classes[] = 'layout-no-sidebars';
   }
   $attributes['class'] = $classes;
 

@@ -9,7 +9,7 @@
  * This layout method works reasonably well, but shouldn't be used on a
  * production site because it can break. For example, if an over-large image
  * (one that is wider than 20% of the viewport) is in the left sidebar, the
- * image will overlap with the .l-content to the right.
+ * image will overlap with the .layout-content to the right.
  */
 img {
   height: auto;
@@ -21,80 +21,80 @@ main:after {
   clear: both;
 }
 
-.l-content,
-.l-sidebar-first,
-.l-sidebar-second {
+.layout-content,
+.layout-sidebar-first,
+.layout-sidebar-second {
   display: inline;
   position: relative;
 }
 
 @media all and (min-width: 480px) and (max-width: 959px) {
-  .l-content {
+  .layout-content {
     width: 67%;
     float: right; /* LTR */
   }
-  [dir="rtl"] .l-content {
+  [dir="rtl"] .layout-content {
     float: left;
   }
 
-  .l-sidebar-first {
+  .layout-sidebar-first {
     width: 33%;
     float: left; /* LTR */
   }
-  [dir="rtl"] .l-sidebar-first {
+  [dir="rtl"] .layout-sidebar-first {
     float: right;
   }
 
-  .l-sidebar-second {
+  .layout-sidebar-second {
     float: right; /* LTR */
     clear: both;
     width: 100%;
   }
-  [dir="rtl"] .l-sidebar-second {
+  [dir="rtl"] .layout-sidebar-second {
     float: right;
     clear: right;
   }
 
-  .l-sidebar-second .block {
+  .layout-sidebar-second .block {
     float: left; /* LTR */
     width: 33%;
   }
-  [dir="rtl"] .l-sidebar-second .block {
+  [dir="rtl"] .layout-sidebar-second .block {
     float: right;
   }
-  .l-sidebar-second .block:nth-child(3n+1) {
+  .layout-sidebar-second .block:nth-child(3n+1) {
     clear: both;
   }
 }
 
 @media all and (min-width: 960px) {
-  .l-content {
+  .layout-content {
     width: 60%;
     float: left; /* LTR */
     left: 20%; /* LTR */
   }
-  [dir="rtl"] .l-content {
+  [dir="rtl"] .layout-content {
     float: right;
     left: 0;
     right: 20%;
   }
 
-  .l-sidebar-first {
+  .layout-sidebar-first {
     width: 20%;
     float: left; /* LTR */
     left: -60%; /* LTR */
   }
-  [dir="rtl"] .l-sidebar-first {
+  [dir="rtl"] .layout-sidebar-first {
     float: right;
     left: 0;
     right: -60%;
   }
 
-  .l-sidebar-second {
+  .layout-sidebar-second {
     float: right; /* LTR */
     width: 20%;
   }
-  [dir="rtl"] .l-sidebar-second {
+  [dir="rtl"] .layout-sidebar-second {
     float: left;
   }
 }

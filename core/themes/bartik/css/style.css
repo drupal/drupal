@@ -1564,13 +1564,13 @@ ul.vertical-tabs-list {
 .comment-form input.form-file {
   width: auto;
 }
-.no-sidebars .comment-form .form-text {
+.layout-no-sidebars .comment-form .form-text {
   width: 800px;
 }
-.one-sidebar .comment-form .form-text {
+.layout-one-sidebar .comment-form .form-text {
   width: 500px;
 }
-.two-sidebars .comment-form .form-text {
+.layout-two-sidebars .comment-form .form-text {
   width: 320px;
 }
 .comment-form .form-item .description {

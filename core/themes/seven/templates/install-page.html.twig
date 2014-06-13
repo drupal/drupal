@@ -9,7 +9,7 @@
  * @see template_preprocess_install_page()
  */
 #}
-<div class="l-container">
+<div class="layout-container">
 
   <header role="banner">
     {% if site_name or site_slogan %}
@@ -25,9 +25,9 @@
   </header>
 
   {% if page.sidebar_first %}
-    <aside class="l-sidebar-first" role="complementary">
+    <aside class="layout-sidebar-first" role="complementary">
       {{ page.sidebar_first }}
-    </aside>{# /.l-sidebar-first #}
+    </aside>{# /.layout-sidebar-first #}
   {% endif %}
 
   <main role="main">
@@ -39,9 +39,9 @@
   </main>
 
   {% if page.sidebar_second %}
-    <aside class="l-sidebar-second" role="complementary">
+    <aside class="layout-sidebar-second" role="complementary">
       {{ page.sidebar_second }}
-    </aside>{# /.l-sidebar-second #}
+    </aside>{# /.layout-sidebar-second #}
   {% endif %}
 
   {% if page.page_bottom %}
@@ -50,4 +50,4 @@
     </footer>
   {% endif %}
 
-</div>{# /.l-container #}
+</div>{# /.layout-container #}

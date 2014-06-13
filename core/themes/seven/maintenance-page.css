@@ -102,19 +102,19 @@
 /**
  * Layout
  */
-.l-container {
+.layout-container {
   background: #fff;
   width: auto;
   margin-left: 1.25em;
   margin-right: 1.25em;
 }
-.l-container:after { /* no reason for a clearfix in the markup */
+.layout-container:after { /* no reason for a clearfix in the markup */
   content: "";
   display: table;
   clear: both;
 }
 @media all and (max-width: 48em) { /* 768px */
-  .l-container {
+  .layout-container {
     margin: 1.25em;
     padding: 10px 20px;
   }
@@ -138,7 +138,7 @@
     width: 100%;
     height: 100%;
   }
-  .l-container {
+  .layout-container {
     margin: 0 auto;
     max-width: 770px;
     width: 75%;
@@ -165,11 +165,11 @@
     padding: 15px;
     margin: 0.25em 0;
   }
-  .l-sidebar-first {
+  .layout-sidebar-first {
     float: left;
     width: 35%;
   }
-  [dir="rtl"] .l-sidebar-first {
+  [dir="rtl"] .layout-sidebar-first {
     float: right;
   }
 

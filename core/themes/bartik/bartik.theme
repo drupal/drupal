@@ -22,18 +22,18 @@ function bartik_preprocess_page(&$variables) {
   $attributes = $page_object->getBodyAttributes();
   $classes = $attributes['class'];
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
-    $classes[] = 'two-sidebars';
+    $classes[] = 'layout-two-sidebars';
   }
   elseif (!empty($variables['page']['sidebar_first'])) {
-    $classes[] = 'one-sidebar';
-    $classes[] = 'sidebar-first';
+    $classes[] = 'layout-one-sidebar';
+    $classes[] = 'layout-sidebar-first';
   }
   elseif (!empty($variables['page']['sidebar_second'])) {
-    $classes[] = 'one-sidebar';
-    $classes[] = 'sidebar-second';
+    $classes[] = 'layout-one-sidebar';
+    $classes[] = 'layout-sidebar-second';
   }
   else {
-    $classes[] = 'no-sidebars';
+    $classes[] = 'layout-no-sidebars';
   }
 
   if (!empty($variables['page']['featured'])) {
