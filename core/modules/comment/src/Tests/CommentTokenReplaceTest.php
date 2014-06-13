@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 
 /**
@@ -53,10 +54,10 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[comment:cid]'] = $comment->id();
-    $tests['[comment:hostname]'] = check_plain($comment->getHostname());
+    $tests['[comment:hostname]'] = String::checkPlain($comment->getHostname());
     $tests['[comment:name]'] = Xss::filter($comment->getAuthorName());
     $tests['[comment:author]'] = Xss::filter($comment->getAuthorName());
-    $tests['[comment:mail]'] = check_plain($this->admin_user->getEmail());
+    $tests['[comment:mail]'] = String::checkPlain($this->admin_user->getEmail());
     $tests['[comment:homepage]'] = check_url($comment->getHomepage());
     $tests['[comment:title]'] = Xss::filter($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
@@ -65,11 +66,11 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->id);
     $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->getChangedTime(), 2, $language_interface->id);
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
-    $tests['[comment:parent:title]'] = check_plain($parent_comment->getSubject());
+    $tests['[comment:parent:title]'] = String::checkPlain($parent_comment->getSubject());
     $tests['[comment:node:nid]'] = $comment->getCommentedEntityId();
-    $tests['[comment:node:title]'] = check_plain($node->getTitle());
+    $tests['[comment:node:title]'] = String::checkPlain($node->getTitle());
     $tests['[comment:author:uid]'] = $comment->getOwnerId();
-    $tests['[comment:author:name]'] = check_plain($this->admin_user->getUsername());
+    $tests['[comment:author:name]'] = String::checkPlain($this->admin_user->getUsername());
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

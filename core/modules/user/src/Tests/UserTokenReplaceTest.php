@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
@@ -62,15 +63,15 @@ class UserTokenReplaceTest extends WebTestBase {
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[user:uid]'] = $account->id();
-    $tests['[user:name]'] = check_plain(user_format_name($account));
-    $tests['[user:mail]'] = check_plain($account->getEmail());
+    $tests['[user:name]'] = String::checkPlain(user_format_name($account));
+    $tests['[user:mail]'] = String::checkPlain($account->getEmail());
     $tests['[user:url]'] = url("user/" . $account->id(), $url_options);
     $tests['[user:edit-url]'] = url("user/" . $account->id() . "/edit", $url_options);
     $tests['[user:last-login]'] = format_date($account->getLastLoginTime(), 'medium', '', NULL, $language_interface->id);
     $tests['[user:last-login:short]'] = format_date($account->getLastLoginTime(), 'short', '', NULL, $language_interface->id);
     $tests['[user:created]'] = format_date($account->getCreatedTime(), 'medium', '', NULL, $language_interface->id);
     $tests['[user:created:short]'] = format_date($account->getCreatedTime(), 'short', '', NULL, $language_interface->id);
-    $tests['[current-user:name]'] = check_plain(user_format_name($global_account));
+    $tests['[current-user:name]'] = String::checkPlain(user_format_name($global_account));
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

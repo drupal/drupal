@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Environment;
+use Drupal\Component\Utility\String;
 
 /**
  * Minimum value of PHP memory_limit for SimpleTest.
@@ -67,7 +68,7 @@ function simpletest_requirements($phase) {
       'value' => is_dir(DRUPAL_ROOT . '/' . $site_directory) ? t('Not writable') : t('Missing'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('The testing framework requires the !sites-simpletest directory to exist and be writable in order to run tests.', array(
-        '!sites-simpletest' => '<code>./' . check_plain($site_directory) . '</code>',
+        '!sites-simpletest' => '<code>./' . String::checkPlain($site_directory) . '</code>',
       )),
     );
   }
@@ -77,7 +78,7 @@ function simpletest_requirements($phase) {
       'value' => t('Not protected'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('The file !file does not exist and could not be created automatically, which poses a security risk. Ensure that the directory is writable.', array(
-        '!file' => '<code>./' . check_plain($site_directory) . '/.htaccess</code>',
+        '!file' => '<code>./' . String::checkPlain($site_directory) . '/.htaccess</code>',
       )),
     );
   }

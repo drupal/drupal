@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\row;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
@@ -74,7 +75,7 @@ class Rss extends RowPluginBase {
 
   public function summaryTitle() {
     $options = $this->buildOptionsForm_summary_options();
-    return check_plain($options[$this->options['item_length']]);
+    return String::checkPlain($options[$this->options['item_length']]);
   }
 
   public function preRender($values) {

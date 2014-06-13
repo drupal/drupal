@@ -119,7 +119,7 @@ function seven_node_add_list($variables) {
     $output = '<ul class="admin-list">';
     foreach ($content as $type) {
       $output .= '<li class="clearfix">';
-      $content = '<span class="label">' . check_plain($type->name) . '</span>';
+      $content = '<span class="label">' . String::checkPlain($type->name) . '</span>';
       $content .= '<div class="description">' . Xss::filterAdmin($type->description) . '</div>';
       $options['html'] = TRUE;
       $output .= l($content, 'node/add/' . $type->type, $options);
@@ -144,7 +144,7 @@ function seven_block_content_add_list($variables) {
     $output = '<ul class="admin-list">';
     foreach ($variables['types'] as $id => $type) {
       $output .= '<li class="clearfix">';
-      $content = '<span class="label">' . check_plain($type['title']) . '</span>';
+      $content = '<span class="label">' . String::checkPlain($type['title']) . '</span>';
       $content .= '<div class="description">' . Xss::filterAdmin($type['description']) . '</div>';
       $options = $type['localized_options'];
       $options['html'] = TRUE;

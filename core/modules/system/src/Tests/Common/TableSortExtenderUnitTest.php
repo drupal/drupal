@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\UnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,7 +44,7 @@ class TableSortExtenderUnitTest extends UnitTestBase {
     $request->query->replace(array());
     \Drupal::getContainer()->set('request', $request);
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => check_plain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Simple table headers sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that should _not_
@@ -56,7 +57,7 @@ class TableSortExtenderUnitTest extends UnitTestBase {
     ));
     \Drupal::getContainer()->set('request', $request);
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => check_plain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Simple table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that _should_
@@ -72,7 +73,7 @@ class TableSortExtenderUnitTest extends UnitTestBase {
     $expected_ts['sort'] = 'desc';
     $expected_ts['query'] = array('alpha' => 'beta');
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => check_plain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Simple table headers plus $_GET parameters sorted correctly.');
 
     // Test complex table headers.
@@ -104,7 +105,7 @@ class TableSortExtenderUnitTest extends UnitTestBase {
       'sort' => 'desc',
       'query' => array(),
     );
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => check_plain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Complex table headers sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that should _not_
@@ -123,7 +124,7 @@ class TableSortExtenderUnitTest extends UnitTestBase {
       'sort' => 'asc',
       'query' => array(),
     );
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => check_plain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Complex table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that _should_
@@ -144,7 +145,7 @@ class TableSortExtenderUnitTest extends UnitTestBase {
       'query' => array('alpha' => 'beta'),
     );
     $ts = tablesort_init($headers);
-    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => check_plain(var_export($ts, TRUE)))));
+    $this->verbose(strtr('$ts: <pre>!ts</pre>', array('!ts' => String::checkPlain(var_export($ts, TRUE)))));
     $this->assertEqual($ts, $expected_ts, 'Complex table headers plus $_GET parameters sorted correctly.');
   }
 }

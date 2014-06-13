@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\access;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Session\AccountInterface;
@@ -56,7 +57,7 @@ class Role extends AccessPluginBase {
     else {
       $rids = user_role_names();
       $rid = reset($this->options['role']);
-      return check_plain($rids[$rid]);
+      return String::checkPlain($rids[$rid]);
     }
   }
 

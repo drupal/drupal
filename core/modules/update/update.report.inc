@@ -5,6 +5,8 @@
  * Code required only when rendering the available updates report.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Returns HTML for the project status report.
  *
@@ -83,7 +85,7 @@ function theme_update_report($variables) {
     $row = '<div class="version-status">';
     $update_status_label = array('#theme' => 'update_status_label', '#status' => $project['status']);
     $status_label = drupal_render($update_status_label);
-    $row .= !empty($status_label) ? $status_label : check_plain($project['reason']);
+    $row .= !empty($status_label) ? $status_label : String::checkPlain($project['reason']);
     $row .= '<span class="icon">' . drupal_render($icon) . '</span>';
     $row .= "</div>\n";
 
@@ -93,13 +95,13 @@ function theme_update_report($variables) {
         $row .= l($project['title'], $project['link']);
       }
       else {
-        $row .= check_plain($project['title']);
+        $row .= String::checkPlain($project['title']);
       }
     }
     else {
-      $row .= check_plain($project['name']);
+      $row .= String::checkPlain($project['name']);
     }
-    $row .= ' ' . check_plain($project['existing_version']);
+    $row .= ' ' . String::checkPlain($project['existing_version']);
     if ($project['install_type'] == 'dev' && !empty($project['datestamp'])) {
       $row .= ' <span class="version-date">(' . format_date($project['datestamp'], 'custom', 'Y-M-d') . ')</span>';
     }
@@ -201,7 +203,7 @@ function theme_update_report($variables) {
       $row .= '<div class="extra">' . "\n";
       foreach ($project['extra'] as $value) {
         $row .= '<div class="' . implode(' ', $value['class']) . '">';
-        $row .= check_plain($value['label']) . ': ';
+        $row .= String::checkPlain($value['label']) . ': ';
         $row .= drupal_placeholder($value['data']);
         $row .= "</div>\n";
       }

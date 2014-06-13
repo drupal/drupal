@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -94,7 +95,7 @@ class FileWidget extends WidgetBase {
         break;
     }
 
-    $title = check_plain($this->fieldDefinition->getLabel());
+    $title = String::checkPlain($this->fieldDefinition->getLabel());
     $description = field_filter_xss($this->fieldDefinition->getDescription());
 
     $elements = array();

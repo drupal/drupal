@@ -73,10 +73,10 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
     $tests['[node:vid]'] = $node->getRevisionId();
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
-    $tests['[node:title]'] = check_plain($node->getTitle());
+    $tests['[node:title]'] = String::checkPlain($node->getTitle());
     $tests['[node:body]'] = $node->body->processed;
     $tests['[node:summary]'] = $node->body->summary_processed;
-    $tests['[node:langcode]'] = check_plain($node->language()->id);
+    $tests['[node:langcode]'] = String::checkPlain($node->language()->id);
     $tests['[node:url]'] = url('node/' . $node->id(), $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->id() . '/edit', $url_options);
     $tests['[node:author]'] = String::checkPlain($account->getUsername());

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Mail;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Site\Settings;
 use Drupal\simpletest\WebTestBase;
 
@@ -37,7 +38,7 @@ class HtmlToTextTest extends WebTestBase {
       str_replace(
         array("\n", ' '),
         array('\n', '&nbsp;'),
-        check_plain($text)
+        String::checkPlain($text)
       ) . '"';
   }
 
@@ -59,7 +60,7 @@ class HtmlToTextTest extends WebTestBase {
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = drupal_html_to_text($html, $allowed_tags);
-    $pass = $this->assertEqual($result, $text, check_plain($message));
+    $pass = $this->assertEqual($result, $text, String::checkPlain($message));
     $verbose = 'html = <pre>' . $this->stringToHtml($html)
       . '</pre><br />' . 'result = <pre>' . $this->stringToHtml($result)
       . '</pre><br />' . 'expected = <pre>' . $this->stringToHtml($text)

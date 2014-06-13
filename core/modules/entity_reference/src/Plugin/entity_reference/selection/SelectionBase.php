@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\entity_reference\selection;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -183,7 +184,7 @@ class SelectionBase implements SelectionInterface {
     $entities = entity_load_multiple($target_type, $result);
     foreach ($entities as $entity_id => $entity) {
       $bundle = $entity->bundle();
-      $options[$bundle][$entity_id] = check_plain($entity->label());
+      $options[$bundle][$entity_id] = String::checkPlain($entity->label());
     }
 
     return $options;

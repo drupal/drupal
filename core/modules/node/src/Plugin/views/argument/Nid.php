@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\argument\Numeric;
 
 /**
@@ -24,7 +25,7 @@ class Nid extends Numeric {
 
     $nodes = node_load_multiple($this->value);
     foreach ($nodes as $node) {
-      $titles[] = check_plain($node->label());
+      $titles[] = String::checkPlain($node->label());
     }
     return $titles;
   }

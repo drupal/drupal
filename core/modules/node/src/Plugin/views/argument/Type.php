@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
+use Drupal\Component\Utility\String as UtilityString;
 use Drupal\views\Plugin\views\argument\String;
 
 /**
@@ -35,7 +36,7 @@ class Type extends String {
   function node_type($type_name) {
     $type = entity_load('node_type', $type_name);
     $output = $type ? $type->label() : t('Unknown content type');
-    return check_plain($output);
+    return UtilityString::checkPlain($output);
   }
 
 }

@@ -984,8 +984,8 @@ function _filter_url_parse_full_links($match) {
   $i = 1;
 
   $match[$i] = decode_entities($match[$i]);
-  $caption = check_plain(_filter_url_trim($match[$i]));
-  $match[$i] = check_plain($match[$i]);
+  $caption = String::checkPlain(_filter_url_trim($match[$i]));
+  $match[$i] = String::checkPlain($match[$i]);
   return '<a href="' . $match[$i] . '">' . $caption . '</a>';
 }
 
@@ -999,8 +999,8 @@ function _filter_url_parse_email_links($match) {
   $i = 0;
 
   $match[$i] = decode_entities($match[$i]);
-  $caption = check_plain(_filter_url_trim($match[$i]));
-  $match[$i] = check_plain($match[$i]);
+  $caption = String::checkPlain(_filter_url_trim($match[$i]));
+  $match[$i] = String::checkPlain($match[$i]);
   return '<a href="mailto:' . $match[$i] . '">' . $caption . '</a>';
 }
 
@@ -1014,8 +1014,8 @@ function _filter_url_parse_partial_links($match) {
   $i = 1;
 
   $match[$i] = decode_entities($match[$i]);
-  $caption = check_plain(_filter_url_trim($match[$i]));
-  $match[$i] = check_plain($match[$i]);
+  $caption = String::checkPlain(_filter_url_trim($match[$i]));
+  $match[$i] = String::checkPlain($match[$i]);
   return '<a href="http://' . $match[$i] . '">' . $caption . '</a>';
 }
 
@@ -1147,7 +1147,7 @@ function _filter_autop($text) {
  * Escapes all HTML tags, so they will be visible instead of being effective.
  */
 function _filter_html_escape($text) {
-  return trim(check_plain($text));
+  return trim(String::checkPlain($text));
 }
 
 /**

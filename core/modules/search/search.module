@@ -5,6 +5,7 @@
  * Enables site-wide keyword searching.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -675,7 +676,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
     // We didn't find any keyword matches, so just return the first part of the
     // text. We also need to re-encode any HTML special characters that we
     // entity-decoded above.
-    return check_plain(truncate_utf8($text, 256, TRUE, TRUE));
+    return String::checkPlain(truncate_utf8($text, 256, TRUE, TRUE));
   }
 
   // Sort the text ranges by starting position.
@@ -716,7 +717,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // translated. Let translators have the … separator text as one chunk.
   $ellipses = explode('!excerpt', t('… !excerpt … !excerpt …'));
   $text = (isset($new_ranges[0]) ? '' : $ellipses[0]) . implode($ellipses[1], $out) . (($max_end < strlen($text) - 1) ? $ellipses[2] : '');
-  $text = check_plain($text);
+  $text = String::checkPlain($text);
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong'
   // and '<strong>').

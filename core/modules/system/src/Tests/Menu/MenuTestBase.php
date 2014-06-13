@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 abstract class MenuTestBase extends WebTestBase {
@@ -65,7 +66,7 @@ abstract class MenuTestBase extends WebTestBase {
       foreach ($trail as $path => $title) {
         $url = url($path);
         $part = array_shift($parts);
-        $pass = ($pass && $part['href'] === $url && $part['text'] === check_plain($title));
+        $pass = ($pass && $part['href'] === $url && $part['text'] === String::checkPlain($title));
       }
     }
     // No parts must be left, or an expected "Home" will always pass.

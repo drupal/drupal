@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -153,8 +154,8 @@ class RenderWebTest extends WebTestBase {
   protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {
     $original_element = $element;
     $this->drupalSetContent(drupal_render($element));
-    $this->verbose('<pre>' .  check_plain(var_export($original_element, TRUE)) . '</pre>'
-      . '<pre>' .  check_plain(var_export($element, TRUE)) . '</pre>'
+    $this->verbose('<pre>' .  String::checkPlain(var_export($original_element, TRUE)) . '</pre>'
+      . '<pre>' .  String::checkPlain(var_export($element, TRUE)) . '</pre>'
       . '<hr />' . $this->drupalGetContent()
     );
 

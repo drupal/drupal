@@ -36,6 +36,7 @@
  * root.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Updater\Updater;
 use Drupal\Core\FileTransfer\Local;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -108,14 +109,14 @@ function update_manager_update_form($form, $form_state = array(), $context) {
         $project_name = l($project['title'], $project['link']);
       }
       else {
-        $project_name = check_plain($project['title']);
+        $project_name = String::checkPlain($project['title']);
       }
     }
     elseif (!empty($project['info']['name'])) {
-      $project_name = check_plain($project['info']['name']);
+      $project_name = String::checkPlain($project['info']['name']);
     }
     else {
-      $project_name = check_plain($name);
+      $project_name = String::checkPlain($name);
     }
     if ($project['project_type'] == 'theme' || $project['project_type'] == 'theme-disabled') {
       $project_name .= ' ' . t('(Theme)');

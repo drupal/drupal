@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Form\ConfigFormBase;
 
@@ -55,7 +56,7 @@ class FileSystemForm extends ConfigFormBase {
     // Any visible, writeable wrapper can potentially be used for the files
     // directory, including a remote file system that integrates with a CDN.
     foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $info) {
-      $options[$scheme] = check_plain($info['description']);
+      $options[$scheme] = String::checkPlain($info['description']);
     }
 
     if (!empty($options)) {

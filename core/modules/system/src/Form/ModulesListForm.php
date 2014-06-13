@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -116,7 +117,7 @@ class ModulesListForm extends FormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    $distribution = check_plain(drupal_install_profile_distribution_name());
+    $distribution = String::checkPlain(drupal_install_profile_distribution_name());
 
     // Include system.admin.inc so we can use the sort callbacks.
     $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');

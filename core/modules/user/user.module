@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
@@ -583,8 +584,8 @@ function user_preprocess_block(&$variables) {
  *
  * @return
  *   An unsanitized string with the username to display. The code receiving
- *   this result must ensure that check_plain() is called on it before it is
- *   printed to the page.
+ *   this result must ensure that \Drupal\Component\Utility\String::checkPlain()
+ *   is called on it before it is printed to the page.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal\Core\Session\Interface::getUsername().
@@ -621,7 +622,8 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  *
  * Modules that make any changes to variables like 'name' or 'extra' must ensure
  * that the final string is safe to include directly in the output by using
- * check_plain() or \Drupal\Component\Utility\Xss::filter().
+ * \Drupal\Component\Utility\String::checkPlain() or
+ * \Drupal\Component\Utility\Xss::filter().
  */
 function template_preprocess_username(&$variables) {
   $account = $variables['account'] ?: new AnonymousUserSession();
@@ -647,7 +649,7 @@ function template_preprocess_username(&$variables) {
   else {
     $variables['truncated'] = FALSE;
   }
-  $variables['name'] = check_plain($name);
+  $variables['name'] = String::checkPlain($name);
   $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
 
   // Populate link path and attributes if appropriate.
@@ -664,7 +666,8 @@ function template_preprocess_username(&$variables) {
     $variables['link_path'] = $account->homepage;
     $variables['homepage'] = $account->homepage;
   }
-  // We do not want the l() function to check_plain() a second time.
+  // We do not want the l() function to
+  // \Drupal\Component\Utility\String::checkPlain() a second time.
   $variables['link_options']['html'] = TRUE;
   // Set a default class.
   $variables['link_options']['attributes']['class'] = array('username');

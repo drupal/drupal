@@ -8,6 +8,7 @@
 namespace Drupal\search\Tests;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Component\Utility\String;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
@@ -124,7 +125,7 @@ class SearchCommentTest extends SearchTestBase {
     // Verify that comment is rendered using proper format.
     $this->assertText($comment_body, 'Comment body text found in search results.');
     $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
-    $this->assertNoRaw(check_plain($edit_comment['comment_body[0][value]']), 'HTML in comment body is not escaped.');
+    $this->assertNoRaw(String::checkPlain($edit_comment['comment_body[0][value]']), 'HTML in comment body is not escaped.');
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);

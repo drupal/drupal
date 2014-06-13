@@ -215,7 +215,7 @@ function database_test_theme_tablesort($form, &$form_state) {
   foreach (user_load_multiple($uids) as $account) {
     $options[$account->id()] = array(
       'title' => array('data' => array('#title' => String::checkPlain($account->getUsername()))),
-      'username' => check_plain($account->getUsername()),
+      'username' => String::checkPlain($account->getUsername()),
       'status' =>  $account->isActive() ? t('active') : t('blocked'),
     );
   }

@@ -5,6 +5,7 @@
  * Enables semantically enriched output for Drupal sites in the form of RDFa.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Template\Attribute;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -418,7 +419,7 @@ function rdf_preprocess_username(&$variables) {
   // Long usernames are truncated by template_preprocess_username(). Store the
   // full name in the content attribute so it can be extracted in RDFa.
   if ($variables['truncated']) {
-    $attributes['content'] = check_plain($variables['name_raw']);
+    $attributes['content'] = String::checkPlain($variables['name_raw']);
   }
   // The remaining attributes can have multiple values listed, with whitespace
   // separating the values in the RDFa attributes

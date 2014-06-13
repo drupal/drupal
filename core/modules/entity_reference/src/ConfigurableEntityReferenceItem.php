@@ -190,7 +190,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
       // entity type specific plugins (e.g. 'default_node', 'default_user',
       // ...).
       if (in_array($plugin_id, $handler_groups)) {
-        $handlers_options[$plugin_id] = check_plain($plugin['label']);
+        $handlers_options[$plugin_id] = String::checkPlain($plugin['label']);
       }
     }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
@@ -77,7 +78,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
           ) + $uri->toRenderArray();
         }
         else {
-          $elements[$delta] = array('#markup' => check_plain($label));
+          $elements[$delta] = array('#markup' => String::checkPlain($label));
         }
         $elements[$delta]['#cache']['tags'] = $referenced_entity->getCacheTag();
       }

@@ -5,6 +5,7 @@
  * Administration toolbar for quick access to top level administration items.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
@@ -458,7 +459,7 @@ function toolbar_menu_navigation_links(&$tree) {
         'toolbar-icon',
         'toolbar-icon-' . strtolower(str_replace(' ', '-', $item['link']['link_title'])),
       ),
-      'title' => check_plain($item['link']['description']),
+      'title' => String::checkPlain($item['link']['description']),
     );
   }
 }

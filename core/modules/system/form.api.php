@@ -5,6 +5,8 @@
  * Callbacks provided by the form system.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * @addtogroup callbacks
  * @{
@@ -74,7 +76,7 @@ function callback_batch_operation($MULTIPLE_PARAMS, &$context) {
     node_save($node);
 
     // Store some result for post-processing in the finished callback.
-    $context['results'][] = check_plain($node->title);
+    $context['results'][] = String::checkPlain($node->title);
 
     // Update our progress information.
     $context['sandbox']['progress']++;

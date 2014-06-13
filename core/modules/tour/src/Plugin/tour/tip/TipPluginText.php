@@ -7,6 +7,7 @@
 
 namespace Drupal\tour\Plugin\tour\tip;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
@@ -119,7 +120,7 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
    * Implements \Drupal\tour\TipPluginInterface::getOutput().
    */
   public function getOutput() {
-    $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->getAriaId() . '-label">' . check_plain($this->getLabel()) . '</h2>';
+    $output = '<h2 class="tour-tip-label" id="tour-tip-' . $this->getAriaId() . '-label">' . String::checkPlain($this->getLabel()) . '</h2>';
     $output .= '<p class="tour-tip-body" id="tour-tip-' . $this->getAriaId() . '-contents">' . Xss::filterAdmin($this->token->replace($this->getBody())) . '</p>';
     return array('#markup' => $output);
   }

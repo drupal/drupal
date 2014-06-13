@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityListBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -125,7 +126,7 @@ class FieldOverview extends OverviewBase {
           'id' => drupal_html_class($name),
         ),
         'label' => array(
-          '#markup' => check_plain($instance->getLabel()),
+          '#markup' => String::checkPlain($instance->getLabel()),
         ),
         'field_name' => array(
           '#markup' => $instance->getName(),

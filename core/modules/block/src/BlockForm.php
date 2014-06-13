@@ -195,7 +195,7 @@ class BlockForm extends EntityForm {
     }
 
     // Per-role visibility.
-    $role_options = array_map('check_plain', user_role_names());
+    $role_options = array_map(array('\Drupal\Component\Utility\String', 'checkPlain'), user_role_names());
     $form['visibility']['role'] = array(
       '#type' => 'details',
       '#title' => $this->t('Roles'),

@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Plugin\views\display;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormErrorInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -286,7 +287,7 @@ class RestExport extends PathPluginBase {
     // Wrap the output in a pre tag if this is for a live preview.
     if (!empty($this->view->live_preview)) {
       $build['#prefix'] = '<pre>';
-      $build['#markup'] = check_plain($build['#markup']);
+      $build['#markup'] = String::checkPlain($build['#markup']);
       $build['#suffix'] = '</pre>';
     }
 

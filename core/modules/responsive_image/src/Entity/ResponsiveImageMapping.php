@@ -7,6 +7,7 @@
 
 namespace Drupal\responsive_image\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\responsive_image\ResponsiveImageMappingInterface;
 
@@ -122,7 +123,7 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
   public function createDuplicate() {
     return entity_create('responsive_image_mapping', array(
       'id' => '',
-      'label' => t('Clone of !label', array('!label' => check_plain($this->label()))),
+      'label' => t('Clone of !label', array('!label' => String::checkPlain($this->label()))),
       'mappings' => $this->getMappings(),
     ));
   }

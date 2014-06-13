@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -80,7 +81,7 @@ class Roles extends PrerenderList {
       $roles = user_roles();
       $result = $this->database->query('SELECT u.uid, u.rid FROM {users_roles} u WHERE u.uid IN (:uids) AND u.rid IN (:rids)', array(':uids' => $uids, ':rids' => array_keys($roles)));
       foreach ($result as $role) {
-        $this->items[$role->uid][$role->rid]['role'] = check_plain($roles[$role->rid]->label());
+        $this->items[$role->uid][$role->rid]['role'] = String::checkPlain($roles[$role->rid]->label());
         $this->items[$role->uid][$role->rid]['rid'] = $role->rid;
       }
       // Sort the roles for each user by role weight.

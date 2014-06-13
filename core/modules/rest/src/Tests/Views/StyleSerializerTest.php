@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests\Views;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Views;
 use Drupal\views\Tests\Plugin\PluginTestBase;
 use Drupal\views\Tests\ViewTestData;
@@ -280,7 +281,7 @@ class StyleSerializerTest extends PluginTestBase {
       $entities[] = $row->_entity;
     }
 
-    $expected = check_plain($serializer->serialize($entities, 'json'));
+    $expected = String::checkPlain($serializer->serialize($entities, 'json'));
 
     $view->display_handler->setContentType('json');
     $view->live_preview = TRUE;

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -78,7 +79,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
     $this->assertTrue(strpos($styles, $css) > 0, 'Rendered CSS includes the added stylesheet.');
     // Verify that newlines are properly added inside style tags.
     $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
-    $css_processed = '<link rel="stylesheet" href="' . check_plain(file_create_url($css)) . "?" . $query_string . '" media="all" />';
+    $css_processed = '<link rel="stylesheet" href="' . String::checkPlain(file_create_url($css)) . "?" . $query_string . '" media="all" />';
     $this->assertEqual(trim($styles), $css_processed, 'Rendered CSS includes newlines inside style tags for JavaScript use.');
   }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\argument\Numeric;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,7 +67,7 @@ class Vid extends Numeric {
 
     foreach ($results as $result) {
       $nodes[$result['nid']]->set('title', $result['title']);
-      $titles[] = check_plain($nodes[$result['nid']]->label());
+      $titles[] = String::checkPlain($nodes[$result['nid']]->label());
     }
 
     return $titles;

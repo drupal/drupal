@@ -7,6 +7,7 @@
 
 namespace Drupal\text\Tests\Formatter;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -144,7 +145,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    * @return string
    *   The $message with exported replacement tokens, sanitized for HTML output.
    *
-   * @see check_plain()
+   * @see \Drupal\Component\Utility\String::checkPlain()
    * @see format_string()
    */
   protected function formatString($message, array $args) {
@@ -304,7 +305,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     $this->renderEntityFields($entity, $this->display);
     $this->assertText($value);
     $this->assertNoRaw($value);
-    $this->assertRaw(nl2br(check_plain($value)));
+    $this->assertRaw(nl2br(String::checkPlain($value)));
   }
 
 }

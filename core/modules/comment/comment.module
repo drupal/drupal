@@ -13,6 +13,7 @@
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
@@ -1265,7 +1266,7 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
 
     if (!empty($account) && $account->isAuthenticated()) {
       $comment->setOwner($account);
-      $comment->setAuthorName(check_plain($account->getUsername()));
+      $comment->setAuthorName(String::checkPlain($account->getUsername()));
     }
     elseif (empty($author_name)) {
       $comment->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));

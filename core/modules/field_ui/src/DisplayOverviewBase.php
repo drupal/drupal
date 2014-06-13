@@ -8,6 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -275,7 +276,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
         'defaultPlugin' => $this->getDefaultPlugin($field_definition->getType()),
       ),
       'human_name' => array(
-        '#markup' => check_plain($label),
+        '#markup' => String::checkPlain($label),
       ),
       'weight' => array(
         '#type' => 'textfield',

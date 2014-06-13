@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
 
@@ -188,7 +189,7 @@ function theme_file_upload_help($variables) {
     $descriptions[] = t('!size limit.', array('!size' => format_size($upload_validators['file_validate_size'][0])));
   }
   if (isset($upload_validators['file_validate_extensions'])) {
-    $descriptions[] = t('Allowed types: !extensions.', array('!extensions' => check_plain($upload_validators['file_validate_extensions'][0])));
+    $descriptions[] = t('Allowed types: !extensions.', array('!extensions' => String::checkPlain($upload_validators['file_validate_extensions'][0])));
   }
 
   if (isset($upload_validators['file_validate_image_resolution'])) {

@@ -5,6 +5,7 @@
  * Builds placeholder replacement tokens for comment-related data.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 
 /**
@@ -141,12 +142,12 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         // Poster identity information for comments.
         case 'hostname':
-          $replacements[$original] = $sanitize ? check_plain($comment->getHostname()) : $comment->getHostname();
+          $replacements[$original] = $sanitize ? String::checkPlain($comment->getHostname()) : $comment->getHostname();
           break;
 
         case 'mail':
           $mail = $comment->getAuthorEmail();
-          $replacements[$original] = $sanitize ? check_plain($mail) : $mail;
+          $replacements[$original] = $sanitize ? String::checkPlain($mail) : $mail;
           break;
 
         case 'homepage':

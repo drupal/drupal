@@ -65,7 +65,7 @@ class BlockViewBuilder extends EntityViewBuilder {
         // @todo Remove after fixing http://drupal.org/node/1989568.
         '#block' => $entity,
       );
-      $build[$entity_id]['#configuration']['label'] = check_plain($configuration['label']);
+      $build[$entity_id]['#configuration']['label'] = String::checkPlain($configuration['label']);
 
       // Set cache tags; these always need to be set, whether the block is
       // cacheable or not, so that the page cache is correctly informed.

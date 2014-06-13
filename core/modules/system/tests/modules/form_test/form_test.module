@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\form_test\Callbacks;
@@ -640,7 +641,7 @@ function form_storage_test_form_continue_submit($form, &$form_state) {
  * Form submit handler to finish multi-step form.
  */
 function form_test_storage_form_submit($form, &$form_state) {
-  drupal_set_message("Title: " . check_plain($form_state['values']['title']));
+  drupal_set_message("Title: " . String::checkPlain($form_state['values']['title']));
   drupal_set_message("Form constructions: " . $_SESSION['constructions']);
   if (isset($form_state['storage']['thing']['changed'])) {
     drupal_set_message("The thing has been changed.");
