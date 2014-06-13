@@ -2,11 +2,21 @@
 
 /**
  * @file
- * A dummy module implementing node access related hooks for testing purposes.
+ * Test module for testing the node access system.
  *
- * A dummy module implementing node access related hooks to test API interaction
- * with the Node module. This module restricts view permission to those with
- * a special 'node test view' permission.
+ * This module's functionality depends on the following state variables:
+ * - node_access_test.no_access_uid: Used in NodeQueryAlterTest to enable the
+ *   node_access_all grant realm.
+ * - node_access_test.private: When TRUE, the module controls access for nodes
+ *   with a 'private' property set, and inherits the default core access for
+ *   nodes without this flag. When FALSE, the module controls access for all
+ *   nodes.
+ * - node_access_test_secret_catalan: When set to TRUE and using the Catalan
+ *   'ca' language code, makes all Catalan content secret.
+ *
+ * @see node_access_test_node_grants()
+ * @see \Drupal\node\Tests\NodeQueryAlterTest
+ * @see \Drupal\node\Tests\NodeAccessBaseTableTest
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -15,10 +25,29 @@ use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_grants().
+ *
+ * Provides three grant realms:
+ * - node_access_test_author: Grants users view, update, and delete privileges
+ *   on nodes they have authored. Users receive a group ID matching their user
+ *   ID on this realm.
+ * - node_access_test: Grants users view privileges when they have the
+ *   'node test view' permission. Users with this permission receive two group
+ *   IDs for the realm, 8888 and 8889. Access for both realms is identical;
+ *   the second group is added so that the interaction of multiple groups on
+ *   a given grant realm can be tested in NodeAccessPagerTest.
+ * - node_access_all: Provides grants for the user whose user ID matches the
+ *   'node_access_test.no_access_uid' state variable. Access control on this
+ *   realm is not provided in this module; instead,
+ *   NodeQueryAlterTest::testNodeQueryAlterOverride() manually writes a node
+ *   access record defining the access control for this realm.
+ *
+ * @see \Drupal\node\Tests\NodeQueryAlterTest::testNodeQueryAlterOverride()
+ * @see \Drupal\node\Tests\NodeAccessPagerTest
+ * @see node_access_test_permission()
+ * @see node_access_test_node_access_records()
  */
 function node_access_test_node_grants($account, $op) {
   $grants = array();
-  // First grant a grant to the author for own content.
   $grants['node_access_test_author'] = array($account->id());
   if ($op == 'view' && user_access('node test view', $account)) {
     $grants['node_access_test'] = array(8888, 8889);
@@ -33,11 +62,23 @@ function node_access_test_node_grants($account, $op) {
 
 /**
  * Implements hook_node_access_records().
+ *
+ * By default, records are written for all nodes. When the
+ * 'node_access_test.private' state variable is set to TRUE, records
+ * are only written for nodes with a "private" property set, which causes the
+ * Node module to write the default global view grant for nodes that are not
+ * marked private.
+ *
+ * @see \Drupal\node\Tests\NodeAccessBaseTableTest::setUp()
+ * @see node_access_test_node_grants()
+ * @see node_access_test_permission()
  */
 function node_access_test_node_access_records(NodeInterface $node) {
   $grants = array();
   // For NodeAccessBaseTableTestCase, only set records for private nodes.
   if (!\Drupal::state()->get('node_access_test.private') || $node->private->value) {
+    // Groups 8888 and 8889 for the node_access_test realm both receive a view
+    // grant for all controlled nodes. See node_access_test_node_grants().
     $grants[] = array(
       'realm' => 'node_access_test',
       'gid' => 8888,
@@ -54,7 +95,7 @@ function node_access_test_node_access_records(NodeInterface $node) {
       'grant_delete' => 0,
       'priority' => 0,
     );
-    // For the author realm, the GID is equivalent to a UID, which
+    // For the author realm, the group ID is equivalent to a user ID, which
     // means there are many many groups of just 1 user.
     $grants[] = array(
       'realm' => 'node_access_test_author',
@@ -72,7 +113,14 @@ function node_access_test_node_access_records(NodeInterface $node) {
 /**
  * Implements hook_permission().
  *
- * Sets up permissions for this module.
+ * Provides a 'node test view' permission. By default, all content is
+ * restricted, and users without this permission can only view content they
+ * have authored. When the 'node_access_test.private' state variable is
+ * TRUE, only 'private' nodes are restricted, and this permission grants access
+ * to view private nodes.
+ *
+ * @see node_access_test_node_access_records()
+ * @see node_access_test_node_grants()
  */
 function node_access_test_permission() {
   return array('node test view' => array('title' => 'View content'));
@@ -120,7 +168,6 @@ function node_access_test_node_load($nodes) {
 /**
  * Implements hook_node_predelete().
  */
-
 function node_access_test_node_predelete(NodeInterface $node) {
   db_delete('node_access_test')->condition('nid', $node->id())->execute();
 }
@@ -140,7 +187,7 @@ function node_access_test_node_update(NodeInterface $node) {
 }
 
 /**
- * Helper for node insert/update.
+ * Saves the private status of the node in the database.
  */
 function _node_access_test_node_write(NodeInterface $node) {
   db_merge('node_access_test')

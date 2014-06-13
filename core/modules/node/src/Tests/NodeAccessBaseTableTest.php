@@ -125,7 +125,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
       $this->assertTaxonomyPage(FALSE);
     }
 
-    // Now test that a user with 'access any private content' can view content.
+    // Now test that a user with 'node test view' permissions can view content.
     $access_user = $this->drupalCreateUser(array('access content', 'create article content', 'node test view', 'search content'));
     $this->drupalLogin($access_user);
 
