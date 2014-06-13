@@ -657,7 +657,7 @@ function db_drop_table(&$ret, $table) {
  *   This is most useful for creating NOT NULL columns with no default
  *   value in existing tables.
  * @param $new_keys
- *   Optional keys and indexes specification to be created on the
+ *   (optional) Keys and indexes specification to be created on the
  *   table along with adding the field. The format is the same as a
  *   table specification but without the 'fields' element.  If you are
  *   adding a type 'serial' field, you MUST specify at least one key
@@ -887,7 +887,7 @@ function db_drop_index(&$ret, $table, $name) {
  * @param $spec
  *   The field specification for the new field.
  * @param $new_keys
- *   Optional keys and indexes specification to be created on the
+ *   (optional) Keys and indexes specification to be created on the
  *   table along with changing the field. The format is the same as a
  *   table specification but without the 'fields' element.
  */
