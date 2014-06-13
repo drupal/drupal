@@ -2624,8 +2624,6 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * @param $label
    *   Text between the anchor tags.
-   * @param $index
-   *   Link position counting from zero.
    * @param $message
    *   Message to display.
    * @param $group
