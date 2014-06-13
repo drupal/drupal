@@ -26,7 +26,9 @@ function xmlrpc_server_page() {
  * Invokes XML-RPC methods on this server.
  *
  * @param array $callbacks
- *   Array of external XML-RPC method names with the callbacks they map to.
+ *   Either an associative array of external XML-RPC method names as keys with
+ *   the callbacks they map to as values, or a more complex structure
+ *   describing XML-RPC callbacks as returned from hook_xmlrpc().
  *
  * @return \Symfony\Component\HttpFoundation\Response
  *   A Response object.
