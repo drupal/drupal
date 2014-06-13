@@ -217,8 +217,6 @@ services:
   container.namespaces:
     class: ArrayObject
     arguments: [ '%container.namespaces%' ]
-    tags:
-      - { name: persist }
   container.trait:
     abstract: true
     calls:
