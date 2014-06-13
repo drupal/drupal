@@ -3,73 +3,90 @@
 /**
  * @defgroup themeable Default theme implementations
  * @{
- * Functions and templates for the user interface to be implemented by themes.
+ * Functions and templates for the user interface that themes can override.
  *
- * Drupal's presentation layer is a pluggable system known as the theme
- * layer. Each theme can take control over most of Drupal's output, and
- * has complete control over the CSS.
+ * Drupal's theme system allows a theme to have nearly complete control over
+ * the appearance of the site, which includes both the markup and the CSS used
+ * to style the markup. For this system to work, modules, instead of writing
+ * HTML markup directly, need to return "render arrays", which are structured
+ * hierarchical arrays that include the data to be rendered into HTML (or XML or
+ * another output format), and options that affect the markup. Render arrays
+ * are ultimately rendered into HTML or other output formats by recursive calls
+ * to drupal_render(), traversing the depth of the render array hierarchy. At
+ * each level, the theme system is invoked to do the actual rendering. See the
+ * documentation of drupal_render() and the
+ * @link theme_render Theme system and Render API topic @endlink for more
+ * information about render arrays and rendering.
  *
- * The theme layer is utilized by specifying theme implementations in a
- * renderable array. The names of the keys in a renderable array
- * determine how the information in the array is converted to themed output.
- *
- * To invoke a theme implementation on a renderable array, define a key named
- * '#theme' and assign it a string value that is the name of a theme hook. Any
- * variables that the theme hook requires may be supplied as additional keys --
- * prepended with a '#' character -- in the renderable array.
- *
+ * @section sec_theme_hooks Theme Hooks The theme system is invoked in
+ * drupal_render() by calling the internal _theme() function, which operates on
+ * the concept of "theme hooks". Theme hooks define how a particular type of
+ * data should be rendered. They are registered by modules by implenting
+ * hook_theme(), which specifies the name of the hook, the input "variables"
+ * used to provide data and options, and other information. Modules implementing
+ * hook_theme() also need to provide a default implementation for each of their
+ * theme hooks, normally in a Twig file, and they may also provide preprocessing
+ * functions. For example, the core Search module defines a theme hook for a
+ * search result item in search_theme():
  * @code
- * $item_list = array(
- *   '#theme' => 'item_list',
- *   '#items' => $links,
- *   '#title' => t('Next steps'),
+ * return array(
+ *   'search_result' => array(
+ *     'variables' => array(
+ *       'result' => NULL,
+ *       'plugin_id' => NULL,
+ *     ),
+ *    'file' => 'search.pages.inc',
+ *    'template' => 'search-result',
+ *   ),
  * );
- *
- * return $item_list;
  * @endcode
+ * Given this definition, the template file with the default implementation is
+ * search-result.html.twig, which can be found in the
+ * core/modules/search/templates directory, and the variables for rendering are
+ * the search result and the plugin ID. In addition, there is a function
+ * template_preprocess_search_result(), located in file search.pages.inc, which
+ * preprocesses the information from the input variables so that it can be
+ * rendered by the Twig template; the processed variables that the Twig template
+ * receives are documented in the header of the default Twig template file.
  *
- * Do not call _theme() directly; instead, build and return a renderable array.
- * If necessary, the array may be rendered to a string in-place
- * by calling drupal_render().
+ * hook_theme() implementations can also specify that a theme hook
+ * implementation is a theme function, but that is uncommon. It is only used for
+ * special cases, for performance reasons, because rendering using theme
+ * functions is somewhat faster than theme templates.
  *
- * @code
- * $output = drupal_render($item_list);
- * @endcode
+ * @section sec_overriding_theme_hooks Overriding Theme Hooks
+ * Themes may register new theme hooks within a hook_theme() implementation, but
+ * it is more common for themes to override default implementations provided by
+ * modules than to register entirely new theme hooks. Themes can override a
+ * default implementation by creating a template file with the same name as the
+ * default implementation; for example, to override the display of search
+ * results, a theme would add a file called search-result.html.twig to its
+ * templates directory. A good starting point for doing this is normally to
+ * copy the default implementation template, and then modifying it as desired.
  *
- * @section sec_theme_hooks Theme Hooks
- * Modules register theme hooks within a hook_theme() implementation and provide
- * a default implementation via a function named theme_HOOK(). For instance, to
- * theme a taxonomy term, the theme hook name is 'taxonomy_term'. If theming is
- * handled via a function then the corresponding function name is
- * theme_taxonomy_term(). If theming is handled via a template then the file
- * should be named according to the value of the 'template' key registered with
- * the theme hook (see hook_theme() for details). Default templates are
- * implemented with the Twig rendering engine and are named the same as the
- * theme hook, with underscores changed to hyphens, so for the 'taxonomy_term'
- * theme hook, the default template is 'taxonomy-term.html.twig'.
+ * In the uncommon case that a theme hook uses a theme function instead of a
+ * template file, a module would provide a default implementation function
+ * called theme_HOOK, where HOOK is the name of the theme hook (for example,
+ * theme_search_result() would be the name of the function for search result
+ * theming). In this case, a theme can override the default implentation by
+ * defining a function called THEME_HOOK() in its THEME.theme file, where THEME
+ * is the machine name of the theme (for example, 'bartik' is the machine name
+ * of the core Bartik theme, and it would define a function called
+ * bartik_search_result() in the bartik.theme file, if the search_result hook
+ * implementation was a function instead of a template). Normally, copying the
+ * default function is again a good starting point for overriding its behavior.
  *
- * @subsection sub_overriding_theme_hooks Overriding Theme Hooks
- * Themes may register new theme hooks within a hook_theme()
- * implementation, but it is more common for themes to override default
- * implementations provided by modules than to register entirely new theme
- * hooks. Themes can override a default implementation by implementing a
- * function named THEME_HOOK() (for example, the 'bartik' theme overrides the
- * default implementation of the 'menu_tree' theme hook by implementing a
- * bartik_menu_tree() function), or by adding a template file within its folder
- * structure that follows the template naming structure used by the theme's
- * rendering engine. For example, since the Bartik theme uses the Twig rendering
- * engine, it overrides the default implementation of the 'page' theme hook by
- * containing a 'page.html.twig' file within its folder structure.
- *
- * @subsection sub_preprocess_templates Preprocessing for Template Files
- * If the implementation is a template file, several functions are called before
- * the template file is invoked to modify the $variables array. These make up
- * the "preprocessing" phase, and are executed (if they exist), in the following
- * order (note that in the following list, HOOK indicates the theme hook name,
- * MODULE indicates a module name, THEME indicates a theme name, and ENGINE
- * indicates a theme engine name):
+ * @section sec_preprocess_templates Preprocessing for Template Files
+ * If the theme implementation is a template file, several functions are called
+ * before the template file is invoked to modify the variables that are passed
+ * to the template. These make up the "preprocessing" phase, and are executed
+ * (if they exist), in the following order (note that in the following list,
+ * HOOK indicates the theme hook name, MODULE indicates a module name, THEME
+ * indicates a theme name, and ENGINE indicates a theme engine name). Modules,
+ * themes, and theme engines can provide these functions to modify how the
+ * data is preprocessed, before it is passed to the theme template:
  * - template_preprocess(&$variables, $hook): Creates a default set of variables
- *   for all theme hooks with template implementations.
+ *   for all theme hooks with template implementations. Provided by Drupal Core.
  * - template_preprocess_HOOK(&$variables): Should be implemented by the module
  *   that registers the theme hook, to set up default variables.
  * - MODULE_preprocess(&$variables, $hook): hook_preprocess() is invoked on all
@@ -86,32 +103,51 @@
  * - THEME_preprocess_HOOK(&$variables): Allows the theme to set necessary
  *   variables specific to the particular theme hook.
  *
- * @subsection sub_preprocess_theme_funcs Preprocessing for Theme Functions
+ * @section sec_preprocess_functions Preprocessing for Theme Functions
  * If the theming implementation is a function, only the theme-hook-specific
  * preprocess functions (the ones ending in _HOOK) are called from the list
  * above. This is because theme hooks with function implementations need to be
  * fast, and calling the non-theme-hook-specific preprocess functions for them
  * would incur a noticeable performance penalty.
  *
- * @subsection sub_alternate_suggestions Suggesting Alternate Hooks
- * Alternate hooks can be suggested by implementing the hook-specific
- * hook_theme_suggestions_HOOK_alter() or the generic
- * hook_theme_suggestions_alter(). These alter hooks are used to manipulate an
- * array of suggested alternate theme hooks to use, in reverse order of
- * priority. _theme() will use the highest priority implementation that exists.
- * If none exists, _theme() will use the implementation for the theme hook it
- * was called with. These suggestions are similar to and are used for similar
- * reasons as assigning an array of theme hooks to the #theme property of a
- * renderable array. The difference is whether the suggestions are determined
- * when _theme() is called or through altering the suggestions via the
- * suggestion alter hooks.
+ * @section sec_suggestions Theme hook suggestions
+ * In some cases, instead of calling the base theme hook implementation (either
+ * the default provided by the module that defined the hook, or the override
+ * provided by the theme), the theme system will instead look for "suggestions"
+ * of other hook names to look for. Suggestions can be specified in several
+ * ways:
+ * - In a render array, the '#theme' property (which gives the name of the hook
+ *   to use) can be an array of theme hook names instead of a single hook name.
+ *   In this case, the render system will look first for the highest-priority
+ *   hook name, and if no implementation is found, look for the second, and so
+ *   on. Note that the highest-priority suggestion is at the end of the array.
+ * - In a render array, the '#theme' property can be set to the name of a hook
+ *   with a '__SUGGESTION' suffix. For example, in search results theming, the
+ *   hook 'item_list__search_results' is given. In this case, the render system
+ *   will look for theme templates called item-list--search-results.html.twig,
+ *   which would only be used for rendering item lists containing search
+ *   results, and if this template is not found, it will fall back to using the
+ *   base item-list.html.twig template. This type of suggestion can also be
+ *   combined with providing an array of theme hook names as described above.
+ * - A module can implement hook_theme_suggestions_HOOK(). This allows the
+ *   module that defines the theme template to dynamically return an array
+ *   containing specific theme hook names (presumably with '__' suffixes as
+ *   defined above) to use as suggestions. For example, the Search module
+ *   does this in search_theme_suggestions_search_result() to suggest
+ *   search_result__PLUGIN as the theme hook for search result items, where
+ *   PLUGIN is the machine name of the particular search plugin type that was
+ *   used for the search (such as node_search or user_search).
  *
- * @see drupal_render()
- * @see _theme()
- * @see hook_theme()
+ * @section sec_alternate_suggestions Altering theme hook suggestions
+ * Modules can also alter the theme suggestions provided using the mechanisms
+ * of the previous section. There are two hooks for this: the
+ * theme-hook-specific hook_theme_suggestions_HOOK_alter() and the generic
+ * hook_theme_suggestions_alter(). These hooks get the current list of
+ * suggestions as input, and can change this array (adding suggestions and
+ * removing them).
+ *
  * @see hooks
  * @see callbacks
- * @see system_element_info()
  *
  * @} End of "defgroup themeable".
  */

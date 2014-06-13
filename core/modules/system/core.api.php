@@ -585,12 +585,73 @@
 /**
  * @defgroup theme_render Theme system and Render API
  * @{
- * Overview of the theme system and render API
+ * Overview of the Theme system and Render API.
  *
- * @todo write this
+ * The main purpose of Drupal's Theme system is to give themes complete control
+ * over the appearance of the site, which includes the markup returned from HTTP
+ * requests and the CSS files used to style that markup. In order to ensure that
+ * a theme can completely customize the markup, module developers should avoid
+ * directly writing HTML markup for pages, blocks, and other user-visible output
+ * in their modules, and instead return structured "render arrays" (described
+ * below). Doing this also increases usability, by ensuring that the markup used
+ * for similar functionality on different areas of the site is the same, which
+ * gives users fewer user interface patterns to learn.
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
+ * The core structure of the Render API is the render array, which is a
+ * hierarchical associative array containing data to be rendered and properties
+ * describing how the data should be rendered. A render array that is returned
+ * by a function to specify markup to be sent to the web browser or other
+ * services will eventually be rendered by a call to drupal_render(), which will
+ * recurse through the render array hierarchy if appropriate, making calls into
+ * the theme system to do the actual rendering. If a function or method actually
+ * needs to return rendered output rather than a render array, the best practice
+ * would be to create a render array, render it by calling drupal_render(), and
+ * return that result, rather than writing the markup directly. See the
+ * documentation of drupal_render() for more details of the rendering process.
+ *
+ * Each level in the hierarchy of a render array (including the outermost array)
+ * has one or more array elements. Array elements whose names start with '#' are
+ * known as "properties", and the array elements with other names are "children"
+ * (constituting the next level of the hierarchy); the names of children are
+ * flexible, while property names are specific to the Render API and the
+ * particular type of data being rendered. A special case of render arrays is a
+ * form array, which specifies the form elements for an HTML form; see the
+ * @link form_api Form generation topic @endlink for more information on forms.
+ *
+ * Render arrays (at each level in the hierarchy) will usually have one of the
+ * following three properties defined:
+ * - #type: Specifies that the array contains data and options for a particular
+ *   type of "render element" (examples: 'form', for an HTML form; 'textfield',
+ *   'submit', and other HTML form element types; 'table', for a table with
+ *   rows, columns, and headers). Modules define render elements by implementing
+ *   hook_element_info(), which specifies the properties that are used in render
+ *   arrays to provide the data and options, and default values for these
+ *   properties. Look through implementations of hook_element_info() to discover
+ *   what render elements are available.
+ * - #theme: Specifies that the array contains data to be themed by a particular
+ *   theme hook. Modules define theme hooks by implementing hook_theme(), which
+ *   specifies the input "variables" used to provide data and options; if a
+ *   hook_theme() implementation specifies variable 'foo', then in a render
+ *   array, you would provide this data using property '#foo'. Modules
+ *   implementing hook_theme() also need to provide a default implementation for
+ *   each of their theme hooks, normally in a Twig file. For more information
+ *   and to discover available theme hooks, see the documentation of
+ *   hook_theme() and the
+ *   @link themeable Default theme implementations topic. @endlink
+ * - #markup: Specifies that the array provides HTML markup directly. Unless the
+ *   markup is very simple, such as an explanation in a paragraph tag, it is
+ *   normally preferable to use #theme or #type instead, so that the theme can
+ *   customize the markup.
+ *
+ * For further information on the Theme and Render APIs, see:
+ * - https://drupal.org/documentation/theme
+ * - https://drupal.org/developing/modules/8
+ * - https://drupal.org/node/722174
+ * - https://drupal.org/node/933976
+ * - https://drupal.org/node/930760
+ *
+ * @todo Check these links. Some are for Drupal 7, and might need updates for
+ *   Drupal 8.
  * @}
  */
 
