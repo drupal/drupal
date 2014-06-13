@@ -2429,8 +2429,6 @@ abstract class WebTestBase extends TestBase {
    *
    * @param $label
    *   Text between the anchor tags.
-   * @param $index
-   *   Link position counting from zero.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use format_string() to embed variables in the message text, not
