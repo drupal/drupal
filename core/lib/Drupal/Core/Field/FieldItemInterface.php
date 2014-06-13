@@ -176,24 +176,24 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Defines custom presave behavior for field values.
    *
-   * This method is called before either insert() or update() methods, and
-   * before values are written into storage.
+   * This method is called before insert() and update() methods, and before
+   * values are written into storage.
    */
   public function preSave();
 
   /**
    * Defines custom insert behavior for field values.
    *
-   * This method is called after the save() method, and before values are
-   * written into storage.
+   * This method is called during the process of inserting an entity, just
+   * before values are written into storage.
    */
   public function insert();
 
   /**
    * Defines custom update behavior for field values.
    *
-   * This method is called after the save() method, and before values are
-   * written into storage.
+   * This method is called during the process of updating an entity, just before
+   * values are written into storage.
    */
   public function update();
 
