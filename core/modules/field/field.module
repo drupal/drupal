@@ -52,16 +52,6 @@ require_once __DIR__ . '/field.purge.inc';
  *   types like Text and Node Reference along with the associated form elements
  *   and display formatters.
  *
- * - @link field_crud Field CRUD API @endlink: Create, updates, and deletes
- *   fields, bundles (a.k.a. "content types"), and instances. Modules use this
- *   API, often in hook_install(), to create custom data structures.
- *
- * - @link field_attach Field Attach API @endlink: Connects entity types to the
- *   Field API. Field Attach API functions load, store, generate Form API
- *   structures, display, and perform a variety of other functions for field
- *   data connected to individual entities. Fieldable entity types like node and
- *   user use this API to make themselves fieldable.
- *
  * - @link field_purge Field API bulk data deletion @endlink: Cleans up after
  *   bulk deletion operations such as deletion of field or field_instance.
  *

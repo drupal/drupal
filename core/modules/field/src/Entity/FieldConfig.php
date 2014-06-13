@@ -198,8 +198,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    * parameter as in this constructor.
    *
    * @see entity_create()
-   *
-   * @ingroup field_crud
    */
   public function __construct(array $values, $entity_type = 'field_config') {
     // Check required properties.

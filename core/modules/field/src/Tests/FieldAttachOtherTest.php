@@ -10,7 +10,9 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Unit test class for non-storage related field_attach_* functions.
+ * Unit test class for non-storage related entity field functions.
+ *
+ * @todo move this to the Entity module
  */
 class FieldAttachOtherTest extends FieldUnitTestBase {
 
@@ -31,7 +33,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Field attach tests (other)',
-      'description' => 'Test other Field Attach API functions.',
+      'description' => 'Test other Field API functions.',
       'group' => 'Field API',
     );
   }
@@ -373,7 +375,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     }
     $this->assertIdentical($entity->{$this->field_name_2}->getValue(), $expected_values_2, 'Submit filters empty values');
 
-    // Call field_attach_extract_form_values() for a single field (the second field).
+    // Call EntityFormDisplayInterface::extractFormValues() for a single field (the second field).
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $this->field_name_2) {
         $display->removeComponent($name);

@@ -217,7 +217,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
 }
 
 /**
- * @addtogroup field_crud
+ * @addtogroup field_purge
  * @{
  */
 
@@ -294,7 +294,7 @@ function hook_field_purge_instance($instance) {
 }
 
 /**
- * @} End of "addtogroup field_crud".
+ * @} End of "addtogroup field_purge".
  */
 
 /**

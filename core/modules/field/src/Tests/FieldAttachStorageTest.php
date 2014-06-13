@@ -10,6 +10,8 @@ use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Unit test class for storage-related field behavior.
+ *
+ * @todo move this to the Entity module
  */
 class FieldAttachStorageTest extends FieldUnitTestBase {
 

@@ -228,8 +228,6 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    *   property documentation for details.
    *
    * @see entity_create()
-   *
-   * @ingroup field_crud
    */
   public function __construct(array $values, $entity_type = 'field_instance_config') {
     // Allow either an injected FieldConfig object, or a field_name and

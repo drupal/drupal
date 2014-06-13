@@ -747,8 +747,7 @@ function hook_node_validate(\Drupal\node\NodeInterface $node, $form, &$form_stat
  * object, but before the node is saved or previewed. It is a chance for modules
  * to adjust the node's properties from what they are simply after a copy from
  * $form_state['values']. This hook is intended for adjusting non-field-related
- * properties. See hook_field_attach_extract_form_values() for customizing
- * field-related properties.
+ * properties.
  *
  * @param \Drupal\node\NodeInterface $node
  *   The node entity being updated in response to a form submission.

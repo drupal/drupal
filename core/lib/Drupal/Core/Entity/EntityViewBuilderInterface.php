@@ -96,8 +96,6 @@ interface EntityViewBuilderInterface {
    * isolated field.
    * - Do not use inside node (or any other entity) templates; use
    *   render($content[FIELD_NAME]) instead.
-   * - Do not use to display all fields in an entity; use
-   *   field_attach_prepare_view() and field_attach_view() instead.
    * - The FieldItemInterface::view() method can be used to output a single
    *   formatted field value, without label or wrapping field markup.
    *
