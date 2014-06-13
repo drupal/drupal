@@ -105,7 +105,7 @@ class BookController implements ContainerInjectionInterface {
   public function bookRender() {
     $book_list = array();
     foreach ($this->bookManager->getAllBooks() as $book) {
-      $book_list[] = l($book['title'], $book['href'], $book['options']);
+      $book_list[] = l($book['title'], $book['link_path']);
     }
     return array(
       '#theme' => 'item_list',

@@ -605,4 +605,19 @@ class BookTest extends WebTestBase {
     $this->assertEqual($return, $link);
   }
 
+  /**
+   * Tests the listing of all books.
+   */
+  public function testBookListing() {
+    // Create a new book.
+    $this->createBook();
+
+    // Must be a user with 'node test view' permission since node_access_test is enabled.
+    $this->drupalLogin($this->web_user);
+
+    // Load the book page and assert the created book title is displayed.
+    $this->drupalGet('book');
+
+    $this->assertText($this->book->label(), 'The book title is displayed on the book listing page.');
+  }
 }
