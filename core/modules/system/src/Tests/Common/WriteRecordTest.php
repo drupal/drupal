@@ -75,7 +75,7 @@ class WriteRecordTest extends DrupalUnitTestBase {
     $person->name = 'Ringo';
     $person->age = NULL;
     $person->job = NULL;
-    $insert_result = drupal_write_record('test', $person);
+    drupal_write_record('test', $person);
     $this->assertTrue(isset($person->id), 'Primary key is set on record created with drupal_write_record().');
     $result = db_query("SELECT * FROM {test} WHERE id = :id", array(':id' => $person->id))->fetchObject();
     $this->assertIdentical($result->name, 'Ringo', 'Name field set.');
@@ -86,7 +86,7 @@ class WriteRecordTest extends DrupalUnitTestBase {
     $person = new \stdClass();
     $person->name = 'Paul';
     $person->age = NULL;
-    $insert_result = drupal_write_record('test_null', $person);
+    drupal_write_record('test_null', $person);
     $this->assertTrue(isset($person->id), 'Primary key is set on record created with drupal_write_record().');
     $result = db_query("SELECT * FROM {test_null} WHERE id = :id", array(':id' => $person->id))->fetchObject();
     $this->assertIdentical($result->name, 'Paul', 'Name field set.');
@@ -95,7 +95,7 @@ class WriteRecordTest extends DrupalUnitTestBase {
     // Insert a record - do not specify the value of a column that allows NULL.
     $person = new \stdClass();
     $person->name = 'Meredith';
-    $insert_result = drupal_write_record('test_null', $person);
+    drupal_write_record('test_null', $person);
     $this->assertTrue(isset($person->id), 'Primary key is set on record created with drupal_write_record().');
     $this->assertIdentical($person->age, 0, 'Age field set to default value.');
     $result = db_query("SELECT * FROM {test_null} WHERE id = :id", array(':id' => $person->id))->fetchObject();
@@ -105,7 +105,7 @@ class WriteRecordTest extends DrupalUnitTestBase {
     // Update the newly created record.
     $person->name = 'Mary';
     $person->age = NULL;
-    $update_result = drupal_write_record('test_null', $person, array('id'));
+    drupal_write_record('test_null', $person, array('id'));
     $result = db_query("SELECT * FROM {test_null} WHERE id = :id", array(':id' => $person->id))->fetchObject();
     $this->assertIdentical($result->name, 'Mary', 'Name field set.');
     $this->assertIdentical($result->age, NULL, 'Age field set.');
@@ -113,20 +113,20 @@ class WriteRecordTest extends DrupalUnitTestBase {
     // Insert a record - the "data" column should be serialized.
     $person = new \stdClass();
     $person->name = 'Dave';
-    $update_result = drupal_write_record('test_serialized', $person);
+    drupal_write_record('test_serialized', $person);
     $result = db_query("SELECT * FROM {test_serialized} WHERE id = :id", array(':id' => $person->id))->fetchObject();
     $this->assertIdentical($result->name, 'Dave', 'Name field set.');
     $this->assertIdentical($result->info, NULL, 'Info field set.');
 
     $person->info = array();
-    $update_result = drupal_write_record('test_serialized', $person, array('id'));
+    drupal_write_record('test_serialized', $person, array('id'));
     $result = db_query("SELECT * FROM {test_serialized} WHERE id = :id", array(':id' => $person->id))->fetchObject();
     $this->assertIdentical(unserialize($result->info), array(), 'Info field updated.');
 
     // Update the serialized record.
     $data = array('foo' => 'bar', 1 => 2, 'empty' => '', 'null' => NULL);
     $person->info = $data;
-    $update_result = drupal_write_record('test_serialized', $person, array('id'));
+    drupal_write_record('test_serialized', $person, array('id'));
     $result = db_query("SELECT * FROM {test_serialized} WHERE id = :id", array(':id' => $person->id))->fetchObject();
     $this->assertIdentical(unserialize($result->info), $data, 'Info field updated.');
 

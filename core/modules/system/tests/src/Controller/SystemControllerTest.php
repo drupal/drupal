@@ -125,8 +125,6 @@ class SystemControllerTest extends UnitTestCase {
       'language' => 'nl',
       'query' => array(),
     );
-    // Nothing to do.
-    $markup = '<foo>bar</foo>';
     $situations[] = array('context' => $context, 'is active' => FALSE, 'attributes' => array());
     // Matching path, plus all matching variations.
     $attributes = array(
@@ -162,8 +160,6 @@ class SystemControllerTest extends UnitTestCase {
       'language' => 'nl',
       'query' => array('foo' => 'bar'),
     );
-    // Nothing to do.
-    $markup = '<foo>bar</foo>';
     $situations[] = array('context' => $context, 'is active' => FALSE, 'attributes' => array());
     // Matching path, plus all matching variations.
     $attributes = array(
@@ -195,8 +191,6 @@ class SystemControllerTest extends UnitTestCase {
       'language' => 'nl',
       'query' => array('foo' => 'bar'),
     );
-    // Nothing to do.
-    $markup = '<foo>bar</foo>';
     $situations[] = array('context' => $context, 'is active' => FALSE, 'attributes' => array());
     // Matching path, plus all matching variations.
     $attributes = array(
@@ -232,8 +226,6 @@ class SystemControllerTest extends UnitTestCase {
       'language' => 'en',
       'query' => array('foo' => 'bar'),
     );
-    // Nothing to do.
-    $markup = '<foo>bar</foo>';
     $situations[] = array('context' => $context, 'is active' => FALSE, 'attributes' => array());
     // Matching path, plus all matching variations.
     $attributes = array(

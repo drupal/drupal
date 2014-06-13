@@ -61,7 +61,6 @@ class LockFunctionalTest extends WebTestBase {
 
     // Check the shut-down function.
     $lock_acquired_exit = 'TRUE: Lock successfully acquired in system_test_lock_exit()';
-    $lock_not_acquired_exit = 'FALSE: Lock not acquired in system_test_lock_exit()';
     $this->drupalGet('system-test/lock-exit');
     $this->assertText($lock_acquired_exit, 'Lock acquired by the other request before exit.', 'Lock');
     $this->assertTrue($lock->acquire('system_test_lock_exit'), 'Lock acquired by this request after the other request exits.', 'Lock');

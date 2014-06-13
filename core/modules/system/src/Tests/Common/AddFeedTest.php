@@ -68,7 +68,7 @@ class AddFeedTest extends WebTestBase {
 
     $html_page = new HtmlPage();
 
-    foreach ($urls as $description => $feed_info) {
+    foreach ($urls as $feed_info) {
       $feed_link = new FeedLinkElement($feed_info['title'], $feed_info['url']);
       $html_page->addLinkElement($feed_link);
     }

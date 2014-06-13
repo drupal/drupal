@@ -166,11 +166,11 @@ class ElementsTableSelectTest extends WebTestBase {
     );
 
     // Test with a valid value.
-    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => array('row1' => 'row1')));
+    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => array('row1' => 'row1')));
     $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for checkboxes.');
 
     // Test with an invalid value.
-    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => array('non_existing_value' => 'non_existing_value')));
+    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => array('non_existing_value' => 'non_existing_value')));
     $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for checkboxes.');
 
   }
@@ -191,11 +191,11 @@ class ElementsTableSelectTest extends WebTestBase {
     );
 
     // Test with a valid value.
-    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'row1'));
+    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => 'row1'));
     $this->assertFalse(isset($errors['tableselect']), 'Option checker allows valid values for radio buttons.');
 
     // Test with an invalid value.
-    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'non_existing_value'));
+    list(, , $errors) = $this->formSubmitHelper($form, array('tableselect' => 'non_existing_value'));
     $this->assertTrue(isset($errors['tableselect']), 'Option checker disallows invalid values for radio buttons.');
   }
 

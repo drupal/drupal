@@ -76,7 +76,7 @@ abstract class DatabaseTestBase extends DrupalUnitTestBase {
       ))
       ->execute();
 
-    $ringo = db_insert('test')
+    db_insert('test')
       ->fields(array(
         'name' => 'Ringo',
         'age' => 28,

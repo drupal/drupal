@@ -52,7 +52,7 @@ class FrontPageTest extends WebTestBase {
       'title' => $this->randomName(8),
       'promote' => 1,
     );
-    $node = $this->drupalCreateNode($settings);
+    $this->drupalCreateNode($settings);
     $this->drupalGet('');
     $this->assertTitle('Home | Drupal');
 

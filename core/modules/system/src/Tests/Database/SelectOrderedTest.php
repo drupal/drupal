@@ -25,7 +25,7 @@ class SelectOrderedTest extends DatabaseTestBase {
    */
   function testSimpleSelectOrdered() {
     $query = db_select('test');
-    $name_field = $query->addField('test', 'name');
+    $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
     $query->orderBy($age_field);
     $result = $query->execute();
@@ -46,7 +46,7 @@ class SelectOrderedTest extends DatabaseTestBase {
    */
   function testSimpleSelectMultiOrdered() {
     $query = db_select('test');
-    $name_field = $query->addField('test', 'name');
+    $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
     $job_field = $query->addField('test', 'job');
     $query->orderBy($job_field);
@@ -77,7 +77,7 @@ class SelectOrderedTest extends DatabaseTestBase {
    */
   function testSimpleSelectOrderedDesc() {
     $query = db_select('test');
-    $name_field = $query->addField('test', 'name');
+    $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
     $query->orderBy($age_field, 'DESC');
     $result = $query->execute();

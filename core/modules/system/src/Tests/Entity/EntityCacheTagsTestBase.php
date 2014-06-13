@@ -68,7 +68,6 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     if ($this->entity->getEntityType()->isFieldable()) {
       // Add field, so we can modify the Field and FieldInstance entities to
       // verify that changes to those indeed clear cache tags.
-      $field_name = drupal_strtolower($this->randomName());
       entity_create('field_config', array(
         'name' => 'configurable_field',
         'entity_type' => $this->entity->getEntityTypeId(),
