@@ -136,6 +136,9 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
           $pseudo_tree[0]['link'] = $book;
           $book_menus[$book_id] = $this->bookManager->bookTreeOutput($pseudo_tree);
         }
+        $book_menus[$book_id] += array(
+          '#book_title' => $book['title'],
+        );
       }
       if ($book_menus) {
         return array(

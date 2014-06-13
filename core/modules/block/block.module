@@ -382,6 +382,13 @@ function template_preprocess_block(&$variables) {
   if ($id = $variables['elements']['#block']->id()) {
     $variables['attributes']['id'] = drupal_html_id('block-' . $id);
   }
+
+  // Proactively add aria-describedby if possible to improve accessibility.
+  if (isset($variables['elements']['#block']->subject) && isset($variables['attributes']['role'])) {
+    $variables['title_attributes']['id'] = drupal_html_id($variables['elements']['#block']->subject);
+    $variables['attributes']['aria-describedby'] =  $variables['title_attributes']['id'];
+  }
+
 }
 
 /**

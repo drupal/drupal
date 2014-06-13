@@ -362,15 +362,6 @@ function book_form_node_delete_confirm_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block templates.
- */
-function book_preprocess_block(&$variables) {
-  if ($variables['configuration']['provider'] == 'book') {
-    $variables['attributes']['role'] = 'navigation';
-  }
-}
-
-/**
  * Prepares variables for book listing block templates.
  *
  * Default template: book-all-books-block.html.twig.
@@ -389,7 +380,11 @@ function template_preprocess_book_all_books_block(&$variables) {
   $elements = $variables['book_menus'];
   $variables['book_menus'] = array();
   foreach (Element::children($elements) as $index) {
-    $variables['book_menus'][$index] = $elements[$index];
+    $variables['book_menus'][] = array(
+      'id' => $index,
+      'menu' => $elements[$index],
+      'title' => $elements[$index]['#book_title'],
+    );
   }
 }
 

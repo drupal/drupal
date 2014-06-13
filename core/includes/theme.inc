@@ -2135,6 +2135,7 @@ function template_preprocess_page(&$variables) {
       '#heading' => array(
         'text' => t('Main menu'),
         'class' => array('visually-hidden'),
+        'attributes' => array('id' => 'links__system_main_menu'),
       ),
       '#set_active_class' => TRUE,
     );
@@ -2146,6 +2147,7 @@ function template_preprocess_page(&$variables) {
       '#heading' => array(
         'text' => t('Secondary menu'),
         'class' => array('visually-hidden'),
+        'attributes' => array('id' => 'links__system_secondary_menu'),
       ),
       '#set_active_class' => TRUE,
     );

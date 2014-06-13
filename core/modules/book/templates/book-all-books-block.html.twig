@@ -8,7 +8,8 @@
  *
  * Available variables:
  * - book_menus: Book outlines.
- *   - book_id: The parent book ID.
+ *   - id: The parent book ID.
+ *   - title: The parent book title.
  *   - menu: The top-level book links.
  *
  * @see template_preprocess_book_all_books_block()
@@ -16,8 +17,8 @@
  * @ingroup themeable
  */
 #}
-{% for book_id, menu in book_menus %}
-  <nav id="book-block-menu-{{ book_id }}" class="book-block-menu">
-    {{ menu }}
+{% for book in book_menus %}
+  <nav id="book-block-menu-{{ book.id }}" class="book-block-menu" role="navigation" aria-label="{% trans %}Book outline for {{ book.title }}{% endtrans %}">
+    {{ book.menu }}
   </nav>
 {% endfor %}

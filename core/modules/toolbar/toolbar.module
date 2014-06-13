@@ -80,6 +80,7 @@ function toolbar_element_info() {
       'id' => 'toolbar-administration',
       'class' => array('toolbar'),
       'role' => 'navigation',
+      'aria-label' => t('Site administration'),
     ),
     // Metadata for the administration bar.
     '#bar' => array(

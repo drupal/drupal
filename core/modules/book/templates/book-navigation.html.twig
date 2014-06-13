@@ -24,7 +24,6 @@
  * - book_url: The book/node URL of the current outline being viewed. Provided
  *   as an option. Not used by default.
  * - book_title: The book/node title of the current outline being viewed.
- *   Provided as an option. Not used by default.
  *
  * @see template_preprocess_book_navigation()
  *
@@ -32,10 +31,10 @@
  */
 #}
 {% if tree or has_links %}
-  <nav id="book-navigation-{{ book_id }}" class="book-navigation">
+  <nav id="book-navigation-{{ book_id }}" class="book-navigation" role="navigation" aria-labelledby="book-label-{{ book_id }}">
     {{ tree }}
     {% if has_links %}
-      <h2 class="visually-hidden">{{ 'Book Navigation'|t }}</h2>
+      <h2 class="visually-hidden" id="book-label-{{ book_id }}">{{ 'Book traversal links for'|t }} {{ book_title }}</h2>
       <ul class="book-pager">
       {% if prev_url %}
         <li class="previous">
