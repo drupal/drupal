@@ -76,7 +76,7 @@ class TestItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $form['test_field_setting'] = array(
       '#type' => 'textfield',
       '#title' => t('Field test field setting'),

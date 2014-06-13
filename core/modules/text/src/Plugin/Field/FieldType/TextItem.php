@@ -78,7 +78,7 @@ class TextItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $element = array();
 
     $element['max_length'] = array(

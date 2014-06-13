@@ -119,7 +119,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedVa
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $options = array();
     foreach ($vocabularies as $vocabulary) {

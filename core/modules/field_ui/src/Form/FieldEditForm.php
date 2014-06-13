@@ -151,6 +151,8 @@ class FieldEditForm extends FormBase {
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));
+    $form['#submit'][] = array($this, 'submitForm');
+    $form['#validate'][] = array($this, 'validateForm');
     return $form;
   }
 

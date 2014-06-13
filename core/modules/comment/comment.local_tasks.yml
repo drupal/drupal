@@ -29,3 +29,9 @@ comment.admin_approval:
   class: Drupal\comment\Plugin\Menu\LocalTask\UnapprovedComments
   parent_id: comment.admin
   weight: 1
+
+# Default tab for comment type editing.
+comment.type_edit:
+  title: 'Edit'
+  route_name: comment.type_edit
+  base_route: comment.type_edit

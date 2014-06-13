@@ -1,0 +1,25 @@
+id: d6_comment_type
+label: Drupal 6 comment type
+source:
+  plugin: variable
+  variables:
+  # Ensure that we get at least one row to process by using variables that exist
+  # on every Drupal 6 site. We just need a single one of these, but include a
+  # few to be sure.
+    - site_name
+    - menu_expanded
+    - menu_masks
+    - css_js_query_string
+    - clean_url
+  constants:
+    entity_type: node
+    id: comment
+    label: comment
+    description: comment
+process:
+  target_entity_type_id: constants.entity_type
+  id: constants.id
+  label: constants.label
+  description: constants.description
+destination:
+  plugin: entity:comment_type

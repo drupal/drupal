@@ -39,7 +39,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   function setUp() {
     $this->entityTypeId = 'comment';
     $this->nodeBundle = 'article';
-    $this->bundle = 'node__comment_article';
+    $this->bundle = 'comment_article';
     $this->testLanguageSelector = FALSE;
     $this->subject = $this->randomName();
     parent::setUp();
@@ -52,14 +52,14 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     parent::setupBundle();
     $this->drupalCreateContentType(array('type' => $this->nodeBundle, 'name' => $this->nodeBundle));
     // Add a comment field to the article content type.
-    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_article', CommentItemInterface::OPEN, 'comment_article');
     // Create a page content type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'page'));
     // Add a comment field to the page content type - this one won't be
     // translatable.
     $this->container->get('comment.manager')->addDefaultField('node', 'page', 'comment');
     // Mark this bundle as translatable.
-    content_translation_set_config('comment', 'node__comment_article', 'enabled', TRUE);
+    content_translation_set_config('comment', 'comment_article', 'enabled', TRUE);
   }
 
   /**
@@ -82,12 +82,8 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::createEntity().
    */
-  protected function createEntity($values, $langcode, $node_bundle = 'node__comment_article') {
-    // The argument is called 'node_bundle' but its actually just the entity
-    // bundle. Comment entity's bundle is of the form
-    // {entity_type}__{field_name}. Based on the passed bundle we need to
-    // determine the type of node and the name of the comment field.
-    if ($node_bundle == 'node__comment_article') {
+  protected function createEntity($values, $langcode, $comment_type = 'comment_article') {
+    if ($comment_type == 'comment_article') {
       // This is the article node type, with the 'comment_article' field.
       $node_type = 'article';
       $field_name = 'comment_article';
@@ -105,9 +101,9 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     ));
     $values['entity_id'] = $node->id();
     $values['entity_type'] = 'node';
-    $values['field_id'] = $node_bundle;
+    $values['field_name'] = $field_name;
     $values['uid'] = $node->getOwnerId();
-    return parent::createEntity($values, $langcode, $node_bundle);
+    return parent::createEntity($values, $langcode, $comment_type);
   }
 
   /**
@@ -157,7 +153,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $this->drupalLogin($this->admin_user);
 
     $cid_translatable = $this->createEntity(array(), $this->langcodes[0]);
-    $cid_untranslatable = $this->createEntity(array(), $this->langcodes[0], 'node__comment');
+    $cid_untranslatable = $this->createEntity(array(), $this->langcodes[0], 'comment');
 
     // Verify translation links.
     $this->drupalGet('admin/content/comment');

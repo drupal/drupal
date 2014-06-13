@@ -159,7 +159,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements All
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $element['target_type'] = array(
       '#type' => 'select',
       '#title' => t('Type of item to reference'),

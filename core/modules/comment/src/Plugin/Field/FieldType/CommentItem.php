@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\Field\FieldType;
 
+use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
@@ -30,7 +31,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    */
   public static function defaultSettings() {
     return array(
-      'description' => '',
+      'comment_type' => '',
     ) + parent::defaultSettings();
   }
 
@@ -102,16 +103,12 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
 
     $settings = $this->getSettings();
 
-    $entity_type = $this->getEntity()->getEntityTypeId();
-    $field_name = $this->getFieldDefinition()->getName();
     $anonymous_user = new AnonymousUserSession();
 
     $element['comment'] = array(
       '#type' => 'details',
       '#title' => t('Comment form settings'),
       '#open' => TRUE,
-      '#bundle' => "{$entity_type}__{$field_name}",
-      '#process' => array(array(get_class($this), 'processSettingsElement')),
       '#attributes' => array(
         'class' => array('comment-instance-settings-form'),
       ),
@@ -194,39 +191,28 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
   }
 
   /**
-   * Process callback to add submit handler for instance settings form.
-   *
-   * Attaches the required translation entity handlers for the instance which
-   * correlates one to one with the comment bundle.
-   */
-  public static function processSettingsElement($element) {
-    // Settings should not be stored as nested.
-    $parents = $element['#parents'];
-    array_pop($parents);
-    $element['#parents'] = $parents;
-    // Add translation entity handlers.
-    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
-      $comment_form = $element;
-      $comment_form_state['content_translation']['key'] = 'language_configuration';
-      $element += content_translation_enable_widget('comment', $element['#bundle'], $comment_form, $comment_form_state);
-      $element['content_translation']['#parents'] = $element['content_translation']['#array_parents'] = array(
-        'content_translation'
-      );
-    }
-    return $element;
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $element = array();
 
-    $element['description'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Field description'),
-      '#description' => t('Describe this comment field. The text will be displayed on the <em>Comments Forms</em> page.'),
-      '#default_value' => $this->getSetting('description'),
+    // @todo Inject entity storage once typed-data supports container injection.
+    // See https://drupal.org/node/2053415 for more details.
+    $comment_types = CommentType::loadMultiple();
+    $options = array();
+    $entity_type = $this->getEntity()->getEntityTypeId();
+    foreach ($comment_types as $comment_type) {
+      if ($comment_type->getTargetEntityTypeId() == $entity_type) {
+        $options[$comment_type->id()] = $comment_type->label();
+      }
+    }
+    $element['comment_type'] = array(
+      '#type' => 'select',
+      '#title' => t('Comment type'),
+      '#options' => $options,
+      '#description' => t('Select the Comment type to use for this comment field.'),
+      '#default_value' => $this->getSetting('comment_type'),
+      '#disabled' => $has_data,
     );
     return $element;
   }

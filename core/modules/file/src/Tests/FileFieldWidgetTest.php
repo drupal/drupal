@@ -258,7 +258,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'fields[_add_new_field][field_name]' => $name = strtolower($this->randomName()),
       'fields[_add_new_field][type]' => 'file',
     );
-    $this->drupalPostForm('admin/structure/comments/manage/node__comment/fields', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/comment/manage/comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
     $this->drupalPostForm(NULL, $edit, t('Save field settings'));
     $this->drupalPostForm(NULL, array(), t('Save settings'));

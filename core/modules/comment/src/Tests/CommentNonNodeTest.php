@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
@@ -40,12 +41,18 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Create a bundle for entity_test.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
+    entity_create('comment_type', array(
+      'id' => 'comment',
+      'label' => 'Comment settings',
+      'description' => 'Comment settings',
+      'target_entity_type_id' => 'entity_test',
+    ))->save();
     // Create comment field on entity_test bundle.
     $this->container->get('comment.manager')->addDefaultField('entity_test', 'entity_test');
 
     // Verify that bundles are defined correctly.
     $bundles = \Drupal::entityManager()->getBundleInfo('comment');
-    $this->assertEqual($bundles['entity_test__comment']['label'], 'Comment settings');
+    $this->assertEqual($bundles['comment']['label'], 'Comment settings');
 
     // Create test user.
     $this->admin_user = $this->drupalCreateUser(array(
@@ -355,6 +362,15 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-2');
 
+    // Add a new comment-type.
+    $bundle = CommentType::create(array(
+      'id' => 'foobar',
+      'label' => 'Foobar',
+      'description' => '',
+      'target_entity_type_id' => 'entity_test',
+    ));
+    $bundle->save();
+
     // Add a new comment field.
     $this->drupalGet('entity_test/structure/entity_test/fields');
     $edit = array(
@@ -363,9 +379,32 @@ class CommentNonNodeTest extends WebTestBase {
       'fields[_add_new_field][type]' => 'comment',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->drupalPostForm(NULL, array(), t('Save field settings'));
+    $this->drupalPostForm(NULL, array(
+      'field[settings][comment_type]' => 'foobar',
+    ), t('Save field settings'));
+
     $this->drupalPostForm(NULL, array(), t('Save settings'));
     $this->assertRaw(t('Saved %name configuration', array('%name' => 'Foobar')));
+
+    // Add a third comment field.
+    $this->drupalGet('entity_test/structure/entity_test/fields');
+    $edit = array(
+      'fields[_add_new_field][label]' => 'Barfoo',
+      'fields[_add_new_field][field_name]' => 'barfoo',
+      'fields[_add_new_field][type]' => 'comment',
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    // Re-use another comment type.
+    $this->drupalPostForm(NULL, array(
+      'field[settings][comment_type]' => 'foobar',
+    ), t('Save field settings'));
+    $this->drupalPostForm(NULL, array(), t('Save settings'));
+    $this->assertRaw(t('Saved %name configuration', array('%name' => 'Barfoo')));
+
+    // Check the field contains the correct comment type.
+    $field = entity_load('field_config', 'entity_test.field_barfoo');
+    $this->assertTrue($field);
+    $this->assertEqual($field->getSetting('comment_type'), 'foobar');
 
     // Test the new entity commenting inherits default.
     $random_label = $this->randomName();

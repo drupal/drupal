@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -16,6 +17,8 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Comment manager contains common functions to manage comment fields.
@@ -103,9 +106,27 @@ class CommentManager implements CommentManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN) {
+  public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment') {
+    $comment_type_storage = $this->entityManager->getStorage('comment_type');
+    if ($comment_type = $comment_type_storage->load($comment_type_id)) {
+      if ($comment_type->getTargetEntityTypeId() !== $entity_type) {
+        throw new \InvalidArgumentException(String::format('The given comment type id %id can only be used with the %entity_type entity type', array(
+          '%id' => $comment_type_id,
+          '%entity_type' => $entity_type,
+        )));
+      }
+    }
+    else {
+      // Silently create the comment-type for the calling code.
+      $comment_type_storage->create(array(
+        'id' => $comment_type_id,
+        'label' => Unicode::ucfirst($comment_type_id),
+        'target_entity_type_id' => $entity_type,
+        'description' => 'Default comment field',
+      ))->save();
+    }
     // Make sure the field doesn't already exist.
-    if (!$this->entityManager->getStorage('field_config')->load($entity_type . '.' . $field_name)) {
+    if (!FieldConfig::loadByName($entity_type, $field_name)) {
       // Add a default comment field for existing node comments.
       $field = $this->entityManager->getStorage('field_config')->create(array(
         'entity_type' => $entity_type,
@@ -113,14 +134,14 @@ class CommentManager implements CommentManagerInterface {
         'type' => 'comment',
         'translatable' => '0',
         'settings' => array(
-          'description' => 'Default comment field',
+          'comment_type' => $comment_type_id,
         ),
       ));
       // Create the field.
       $field->save();
     }
     // Make sure the instance doesn't already exist.
-    if (!$this->entityManager->getStorage('field_instance_config')->load($entity_type . '.' . $bundle . '.' . $field_name)) {
+    if (!array_key_exists($field_name, $this->entityManager->getFieldDefinitions($entity_type, $bundle))) {
       $instance = $this->entityManager->getStorage('field_instance_config')->create(array(
         'label' => 'Comment settings',
         'description' => '',
@@ -164,7 +185,7 @@ class CommentManager implements CommentManagerInterface {
           'weight' => 20,
         ))
         ->save();
-        // The comment field should be hidden in all other view displays.
+      // The comment field should be hidden in all other view displays.
       foreach ($this->entityManager->getViewModes($entity_type) as $id => $view_mode) {
         $display = entity_get_display($entity_type, $bundle, $id);
         // Only update existing displays.
@@ -174,15 +195,15 @@ class CommentManager implements CommentManagerInterface {
       }
 
     }
-    $this->addBodyField($entity_type, $field_name);
+    $this->addBodyField($comment_type_id);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addBodyField($entity_type, $field_name) {
+  public function addBodyField($comment_type_id) {
     // Create the field if needed.
-    $field = $this->entityManager->getStorage('field_config')->load('comment.comment_body');
+    $field = FieldConfig::loadByName('comment', 'comment_body');
     if (!$field) {
       $field = $this->entityManager->getStorage('field_config')->create(array(
         'name' => 'comment_body',
@@ -191,32 +212,27 @@ class CommentManager implements CommentManagerInterface {
       ));
       $field->save();
     }
-    // Create the instance if needed, field name defaults to 'comment'.
-    $comment_bundle = $entity_type . '__' . $field_name;
-    $field_instance = $this->entityManager
-      ->getStorage('field_instance_config')
-      ->load("comment.$comment_bundle.comment_body");
-    if (!$field_instance) {
+    if (!FieldInstanceConfig::loadByName('comment', $comment_type_id, 'comment_body')) {
       // Attaches the body field by default.
       $field_instance = $this->entityManager->getStorage('field_instance_config')->create(array(
         'field_name' => 'comment_body',
         'label' => 'Comment',
         'entity_type' => 'comment',
-        'bundle' => $comment_bundle,
+        'bundle' => $comment_type_id,
         'settings' => array('text_processing' => 1),
         'required' => TRUE,
       ));
       $field_instance->save();
 
       // Assign widget settings for the 'default' form mode.
-      entity_get_form_display('comment', $comment_bundle, 'default')
+      entity_get_form_display('comment', $comment_type_id, 'default')
         ->setComponent('comment_body', array(
           'type' => 'text_textarea',
         ))
         ->save();
 
       // Assign display settings for the 'default' view mode.
-      entity_get_display('comment', $comment_bundle, 'default')
+      entity_get_display('comment', $comment_type_id, 'default')
         ->setComponent('comment_body', array(
           'label' => 'hidden',
           'type' => 'text_default',
@@ -224,16 +240,6 @@ class CommentManager implements CommentManagerInterface {
         ))
         ->save();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldUIPageTitle($commented_entity_type, $field_name) {
-    $field_info = $this->getFields($commented_entity_type);
-    $sample_bundle = reset($field_info[$field_name]['bundles']);
-    $sample_definition = $this->entityManager->getFieldDefinitions($commented_entity_type, $sample_bundle)[$field_name];
-    return String::checkPlain($sample_definition->getLabel());
   }
 
   /**

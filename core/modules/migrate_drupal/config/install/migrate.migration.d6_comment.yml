@@ -3,7 +3,8 @@ label: Drupal 6 comments
 source:
   plugin: d6_comment
   constants:
-    field_id: node__comment
+    field_name: comment
+    comment_type: comment
     entity_type: node
 process:
   cid: cid
@@ -19,7 +20,8 @@ process:
     migration: d6_node
     source: nid
   entity_type: constants.entity_type
-  field_id: constants.field_id
+  field_name: constants.field_name
+  comment_type: constants.comment_type
   subject: subject
   uid:
     -
@@ -44,6 +46,8 @@ process:
 destination:
   plugin: entity:comment
 migration_dependencies:
+  optional:
+    - d6_comment_type
   required:
     - d6_node
     - d6_user

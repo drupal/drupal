@@ -43,6 +43,16 @@ action.configuration.comment_unpublish_action:
   type: action_configuration_default
   label: 'Unpublish comment configuration'
 
+comment.type.*:
+  type: config_entity
+  label: 'Comment type settings'
+  mapping:
+    target_entity_type_id:
+      type: string
+      label: 'Target Entity Type ID'
+    description:
+      type: text
+      label: 'Description'
 
 field.comment.settings:
   type: sequence

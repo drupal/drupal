@@ -14,6 +14,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -156,6 +157,15 @@ class CommentForm extends ContentEntityForm {
       $form['author']['name']['#account'] = $this->currentUser;
     }
 
+    $language_configuration = \Drupal::moduleHandler()->invoke('language', 'get_default_configuration', array('comment', $comment->getTypeId()));
+    $form['langcode'] = array(
+      '#title' => t('Language'),
+      '#type' => 'language_select',
+      '#default_value' => $comment->getUntranslated()->language()->id,
+      '#languages' => Language::STATE_ALL,
+      '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
+    );
+
     // Add author email and homepage fields depending on the current user.
     $form['author']['mail'] = array(
       '#type' => 'email',
@@ -211,13 +221,6 @@ class CommentForm extends ContentEntityForm {
       '#value' => ($comment->id() ? !$comment->getOwnerId() : $this->currentUser->isAnonymous()),
     );
 
-    // Add internal comment properties.
-    $original = $comment->getUntranslated();
-    foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_id', 'uid', 'langcode') as $key) {
-      $key_name = key($comment->$key->getFieldDefinition()->getPropertyDefinitions());
-      $form[$key] = array('#type' => 'value', '#value' => $original->$key->{$key_name});
-    }
-
     return parent::form($form, $form_state, $comment);
   }
 
@@ -263,8 +266,9 @@ class CommentForm extends ContentEntityForm {
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
+    $entity = $this->entity;
 
-    if (!empty($form_state['values']['cid'])) {
+    if (!$entity->isNew()) {
       // Verify the name in case it is being changed from being anonymous.
       $accounts = $this->entityManager->getStorage('user')->loadByProperties(array('name' => $form_state['values']['name']));
       $account = reset($accounts);
@@ -364,8 +368,8 @@ class CommentForm extends ContentEntityForm {
    * Overrides Drupal\Core\Entity\EntityForm::save().
    */
   public function save(array $form, array &$form_state) {
-    $entity = entity_load($form_state['values']['entity_type'], $form_state['values']['entity_id']);
     $comment = $this->entity;
+    $entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();
     $uri = $entity->urlInfo();
 

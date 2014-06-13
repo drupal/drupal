@@ -54,6 +54,15 @@ class EntityTest extends NormalizerTestBase {
     $user = entity_create('user', array('name' => $this->randomName()));
     $user->save();
 
+    // Add comment type.
+    $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
+      'id' => 'comment',
+      'label' => 'comment',
+      'target_entity_type_id' => 'node',
+    ))->save();
+
+    $this->container->get('comment.manager')->addDefaultField('node', 'example_type');
+
     $node = entity_create('node', array(
       'title' => $this->randomName(),
       'uid' => $user->id(),
@@ -129,6 +138,15 @@ class EntityTest extends NormalizerTestBase {
     $user = entity_create('user', array('name' => $this->randomName()));
     $user->save();
 
+    // Add comment type.
+    $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
+      'id' => 'comment',
+      'label' => 'comment',
+      'target_entity_type_id' => 'node',
+    ))->save();
+
+    $this->container->get('comment.manager')->addDefaultField('node', 'example_type');
+
     $node = entity_create('node', array(
       'title' => $this->randomName(),
       'uid' => $user->id(),
@@ -142,8 +160,6 @@ class EntityTest extends NormalizerTestBase {
       )
     ));
     $node->save();
-
-    $this->container->get('comment.manager')->addDefaultField('node', 'example_type');
 
     $comment = entity_create('comment', array(
       'uid' => $user->id(),

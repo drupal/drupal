@@ -7,10 +7,13 @@ source:
     type: comment
     id: node.comment
     name: comment
+    settings:
+      content_type: comment
 process:
   entity_type: constants.entity_type
   id: constants.id
   name: constants.name
   type: constants.type
+  settings: constants.settings
 destination:
   plugin: entity:field_config

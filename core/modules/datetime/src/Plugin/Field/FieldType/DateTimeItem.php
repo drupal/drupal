@@ -83,7 +83,7 @@ class DateTimeItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $element = array();
 
     $element['datetime_type'] = array(

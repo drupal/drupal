@@ -110,7 +110,7 @@ class CommentViewBuilder extends EntityViewBuilder {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));
       }
       $build[$id]['#entity'] = $entity;
-      $build[$id]['#theme'] = 'comment__' . $entity->getFieldId() . '__' . $commented_entity->bundle();
+      $build[$id]['#theme'] = 'comment__' . $entity->getFieldName() . '__' . $commented_entity->bundle();
       $callback = '\Drupal\comment\CommentViewBuilder::renderLinks';
       $context = array(
         'comment_entity_id' => $entity->id(),

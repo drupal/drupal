@@ -12,9 +12,3 @@ services:
   comment.statistics:
     class: Drupal\comment\CommentStatistics
     arguments: ['@database', '@current_user', '@entity.manager', '@state']
-
-  comment.route_enhancer:
-      class: Drupal\comment\Routing\CommentBundleEnhancer
-      arguments: ['@entity.manager']
-      tags:
-        - { name: route_enhancer}

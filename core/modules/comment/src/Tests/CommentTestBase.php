@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Entity\CommentType;
 use Drupal\comment\CommentInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
@@ -58,6 +59,7 @@ abstract class CommentTestBase extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array(
       'administer content types',
       'administer comments',
+      'administer comment types',
       'administer comment fields',
       'administer comment display',
       'skip comment approval',
@@ -351,6 +353,26 @@ abstract class CommentTestBase extends WebTestBase {
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->drupalGetContent(), $match);
 
     return $match[2];
+  }
+
+  /**
+   * Creates a comment comment type (bundle).
+   *
+   * @param string $label
+   *   The comment type label.
+   *
+   * @return \Drupal\comment\Entity\CommentType
+   *   Created comment type.
+   */
+  protected function createCommentType($label) {
+    $bundle = CommentType::create(array(
+      'id' => $label,
+      'label' => $label,
+      'description' => '',
+      'target_entity_type_id' => 'node',
+    ));
+    $bundle->save();
+    return $bundle;
   }
 
 }

@@ -67,24 +67,15 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
   public function getCommentedEntityTypeId();
 
   /**
-   * Returns the field ID of the comment field the comment is attached to.
-   *
-   * @return string
-   *   The field identifier of the field the comment is attached to.
-   */
-  public function getFieldId();
-
-  /**
    * Sets the field ID for which this comment is attached.
    *
-   * @param string $field_id
-   *   The field identifier, usually formatted: {entity_type}__{field_name},
-   *   for example, node__comment.
+   * @param string $field_name
+   *   The field name through which the comment was added.
    *
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setFieldId($field_id);
+  public function setFieldName($field_name);
 
   /**
    * Returns the name of the field the comment is attached to.
@@ -257,5 +248,13 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * @return \Drupal\Core\Url
    */
   public function permalink();
+
+  /**
+   * Get the comment type id for this comment.
+   *
+   * @return string
+   *   The id of the comment type.
+   */
+  public function getTypeId();
 
 }

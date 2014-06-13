@@ -1,0 +1,5 @@
+comment_type_add:
+  route_name: comment.type_add
+  title: 'Add comment type'
+  appears_on:
+    - comment.type_list

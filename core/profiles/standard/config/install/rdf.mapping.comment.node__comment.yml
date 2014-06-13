@@ -1,6 +1,6 @@
-id: comment.node__comment
+id: comment.comment
 targetEntityType: comment
-bundle: node__comment
+bundle: comment
 types:
   - 'schema:Comment'
 fieldMappings:
@@ -27,3 +27,5 @@ fieldMappings:
 dependencies:
   module:
     - comment
+  entity:
+    - comment.type.comment

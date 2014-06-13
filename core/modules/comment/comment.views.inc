@@ -332,9 +332,26 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['field_id'] = array(
-    'title' => t('Comment field id'),
-    'help' => t('The Field id from which the comment originated.'),
+  $data['comment']['field_name'] = array(
+    'title' => t('Comment field name'),
+    'help' => t('The Field name from which the comment originated.'),
+    'field' => array(
+      'id' => 'standard',
+    ),
+    'filter' => array(
+      'id' => 'string',
+    ),
+    'argument' => array(
+      'id' => 'string',
+    ),
+    'sort' => array(
+      'id' => 'standard',
+    ),
+  );
+
+  $data['comment']['comment_type'] = array(
+    'title' => t('Comment type'),
+    'help' => t('The comment type for this comment.'),
     'field' => array(
       'id' => 'standard',
     ),
@@ -567,9 +584,9 @@ function comment_views_data() {
       'id' => 'standard',
     ),
   );
-  $data['comment_entity_statistics']['field_id'] = array(
-    'title' => t('Comment field ID'),
-    'help' => t('The field ID from which the comment originated.'),
+  $data['comment_entity_statistics']['field_name'] = array(
+    'title' => t('Comment field name'),
+    'help' => t('The field name from which the comment originated.'),
     'field' => array(
       'id' => 'standard',
     ),
@@ -666,8 +683,8 @@ function comment_views_data_alter(&$data) {
                 'value' => $entity_type_id,
               ),
               array(
-                'field' => 'field_id',
-                'value' => $entity_type_id . '.' . $field_name,
+                'field' => 'field_name',
+                'value' => $field_name,
               ),
             ),
           ),

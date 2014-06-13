@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Entity\CommentType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -19,7 +20,15 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'user', 'field', 'field_ui', 'entity_test');
+  public static $modules = array(
+    'comment',
+    'user',
+    'field',
+    'field_ui',
+    'entity',
+    'entity_test',
+    'text',
+  );
 
   public static function getInfo() {
     return array(
@@ -40,10 +49,19 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
    */
   public function testCommentFieldNonStringId() {
     try {
+      $bundle = CommentType::create(array(
+        'id' => 'foo',
+        'label' => 'foo',
+        'description' => '',
+        'target_entity_type_id' => 'entity_test_string_id',
+      ));
+      $bundle->save();
       $field = entity_create('field_config', array(
         'name' => 'foo',
         'entity_type' => 'entity_test_string_id',
-        'settings' => array(),
+        'settings' => array(
+          'comment_type' => 'entity_test_string_id',
+        ),
         'type' => 'comment',
       ));
       $field->save();

@@ -41,7 +41,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
 
     // Check that the 'comment_body' field is present on the comment bundle.
-    $instance = FieldInstanceConfig::loadByName('comment', 'node__comment', 'comment_body');
+    $instance = FieldInstanceConfig::loadByName('comment', 'comment', 'comment_body');
     $this->assertTrue(!empty($instance), 'The comment_body field is added when a comment bundle is created');
 
     $instance->delete();
@@ -59,11 +59,11 @@ class CommentFieldsTest extends CommentTestBase {
     // new comment bundle.
     $field = FieldConfig::loadByName('comment', 'comment_body');
     $this->assertTrue($field, 'The comment_body field exists');
-    $instance = FieldInstanceConfig::loadByName('comment', 'node__comment', 'comment_body');
+    $instance = FieldInstanceConfig::loadByName('comment', 'comment', 'comment_body');
     $this->assertTrue(isset($instance), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
-    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED);
+    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');
     $field = entity_load('field_instance_config', 'node.test_node_type.who_likes_ponies');
     $this->assertEqual($field->default_value[0]['status'], CommentItemInterface::CLOSED);
   }
@@ -130,10 +130,10 @@ class CommentFieldsTest extends CommentTestBase {
     // Disable text processing for comments.
     $this->drupalLogin($this->admin_user);
     $edit = array('instance[settings][text_processing]' => 0);
-    $this->drupalPostForm('admin/structure/comments/manage/node__comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/comment/manage/comment/fields/comment.comment.comment_body', $edit, t('Save settings'));
 
     // Change formatter settings.
-    $this->drupalGet('admin/structure/comments/manage/node__comment/display');
+    $this->drupalGet('admin/structure/comment/manage/comment/display');
     $edit = array('fields[comment_body][type]' => 'text_trimmed', 'refresh_rows' => 'comment_body');
     $commands = $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
     $this->assertTrue($commands, 'Ajax commands returned');

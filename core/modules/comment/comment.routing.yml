@@ -66,20 +66,6 @@ comment.new_comments_node_links:
   requirements:
     _permission: 'access content'
 
-comment.bundle_list:
-  path: '/admin/structure/comments'
-  defaults:
-    _content: '\Drupal\comment\Controller\AdminController::overviewBundles'
-    _title: 'Comment forms'
-  requirements:
-    _permission: 'administer comments'
-
-# This route is only used by Field UI.
-comment.bundle:
-  path: '/admin/structure/comments/manage/{bundle}'
-  requirements:
-    _access: 'FALSE'
-
 comment.node_redirect:
   path: '/comment/{node}/reply'
   defaults:
@@ -87,3 +73,43 @@ comment.node_redirect:
   requirements:
     _entity_access: 'node.view'
     _module_dependencies: 'node'
+
+comment.type_list:
+  path: '/admin/structure/comment'
+  defaults:
+    _entity_list: 'comment_type'
+    _title: 'Comment types'
+  requirements:
+    _permission: 'administer comment types'
+  options:
+    _admin_route: TRUE
+
+comment.type_delete:
+  path: '/admin/structure/comment/manage/{comment_type}/delete'
+  defaults:
+    _entity_form: 'comment_type.delete'
+    _title: 'Delete'
+  requirements:
+    _entity_access: 'comment_type.delete'
+  options:
+    _admin_route: TRUE
+
+comment.type_add:
+  path: '/admin/structure/comment/types/add'
+  defaults:
+    _entity_form: 'comment_type.add'
+    _title: 'Add'
+  requirements:
+    _permission: 'administer comment types'
+  options:
+    _admin_route: TRUE
+
+comment.type_edit:
+  path: '/admin/structure/comment/manage/{comment_type}'
+  defaults:
+    _entity_form: 'comment_type.edit'
+    _title: 'Edit'
+  requirements:
+    _entity_access: 'comment_type.update'
+  options:
+    _admin_route: TRUE

@@ -252,7 +252,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return
    *   The form definition for the field settings.
    */
-  public function settingsForm(array $form, array &$form_state, $has_data);
+  public function settingsForm(array &$form, array &$form_state, $has_data);
 
   /**
    * Returns a form for the instance-level settings.

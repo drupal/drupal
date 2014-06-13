@@ -48,36 +48,24 @@ interface CommentManagerInterface {
    * @param string $bundle
    *   The bundle to attach the default comment field instance to.
    * @param string $field_name
-   *   (optional) Field name to use for the comment field. Defaults to 'comment'.
+   *   (optional) Field name to use for the comment field. Defaults to
+   *     'comment'.
    * @param int $default_value
    *   (optional) Default value, one of CommentItemInterface::HIDDEN,
    *   CommentItemInterface::OPEN, CommentItemInterface::CLOSED. Defaults to
    *   CommentItemInterface::OPEN.
+   * @param string $comment_type_id
+   *   (optional) ID of comment type to use. Defaults to 'comment'.
    */
-  public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN);
+  public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment');
 
   /**
    * Creates a comment_body field instance.
    *
-   * @param string $entity_type
-   *   The type of the entity to which the comment field attached.
-   * @param string $field_name
-   *   Name of the comment field to add comment_body field.
+   * @param string $comment_type
+   *   The comment bundle.
    */
-  public function addBodyField($entity_type, $field_name);
-
-  /**
-   * Builds human readable page title for field_ui management screens.
-   *
-   * @param string $commented_entity_type
-   *   The entity type to which the comment field is attached.
-   * @param string $field_name
-   *   The comment field for which the overview is to be displayed.
-   *
-   * @return string
-   *   The human readable field name.
-   */
-  public function getFieldUIPageTitle($commented_entity_type, $field_name);
+  public function addBodyField($comment_type);
 
   /**
    * Provides a message if posting comments is forbidden.

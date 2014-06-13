@@ -152,7 +152,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $element = array();
 
     // We need the field-level 'default_image' setting, and $this->getSettings()

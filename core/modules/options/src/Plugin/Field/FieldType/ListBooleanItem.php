@@ -102,7 +102,7 @@ class ListBooleanItem extends FieldItemBase implements AllowedValuesInterface {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state, $has_data) {
+  public function settingsForm(array &$form, array &$form_state, $has_data) {
     $allowed_values = $this->getSetting('allowed_values');
     $allowed_values_function = $this->getSetting('allowed_values_function');
 

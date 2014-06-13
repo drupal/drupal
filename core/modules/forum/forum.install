@@ -4,6 +4,8 @@
  * @file
  * Install, update, and uninstall functions for the Forum module.
  */
+
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -84,7 +86,7 @@ function forum_install() {
       'include_deleted' => FALSE,
     ));
     if (empty($fields)) {
-      Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum');
+      Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum', CommentItemInterface::OPEN, 'comment_forum');
     }
   }
 }

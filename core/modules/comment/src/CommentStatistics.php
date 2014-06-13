@@ -95,7 +95,7 @@ class CommentStatistics implements CommentStatisticsInterface {
       ->fields(array(
         'entity_id',
         'entity_type',
-        'field_id',
+        'field_name',
         'cid',
         'last_comment_timestamp',
         'last_comment_name',
@@ -126,7 +126,7 @@ class CommentStatistics implements CommentStatisticsInterface {
       $query->values(array(
         'entity_id' => $entity->id(),
         'entity_type' => $entity->getEntityTypeId(),
-        'field_id' => $entity->getEntityTypeId() . '__' . $field_name,
+        'field_name' => $field_name,
         'cid' => 0,
         'last_comment_timestamp' => $last_comment_timestamp,
         'last_comment_name' => NULL,
@@ -157,7 +157,7 @@ class CommentStatistics implements CommentStatisticsInterface {
           'alias' => 'ces',
           // Default to comment field as this is the most common use case for
           // nodes.
-          'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_id = 'node__comment'",
+          'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_name = 'comment'",
         ),
         // Inverse law that maps the highest reply count on the site to 1 and 0
         // to 0. Note that the CAST here is necessary for PostgreSQL, because the
@@ -183,7 +183,7 @@ class CommentStatistics implements CommentStatisticsInterface {
     $query->addExpression('COUNT(cid)');
     $count = $query->condition('c.entity_id', $comment->getCommentedEntityId())
       ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
-      ->condition('c.field_id', $comment->getFieldId())
+      ->condition('c.field_name', $comment->getFieldName())
       ->condition('c.status', CommentInterface::PUBLISHED)
       ->execute()
       ->fetchField();
@@ -194,7 +194,7 @@ class CommentStatistics implements CommentStatisticsInterface {
         ->fields('c', array('cid', 'name', 'changed', 'uid'))
         ->condition('c.entity_id', $comment->getCommentedEntityId())
         ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
-        ->condition('c.field_id', $comment->getFieldId())
+        ->condition('c.field_name', $comment->getFieldName())
         ->condition('c.status', CommentInterface::PUBLISHED)
         ->orderBy('c.created', 'DESC')
         ->range(0, 1)
@@ -212,7 +212,7 @@ class CommentStatistics implements CommentStatisticsInterface {
         ->keys(array(
           'entity_id' => $comment->getCommentedEntityId(),
           'entity_type' => $comment->getCommentedEntityTypeId(),
-          'field_id' => $comment->getFieldId(),
+          'field_name' => $comment->getFieldName(),
         ))
         ->execute();
     }
@@ -241,7 +241,7 @@ class CommentStatistics implements CommentStatisticsInterface {
         ))
         ->condition('entity_id', $comment->getCommentedEntityId())
         ->condition('entity_type', $comment->getCommentedEntityTypeId())
-        ->condition('field_id', $comment->getFieldId())
+        ->condition('field_name', $comment->getFieldName())
         ->execute();
     }
   }
