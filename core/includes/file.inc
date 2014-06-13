@@ -1171,7 +1171,11 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
  *
  * Directories and files beginning with a dot are excluded; this prevents
  * hidden files and directories (such as SVN working directories) from being
- * scanned.
+ * scanned. Use the umask option to skip configuration directories to
+ * eliminate the possibility of accidentally exposing configuration
+ * information. Also, you can use the base directory, recurse, and min_depth
+ * options to improve performance by limiting how much of the filesystem has
+ * to be traversed.
  *
  * @param $dir
  *   The base directory or URI to scan, without trailing slash.
