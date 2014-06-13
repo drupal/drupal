@@ -221,12 +221,18 @@ $databases = array();
 /**
  * Location of the site configuration files.
  *
- * By default, Drupal configuration files are stored in a randomly named
- * directory under the default public files path. On install the
- * named directory is created in the default files directory. For enhanced
- * security, you may set this variable to a location outside your docroot.
+ * The $config_directories array specifies the location of file system
+ * directories used for configuration data. On install, "active" and "staging"
+ * directories are created for configuration. The staging directory is used for
+ * configuration imports; the active directory is not used by default, since the
+ * default storage for active configuration is the database rather than the file
+ * system (this can be changed; see "Active configuration settings" below).
  *
- * @todo Flesh this out, provide more details, etc.
+ * The default location for the active and staging directories is inside a
+ * randomly-named directory in the public files path; this setting allows you to
+ * override these locations. If you use files for the active configuration, you
+ * can enhance security by putting the active configuration outside your
+ * document root.
  *
  * Example:
  * @code
@@ -256,9 +262,9 @@ $config_directories = array();
  * site is deployed on a cluster of web servers, you must ensure that this
  * variable has the same value on each server.
  *
- * For enhanced security, you may set this variable to a value using the
- * contents of a file outside your docroot that is never saved together
- * with any backups of your Drupal files and database.
+ * For enhanced security, you may set this variable to the contents of a file
+ * outside your document root; you should also ensure that this file is not
+ * stored with backups of your database.
  *
  * Example:
  * @code
@@ -546,12 +552,14 @@ ini_set('session.cookie_lifetime', 2000000);
  * Active configuration settings.
  *
  * By default, the active configuration is stored in the database in the
- * {config} table. To install Drupal with a different active configuration
- * storage, you need to override the setting here, in addition to overriding
- * the config.storage.active service definition in a module or profile.
- *
- * The 'bootstrap_config_storage' setting needs to be a callable that returns
- * core.services.yml.
+ * {config} table. To use a different storage mechanism for the active
+ * configuration, do the following prior to installing:
+ * - Override the 'bootstrap_config_storage' setting here. It must be set to a
+ *   callable that returns an object that implements
+ *   \Drupal\Core\Config\StorageInterface.
+ * - Override the service definition 'config.storage.active'. Put this
+ *   override in a services.yml file in the same directory as settings.php
+ *   (definitions in this file will override service definition defaults).
  */
 # $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
 
