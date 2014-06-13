@@ -71,113 +71,105 @@ function theme_image_style_effects($variables) {
 }
 
 /**
- * Returns HTML for a preview of an image style.
+ * Prepares variables for image style preview templates.
  *
- * @param $variables
+ * Default template: image-style-preview.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - style: \Drupal\image\ImageStyleInterface image style being previewed.
- *
- * @ingroup themeable
  */
-function theme_image_style_preview($variables) {
+function template_preprocess_image_style_preview(&$variables) {
+  // Style information.
   $style = $variables['style'];
+  $variables['style_id'] = String::checkPlain($style->id());
+  $variables['style_name'] = String::checkPlain($style->label());
 
-  $sample_image = \Drupal::config('image.settings')->get('preview_image');
+  // Cache bypass token.
+  $variables['cache_bypass'] = REQUEST_TIME;
+
+  // Sample image info.
   $sample_width = 160;
   $sample_height = 160;
+  $image_factory = \Drupal::service('image.factory');
 
   // Set up original file information.
-  $original_path = $sample_image;
-  $image_factory = \Drupal::service('image.factory');
+  $original_path = \Drupal::config('image.settings')->get('preview_image');
   $original_image = $image_factory->get($original_path);
-  $original_image = array(
+  $variables['original'] = array(
+    'url' => file_create_url($original_path),
     'width' => $original_image->getWidth(),
     'height' => $original_image->getHeight(),
   );
-  if ($original_image['width'] > $original_image['height']) {
-    $original_width = min($original_image['width'], $sample_width);
-    $original_height = round($original_width / $original_image['width'] * $original_image['height']);
+  if ($variables['original']['width'] > $variables['original']['height']) {
+    $variables['preview']['original']['width'] = min($variables['original']['width'], $sample_width);
+    $variables['preview']['original']['height'] = round($variables['preview']['original']['width'] / $variables['original']['width'] * $variables['original']['height']);
   }
   else {
-    $original_height = min($original_image['height'], $sample_height);
-    $original_width = round($original_height / $original_image['height'] * $original_image['width']);
+    $variables['preview']['original']['height'] = min($variables['original']['height'], $sample_height);
+    $variables['preview']['original']['width'] = round($variables['preview']['original']['height'] / $variables['original']['height'] * $variables['original']['width']);
   }
-  $original_image['style'] = 'width: ' . $original_width . 'px; height: ' . $original_height . 'px;';
 
-  // Set up preview file information.
+  // Set up derivative file information.
   $preview_file = $style->buildUri($original_path);
+  // Create derivative if necessary.
   if (!file_exists($preview_file)) {
     $style->createDerivative($original_path, $preview_file);
   }
   $preview_image = $image_factory->get($preview_file);
-  $preview_image = array(
+  $variables['derivative'] = array(
+    'url' => file_create_url($preview_file),
     'width' => $preview_image->getWidth(),
     'height' => $preview_image->getHeight(),
   );
-  if ($preview_image['width'] > $preview_image['height']) {
-    $preview_width = min($preview_image['width'], $sample_width);
-    $preview_height = round($preview_width / $preview_image['width'] * $preview_image['height']);
+  if ($variables['derivative']['width'] > $variables['derivative']['height']) {
+    $variables['preview']['derivative']['width'] = min($variables['derivative']['width'], $sample_width);
+    $variables['preview']['derivative']['height'] = round($variables['preview']['derivative']['width'] / $variables['derivative']['width'] * $variables['derivative']['height']);
   }
   else {
-    $preview_height = min($preview_image['height'], $sample_height);
-    $preview_width = round($preview_height / $preview_image['height'] * $preview_image['width']);
+    $variables['preview']['derivative']['height'] = min($variables['derivative']['height'], $sample_height);
+    $variables['preview']['derivative']['width'] = round($variables['preview']['derivative']['height'] / $variables['derivative']['height'] * $variables['derivative']['width']);
   }
-  $preview_image['style'] = 'width: ' . $preview_width . 'px; height: ' . $preview_height . 'px;';
-
-  // In the previews, timestamps are added to prevent caching of images.
-  $output = '<div class="image-style-preview preview clearfix">';
 
   // Build the preview of the original image.
-  $original_url = file_create_url($original_path);
-  $image = array(
+  $variables['original']['rendered'] = array(
     '#theme' => 'image',
     '#uri' => $original_path,
     '#alt' => t('Sample original image'),
     '#title' => '',
-    '#attributes' => $original_image,
+    '#attributes' => array(
+      'width' => $variables['original']['width'],
+      'height' => $variables['original']['height'],
+      'style' => 'width: ' . $variables['preview']['original']['width'] . 'px; height: ' . $variables['preview']['original']['height'] . 'px;',
+    ),
   );
-  $output .= '<div class="preview-image-wrapper">';
-  $output .= t('original') . ' (' . l(t('view actual size'), $original_url) . ')';
-  $output .= '<div class="preview-image original-image" style="' . $original_image['style'] . '">';
-  $output .= '<a href="' . $original_url . '">' . drupal_render($image) . '</a>';
-  $output .= '<div class="height" style="height: ' . $original_height . 'px"><span>' . $original_image['height'] . 'px</span></div>';
-  $output .= '<div class="width" style="width: ' . $original_width . 'px"><span>' . $original_image['width'] . 'px</span></div>';
-  $output .= '</div>'; // End preview-image.
-  $output .= '</div>'; // End preview-image-wrapper.
 
-  // Build the preview of the image style.
-  $preview_url = file_create_url($preview_file) . '?cache_bypass=' . REQUEST_TIME;
-  $image = array(
+  // Build the preview of the image style derivative. Timestamps are added
+  // to prevent caching of images on the client side.
+  $variables['derivative']['rendered'] = array(
     '#theme' => 'image',
-    '#uri' => $preview_url,
+    '#uri' => $variables['derivative']['url'] . '?cache_bypass=' . $variables['cache_bypass'],
     '#alt' => t('Sample modified image'),
     '#title' => '',
-    '#attributes' => $preview_image,
+    '#attributes' => array(
+      'width' => $variables['derivative']['width'],
+      'height' => $variables['derivative']['height'],
+      'style' => 'width: ' . $variables['preview']['derivative']['width'] . 'px; height: ' . $variables['preview']['derivative']['height'] . 'px;',
+    ),
   );
-  $output .= '<div class="preview-image-wrapper">';
-  $output .= String::checkPlain($style->label()) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
-  $output .= '<div class="preview-image modified-image" style="' . $preview_image['style'] . '">';
-  $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . drupal_render($image) . '</a>';
-  $output .= '<div class="height" style="height: ' . $preview_height . 'px"><span>' . $preview_image['height'] . 'px</span></div>';
-  $output .= '<div class="width" style="width: ' . $preview_width . 'px"><span>' . $preview_image['width'] . 'px</span></div>';
-  $output .= '</div>'; // End preview-image.
-  $output .= '</div>'; // End preview-image-wrapper.
 
-  $output .= '</div>'; // End image-style-preview.
-
-  return $output;
 }
 
 /**
- * Returns HTML for a 3x3 grid of checkboxes for image anchors.
+ * Prepares variables for image anchor templates.
  *
- * @param $variables
+ * Default template: image-anchor.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
- *   - element: A render element containing radio buttons.
- *
- * @ingroup themeable
+ *   - element: An associative array containing the image.
  */
-function theme_image_anchor($variables) {
+function template_preprocess_image_anchor(&$variables) {
   $element = $variables['element'];
 
   $rows = array();
@@ -185,86 +177,21 @@ function theme_image_anchor($variables) {
   foreach (Element::children($element) as $n => $key) {
     $element[$key]['#attributes']['title'] = $element[$key]['#title'];
     unset($element[$key]['#title']);
-    $row[] = drupal_render($element[$key]);
+    $row[] = array(
+      'data' => $element[$key],
+    );
     if ($n % 3 == 3 - 1) {
       $rows[] = $row;
       $row = array();
     }
   }
 
-  $table = array(
+  $variables['table'] = array(
     '#type' => 'table',
     '#header' => array(),
     '#rows' => $rows,
-    '#attributes' => array('class' => array('image-anchor')),
+    '#attributes' => array(
+      'class' => array('image-anchor'),
+    ),
   );
-  return drupal_render($table);
-}
-
-/**
- * Returns HTML for a summary of an image resize effect.
- *
- * @param $variables
- *   An associative array containing:
- *   - data: The current configuration for this resize effect.
- *
- * @ingroup themeable
- */
-function theme_image_resize_summary($variables) {
-  $data = $variables['data'];
-
-  if ($data['width'] && $data['height']) {
-    return String::checkPlain($data['width']) . 'x' . String::checkPlain($data['height']);
-  }
-  else {
-    return ($data['width']) ? t('width @width', array('@width' => $data['width'])) : t('height @height', array('@height' => $data['height']));
-  }
-}
-
-/**
- * Returns HTML for a summary of an image scale effect.
- *
- * @param $variables
- *   An associative array containing:
- *   - data: The current configuration for this scale effect.
- *
- * @ingroup themeable
- */
-function theme_image_scale_summary($variables) {
-  $image_resize_summary = array(
-    '#theme' => 'image_resize_summary',
-    '#data' => $variables['data'],
-  );
-  return drupal_render($image_resize_summary) . ' ' . ($variables['data']['upscale'] ? '(' . t('upscaling allowed') . ')' : '');
-}
-
-/**
- * Returns HTML for a summary of an image crop effect.
- *
- * @param $variables
- *   An associative array containing:
- *   - data: The current configuration for this crop effect.
- *
- * @ingroup themeable
- */
-function theme_image_crop_summary($variables) {
-  $image_resize_summary = array(
-    '#theme' => 'image_resize_summary',
-    '#data' => $variables['data'],
-  );
-  return drupal_render($image_resize_summary);
-}
-
-/**
- * Returns HTML for a summary of an image rotate effect.
- *
- * @param $variables
- *   An associative array containing:
- *   - data: The current configuration for this rotate effect.
- *
- * @ingroup themeable
- */
-function theme_image_rotate_summary($variables) {
-  $data = $variables['data'];
-  return ($data['random']) ? t('random between -@degrees&deg and @degrees&deg', array('@degrees' => str_replace('-', '', $data['degrees']))) : t('@degrees&deg', array('@degrees' => $data['degrees']));
 }

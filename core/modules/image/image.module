@@ -108,6 +108,7 @@ function image_theme() {
         'title' => NULL,
         'attributes' => array(),
       ),
+      'template' => 'image-style',
     ),
 
     // Theme functions in image.admin.inc.
@@ -118,36 +119,40 @@ function image_theme() {
     'image_style_preview' => array(
       'variables' => array('style' => NULL),
       'file' => 'image.admin.inc',
+      'template' => 'image-style-preview',
     ),
     'image_anchor' => array(
       'render element' => 'element',
       'file' => 'image.admin.inc',
+      'template' => 'image-anchor',
     ),
     'image_resize_summary' => array(
-      'variables' => array('data' => NULL),
-      'file' => 'image.admin.inc',
+      'variables' => array('data' => NULL, 'effect' => array()),
+      'template' => 'image-resize-summary',
     ),
     'image_scale_summary' => array(
-      'variables' => array('data' => NULL),
-      'file' => 'image.admin.inc',
+      'variables' => array('data' => NULL, 'effect' => array()),
+      'template' => 'image-scale-summary',
     ),
     'image_crop_summary' => array(
-      'variables' => array('data' => NULL),
-      'file' => 'image.admin.inc',
+      'variables' => array('data' => NULL, 'effect' => array()),
+      'template' => 'image-crop-summary',
     ),
     'image_rotate_summary' => array(
-      'variables' => array('data' => NULL),
-      'file' => 'image.admin.inc',
+      'variables' => array('data' => NULL, 'effect' => array()),
+      'template' => 'image-rotate-summary',
     ),
 
     // Theme functions in image.field.inc.
     'image_widget' => array(
       'render element' => 'element',
       'file' => 'image.field.inc',
+      'template' => 'image-widget',
     ),
     'image_formatter' => array(
       'variables' => array('item' => NULL, 'item_attributes' => NULL, 'path' => NULL, 'image_style' => NULL),
       'file' => 'image.field.inc',
+      'template' => 'image-formatter',
     ),
   );
 }
@@ -268,18 +273,17 @@ function image_style_options($include_empty = TRUE) {
 }
 
 /**
- * Returns HTML for an image using a specific image style.
+ * Prepares variables for image style templates.
  *
- * @param $variables
+ * Default template: image-style.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
- *   - style_name: The name of the style to be used to alter the original image.
- *   - uri: The path of the image file relative to the Drupal files directory.
- *     This function does not work with images outside the files directory nor
- *     with remotely hosted images. This should be in a format such as
- *     'images/image.jpg', or using a stream wrapper such as
- *     'public://images/image.jpg'.
- *   - width: The width of the source image (if known).
- *   - height: The height of the source image (if known).
+ *   - width: The width of the image.
+ *   - height: The height of the image.
+ *   - style_name: The name of the image style to be applied.
+ *   - attributes: Additional attributes to apply to the image.
+ *   - uri: URI of the source image before styling.
  *   - alt: The alternative text for text-based browsers. HTML 4 and XHTML 1.0
  *     always require an alt attribute. The HTML 5 draft allows the alt
  *     attribute to be omitted in some cases. Therefore, this variable defaults
@@ -293,12 +297,8 @@ function image_style_options($include_empty = TRUE) {
  *   - title: The title text is displayed when the image is hovered in some
  *     popular browsers.
  *   - attributes: Associative array of attributes to be placed in the img tag.
- *
- * @ingroup themeable
  */
-function theme_image_style($variables) {
-  // @todo Image style loading will be moved outside theme in
-  //   https://drupal.org/node/2029649
+function template_preprocess_image_style(&$variables) {
   $style = entity_load('image_style', $variables['style_name']);
 
   // Determine the dimensions of the styled image.
@@ -312,7 +312,7 @@ function theme_image_style($variables) {
   // Add in the image style name as an HTML class.
   $variables['attributes']['class'][] = 'image-style-' . drupal_html_class($variables['style_name']);
 
-  $image = array(
+  $variables['image'] = array(
     '#theme' => 'image',
     '#width' => $dimensions['width'],
     '#height' => $dimensions['height'],
@@ -321,13 +321,12 @@ function theme_image_style($variables) {
   );
 
   if (isset($variables['alt']) || array_key_exists('alt', $variables)) {
-    $image['#alt'] = $variables['alt'];
+    $variables['image']['#alt'] = $variables['alt'];
   }
   if (isset($variables['title']) || array_key_exists('title', $variables)) {
-    $image['#title'] = $variables['title'];
+    $variables['image']['#title'] = $variables['title'];
   }
 
-  return drupal_render($image);
 }
 
 /**

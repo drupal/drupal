@@ -50,6 +50,11 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
   public function getSummary() {
     return array(
       '#markup' => '',
+      '#effect' => array(
+        'id' => $this->pluginDefinition['id'],
+        'label' => $this->label(),
+        'description' => $this->pluginDefinition['description'],
+      ),
     );
   }
 

@@ -45,10 +45,13 @@ class ScaleImageEffect extends ResizeImageEffect {
    * {@inheritdoc}
    */
   public function getSummary() {
-    return array(
+    $summary = array(
       '#theme' => 'image_scale_summary',
       '#data' => $this->configuration,
     );
+    $summary += parent::getSummary();
+
+    return $summary;
   }
 
   /**

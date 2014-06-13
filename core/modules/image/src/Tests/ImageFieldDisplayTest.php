@@ -73,7 +73,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = drupal_render($image);
+    $default_output = str_replace("\n", NULL, drupal_render($image));
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Test the image linked to file formatter.
@@ -123,11 +123,19 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = l($image, 'node/' . $nid, array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
-    $this->assertRaw($default_output, 'Image linked to content formatter displaying correctly on full node view.');
+    $elements = $this->xpath(
+      '//a[@href=:path]/img[@src=:url and @alt="" and @width=:width and @height=:height]',
+      array(
+        ':path' => url('node/' . $nid),
+        ':url' => file_create_url($image['#uri']),
+        ':width' => $image['#width'],
+        ':height' => $image['#height'],
+      )
+    );
+    $this->assertEqual(count($elements), 1, 'Image linked to content formatter displaying correctly on full node view.');
 
     // Test the image style 'thumbnail' formatter.
     $display_options['settings']['image_link'] = '';
@@ -218,7 +226,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][title]' => $image['#title'],
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
-    $default_output = drupal_render($image);
+    $default_output = str_replace("\n", NULL, drupal_render($image));
     $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
 
     // Verify that alt/title longer than allowed results in a validation error.
@@ -294,7 +302,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = drupal_render($image);
+    $default_output = str_replace("\n", NULL, drupal_render($image));
     $this->drupalGet('node/' . $node->id());
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
@@ -310,7 +318,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $image_output = drupal_render($image);
+    $image_output = str_replace("\n", NULL, drupal_render($image));
     $this->drupalGet('node/' . $nid);
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
@@ -357,7 +365,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = drupal_render($image);
+    $default_output = str_replace("\n", NULL, drupal_render($image));
     $this->drupalGet('node/' . $node->id());
     $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
     $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');

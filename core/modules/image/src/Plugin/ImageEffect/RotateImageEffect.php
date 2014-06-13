@@ -74,10 +74,13 @@ class RotateImageEffect extends ConfigurableImageEffectBase {
    * {@inheritdoc}
    */
   public function getSummary() {
-    return array(
+    $summary = array(
       '#theme' => 'image_rotate_summary',
       '#data' => $this->configuration,
     );
+    $summary += parent::getSummary();
+
+    return $summary;
   }
 
   /**
