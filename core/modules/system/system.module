@@ -177,6 +177,7 @@ function system_theme() {
     ),
     'system_config_form' => array(
       'render element' => 'form',
+      'template' => 'system-config-form',
     ),
     'confirm_form' => array(
       'render element' => 'form',
@@ -1704,22 +1705,6 @@ function system_block_view_system_help_block_alter(array &$build, BlockPluginInt
   // Assume that most users do not need or want to perform contextual actions on
   // the help block, so don't needlessly draw attention to it.
   unset($build['#contextual_links']);
-}
-
-/**
- * Returns HTML for a system settings form.
- *
- * By default this does not alter the appearance of a form at all,
- * but is provided as a convenience for themers.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_system_config_form($variables) {
-  return drupal_render_children($variables['form']);
 }
 
 /**
