@@ -13,39 +13,34 @@ use Drupal\Core\Render\Element;
 /**
  * Returns HTML for an individual file upload widget.
  *
- * @param $variables
- *   An associative array containing:
- *   - element: A render element representing the widget.
+ * Default template: file-widget.html.twig.
  *
- * @ingroup themeable
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: A render element representing the file.
  */
-function theme_file_widget($variables) {
+function template_preprocess_file_widget(&$variables) {
   $element = $variables['element'];
-  $output = '';
-
-  // The "form-managed-file" class is required for proper Ajax functionality.
-  $output .= '<div class="file-widget form-managed-file clearfix">';
   if (!empty($element['fids']['#value'])) {
     // Add the file size after the file name.
     $file = reset($element['#files']);
     $element['file_' . $file->id()]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
   }
-  $output .= drupal_render_children($element);
-  $output .= '</div>';
-
-  return $output;
+  $variables['element'] = $element;
+  // The "form-managed-file" class is required for proper Ajax functionality.
+  $variables['attributes'] = array('class' => array('file-widget', 'form-managed-file', 'clearfix'));
 }
 
 /**
- * Returns HTML for a group of file upload widgets.
+ * Prepares variables for multi file form widget templates.
  *
- * @param $variables
+ * Default template: file-widget-multiple.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the widgets.
- *
- * @ingroup themeable
  */
-function theme_file_widget_multiple($variables) {
+function template_preprocess_file_widget_multiple(&$variables) {
   $element = $variables['element'];
 
   // Special ID and classes for draggable tables.
@@ -133,7 +128,7 @@ function theme_file_widget_multiple($variables) {
     );
   }
 
-  $build = array(
+  $variables['table'] = array(
     '#type' => 'table',
     '#header' => $headers,
     '#rows' => $rows,
@@ -149,25 +144,22 @@ function theme_file_widget_multiple($variables) {
     ),
   );
 
-  $output = empty($rows) ? '' : drupal_render($build);
-  $output .= drupal_render_children($element);
-  return $output;
+  $variables['element'] = $element;
 }
 
-
 /**
- * Returns HTML for help text based on file upload validators.
+ * Prepares variables for file upload help text templates.
  *
- * @param $variables
+ * Default template: file-upload-help.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - description: The normal description for this field, specified by the
  *     user.
  *   - upload_validators: An array of upload validators as used in
  *     $element['#upload_validators'].
- *
- * @ingroup themeable
  */
-function theme_file_upload_help($variables) {
+function template_preprocess_file_upload_help(&$variables) {
   $description = $variables['description'];
   $upload_validators = $variables['upload_validators'];
   $cardinality = $variables['cardinality'];
@@ -209,7 +201,7 @@ function theme_file_upload_help($variables) {
     }
   }
 
-  return implode(' ', $descriptions);
+  $variables['descriptions'] = $descriptions;
 }
 
 /**
@@ -234,39 +226,4 @@ function file_field_find_file_reference_column(FieldDefinitionInterface $field) 
     }
   }
   return FALSE;
-}
-
-/**
- * Returns HTML for a file attachments table.
- *
- * @param $variables
- *   An associative array containing:
- *   - items: field values, as a FileFieldItemList object.
- *
- * @ingroup themeable
- */
-function theme_file_formatter_table($variables) {
-  $header = array(t('Attachment'), t('Size'));
-  $rows = array();
-  foreach ($variables['items'] as $delta => $item) {
-    if ($item->isDisplayed() && $item->entity) {
-      $rows[] = array(
-        array(
-          'data' => array(
-            '#theme' => 'file_link',
-            '#file' => $item->entity,
-          ),
-        ),
-        format_size($item->entity->getSize()),
-      );
-    }
-  }
-
-  $build = array(
-    '#type' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-  );
-
-  return empty($rows) ? '' : drupal_render($build);
 }

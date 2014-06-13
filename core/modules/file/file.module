@@ -583,29 +583,31 @@ function file_get_content_headers(File $file) {
  */
 function file_theme() {
   return array(
-    // file.module.
+    // From file.module.
     'file_link' => array(
       'variables' => array('file' => NULL, 'icon_directory' => NULL, 'description' => NULL, 'attributes' => array()),
-    ),
-    'file_icon' => array(
-      'variables' => array('file' => NULL, 'icon_directory' => NULL),
+      'template' => 'file-link',
     ),
     'file_managed_file' => array(
       'render element' => 'element',
+      'template' => 'file-managed-file',
     ),
 
-    // file.field.inc.
+    // From file.field.inc.
     'file_widget' => array(
       'render element' => 'element',
+      'template' => 'file-widget',
+      'file' => 'file.field.inc',
     ),
     'file_widget_multiple' => array(
       'render element' => 'element',
-    ),
-    'file_formatter_table' => array(
-      'variables' => array('items' => NULL),
+      'template' => 'file-widget-multiple',
+      'file' => 'file.field.inc',
     ),
     'file_upload_help' => array(
       'variables' => array('description' => NULL, 'upload_validators' => NULL, 'cardinality' => NULL),
+      'template' => 'file-upload-help',
+      'file' => 'file.field.inc',
     ),
   );
 }
@@ -1534,32 +1536,25 @@ function file_managed_file_save_upload($element, array &$form_state) {
 }
 
 /**
- * Returns HTML for a managed file element.
+ * Prepares variables for file form widget templates.
  *
- * @param $variables
+ * Default template: file-managed-file.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the file.
- *
- * @ingroup themeable
  */
-function theme_file_managed_file($variables) {
+function template_preprocess_file_managed_file(&$variables) {
   $element = $variables['element'];
 
-  $attributes = array();
+  $variables['attributes'] = array();
   if (isset($element['#id'])) {
-    $attributes['id'] = $element['#id'];
+    $variables['attributes']['id'] = $element['#id'];
   }
   if (!empty($element['#attributes']['class'])) {
-    $attributes['class'] = (array) $element['#attributes']['class'];
+    $variables['attributes']['class'] = (array) $element['#attributes']['class'];
   }
-  $attributes['class'][] = 'form-managed-file';
-
-  // This wrapper is required to apply JS behaviors and CSS styling.
-  $output = '';
-  $output .= '<div' . new Attribute($attributes) . '>';
-  $output .= drupal_render_children($element);
-  $output .= '</div>';
-  return $output;
+  $variables['attributes']['class'][] = 'form-managed-file';
 }
 
 /**
@@ -1598,23 +1593,33 @@ function file_managed_file_pre_render($element) {
 }
 
 /**
- * Returns HTML for a link to a file.
+ * Prepares variables for file link templates.
  *
- * @param $variables
+ * Default template: file-link.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - file: A file object to which the link will be created.
  *   - icon_directory: (optional) A path to a directory of icons to be used for
- *     files. Defaults to the value of the "icon.directory"
- *     variable.
+ *     files. Defaults to the value of the "icon.directory" variable.
  *   - description: A description to be displayed instead of the filename.
  *   - attributes: An associative array of attributes to be placed in the a tag.
- *
- * @ingroup themeable
  */
-function theme_file_link($variables) {
+function template_preprocess_file_link(&$variables) {
   $file = $variables['file'];
   $options = array(
     'attributes' => $variables['attributes'],
+  );
+  $icon_directory = $variables['icon_directory'];
+
+  $url = file_create_url($file->getFileUri());
+  $file_entity = ($file instanceof File) ? $file : file_load($file->fid);
+  $variables['icon'] = array(
+    '#theme' => 'image__file_icon',
+    '#uri' => file_icon_url($file_entity, $icon_directory),
+    '#alt' => '',
+    '#title' => check_plain($file_entity->getFilename()),
+    '#attributes' => array('class' => 'file-icon'),
   );
 
   // Set options as per anchor format described at
@@ -1623,41 +1628,15 @@ function theme_file_link($variables) {
 
   // Use the description as the link text if available.
   if (empty($variables['description'])) {
-    $link_text = $file->getFilename();
+    $link_text = $file_entity->getFilename();
   }
   else {
     $link_text = $variables['description'];
-    $options['attributes']['title'] = String::checkPlain($file->getFilename());
+    $options['attributes']['title'] = String::checkPlain($file_entity->getFilename());
   }
 
-  $file_icon = array(
-    '#theme' => 'file_icon',
-    '#file' => $file,
-    '#icon_directory' => $variables['icon_directory'],
-  );
-
-  return '<span class="file">' . drupal_render($file_icon) . ' ' . l($link_text, file_create_url($file->getFileUri()), $options) . '</span>';
-}
-
-/**
- * Returns HTML for an image with an appropriate icon for the given file.
- *
- * @param $variables
- *   An associative array containing:
- *   - file: A file entity for which to make an icon.
- *   - icon_directory: (optional) A path to a directory of icons to be used for
- *     files. Defaults to the value of the "icon.directory"
- *     variable.
- *
- * @ingroup themeable
- */
-function theme_file_icon($variables) {
-  $file = $variables['file'];
-  $icon_directory = $variables['icon_directory'];
-
-  $mime = String::checkPlain($file->getMimeType());
-  $icon_url = file_icon_url($file, $icon_directory);
-  return '<img class="file-icon" alt="" title="' . $mime . '" src="' . $icon_url . '" />';
+  $variables['link'] = l($link_text, $url, $options);
+  $variables['attributes'] = array('class' => array('file'));
 }
 
 /**

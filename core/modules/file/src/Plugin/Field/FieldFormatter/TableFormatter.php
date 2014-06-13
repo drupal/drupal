@@ -29,11 +29,31 @@ class TableFormatter extends FileFormatterBase {
     $elements = array();
 
     if (!$items->isEmpty()) {
-      // Display all values in a single element.
-      $elements[0] = array(
-        '#theme' => 'file_formatter_table',
-        '#items' => $items,
-      );
+
+      $header = array(t('Attachment'), t('Size'));
+      $rows = array();
+      foreach ($items as $delta => $item) {
+        if ($item->isDisplayed() && $item->entity) {
+          $rows[] = array(
+            array(
+              'data' => array(
+                '#theme' => 'file_link',
+                '#file' => $item->entity,
+              ),
+            ),
+            array('data' => format_size($item->entity->getSize())),
+          );
+        }
+      }
+
+      $elements[0] = array();
+      if (!empty($rows)) {
+        $elements[0] = array(
+          '#theme' => 'table__file_formatter_table',
+          '#header' => $header,
+          '#rows' => $rows,
+        );
+      }
     }
 
     return $elements;

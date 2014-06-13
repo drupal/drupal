@@ -40,7 +40,7 @@ class FileMime extends File {
     $data = $values->{$this->field_alias};
     if (!empty($this->options['filemime_image']) && $data !== NULL && $data !== '') {
       $file_icon = array(
-        '#theme' => 'file_icon',
+        '#theme' => 'image__file_icon',
         '#file' => $values->_entity,
       );
       $data = drupal_render($file_icon);
