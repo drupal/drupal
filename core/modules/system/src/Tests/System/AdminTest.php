@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\AdminTest.
+ * Contains \Drupal\system\Tests\System\AdminTest.
  */
 
 namespace Drupal\system\Tests\System;
@@ -13,6 +13,20 @@ use Drupal\simpletest\WebTestBase;
  * Tests administrative overview pages.
  */
 class AdminTest extends WebTestBase {
+
+  /**
+   * User account with all available permissions
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $admin_user;
+
+  /**
+   * User account with limited access to administration pages.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $web_user;
 
   /**
    * Modules to enable.
