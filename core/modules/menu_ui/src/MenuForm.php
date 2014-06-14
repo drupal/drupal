@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
+use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,6 +27,13 @@ class MenuForm extends EntityForm {
    * @var \Drupal\Core\Entity\Query\QueryFactory
    */
   protected $entityQueryFactory;
+
+  /**
+   * The menu link manager.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
+   */
+  protected $menuLinkManager;
 
   /**
    * The menu tree service.
@@ -46,11 +54,14 @@ class MenuForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The factory for entity queries.
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   *   The menu link manager.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
    *   The menu tree service.
    */
-  public function __construct(QueryFactory $entity_query_factory, MenuLinkTreeInterface $menu_tree) {
+  public function __construct(QueryFactory $entity_query_factory, MenuLinkManagerInterface $menu_link_manager, MenuLinkTreeInterface $menu_tree) {
     $this->entityQueryFactory = $entity_query_factory;
+    $this->menuLinkManager = $menu_link_manager;
     $this->menuTree = $menu_tree;
   }
 
@@ -60,6 +71,7 @@ class MenuForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
+      $container->get('plugin.manager.menu.link'),
       $container->get('menu.link_tree')
     );
   }
@@ -140,7 +152,7 @@ class MenuForm extends EntityForm {
     }
 
     // Check for a link assigned to this menu.
-    return $this->menuTree->menuNameInUse($value);
+    return $this->menuLinkManager->menuNameInUse($value);
   }
 
   /**
@@ -202,13 +214,14 @@ class MenuForm extends EntityForm {
     $form_state += array('menu_overview_form_parents' => array());
 
     $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/css/menu.admin.css');
+    // We indicate that a menu administrator is running the menu access check.
+    $this->getRequest()->attributes->set('_menu_admin', TRUE);
 
     $tree = $this->menuTree->buildAllData($this->entity->id());
 
     $count = $this->countElements($tree);
     $delta = max($count, 50);
-    // We indicate that a menu administrator is running the menu access check.
-    $this->getRequest()->attributes->set('_menu_admin', TRUE);
+
     $this->getRequest()->attributes->set('_menu_admin', FALSE);
 
     $form = array_merge($form, $this->buildOverviewTreeForm($tree, $delta));
@@ -361,7 +374,7 @@ class MenuForm extends EntityForm {
         if ($updated_values) {
           // Use the ID from the actual plugin instance since the hidden value
           // in the form could be tampered with.
-          $this->menuTree->updateLink($element['#item']['link']->getPLuginId(), $updated_values);
+          $this->menuLinkManager->updateLink($element['#item']['link']->getPLuginId(), $updated_values);
         }
       }
     }

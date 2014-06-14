@@ -337,7 +337,6 @@ class MenuLinkManager implements MenuLinkManagerInterface {
     // Store the new link in the tree and invalidate some caches.
     $affected_menus = $this->treeStorage->save($definition);
     Cache::invalidateTags(array('menu' => $affected_menus));
-    $this->resetDefinition($id);
     return $this->createInstance($id);
   }
 

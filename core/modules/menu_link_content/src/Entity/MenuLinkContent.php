@@ -219,20 +219,20 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
-    $menu_tree = \Drupal::menuTree();
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
 
     // The menu link can just be updated if there is already an menu link entry
-    // on both entity and menu tree level.
-    if ($update && $menu_tree->getDefinition($this->getPluginId())) {
+    // on both entity and menu link plugin level.
+    if ($update && $menu_link_manager->getDefinition($this->getPluginId())) {
       // When the entity is saved via a plugin instance, we should not call
       // the menu tree manager to update the definition a second time.
       if (!$this->insidePlugin) {
-        $menu_tree->updateLink($this->getPluginId(), $this->getMenuDefinition(), FALSE);
+        $menu_link_manager->updateLink($this->getPluginId(), $this->getMenuDefinition(), FALSE);
       }
     }
     else {
-      $menu_tree->createLink($this->getPluginId(), $this->getMenuDefinition());
+      $menu_link_manager->createLink($this->getPluginId(), $this->getMenuDefinition());
     }
   }
 
@@ -242,9 +242,12 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     parent::preDelete($storage, $entities);
 
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+
     foreach ($entities as $menu_link) {
       /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $menu_link */
-      \Drupal::menuTree()->deleteLink($menu_link->getPluginId(), FALSE);
+      $menu_link_manager->deleteLink($menu_link->getPluginId(), FALSE);
     }
   }
 

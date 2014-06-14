@@ -268,6 +268,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $transaction->rollback();
       throw $e;
     }
+    $this->resetDefinitions();
     return $affected_menus;
   }
 
