@@ -9,6 +9,7 @@ namespace Drupal\Core\Menu\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
+use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -32,7 +33,14 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   protected $menuLink;
 
   /**
-   * The menu link tree.
+   * The menu link manager.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
+   */
+  protected $menuLinkManager;
+
+  /**
+   * The menu tree service.
    *
    * @var \Drupal\Core\Menu\MenuLinkTreeInterface
    */
@@ -55,14 +63,17 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   /**
    * Constructs a new MenuLinkDefaultForm.
    *
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   *   The menu link manager.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
-   *   The menu link tree.
+   *   The menu tree service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler;
    */
-  public function __construct(MenuLinkTreeInterface $menu_tree, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler) {
+  public function __construct(MenuLinkManagerInterface $menu_link_manager, MenuLinkTreeInterface $menu_tree, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler) {
+    $this->menuLinkManager = $menu_link_manager;
     $this->menuTree = $menu_tree;
     $this->stringTranslation = $string_translation;
     $this->moduleHandler = $module_handler;
@@ -73,6 +84,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('plugin.manager.menu.link'),
       $container->get('menu.link_tree'),
       $container->get('string_translation'),
       $container->get('module_handler')
@@ -164,7 +176,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
   public function submitConfigurationForm(array &$form, array &$form_state) {
     $new_definition = $this->extractFormValues($form, $form_state);
 
-    return $this->menuTree->updateLink($this->menuLink->getPluginId(), $new_definition);
+    return $this->menuLinkManager->updateLink($this->menuLink->getPluginId(), $new_definition);
   }
 
   /**
