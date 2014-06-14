@@ -3305,8 +3305,16 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // Make any final changes to the element before it is rendered. This means
   // that the $element or the children can be altered or corrected before the
   // element is rendered into the final text.
+  /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
+  $controller_resolver = \Drupal::service('controller_resolver');
   if (isset($elements['#pre_render'])) {
     foreach ($elements['#pre_render'] as $callable) {
+      if (is_string($callable) && strpos($callable, '::') === FALSE) {
+        $callable = $controller_resolver->getControllerFromDefinition($callable);
+      }
+      else {
+        $callable = $callable;
+      }
       $elements = call_user_func($callable, $elements);
     }
   }
@@ -3407,6 +3415,12 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // which allows the output'ed text to be filtered.
   if (isset($elements['#post_render'])) {
     foreach ($elements['#post_render'] as $callable) {
+      if (is_string($callable) && strpos($callable, '::') === FALSE) {
+        $callable = $controller_resolver->getControllerFromDefinition($callable);
+      }
+      else {
+        $callable = $callable;
+      }
       $elements['#children'] = call_user_func($callable, $elements['#children'], $elements);
     }
   }
@@ -3672,9 +3686,24 @@ function drupal_render_cache_set(&$markup, array $elements) {
  * @return string
  *   The generated placeholder HTML.
  *
+ * @throws \Exception
+ *
  * @see drupal_render_cache_get()
  */
 function drupal_render_cache_generate_placeholder($callback, array &$context) {
+  if (is_string($callback) && strpos($callback, '::') === FALSE) {
+    /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
+    $controller_resolver = \Drupal::service('controller_resolver');
+    $callable = \Drupal::service('controller_resolver')->getControllerFromDefinition($callback);
+  }
+  else {
+   $callable = $callback;
+  }
+
+  if (!is_callable($callable)) {
+    throw new Exception(t('$callable must be a callable function or of the form service_id:method.'));
+  }
+
   // Generate a unique token if one is not already provided.
   $context += array(
     'token' => \Drupal\Component\Utility\Crypt::randomBytesBase64(55),
@@ -3702,10 +3731,19 @@ function drupal_render_cache_generate_placeholder($callback, array &$context) {
  */
 function _drupal_render_process_post_render_cache(array &$elements) {
   if (isset($elements['#post_render_cache'])) {
+    /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
+    $controller_resolver = \Drupal::service('controller_resolver');
+
     // Call all #post_render_cache callbacks, passing the provided context.
     foreach (array_keys($elements['#post_render_cache']) as $callback) {
+      if (strpos($callback, '::') === FALSE) {
+        $callable = $controller_resolver->getControllerFromDefinition($callback);
+      }
+      else {
+        $callable = $callback;
+      }
       foreach ($elements['#post_render_cache'][$callback] as $context) {
-        $elements = call_user_func_array($callback, array($elements, $context));
+        $elements = call_user_func_array($callable, array($elements, $context));
       }
     }
     // Make sure that any attachments added in #post_render_cache callbacks are

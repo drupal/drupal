@@ -176,7 +176,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           // All other users need a user-specific form, which would break the
           // render cache: hence use a #post_render_cache callback.
           else {
-            $callback = '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm';
+            $callback = 'comment.post_render_cache:renderForm';
             $context = array(
               'entity_type' => $entity->getEntityTypeId(),
               'entity_id' => $entity->id(),
@@ -205,33 +205,6 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
     }
 
     return $elements;
-  }
-
-  /**
-   * #post_render_cache callback; replaces placeholder with comment form.
-   *
-   * @param array $element
-   *   The renderable array that contains the to be replaced placeholder.
-   * @param array $context
-   *   An array with the following keys:
-   *   - entity_type: an entity type
-   *   - entity_id: an entity ID
-   *   - field_name: a comment field name
-   *
-   * @return array
-   *   A renderable array containing the comment form.
-   */
-  public static function renderForm(array $element, array $context) {
-    $callback = '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm';
-    $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
-    $entity = entity_load($context['entity_type'], $context['entity_id']);
-    $form = comment_add($entity, $context['field_name']);
-    // @todo: This only works as long as assets are still tracked in a global
-    //   static variable, see https://drupal.org/node/2238835
-    $markup = drupal_render($form, TRUE);
-    $element['#markup'] = str_replace($placeholder, $markup, $element['#markup']);
-
-    return $element;
   }
 
   /**

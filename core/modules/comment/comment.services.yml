@@ -12,3 +12,7 @@ services:
   comment.statistics:
     class: Drupal\comment\CommentStatistics
     arguments: ['@database', '@current_user', '@entity.manager', '@state']
+
+  comment.post_render_cache:
+    class: Drupal\comment\CommentPostRenderCache
+    arguments: ['@entity.manager', '@entity.form_builder']
