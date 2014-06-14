@@ -59,10 +59,6 @@ class MenuRouterTest extends WebTestBase {
     $this->doTestMenuOnRoute();
     $this->doTestMenuName();
     $this->doTestMenuLinkDefaultsAlter();
-    $this->doTestMenuItemTitlesCases();
-    $this->doTestMenuLinkMaintain();
-    $this->doTestMenuLinkOptions();
-    $this->doTestMenuItemHooks();
     $this->doTestHookMenuIntegration();
     $this->doTestExoticPath();
   }
@@ -115,68 +111,24 @@ class MenuRouterTest extends WebTestBase {
   }
 
   /**
-   * Tests for menu_link_maintain().
-   */
-  protected function doTestMenuLinkMaintain() {
-    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $this->drupalLogin($admin_user);
-
-    // Create three menu items.
-    menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/1', 'Menu link #1');
-    menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/1', 'Menu link #1-main');
-    menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/2', 'Menu link #2');
-
-    // Move second link to the main-menu, to test caching later on.
-    $menu_links_to_update = entity_load_multiple_by_properties('menu_link', array('link_title' => 'Menu link #1-main', 'customized' => 0, 'module' => 'menu_test'));
-    foreach ($menu_links_to_update as $menu_link) {
-      $menu_link->menu_name = 'main';
-      $menu_link->save();
-    }
-
-    // Load front page.
-    $this->drupalGet('');
-    $this->assertLink('Menu link #1');
-    $this->assertLink('Menu link #1-main');
-    $this->assertLink('Menu link #2');
-
-    // Rename all links for the given path.
-    menu_link_maintain('menu_test', 'update', 'menu_test_maintain/1', 'Menu link updated');
-    // Load a different page to be sure that we have up to date information.
-    $this->drupalGet('menu_test_maintain/1');
-    $this->assertLink('Menu link updated');
-    $this->assertNoLink('Menu link #1');
-    $this->assertNoLink('Menu link #1-main');
-    $this->assertLink('Menu link #2');
-
-    // Delete all links for the given path.
-    menu_link_maintain('menu_test', 'delete', 'menu_test_maintain/1', '');
-    // Load a different page to be sure that we have up to date information.
-    $this->drupalGet('menu_test_maintain/2');
-    $this->assertNoLink('Menu link updated');
-    $this->assertNoLink('Menu link #1');
-    $this->assertNoLink('Menu link #1-main');
-    $this->assertLink('Menu link #2');
-  }
-
-  /**
    * Tests for menu_name parameter for default menu links.
    */
   protected function doTestMenuName() {
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
 
-    $menu_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu_name_test'));
+    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.menu_name_test');
     $menu_link = reset($menu_links);
-    $this->assertEqual($menu_link->menu_name, 'original', 'Menu name is "original".');
+    $this->assertEqual($menu_link->getMenuName(), 'original', 'Menu name is "original".');
 
     // Change the menu_name parameter in menu_test.module, then force a menu
     // rebuild.
     menu_test_menu_name('changed');
-    \Drupal::service('router.builder')->rebuild();
+    \Drupal::menuTree()->rebuild();
 
-    $menu_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu_name_test'));
+    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.menu_name_test');
     $menu_link = reset($menu_links);
-    $this->assertEqual($menu_link->menu_name, 'changed', 'Menu name was successfully changed after rebuild.');
+    $this->assertEqual($menu_link->getMenuName(), 'changed', 'Menu name was successfully changed after rebuild.');
   }
 
   /**
@@ -185,9 +137,9 @@ class MenuRouterTest extends WebTestBase {
   protected function doTestMenuLinkDefaultsAlter() {
     // Check that machine name does not need to be defined since it is already
     // set as the key of each menu link.
-    $menu_links = entity_load_multiple_by_properties('menu_link', array('route_name' => 'menu_test.custom'));
+    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.custom');
     $menu_link = reset($menu_links);
-    $this->assertEqual($menu_link->machine_name, 'menu_test.custom', 'Menu links added at hook_menu_link_defaults_alter() obtain the machine name from the $links key.');
+    $this->assertEqual($menu_link->getPluginId(), 'menu_test.custom', 'Menu links added at hook_menu_link_defaults_alter() obtain the machine name from the $links key.');
     // Make sure that rebuilding the menu tree does not produce duplicates of
     // links added by hook_menu_link_defaults_alter().
     \Drupal::service('router.builder')->rebuild();
@@ -199,98 +151,15 @@ class MenuRouterTest extends WebTestBase {
    * Tests for menu hierarchy.
    */
   protected function doTestMenuHierarchy() {
-    $parent_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu-test/hierarchy/parent'));
-    $parent_link = reset($parent_links);
-    $child_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu-test/hierarchy/parent/child'));
-    $child_link = reset($child_links);
-    $unattached_child_links = entity_load_multiple_by_properties('menu_link', array('link_path' => 'menu-test/hierarchy/parent/child2/child'));
-    $unattached_child_link = reset($unattached_child_links);
+    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.hierarchy_parent');
+    $parent_link = reset($menu_links);
+    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.hierarchy_parent.child');
+    $child_link = reset($menu_links);
+    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.hierarchy_parent.child2.child');
+    $unattached_child_link = reset($menu_links);
 
-    $this->assertEqual($child_link['plid'], $parent_link['mlid'], 'The parent of a directly attached child is correct.');
-    $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], 'The parent of a non-directly attached child is correct.');
-  }
-
-  /**
-   * Test menu maintenance hooks.
-   */
-  protected function doTestMenuItemHooks() {
-    // Create an item.
-    menu_link_maintain('menu_test', 'insert', 'menu_test_maintain/4', 'Menu link #4');
-    $this->assertEqual(menu_test_static_variable(), 'insert', 'hook_menu_link_insert() fired correctly');
-    // Update the item.
-    menu_link_maintain('menu_test', 'update', 'menu_test_maintain/4', 'Menu link updated');
-    $this->assertEqual(menu_test_static_variable(), 'update', 'hook_menu_link_update() fired correctly');
-    // Delete the item.
-    menu_link_maintain('menu_test', 'delete', 'menu_test_maintain/4', '');
-    $this->assertEqual(menu_test_static_variable(), 'delete', 'hook_menu_link_delete() fired correctly');
-  }
-
-  /**
-   * Test menu link 'options' storage and rendering.
-   */
-  protected function doTestMenuLinkOptions() {
-    // Create a menu link with options.
-    $menu_link = entity_create('menu_link', array(
-      'link_title' => 'Menu link options test',
-      'link_path' => 'test-page',
-      'module' => 'menu_test',
-      'options' => array(
-        'attributes' => array(
-          'title' => 'Test title attribute',
-        ),
-        'query' => array(
-          'testparam' => 'testvalue',
-        ),
-      ),
-    ));
-    menu_link_save($menu_link);
-
-    // Load front page.
-    $this->drupalGet('test-page');
-    $this->assertRaw('title="Test title attribute"', 'Title attribute of a menu link renders.');
-    $this->assertRaw('testparam=testvalue', 'Query parameter added to menu link.');
-  }
-
-  /**
-   * Tests the possible ways to set the title for menu items.
-   * Also tests that menu item titles work with string overrides.
-   */
-  protected function doTestMenuItemTitlesCases() {
-
-    // Build array with string overrides.
-    $test_data = array(
-      1 => array('Example title - Case 1' => 'Alternative example title - Case 1'),
-      2 => array('Example title' => 'Alternative example title'),
-      3 => array('Example title' => 'Alternative example title'),
-    );
-
-    foreach ($test_data as $case_no => $override) {
-      $this->menuItemTitlesCasesHelper($case_no);
-      $this->addCustomTranslations('en', array('' => $override));
-      $this->writeCustomTranslations();
-
-      $this->menuItemTitlesCasesHelper($case_no, TRUE);
-      $this->addCustomTranslations('en', array());
-      $this->writeCustomTranslations();
-    }
-  }
-
-  /**
-   * Get a URL and assert the title given a case number. If override is true,
-   * the title is asserted to begin with "Alternative".
-   */
-  protected function menuItemTitlesCasesHelper($case_no, $override = FALSE) {
-    $this->drupalGet('menu-title-test/case' . $case_no);
-    $this->assertResponse(200);
-    $asserted_title = $override ? 'Alternative example title - Case ' . $case_no : 'Example title - Case ' . $case_no;
-    $this->assertTitle($asserted_title . ' | Drupal', format_string('Menu title is: %title.', array('%title' => $asserted_title)), 'Menu');
-  }
-
-  /**
-   * Load the router for a given path.
-   */
-  protected function menuLoadRouter($router_path) {
-    return db_query('SELECT * FROM {menu_router} WHERE path = :path', array(':path' => $router_path))->fetchAssoc();
+    $this->assertEqual($child_link->getParent(), $parent_link->getPluginId(), 'The parent of a directly attached child is correct.');
+    $this->assertEqual($unattached_child_link->getParent(), $parent_link->getPluginId(), 'The parent of a non-directly attached child is correct.');
   }
 
   /**

@@ -1517,13 +1517,12 @@ class ViewExecutable extends DependencySerialization {
    *
    * @param string $display_id
    *   A display ID.
-   * @param array $links
-   *   An array of default menu link items passed from
+   * @internal param array $links An array of default menu link items passed from*   An array of default menu link items passed from
    *   views_menu_link_defaults_alter().
    *
    * @return array|bool
    */
-  public function executeHookMenuLinkDefaults($display_id = NULL, &$links = array()) {
+  public function executeHookMenuLinks($display_id = NULL) {
     // Prepare the view with the information we have. This was probably already
     // called, but it's good to be safe.
     if (!$this->setDisplay($display_id)) {
@@ -1532,7 +1531,7 @@ class ViewExecutable extends DependencySerialization {
 
     // Execute the hook.
     if (isset($this->display_handler)) {
-      return $this->display_handler->executeHookMenuLinkDefaults($links);
+      return $this->display_handler->executeHookMenuLinks();
     }
   }
 

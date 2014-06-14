@@ -45,15 +45,8 @@ class MenuTest extends WizardTestBase {
     $this->assertLinkByHref(url($view['page[path]']));
 
     // Make sure the link is associated with the main menu.
-    $links = menu_load_links('main');
-    $found = FALSE;
-    foreach ($links as $link) {
-      if ($link['link_path'] == $view['page[path]']) {
-        $found = TRUE;
-        break;
-      }
-    }
-    $this->assertTrue($found, t('Found a link to %path in the main menu', array('%path' => $view['page[path]'])));
+    $link = \Drupal::menuTree()->getDefinition('views_view:views.' . $view['id'] . '.page_1');
+    $this->assertEqual($link['route_name'], 'view.' . $view['id'] . '.page_1', t('Found a link to %path in the main menu', array('%path' => $view['page[path]'])));
   }
 
 }

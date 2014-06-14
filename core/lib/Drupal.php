@@ -637,4 +637,14 @@ class Drupal {
     return static::$container->get('logger.factory')->get($channel);
   }
 
+  /**
+   * Returns the menu tree.
+   *
+   * @return \Drupal\Core\Menu\MenuLinkTreeInterface
+   *   The menu tree.
+   */
+  public static function menuTree() {
+    return static::$container->get('menu.link_tree');
+  }
+
 }

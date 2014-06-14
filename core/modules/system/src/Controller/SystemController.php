@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -94,59 +95,43 @@ class SystemController extends ControllerBase {
   /**
    * Provide the administration overview page.
    *
-   * @param string $path
-   *   The administrative path for which to display child links.
+   * @param string $link_id
+   *   The ID of and administrative path link for which to display child links.
    *
    * @return array
    *   A renderable array of the administration overview page.
    */
-  public function overview($path) {
+  public function overview($link_id) {
     // Check for status report errors.
     if ($this->systemManager->checkRequirements() && $this->currentUser()->hasPermission('administer site configuration')) {
       drupal_set_message($this->t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
     }
+    /* @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
+    $menu_tree = \Drupal::menuTree();
+    //$system_link = $menu_tree->createInstance($link_id); // 'system.admin_config'
+    // Only find the children of this link.
+    //$parameters['expanded'][] = 'system.admin_config';
+    //$parameters['conditions']['hidden'] = 0;
+    //$tree =  $menu_tree->buildTree($system_link->getMenuName(), $parameters);
+    $top_tree = $menu_tree->buildSubtree($link_id, 1);
+    $tree = !empty($top_tree['below']) ? $top_tree['below'] : array();
     $blocks = array();
-    // Load all links on $path and menu links below it.
-    $query = $this->queryFactory->get('menu_link')
-      ->condition('link_path', $path)
-      ->condition('module', 'system');
-    $result = $query->execute();
-    $menu_link_storage = $this->entityManager()->getStorage('menu_link');
-    if ($system_link = $menu_link_storage->loadMultiple($result)) {
-      $system_link = reset($system_link);
-      $query = $this->queryFactory->get('menu_link')
-        ->condition('link_path', 'admin/help', '<>')
-        ->condition('menu_name', $system_link->menu_name)
-        ->condition('plid', $system_link->id())
-        ->condition('hidden', 0);
-      $result = $query->execute();
-      if (!empty($result)) {
-        $menu_links = $menu_link_storage->loadMultiple($result);
-        foreach ($menu_links as $item) {
-          _menu_link_translate($item);
-          if (!$item['access']) {
-            continue;
-          }
-          // The link description, either derived from 'description' in hook_menu()
-          // or customized via Menu UI module is used as title attribute.
-          if (!empty($item['localized_options']['attributes']['title'])) {
-            $item['description'] = $item['localized_options']['attributes']['title'];
-            unset($item['localized_options']['attributes']['title']);
-          }
-          $block = $item;
-          $block['content'] = array(
-            '#theme' => 'admin_block_content',
-            '#content' => $this->systemManager->getAdminBlock($item),
-          );
+    // Load all menu links below it.
+    foreach ($tree as $key => $item) {
+      $block['title'] = $item['link']->getTitle();
+      $block['description'] = $item['link']->getDescription();
+      $block['content'] = array(
+        '#theme' => 'admin_block_content',
+        '#content' => $this->systemManager->getAdminBlock($item['link']),
+      );
 
-          if (!empty($block['content']['#content'])) {
-            // Prepare for sorting as in function _menu_tree_check_access().
-            // The weight is offset so it is always positive, with a uniform 5-digits.
-            $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
-          }
-        }
+      if (!empty($block['content']['#content'])) {
+        // Prepare for sorting as in function _menu_tree_check_access().
+        // The weight is offset so it is always positive, with a uniform 5-digits.
+        $blocks[$key] = $block;
       }
     }
+
     if ($blocks) {
       ksort($blocks);
       return array(

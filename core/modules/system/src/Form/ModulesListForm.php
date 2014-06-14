@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
@@ -17,9 +18,11 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Access\AccessManager;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides module installation interface.
@@ -60,11 +63,18 @@ class ModulesListForm extends FormBase {
   protected $entityManager;
 
   /**
-   * The query factory.
+   * The title resolver.
    *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
+   * @var \Drupal\Core\Controller\TitleResolverInterface
    */
-  protected $queryFactory;
+  protected $titleResolver;
+
+  /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
 
   /**
    * {@inheritdoc}
@@ -75,8 +85,9 @@ class ModulesListForm extends FormBase {
       $container->get('keyvalue.expirable')->get('module_list'),
       $container->get('access_manager'),
       $container->get('entity.manager'),
-      $container->get('entity.query'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('title_resolver'),
+      $container->get('router.route_provider')
     );
   }
 
@@ -91,18 +102,21 @@ class ModulesListForm extends FormBase {
    *   Access manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query factory.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
+   *   The title resolver.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory, AccountInterface $current_user) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, AccountInterface $current_user, TitleResolverInterface $title_resolver, RouteProviderInterface $route_provider) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
     $this->accessManager = $access_manager;
     $this->entityManager = $entity_manager;
-    $this->queryFactory = $query_factory;
     $this->currentUser = $current_user;
+    $this->titleResolver = $title_resolver;
+    $this->routeProvider = $route_provider;
   }
 
   /**
@@ -237,11 +251,13 @@ class ModulesListForm extends FormBase {
     if ($module->status && isset($module->info['configure'])) {
       $route_parameters = isset($module->info['configure_parameters']) ? $module->info['configure_parameters'] : array();
       if ($this->accessManager->checkNamedRoute($module->info['configure'], $route_parameters, $this->currentUser)) {
-        $result = $this->queryFactory->get('menu_link')
-          ->condition('route_name', $module->info['configure'])
-          ->execute();
-        $menu_items = $this->entityManager->getStorage('menu_link')->loadMultiple($result);
-        $item = reset($menu_items);
+
+        $request = new Request();
+        $request->attributes->set('_route_name', $module->info['configure']);
+        $route_object = $this->routeProvider->getRouteByName($module->info['configure']);
+        $request->attributes->set('_route', $route_object);
+        $title = $this->titleResolver->getTitle($request, $route_object);
+
         $row['links']['configure'] = array(
           '#type' => 'link',
           '#title' => $this->t('Configure'),
@@ -250,7 +266,7 @@ class ModulesListForm extends FormBase {
           '#options' => array(
             'attributes' => array(
               'class' => array('module-link', 'module-link-configure'),
-              'title' => $item['description'],
+              'title' => $title,
             ),
           ),
         );
