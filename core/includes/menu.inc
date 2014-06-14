@@ -501,6 +501,8 @@ function menu_cache_clear_all() {
  * Builds menu links for the items discovered as plugins.
  */
 function menu_link_rebuild_defaults() {
+  // Ignore any database replicas temporarily.
+  db_ignore_replica();
   $menu_manager = \Drupal::service('plugin.manager.menu.link');
   $menu_manager->rebuild();
 }

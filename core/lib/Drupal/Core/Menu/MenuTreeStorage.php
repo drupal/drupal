@@ -263,8 +263,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         $this->updateParentalStatus($original);
       }
       $this->updateParentalStatus($link);
-      // Ignore slave server temporarily.
-      db_ignore_slave();
     }
     catch (\Exception $e) {
       $transaction->rollback();
