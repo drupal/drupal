@@ -16,7 +16,7 @@ display:
           query_comment: false
           disable_sql_rewrite: false
           distinct: false
-          slave: false
+          replica: false
           query_tags: {  }
         provider: views
       use_ajax: true

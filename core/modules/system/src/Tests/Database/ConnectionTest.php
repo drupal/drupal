@@ -26,22 +26,22 @@ class ConnectionTest extends DatabaseTestBase {
    * Tests that connections return appropriate connection objects.
    */
   function testConnectionRouting() {
-    // Clone the master credentials to a slave connection.
+    // Clone the primary credentials to a replica connection.
     // Note this will result in two independent connection objects that happen
     // to point to the same place.
     $connection_info = Database::getConnectionInfo('default');
-    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+    Database::addConnectionInfo('default', 'replica', $connection_info['default']);
 
     $db1 = Database::getConnection('default', 'default');
-    $db2 = Database::getConnection('slave', 'default');
+    $db2 = Database::getConnection('replica', 'default');
 
     $this->assertNotNull($db1, 'default connection is a real connection object.');
-    $this->assertNotNull($db2, 'slave connection is a real connection object.');
+    $this->assertNotNull($db2, 'replica connection is a real connection object.');
     $this->assertNotIdentical($db1, $db2, 'Each target refers to a different connection.');
 
     // Try to open those targets another time, that should return the same objects.
     $db1b = Database::getConnection('default', 'default');
-    $db2b = Database::getConnection('slave', 'default');
+    $db2b = Database::getConnection('replica', 'default');
     $this->assertIdentical($db1, $db1b, 'A second call to getConnection() returns the same object.');
     $this->assertIdentical($db2, $db2b, 'A second call to getConnection() returns the same object.');
 
@@ -60,16 +60,16 @@ class ConnectionTest extends DatabaseTestBase {
    * Tests that connections return appropriate connection objects.
    */
   function testConnectionRoutingOverride() {
-    // Clone the master credentials to a slave connection.
+    // Clone the primary credentials to a replica connection.
     // Note this will result in two independent connection objects that happen
     // to point to the same place.
     $connection_info = Database::getConnectionInfo('default');
-    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+    Database::addConnectionInfo('default', 'replica', $connection_info['default']);
 
-    Database::ignoreTarget('default', 'slave');
+    Database::ignoreTarget('default', 'replica');
 
     $db1 = Database::getConnection('default', 'default');
-    $db2 = Database::getConnection('slave', 'default');
+    $db2 = Database::getConnection('replica', 'default');
 
     $this->assertIdentical($db1, $db2, 'Both targets refer to the same connection.');
   }
@@ -104,14 +104,14 @@ class ConnectionTest extends DatabaseTestBase {
     $this->assertEqual($connection_info['default']['driver'], $connectionOptions['driver'], 'The default connection info driver matches the current connection options driver.');
     $this->assertEqual($connection_info['default']['database'], $connectionOptions['database'], 'The default connection info database matches the current connection options database.');
 
-    // Set up identical slave and confirm connection options are identical.
-    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
-    $db2 = Database::getConnection('slave', 'default');
+    // Set up identical replica and confirm connection options are identical.
+    Database::addConnectionInfo('default', 'replica', $connection_info['default']);
+    $db2 = Database::getConnection('replica', 'default');
     $connectionOptions2 = $db2->getConnectionOptions();
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertIdentical($connectionOptions, $connectionOptions2, 'The default and slave connection options are identical.');
+    $this->assertIdentical($connectionOptions, $connectionOptions2, 'The default and replica connection options are identical.');
 
     // Set up a new connection with different connection info.
     $test = $connection_info['default'];

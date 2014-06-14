@@ -611,8 +611,8 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
     try {
       parent::delete($entities);
 
-      // Ignore slave server temporarily.
-      db_ignore_slave();
+      // Ignore replica server temporarily.
+      db_ignore_replica();
     }
     catch (\Exception $e) {
       $transaction->rollback();
@@ -669,8 +669,8 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
 
       $return = parent::save($entity);
 
-      // Ignore slave server temporarily.
-      db_ignore_slave();
+      // Ignore replica server temporarily.
+      db_ignore_replica();
       return $return;
     }
     catch (\Exception $e) {

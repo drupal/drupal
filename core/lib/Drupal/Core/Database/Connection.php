@@ -35,8 +35,8 @@ abstract class Connection implements \Serializable {
    * The key representing this connection.
    *
    * The key is a unique string which identifies a database connection. A
-   * connection can be a single server or a cluster of master and slaves (use
-   * target to pick between master and slave).
+   * connection can be a single server or a cluster of primary and replicas
+   * (use target to pick between primary and replica).
    *
    * @var string
    */
@@ -188,7 +188,7 @@ abstract class Connection implements \Serializable {
    * A given query can be customized with a number of option flags in an
    * associative array:
    * - target: The database "target" against which to execute a query. Valid
-   *   values are "default" or "slave". The system will first try to open a
+   *   values are "default" or "replica". The system will first try to open a
    *   connection to a database specified with the user-supplied key. If one
    *   is not available, it will silently fall back to the "default" target.
    *   If multiple databases connections are specified with the same target,

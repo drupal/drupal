@@ -159,8 +159,8 @@ abstract class Database {
     }
     // If the requested target does not exist, or if it is ignored, we fall back
     // to the default target. The target is typically either "default" or
-    // "slave", indicating to use a slave SQL server if one is available. If
-    // it's not available, then the default/master server is the correct server
+    // "replica", indicating to use a replica SQL server if one is available. If
+    // it's not available, then the default/primary server is the correct server
     // to use.
     if (!empty(self::$ignoreTargets[$key][$target]) || !isset(self::$databaseInfo[$key][$target])) {
       $target = 'default';
@@ -212,7 +212,7 @@ abstract class Database {
   final public static function parseConnectionInfo(array $info) {
     // If there is no "driver" property, then we assume it's an array of
     // possible connections for this target. Pick one at random. That allows
-    // us to have, for example, multiple slave servers.
+    // us to have, for example, multiple replica servers.
     if (empty($info['driver'])) {
       $info = $info[mt_rand(0, count($info) - 1)];
     }
@@ -431,7 +431,7 @@ abstract class Database {
   /**
    * Instructs the system to temporarily ignore a given key/target.
    *
-   * At times we need to temporarily disable slave queries. To do so, call this
+   * At times we need to temporarily disable replica queries. To do so, call this
    * method with the database key and the target to disable. That database key
    * will then always fall back to 'default' for that key, even if it's defined.
    *

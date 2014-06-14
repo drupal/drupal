@@ -22,7 +22,7 @@ display:
         options:
           disable_sql_rewrite: false
           distinct: false
-          slave: false
+          replica: false
           query_comment: ''
           query_tags: {  }
       exposed_form:

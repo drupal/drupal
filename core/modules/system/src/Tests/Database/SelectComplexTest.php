@@ -337,7 +337,7 @@ class SelectComplexTest extends DatabaseTestBase {
       'mail' => $this->randomName() . '@example.com',
     ));
 
-    $query = db_select('test_task', 'tt', array('target' => 'slave'));
+    $query = db_select('test_task', 'tt', array('target' => 'replica'));
     $query->addExpression('tt.pid + 1', 'abc');
     $query->condition('priority', 1, '>');
     $query->condition('priority', 100, '<');

@@ -95,8 +95,8 @@ class MenuLinkStorage extends EntityDatabaseStorage implements MenuLinkStorageIn
         }
       }
 
-      // Ignore slave server temporarily.
-      db_ignore_slave();
+      // Ignore replica server temporarily.
+      db_ignore_replica();
       unset($entity->original);
 
       return $return;

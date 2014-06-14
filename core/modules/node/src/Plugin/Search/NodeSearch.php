@@ -182,7 +182,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     // Build matching conditions.
     $query = $this->database
-      ->select('search_index', 'i', array('target' => 'slave'))
+      ->select('search_index', 'i', array('target' => 'replica'))
       ->extend('Drupal\search\SearchQuery')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query->join('node_field_data', 'n', 'n.nid = i.sid');
@@ -325,7 +325,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // per cron run.
     $limit = (int) $this->searchSettings->get('index.cron_limit');
 
-    $result = $this->database->queryRange("SELECT n.nid, MAX(sd.reindex) FROM {node} n LEFT JOIN {search_dataset} sd ON sd.sid = n.nid AND sd.type = :type WHERE sd.sid IS NULL OR sd.reindex <> 0 GROUP BY n.nid ORDER BY MAX(sd.reindex) is null DESC, MAX(sd.reindex) ASC, n.nid ASC", 0, $limit, array(':type' => $this->getPluginId()), array('target' => 'slave'));
+    $result = $this->database->queryRange("SELECT n.nid, MAX(sd.reindex) FROM {node} n LEFT JOIN {search_dataset} sd ON sd.sid = n.nid AND sd.type = :type WHERE sd.sid IS NULL OR sd.reindex <> 0 GROUP BY n.nid ORDER BY MAX(sd.reindex) is null DESC, MAX(sd.reindex) ASC, n.nid ASC", 0, $limit, array(':type' => $this->getPluginId()), array('target' => 'replica'));
     $nids = $result->fetchCol();
     if (!$nids) {
       return;

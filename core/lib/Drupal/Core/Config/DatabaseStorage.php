@@ -219,7 +219,7 @@ class DatabaseStorage implements StorageInterface {
    *
    * @throws PDOException
    *
-   * @todo Ignore slave targets for data manipulation operations.
+   * @todo Ignore replica targets for data manipulation operations.
    */
   public function delete($name) {
     $options = array('return' => Database::RETURN_AFFECTED) + $this->options;

@@ -98,22 +98,23 @@
  * For each database, you may optionally specify multiple "target" databases.
  * A target database allows Drupal to try to send certain queries to a
  * different database if it can but fall back to the default connection if not.
- * That is useful for master/slave replication, as Drupal may try to connect
- * to a slave server when appropriate and if one is not available will simply
- * fall back to the single master server.
+ * That is useful for primary/replica replication, as Drupal may try to connect
+ * to a replica server when appropriate and if one is not available will simply
+ * fall back to the single primary server (The terms primary/replica are
+ * traditionally referred to as master/slave in database server documentation).
  *
  * The general format for the $databases array is as follows:
  * @code
  * $databases['default']['default'] = $info_array;
- * $databases['default']['slave'][] = $info_array;
- * $databases['default']['slave'][] = $info_array;
+ * $databases['default']['replica'][] = $info_array;
+ * $databases['default']['replica'][] = $info_array;
  * $databases['extra']['default'] = $info_array;
  * @endcode
  *
  * In the above example, $info_array is an array of settings described above.
- * The first line sets a "default" database that has one master database
+ * The first line sets a "default" database that has one primary database
  * (the second level default).  The second and third lines create an array
- * of potential slave databases.  Drupal will select one at random for a given
+ * of potential replica databases.  Drupal will select one at random for a given
  * request as needed.  The fourth line creates a new database with a name of
  * "extra".
  *

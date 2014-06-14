@@ -308,11 +308,11 @@ services:
       - [initLanguageManager]
     tags:
       - { name: service_collector, tag: string_translator, call: addTranslator }
-  database.slave:
+  database.replica:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database
     factory_method: getConnection
-    arguments: [slave]
+    arguments: [replica]
   typed_data_manager:
     class: Drupal\Core\TypedData\TypedDataManager
     parent: default_plugin_manager
@@ -707,8 +707,8 @@ services:
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database']
-  slave_database_ignore__subscriber:
-    class: Drupal\Core\EventSubscriber\SlaveDatabaseIgnoreSubscriber
+  replica_database_ignore__subscriber:
+    class: Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber
     tags:
       - {name: event_subscriber}
   country_manager:

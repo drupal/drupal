@@ -87,7 +87,7 @@ display:
         options:
           disable_sql_rewrite: false
           distinct: false
-          slave: false
+          replica: false
           query_comment: false
           query_tags: {  }
       exposed_form:

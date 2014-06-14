@@ -155,7 +155,7 @@ function statistics_get($nid) {
 
   if ($nid > 0) {
     // Retrieve an array with both totalcount and daycount.
-    return db_query('SELECT totalcount, daycount, timestamp FROM {node_counter} WHERE nid = :nid', array(':nid' => $nid), array('target' => 'slave'))->fetchAssoc();
+    return db_query('SELECT totalcount, daycount, timestamp FROM {node_counter} WHERE nid = :nid', array(':nid' => $nid), array('target' => 'replica'))->fetchAssoc();
   }
 }
 

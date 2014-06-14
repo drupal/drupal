@@ -181,7 +181,7 @@ class Sql extends QueryPluginBase {
       'default' => FALSE,
       'bool' => TRUE,
     );
-    $options['slave'] = array(
+    $options['replica'] = array(
       'default' => FALSE,
       'bool' => TRUE,
     );
@@ -214,11 +214,11 @@ class Sql extends QueryPluginBase {
       '#description' => t('This will make the view display only distinct items. If there are multiple identical items, each will be displayed only once. You can use this to try and remove duplicates from a view, though it does not always work. Note that this can slow queries down, so use it with caution.'),
       '#default_value' => !empty($this->options['distinct']),
     );
-    $form['slave'] = array(
+    $form['replica'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use Slave Server'),
-      '#description' => t('This will make the query attempt to connect to a slave server if available.  If no slave server is defined or available, it will fall back to the default server.'),
-      '#default_value' => !empty($this->options['slave']),
+      '#title' => t('Use Secondary Server'),
+      '#description' => t('This will make the query attempt to connect to a replica server if available.  If no replica server is defined or available, it will fall back to the default server.'),
+      '#default_value' => !empty($this->options['replica']),
     );
     $form['query_comment'] = array(
       '#type' => 'textfield',
@@ -1204,9 +1204,9 @@ class Sql extends QueryPluginBase {
       $key = $this->view->base_database;
     }
 
-    // Set the slave target if the slave option is set
-    if (!empty($this->options['slave'])) {
-      $target = 'slave';
+    // Set the replica target if the replica option is set
+    if (!empty($this->options['replica'])) {
+      $target = 'replica';
     }
 
     // Go ahead and build the query.

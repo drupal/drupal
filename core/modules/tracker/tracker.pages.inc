@@ -27,7 +27,7 @@ function tracker_page($account = NULL) {
       ->condition('t.uid', $account->id());
   }
   else {
-    $query = db_select('tracker_node', 't', array('target' => 'slave'))
+    $query = db_select('tracker_node', 't', array('target' => 'replica'))
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->addMetaData('base_table', 'tracker_node');
   }
@@ -63,7 +63,7 @@ function tracker_page($account = NULL) {
     GROUP BY n.nid
     ORDER BY n.changed DESC", array(
       ':nids' => array_keys($nodes)
-    ), array('target' => 'slave'))->fetchAllKeyed();
+    ), array('target' => 'replica'))->fetchAllKeyed();
     foreach ($result as $nid => $comment_count) {
       $nodes[$nid]->last_activity = $tracker_data[$nid]->changed;
       $nodes[$nid]->comment_count = $comment_count;

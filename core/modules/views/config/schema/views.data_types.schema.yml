@@ -832,9 +832,9 @@ views_query:
     distinct:
       type: boolean
       label: 'Distinct'
-    slave:
+    replica:
       type: boolean
-      label: 'Use Slave Server'
+      label: 'Use Replica Server'
     query_tags:
       type: sequence
       label: 'Query Tags'

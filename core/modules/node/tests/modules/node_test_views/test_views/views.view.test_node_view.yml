@@ -29,7 +29,7 @@ display:
         options:
           disable_sql_rewrite: '0'
           distinct: '0'
-          slave: '0'
+          replica: '0'
           query_comment: ''
           query_tags: {  }
       exposed_form:

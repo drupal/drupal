@@ -296,7 +296,7 @@ function db_query_temporary($query, array $args = array(), array $options = arra
  *   A new Insert object for this connection.
  */
 function db_insert($table, array $options = array()) {
-  if (empty($options['target']) || $options['target'] == 'slave') {
+  if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
   return Database::getConnection($options['target'])->insert($table, $options);
@@ -314,7 +314,7 @@ function db_insert($table, array $options = array()) {
  *   A new Merge object for this connection.
  */
 function db_merge($table, array $options = array()) {
-  if (empty($options['target']) || $options['target'] == 'slave') {
+  if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
   return Database::getConnection($options['target'])->merge($table, $options);
@@ -332,7 +332,7 @@ function db_merge($table, array $options = array()) {
  *   A new Update object for this connection.
  */
 function db_update($table, array $options = array()) {
-  if (empty($options['target']) || $options['target'] == 'slave') {
+  if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
   return Database::getConnection($options['target'])->update($table, $options);
@@ -350,7 +350,7 @@ function db_update($table, array $options = array()) {
  *   A new Delete object for this connection.
  */
 function db_delete($table, array $options = array()) {
-  if (empty($options['target']) || $options['target'] == 'slave') {
+  if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
   return Database::getConnection($options['target'])->delete($table, $options);
@@ -368,7 +368,7 @@ function db_delete($table, array $options = array()) {
  *   A new Truncate object for this connection.
  */
 function db_truncate($table, array $options = array()) {
-  if (empty($options['target']) || $options['target'] == 'slave') {
+  if (empty($options['target']) || $options['target'] == 'replica') {
     $options['target'] = 'default';
   }
   return Database::getConnection($options['target'])->truncate($table, $options);
@@ -924,18 +924,21 @@ function db_change_field($table, $field, $field_new, $spec, $keys_new = array())
  */
 
 /**
- * Sets a session variable specifying the lag time for ignoring a slave server.
+ * Sets a session variable specifying the lag time for ignoring a replica
+ * server (A replica server is traditionally referred to as
+ * a "slave" in database server documentation).
+ * @see http://drupal.org/node/2275877
  */
-function db_ignore_slave() {
+function db_ignore_replica() {
   $connection_info = Database::getConnectionInfo();
-  // Only set ignore_slave_server if there are slave servers being used, which
-  // is assumed if there are more than one.
+  // Only set ignore_replica_server if there are replica servers being used,
+  // which is assumed if there are more than one.
   if (count($connection_info) > 1) {
-    // Five minutes is long enough to allow the slave to break and resume
+    // Five minutes is long enough to allow the replica to break and resume
     // interrupted replication without causing problems on the Drupal site from
     // the old data.
     $duration = Settings::get('maximum_replication_lag', 300);
-    // Set session variable with amount of time to delay before using slave.
-    $_SESSION['ignore_slave_server'] = REQUEST_TIME + $duration;
+    // Set session variable with amount of time to delay before using replica.
+    $_SESSION['ignore_replica_server'] = REQUEST_TIME + $duration;
   }
 }

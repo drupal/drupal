@@ -66,22 +66,22 @@ class LoggingTest extends DatabaseTestBase {
    * Tests logging queries against multiple targets on the same connection.
    */
   function testEnableTargetLogging() {
-    // Clone the master credentials to a slave connection and to another fake
+    // Clone the primary credentials to a replica connection and to another fake
     // connection.
     $connection_info = Database::getConnectionInfo('default');
-    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+    Database::addConnectionInfo('default', 'replica', $connection_info['default']);
 
     Database::startLog('testing1');
 
     db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
 
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'slave'));//->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'replica'));//->fetchCol();
 
     $queries1 = Database::getLog('testing1');
 
     $this->assertEqual(count($queries1), 2, 'Recorded queries from all targets.');
     $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
-    $this->assertEqual($queries1[1]['target'], 'slave', 'Second query used slave target.');
+    $this->assertEqual($queries1[1]['target'], 'replica', 'Second query used replica target.');
   }
 
   /**
@@ -98,7 +98,7 @@ class LoggingTest extends DatabaseTestBase {
 
     // We use "fake" here as a target because any non-existent target will do.
     // However, because all of the tests in this class share a single page
-    // request there is likely to be a target of "slave" from one of the other
+    // request there is likely to be a target of "replica" from one of the other
     // unit tests, so we use a target here that we know with absolute certainty
     // does not exist.
     db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'fake'))->fetchCol();
@@ -114,7 +114,7 @@ class LoggingTest extends DatabaseTestBase {
    * Tests that we can log queries separately on different connections.
    */
   function testEnableMultiConnectionLogging() {
-    // Clone the master credentials to a fake connection.
+    // Clone the primary credentials to a fake connection.
     // That both connections point to the same physical database is irrelevant.
     $connection_info = Database::getConnectionInfo('default');
     Database::addConnectionInfo('test2', 'default', $connection_info['default']);
@@ -126,7 +126,7 @@ class LoggingTest extends DatabaseTestBase {
 
     $old_key = db_set_active('test2');
 
-    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'slave'))->fetchCol();
+    db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'), array('target' => 'replica'))->fetchCol();
 
     db_set_active($old_key);
 
