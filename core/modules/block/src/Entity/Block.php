@@ -33,8 +33,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *   admin_permission = "administer blocks",
  *   fieldable = FALSE,
  *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label"
+ *     "id" = "id"
  *   },
  *   links = {
  *     "delete-form" = "block.admin_block_delete",
@@ -132,25 +131,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
       $definition = $this->getPlugin()->getPluginDefinition();
       return $definition['admin_label'];
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function toArray() {
-    $properties = parent::toArray();
-    $names = array(
-      'theme',
-      'region',
-      'weight',
-      'plugin',
-      'settings',
-      'visibility',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
   }
 
   /**

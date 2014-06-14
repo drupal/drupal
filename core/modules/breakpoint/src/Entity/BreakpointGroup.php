@@ -214,29 +214,6 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $names = array(
-      'id',
-      'uuid',
-      'name',
-      'label',
-      'breakpoint_ids',
-      'source',
-      'sourceType',
-      'status',
-      'langcode',
-      'dependencies',
-    );
-    $properties = array();
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function calculateDependencies() {
     parent::calculateDependencies();
 

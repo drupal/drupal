@@ -339,4 +339,18 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function toArray() {
+    // @todo Remove once migration config entities have schema
+    //   https://drupal.org/node/2183957.
+    $class_info = new \ReflectionClass($this);
+    foreach ($class_info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+      $name = $property->getName();
+      $properties[$name] = $this->get($name);
+    }
+    return $properties;
+  }
+
 }

@@ -71,21 +71,6 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $properties = parent::toArray();
-    $names = array(
-      'locked',
-      'pattern',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getPattern() {
     return $this->pattern;
   }

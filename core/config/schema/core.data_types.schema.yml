@@ -235,15 +235,9 @@ config_dependencies:
 config_entity:
   type: mapping
   mapping:
-    id:
-      type: string
-      label: 'ID'
     uuid:
       type: string
       label: 'UUID'
-    label:
-      type: label
-      label: 'Label'
     langcode:
       type: string
       label: 'Default language'

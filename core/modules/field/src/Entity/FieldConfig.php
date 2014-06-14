@@ -225,34 +225,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function toArray() {
-    $names = array(
-      'uuid',
-      'status',
-      'langcode',
-      'name',
-      'entity_type',
-      'type',
-      'settings',
-      'module',
-      'locked',
-      'cardinality',
-      'translatable',
-      'indexes',
-      'dependencies',
-    );
-    $properties = array(
-      'id' => $this->id(),
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
    * Overrides \Drupal\Core\Entity\Entity::preSave().
    *
    * @throws \Drupal\field\FieldException
@@ -728,7 +700,10 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function __sleep() {
     // Only serialize properties from self::toArray().
-    return array_keys(array_intersect_key($this->toArray(), get_object_vars($this)));
+    $properties = array_keys(array_intersect_key($this->toArray(), get_object_vars($this)));
+    // Serialize $entityTypeId property so that toArray() works when waking up.
+    $properties[] = 'entityTypeId';
+    return $properties;
   }
 
   /**

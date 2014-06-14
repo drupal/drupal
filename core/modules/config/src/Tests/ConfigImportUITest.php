@@ -56,15 +56,15 @@ class ConfigImportUITest extends WebTestBase {
 
     // Create new config entity.
     $original_dynamic_data = array(
+      'uuid' => '30df59bd-7b03-4cf7-bb35-d42fc49f0651',
+      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
+      'status' => TRUE,
+      'dependencies' => array(),
       'id' => 'new',
       'label' => 'New',
       'weight' => 0,
       'style' => '',
       'test_dependencies' => array(),
-      'status' => TRUE,
-      'uuid' => '30df59bd-7b03-4cf7-bb35-d42fc49f0651',
-      'langcode' => \Drupal::languageManager()->getDefaultLanguage()->id,
-      'dependencies' => array(),
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);
@@ -349,31 +349,31 @@ class ConfigImportUITest extends WebTestBase {
     $uuid = $this->container->get('uuid');
 
     $values_primary = array(
+      'uuid' => $uuid->generate(),
+      'langcode' => 'en',
+      'status' => TRUE,
+      'dependencies' => array(),
       'id' => 'primary',
       'label' => 'Primary',
       'weight' => 0,
       'style' => NULL,
       'test_dependencies' => array(),
-      'status' => TRUE,
-      'uuid' => $uuid->generate(),
-      'langcode' => 'en',
-      'dependencies' => array(),
       'protected_property' => null,
     );
     $staging->write($name_primary, $values_primary);
     $values_secondary = array(
+      'uuid' => $uuid->generate(),
+      'langcode' => 'en',
+      'status' => TRUE,
+      // Add a dependency on primary, to ensure that is synced first.
+      'dependencies' => array(
+        'entity' => array($name_primary),
+      ),
       'id' => 'secondary',
       'label' => 'Secondary Sync',
       'weight' => 0,
       'style' => NULL,
       'test_dependencies' => array(),
-      'status' => TRUE,
-      'uuid' => $uuid->generate(),
-      'langcode' => 'en',
-      // Add a dependency on primary, to ensure that is synced first.
-      'dependencies' => array(
-        'entity' => array($name_primary),
-      ),
       'protected_property' => null,
     );
     $staging->write($name_secondary, $values_secondary);

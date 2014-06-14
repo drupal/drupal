@@ -64,14 +64,18 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
    */
   public function setUp() {
     $this->entityTypeId = $this->randomName();
+    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
 
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
 
     $this->uuid = $this->getMock('\Drupal\Component\Uuid\UuidInterface');
 
+    $this->typedConfigManager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
+
     $container = new ContainerBuilder();
     $container->set('entity.manager', $this->entityManager);
     $container->set('uuid', $this->uuid);
+    $container->set('config.typed', $this->typedConfigManager);
     \Drupal::setContainer($container);
 
     // Create a mock FieldConfig object.
@@ -139,12 +143,12 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
    */
   public function testToArray() {
     $values = array('field_name' => $this->field->getName(), 'entity_type' => 'test_entity_type', 'bundle' => 'test_bundle');
-    $instance = new FieldInstanceConfig($values);
-    $export = $instance->toArray();
+    $instance = new FieldInstanceConfig($values, $this->entityTypeId);
+
     $expected = array(
       'id' => 'test_entity_type.test_bundle.field_test',
       'uuid' => NULL,
-      'status' => 1,
+      'status' => TRUE,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'field_uuid' => NULL,
       'field_name' => 'field_test',
@@ -159,6 +163,19 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
       'dependencies' => array(),
       'field_type' => 'test_field',
     );
+    $this->entityManager->expects($this->any())
+       ->method('getDefinition')
+       ->with($this->entityTypeId)
+       ->will($this->returnValue($this->entityType));
+    $this->entityType->expects($this->once())
+      ->method('getKey')
+      ->with('id')
+      ->will($this->returnValue('id'));
+    $this->typedConfigManager->expects($this->once())
+      ->method('getDefinition')
+      ->will($this->returnValue(array('mapping' => array_fill_keys(array_keys($expected), ''))));
+
+    $export = $instance->toArray();
     $this->assertEquals($expected, $export);
   }
 }

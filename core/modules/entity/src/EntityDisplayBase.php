@@ -200,23 +200,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   public function toArray() {
-    $names = array(
-      'uuid',
-      'targetEntityType',
-      'bundle',
-      'mode',
-      'content',
-      'hidden',
-      'status',
-      'dependencies'
-    );
-    $properties = array(
-      'id' => $this->id(),
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-
+    $properties = parent::toArray();
     // Do not store options for fields whose display is not set to be
     // configurable.
     foreach ($this->getFieldDefinitions() as $field_name => $definition) {

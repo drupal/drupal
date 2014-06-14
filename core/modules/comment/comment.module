@@ -120,7 +120,7 @@ function comment_uri(CommentInterface $comment) {
 function comment_entity_extra_field_info() {
   $return = array();
   foreach (CommentType::loadMultiple() as $comment_type) {
-    $return['comment'][$comment_type->id] = array(
+    $return['comment'][$comment_type->id()] = array(
       'form' => array(
         'author' => array(
           'label' => t('Author'),

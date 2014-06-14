@@ -272,29 +272,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * {@inheritdoc}
    */
   public function toArray() {
-    $names = array(
-      'uuid',
-      'status',
-      'langcode',
-      'field_uuid',
-      'field_name',
-      'entity_type',
-      'bundle',
-      'label',
-      'description',
-      'required',
-      'default_value',
-      'default_value_function',
-      'settings',
-      'dependencies',
-    );
-    $properties = array(
-      'id' => $this->id(),
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-
+    $properties = parent::toArray();
     // Additionally, include the field type, that is needed to be able to
     // generate the field-type-dependant parts of the config schema.
     $properties['field_type'] = $this->getType();
@@ -672,7 +650,10 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    */
   public function __sleep() {
     // Only serialize properties from self::toArray().
-    return array_keys(array_intersect_key($this->toArray(), get_object_vars($this)));
+    $properties = array_keys(array_intersect_key($this->toArray(), get_object_vars($this)));
+    // Serialize $entityTypeId property so that toArray() works when waking up.
+    $properties[] = 'entityTypeId';
+    return $properties;
   }
 
   /**

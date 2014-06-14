@@ -148,20 +148,4 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
     return parent::sort($a, $b);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function toArray() {
-    $properties = parent::toArray();
-    $names = array(
-      'type',
-      'plugin',
-      'configuration',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
 }

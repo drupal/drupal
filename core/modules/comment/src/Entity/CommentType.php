@@ -47,28 +47,28 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The comment type label.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The description of the comment type.
    *
    * @var string
    */
-  public $description;
+  protected $description;
 
   /**
    * The target entity type.
    *
    * @var string
    */
-  public $target_entity_type_id;
+  protected $target_entity_type_id;
 
   /**
    * {@inheritdoc}

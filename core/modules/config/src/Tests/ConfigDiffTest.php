@@ -111,11 +111,12 @@ class ConfigDiffTest extends DrupalUnitTestBase {
 
     $diff = \Drupal::service('config.manager')->diff($active, $staging, 'config_test.dynamic.' . $new_test_entity_id, $config_name);
     $edits = $diff->getEdits();
-    $this->assertEqual($edits[0]->type, 'change',  'The second item in the diff is a copy.');
-    $this->assertEqual($edits[0]->orig, array('id: ' . $new_test_entity_id));
-    $this->assertEqual($edits[0]->closing, array('id: ' . $test_entity_id));
-    $this->assertEqual($edits[1]->type, 'copy',  'The second item in the diff is a copy.');
-    $this->assertEqual(count($edits), 2, 'There are two items in the diff.');
+    $this->assertEqual($edits[0]->type, 'copy',  'The first item in the diff is a copy.');
+    $this->assertEqual($edits[1]->type, 'change',  'The second item in the diff is a change.');
+    $this->assertEqual($edits[1]->orig, array('id: ' . $new_test_entity_id));
+    $this->assertEqual($edits[1]->closing, array('id: ' . $test_entity_id));
+    $this->assertEqual($edits[2]->type, 'copy',  'The third item in the diff is a copy.');
+    $this->assertEqual(count($edits), 3, 'There are three items in the diff.');
   }
 
   /**

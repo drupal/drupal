@@ -1,12 +1,11 @@
 # Schema for the configuration files of the Configuration Test module.
 
-config_test.dynamic.*:
-  type: mapping
-  label: 'Config test entity'
+config_test_dynamic:
+  type: config_entity
   mapping:
     id:
       type: string
-      label: 'Machine name'
+      label: 'ID'
     label:
       type: label
       label: 'Label'
@@ -15,20 +14,10 @@ config_test.dynamic.*:
       label: 'Weight'
     style:
       type: string
-      label: 'Image style'
-    protected_property:
-      type: string
-      label: 'Protected property'
-
-config_test_dynamic:
-  type: config_entity
-  mapping:
-    weight:
-      type: integer
-      label: 'Weight'
-    style:
-      type: string
       label: 'style'
+    test_dependencies:
+      type: config_dependencies
+      label: 'Configuration dependencies'
     protected_property:
       type: string
       label: 'Protected property'
@@ -40,6 +29,24 @@ config_test.dynamic.*:
 config_test.dynamic.*.*:
   type: config_test_dynamic
   label: 'Config test dynamic settings'
+
+config_test.query.*:
+  type: config_entity
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    array:
+      type: sequence
+      label: 'Array'
+      sequence:
+        - type: string
+    number:
+      type: integer
+      label: 'number'
 
 config_test.types:
   type: mapping

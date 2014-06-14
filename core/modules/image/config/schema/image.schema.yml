@@ -6,6 +6,9 @@ image.style.*:
   mapping:
     name:
       type: string
+    label:
+      type: label
+      label: 'Label'
     effects:
       type: sequence
       sequence:

@@ -4,6 +4,9 @@ rdf.mapping.*.*:
   type: config_entity
   label: 'RDF mapping'
   mapping:
+    id:
+      type: string
+      label: 'ID'
     targetEntityType:
       type: string
       label: 'Target entity type'

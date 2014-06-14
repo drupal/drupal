@@ -3,6 +3,12 @@ breakpoint.breakpoint.*.*.*:
   type: config_entity
   label: 'Defines the Breakpoint entity'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     name:
       type: string
       label: 'Machine name'
@@ -29,6 +35,12 @@ breakpoint.breakpoint_group.*.*.*:
   type: config_entity
   label: 'Breakpoint group settings'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     name:
       type: string
       label: 'Machine name'

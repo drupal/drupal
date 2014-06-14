@@ -135,12 +135,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['label'] = 'Image style';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['name']['type'] = 'string';
-    $expected['mapping']['id']['label'] = 'ID';
-    $expected['mapping']['id']['type'] = 'string';
     $expected['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['uuid']['label'] = 'UUID';
-    $expected['mapping']['label']['type'] = 'label';
-    $expected['mapping']['label']['label'] = 'Label';
     $expected['mapping']['langcode']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Default language';
     $expected['mapping']['status']['type'] = 'boolean';
@@ -148,6 +144,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['mapping']['dependencies']['type'] = 'config_dependencies';
     $expected['mapping']['dependencies']['label'] = 'Dependencies';
     $expected['mapping']['name']['type'] = 'string';
+    $expected['mapping']['label']['type'] = 'label';
+    $expected['mapping']['label']['label'] = 'Label';
     $expected['mapping']['effects']['type'] = 'sequence';
     $expected['mapping']['effects']['sequence'][0]['type'] = 'mapping';
     $expected['mapping']['effects']['sequence'][0]['mapping']['id']['type'] = 'string';

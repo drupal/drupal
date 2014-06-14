@@ -12,6 +12,9 @@ field.field.*.*:
   type: config_entity
   label: 'Field'
   mapping:
+    id:
+      type: string
+      label: 'ID'
     name:
       type: string
       label: 'Name'
@@ -49,6 +52,12 @@ field.instance.*.*.*:
   type: config_entity
   label: 'Field instance'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     field_uuid:
       type: string
       label: 'Field UUID'

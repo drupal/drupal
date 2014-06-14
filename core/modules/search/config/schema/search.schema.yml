@@ -68,6 +68,12 @@ search.page.*:
   type: config_entity
   label: 'Search page'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     path:
       type: string
       label: 'Search page path'

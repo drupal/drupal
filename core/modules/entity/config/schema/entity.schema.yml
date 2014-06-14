@@ -33,6 +33,12 @@ entity.form_mode.*.*:
   type: config_entity
   label: 'Entity form mode settings'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -45,6 +51,12 @@ entity.view_display.*.*.*:
   type: config_entity
   label: 'Entity display'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -71,6 +83,9 @@ entity.form_display.*.*.*:
   type: config_entity
   label: 'Entity form display'
   mapping:
+    id:
+      type: string
+      label: 'ID'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -80,9 +95,12 @@ entity.form_display.*.*.*:
     mode:
       type: string
       label: 'View or form mode machine name'
+    status:
+      type: boolean
+      label: 'Enabled'
     content:
       type: sequence
-      label: 'Field form display formatters'
+      label: 'Field display formatters'
       sequence:
         - type: entity_form_display.field.[type]
     hidden:
@@ -91,6 +109,9 @@ entity.form_display.*.*.*:
       sequence:
         - type: boolean
           label: 'Component'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 # Default schema for entity display field with undefined type.
 entity_view_display.field.*:

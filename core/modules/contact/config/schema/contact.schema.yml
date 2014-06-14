@@ -4,6 +4,12 @@ contact.category.*:
   type: config_entity
   label: 'Contact category'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     recipients:
       type: sequence
       label: 'Recipients'

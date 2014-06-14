@@ -60,22 +60,6 @@ class Menu extends ConfigEntityBase implements MenuInterface {
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $properties = parent::toArray();
-    // @todo Make $description protected and include it here, see
-    //   https://drupal.org/node/2030645.
-    $names = array(
-      'locked',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isLocked() {
     return (bool) $this->locked;
   }

@@ -72,6 +72,12 @@ views.view.*:
   type: config_entity
   label: 'View'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     module:
       type: string
       label: 'Module'

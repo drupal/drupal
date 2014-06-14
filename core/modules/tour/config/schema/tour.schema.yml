@@ -4,6 +4,12 @@ tour.tour.*:
   type: config_entity
   label: 'Tour settings'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     module:
       type: string
       label: 'Providing module'

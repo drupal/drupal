@@ -119,6 +119,12 @@ user.role.*:
   type: config_entity
   label: 'User role settings'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     weight:
       type: integer
       label: 'User role weight'

@@ -118,6 +118,12 @@ system.date_format.*:
   type: config_entity
   label: 'Date format'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     locked:
       type: boolean
       label: 'Locked'
@@ -278,6 +284,12 @@ system.menu.*:
   type: config_entity
   label: 'Menu'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     description:
       type: label
       label: 'Menu description'
@@ -289,6 +301,12 @@ system.action.*:
   type: config_entity
   label: 'System action'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     type:
       type: string
       label: 'Type'

@@ -169,23 +169,6 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $properties = parent::toArray();
-    $names = array(
-      'path',
-      'weight',
-      'plugin',
-      'configuration',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function postCreate(EntityStorageInterface $storage) {
     parent::postCreate($storage);
 

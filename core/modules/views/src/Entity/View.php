@@ -243,32 +243,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $names = array(
-      'base_field',
-      'base_table',
-      'core',
-      'description',
-      'status',
-      'display',
-      'label',
-      'module',
-      'id',
-      'tag',
-      'uuid',
-      'langcode',
-      'dependencies',
-    );
-    $properties = array();
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function calculateDependencies() {
     parent::calculateDependencies();
 

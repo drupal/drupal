@@ -48,7 +48,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The human-readable name of the configuration entity.
@@ -84,20 +84,6 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
    * @var string
    */
   protected $protected_property;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function toArray() {
-    $properties = parent::toArray();
-    $protected_names = array(
-      'protected_property',
-    );
-    foreach ($protected_names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
 
   /**
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::sort().

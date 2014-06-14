@@ -176,21 +176,4 @@ class Editor extends ConfigEntityBase implements EditorInterface {
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function toArray() {
-    $properties = parent::toArray();
-    $names = array(
-      'format',
-      'editor',
-      'settings',
-      'image_upload',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
 }

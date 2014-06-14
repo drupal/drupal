@@ -123,21 +123,6 @@ class Tour extends ConfigEntityBase implements TourInterface {
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $properties = parent::toArray();
-    $names = array(
-      'routes',
-      'tips',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function hasMatchingRoute($route_name, $route_params) {
     if (!isset($this->keyedRoutes)) {
       $this->keyedRoutes = array();

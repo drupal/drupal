@@ -85,6 +85,12 @@ language.entity.*:
   type: config_entity
   label: 'Language'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     direction:
       type: integer
       label: 'Direction'

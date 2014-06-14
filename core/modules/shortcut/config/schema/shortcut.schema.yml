@@ -4,6 +4,12 @@ shortcut.set.*:
   type: config_entity
   label: 'Shortcut settings'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     links:
       type: sequence
       label: 'Shortcuts'

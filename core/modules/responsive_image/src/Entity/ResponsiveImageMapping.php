@@ -190,24 +190,6 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
-    $names = array(
-      'id',
-      'uuid',
-      'label',
-      'mappings',
-      'breakpointGroup',
-    );
-    $properties = array();
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-    return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setMappings(array $mappings) {
     $this->set('mappings', $mappings);
     return $this;

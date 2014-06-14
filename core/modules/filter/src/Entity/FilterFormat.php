@@ -162,13 +162,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    */
   public function toArray() {
     $properties = parent::toArray();
-    // @todo Make self::$weight and self::$cache protected and add them here.
-    $names = array(
-      'filters',
-    );
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
+    // The 'roles' property is only used during install and should never
+    // actually be saved.
+    unset($properties['roles']);
     return $properties;
   }
 

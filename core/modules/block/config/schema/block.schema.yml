@@ -4,6 +4,9 @@ block.block.*:
   type: config_entity
   label: 'Block'
   mapping:
+    id:
+      type: string
+      label: 'ID'
     theme:
       type: string
       label: 'Theme'

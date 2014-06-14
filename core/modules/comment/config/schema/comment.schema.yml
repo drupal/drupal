@@ -47,6 +47,12 @@ comment.type.*:
   type: config_entity
   label: 'Comment type settings'
   mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     target_entity_type_id:
       type: string
       label: 'Target Entity Type ID'
