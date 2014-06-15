@@ -779,6 +779,7 @@ function simpletest_phpunit_get_available_tests($module = NULL) {
     // Find all the tests and get a list of unique class names.
     $test_suite = $configuration->getTestSuiteConfiguration(NULL);
     $test_classes = array();
+    /** @var $test_suite \PHPUnit_Framework_TestSuite[] */
     foreach ($test_suite as $test) {
       // PHPUnit returns a warning message if something is wrong with a test,
       // throw an exception to avoid an error when trying to call getInfo() on
@@ -787,9 +788,9 @@ function simpletest_phpunit_get_available_tests($module = NULL) {
         throw new RuntimeException($test->getMessage());
       }
 
-      $name = get_class($test);
-      if (!array_key_exists($name, $test_classes) && (!$module || substr($name, 0, $n) == $prefix)) {
-        $test_classes[$name] = $test->getInfo();
+      $name = $test->getName();
+      if ($test instanceof \Drupal\Tests\UnitTestCase && !array_key_exists($name, $test_classes) && (!$module || substr($name, 0, $n) == $prefix)) {
+        $test_classes[$name] = $test::getInfo();
       }
     }
 

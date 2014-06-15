@@ -21,17 +21,26 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "phpunit/php-text-template": ">=1.1.1@stable"
+        "phpunit/php-text-template": "~1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.1"
     },
     "suggest": {
         "ext-soap": "*"
     },
     "autoload": {
         "classmap": [
-            "PHPUnit/"
+            "src/"
         ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1.x-dev"
+        }
     },
     "include-path": [
         ""
     ]
 }
+

@@ -5,7 +5,7 @@
     "keywords": [
         "tokenizer"
     ],
-    "homepage": "http://www.phpunit.de/",
+    "homepage": "https://github.com/sebastianbergmann/php-token-stream/",
     "license": "BSD-3-Clause",
     "authors": [
         {
@@ -29,5 +29,10 @@
     },
     "include-path": [
         ""
-    ]
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2-dev"
+        }
+    }
 }

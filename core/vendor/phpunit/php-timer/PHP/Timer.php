@@ -2,7 +2,7 @@
 /**
  * PHP_Timer
  *
- * Copyright (c) 2010-2012, Sebastian Bergmann <sb@sebastian-bergmann.de>.
+ * Copyright (c) 2010-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,8 +36,8 @@
  *
  * @package    PHP
  * @subpackage Timer
- * @author     Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @copyright  2010-2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2010-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @link       http://github.com/sebastianbergmann/php-timer
  * @since      File available since Release 1.0.0
@@ -48,8 +48,8 @@
  *
  * @package    PHP
  * @subpackage Timer
- * @author     Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @copyright  2010-2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2010-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @version    Release: @package_version@
  * @link       http://github.com/sebastianbergmann/php-timer
@@ -60,7 +60,16 @@ class PHP_Timer
     /**
      * @var array
      */
-    protected static $startTimes = array();
+    private static $times = array(
+      'hour'   => 3600000,
+      'minute' => 60000,
+      'second' => 1000
+    );
+
+    /**
+     * @var array
+     */
+    private static $startTimes = array();
 
     /**
      * @var float
@@ -93,32 +102,16 @@ class PHP_Timer
      */
     public static function secondsToTimeString($time)
     {
-        $buffer = '';
+        $ms = round($time * 1000);
 
-        $hours   = sprintf('%02d', ($time >= 3600) ? floor($time / 3600) : 0);
-        $minutes = sprintf(
-                     '%02d',
-                     ($time >= 60)   ? floor($time /   60) - 60 * $hours : 0
-                   );
-        $seconds = sprintf('%02d', $time - 60 * 60 * $hours - 60 * $minutes);
-
-        if ($hours == 0 && $minutes == 0) {
-            $seconds = sprintf('%1d', $seconds);
-
-            $buffer .= $seconds . ' second';
-
-            if ($seconds != '1') {
-                $buffer .= 's';
+        foreach (self::$times as $unit => $value) {
+            if ($ms >= $value) {
+                $time = floor($ms / $value * 100.0) / 100.0;
+                return $time . ' ' . ($time == 1 ? $unit : $unit . 's');
             }
-        } else {
-            if ($hours > 0) {
-                $buffer = $hours . ':';
-            }
-
-            $buffer .= $minutes . ':' . $seconds;
         }
 
-        return $buffer;
+        return $ms . ' ms';
     }
 
     /**
@@ -128,7 +121,7 @@ class PHP_Timer
      */
     public static function timeSinceStartOfRequest()
     {
-        return self::secondsToTimeString(time() - self::$requestTime);
+        return self::secondsToTimeString(microtime(TRUE) - self::$requestTime);
     }
 
     /**
@@ -150,10 +143,6 @@ if (isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     PHP_Timer::$requestTime = $_SERVER['REQUEST_TIME_FLOAT'];
 }
 
-else if (isset($_SERVER['REQUEST_TIME'])) {
-    PHP_Timer::$requestTime = $_SERVER['REQUEST_TIME'];
-}
-
 else {
-    PHP_Timer::$requestTime = time();
+    PHP_Timer::$requestTime = microtime(TRUE);
 }

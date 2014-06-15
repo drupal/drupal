@@ -2,7 +2,7 @@
 /**
  * php-token-stream
  *
- * Copyright (c) 2009-2012, Sebastian Bergmann <sb@sebastian-bergmann.de>.
+ * Copyright (c) 2009-2013, Sebastian Bergmann <sebastian@phpunit.de>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,8 +36,8 @@
  *
  * @package    PHP_TokenStream
  * @subpackage Tests
- * @author     Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @copyright  2009-2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @since      File available since Release 1.0.0
  */
@@ -57,8 +57,8 @@ require_once 'PHP/Token/Stream.php';
  *
  * @package    PHP_TokenStream
  * @subpackage Tests
- * @author     Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @copyright  2009-2012 Sebastian Bergmann <sb@sebastian-bergmann.de>
+ * @author     Sebastian Bergmann <sebastian@phpunit.de>
+ * @copyright  2009-2013 Sebastian Bergmann <sebastian@phpunit.de>
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @version    Release: @package_version@
  * @link       http://github.com/sebastianbergmann/php-token-stream/
@@ -99,6 +99,8 @@ class PHP_Token_FunctionTest extends PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(array(), $this->functions[4]->getArguments());
+
+        $this->assertEquals(array('$x' => null, '$y' => null), $this->functions[5]->getArguments());
     }
 
     /**
@@ -156,5 +158,33 @@ class PHP_Token_FunctionTest extends PHPUnit_Framework_TestCase
 
         $this->assertNull($this->functions[3]->getDocblock());
         $this->assertNull($this->functions[4]->getDocblock());
+    }
+
+    public function testSignature()
+    {
+        $ts = new PHP_Token_Stream(TEST_FILES_PATH . 'source5.php');
+        $f  = $ts->getFunctions();
+        $c  = $ts->getClasses();
+        $i  = $ts->getInterfaces();
+
+        $this->assertEquals(
+          'foo($a, array $b, array $c = array())',
+          $f['foo']['signature']
+        );
+
+        $this->assertEquals(
+          'm($a, array $b, array $c = array())',
+          $c['c']['methods']['m']['signature']
+        );
+
+        $this->assertEquals(
+          'm($a, array $b, array $c = array())',
+          $c['a']['methods']['m']['signature']
+        );
+
+        $this->assertEquals(
+          'm($a, array $b, array $c = array())',
+          $i['i']['methods']['m']['signature']
+        );
     }
 }

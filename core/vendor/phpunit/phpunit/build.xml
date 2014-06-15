@@ -1,34 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="PHPUnit" default="build">
  <property name="php" value="php"/>
 
  <target name="build"
-   depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb"/>
-
- <target name="build-parallel"
-   depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
-
- <target name="tools-parallel"
-         description="Run tools in parallel">
-  <parallel threadCount="2">
-   <sequential>
-    <antcall target="pdepend"/>
-    <antcall target="phpmd-ci"/>
-   </sequential>
-   <antcall target="phpcpd"/>
-   <antcall target="phpcs-ci"/>
-   <antcall target="phploc"/>
-  </parallel>
- </target>
+   depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpdox"/>
 
  <target name="clean" description="Cleanup build artifacts">
+  <delete dir="${basedir}/bin"/>
+  <delete dir="${basedir}/vendor"/>
+  <delete file="${basedir}/composer.lock"/>
   <delete dir="${basedir}/build/api"/>
   <delete dir="${basedir}/build/code-browser"/>
   <delete dir="${basedir}/build/coverage"/>
   <delete dir="${basedir}/build/logs"/>
   <delete dir="${basedir}/build/pdepend"/>
   <delete dir="${basedir}/build/phar"/>
+  <delete dir="${basedir}/build/phpdox"/>
 
   <delete>
    <fileset dir="${basedir}/build">
@@ -37,8 +24,7 @@
   </delete>
  </target>
 
- <target name="prepare" depends="clean,phpab"
-         description="Prepare for build">
+ <target name="prepare" description="Prepare for build">
   <mkdir dir="${basedir}/build/api"/>
   <mkdir dir="${basedir}/build/code-browser"/>
   <mkdir dir="${basedir}/build/coverage"/>
@@ -47,15 +33,25 @@
   <mkdir dir="${basedir}/build/phpdox"/>
  </target>
 
- <target name="phpab" description="Generate autoloader scripts">
-  <exec executable="phpab">
-   <arg value="--output" />
-   <arg path="PHPUnit/Autoload.php" />
-   <arg value="--template" />
-   <arg path="PHPUnit/Autoload.php.in" />
-   <arg value="--indent" />
-   <arg value="            " />
-   <arg path="PHPUnit" />
+ <target name="download-composer" description="Downloads composer.phar (when it does not exist or is older than 30 days)">
+  <tstamp>
+   <format property="thirty.days.ago" pattern="MM/dd/yyyy hh:mm aa" offset="-30" unit="day"/>
+  </tstamp>
+  <delete>
+   <fileset dir="${basedir}">
+    <include name="composer.phar" />
+    <date datetime="${thirty.days.ago}" when="before"/>
+   </fileset>
+  </delete>
+
+  <get src="https://getcomposer.org/composer.phar" dest="${basedir}/composer.phar" skipexisting="true"/>
+ </target>
+
+ <target name="composer" depends="download-composer" description="Install dependencies with Composer">
+
+  <exec executable="php">
+   <arg value="composer.phar"/>
+   <arg value="install"/>
   </exec>
  </target>
 
@@ -63,12 +59,12 @@
   <apply executable="${php}" failonerror="true">
    <arg value="-l" />
 
-   <fileset dir="${basedir}/PHPUnit">
+   <fileset dir="${basedir}/src">
     <include name="**/*.php" />
     <modified />
    </fileset>
 
-   <fileset dir="${basedir}/Tests">
+   <fileset dir="${basedir}/tests">
     <include name="**/*.php" />
     <modified />
    </fileset>
@@ -79,7 +75,9 @@
   <exec executable="phploc">
    <arg value="--log-csv" />
    <arg value="${basedir}/build/logs/phploc.csv" />
-   <arg path="${basedir}/PHPUnit" />
+   <arg value="--log-xml" />
+   <arg value="${basedir}/build/logs/phploc.xml" />
+   <arg path="${basedir}/src" />
   </exec>
  </target>
 
@@ -89,14 +87,14 @@
    <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
    <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
    <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-   <arg path="${basedir}/PHPUnit" />
+   <arg path="${basedir}/src" />
   </exec>
  </target>
 
  <target name="phpmd"
          description="Perform project mess detection using PHPMD">
   <exec executable="phpmd">
-   <arg path="${basedir}/PHPUnit" />
+   <arg path="${basedir}/src" />
    <arg value="text" />
    <arg value="${basedir}/build/phpmd.xml" />
   </exec>
@@ -105,7 +103,7 @@
  <target name="phpmd-ci"
          description="Perform project mess detection using PHPMD">
   <exec executable="phpmd">
-   <arg path="${basedir}/PHPUnit" />
+   <arg path="${basedir}/src" />
    <arg value="xml" />
    <arg value="${basedir}/build/phpmd.xml" />
    <arg value="--reportfile" />
@@ -116,11 +114,10 @@
  <target name="phpcs"
          description="Find coding standard violations using PHP_CodeSniffer">
   <exec executable="phpcs">
-   <arg value="--standard=${basedir}/build/PHPCS" />
+   <arg value="--standard=PSR2" />
    <arg value="--extensions=php" />
-   <arg value="--ignore=Autoload.php" />
-   <arg path="${basedir}/PHPUnit" />
-   <arg path="${basedir}/Tests" />
+   <arg path="${basedir}/src" />
+   <arg path="${basedir}/tests" />
   </exec>
  </target>
 
@@ -129,11 +126,10 @@
   <exec executable="phpcs" output="/dev/null">
    <arg value="--report=checkstyle" />
    <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-   <arg value="--standard=${basedir}/build/PHPCS" />
+   <arg value="--standard=PSR2" />
    <arg value="--extensions=php" />
-   <arg value="--ignore=Autoload.php" />
-   <arg path="${basedir}/PHPUnit" />
-   <arg path="${basedir}/Tests" />
+   <arg path="${basedir}/src" />
+   <arg path="${basedir}/tests" />
   </exec>
  </target>
 
@@ -141,63 +137,187 @@
   <exec executable="phpcpd">
    <arg value="--log-pmd" />
    <arg value="${basedir}/build/logs/pmd-cpd.xml" />
-   <arg path="${basedir}/PHPUnit" />
+   <arg path="${basedir}/src" />
   </exec>
  </target>
 
  <target name="phpunit" description="Run unit tests with PHPUnit">
   <exec executable="${php}" failonerror="true">
-   <arg path="${basedir}/phpunit.php" />
+   <arg path="${basedir}/src" />
   </exec>
  </target>
 
- <target name="phpcb"
-         description="Aggregate tool output with PHP_CodeBrowser">
-  <exec executable="phpcb">
-   <arg value="--log" />
-   <arg path="${basedir}/build/logs" />
-   <arg value="--source" />
-   <arg path="${basedir}/PHPUnit" />
-   <arg value="--output" />
-   <arg path="${basedir}/build/code-browser" />
-  </exec>
+ <target name="phpdox"
+         description="Generate software project documentation using phpDox">
+  <exec executable="phpdox" />
  </target>
 
  <target name="phar"
-         description="Create PHAR archive of PHPUnit and all its dependencies"
-         depends="clean">
-  <mkdir dir="${basedir}/build/phar"/>
-
+         description="Create PHAR archive of PHPUnit and all its dependencies (release)"
+         depends="phar-prepare">
   <exec executable="bash" outputproperty="version">
    <arg value="-c" />
-   <arg value="${basedir}/phpunit.php --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
+   <arg value="${basedir}/phpunit --version | awk 'BEGIN { ORS = &quot;&quot;; } {print $2}'" />
   </exec>
 
-  <untar dest="${basedir}/build/phar" compression="gzip">
-   <fileset dir="${basedir}/build/dependencies">
-    <include name="**/*.tgz"/>
-   </fileset>
-  </untar>
+  <antcall target="phar-build">
+   <param name="version" value="${version}"/>
+  </antcall>
+ </target>
 
-  <copy todir="${basedir}/build/phar/PHPUnit">
-   <fileset dir="${basedir}/PHPUnit"/>
+ <target name="phar-alpha"
+         description="Create PHAR archive of PHPUnit and all its dependencies (alpha)"
+         depends="phar-prepare">
+  <antcall target="phar-build">
+   <param name="version" value="alpha"/>
+  </antcall>
+ </target>
+
+ <target name="phar-beta"
+         description="Create PHAR archive of PHPUnit and all its dependencies (beta)"
+         depends="phar-prepare">
+  <antcall target="phar-build">
+   <param name="version" value="beta"/>
+  </antcall>
+ </target>
+
+ <target name="phar-prepare" depends="clean,download-composer">
+  <mkdir dir="${basedir}/build/phar"/>
+  <copy file="${basedir}/composer.json" tofile="${basedir}/composer.json.bak"/>
+
+  <exec executable="php">
+   <arg value="composer.phar"/>
+   <arg value="require"/>
+   <arg value="phpunit/dbunit:1.3.*"/>
+   <arg value="phpunit/phpunit-selenium:1.3.*"/>
+   <arg value="phpunit/php-invoker:1.1.*"/>
+  </exec>
+
+  <move file="${basedir}/composer.json.bak" tofile="${basedir}/composer.json"/>
+
+  <exec executable="${basedir}/build/phar-manifest.php" output="${basedir}/build/phar/manifest.txt"/>
+
+  <copy todir="${basedir}/build/phar/php-code-coverage">
+   <fileset dir="${basedir}/vendor/phpunit/php-code-coverage/src">
+    <include name="**/*" />
+   </fileset>
   </copy>
 
-  <delete>
-   <fileset dir="${basedir}/build/phar">
-    <include name="**/autoload.php" />
-    <include name="**/Autoload.php" />
-    <include name="**/Autoload.php.in" />
-    <include name="**/package.sig" />
-    <include name="**/package.xml" />
+  <copy todir="${basedir}/build/phar" file="${basedir}/build/ca.pem" />
+
+  <copy todir="${basedir}/build/phar/php-file-iterator">
+   <fileset dir="${basedir}/vendor/phpunit/php-file-iterator/File">
+    <include name="**/*.php" />
+    <exclude name="**/Autoload.*" />
    </fileset>
-  </delete>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/php-text-template">
+   <fileset dir="${basedir}/vendor/phpunit/php-text-template/Text">
+    <include name="**/*.php" />
+    <exclude name="**/Autoload.*" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/php-timer">
+   <fileset dir="${basedir}/vendor/phpunit/php-timer/PHP">
+    <include name="**/*.php" />
+    <exclude name="**/Autoload.*" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/php-token-stream">
+   <fileset dir="${basedir}/vendor/phpunit/php-token-stream/PHP">
+    <include name="**/*.php" />
+    <exclude name="**/Autoload.*" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/phpunit-mock-objects">
+   <fileset dir="${basedir}/vendor/phpunit/phpunit-mock-objects/src">
+    <include name="**/*" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/sebastian-comparator">
+   <fileset dir="${basedir}/vendor/sebastian/comparator/src">
+    <include name="**/*.php" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/sebastian-diff">
+   <fileset dir="${basedir}/vendor/sebastian/diff/src">
+    <include name="**/*.php" />
+    <exclude name="**/autoload.php" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/sebastian-environment">
+   <fileset dir="${basedir}/vendor/sebastian/environment/src">
+    <include name="**/*.php" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/sebastian-exporter">
+   <fileset dir="${basedir}/vendor/sebastian/exporter/src">
+    <include name="**/*.php" />
+    <exclude name="**/autoload.php" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/sebastian-version">
+   <fileset dir="${basedir}/vendor/sebastian/version/src">
+    <include name="**/*.php" />
+    <exclude name="**/autoload.php" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/symfony">
+   <fileset dir="${basedir}/vendor/symfony">
+    <include name="**/*.php" />
+    <exclude name="**/Tests/**" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/dbunit">
+   <fileset dir="${basedir}/vendor/phpunit/dbunit/PHPUnit">
+    <include name="**/*.php" />
+    <exclude name="**/Autoload.*" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/php-invoker">
+   <fileset dir="${basedir}/vendor/phpunit/php-invoker/PHP">
+    <include name="**/*.php" />
+    <exclude name="**/Autoload.*" />
+   </fileset>
+  </copy>
+
+  <copy todir="${basedir}/build/phar/phpunit-selenium">
+   <fileset dir="${basedir}/vendor/phpunit/phpunit-selenium/PHPUnit">
+    <include name="**/*.php" />
+    <exclude name="**/Autoload.*" />
+   </fileset>
+  </copy>
+ </target>
+
+ <target name="phar-build">
+  <copy todir="${basedir}/build/phar/phpunit">
+   <fileset dir="${basedir}/src">
+    <include name="**/*.php" />
+    <include name="**/*.tpl*" />
+   </fileset>
+  </copy>
+
+  <exec executable="${basedir}/build/phar-version.php" outputproperty="_version">
+   <arg value="${version}" />
+  </exec>
 
   <exec executable="phpab">
    <arg value="--all" />
    <arg value="--phar" />
    <arg value="--output" />
-   <arg path="${basedir}/build/phpunit-${version}.phar" />
+   <arg path="${basedir}/build/phpunit-${_version}.phar" />
    <arg value="--template" />
    <arg path="${basedir}/build/phar-autoload.php.in" />
    <arg value="--indent" />
@@ -205,16 +325,7 @@
    <arg path="${basedir}/build/phar" />
   </exec>
 
-  <chmod file="${basedir}/build/phpunit-${version}.phar" perm="ugo+rx"/>
-  <copy file="${basedir}/build/phpunit-${version}.phar" tofile="${basedir}/build/phpunit-${version}-compressed.phar"/>
-  <chmod file="${basedir}/build/phpunit-${version}-compressed.phar" perm="ugo+rx"/>
-
-  <exec executable="phar">
-   <arg value="compress" />
-   <arg value="-f" />
-   <arg path="${basedir}/build/phpunit-${version}-compressed.phar" />
-   <arg value="-c" />
-   <arg value="bzip2" />
-  </exec>
+  <chmod file="${basedir}/build/phpunit-${_version}.phar" perm="ugo+rx"/>
  </target>
 </project>
+
