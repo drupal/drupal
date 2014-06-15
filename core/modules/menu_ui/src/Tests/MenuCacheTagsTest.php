@@ -46,10 +46,10 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
       'description' => 'Description text',
     ));
     $menu->save();
-    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
-    $menu_tree = $this->container->get('menu.link_tree');
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = $this->container->get('plugin.manager.menu.link');
     // Move a link into the new menu.
-    $menu_link = $menu_tree->updateLink('test_page_test.test_page', array('menu_name' => 'llama', 'parent' => ''));
+    $menu_link = $menu_link_manager->updateLink('test_page_test.test_page', array('menu_name' => 'llama', 'parent' => ''));
     $block = $this->drupalPlaceBlock('system_menu_block:llama', array('label' => 'Llama', 'provider' => 'system', 'region' => 'footer'));
 
     // Prime the page cache.
@@ -77,7 +77,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     $this->verifyPageCache($path, 'HIT');
 
     // Verify that after modifying the menu link weight, there is a cache miss.
-    $menu_tree->updateLink('test_page_test.test_page', array('weight' => -10));
+    $menu_link_manager->updateLink('test_page_test.test_page', array('weight' => -10));
     $this->pass('Test modification of menu link.', 'Debug');
     $this->verifyPageCache($path, 'MISS');
 
@@ -104,7 +104,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
     // Verify that after resetting the first menu link, there is a cache miss.
     $this->pass('Test reset of menu link.', 'Debug');
     $this->assertTrue($menu_link->isResetable(), 'First link can be reset');
-    $menu_link = $menu_tree->resetLink($menu_link->getPluginId());
+    $menu_link = $menu_link_manager->resetLink($menu_link->getPluginId());
     $this->verifyPageCache($path, 'MISS');
 
     // Verify a cache hit.
