@@ -24,6 +24,13 @@ class MenuLinkTreeTest extends KernelTestBase {
   protected $linkTree;
 
   /**
+   * The menu link plugin maanger
+   *
+   * @var \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
+   */
+  protected $menuLinkManager;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -49,7 +56,8 @@ class MenuLinkTreeTest extends KernelTestBase {
     $this->installSchema('system', array('router'));
     $this->installEntitySchema('menu_link_content');
 
-    $this->linkTree = \Drupal::menuTree();
+    $this->linkTree = $this->container->get('menu.link_tree');
+    $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
   }
 
   /**
@@ -70,8 +78,8 @@ class MenuLinkTreeTest extends KernelTestBase {
     $output = $this->linkTree->buildTree('menu2');
     $this->assertEqual(count($output), 1);
 
-    $this->linkTree->deleteLinksInMenu('menu1');
-    $this->linkTree->resetDefinitions();
+    $this->menuLinkManager->deleteLinksInMenu('menu1');
+    $this->linkTree->resetStaticCache();
 
     $output = $this->linkTree->buildTree('menu1');
     $this->assertEqual(count($output), 0);

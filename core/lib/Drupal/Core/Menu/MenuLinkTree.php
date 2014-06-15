@@ -878,7 +878,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   /**
    * {@inheritdoc}
    */
-  public function resetDefinitions() {
+  public function resetStaticCache() {
     $this->menuTree = array();
     $this->buildAllDataParameters = array();
     $this->menuPageTrees = array();

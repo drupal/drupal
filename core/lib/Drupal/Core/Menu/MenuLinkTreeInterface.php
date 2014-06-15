@@ -253,4 +253,9 @@ interface MenuLinkTreeInterface {
    */
   public function getParentDepthLimit($id);
 
+  /**
+   * For test purposes, clear any static data caches.
+   */
+  public function resetStaticCache();
+
 }
