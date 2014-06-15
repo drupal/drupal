@@ -108,7 +108,7 @@ class MenuNodeTest extends WebTestBase {
     $this->assertLink($node_title);
 
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertOptionSelected('edit-menu-weight', 17, 'Menu weight correct in edit form');
+    $this->assertFieldById('edit-menu-weight', 17, 'Menu weight correct in edit form');
 
     // Edit the node and remove the menu link.
     $edit = array(

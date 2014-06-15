@@ -198,13 +198,13 @@ interface MenuLinkTreeInterface {
    *   children from the select options.
    * @param array $menus
    *   Optional array of menu names as keys and titles as values to limit
-   *   the select options.
+   *   the select options.  If NULL, all menus will be included.
    *
    * @return array
    *   Keyed array where the keys are contain a menu name and parent ID and
    *   the values are a menu name or link title indented by depth.
    */
-  public function getParentSelectOptions($id = '', array $menus = array());
+  public function getParentSelectOptions($id = '', array $menus = NULL);
 
   /**
    * Get a form element to choose a menu and parent.
@@ -221,7 +221,7 @@ interface MenuLinkTreeInterface {
    *   children from being selected.
    * @param array $menus
    *   Optional array of menu names as keys and titles as values to limit
-   *   the values that may be selected.
+   *   the values that may be selected. If NULL, all menus will be included.
    *
    * @return array
    *   A form element to choose a parent, or an empty array if no possible
@@ -229,7 +229,7 @@ interface MenuLinkTreeInterface {
    *   a single string containing the chosen menu name and parent ID separated
    *   by a ':' character.
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = array());
+  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL);
 
   /**
    * Gets a list of menu names for use as options.

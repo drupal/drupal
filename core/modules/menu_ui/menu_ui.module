@@ -264,8 +264,9 @@ function menu_ui_node_save(EntityInterface $node) {
  */
 function menu_ui_node_predelete(EntityInterface $node) {
   // Delete all MenuLinkContent links that point to this node.
-  $menu_tree = \Drupal::menuTree();
-  $result = $menu_tree->loadLinksByRoute('node.view', array('node' => $node->id()));
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $result = $menu_link_manager->loadLinksByRoute('node.view', array('node' => $node->id()));
 
   if (!empty($result)) {
     foreach ($result as $id => $instance) {
@@ -369,7 +370,7 @@ function menu_ui_form_node_form_alter(&$form, $form_state) {
   else {
     $default = \Drupal::config('menu.entity.node.'.$type)->get('parent');
   }
-  $parent_element = $this->menuTree->parentSelectElement($default,  $definition['id'], $available_menus);
+  $parent_element = $link_tree->parentSelectElement($default,  $definition['id'], $available_menus);
   // If no possible parent menu items were found, there is nothing to display.
   if (empty($parent_element)) {
     return;
@@ -426,16 +427,9 @@ function menu_ui_form_node_form_alter(&$form, $form_state) {
   $form['menu']['link']['menu_parent']['#title'] = t('Parent item');
   $form['menu']['link']['menu_parent']['#attributes']['class'][] = 'menu-parent-select';
 
-  // Get number of items in menu so the weight selector is sized appropriately.
-  $delta = $link_tree->countMenuLinks($definition['menu_name']);
-  if ($delta < 50) {
-    // Old hardcoded value
-    $delta = 50;
-  }
   $form['menu']['link']['weight'] = array(
-    '#type' => 'weight',
+    '#type' => 'number',
     '#title' => t('Weight'),
-    '#delta' => $delta,
     '#default_value' => $definition['weight'],
     '#description' => t('Menu links with lower weights are displayed before links with higher weights.'),
   );

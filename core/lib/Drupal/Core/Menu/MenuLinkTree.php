@@ -774,10 +774,8 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getParentSelectOptions($id = '', array $menus = array()) {
-    // @todo: Core allows you to replace the select element ... this is a sign
-    // that we might want to write a form element as well, which can be swapped.
-    if (empty($menus)) {
+  public function getParentSelectOptions($id = '', array $menus = NULL) {
+    if (!isset($menus)) {
       $menus = $this->getMenuOptions();
     }
 
@@ -795,7 +793,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   /**
    * {@inheritdoc}
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = array()) {
+  public function parentSelectElement($menu_parent, $id = '', array $menus =  NULL) {
     $options = $this->getParentSelectOptions($id, $menus);
     // If no options were found, there is nothing to select.
     if ($options) {
