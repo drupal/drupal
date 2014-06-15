@@ -27,9 +27,9 @@ class LinksTest extends WebTestBase {
   /**
    * The menu link plugin maanger
    *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface $menuTree
+   * @var \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    */
-  protected $menuTree;
+  protected $menuLinkManager;
 
   public static function getInfo() {
     return array(
@@ -45,7 +45,7 @@ class LinksTest extends WebTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->menuTree = $this->container->get('menu.link_tree');
+    $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
 
     entity_create('menu', array(
       'id' => 'menu_test',
@@ -59,7 +59,7 @@ class LinksTest extends WebTestBase {
    */
   function createLinkHierarchy($module = 'menu_test') {
     // First remove all the menu links in the menu.
-    $this->menuTree->deleteLinksInMenu('menu_test');
+    $this->menuLinkManager->deleteLinksInMenu('menu_test');
 
     // Then create a simple link hierarchy:
     // - parent
@@ -122,7 +122,7 @@ class LinksTest extends WebTestBase {
   function assertMenuLinkParents($links, $expected_hierarchy) {
     foreach ($expected_hierarchy as $id => $parent) {
       /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
-      $menu_link_plugin = $this->menuTree->createInstance($links[$id]);
+      $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);
       $expected_parent = isset($links[$parent]) ? $links[$parent] : '';
 
       $this->assertEqual($menu_link_plugin->getParent(), $expected_parent, format_string('Menu link %id has parent of %parent, expected %expected_parent.', array('%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent)));
@@ -149,10 +149,10 @@ class LinksTest extends WebTestBase {
     // childs of child-1 have been moved too.
     $links = $this->createLinkHierarchy($module);
     /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
-    $this->menuTree->updateLink($links['child-1'], array('parent' => $links['child-2']));
+    $this->menuLinkManager->updateLink($links['child-1'], array('parent' => $links['child-2']));
     // Verify that the entity was updated too.
     /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
-    $menu_link_plugin = $this->menuTree->createInstance($links['child-1']);
+    $menu_link_plugin = $this->menuLinkManager->createInstance($links['child-1']);
     $entity = entity_load_by_uuid('menu_link_content', $menu_link_plugin->getDerivativeId());
     $this->assertEqual($entity->getParentId(), $links['child-2']);
 
@@ -168,7 +168,7 @@ class LinksTest extends WebTestBase {
     // Start over, and delete child-1, and check that the children of child-1
     // have been reassigned to the parent.
     $links = $this->createLinkHierarchy($module);
-    $this->menuTree->deleteLink($links['child-1']);
+    $this->menuLinkManager->deleteLink($links['child-1']);
 
     $expected_hierarchy = array(
       'parent' => FALSE,
@@ -178,6 +178,9 @@ class LinksTest extends WebTestBase {
     );
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
+    // @todo - figure out what makes sense to test in terms of automatic
+    //   re-parenting. Force deleting a link from the DB is an artificial
+    //   situation.
     return;
     // Start over, forcefully delete child-1 from the database, simulating a
     // database crash. Check that the children of child-1 have been reassigned
@@ -218,7 +221,7 @@ class LinksTest extends WebTestBase {
     \Drupal::moduleHandler()->install(array('menu_test'));
     \Drupal::service('router.builder')->rebuild();
     menu_link_rebuild_defaults();
-    $menu_links = $this->menuTree->loadLinksByRoute('menu_test.menu_test');
+    $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
     $this->assertEqual(count($menu_links), 1);
     $menu_link = reset($menu_links);
     $this->assertEqual($menu_link->getPluginId(), 'menu_test');
@@ -226,7 +229,7 @@ class LinksTest extends WebTestBase {
     // Uninstall the module and ensure the menu link got removed.
     \Drupal::moduleHandler()->uninstall(array('menu_test'));
     menu_link_rebuild_defaults();
-    $menu_links = $this->menuTree->loadLinksByRoute('menu_test.menu_test');
+    $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
     $this->assertEqual(count($menu_links), 0);
   }
 
