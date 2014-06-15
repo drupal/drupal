@@ -59,4 +59,15 @@ class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
     $this->assertTrue(Uuid::isValid($entity->uuid->value), String::format('%entity_type: Default UUID', array('%entity_type' => $entity_type)));
     $this->assertEqual($entity->name->getValue(), array(0 => array('value' => NULL)), 'Field has one empty value by default.');
   }
+
+  /**
+   * Tests custom default value callbacks.
+   */
+  public function testDefaultValueCallback() {
+    $entity = $this->entityManager->getStorage('entity_test_default_value')->create();
+    // The description field has a default value callback for testing, see
+    // entity_test_field_default_value().
+    $this->assertEqual($entity->description->value, 'description_' . $entity->language()->id);
+  }
+
 }

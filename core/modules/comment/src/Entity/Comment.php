@@ -233,18 +233,14 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The user ID of the comment author.'))
-      ->setSettings(array(
-        'target_type' => 'user',
-        'default_value' => 0,
-      ));
+      ->setSetting('target_type', 'user')
+      ->setDefaultValue(0);
 
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t("The comment author's name."))
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 60,
-      ))
+      ->setSetting('max_length', 60)
+      ->setDefaultValue('')
       ->addConstraint('CommentName', array());
 
     $fields['mail'] = FieldDefinition::create('email')
@@ -274,7 +270,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the comment is published.'))
-      ->setSetting('default_value', TRUE);
+      ->setDefaultValue(TRUE);
 
     $fields['thread'] = FieldDefinition::create('string')
       ->setLabel(t('Thread place'))

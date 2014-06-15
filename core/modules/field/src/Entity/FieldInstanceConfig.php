@@ -9,7 +9,7 @@ namespace Drupal\field\Entity;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
@@ -154,14 +154,10 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * The name of a callback function that returns default values.
    *
    * The function will be called with the following arguments:
-   * - \Drupal\Core\Entity\EntityInterface $entity
+   * - \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity being created.
-   * - \Drupal\field\Entity\FieldConfig $field
-   *   The field object.
-   * - \Drupal\field\Entity\FieldInstanceConfig $instance
-   *   The field instance object.
-   * - string $langcode
-   *   The language of the entity being created.
+   * - \Drupal\Core\Field\FieldDefinitionInterface $definition
+   *   The field definition.
    * It should return an array of default values, in the same format as the
    * $default_value property.
    *
@@ -588,14 +584,17 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
-  public function getDefaultValue(EntityInterface $entity) {
-    if (!empty($this->default_value_function)) {
-      $function = $this->default_value_function;
-      return $function($entity, $this->getField(), $this, $entity->language()->id);
+  public function getDefaultValue(ContentEntityInterface $entity) {
+    // Allow custom default values function.
+    if ($function = $this->default_value_function) {
+      $value = call_user_func($function, $entity, $this);
     }
-    elseif (!empty($this->default_value)) {
-      return $this->default_value;
+    else {
+      $value = $this->default_value;
     }
+    // Allow the field type to process default values.
+    $field_item_list_class = $this->getClass();
+    return $field_item_list_class::processDefaultValue($value, $entity, $this);
   }
 
   /**

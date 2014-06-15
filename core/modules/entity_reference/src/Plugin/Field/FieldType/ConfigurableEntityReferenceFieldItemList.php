@@ -8,6 +8,8 @@
 namespace Drupal\entity_reference\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\EntityReferenceFieldItemList;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Represents a configurable entity_reference entity field.
@@ -17,8 +19,8 @@ class ConfigurableEntityReferenceFieldItemList extends EntityReferenceFieldItemL
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultValue() {
-    $default_value = parent::getDefaultValue();
+  public static function processDefaultValue($default_value, ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+    $default_value = parent::processDefaultValue($default_value, $entity, $definition);
 
     if ($default_value) {
       // Convert UUIDs to numeric IDs.
@@ -33,7 +35,7 @@ class ConfigurableEntityReferenceFieldItemList extends EntityReferenceFieldItemL
         }
       }
       if ($uuids) {
-        $target_type = $this->getSetting('target_type');
+        $target_type = $definition->getSetting('target_type');
         $entity_ids = \Drupal::entityQuery($target_type)
           ->condition('uuid', $uuids, 'IN')
           ->execute();

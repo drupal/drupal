@@ -6,13 +6,12 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
-use Drupal\field\FieldConfigInterface;
-use Drupal\field\FieldInstanceConfigInterface;
 
 /**
  * Filter that limits test entity list to revisable ones.
@@ -419,17 +418,19 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
 /**
  * Field default value callback.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity the field belongs to.
- * @param \Drupal\field\FieldConfigInterface $field
- *   The field for which default values should be provided.
- * @param \Drupal\field\FieldInstanceConfigInterface $instance
- *   The field instance for which default values should be provided.
- * @param string $langcode
- *   The field language code to fill-in with the default value.
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The entity being created.
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
+ *   The field definition.
+ *
+ * @return array
+ *   An array of default values, in the same format as the $default_value
+ *   property.
+ *
+ * @see \Drupal\field\Entity\FieldInstanceConfig::$default_value
  */
-function entity_test_field_default_value(EntityInterface $entity, FieldConfigInterface $field, FieldInstanceConfigInterface $instance, $langcode) {
-  return array(array('value' => $field->getName() . '_' . $langcode));
+function entity_test_field_default_value(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+  return array(array('value' => $definition->getName() . '_' . $entity->language()->id));
 }
 
 /**

@@ -8,7 +8,6 @@
 namespace Drupal\serialization\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
-use Symfony\Component\Serializer\Serializer;
 use Drupal\Component\Utility\String;
 
 /**

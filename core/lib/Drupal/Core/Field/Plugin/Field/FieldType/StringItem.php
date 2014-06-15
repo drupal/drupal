@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\StringItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\StringItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;

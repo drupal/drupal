@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -202,7 +203,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    $value = $this->getDefaultValue();
+    $value = $this->getFieldDefinition()->getDefaultValue($this->getEntity());
 
     // NULL or array() mean "no default value", but  0, '0' and the empty string
     // are valid default values.
@@ -214,16 +215,6 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
       $this->setValue($value, $notify);
     }
     return $this;
-  }
-
-  /**
-   * Returns the default value for the field.
-   *
-   * @return array
-   *   The default value for the field.
-   */
-  protected function getDefaultValue() {
-    return $this->getFieldDefinition()->getDefaultValue($this->getEntity());
   }
 
   /**
@@ -345,6 +336,13 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     $widget = $this->defaultValueWidget($form_state);
     $widget->extractFormValues($this, $element, $form_state);
     return $this->getValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function processDefaultValue($default_value, ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
+    return $default_value;
   }
 
   /**

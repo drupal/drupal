@@ -470,7 +470,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of this user.'))
-      ->setSetting('default_value', '')
+      ->setDefaultValue('')
       ->setPropertyConstraints('value', array(
         // No Length constraint here because the UserName constraint also covers
         // that.
@@ -485,7 +485,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['mail'] = FieldDefinition::create('email')
       ->setLabel(t('Email'))
       ->setDescription(t('The email of this user.'))
-      ->setSetting('default_value', '')
+      ->setDefaultValue('')
       ->setPropertyConstraints('value', array('UserMailUnique' => array()));
 
     // @todo Convert to a text field in https://drupal.org/node/1548204.
@@ -504,7 +504,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('User status'))
       ->setDescription(t('Whether the user is active or blocked.'))
-      ->setSetting('default_value', FALSE);
+      ->setDefaultValue(FALSE);
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
@@ -513,17 +513,17 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['access'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Last access'))
       ->setDescription(t('The time that the user last accessed the site.'))
-      ->setSetting('default_value', 0);
+      ->setDefaultValue(0);
 
     $fields['login'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Last login'))
       ->setDescription(t('The time that the user last logged in.'))
-      ->setSetting('default_value', 0);
+      ->setDefaultValue(0);
 
     $fields['init'] = FieldDefinition::create('email')
       ->setLabel(t('Initial email'))
       ->setDescription(t('The email address used for initial account creation.'))
-      ->setSetting('default_value', '');
+      ->setDefaultValue('');
 
     // @todo Convert this to entity_reference_field, see
     // https://drupal.org/node/2044859.

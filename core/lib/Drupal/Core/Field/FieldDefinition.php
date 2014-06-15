@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\field\FieldException;
@@ -378,8 +378,56 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
   /**
    * {@inheritdoc}
    */
-  public function getDefaultValue(EntityInterface $entity) {
-    return $this->getSetting('default_value');
+  public function getDefaultValue(ContentEntityInterface $entity) {
+    // Allow custom default values function.
+    if (isset($this->definition['default_value_callback'])) {
+      $value = call_user_func($this->definition['default_value_callback'], $entity, $this);
+    }
+    else {
+      $value = isset($this->definition['default_value']) ? $this->definition['default_value'] : NULL;
+    }
+    // Allow the field type to process default values.
+    $field_item_list_class = $this->getClass();
+    return $field_item_list_class::processDefaultValue($value, $entity, $this);
+  }
+
+  /**
+   * Sets a custom default value callback.
+   *
+   * If set, the callback overrides any set default value.
+   *
+   * @param string|array $callback
+   *   The callback to invoke for getting the default value. The callback will
+   *   be invoked with the following arguments:
+   *   - \Drupal\Core\Entity\ContentEntityInterface $entity
+   *     The entity being created.
+   *   - \Drupal\Core\Field\FieldDefinitionInterface $definition
+   *     The field definition.
+   *   It should return the default value as documented by
+   *   \Drupal\Core\Field\FieldDefinitionInterface::getDefaultValue().
+   *
+   * @return $this
+   */
+  public function setDefaultValueCallback($callback) {
+    $this->definition['default_value_callback'] = $callback;
+    return $this;
+  }
+
+  /**
+   * Sets a default value.
+   *
+   * Note that if a default value callback is set, it will take precedence over
+   * any value set here.
+   *
+   * @param mixed $value
+   *   The default value in the format as returned by
+   *   \Drupal\Core\Field\FieldDefinitionInterface::getDefaultValue().
+   *
+   * @return $this
+   */
+  public function setDefaultValue($value) {
+    $this->definition['default_value'] = $value;
+    return $this;
   }
 
   /**

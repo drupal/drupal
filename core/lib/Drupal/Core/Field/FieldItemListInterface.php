@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\TypedData\ListInterface;
@@ -227,5 +228,31 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *   The field instance default value.
    */
   public function defaultValuesFormSubmit(array $element, array &$form, array &$form_state);
+
+  /**
+   * Processes the default value before being applied.
+   *
+   * Defined or configured default values of a field might need some processing
+   * in order to be a valid value for the field type; e.g., a date field could
+   * process the defined value of 'NOW' to a valid date.
+   *
+   * @param mixed
+   *   The default value as defined for the field.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity for which the default value is generated.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
+   *   The definition of the field.
+   *
+   * @return mixed
+   *   The default value for the field, as accepted by
+   *   \Drupal\field\Plugin\Core\Entity\FieldItemListInterface::setValue(). This
+   *   can be either:
+   *   - a literal, in which case it will be assigned to the first property of
+   *     the first item.
+   *   - a numerically indexed array of items, each item being a property/value
+   *     array.
+   *   - NULL or array() for no default value.
+   */
+  public static function processDefaultValue($default_value, ContentEntityInterface $entity, FieldDefinitionInterface $definition);
 
 }

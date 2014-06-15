@@ -156,7 +156,7 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['weight'] = FieldDefinition::create('integer')
       ->setLabel(t('Weight'))
       ->setDescription(t('The weight of this term in relation to other terms.'))
-      ->setSetting('default_value', 0);
+      ->setDefaultValue(0);
 
     // @todo Convert this to an entity_reference field, see
     // https://drupal.org/node/1915056
@@ -165,7 +165,7 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setDescription(t('The parents of this term.'))
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       // Save new terms with no parents by default.
-      ->setSetting('default_value', 0)
+      ->setDefaultValue(0)
       ->setSetting('unsigned', TRUE)
       ->addConstraint('TermParent', array());
 

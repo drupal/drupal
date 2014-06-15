@@ -5,7 +5,7 @@
  * Defines a field type and its formatters and widgets.
  */
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -31,7 +31,7 @@ function field_test_field_config_update_forbid(FieldConfigInterface $field, Fiel
 /**
  * Sample 'default value' callback.
  */
-function field_test_default_value(EntityInterface $entity, $field, $instance) {
+function field_test_default_value(ContentEntityInterface $entity, FieldDefinitionInterface $definition) {
   return array(array('value' => 99));
 }
 

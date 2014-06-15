@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 
 /**
@@ -114,19 +114,19 @@ interface FieldDefinitionInterface extends FieldStorageDefinitionInterface, List
   /**
    * Returns the default value for the field in a newly created entity.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being created.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity for which the default value is generated.
    *
    * @return mixed
    *   The default value for the field, as accepted by
-   *   Drupal\field\Plugin\Core\Entity\FieldConfig::setValue(). This can be
-   *   either:
+   *   \Drupal\field\Plugin\Core\Entity\FieldItemListInterface::setValue(). This
+   *   can be either:
    *   - a literal, in which case it will be assigned to the first property of
    *     the first item.
    *   - a numerically indexed array of items, each item being a property/value
    *     array.
    *   - NULL or array() for no default value.
    */
-  public function getDefaultValue(EntityInterface $entity);
+  public function getDefaultValue(ContentEntityInterface $entity);
 
 }

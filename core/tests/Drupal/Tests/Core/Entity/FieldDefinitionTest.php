@@ -149,12 +149,14 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldDefaultValue() {
     $definition = FieldDefinition::create($this->fieldType);
-    $setting = 'default_value';
     $value = $this->randomName();
-    $definition->setSetting($setting, $value);
-    $entity = $this->getMockBuilder('Drupal\Core\Entity\Entity')
+    $definition->setDefaultValue($value);
+    $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
       ->getMock();
+    // Set the field item list class to be used to avoid requiring the typed
+    // data manager to retrieve it.
+    $definition->setClass('Drupal\Core\Field\FieldItemList');
     $this->assertEquals($value, $definition->getDefaultValue($entity));
   }
 
