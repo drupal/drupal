@@ -136,9 +136,9 @@ function menu_ui_menu_update(Menu $menu) {
  */
 function menu_ui_menu_predelete(Menu $menu) {
   // Delete all links from the menu.
-  /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
-  $menu_tree = \Drupal::service('menu.link_tree');
-  $menu_tree->deleteLinksInMenu($menu->id());
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_link_manager->deleteLinksInMenu($menu->id());
 
   // Remove menu from active menus variable.
   $config = \Drupal::config('system.menu');

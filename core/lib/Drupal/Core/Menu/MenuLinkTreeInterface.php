@@ -176,37 +176,6 @@ interface MenuLinkTreeInterface {
   public function getChildLinks($id, $max_relative_depth = NULL);
 
   /**
-   * Loads all parent link IDs of a given menu link.
-   *
-   * This method is very similar to getActiveTrailIds() but allows the link
-   * to be specified rather than being discovered based on the menu name
-   * and request. This method is mostly useful for testing.
-   *
-   * @param string $id
-   *   The menu link plugin ID.
-   *
-   * @return array
-   *   An ordered array of IDs representing the path to the root of the tree.
-   *   The first element of the array will be equal to $id, unless $id is not
-   *   valid, in which case the return value will be NULL.
-   */
-  public function getParentIds($id);
-
-  /**
-   * Loads all child link IDs of a given menu link, regardless of visibility.
-   *
-   * This method is mostly useful for testing.
-   *
-   * @param string $id
-   *   The menu link plugin ID.
-   *
-   * @return array
-   *   An unordered array of IDs representing the IDs of all children, or NULL
-   *   if the ID is invalid.
-   */
-  public function getChildIds($id);
-
-  /**
    * Fetches a menu link which matches the route name, parameters and menu name.
    *
    * @param string $route_name

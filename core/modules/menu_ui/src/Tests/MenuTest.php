@@ -85,9 +85,11 @@ class MenuTest extends MenuWebTestBase {
 
     // Verify that the menu links rebuild is idempotent and leaves the same
     // number of links in the table.
-    $before_count = \Drupal::menuTree()->countMenuLinks(NULL);
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = $this->container->get('plugin.manager.menu.link');
+    $before_count = $menu_link_manager->countMenuLinks(NULL);
     menu_link_rebuild_defaults();
-    $after_count = \Drupal::menuTree()->countMenuLinks(NULL);
+    $after_count = $menu_link_manager->countMenuLinks(NULL);
     $this->assertIdentical($before_count, $after_count, 'menu_link_rebuild_defaults() does not add more links');
     // Do standard user tests.
     // Login the user.
@@ -113,8 +115,6 @@ class MenuTest extends MenuWebTestBase {
 
     // Modify and reset a standard menu link.
     $instance = $this->getStandardMenuLink();
-    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
-    $menu_tree = $this->container->get('menu.link_tree');
     // Edit the static menu link.
     $edit = array();
     $edit['weight'] = 10;
@@ -122,9 +122,9 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalPostForm("admin/structure/menu/link/$id/edit", $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertText('The menu link has been saved.');
-    $menu_tree->resetDefinitions();
+    $menu_link_manager->resetDefinitions();
 
-    $instance = $menu_tree->createInstance($instance->getPluginId());
+    $instance = $menu_link_manager->createInstance($instance->getPluginId());
     $this->assertEqual($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
   }
 
@@ -736,9 +736,9 @@ class MenuTest extends MenuWebTestBase {
   private function getStandardMenuLink() {
     // Retrieve menu link id of the Log out menu link, which will always be on
     // the front page.
-    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
-    $menu_tree = $this->container->get('menu.link_tree');
-    $result = $menu_tree->loadLinksByRoute('user.logout');
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = $this->container->get('plugin.manager.menu.link');
+    $result = $menu_link_manager->loadLinksByRoute('user.logout');
     $instance = reset($result);
 
     $this->assertTrue((bool) $instance, 'Standard menu link was loaded');

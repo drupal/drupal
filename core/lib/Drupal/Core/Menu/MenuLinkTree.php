@@ -597,26 +597,6 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getParentIds($id) {
-    if ($this->getDefinition($id, FALSE)) {
-      return $this->treeStorage->getRootPathIds($id);
-    }
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getChildIds($id) {
-    if ($this->getDefinition($id, FALSE)) {
-      return $this->treeStorage->getAllChildIds($id);
-    }
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildSubtree($id, $max_relative_depth = NULL) {
     $subtree = $this->treeStorage->loadSubtree($id, $max_relative_depth);
     if ($subtree) {

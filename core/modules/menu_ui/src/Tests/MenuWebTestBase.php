@@ -31,12 +31,12 @@ abstract class MenuWebTestBase extends WebTestBase {
    */
   function assertMenuLink($menu_plugin_id, array $expected_item) {
     // Retrieve menu link.
-    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
-    $menu_tree = $this->container->get('menu.link_tree');
-    $menu_tree->resetDefinitions();
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = $this->container->get('plugin.manager.menu.link');
+    $menu_link_manager->resetDefinitions();
     // Reset the static load cache.
     \Drupal::entityManager()->getStorage('menu_link_content')->resetCache();
-    $definition = $menu_tree->getDefinition($menu_plugin_id);
+    $definition = $menu_link_manager->getDefinition($menu_plugin_id);
 
     $entity = NULL;
 
@@ -49,7 +49,7 @@ abstract class MenuWebTestBase extends WebTestBase {
     }
 
     if (isset($expected_item['children'])) {
-      $child_ids = array_values($menu_tree->getChildIds($menu_plugin_id));
+      $child_ids = array_values($menu_link_manager->getChildIds($menu_plugin_id));
       sort($expected_item['children']);
       if ($child_ids) {
         sort($child_ids);
@@ -59,7 +59,7 @@ abstract class MenuWebTestBase extends WebTestBase {
     }
 
     if (isset($expected_item['parents'])) {
-      $parent_ids = array_values($menu_tree->getParentIds($menu_plugin_id));
+      $parent_ids = array_values($menu_link_manager->getParentIds($menu_plugin_id));
       $this->assertEqual($expected_item['parents'], $parent_ids);
       unset($expected_item['parents']);
     }

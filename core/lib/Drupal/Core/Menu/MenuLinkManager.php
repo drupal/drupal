@@ -317,6 +317,26 @@ class MenuLinkManager implements MenuLinkManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getParentIds($id) {
+    if ($this->getDefinition($id, FALSE)) {
+      return $this->treeStorage->getRootPathIds($id);
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChildIds($id) {
+    if ($this->getDefinition($id, FALSE)) {
+      return $this->treeStorage->getAllChildIds($id);
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadLinksByRoute($route_name, array $route_parameters = array(), $include_hidden = FALSE) {
     $instances = array();
     $loaded = $this->treeStorage->loadByRoute($route_name, $route_parameters, $include_hidden);
