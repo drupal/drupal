@@ -116,17 +116,18 @@ class MenuRouterTest extends WebTestBase {
   protected function doTestMenuName() {
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
-
-    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.menu_name_test');
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = $this->container->get('plugin.manager.menu.link');
+    $menu_links = $menu_link_manager->loadLinksByRoute('menu_test.menu_name_test');
     $menu_link = reset($menu_links);
     $this->assertEqual($menu_link->getMenuName(), 'original', 'Menu name is "original".');
 
     // Change the menu_name parameter in menu_test.module, then force a menu
     // rebuild.
     menu_test_menu_name('changed');
-    \Drupal::menuTree()->rebuild();
+    $menu_link_manager->rebuild();
 
-    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.menu_name_test');
+    $menu_links = $menu_link_manager->loadLinksByRoute('menu_test.menu_name_test');
     $menu_link = reset($menu_links);
     $this->assertEqual($menu_link->getMenuName(), 'changed', 'Menu name was successfully changed after rebuild.');
   }
@@ -137,7 +138,9 @@ class MenuRouterTest extends WebTestBase {
   protected function doTestMenuLinkDefaultsAlter() {
     // Check that machine name does not need to be defined since it is already
     // set as the key of each menu link.
-    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.custom');
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = $this->container->get('plugin.manager.menu.link');
+    $menu_links = $menu_link_manager->loadLinksByRoute('menu_test.custom');
     $menu_link = reset($menu_links);
     $this->assertEqual($menu_link->getPluginId(), 'menu_test.custom', 'Menu links added at hook_menu_link_defaults_alter() obtain the machine name from the $links key.');
     // Make sure that rebuilding the menu tree does not produce duplicates of
@@ -151,11 +154,13 @@ class MenuRouterTest extends WebTestBase {
    * Tests for menu hierarchy.
    */
   protected function doTestMenuHierarchy() {
-    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.hierarchy_parent');
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = $this->container->get('plugin.manager.menu.link');
+    $menu_links = $menu_link_manager->loadLinksByRoute('menu_test.hierarchy_parent');
     $parent_link = reset($menu_links);
-    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.hierarchy_parent.child');
+    $menu_links = $menu_link_manager->loadLinksByRoute('menu_test.hierarchy_parent.child');
     $child_link = reset($menu_links);
-    $menu_links = \Drupal::menuTree()->loadLinksByRoute('menu_test.hierarchy_parent.child2.child');
+    $menu_links = $menu_link_manager->loadLinksByRoute('menu_test.hierarchy_parent.child2.child');
     $unattached_child_link = reset($menu_links);
 
     $this->assertEqual($child_link->getParent(), $parent_link->getPluginId(), 'The parent of a directly attached child is correct.');
