@@ -12,6 +12,8 @@ namespace Drupal\Core\TypedData;
  *
  * @see \Drupal\Core\TypedData\DataReferenceDefinition
  * @see \Drupal\Core\TypedData\DataReferenceInterface
+ *
+ * @ingroup typed_data
  */
 interface DataReferenceDefinitionInterface extends DataDefinitionInterface  {
 

@@ -17,6 +17,8 @@ namespace Drupal\Core\TypedData;
  * IteratorAggregate or Iterator before this interface in the implements clause.
  *
  * @see \Drupal\Core\TypedData\ListDefinitionInterface
+ *
+ * @ingroup typed_data
  */
 interface ListInterface extends TypedDataInterface, \ArrayAccess, \Countable, \Traversable {
 

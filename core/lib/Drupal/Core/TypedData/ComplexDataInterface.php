@@ -20,6 +20,8 @@ namespace Drupal\Core\TypedData;
  * IteratorAggregate or Iterator before this interface in the implements clause.
  *
  * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface
+ *
+ * @ingroup typed_data
  */
 interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
 

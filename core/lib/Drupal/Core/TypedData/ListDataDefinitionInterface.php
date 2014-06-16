@@ -15,6 +15,8 @@ namespace Drupal\Core\TypedData;
  *
  * @see \Drupal\Core\TypedData\ListDefinition
  * @see \Drupal\Core\TypedData\ListInterface
+ *
+ * @ingroup typed_data
  */
 interface ListDataDefinitionInterface extends DataDefinitionInterface {
 

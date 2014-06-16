@@ -23,6 +23,8 @@ namespace Drupal\Core\TypedData;
  * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface
  * @see \Drupal\Core\TypedData\DataReferenceDefinitionInterface
  * @see \Drupal\Core\TypedData\TypedDataInterface
+ *
+ * @ingroup typed_data
  */
 interface DataDefinitionInterface {
 

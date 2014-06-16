@@ -718,14 +718,60 @@
 /**
  * @defgroup typed_data Typed Data API
  * @{
- * API for defining what type of data is used in fields, configuration, etc.
+ * API for describing data based on a set of available data types.
  *
- * @todo write this
+ * The Typed Data API was created to provide developers with a consistent
+ * interface for interacting with data, as well as an API for metadata
+ * (information about the data, such as the data type, whether it is
+ * translatable, and who can access it). The Typed Data API is used in several
+ * Drupal sub-systems, such as the Entity Field API and Configuration API.
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
+ * See https://drupal.org/node/1794140 for more information about the Typed
+ * Data API.
  *
- * See https://drupal.org/node/1794140
+ * @section interfaces Interfaces and classes in the Typed Data API
+ * There are several basic interfaces in the Typed Data API, representing
+ * different types of data:
+ * - \Drupal\Core\TypedData\PrimitiveInterface: Used for primitive data, such
+ *   as strings, numeric types, etc. Drupal provides primitive types for
+ *   integers, strings, etc. based on this interface, and you should
+ *   not ever need to create new primitive types.
+ * - \Drupal\Core\TypedData\TypedDataInterface: Used for single pieces of data,
+ *   with some information about its context. Abstract base class
+ *   \Drupal\Core\TypedData\TypedData is a useful starting point, and contains
+ *   documentation on how to extend it.
+ * - \Drupal\Core\TypedData\ComplexDataInterface: Used for complex data, which
+ *   contains named and typed properties; extends TypedDataInterface. Examples
+ *   of complex data include content entities and field items. See the
+ *   @link entity_api Entity API topic @endlink for more information about
+ *   entities; for most complex data, developers should use entities.
+ * - \Drupal\Core\TypedData\ListInterface: Used for a sequential list of other
+ *   typed data. Class \Drupal\Core\TypedData\Plugin\DataType\ItemList is a
+ *   generic implementation of this interface, and it is used by default for
+ *   data declared as a list of some other data type. You can also define a
+ *   custom list class, in which case ItemList is a useful base class.
+ *
+ * @section defining Defining data types
+ * To define a new data type:
+ * - Create a class that implements one of the Typed Data interfaces.
+ *   Typically, you will want to extend one of the classes listed in the
+ *   section above as a starting point.
+ * - Make your class into a DataType plugin. To do that, put it in namespace
+ *   \Drupal\yourmodule\Plugin\DataType (where "yourmodule" is your module's
+ *   short name), and add annotation of type
+ *   \Drupal\Core\TypedData\Annotation\DataType to the documentation header.
+ *   See the @link plugin_api Plugin API topic @endlink and the
+ *   @link annotation Annotations topic @endlink for more information.
+ *
+ * @section using Using data types
+ * The data types of the Typed Data API can be used in several ways, once they
+ * have been defined:
+ * - In the Field API, data types can be used as the class in the property
+ *   definition of the field. See the @link field Field API topic @endlink for
+ *   more information.
+ * - In configuration schema files, you can use the unique ID ('id' annotation)
+ *   from any DataType plugin class as the 'type' value for an entry. See the
+ *   @link config_api Confuration API topic @endlink for more information.
  * @}
  */
 

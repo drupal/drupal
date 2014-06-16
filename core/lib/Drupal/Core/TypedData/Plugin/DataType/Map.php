@@ -20,6 +20,8 @@ use Drupal\Core\TypedData\ComplexDataInterface;
  * By default there is no metadata for contained properties. Extending classes
  * may want to override Map::getPropertyDefinitions() to define it.
  *
+ * @ingroup typed_data
+ *
  * @DataType(
  *   id = "map",
  *   label = @Translation("Map"),

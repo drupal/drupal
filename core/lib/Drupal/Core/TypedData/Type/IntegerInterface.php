@@ -14,6 +14,8 @@ use Drupal\Core\TypedData\PrimitiveInterface;
  *
  * The plain value of an integer is a regular PHP integer. For setting the value
  * any PHP variable that casts to an integer may be passed.
+ *
+ * @ingroup typed_data
  */
 interface IntegerInterface extends PrimitiveInterface {
 

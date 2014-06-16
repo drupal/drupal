@@ -11,6 +11,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Interface for dates, optionally including a time.
+ *
+ * @ingroup typed_data
  */
 interface DateTimeInterface {
 

@@ -9,6 +9,8 @@ namespace Drupal\Core\TypedData\Type;
 
 /**
  * Interface for durations.
+ *
+ * @ingroup typed_data
  */
 interface DurationInterface {
 

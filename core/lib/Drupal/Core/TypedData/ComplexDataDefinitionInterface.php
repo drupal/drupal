@@ -11,6 +11,8 @@ namespace Drupal\Core\TypedData;
  * Interface for complex data definitions.
  *
  * @see \Drupal\Core\TypedData\ComplexDataInterface
+ *
+ * @ingroup typed_data
  */
 interface ComplexDataDefinitionInterface extends DataDefinitionInterface  {
 

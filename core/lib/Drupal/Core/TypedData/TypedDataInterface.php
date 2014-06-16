@@ -13,6 +13,8 @@ use Drupal\user;
  * Interface for typed data objects.
  *
  * @see \Drupal\Core\TypedData\DataDefinitionInterface
+ *
+ * @ingroup typed_data
  */
 interface TypedDataInterface {
 

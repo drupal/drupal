@@ -32,6 +32,8 @@ use Drupal\Component\Annotation\Plugin;
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  * @see hook_data_type_info_alter()
  *
+ * @ingroup typed_data
+ *
  * @Annotation
  */
 class DataType extends Plugin {

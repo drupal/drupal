@@ -9,6 +9,8 @@ namespace Drupal\Core\TypedData;
 
 /**
  * Interface for primitive data.
+ *
+ * @ingroup typed_data
  */
 interface PrimitiveInterface {
 

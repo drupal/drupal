@@ -20,6 +20,8 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * Drupal\Core\TypedData\Annotation\DataType.
  * Note: The class cannot be called "List" as list is a reserved PHP keyword.
  *
+ * @ingroup typed_data
+ *
  * @DataType(
  *   id = "list",
  *   label = @Translation("List of items"),
