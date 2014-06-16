@@ -268,53 +268,100 @@
  * @{
  * Describes how to define and manipulate content and configuration entities.
  *
- * @todo Add an overview here, describing what an entity is, bundles, entity
- *   types, etc. at an overview level. And link to more detailed documentation:
- *   https://drupal.org/developing/api/entity
- *
- * @section types Types of entities
- * Entities can be used to store content or configuration information. See the
+ * Entities, in Drupal, are objects that are used for persistent storage of
+ * content and configuration information. See the
  * @link architecture Drupal's architecture topic @endlink for an overview of
  * the different types of information, and the
  * @link config_api Configuration API topic @endlink for more about the
- * configuration API. Defining and manipulating content and configuration
- * entities is very similar, and this is described in the sections below.
+ * configuration API.
+ *
+ * Each entity is an instance of a particular "entity type". Some content entity
+ * types have sub-types, which are known as "bundles", while for other entity
+ * types, there is only a single bundle. For example, the Node content entity
+ * type, which is used for the main content pages in Drupal, has bundles that
+ * are known as "content types", while the User content type, which is used for
+ * user accounts, has only one bundle.
+ *
+ * The sections below have more information about entities and the Entity API;
+ * for more detailed information, see https://drupal.org/developing/api/entity
  *
  * @section define Defining an entity type
- *
- * @todo This section was written for Config entities. Add information about
- *   content entities to each item, and add additional items that are relevant
- *   to content entities, making sure to say they are not needed for config
- *   entities, such as view page controllers, etc.
- *
- * Here are the steps to follow to define a new entity type:
+ * Entity types are defined by modules, using Drupal's Plugin API (see the
+ * @link plugins Plugin API topic @endlink for more information about plugins
+ * in general). Here are the steps to follow to define a new entity type:
  * - Choose a unique machine name, or ID, for your entity type. This normally
  *   starts with (or is the same as) your module's machine name. It should be
  *   as short as possible, and may not exceed 32 characters.
  * - Define an interface for your entity's get/set methods, extending either
- *   \Drupal\Core\Config\Entity\ConfigEntityInterface or [content entity
- *   interface].
+ *   \Drupal\Core\Config\Entity\ConfigEntityInterface or
+ *   \Drupal\Core\Entity\ContentEntityInterface.
  * - Define a class for your entity, implementing your interface and extending
- *   either \Drupal\Core\Config\Entity\ConfigEntityBase or [content entity
- *   class] , with annotation for \@ConfigEntityType or [content entity
- *   annotation] in its documentation block.
+ *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
+ *   \Drupal\Core\Entity\ContentEntityBase, with annotation for
+ *   \@ConfigEntityType or \@ContentEntityType in its documentation block.
  * - The 'id' annotation gives the entity type ID, and the 'label' annotation
- *   gives the human-readable name of the entity type.
+ *   gives the human-readable name of the entity type. If you are defining a
+ *   content entity type that uses bundles, the 'bundle_label' annotation gives
+ *   the human-readable name to use for a bundle of this entity type (for
+ *   example, "Content type" for the Node entity).
  * - The annotation will refer to several controller classes, which you will
  *   also need to define:
  *   - list_builder: Define a class that extends
- *     \Drupal\Core\Config\Entity\ConfigEntityListBuilder or [content entity
-       list builder], to provide an administrative overview for your entities.
+ *     \Drupal\Core\Config\Entity\ConfigEntityListBuilder (for configuration
+ *     entities) or \Drupal\Core\Entity\EntityListBuilder (for content
+ *     entities), to provide an administrative overview for your entities.
  *   - add and edit forms, or default form: Define a class (or two) that
  *     extend(s) \Drupal\Core\Entity\EntityForm to provide add and edit forms
  *     for your entities.
  *   - delete form: Define a class that extends
  *     \Drupal\Core\Entity\EntityConfirmFormBase to provide a delete
  *     confirmation form for your entities.
+ *   - view_buider: For content entities, define a class that extends
+ *     \Drupal\Core\Entity\EntityViewBuilder, to display a single entity.
+ *   - translation: For translatable content entities (if the 'translatable'
+ *     annotation has value TRUE), define a class that extends
+ *     \Drupal\content_translation\ContentTranslationHandler, to translate
+ *     the content. Configuration translation is handled automatically by the
+ *     Configuration Translation module, without the need of a controller class.
  *   - access: If your configuration entity has complex permissions, you might
  *     need an access controller, implementing
  *     \Drupal\Core\Entity\EntityAccessControllerInterface, but most entities
  *     can just use the 'admin_permission' annotation instead.
+ * - For content entities, the annotation will refer to a number of database
+ *   tables and their fields. These annotation properties, such as 'base_table',
+ *   'data_table', 'entity_keys', etc., are documented on
+ *   \Drupal\Core\Entity\EntityType. Your module will also need to set up its
+ *   database tables using hook_schema().
+ * - For content entities that are displayed on their own pages, the annotation
+ *   will refer to a 'uri_callback' function, which takes an object of the
+ *   entity interface you have defined as its parameter, and returns routing
+ *   information for the entity page; see node_uri() for an example. You will
+ *   also need to add a corresponding route to your module's routing.yml file;
+ *   see the node.view route in node.routing.yml for an example, and see the
+ *   @link menu Menu and routing @endlink topic for more information about
+ *   routing.
+ * - Define routing and links for the various URLs associated with the entity.
+ *   These go into the 'links' annotation, with the link type as the key, and
+ *   the route machine name (defined in your module's routing.yml file) as the
+ *   value. Typical link types are:
+ *   - canonical: Default link, either to view (if entities are viewed on their
+ *     own pages) or edit the entity.
+ *   - delete-form: Confirmation form to delete the entity.
+ *   - edit-form: Editing form.
+ *   - admin-form: Form for editing bundle or entity type settings.
+ *   - Other link types specific to your entity type can also be defined.
+ * - If your content entity has bundles, you will also need to define a second
+ *   plugin to handle the bundles. This plugin is itself a configuration entity
+ *   type, so follow the steps here to define it. The machine name ('id'
+ *   annotation) of this configuration entity class goes into the
+ *   'bundle_entity_type' annotation on the entity type class. For example, for
+ *   the Node entity, the bundle class is \Drupal\node\Entity\NodeType, whose
+ *   machine name is 'node_type'. This is the annotation value for
+ *  'bundle_entity_type' on the \Drupal\node\Entity\Node class.
+ * - Additional annotations can be seen on entity class examples such as
+ *   \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
+ *   (configuration). These annotations are documented on
+ *   \Drupal\Core\Entity\EntityType.
  *
  * @section load_query Loading and querying entities
  * To load entities, use the entity storage manager, which is a class
@@ -323,6 +370,8 @@
  * @code
  * $storage = \Drupal::entityManager()->getStorage('your_entity_type');
  * @endcode
+ * Here, 'your_entity_type' is the machine name of your entity type ('id'
+ * annotation on the entity class).
  *
  * To query to find entities to load, use an entity query, which is a class
  * implementing \Drupal\Core\Entity\Query\QueryInterface that you can retrieve
@@ -330,9 +379,6 @@
  * @code
  * $storage = \Drupal::entityQuery('your_entity_type');
  * @endcode
- *
- * @todo Add additional relevant classes and interfaces to this topic using
- *   ingroup.
  * @}
  */
 

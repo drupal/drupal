@@ -14,6 +14,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides an implementation of an entity type and its metadata.
+ *
+ * @ingroup entity_api
  */
 class EntityType implements EntityTypeInterface {
 

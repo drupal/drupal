@@ -14,6 +14,8 @@ use Drupal\Core\Render\Element;
 
 /**
  * Base class for content translation handlers.
+ *
+ * @ingroup entity_api
  */
 class ContentTranslationHandler implements ContentTranslationHandlerInterface {
 

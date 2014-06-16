@@ -16,6 +16,8 @@ use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Implements Entity Field API specific enhancements to the Entity class.
+ *
+ * @ingroup entity_api
  */
 abstract class ContentEntityBase extends Entity implements \IteratorAggregate, ContentEntityInterface {
 

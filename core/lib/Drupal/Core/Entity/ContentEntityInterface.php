@@ -25,6 +25,8 @@ use Drupal\Core\TypedData\TranslatableInterface;
  *
  * @see \Drupal\Core\TypedData\TypedDataManager
  * @see \Drupal\Core\Field\FieldItemListInterface
+ *
+ * @ingroup entity_api
  */
 interface ContentEntityInterface extends EntityInterface, RevisionableInterface, TranslatableInterface, ComplexDataInterface {
 

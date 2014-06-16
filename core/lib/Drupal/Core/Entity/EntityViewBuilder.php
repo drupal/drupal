@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for entity view controllers.
+ *
+ * @ingroup entity_api
  */
 class EntityViewBuilder extends EntityControllerBase implements EntityControllerInterface, EntityViewBuilderInterface {
 

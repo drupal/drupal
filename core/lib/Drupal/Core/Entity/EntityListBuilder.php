@@ -13,6 +13,8 @@ use Drupal\Component\Utility\String;
 
 /**
  * Defines a generic implementation to build a listing of entities.
+ *
+ * @ingroup entity_api
  */
 class EntityListBuilder extends EntityControllerBase implements EntityListBuilderInterface, EntityControllerInterface {
 
