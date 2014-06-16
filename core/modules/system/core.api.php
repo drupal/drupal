@@ -702,12 +702,96 @@
  * @{
  * Overview of PHPUnit tests and Simpletest tests.
  *
- * @todo write this
+ * The Drupal project has embraced a philosophy of using automated tests,
+ * consisting of both unit tests (which test the functionality of classes at a
+ * low level) and functional tests (which test the functionality of Drupal
+ * systems at a higher level, usually involving web output). The goal is to
+ * have test coverage for all or most of the components and features, and to
+ * run the automated tests before any code is changed or added, to make sure
+ * it doesn't break any existing functionality (regression testing).
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
+ * In order to implement this philosophy, developers need to do the following:
+ * - When making a patch to fix a bug, make sure that the bug fix patch includes
+ *   a test that fails without the code change and passes with the code change.
+ *   This helps reviewers understand what the bug is, demonstrates that the code
+ *   actually fixes the bug, and ensures the bug will not reappear due to later
+ *   code changes.
+ * - When making a patch to implement a new feature, include new unit and/or
+ *   functional tests in the patch. This serves to both demonstrate that the
+ *   code actually works, and ensure that later changes do not break the new
+ *   functionality.
  *
- * See https://drupal.org/simpletest and https://drupal.org/phpunit
+ * @section write_unit Writing PHPUnit tests for classes
+ * PHPUnit tests for classes are written using the industry-standard PHPUnit
+ * framework. Use a PHPUnit test to test functionality of a class if the Drupal
+ * environment (database, settings, etc.) and web browser are not needed for the
+ * test, or if the Drupal environment can be replaced by a "mock" object. To
+ * write a PHPUnit test:
+ * - Define a class that extends \Drupal\Tests\UnitTestCase.
+ * - The class name needs to end in the word Test.
+ * - The namespace must be a subspace/subdirectory of \Drupal\yourmodule\Tests,
+ *   where yourmodule is your module's machine name.
+ * - The test class file must be named and placed under the yourmodule/tests/src
+ *   directory, according to the PSR-4 standard.
+ * - Your test class needs a getInfo() method, which gives information about
+ *   the test.
+ * - Methods in your test class whose names start with 'test' are the actual
+ *   test cases. Each one should test a logical subset of the functionality.
+ * For more details, see:
+ * - https://drupal.org/phpunit for full documentation on how to write PHPUnit
+ *   tests for Drupal.
+ * - http://phpunit.de for general information on the PHPUnit framework.
+ * - @link oo_conventions Object-oriented programming topic @endlink for more
+ *   on PSR-4, namespaces, and where to place classes.
+ *
+ * @section write_functional Writing functional tests
+ * Functional tests are written using a Drupal-specific framework that is, for
+ * historical reasons, known as "Simpletest". Use a Simpletest test to test the
+ * functionality of sub-system of Drupal, if the functionality depends on the
+ * Drupal database and settings, or to test the web output of Drupal. To
+ * write a Simpletest test:
+ * - For functional tests of the web output of Drupal, define a class that
+ *   extends \Drupal\simpletest\WebTestBase, which contains an internal web
+ *   browser and defines many helpful test assertion methods that you can use
+ *   in your tests. You can specify modules to be enabled by defining a
+ *   $modules member variable -- keep in mind that by default, WebTestBase uses
+ *   a "testing" install profile, with a minimal set of modules enabled.
+ * - For functional tests that do not test web output, define a class that
+ *   extends \Drupal\simpletest\KernelTestBase. This class is much faster
+ *   than WebTestBase, because instead of making a full install of Drupal, it
+ *   uses an in-memory pseudo-installation (similar to what the installer and
+ *   update scripts use). To use this test class, you will need to create the
+ *   database tables you need and install needed modules manually.
+ * - The namespace must be a subspace/subdirectory of \Drupal\yourmodule\Tests,
+ *   where yourmodule is your module's machine name.
+ * - The test class file must be named and placed under the yourmodule/src/Tests
+ *   directory, according to the PSR-4 standard.
+ * - Your test class needs a getInfo() method, which gives information about
+ *   the test.
+ * - You may also override the default setUp() method, which can set be used to
+ *   set up content types and similar procedures.
+ * - In some cases, you may need to write a test module to support your test;
+ *   put such modules under the yourmodule/tests/modules directory.
+ * - Methods in your test class whose names start with 'test', and which have
+ *   no arguments, are the actual test cases. Each one should test a logical
+ *   subset of the functionality, and each one runs in a new, isolated test
+ *   environment, so it can only rely on the setUp() method, not what has
+ *   been set up by other test methods.
+ * For more details, see:
+ * - https://drupal.org/simpletest for full documentation on how to write
+ *   functional tests for Drupal.
+ * - @link oo_conventions Object-oriented programming topic @endlink for more
+ *   on PSR-4, namespaces, and where to place classes.
+ *
+ * @section running Running tests
+ * You can run both Simpletest and PHPUnit tests by enabling the core Testing
+ * module (core/modules/simpletest). Once that module is enabled, tests can be
+ * run usin the core/scripts/run-tests.sh script, using
+ * @link https://drupal.org/project/drush Drush @endlink, or from the Testing
+ * module user interface.
+ *
+ * PHPUnit tests can also be run from the command line, using the PHPUnit
+ * framework. See https://drupal.org/node/2116263 for more information.
  * @}
  */
 

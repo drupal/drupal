@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @see \Drupal\simpletest\KernelTestBase::$modules
  * @see \Drupal\simpletest\KernelTestBase::enableModules()
+ *
+ * @ingroup testing
  */
 abstract class KernelTestBase extends UnitTestBase {
 

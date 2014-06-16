@@ -28,6 +28,8 @@ use Symfony\Component\CssSelector\CssSelector;
 
 /**
  * Test case for typical Drupal tests.
+ *
+ * @ingroup testing
  */
 abstract class WebTestBase extends TestBase {
 

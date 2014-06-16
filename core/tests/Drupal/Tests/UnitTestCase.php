@@ -14,6 +14,8 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
+ *
+ * @ingroup testing
  */
 abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
 
