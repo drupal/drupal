@@ -17,10 +17,13 @@ interface MenuTreeStorageInterface {
    */
   public function maxDepth();
 
+  /**
+   * Helper function for testing. Clears all definitions cached in memory.
+   */
   public function resetDefinitions();
 
   /**
-   * Rebuilds the stored menu links.
+   * Rebuilds the stored menu link definitions.
    *
    * @param array $definitions
    *   The new menu link definitions.
@@ -30,7 +33,7 @@ interface MenuTreeStorageInterface {
   public function rebuild(array $definitions);
 
   /**
-   * Loads a plugin definition from the storage.
+   * Loads a menu link plugin definition from the storage.
    *
    * @param string $id
    *   The menu link plugin ID.
@@ -97,7 +100,7 @@ interface MenuTreeStorageInterface {
   public function save(array $definition);
 
   /**
-   * Deletes a menu plugin from the storage.
+   * Deletes a menu link definition from the storage.
    *
    * @param string $id
    *   The menu link plugin ID.
@@ -105,7 +108,7 @@ interface MenuTreeStorageInterface {
   public function delete($id);
 
   /**
-   * Loads a menu tree from the storage.
+   * Loads a menu link tree from the storage.
    *
    * This function may be used build the data for a menu tree only, for example
    * to further massage the data manually before further processing happens.
@@ -142,7 +145,7 @@ interface MenuTreeStorageInterface {
   public function loadTree($menu_name, array $parameters = array());
 
   /**
-   * Loads all the visible links that are below the given ID.
+   * Loads all the visible menu links that are below the given ID.
    *
    * The returned links are not ordered, and visible children will be
    * included even if they have a hidden parent or ancestor so would not
@@ -159,7 +162,7 @@ interface MenuTreeStorageInterface {
   public function loadAllChildLinks($id, $max_relative_depth = NULL);
 
   /**
-   * Loads all the IDs for links that are below the given ID.
+   * Loads all the IDs for menu links that are below the given ID.
    *
    * @param string $id
    *   The parent menu link ID.
@@ -170,7 +173,7 @@ interface MenuTreeStorageInterface {
   public function getAllChildIds($id);
 
   /**
-   * Loads a subtree rooted by the given ID.
+   * Loads a subtree rooted by the given menu link plugin ID.
    *
    * The returned links are structured like those from loadTree().
    *
@@ -243,13 +246,13 @@ interface MenuTreeStorageInterface {
   public function getMenuNames();
 
   /**
-   * Counts the total amount of menu links.
+   * Counts the total number of menu links in one menu or all menus.
    *
    * @param string $menu_name
    *   (optional) The menu name to count by, defaults to NULL.
    *
    * @return int
-   *   The amount of menu links.
+   *   The number of menu links.
    */
   public function countMenuLinks($menu_name = NULL);
 

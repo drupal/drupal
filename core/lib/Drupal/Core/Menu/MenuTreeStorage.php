@@ -120,6 +120,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     return static::MAX_DEPTH;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function resetDefinitions() {
     $this->definitions = array();
   }
