@@ -8,12 +8,15 @@
 namespace Drupal\block\Tests;
 
 use Drupal\block\Entity\Block;
-use Drupal\config\Tests\ConfigSchemaTestBase;
+use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the block config schema.
  */
-class BlockConfigSchemaTest extends ConfigSchemaTestBase {
+class BlockConfigSchemaTest extends WebTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * {@inheritdoc}

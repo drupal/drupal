@@ -7,12 +7,15 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\config\Tests\ConfigSchemaTestBase;
+use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the User action config schema.
  */
-class UserActionConfigSchemaTest extends ConfigSchemaTestBase {
+class UserActionConfigSchemaTest extends WebTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.

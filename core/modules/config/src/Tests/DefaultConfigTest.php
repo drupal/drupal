@@ -10,11 +10,14 @@ namespace Drupal\config\Tests;
 use Drupal\config_test\TestInstallStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\TypedConfigManager;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests default configuration availability and type with configuration schema.
  */
-class DefaultConfigTest extends ConfigSchemaTestBase {
+class DefaultConfigTest extends WebTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.

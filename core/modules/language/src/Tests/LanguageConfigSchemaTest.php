@@ -7,12 +7,15 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\config\Tests\ConfigSchemaTestBase;
+use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the language config schema.
  */
-class LanguageConfigSchemaTest extends ConfigSchemaTestBase {
+class LanguageConfigSchemaTest extends WebTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.

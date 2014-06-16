@@ -7,12 +7,15 @@
 
 namespace Drupal\color\Tests;
 
-use Drupal\config\Tests\ConfigSchemaTestBase;
+use Drupal\config\Tests\SchemaCheckTestTrait;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the Color config schema.
  */
-class ColorConfigSchemaTest extends ConfigSchemaTestBase {
+class ColorConfigSchemaTest extends WebTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
