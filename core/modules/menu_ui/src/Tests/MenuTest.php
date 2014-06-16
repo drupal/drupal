@@ -686,9 +686,6 @@ class MenuTest extends MenuWebTestBase {
     $edit['enabled'] = FALSE;
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
 
-    // Clear the internal cache of the menu tree in the test.
-    \Drupal::menuTree()->resetDefinitions();
-
     // Unlike most other modules, there is no confirmation message displayed.
     // Verify in the database.
     $this->assertMenuLink($item->getPluginId(), array('hidden' => 1));
