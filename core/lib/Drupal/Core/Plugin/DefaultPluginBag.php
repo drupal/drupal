@@ -86,8 +86,7 @@ class DefaultPluginBag extends PluginBag {
   /**
    * Sorts all plugin instances in this bag.
    *
-   * @return self
-   *   Returns the plugin bag.
+   * @return $this
    */
   public function sort() {
     uasort($this->instanceIDs, array($this, 'sortHelper'));

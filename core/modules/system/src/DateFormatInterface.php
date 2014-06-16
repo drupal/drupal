@@ -29,8 +29,7 @@ interface DateFormatInterface extends ConfigEntityInterface {
    * @param string $pattern
    *   The date pattern to use for this format.
    *
-   * @return self
-   *   Returns the date format.
+   * @return $this
    */
   public function setPattern($pattern);
 

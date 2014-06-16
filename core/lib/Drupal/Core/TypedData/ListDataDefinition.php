@@ -106,8 +106,7 @@ class ListDataDefinition extends DataDefinition implements ListDataDefinitionInt
    * @param \Drupal\Core\TypedData\DataDefinition $definition
    *   A list item's data definition.
    *
-   * @return self
-   *   The object itself for chaining.
+   * @return $this
    */
   public function setItemDefinition(DataDefinitionInterface $definition) {
     $this->itemDefinition = $definition;

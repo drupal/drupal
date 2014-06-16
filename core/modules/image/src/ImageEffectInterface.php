@@ -74,8 +74,7 @@ interface ImageEffectInterface extends PluginInspectionInterface, ConfigurablePl
    * @param int $weight
    *   The weight for this image effect.
    *
-   * @return self
-   *   This image effect.
+   * @return $this
    */
   public function setWeight($weight);
 

@@ -55,16 +55,14 @@ interface ConfigInstallerInterface {
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *
-   * @return self
-   *   The configuration installer.
+   * @return $this
    */
   public function setSourceStorage(StorageInterface $storage);
 
   /**
    * Resets the configuration storage that provides the default configuration.
    *
-   * @return self
-   *   The configuration installer.
+   * @return $this
    */
   public function resetSourceStorage();
 

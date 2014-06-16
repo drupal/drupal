@@ -63,8 +63,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    * @param int $priority
    *   The priority of the guesser being added.
    *
-   * @return self
-   *   The called object.
+   * @return $this
    */
   public function addGuesser(MimeTypeGuesserInterface $guesser, $priority = 0) {
     $this->guessers[$priority][] = $guesser;

@@ -65,7 +65,7 @@ interface EntityInterface extends AccessibleInterface {
    *   (optional) Whether the entity should be forced to be new. Defaults to
    *   TRUE.
    *
-   * @return self
+   * @return $this
    *
    * @see \Drupal\Core\Entity\EntityInterface::isNew()
    */

@@ -45,8 +45,7 @@ class ImageFactory {
    * @param string $toolkit_id
    *   The ID of the image toolkit to use for this image factory.
    *
-   * @return self
-   *   Returns this image.
+   * @return $this
    */
   public function setToolkitId($toolkit_id) {
     $this->toolkitId = $toolkit_id;

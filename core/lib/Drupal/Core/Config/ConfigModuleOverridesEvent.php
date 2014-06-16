@@ -89,8 +89,7 @@ class ConfigModuleOverridesEvent extends Event {
    * @param array $values
    *   The values in the configuration object to override.
    *
-   * @return self
-   *   The ConfigModuleOverridesEvent object.
+   * @return $this
    */
   public function setOverride($name, array $values) {
     if (in_array($name, $this->names)) {

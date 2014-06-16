@@ -42,8 +42,7 @@ class GDToolkit extends ImageToolkitBase {
    * @param resource $resource
    *   The GD image resource.
    *
-   * @return self
-   *   Returns this toolkit object.
+   * @return $this
    */
   public function setResource($resource) {
     $this->resource = $resource;
