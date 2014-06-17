@@ -54,8 +54,9 @@ trait SchemaCheckTrait {
     }
     $definition = $typed_config->getDefinition($config_name);
     $this->schema = $typed_config->create($definition, $config_data);
+    $errors = array();
     foreach ($config_data as $key => $value) {
-      $errors = $this->checkValue($key, $value);
+      $errors = array_merge($errors, $this->checkValue($key, $value));
     }
     if (empty($errors)) {
       return TRUE;
@@ -82,7 +83,7 @@ trait SchemaCheckTrait {
     }
     catch (SchemaIncompleteException $e) {
       if (is_scalar($value) || $value === NULL) {
-        return array($error_key => 'Missing schema.');
+        return array($error_key => 'Missing schema');
       }
     }
     // Do not check value if it is defined to be ignored.
