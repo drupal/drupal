@@ -1,6 +1,0 @@
-name = "Theme test"
-description = "Support module for theme system testing."
-package = Testing
-version = VERSION
-core = 7.x
-hidden = TRUE

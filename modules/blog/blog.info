@@ -1,6 +1,0 @@
-name = Blog
-description = Enables multi-user blogs.
-package = Core
-version = VERSION
-core = 7.x
-files[] = blog.test
