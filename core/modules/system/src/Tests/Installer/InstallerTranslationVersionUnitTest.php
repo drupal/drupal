@@ -80,7 +80,7 @@ class InstallerTranslationVersionUnitTest extends DrupalUnitTestBase {
     $this->assertVersionFallback($version, $fallback);
 
     $version = '8.0-dev';
-    $fallback = array('8.0-rc1', '8.0-beta1', '8.0-alpha2', '7.0');
+    $fallback = array('8.0-rc1', '8.0-beta1', '8.0-alpha12', '7.0');
     $this->assertVersionFallback($version, $fallback);
 
     $version = '8.9-dev';

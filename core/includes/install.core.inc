@@ -1360,7 +1360,7 @@ function install_get_localization_release($version = \Drupal::VERSION) {
 
       // Dev release: the previous point release (e.g., 8.2-dev falls back to
       // 8.1) or any unstable release (e.g., 8.0-dev falls back to 8.0-rc1,
-      // 8.0-beta1 or 8.0-alpha2)
+      // 8.0-beta1 or 8.0-alpha12)
       case 'dev':
         if ($info['minor'] >= 1) {
           $alternatives[] = $info['major'] . '.' . ($info['minor'] - 1);
@@ -1368,7 +1368,7 @@ function install_get_localization_release($version = \Drupal::VERSION) {
         else {
           $alternatives[] = $info['major'] . '.0-rc1';
           $alternatives[] = $info['major'] . '.0-beta1';
-          $alternatives[] = $info['major'] . '.0-alpha2';
+          $alternatives[] = $info['major'] . '.0-alpha12';
         }
         break;
 
