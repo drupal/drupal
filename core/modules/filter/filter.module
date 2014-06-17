@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
@@ -1060,7 +1061,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
 }
 
 /**
- * Shortens long URLs to http://www.example.com/long/url...
+ * Shortens long URLs to http://www.example.com/long/url…
  */
 function _filter_url_trim($text, $length = NULL) {
   static $_length;
@@ -1068,9 +1069,8 @@ function _filter_url_trim($text, $length = NULL) {
     $_length = $length;
   }
 
-  // Use +3 for '...' string length.
-  if ($_length && strlen($text) > $_length + 3) {
-    $text = substr($text, 0, $_length) . '...';
+  if (isset($_length)) {
+    $text = Unicode::truncate($text, $_length, FALSE, TRUE);
   }
 
   return $text;

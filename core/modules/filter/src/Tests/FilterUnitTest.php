@@ -682,7 +682,7 @@ www.example.com with a newline in comments -->
     ));
     $tests = array(
       'www.trimmed.com/d/ff.ext?a=1&b=2#a1' => array(
-        '<a href="http://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/ff...</a>' => TRUE,
+        '<a href="http://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/f…</a>' => TRUE,
       ),
     );
     $this->assertFilteredString($filter, $tests);
@@ -715,15 +715,17 @@ www.example.com with a newline in comments -->
       foreach ($tasks as $value => $is_expected) {
         // Not using assertIdentical, since combination with strpos() is hard to grok.
         if ($is_expected) {
-          $success = $this->assertTrue(strpos($result, $value) !== FALSE, format_string('@source: @value found.', array(
+          $success = $this->assertTrue(strpos($result, $value) !== FALSE, format_string('@source: @value found. Filtered result: @result.', array(
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
+            '@result' => var_export($result, TRUE),
           )));
         }
         else {
-          $success = $this->assertTrue(strpos($result, $value) === FALSE, format_string('@source: @value not found.', array(
+          $success = $this->assertTrue(strpos($result, $value) === FALSE, format_string('@source: @value not found. Filtered result: @result.', array(
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
+            '@result' => var_export($result, TRUE),
           )));
         }
         if (!$success) {
