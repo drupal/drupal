@@ -2117,15 +2117,14 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Creates menu links, if this display provides some.
    *
-   * @param array $existing_links
-   *   An array of already existing menu items provided by drupal.
+   * @internal param array $existing_links An array of already existing menu items provided by drupal.*   An array of already existing menu items provided by drupal.
    *
    * @return array
    *   The menu links registers for this display.
    *
    * @see hook_menu_link_defaults()
    */
-  public function executeHookMenuLinkDefaults(array &$existing_links) {
+  public function executeHookMenuLinks() {
     return array();
   }
 

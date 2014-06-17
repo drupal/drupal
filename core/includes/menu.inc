@@ -102,123 +102,6 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  */
 
 /**
- * @defgroup menu_tree_parameters Menu tree parameters
- * @{
- * Parameters for a menu tree.
- */
-
-/**
- * The maximum depth of a menu links tree - matches the number of p columns.
- *
- * @todo Move this constant to MenuLinkStorage along with all the tree
- * functionality.
- */
-const MENU_MAX_DEPTH = 9;
-
-
-/**
- * @} End of "defgroup menu_tree_parameters".
- */
-
-/**
- * Reserved key to identify the most specific menu link for a given path.
- *
- * The value of this constant is a hash of the constant name. We use the hash
- * so that the reserved key is over 32 characters in length and will not
- * collide with allowed menu names:
- * @code
- * sha1('MENU_PREFERRED_LINK') = 1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91
- * @endcode
- *
- * @see menu_link_get_preferred()
- */
-const MENU_PREFERRED_LINK = '1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91';
-
-/**
- * Localizes a menu link title using t() if possible.
- *
- * Translate the title and description to allow storage of English title
- * strings in the database, yet display of them in the language required
- * by the current user.
- *
- * @param $item
- *   A menu link entity.
- */
-function _menu_item_localize(&$item) {
-  // Allow default menu links to be translated.
-  $item['localized_options'] = $item['options'];
-  // All 'class' attributes are assumed to be an array during rendering, but
-  // links stored in the database may use an old string value.
-  // @todo In order to remove this code we need to implement a database update
-  //   including unserializing all existing link options and running this code
-  //   on them, as well as adding validation to menu_link_save().
-  if (isset($item['options']['attributes']['class']) && is_string($item['options']['attributes']['class'])) {
-    $item['localized_options']['attributes']['class'] = explode(' ', $item['options']['attributes']['class']);
-  }
-  // If the menu link is defined in code and not customized, we can use t().
-  if (!empty($item['machine_name']) && !$item['customized']) {
-    // @todo Figure out a proper way to support translations of menu links, see
-    //   https://drupal.org/node/2193777.
-    $item['title'] = t($item['link_title']);
-  }
-  else {
-    $item['title'] = $item['link_title'];
-  }
-}
-
-/**
- * Provides menu link unserializing, access control, and argument handling.
- *
- * @param array $item
- *   The passed in item has the following keys:
- *   - access: (optional) Becomes TRUE if the item is accessible, FALSE
- *     otherwise. If the key is not set, the access manager is used to
- *     determine the access.
- *   - options: (required) Is unserialized and copied to $item['localized_options'].
- *   - link_title: (required) The title of the menu link.
- *   - route_name: (required) The route name of the menu link.
- *   - route_parameters: (required) The unserialized route parameters of the menu link.
- *   The passed in item is changed by the following keys:
- *   - href: The actual path to the link. This path is generated from the
- *     link_path of the menu link entity.
- *   - title: The title of the link. This title is generated from the
- *     link_title of the menu link entity.
- */
-function _menu_link_translate(&$item) {
-  if (!is_array($item['options'])) {
-    $item['options'] = (array) unserialize($item['options']);
-  }
-  $item['localized_options'] = $item['options'];
-  $item['title'] = $item['link_title'];
-  if ($item['external'] || empty($item['route_name'])) {
-    $item['access'] = 1;
-    $item['href'] = $item['link_path'];
-    $item['route_parameters'] = array();
-    // Set to NULL so that drupal_pre_render_link() is certain to skip it.
-    $item['route_name'] = NULL;
-  }
-  else {
-    $item['href'] = NULL;
-    if (!is_array($item['route_parameters'])) {
-      $item['route_parameters'] = (array) unserialize($item['route_parameters']);
-    }
-    // menu_tree_check_access() may set this ahead of time for links to nodes.
-    if (!isset($item['access'])) {
-      $item['access'] = \Drupal::getContainer()->get('access_manager')->checkNamedRoute($item['route_name'], $item['route_parameters'], \Drupal::currentUser());
-    }
-    // For performance, don't localize a link the user can't access.
-    if ($item['access']) {
-      _menu_item_localize($item);
-    }
-  }
-
-  // Allow other customizations - e.g. adding a page-specific query string to the
-  // options array. For performance reasons we only invoke this hook if the link
-  // has the 'alter' flag set in the options array.
-  if (!empty($item['options']['alter'])) {
-    \Drupal::moduleHandler()->alter('translated_menu_link', $item, $map);
-  }
-}
 
 /**
  * Implements template_preprocess_HOOK() for theme_menu_tree().
@@ -257,8 +140,10 @@ function theme_menu_link(array $variables) {
   if ($element['#below']) {
     $sub_menu = drupal_render($element['#below']);
   }
-  $element['#localized_options']['set_active_class'] = TRUE;
-  $output = l($element['#title'], $element['#href'], $element['#localized_options']);
+  /** @var \Drupal\Core\Url $url */
+  $url = $element['#url'];
+  $url->setOption('set_active_class', TRUE);
+  $output = \Drupal::linkGenerator()->generateFromUrl($element['#title'], $url);
   return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
 
@@ -415,15 +300,15 @@ function menu_navigation_links($menu_name, $level = 0) {
   }
 
   // Get the menu hierarchy for the current page.
-  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
-  $menu_tree = \Drupal::service('menu_link.tree');
+  /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu.link_tree');
   $tree = $menu_tree->buildPageData($menu_name, $level + 1);
 
   // Go down the active trail until the right level is reached.
   while ($level-- > 0 && $tree) {
     // Loop through the current level's items until we find one that is in trail.
     while ($item = array_shift($tree)) {
-      if ($item['link']['in_active_trail']) {
+      if ($item['in_active_trail']) {
         // If the item is in the active trail, we continue in the subtree.
         $tree = empty($item['below']) ? array() : $item['below'];
         break;
@@ -434,18 +319,30 @@ function menu_navigation_links($menu_name, $level = 0) {
   // Create a single level of links.
   $links = array();
   foreach ($tree as $item) {
-    if (!$item['link']['hidden']) {
-      $class = '';
-      $l = $item['link']['localized_options'];
-      $l['href'] = $item['link']['link_path'];
-      $l['title'] = $item['link']['title'];
-      if ($item['link']['in_active_trail']) {
-        $class = ' active-trail';
-        $l['attributes']['class'][] = 'active-trail';
-      }
-      // Keyed with the unique mlid to generate classes in links.html.twig.
-      $links['menu-' . $item['link']['mlid'] . $class] = $l;
+    /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
+    $link = $item['link'];
+
+    if ($link->isHidden()) {
+      continue;
     }
+
+    $class = '';
+    $url = $link->getUrlObject();
+    $l = $url->getOptions();
+    $l['title'] = $link->getTitle();
+    if ($url->isExternal()) {
+      $l['href'] = $url->getPath();
+    }
+    else {
+      $l['route_name'] = $url->getRouteName();
+      $l['route_parameters'] = $url->getRouteParameters();
+    }
+    if ($item['in_active_trail']) {
+      $class = ' active-trail';
+      $l['attributes']['class'][] = 'active-trail';
+    }
+    // Keyed with the unique ID to generate classes in links.html.twig.
+    $links['menu-' . $link->getPluginId() . $class] = $l;
   }
   return $links;
 }
@@ -591,119 +488,6 @@ function theme_menu_local_tasks(&$variables) {
 }
 
 /**
- * Sets (or gets) the active menu for the current page.
- *
- * The active menu for the page determines the active trail.
- *
- * @return
- *   An array of menu machine names, in order of preference. The
- *   'system.menu:active_menus_default' config item may be used to assert a menu
- *   order different from the order of creation, or to prevent a particular menu
- *   from being used at all in the active trail.
- */
-function menu_set_active_menu_names($menu_names = NULL) {
-  $active = &drupal_static(__FUNCTION__);
-
-  if (isset($menu_names) && is_array($menu_names)) {
-    $active = $menu_names;
-  }
-  elseif (!isset($active)) {
-    $config = \Drupal::config('system.menu');
-    $active = $config->get('active_menus_default') ?: array_keys(menu_list_system_menus());
-  }
-  return $active;
-}
-
-/**
- * Gets the active menu for the current page.
- */
-function menu_get_active_menu_names() {
-  return menu_set_active_menu_names();
-}
-
-/**
- * Looks up the preferred menu link for a given system path.
- *
- * @param $path
- *   The path; for example, 'node/5'. The function will find the corresponding
- *   menu link ('node/5' if it exists, or fallback to 'node/%').
- * @param $selected_menu
- *   The name of a menu used to restrict the search for a preferred menu link.
- *   If not specified, all the menus returned by menu_get_active_menu_names()
- *   will be used.
- *
- * @return
- *   A fully translated menu link, or FALSE if no matching menu link was
- *   found. The most specific menu link ('node/5' preferred over 'node/%') in
- *   the most preferred menu (as defined by menu_get_active_menu_names()) is
- *   returned.
- */
-function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
-  $preferred_links = &drupal_static(__FUNCTION__);
-
-  if (!isset($path)) {
-    $path = current_path();
-  }
-
-  if (empty($selected_menu)) {
-    // Use an illegal menu name as the key for the preferred menu link.
-    $selected_menu = MENU_PREFERRED_LINK;
-  }
-
-  if (!isset($preferred_links[$path])) {
-    // Look for the correct menu link by building a list of candidate paths,
-    // which are ordered by priority (translated hrefs are preferred over
-    // untranslated paths). Afterwards, the most relevant path is picked from
-    // the menus, ordered by menu preference.
-    $path_candidates = array();
-    // 1. The current item href.
-    // @todo simplify this code and convert to using route names.
-    // @see https://drupal.org/node/2154949
-    $path_candidates[$path] = $path;
-
-    // Retrieve a list of menu names, ordered by preference.
-    $menu_names = menu_get_active_menu_names();
-    // Put the selected menu at the front of the list.
-    array_unshift($menu_names, $selected_menu);
-
-    $menu_links = entity_load_multiple_by_properties('menu_link', array('link_path' => $path_candidates));
-
-    // Sort candidates by link path and menu name.
-    $candidates = array();
-    foreach ($menu_links as $candidate) {
-      $candidates[$candidate['link_path']][$candidate['menu_name']] = $candidate;
-      // Add any menus not already in the menu name search list.
-      if (!in_array($candidate['menu_name'], $menu_names)) {
-        $menu_names[] = $candidate['menu_name'];
-      }
-    }
-
-    // Store the most specific link for each menu. Also save the most specific
-    // link of the most preferred menu in $preferred_link.
-    foreach ($path_candidates as $link_path) {
-      if (isset($candidates[$link_path])) {
-        foreach ($menu_names as $menu_name) {
-          if (empty($preferred_links[$path][$menu_name]) && isset($candidates[$link_path][$menu_name])) {
-            $candidate_item = $candidates[$link_path][$menu_name];
-            $candidate_item['access'] = \Drupal::service('access_manager')->checkNamedRoute($candidate_item['route_name'], $candidate_item['route_parameters'], \Drupal::currentUser());
-            if ($candidate_item['access']) {
-              _menu_item_localize($candidate_item);
-              $preferred_links[$path][$menu_name] = $candidate_item;
-              if (empty($preferred_links[$path][MENU_PREFERRED_LINK])) {
-                // Store the most specific link.
-                $preferred_links[$path][MENU_PREFERRED_LINK] = $candidate_item;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return isset($preferred_links[$path][$selected_menu]) ? $preferred_links[$path][$selected_menu] : FALSE;
-}
-
-/**
  * Clears all cached menu data.
  *
  * This should be called any time broad changes
@@ -711,197 +495,16 @@ function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
  */
 function menu_cache_clear_all() {
   \Drupal::cache('data')->deleteAll();
-  menu_reset_static_cache();
 }
 
 /**
- * Resets the menu system static cache.
- */
-function menu_reset_static_cache() {
-  \Drupal::entityManager()
-    ->getStorage('menu_link')->resetCache();
-  drupal_static_reset('menu_link_get_preferred');
-}
-
-/**
- * Saves menu links recursively for menu_links_rebuild_defaults().
- */
-function _menu_link_save_recursive($controller, $machine_name, &$children, &$links) {
-  $menu_link = $links[$machine_name];
-  if ($menu_link->isNew() || !$menu_link->customized) {
-    if (!isset($menu_link->plid) && !empty($menu_link->parent) && !empty($links[$menu_link->parent])) {
-      $parent = $links[$menu_link->parent];
-
-      if (empty($menu_link->menu_name) || $parent->menu_name == $menu_link->menu_name) {
-        $menu_link->plid = $parent->id();
-        $menu_link->menu_name = $parent->menu_name;
-      }
-    }
-    $controller->save($menu_link);
-  }
-  if (!empty($children[$machine_name])) {
-    foreach ($children[$machine_name] as $next_name) {
-      _menu_link_save_recursive($controller, $next_name, $children, $links);
-    }
-  }
-  // Remove processed link names so we can find stragglers.
-  unset($children[$machine_name]);
-}
-
-/**
- * Builds menu links for the items returned from the menu_link.static service.
+ * Builds menu links for the items discovered as plugins.
  */
 function menu_link_rebuild_defaults() {
-  // Ensure that all configuration used to build the menu items are loaded
-  // without overrides.
-  $old_state = \Drupal::configFactory()->getOverrideState();
-  \Drupal::configFactory()->setOverrideState(FALSE);
-  $module_handler = \Drupal::moduleHandler();
-  if (!$module_handler->moduleExists('menu_link')) {
-    // The Menu link module may not be available during install, so rebuild
-    // when possible.
-    return;
-  }
-  /** @var \Drupal\menu_link\MenuLinkStorageInterface $menu_link_storage */
-  $menu_link_storage = \Drupal::entityManager()
-    ->getStorage('menu_link');
-  $links = array();
-  $children = array();
-  $top_links = array();
-  $all_links = \Drupal::service('menu_link.static')->getLinks();
-  if ($all_links) {
-    foreach ($all_links as $machine_name => $link) {
-      // For performance reasons, do a straight query now and convert to a menu
-      // link entity later.
-      // @todo revisit before release.
-      $existing_item = db_select('menu_links')
-        ->fields('menu_links')
-        ->condition('machine_name', $machine_name)
-        ->execute()->fetchObject();
-      if ($existing_item) {
-        $existing_item->options = unserialize($existing_item->options);
-        $existing_item->route_parameters = unserialize($existing_item->route_parameters);
-        $link['mlid'] = $existing_item->mlid;
-        $link['plid'] = $existing_item->plid;
-        $link['uuid'] = $existing_item->uuid;
-        $link['customized'] = $existing_item->customized;
-        $link['updated'] = $existing_item->updated;
-        $menu_link = $menu_link_storage->createFromDefaultLink($link);
-        // @todo Do not create a new entity in order to update it, see
-        //   https://drupal.org/node/2241865
-        $menu_link->setOriginalId($existing_item->mlid);
-
-        // Convert the existing item to a typed object.
-        /** @var \Drupal\menu_link\MenuLinkInterface $existing_item */
-        $existing_item = $menu_link_storage->create(get_object_vars($existing_item));
-
-        if (!$existing_item->customized) {
-          // A change in the default menu links may move the link to a
-          // different menu or parent.
-          if (!empty($link['menu_name']) && ($link['menu_name'] != $existing_item->menu_name)) {
-            $menu_link->plid = NULL;
-            $menu_link->menu_name = $link['menu_name'];
-          }
-          elseif (!empty($link['parent'])) {
-            $menu_link->plid = NULL;
-          }
-
-          $menu_link->original = $existing_item;
-        }
-      }
-      else {
-        if (empty($link['route_name']) && empty($link['link_path'])) {
-          watchdog('error', 'Menu_link %machine_name does neither provide a route_name nor a link_path, so it got skipped.', array('%machine_name' => $machine_name));
-          continue;
-        }
-        $menu_link = $menu_link_storage->createFromDefaultLink($link);
-      }
-      if (!empty($link['parent'])) {
-        $children[$link['parent']][$machine_name] = $machine_name;
-        $menu_link->parent = $link['parent'];
-        if (empty($link['menu_name'])) {
-          // Reset the default menu name so it is populated from the parent.
-          $menu_link->menu_name = NULL;
-        }
-      }
-      else {
-        // A top level link - we need them to root our tree.
-        $top_links[$machine_name] = $machine_name;
-        $menu_link->plid = 0;
-      }
-      $links[$machine_name] = $menu_link;
-    }
-  }
-  foreach ($top_links as $machine_name) {
-    _menu_link_save_recursive($menu_link_storage, $machine_name, $children, $links);
-  }
-  // Handle any children we didn't find starting from top-level links.
-  foreach ($children as $orphan_links) {
-    foreach ($orphan_links as $machine_name) {
-      // Force it to the top level.
-      $links[$machine_name]->plid = 0;
-      _menu_link_save_recursive($menu_link_storage, $machine_name, $children, $links);
-    }
-  }
-
-  // Find any item whose default menu link no longer exists.
-  if ($all_links) {
-    $query = \Drupal::entityQuery('menu_link')
-      ->condition('machine_name', array_keys($all_links), 'NOT IN')
-      ->exists('machine_name')
-      ->condition('external', 0)
-      ->condition('updated', 0)
-      ->condition('customized', 0)
-      ->sort('depth', 'DESC');
-    $result = $query->execute();
-  }
-  else {
-    $result = array();
-  }
-
-  // Remove all such items. Starting from those with the greatest depth will
-  // minimize the amount of re-parenting done by the menu link controller.
-  if ($result) {
-    menu_link_delete_multiple($result, TRUE);
-  }
-  \Drupal::configFactory()->setOverrideState($old_state);
-}
-
-/**
- * Returns an array containing all links for a menu.
- *
- * @param $menu_name
- *   The name of the menu whose links should be returned.
- *
- * @return
- *   An array of menu links.
- */
-function menu_load_links($menu_name) {
-  $links = array();
-
-  $query = \Drupal::entityQuery('menu_link')
-    ->condition('menu_name', $menu_name)
-    // Order by weight so as to be helpful for menus that are only one level
-    // deep.
-    ->sort('weight');
-  $result = $query->execute();
-
-  if (!empty($result)) {
-    $links = menu_link_load_multiple($result);
-  }
-
-  return $links;
-}
-
-/**
- * Deletes all links for a menu.
- *
- * @param $menu_name
- *   The name of the menu whose links will be deleted.
- */
-function menu_delete_links($menu_name) {
-  $links = menu_load_links($menu_name);
-  menu_link_delete_multiple(array_keys($links), FALSE, TRUE);
+  // Ignore any database replicas temporarily.
+  db_ignore_replica();
+  $menu_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_manager->rebuild();
 }
 
 /**
@@ -915,33 +518,12 @@ function _menu_clear_page_cache() {
   if ($cache_cleared == 0) {
     Cache::invalidateTags(array('content' => TRUE));
     // Keep track of which menus have expanded items.
-    _menu_set_expanded_menus();
     $cache_cleared = 1;
   }
   elseif ($cache_cleared == 1) {
     drupal_register_shutdown_function('Drupal\Core\Cache\Cache::invalidateTags', array('content' => TRUE));
-    // Keep track of which menus have expanded items.
-    drupal_register_shutdown_function('_menu_set_expanded_menus');
     $cache_cleared = 2;
   }
-}
-
-/**
- * Updates a list of menus with expanded items.
- */
-function _menu_set_expanded_menus() {
-  $names = array();
-  $result = Drupal::entityQueryAggregate('menu_link')
-    ->condition('expanded', 0, '<>')
-    ->groupBy('menu_name')
-    ->execute();
-
-  // Flatten the resulting array.
-  foreach($result as $k => $v) {
-    $names[$k] = $v['menu_name'];
-  }
-
-  \Drupal::state()->set('menu_expanded', $names);
 }
 
 /**

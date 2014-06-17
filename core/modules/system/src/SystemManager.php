@@ -6,7 +6,8 @@
 
 namespace Drupal\system;
 
-use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Menu\MenuLinkTreeInterface;
+use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Drupal\Core\Database\Connection;
@@ -33,18 +34,18 @@ class SystemManager {
   protected $database;
 
   /**
-   * The menu link storage.
-   *
-   * @var \Drupal\menu_link\MenuLinkStorageInterface
-   */
-  protected $menuLinkStorage;
-
-  /**
    * The request stack.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
+
+  /**
+   * The menu link tree manager.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
+   */
+  protected $menuTree;
 
   /**
    * A static cache of menu items.
@@ -79,12 +80,14 @@ class SystemManager {
    *   The entity manager.
    * @param \Symfony\Component\HttpFoundation\RequestStack
    *   The request stack.
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
+   *   The menu tree manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, EntityManagerInterface $entity_manager, RequestStack $request_stack) {
+  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, EntityManagerInterface $entity_manager, RequestStack $request_stack, MenuLinkTreeInterface $menu_tree) {
     $this->moduleHandler = $module_handler;
     $this->database = $database;
-    $this->menuLinkStorage = $entity_manager->getStorage('menu_link');
     $this->requestStack = $request_stack;
+    $this->menuTree = $menu_tree;
   }
 
   /**
@@ -173,9 +176,9 @@ class SystemManager {
   public function getBlockContents() {
     $request = $this->requestStack->getCurrentRequest();
     $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
-    $items = $this->menuLinkStorage->loadByProperties(array('route_name' => $route_name));
-    $item = reset($items);
-    if ($content = $this->getAdminBlock($item)) {
+    $route_parameters = $request->attributes->get('_raw_variables')->all();
+    $instance = $this->menuTree->menuLinkGetPreferred($route_name, $route_parameters);
+    if ($instance && $content = $this->getAdminBlock($instance)) {
       $output = array(
         '#theme' => 'admin_block_content',
         '#content' => $content,
@@ -192,48 +195,28 @@ class SystemManager {
   /**
    * Provide a single block on the administration overview page.
    *
-   * @param \Drupal\menu_link\MenuLinkInterface|array $item
+   * @param \Drupal\Core\Menu\MenuLinkInterface $instance
    *   The menu item to be displayed.
    *
    * @return array
    *   An array of menu items, as expected by theme_admin_block_content().
    */
-  public function getAdminBlock($item) {
-    if (!isset($item['mlid'])) {
-      $menu_links = $this->menuLinkStorage->loadByProperties(array('link_path' => $item['path'], 'module' => 'system'));
-      if ($menu_links) {
-        $menu_link = reset($menu_links);
-        $item['mlid'] = $menu_link->id();
-        $item['menu_name'] = $menu_link->menu_name;
-      }
-      else {
-        return array();
-      }
-    }
-
-    if (isset($this->menuItems[$item['mlid']])) {
-      return $this->menuItems[$item['mlid']];
-    }
-
+  public function getAdminBlock(MenuLinkInterface $instance) {
     $content = array();
-    $menu_links = $this->menuLinkStorage->loadByProperties(array('plid' => $item['mlid'], 'menu_name' => $item['menu_name'], 'hidden' => 0));
-    foreach ($menu_links as $link) {
-      _menu_link_translate($link);
-      if ($link['access']) {
-        // The link description, either derived from 'description' in
-        // hook_menu() or customized via Menu UI module is used as title attribute.
-        if (!empty($link['localized_options']['attributes']['title'])) {
-          $link['description'] = $link['localized_options']['attributes']['title'];
-          unset($link['localized_options']['attributes']['title']);
-        }
-        // Prepare for sorting as in function _menu_tree_check_access().
-        // The weight is offset so it is always positive, with a uniform 5-digits.
-        $key = (50000 + $link['weight']) . ' ' . Unicode::strtolower($link['title']) . ' ' . $link['mlid'];
-        $content[$key] = $link;
-      }
+    // Only find the children of this link.
+    $parameters['expanded'][] = $instance->getPluginId();
+    $parameters['conditions']['hidden'] = 0;
+    $tree =  $this->menuTree->buildTree($instance->getMenuName(), $parameters);
+    foreach ($tree as $key => $item) {
+      /** @var $link \Drupal\Core\Menu\MenuLinkInterface */
+      $link = $item['link'];
+      $content[$key]['title'] = $link->getTitle();
+      $content[$key]['options'] = $link->getOptions();
+      $content[$key]['description'] = $link->getDescription();
+      $content[$key]['url'] = $link->getUrlObject();
     }
     ksort($content);
-    $this->menuItems[$item['mlid']] = $content;
+    //$this->menuItems[$item['mlid']] = $content;
     return $content;
   }
 

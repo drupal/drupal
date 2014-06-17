@@ -67,13 +67,13 @@ class UserAccountLinksTests extends WebTestBase {
     $this->drupalGet('<front>');
 
     // For a logged-out user, expect no secondary links.
-    /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
-    $menu_tree = \Drupal::service('menu_link.tree');
+    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
+    $menu_tree = \Drupal::service('menu.link_tree');
     $tree = $menu_tree->buildTree('account');
     $this->assertEqual(count($tree), 1, 'The secondary links menu contains only one menu link.');
     $link = reset($tree);
     $link = $link['link'];
-    $this->assertTrue((bool) $link->hidden, 'The menu link is hidden.');
+    $this->assertTrue($link->isHidden(), 'The menu link is hidden.');
   }
 
   /**
