@@ -1,9 +1,0 @@
-/**
- * @file
- * Right-to-left specific stylesheet for the Field UI module.
- */
-
-/* 'Manage fields' overview */
-table.field-ui-overview tr.add-new .label-input {
-  float: right;
-}

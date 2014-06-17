@@ -1,4 +1,0 @@
-This file is for testing purposes only.
-
-It is used to test the functionality of drupal_get_filename().  See
-BootstrapGetFilenameTestCase::testDrupalGetFilename() for more information.

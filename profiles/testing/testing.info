@@ -1,5 +1,0 @@
-name = Testing
-description = Minimal profile for running tests. Includes absolutely required modules only.
-version = VERSION
-core = 7.x
-hidden = TRUE
