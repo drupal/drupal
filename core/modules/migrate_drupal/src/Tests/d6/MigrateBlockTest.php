@@ -75,6 +75,7 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
    * Test the block settings migration.
    */
   public function testBlockMigration() {
+    /** @var $blocks \Drupal\block\BlockInterface[] */
     $blocks = entity_load_multiple('block');
     $this->assertEqual(count($blocks), 11);
 
@@ -83,36 +84,36 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $this->assertNotNull($test_block_user);
     $this->assertEqual('left', $test_block_user->get('region'));
     $this->assertEqual('garland', $test_block_user->get('theme'));
-    $visibility = $test_block_user->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_user->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(0, $test_block_user->weight);
 
     $test_block_user_1 = $blocks['user_1'];
     $this->assertNotNull($test_block_user_1);
     $this->assertEqual('left', $test_block_user_1->get('region'));
     $this->assertEqual('garland', $test_block_user_1->get('theme'));
-    $visibility = $test_block_user_1->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_user_1->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(0, $test_block_user_1->weight);
 
     $test_block_user_2 = $blocks['user_2'];
     $this->assertNotNull($test_block_user_2);
     $this->assertEqual('', $test_block_user_2->get('region'));
     $this->assertEqual('garland', $test_block_user_2->get('theme'));
-    $visibility = $test_block_user_2->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_user_2->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-3, $test_block_user_2->weight);
 
     $test_block_user_3 = $blocks['user_3'];
     $this->assertNotNull($test_block_user_3);
     $this->assertEqual('', $test_block_user_3->get('region'));
     $this->assertEqual('garland', $test_block_user_3->get('theme'));
-    $visibility = $test_block_user_3->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_user_3->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-1, $test_block_user_3->weight);
 
     // Check system block
@@ -120,9 +121,9 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $this->assertNotNull($test_block_system);
     $this->assertEqual('footer', $test_block_system->get('region'));
     $this->assertEqual('garland', $test_block_system->get('theme'));
-    $visibility = $test_block_system->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_system->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-5, $test_block_system->weight);
 
     // Check comment block
@@ -130,9 +131,9 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $this->assertNotNull($test_block_comment);
     $this->assertEqual('', $test_block_comment->get('region'));
     $this->assertEqual('garland', $test_block_comment->get('theme'));
-    $visibility = $test_block_comment->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_comment->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-6, $test_block_comment->weight);
 
     // Check menu blocks
@@ -140,18 +141,18 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $this->assertNotNull($test_block_menu);
     $this->assertEqual('header', $test_block_menu->get('region'));
     $this->assertEqual('garland', $test_block_menu->get('theme'));
-    $visibility = $test_block_menu->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_menu->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-5, $test_block_menu->weight);
 
     $test_block_menu_1 = $blocks['menu_1'];
     $this->assertNotNull($test_block_menu_1);
     $this->assertEqual('', $test_block_menu_1->get('region'));
     $this->assertEqual('garland', $test_block_menu_1->get('theme'));
-    $visibility = $test_block_menu_1->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_menu_1->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-5, $test_block_menu_1->weight);
 
     // Check node block
@@ -159,9 +160,9 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $this->assertNotNull($test_block_node);
     $this->assertEqual('', $test_block_node->get('region'));
     $this->assertEqual('garland', $test_block_node->get('theme'));
-    $visibility = $test_block_node->get('visibility');
-    $this->assertEqual(0, $visibility['path']['visibility']);
-    $this->assertEqual('', $visibility['path']['pages']);
+    $visibility = $test_block_node->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-4, $test_block_node->weight);
 
     // Check custom blocks
@@ -169,18 +170,18 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $this->assertNotNull($test_block_block);
     $this->assertEqual('content', $test_block_block->get('region'));
     $this->assertEqual('garland', $test_block_block->get('theme'));
-    $visibility = $test_block_block->get('visibility');
-    $this->assertEqual(1, $visibility['path']['visibility']);
-    $this->assertEqual('<front>', $visibility['path']['pages']);
+    $visibility = $test_block_block->getVisibility();
+    $this->assertEqual(FALSE, $visibility['request_path']['negate']);
+    $this->assertEqual('<front>', $visibility['request_path']['pages']);
     $this->assertEqual(0, $test_block_block->weight);
 
     $test_block_block_1 = $blocks['block_1'];
     $this->assertNotNull($test_block_block_1);
     $this->assertEqual('right', $test_block_block_1->get('region'));
     $this->assertEqual('bluemarine', $test_block_block_1->get('theme'));
-    $visibility = $test_block_block_1->get('visibility');
-    $this->assertEqual(1, $visibility['path']['visibility']);
-    $this->assertEqual('node', $visibility['path']['pages']);
+    $visibility = $test_block_block_1->getVisibility();
+    $this->assertEqual(FALSE, $visibility['request_path']['negate']);
+    $this->assertEqual('node', $visibility['request_path']['pages']);
     $this->assertEqual(-4, $test_block_block_1->weight);
   }
 }

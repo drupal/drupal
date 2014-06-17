@@ -44,6 +44,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
       'label' => 'Custom Display Message',
     );
     $expected_configuration = array(
+      'visibility' => array(),
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
       'provider' => 'block_test',
@@ -55,6 +56,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
       'display_message' => 'no message set',
     );
     // Initial configuration of the block at construction time.
+    /** @var $display_block \Drupal\block\BlockPluginInterface */
     $display_block = $manager->createInstance('test_block_instantiation', $configuration);
     $this->assertIdentical($display_block->getConfiguration(), $expected_configuration, 'The block was configured correctly.');
 
@@ -124,7 +126,10 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     );
     $form_state = array();
     // Ensure there are no form elements that do not belong to the plugin.
-    $this->assertIdentical($display_block->buildConfigurationForm(array(), $form_state), $expected_form, 'Only the expected form elements were present.');
+    $actual_form = $display_block->buildConfigurationForm(array(), $form_state);
+    // Remove the visibility sections, as that just tests condition plugins.
+    unset($actual_form['visibility'], $actual_form['visibility_tabs']);
+    $this->assertIdentical($actual_form, $expected_form, 'Only the expected form elements were present.');
 
     $expected_build = array(
       '#children' => 'My custom display message.',

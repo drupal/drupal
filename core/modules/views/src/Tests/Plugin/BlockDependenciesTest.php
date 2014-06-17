@@ -109,10 +109,13 @@ class BlockDependenciesTest extends ViewUnitTestBase {
         'max_age' => 0,
       ),
     );
-    foreach (array('region', 'id', 'theme', 'plugin', 'visibility', 'weight') as $key) {
+    foreach (array('region', 'id', 'theme', 'plugin', 'weight') as $key) {
       $values[$key] = $settings[$key];
       // Remove extra values that do not belong in the settings array.
       unset($settings[$key]);
+    }
+    foreach ($settings['visibility'] as $id => $visibility) {
+      $settings['visibility'][$id]['id'] = $id;
     }
     $values['settings'] = $settings;
     $block = entity_create('block', $values);

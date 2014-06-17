@@ -28,7 +28,6 @@ class NodeType extends ConditionPluginBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, array &$form_state) {
-    $form = parent::buildConfigurationForm($form, $form_state);
     $options = array();
     foreach (node_type_get_types() as $type) {
       $options[$type->type] = $type->name;
@@ -39,7 +38,7 @@ class NodeType extends ConditionPluginBase {
       '#options' => $options,
       '#default_value' => $this->configuration['bundles'],
     );
-    return $form;
+    return parent::buildConfigurationForm($form, $form_state);
   }
 
   /**

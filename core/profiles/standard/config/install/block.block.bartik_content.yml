@@ -6,19 +6,11 @@ langcode: en
 region: content
 plugin: system_main_block
 settings:
+  visibility: {  }
+  id: system_main_block
   label: 'Main page content'
   provider: system
   label_display: '0'
-visibility:
-  path:
-    visibility: 0
-    pages: ''
-  role:
-    roles: {  }
-  node_type:
-    types:
-      article: '0'
-      page: '0'
 dependencies:
   module:
     - system

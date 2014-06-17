@@ -283,6 +283,12 @@ block_settings:
     view_mode:
       type: string
       label: 'View mode'
+    visibility:
+      type: sequence
+      label: 'Visibility Conditions'
+      sequence:
+        - type: condition.plugin.[id]
+          label: 'Visibility Condition'
     provider:
       type: string
       label: 'Provider'
@@ -297,3 +303,11 @@ condition.plugin:
     negate:
       type: boolean
       label: 'Negate'
+    uuid:
+      type: string
+      label: 'UUID'
+    context_mapping:
+      type: sequence
+      label: 'Context assignments'
+      sequence:
+        - type: string

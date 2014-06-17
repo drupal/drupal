@@ -63,9 +63,9 @@ class SearchBlockTest extends SearchTestBase {
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
-    $visibility = $block->get('visibility');
-    $visibility['path']['pages'] = 'search';
-    $block->set('visibility', $visibility);
+    $visibility = $block->getVisibility();
+    $visibility['request_path']['pages'] = 'search';
+    $block->getPlugin()->setVisibilityConfig('request_path', $visibility['request_path']);
 
     $this->submitGetForm('', $terms, t('Search'));
     $this->assertResponse(200);

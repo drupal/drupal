@@ -46,9 +46,6 @@ process:
   region: region
   theme: theme
   label: title
-  'visibility.path.visibility': visibility
-  'visibility.path.pages': pages
-  'visibility.role.roles': roles
   weight: weight
   settings:
     plugin: d6_block_settings
@@ -56,6 +53,9 @@ process:
       - @plugin
       - delta
       - settings
+      - visibility
+  'settings.visibility.request_path.pages': pages
+  'settings.visibility.user_role.roles': roles
 destination:
   plugin: entity:block
 migration_dependencies:

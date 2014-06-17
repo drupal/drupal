@@ -6,17 +6,10 @@ langcode: en
 region: '-1'
 plugin: test_html
 settings:
+  visibility: {  }
   label: 'Test HTML block'
   provider: block_test
   label_display: 'hidden'
-visibility:
-  path:
-    visibility: 0
-    pages: ''
-  role:
-    roles: {  }
-  node_type:
-    types: {  }
 dependencies:
   module:
     - block_test

@@ -98,9 +98,9 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
       'region' => '-1',
       'weight' => NULL,
       'provider' => NULL,
-      'visibility' => NULL,
       'plugin' => 'test_html',
       'settings' => array(
+        'visibility' => array(),
         'id' => 'test_html',
         'label' => '',
         'provider' => 'block_test',

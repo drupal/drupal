@@ -6,3 +6,18 @@ services:
     class: Drupal\block\Theme\AdminDemoNegotiator
     tags:
       - { name: theme_negotiator, priority: 1000 }
+  block.current_user_context:
+    class: Drupal\block\EventSubscriber\CurrentUserContext
+    arguments: ['@current_user', '@entity.manager']
+    tags:
+      - { name: 'event_subscriber' }
+  block.current_language_context:
+    class: Drupal\block\EventSubscriber\CurrentLanguageContext
+    arguments: ['@language_manager']
+    tags:
+      - { name: 'event_subscriber' }
+  block.node_route_context:
+    class: Drupal\block\EventSubscriber\NodeRouteContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: 'event_subscriber' }

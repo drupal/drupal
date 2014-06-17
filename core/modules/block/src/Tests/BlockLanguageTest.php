@@ -57,11 +57,11 @@ class BlockLanguageTest extends WebTestBase {
     $default_theme = \Drupal::config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme);
 
-    $this->assertField('visibility[language][langcodes][en]', 'Language visibility field is visible.');
+    $this->assertField('settings[visibility][language][langcodes][en]', 'Language visibility field is visible.');
 
     // Enable a standard block and set the visibility setting for one language.
     $edit = array(
-      'visibility[language][langcodes][en]' => TRUE,
+      'settings[visibility][language][langcodes][en]' => TRUE,
       'id' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
@@ -100,7 +100,7 @@ class BlockLanguageTest extends WebTestBase {
     $block = $this->drupalPlaceBlock('system_powered_by_block', $edit);
 
     // Check that we have the language in config after saving the setting.
-    $visibility = $block->get('visibility');
+    $visibility = $block->getVisibility();
     $language = $visibility['language']['langcodes']['fr'];
     $this->assertTrue('fr' === $language, 'Language is set in the block configuration.');
 
@@ -110,7 +110,7 @@ class BlockLanguageTest extends WebTestBase {
     // Check that the language is no longer stored in the configuration after
     // it is deleted.
     $block = entity_load('block', $block->id());
-    $visibility = $block->get('visibility');
+    $visibility = $block->getVisibility();
     $this->assertTrue(empty($visibility['language']['langcodes']['fr']), 'Language is no longer not set in the block configuration after deleting the block.');
   }
 

@@ -6,17 +6,10 @@ langcode: en
 region: sidebar_first
 plugin: 'system_menu_block:admin'
 settings:
+  visibility: {  }
   label: Administration
   provider: system
   label_display: visible
-visibility:
-  path:
-    visibility: 0
-    pages: ''
-  role:
-    roles: {  }
-  node_type:
-    types: {  }
 dependencies:
   entity:
     - system.menu.admin

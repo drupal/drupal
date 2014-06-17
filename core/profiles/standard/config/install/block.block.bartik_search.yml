@@ -6,19 +6,11 @@ langcode: en
 region: sidebar_first
 plugin: search_form_block
 settings:
+  visibility: {  }
+  id: search_form_block
   label: Search
   provider: search
   label_display: visible
-visibility:
-  path:
-    visibility: 0
-    pages: ''
-  role:
-    roles: {  }
-  node_type:
-    types:
-      article: '0'
-      page: '0'
 dependencies:
   module:
     - search

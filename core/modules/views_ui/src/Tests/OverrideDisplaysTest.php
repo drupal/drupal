@@ -120,9 +120,9 @@ class OverrideDisplaysTest extends UITestBase {
     // presence/absence of the view's title in both the page and the block).
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", array(
       'visibility' => array(
-        'path' => array(
-          'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+        'request_path' => array(
           'pages' => $view['page[path]'],
+          'negate' => TRUE,
         ),
       ),
     ));

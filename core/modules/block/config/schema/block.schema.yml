@@ -19,40 +19,6 @@ block.block.*:
     provider:
       type: string
       label: 'Provider'
-    visibility:
-      type: mapping
-      label: 'Visibility settings'
-      mapping:
-        path:
-          type: mapping
-          label: 'Pages'
-          mapping:
-            visibility:
-              type: integer
-              label: 'Visibility'
-            pages:
-              type: string
-              label: 'Show block on specific pages'
-        role:
-          type: mapping
-          label: 'Roles'
-          mapping:
-            roles:
-              type: sequence
-              label: 'Show block for specific roles'
-              sequence:
-                - type: string
-                  label: 'Role'
-        node_type:
-          type: mapping
-          label: 'Content types'
-          mapping:
-            types:
-              type: sequence
-              label: 'Show block for specific content types'
-              sequence:
-               - type: string
-                 label: 'Node type'
     plugin:
       type: string
       label: 'Plugin'

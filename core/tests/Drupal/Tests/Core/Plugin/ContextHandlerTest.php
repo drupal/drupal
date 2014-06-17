@@ -16,7 +16,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the ContextHandler class.
  *
- * @coversDefaultClass \Drupal\Core\Plugin\ContextHandler
+ * @coversDefaultClass \Drupal\Core\Plugin\Context\ContextHandler
  *
  * @group Drupal
  * @group Plugin

@@ -26,10 +26,10 @@
         return vals.join(', ');
       }
 
-      $('#edit-visibility-node-type, #edit-visibility-language, #edit-visibility-role').drupalSetSummary(checkboxesSummary);
+      $('#edit-settings-visibility-node-type, #edit-settings-visibility-language, #edit-settings-visibility-user-role').drupalSetSummary(checkboxesSummary);
 
-      $('#edit-visibility-path').drupalSetSummary(function (context) {
-        var $pages = $(context).find('textarea[name="visibility[path][pages]"]');
+      $('#edit-settings-visibility-request-path').drupalSetSummary(function (context) {
+        var $pages = $(context).find('textarea[name="settings[visibility][request_path][pages]"]');
         if (!$pages.val()) {
           return Drupal.t('Not restricted');
         }

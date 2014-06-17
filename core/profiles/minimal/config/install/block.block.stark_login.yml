@@ -6,17 +6,10 @@ langcode: en
 region: sidebar_first
 plugin: user_login_block
 settings:
+  visibility: {  }
   label: 'User login'
   provider: user
   label_display: visible
-visibility:
-  path:
-    visibility: 0
-    pages: ''
-  role:
-    roles: {  }
-  node_type:
-    types: {  }
 dependencies:
   module:
     - user

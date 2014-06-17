@@ -32,4 +32,12 @@ interface BlockInterface extends ConfigEntityInterface {
    */
   public function getPlugin();
 
+  /**
+   * Returns an array of visibility condition configurations.
+   *
+   * @return array
+   *   An array of visibility condition configuration keyed by the condition ID.
+   */
+  public function getVisibility();
+
 }

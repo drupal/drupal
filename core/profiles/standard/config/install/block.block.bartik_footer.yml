@@ -6,19 +6,11 @@ langcode: en
 region: footer
 plugin: 'system_menu_block:footer'
 settings:
+  visibility: {  }
+  id: 'system_menu_block:footer'
   label: 'Footer menu'
   provider: system
   label_display: visible
-visibility:
-  path:
-    visibility: 0
-    pages: ''
-  role:
-    roles: {  }
-  node_type:
-    types:
-      article: '0'
-      page: '0'
 dependencies:
   entity:
     - system.menu.footer

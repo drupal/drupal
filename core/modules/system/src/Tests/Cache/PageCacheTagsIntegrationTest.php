@@ -67,8 +67,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
     // Place a block, but only make it visible on full node page 2.
     $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1', array(
       'visibility' => array(
-        'path' => array(
-          'visibility' => BLOCK_VISIBILITY_LISTED,
+        'request_path' => array(
           'pages' => 'node/' . $node_2->id(),
         ),
       )
