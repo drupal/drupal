@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests the query parameter argument_default plugin.
  *
- * @covers \Drupal\views\Plugin\views\argument_default\QueryParameter
+ * @coversDefaultClass \Drupal\views\Plugin\views\argument_default\QueryParameter
  */
 class QueryParameterTest extends UnitTestCase {
 

@@ -23,8 +23,12 @@
   </testsuites>
   <!-- Filter for coverage reports. -->
   <filter>
-    <blacklist>
-      <directory>./vendor</directory>
-    </blacklist>
+    <whitelist>
+      <directory>./includes</directory>
+      <directory>./lib</directory>
+      <directory>./modules</directory>
+      <directory>../modules</directory>
+      <directory>../sites</directory>
+     </whitelist>
   </filter>
 </phpunit>
