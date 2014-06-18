@@ -9,7 +9,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,8 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides a base class for forms.
  */
-abstract class FormBase extends DependencySerialization implements FormInterface, ContainerInjectionInterface {
+abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   use StringTranslationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The current request.
@@ -38,14 +39,14 @@ abstract class FormBase extends DependencySerialization implements FormInterface
   /**
    * The config factory.
    *
-   * This is marked private in order to force subclasses to use the
-   * self::config() method, which may be overridden to address specific needs
-   * when loading config. See \Drupal\Core\Form\ConfigFormBase::config() for an
-   * example of this.
+   * Subclasses should use the self::config() method, which may be overridden to
+   * address specific needs when loading config, rather than this property
+   * directly. See \Drupal\Core\Form\ConfigFormBase::config() for an example of
+   * this.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  private $configFactory;
+  protected $configFactory;
 
   /**
    * The form error handler.

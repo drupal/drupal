@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewStorageInterface;
@@ -26,7 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
  * An object to contain all of the data to generate a view, plus the member
  * functions to build the view query, execute the query and render the output.
  */
-class ViewExecutable extends DependencySerialization {
+class ViewExecutable {
+  use DependencySerializationTrait;
 
   /**
    * The config entity in which the view is stored.

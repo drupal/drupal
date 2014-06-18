@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -17,8 +17,9 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  *
  * @todo Convert this to a trait.
  */
-abstract class EntityControllerBase extends DependencySerialization {
+abstract class EntityControllerBase {
   use StringTranslationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The module handler to invoke hooks on.

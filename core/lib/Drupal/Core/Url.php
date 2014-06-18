@@ -8,7 +8,7 @@
 namespace Drupal\Core;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Routing\MatchingRouteNotFoundException;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -18,7 +18,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 /**
  * Defines an object that holds information about a URL.
  */
-class Url extends DependencySerialization {
+class Url {
+  use DependencySerializationTrait;
 
   /**
    * The URL generator.

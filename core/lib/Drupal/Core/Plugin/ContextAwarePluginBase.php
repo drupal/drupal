@@ -8,10 +8,10 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\ContextAwarePluginBase as ComponentContextAwarePluginBase;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Drupal specific class for plugins that use context.
@@ -22,16 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
   use StringTranslationTrait;
-
-  /**
-   * An array of service IDs keyed by property name used for serialization.
-   *
-   * @todo Remove when Drupal\Core\DependencyInjection\DependencySerialization
-   *   is converted to a trait in https://drupal.org/node/2208115.
-   *
-   * @var array
-   */
-  protected $_serviceIds = array();
+  use DependencySerializationTrait;
 
   /**
    * Override of \Drupal\Component\Plugin\ContextAwarePluginBase::__construct().
@@ -59,47 +50,6 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
     $this->context[$name] = new Context($context_definition);
     $this->context[$name]->setContextValue($value);
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove when Drupal\Core\DependencyInjection\DependencySerialization
-   *   is converted to a trait in https://drupal.org/node/2208115.
-   */
-  public function __sleep() {
-    $this->_serviceIds = array();
-    $vars = get_object_vars($this);
-    foreach ($vars as $key => $value) {
-      if (is_object($value) && isset($value->_serviceId)) {
-        // If a class member was instantiated by the dependency injection
-        // container, only store its ID so it can be used to get a fresh object
-        // on unserialization.
-        $this->_serviceIds[$key] = $value->_serviceId;
-        unset($vars[$key]);
-      }
-      // Special case the container, which might not have a service ID.
-      elseif ($value instanceof ContainerInterface) {
-        $this->_serviceIds[$key] = 'service_container';
-        unset($vars[$key]);
-      }
-    }
-
-    return array_keys($vars);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove when Drupal\Core\DependencyInjection\DependencySerialization
-   *   is converted to a trait in https://drupal.org/node/2208115.
-   */
-  public function __wakeup() {
-    $container = \Drupal::getContainer();
-    foreach ($this->_serviceIds as $key => $service_id) {
-      $this->$key = $container->get($service_id);
-    }
-    unset($this->_serviceIds);
   }
 
 }

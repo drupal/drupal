@@ -8,15 +8,15 @@
 namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests the dependency serialization base class.
+ * Tests the dependency serialization trait.
  *
- * @see \Drupal\Core\DependencyInjection\DependencySerialization
+ * @coversDefaultClass \Drupal\Core\DependencyInjection\DependencySerializationTrait
  */
 class DependencySerializationTest extends UnitTestCase {
 
@@ -25,14 +25,15 @@ class DependencySerializationTest extends UnitTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Service dependency serialization',
-      'description' => 'Tests the dependency serialization base class.',
+      'name' => '\Drupal\Core\DependencyInjection\DependencySerializationTrait unit test',
+      'description' => '',
       'group' => 'System'
     );
   }
 
   /**
-   * Tests serialization and unserialization.
+   * @covers ::__sleep
+   * @covers ::__wakeup
    */
   public function testSerialization() {
     // Create a pseudo service and dependency injected object.
@@ -43,26 +44,19 @@ class DependencySerializationTest extends UnitTestCase {
     $container->set('service_container', $container);
     \Drupal::setContainer($container);
 
-    $dependencySerialization = new TestClass($service);
+    $dependencySerialization = new DependencySerializationTestDummy($service);
     $dependencySerialization->setContainer($container);
 
     $string = serialize($dependencySerialization);
     $object = unserialize($string);
 
-    // The original object got _serviceIds added so removing it to check
-    // equality.
-    unset($dependencySerialization->_serviceIds);
+    $string = serialize($dependencySerialization);
+    /** @var \Drupal\Tests\Core\DependencyInjection\DependencySerializationTestDummy $object */
+    $dependencySerialization = unserialize($string);
 
-    // Ensure dependency injected object remains the same after serialization.
-    $this->assertEquals($dependencySerialization, $object);
-
-    // Ensure that _serviceIds does not exist on the object anymore.
-    $this->assertFalse(isset($object->_serviceIds));
-
-    // Ensure that both the service and the variable are in the unserialized
-    // object.
-    $this->assertSame($service, $object->service);
-    $this->assertSame($container, $object->container);
+    $this->assertSame($service, $dependencySerialization->service);
+    $this->assertSame($container, $dependencySerialization->container);
+    $this->assertEmpty($dependencySerialization->getServiceIds());
   }
 
 }
@@ -70,7 +64,9 @@ class DependencySerializationTest extends UnitTestCase {
 /**
  * Defines a test class which has a single service as dependency.
  */
-class TestClass extends DependencySerialization implements ContainerAwareInterface {
+class DependencySerializationTestDummy implements ContainerAwareInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * A test service.
@@ -87,13 +83,6 @@ class TestClass extends DependencySerialization implements ContainerAwareInterfa
   public $container;
 
   /**
-   * {@inheritdoc}
-   *
-   * Make the property accessible for the test.
-   */
-  public $_serviceIds;
-
-  /**
    * Constructs a new TestClass object.
    *
    * @param \stdClass $service
@@ -108,5 +97,12 @@ class TestClass extends DependencySerialization implements ContainerAwareInterfa
    */
   public function setContainer(ContainerInterface $container = NULL) {
     $this->container = $container;
+  }
+
+  /**
+   * Gets the stored service IDs.
+   */
+  public function getServiceIds() {
+    return $this->_serviceIds;
   }
 }

@@ -9,12 +9,13 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Defines a config storage comparer.
  */
-class StorageComparer extends DependencySerialization implements StorageComparerInterface {
+class StorageComparer implements StorageComparerInterface {
+  use DependencySerializationTrait;
 
   /**
    * The source storage used to discover configuration changes.

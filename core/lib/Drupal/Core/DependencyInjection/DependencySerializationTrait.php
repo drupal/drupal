@@ -2,16 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\Core\DependencyInjection\DependencySerialization.
+ * Contains \Drupal\Core\DependencyInjection\DependencySerializationTrait.
  */
 
 namespace Drupal\Core\DependencyInjection;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a dependency injection friendly methods for serialization.
+ * Provides dependency injection friendly methods for serialization.
  */
-abstract class DependencySerialization {
+trait DependencySerializationTrait {
 
   /**
    * An array of service IDs keyed by property name used for serialization.
@@ -52,7 +53,7 @@ abstract class DependencySerialization {
     foreach ($this->_serviceIds as $key => $service_id) {
       $this->$key = $container->get($service_id);
     }
-    unset($this->_serviceIds);
+    $this->_serviceIds = array();
   }
 
 }

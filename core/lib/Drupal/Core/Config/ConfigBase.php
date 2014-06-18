@@ -9,7 +9,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
-use \Drupal\Core\DependencyInjection\DependencySerialization;
+use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Provides a base class for configuration objects with get/set support.
@@ -26,7 +26,8 @@ use \Drupal\Core\DependencyInjection\DependencySerialization;
  * @see \Drupal\Core\Config\Config
  * @see \Drupal\Core\Theme\ThemeSettings
  */
-abstract class ConfigBase extends DependencySerialization {
+abstract class ConfigBase {
+  use DependencySerializationTrait;
 
   /**
    * The name of the configuration object.

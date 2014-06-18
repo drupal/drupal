@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
@@ -24,7 +24,8 @@ use Drupal\Core\Url;
 /**
  * Defines a base entity class.
  */
-abstract class Entity extends DependencySerialization implements EntityInterface {
+abstract class Entity implements EntityInterface {
+  use DependencySerializationTrait;
 
   /**
    * The entity type.

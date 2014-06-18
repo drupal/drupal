@@ -11,7 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -37,8 +37,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @see \Drupal\Core\Config\ConfigImporterEvent
  */
-class ConfigImporter extends DependencySerialization {
+class ConfigImporter {
   use StringTranslationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The name used to identify the lock.

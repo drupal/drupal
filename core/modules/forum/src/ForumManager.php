@@ -9,7 +9,7 @@ namespace Drupal\forum;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -19,8 +19,12 @@ use Drupal\node\NodeInterface;
 /**
  * Provides forum manager service.
  */
-class ForumManager extends DependencySerialization implements ForumManagerInterface {
+class ForumManager implements ForumManagerInterface {
   use StringTranslationTrait;
+  use DependencySerializationTrait {
+    __wakeup as defaultWakeup;
+    __sleep as defaultSleep;
+  }
 
   /**
    * Forum sort order, newest first.
@@ -499,7 +503,7 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
    * {@inheritdoc}
    */
   public function __sleep() {
-    $vars = parent::__sleep();
+    $vars = $this->defaultSleep();
     // Do not serialize static cache.
     unset($vars['history'], $vars['index'], $vars['lastPostData'], $vars['forumChildren'], $vars['forumStatistics']);
     return $vars;
@@ -509,7 +513,7 @@ class ForumManager extends DependencySerialization implements ForumManagerInterf
    * {@inheritdoc}
    */
   public function __wakeup() {
-    parent::__wakeup();
+    $this->defaultWakeup();
     // Initialize static cache.
     $this->history = array();
     $this->lastPostData = array();
