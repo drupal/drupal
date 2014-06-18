@@ -4,12 +4,13 @@ bundle: user
 mode: default
 content:
   user_picture:
-    label: hidden
     type: image
+    weight: 0
     settings:
       image_style: thumbnail
       image_link: content
-    weight: 0
+    third_party_settings: {  }
+    label: hidden
 status: true
 dependencies:
   module:

@@ -84,6 +84,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
       'weight' => 0,
       'type' => $default_widget,
       'settings' => $widget_settings,
+      'third_party_settings' => array(),
     );
     $this->assertEqual($form_display->getComponent($field_name), $expected);
 
@@ -136,11 +137,13 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
       'test_display_configurable' => array(
         'type' => 'text_textfield',
         'settings' => $formatter_settings,
+        'third_party_settings' => array(),
         'weight' => 10,
       ),
       'test_display_non_configurable' => array(
         'type' => 'text_textfield',
         'settings' => $formatter_settings,
+        'third_party_settings' => array(),
         'weight' => 11,
       ),
     );

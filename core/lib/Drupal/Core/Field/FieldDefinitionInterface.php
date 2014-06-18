@@ -91,6 +91,8 @@ interface FieldDefinitionInterface extends FieldStorageDefinitionInterface, List
    *     for the field type will be used.
    *   - settings: (array) Settings for the plugin specified above. The default
    *     settings for the plugin will be used for settings left unspecified.
+   *   - third_party_settings: (array) Settings provided by other extensions
+   *     through hook_field_formatter_third_party_settings_form().
    *   - weight: (float) The weight of the element. Not needed if 'type' is
    *     'hidden'.
    *   The defaults of the various display options above get applied by the used

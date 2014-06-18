@@ -69,6 +69,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
       'type' => 'string',
       'weight' => -5,
       'settings' => array(),
+      'third_party_settings' => array(),
     );
     $this->assertEqual($display->getComponents(), $expected);
 
@@ -174,6 +175,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
       'label' => 'above',
       'type' => $default_formatter,
       'settings' => $formatter_settings,
+      'third_party_settings' => array(),
     );
     $this->assertEqual($display->getComponent($field_name), $expected);
 
@@ -221,12 +223,14 @@ class EntityDisplayTest extends DrupalUnitTestBase {
         'label' => 'above',
         'type' => 'text_default',
         'settings' => $formatter_settings,
+        'third_party_settings' => array(),
         'weight' => 10,
       ),
       'test_display_non_configurable' => array(
         'label' => 'above',
         'type' => 'text_default',
         'settings' => $formatter_settings,
+        'third_party_settings' => array(),
         'weight' => 11,
       ),
     );

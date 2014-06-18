@@ -5,7 +5,11 @@ mode: default
 status: true
 content:
   description:
+    type: text_default
     weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    label: above
 hidden: {  }
 status: true
 dependencies:

@@ -9,6 +9,7 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
   body:
     type: text_textarea_with_summary
     weight: 1
@@ -16,20 +17,24 @@ content:
       rows: 9
       summary_rows: 3
       placeholder: ''
+    third_party_settings: {  }
   comment:
     type: comment_default
     weight: 2
     settings: {  }
+    third_party_settings: {  }
   field_tags:
     type: taxonomy_autocomplete
     weight: 3
     settings: {  }
+    third_party_settings: {  }
   field_image:
     type: image_image
     weight: 4
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
+    third_party_settings: {  }
 hidden: {  }
 status: true
 dependencies:

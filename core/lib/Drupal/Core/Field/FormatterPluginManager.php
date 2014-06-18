@@ -68,7 +68,7 @@ class FormatterPluginManager extends DefaultPluginManager {
       return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition);
     }
 
-    return new $plugin_class($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['label'], $configuration['view_mode']);
+    return new $plugin_class($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['label'], $configuration['view_mode'], $configuration['third_party_settings']);
   }
 
   /**
@@ -91,6 +91,8 @@ class FormatterPluginManager extends DefaultPluginManager {
    *       also be used if the requested formatter is not available.
    *     - settings: (array) Settings specific to the formatter. Each setting
    *       defaults to the default value specified in the formatter definition.
+   *     - third_party_settings: (array) Settings provided by other extensions
+   *       through hook_field_formatter_third_party_settings_form().
    *
    * @return \Drupal\Core\Field\FormatterInterface|null
    *   A formatter object or NULL when plugin is not found.
@@ -143,6 +145,7 @@ class FormatterPluginManager extends DefaultPluginManager {
     $configuration += array(
       'label' => 'above',
       'settings' => array(),
+      'third_party_settings' => array(),
     );
     // If no formatter is specified, use the default formatter.
     if (!isset($configuration['type'])) {

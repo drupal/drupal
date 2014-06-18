@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui\Tests;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -14,12 +15,14 @@ use Drupal\Core\Entity\EntityInterface;
  */
 class ManageDisplayTest extends FieldUiTestBase {
 
+  use SchemaCheckTestTrait;
+
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('search', 'field_test');
+  public static $modules = array('search', 'field_test', 'field_third_party_test');
 
   public static function getInfo() {
     return array(
@@ -100,13 +103,22 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
 
     // Assert that the field added in
-    // field_test_field_formatter_settings_form_alter() is present.
-    $fieldname = 'fields[field_test][settings_edit_form][settings][field_test_formatter_settings_form_alter]';
-    $this->assertField($fieldname, 'The field added in hook_field_formatter_settings_form_alter() is present on the settings form.');
+    // field_test_field_formatter_third_party_settings_form() is present.
+    $fieldname = 'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_field_formatter_third_party_settings_form]';
+    $this->assertField($fieldname, 'The field added in hook_field_formatter_third_party_settings_form() is present on the settings form.');
     $edit = array($fieldname => 'foo');
     $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
 
-    // Confirm that the extra settings are not updated on the settings form.
+    // Save the form to save the third party settings.
+    $this->drupalPostForm(NULL, array(), t('Save'));
+
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    $display = entity_load('entity_view_display', 'node.' . $this->type . '.default', TRUE);
+    $this->assertEqual($display->getRenderer('field_test')->getThirdPartySetting('field_third_party_test', 'field_test_field_formatter_third_party_settings_form'), 'foo');
+    $this->assertTrue(in_array('field_third_party_test', $display->calculateDependencies()['module']), 'The display has a dependency on field_third_party_test module.');
+    $this->assertConfigSchema(\Drupal::service('config.typed'), $display->getEntityType()->getConfigPrefix() . '.' . $display->id(), $display->toArray());
+
+    // Confirm that the third party settings are not updated on the settings form.
     $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
     $this->assertFieldByName($fieldname, '');
 
@@ -121,9 +133,15 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
     $this->assertText('Default empty setting now has a value.');
 
-    // Test the no settings form behavior.
+    // Test the settings form behavior. An edit button should be present since
+    // there are third party settings to configure.
     $edit = array('fields[field_test][type]' => 'field_no_settings', 'refresh_rows' => 'field_test');
     $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
+    $this->assertFieldByName('field_test_settings_edit');
+    // Uninstall the module providing third party settings and ensure the button
+    // is no longer there.
+    \Drupal::moduleHandler()->uninstall(array('field_third_party_test'));
+    $this->drupalGet($manage_display);
     $this->assertNoFieldByName('field_test_settings_edit');
   }
 
@@ -193,13 +211,21 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
 
     // Assert that the field added in
-    // field_test_field_widget_settings_form_alter() is present.
-    $fieldname = 'fields[field_test][settings_edit_form][settings][field_test_widget_settings_form_alter]';
-    $this->assertField($fieldname, 'The field added in hook_field_widget_settings_form_alter() is present on the settings form.');
+    // field_test_field_widget_third_party_settings_form() is present.
+    $fieldname = 'fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_widget_third_party_settings_form]';
+    $this->assertField($fieldname, 'The field added in hook_field_widget_third_party_settings_form() is present on the settings form.');
     $edit = array($fieldname => 'foo');
     $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
 
-    // Confirm that the extra settings are not updated on the settings form.
+    // Save the form to save the third party settings.
+    $this->drupalPostForm(NULL, array(), t('Save'));
+    \Drupal::entityManager()->clearCachedFieldDefinitions();
+    $display = entity_load('entity_form_display', 'node.' . $this->type . '.default', TRUE);
+    $this->assertEqual($display->getRenderer('field_test')->getThirdPartySetting('field_third_party_test', 'field_test_widget_third_party_settings_form'), 'foo');
+    $this->assertTrue(in_array('field_third_party_test', $display->calculateDependencies()['module']), 'Form display does not have a dependency on field_third_party_test module.');
+    $this->assertConfigSchema(\Drupal::service('config.typed'), $display->getEntityType()->getConfigPrefix() . '.' . $display->id(), $display->toArray());
+
+    // Confirm that the third party settings are not updated on the settings form.
     $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
     $this->assertFieldByName($fieldname, '');
   }

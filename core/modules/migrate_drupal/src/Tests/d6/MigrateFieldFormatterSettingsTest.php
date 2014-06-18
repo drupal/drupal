@@ -92,6 +92,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupalTestBase {
       'label' => 'above',
       'type' => 'text_trimmed',
       'settings' => array('trim_length' => 600),
+      'third_party_settings' => array(),
     );
 
     // Make sure we don't have the excluded print entity display.

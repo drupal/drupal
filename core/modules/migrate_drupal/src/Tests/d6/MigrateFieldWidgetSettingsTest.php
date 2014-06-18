@@ -92,6 +92,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupalTestBase {
     $component = $form_display->getComponent('field_test');
     $expected = array('weight' => 1, 'type' => 'text_textfield');
     $expected['settings'] = array('size' => 60, 'placeholder' => '');
+    $expected['third_party_settings'] = array();
     $this->assertEqual($component, $expected, 'Text field settings are correct.');
 
     // Integer field.

@@ -4,15 +4,20 @@
 entity_field_view_display_base:
   type: mapping
   mapping:
-    label:
-      type: string
-      label: 'Label setting machine name'
     type:
       type: string
       label: 'Format type machine name'
     weight:
       type: integer
       label: 'Weight'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: entity_view_display.third_party.[%key]
+    label:
+      type: string
+      label: 'Label setting machine name'
 
 # Schema for the base of the form mode display format settings.
 entity_field_form_display_base:
@@ -24,3 +29,8 @@ entity_field_form_display_base:
     weight:
       type: integer
       label: 'Weight'
+    third_party_settings:
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        - type: entity_form_display.third_party.[%key]

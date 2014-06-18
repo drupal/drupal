@@ -5,23 +5,26 @@ mode: teaser
 status: true
 content:
   field_image:
-    label: hidden
     type: image
+    weight: -1
     settings:
       image_style: medium
       image_link: content
-    weight: -1
-  body:
+    third_party_settings: {  }
     label: hidden
+  body:
     type: text_summary_or_trimmed
     weight: 0
     settings:
       trim_length: 600
+    third_party_settings: {  }
+    label: hidden
   field_tags:
     type: taxonomy_term_reference_link
     weight: 10
-    label: above
     settings: {  }
+    third_party_settings: {  }
+    label: above
 dependencies:
   entity:
     - entity.view_mode.node.teaser

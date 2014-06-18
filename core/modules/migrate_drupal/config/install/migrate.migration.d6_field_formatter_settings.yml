@@ -4,6 +4,7 @@ source:
   plugin: d6_field_instance_per_view_mode
   constants:
     entity_type: node
+    third_party_settings: { }
 
 process:
   # We skip field types that don't exist because they weren't migrated by the
@@ -290,6 +291,7 @@ process:
             trim_length: 600
     -
       plugin: field_formatter_settings_defaults
+  "options.third_party_settings": constants.third_party_settings
 
 destination:
   plugin: component_entity_display

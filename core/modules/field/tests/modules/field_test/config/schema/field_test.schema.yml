@@ -1,0 +1,23 @@
+entity_view_display.field.field_test_multiple:
+  type: entity_field_view_display_base
+  label: 'field_test display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        test_formatter_setting_multiple:
+          type: string
+          label: 'Test setting'
+
+entity_form_display.field.test_field_widget_multiple:
+  type: entity_field_form_display_base
+  label: 'field_test display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        test_widget_setting_multiple:
+          type: string
+          label: 'Test setting'

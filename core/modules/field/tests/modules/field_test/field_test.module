@@ -156,44 +156,6 @@ function field_test_query_efq_metadata_test_alter(&$query) {
 }
 
 /**
- * Implements hook_field_widget_settings_form_alter().
- */
-function field_test_field_widget_settings_form_alter(&$element, &$form_state, $context) {
-  $element['field_test_widget_settings_form_alter'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Widget settings form alter'),
-    '#default_value' => $context['widget']->getSetting('field_test_widget_settings_form_alter'),
-  );
-}
-
-/**
- * Implements hook_field_widget_settings_summary_alter().
- */
-function field_test_field_widget_settings_summary_alter(&$summary, $context) {
-  $summary[] = 'field_test_field_widget_settings_summary_alter';
-  return $summary;
-}
-
-/**
- * Implements hook_field_formatter_settings_form_alter().
- */
-function field_test_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
-  $element['field_test_formatter_settings_form_alter'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Formatter settings form alter'),
-    '#default_value' => $context['formatter']->getSetting('field_test_formatter_settings_form_alter'),
-  );
-}
-
-/**
- * Implements hook_field_formatter_settings_summary_alter().
- */
-function field_test_field_formatter_settings_summary_alter(&$summary, $context) {
-  $summary[] = 'field_test_field_formatter_settings_summary_alter';
-  return $summary;
-}
-
-/**
  * Implements hook_entity_extra_field_info_alter().
  */
 function field_test_entity_extra_field_info_alter(&$info) {

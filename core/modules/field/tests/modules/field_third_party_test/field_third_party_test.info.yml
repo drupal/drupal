@@ -1,0 +1,9 @@
+name: 'Field Third Party Settings Test'
+type: module
+description: 'Support module for the Field API tests.'
+core: 8.x
+package: Testing
+version: VERSION
+dependencies:
+  - entity_test
+  - field_test

@@ -43,11 +43,14 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *   The definition of the field to which the widget is associated.
    * @param array $settings
    *   The widget settings.
+   * @param array $third_party_settings
+   *   Any third party settings settings.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
     $this->fieldDefinition = $field_definition;
     $this->settings = $settings;
+    $this->thirdPartySettings = $third_party_settings;
   }
 
   /**

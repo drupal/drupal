@@ -5,6 +5,7 @@ source:
   constants:
     entity_type: node
     form_mode: default
+    third_party_settings: { }
 
 process:
   # We skip field types that don't exist because they weren't migrated by the
@@ -50,6 +51,7 @@ process:
       source:
         - widget_type
         - widget_settings
+  "options.third_party_settings": constants.third_party_settings
 
 destination:
   plugin: component_entity_form_display

@@ -34,8 +34,8 @@ class DateTimeDefaultWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
 
     // @todo Inject this once https://drupal.org/node/2035317 is in.
     $this->dateStorage = \Drupal::entityManager()->getStorage('date_format');

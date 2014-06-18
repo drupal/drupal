@@ -75,6 +75,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       $configuration['settings'],
       $configuration['label'],
       $configuration['view_mode'],
+      $configuration['third_party_settings'],
       $container->get('current_user'),
       $container->get('entity.manager')->getStorage('comment'),
       $container->get('entity.manager')->getViewBuilder('comment')
@@ -96,6 +97,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    *   The formatter label display setting.
    * @param string $view_mode
    *   The view mode.
+   * @param array $third_party_settings
+   *   Third party settings.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\comment\CommentStorageInterface $comment_storage
@@ -103,8 +106,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    * @param \Drupal\Core\Entity\EntityViewBuilderInterface $comment_view_builder
    *   The comment view builder.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, AccountInterface $current_user, CommentStorageInterface $comment_storage, EntityViewBuilderInterface $comment_view_builder) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, CommentStorageInterface $comment_storage, EntityViewBuilderInterface $comment_view_builder) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->viewBuilder = $comment_view_builder;
     $this->storage = $comment_storage;
     $this->currentUser = $current_user;

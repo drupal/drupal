@@ -10,10 +10,12 @@ content:
     settings:
       size: 60
       placeholder: ''
+    third_party_settings: {  }
   description:
     type: text_textfield
     weight: 0
     settings: { }
+    third_party_settings: {  }
 dependencies:
   entity:
     - taxonomy.vocabulary.forums

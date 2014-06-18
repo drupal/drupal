@@ -14,6 +14,7 @@ use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Field\PluginSettingsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -323,8 +324,11 @@ abstract class DisplayOverviewBase extends OverviewBase {
     if (isset($form_state['values']['fields'][$field_name]['type'])) {
       $display_options['type'] = $form_state['values']['fields'][$field_name]['type'];
     }
-    if (isset($form_state['plugin_settings'][$field_name])) {
-      $display_options['settings'] = $form_state['plugin_settings'][$field_name];
+    if (isset($form_state['plugin_settings'][$field_name]['settings'])) {
+      $display_options['settings'] = $form_state['plugin_settings'][$field_name]['settings'];
+    }
+    if (isset($form_state['plugin_settings'][$field_name]['third_party_settings'])) {
+      $display_options['third_party_settings'] = $form_state['plugin_settings'][$field_name]['third_party_settings'];
     }
 
     // Get the corresponding plugin object.
@@ -349,9 +353,9 @@ abstract class DisplayOverviewBase extends OverviewBase {
       if ($plugin) {
         // Generate the settings form and allow other modules to alter it.
         $settings_form = $plugin->settingsForm($form, $form_state);
-        $this->alterSettingsForm($settings_form, $plugin, $field_definition, $form, $form_state);
+        $third_party_settings_form = $this->thirdPartySettingsForm($plugin, $field_definition, $form, $form_state);
 
-        if ($settings_form) {
+        if ($settings_form || $third_party_settings_form) {
           $field_row['plugin']['#cell_attributes'] = array('colspan' => 3);
           $field_row['plugin']['settings_edit_form'] = array(
             '#type' => 'container',
@@ -361,6 +365,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
               '#markup' => $this->t('Plugin settings'),
             ),
             'settings' => $settings_form,
+            'third_party_settings' => $third_party_settings_form,
             'actions' => array(
               '#type' => 'actions',
               'save_settings' => $base_button + array(
@@ -405,7 +410,9 @@ abstract class DisplayOverviewBase extends OverviewBase {
         }
 
         // Check selected plugin settings to display edit link or not.
-        if ($this->pluginManager->getDefaultSettings($display_options['type'])) {
+        $settings_form = $plugin->settingsForm($form, $form_state);
+        $third_party_settings_form = $this->thirdPartySettingsForm($plugin, $field_definition, $form, $form_state);
+        if (!empty($settings_form) || !empty($third_party_settings_form)) {
           $field_row['settings_edit'] = $base_button + array(
             '#type' => 'image_button',
             '#name' => $field_name . '_settings_edit',
@@ -516,11 +523,21 @@ abstract class DisplayOverviewBase extends OverviewBase {
         if (isset($values['settings_edit_form']['settings'])) {
           $settings = $values['settings_edit_form']['settings'];
         }
-        elseif (isset($form_state['plugin_settings'][$field_name])) {
-          $settings = $form_state['plugin_settings'][$field_name];
+        elseif (isset($form_state['plugin_settings'][$field_name]['settings'])) {
+          $settings = $form_state['plugin_settings'][$field_name]['settings'];
         }
         elseif ($current_options = $display->getComponent($field_name)) {
           $settings = $current_options['settings'];
+        }
+        $third_party_settings = array();
+        if (isset($values['settings_edit_form']['third_party_settings'])) {
+          $third_party_settings = $values['settings_edit_form']['third_party_settings'];
+        }
+        elseif (isset($form_state['plugin_settings'][$field_name]['third_party_settings'])) {
+          $third_party_settings = $form_state['plugin_settings'][$field_name]['third_party_settings'];
+        }
+        elseif (($current_options = $display->getComponent($field_name)) && isset($current_options['third_party_settings'])) {
+          $third_party_settings = $current_options['third_party_settings'];
         }
 
         // Only save settings actually used by the selected plugin.
@@ -531,7 +548,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
         $component_values = array(
           'type' => $values['type'],
           'weight' => $values['weight'],
-          'settings' => $settings
+          'settings' => $settings,
+          'third_party_settings' => $third_party_settings,
         );
 
         // Only formatters have configurable label visibility.
@@ -604,8 +622,12 @@ abstract class DisplayOverviewBase extends OverviewBase {
       case 'update':
         // Store the saved settings, and set the field back to 'non edit' mode.
         $field_name = $trigger['#field_name'];
-        $values = $form_state['values']['fields'][$field_name]['settings_edit_form']['settings'];
-        $form_state['plugin_settings'][$field_name] = $values;
+        if (isset($form_state['values']['fields'][$field_name]['settings_edit_form']['settings'])) {
+          $form_state['plugin_settings'][$field_name]['settings'] = $form_state['values']['fields'][$field_name]['settings_edit_form']['settings'];
+        }
+        if (isset($form_state['values']['fields'][$field_name]['settings_edit_form']['third_party_settings'])) {
+          $form_state['plugin_settings'][$field_name]['third_party_settings'] = $form_state['values']['fields'][$field_name]['settings_edit_form']['third_party_settings'];
+        }
         unset($form_state['plugin_settings_edit']);
         break;
 
@@ -850,31 +872,32 @@ abstract class DisplayOverviewBase extends OverviewBase {
   abstract protected function getOverviewRoute($mode);
 
   /**
-   * Alters the widget or formatter settings form.
+   * Adds the widget or formatter third party settings forms.
    *
-   * @param array $settings_form
-   *   The widget or formatter settings form.
-   * @param object $plugin
+   * @param \Drupal\Core\Field\PluginSettingsInterface $plugin
    *   The widget or formatter.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
    * @param array $form
-   *   The The (entire) configuration form array.
+   *   The (entire) configuration form array.
    * @param array $form_state
    *   The form state.
+   *
+   * @return array
+   *   The widget or formatter third party settings form.
    */
-  abstract protected function alterSettingsForm(array &$settings_form, $plugin, FieldDefinitionInterface $field_definition, array $form, array &$form_state);
+  abstract protected function thirdPartySettingsForm(PluginSettingsInterface $plugin, FieldDefinitionInterface $field_definition, array $form, array &$form_state);
 
   /**
    * Alters the widget or formatter settings summary.
    *
    * @param array $summary
    *   The widget or formatter settings summary.
-   * @param object $plugin
+   * @param \Drupal\Core\Field\PluginSettingsInterface $plugin
    *   The widget or formatter.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
    */
-  abstract protected function alterSettingsSummary(array &$summary, $plugin, FieldDefinitionInterface $field_definition);
+  abstract protected function alterSettingsSummary(array &$summary, PluginSettingsInterface $plugin, FieldDefinitionInterface $field_definition);
 
 }
