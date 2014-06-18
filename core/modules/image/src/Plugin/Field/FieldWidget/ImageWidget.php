@@ -218,7 +218,7 @@ class ImageWidget extends FileWidget {
       '#element_validate' => $element['#title_field_required'] == 1 ? array(array(get_called_class(), 'validateRequiredFields')) : array(),
     );
 
-    return $element;
+    return parent::process($element, $form_state, $form);
   }
 
   /**

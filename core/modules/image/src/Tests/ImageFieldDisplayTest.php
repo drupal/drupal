@@ -258,6 +258,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit['files[' . $field_name . '_1][]'] = drupal_realpath($test_image->uri);
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $this->assertText(format_string('Article @title has been updated.', array('@title' => $node->getTitle())));
+
+    // Assert ImageWidget::process() calls FieldWidget::process().
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $edit = array();
+    $edit['files[' . $field_name . '_2][]'] = drupal_realpath($test_image->uri);
+    $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_2_upload_button');
+    $this->assertNoRaw('<input multiple type="file" id="edit-' . strtr($field_name, '_', '-') . '-2-upload" name="files[' . $field_name . '_2][]" size="22" class="form-file">');
+    $this->assertRaw('<input multiple type="file" id="edit-' . strtr($field_name, '_', '-') . '-3-upload" name="files[' . $field_name . '_3][]" size="22" class="form-file">');
   }
 
   /**
