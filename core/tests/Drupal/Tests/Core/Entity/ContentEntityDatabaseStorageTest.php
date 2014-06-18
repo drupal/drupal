@@ -1048,7 +1048,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->entityManager->expects($this->once())
+    $this->entityManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 

@@ -22,6 +22,10 @@ catch (Exception $e) {
     $rebuild_path = $GLOBALS['base_url'] . '/rebuild.php';
     $message .= " or run the <a href=\"$rebuild_path\">rebuild script</a>";
   }
+
+  // Set the response code manually. Otherwise, this response will default to a
+  // 200.
+  http_response_code(500);
   print $message;
   throw $e;
 }

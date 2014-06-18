@@ -40,13 +40,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface {
 
   /**
-   * The storage field definitions for this entity type.
-   *
-   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
-   */
-  protected $fieldStorageDefinitions;
-
-  /**
    * The mapping of field columns to SQL tables.
    *
    * @var \Drupal\Core\Entity\Sql\TableMappingInterface
@@ -130,6 +123,17 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
+   * Gets the base field definitions for a content entity type.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   The array of base field definitions for the entity type, keyed by field
+   *   name.
+   */
+  public function getFieldStorageDefinitions() {
+    return $this->entityManager->getBaseFieldDefinitions($this->entityTypeId);
+  }
+
+  /**
    * Constructs a ContentEntityDatabaseStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -144,7 +148,6 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
 
     $this->database = $database;
     $this->entityManager = $entity_manager;
-    $this->fieldStorageDefinitions = $entity_manager->getBaseFieldDefinitions($entity_type->id());
 
     // @todo Remove table names from the entity type definition in
     //   https://drupal.org/node/2232465
@@ -236,7 +239,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   public function getTableMapping() {
     if (!isset($this->tableMapping)) {
 
-      $definitions = array_filter($this->fieldStorageDefinitions, function (FieldDefinitionInterface $definition) {
+      $definitions = array_filter($this->getFieldStorageDefinitions(), function (FieldDefinitionInterface $definition) {
         // @todo Remove the check for FieldDefinitionInterface::isMultiple() when
         //   multiple-value base fields are supported in
         //   https://drupal.org/node/2248977.
@@ -834,10 +837,10 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
     $table_mapping = $this->getTableMapping();
     foreach ($table_mapping->getFieldNames($table_name) as $field_name) {
 
-      if (empty($this->fieldStorageDefinitions[$field_name])) {
+      if (empty($this->getFieldStorageDefinitions()[$field_name])) {
         throw new EntityStorageException(String::format('Table mapping contains invalid field %field.', array('%field' => $field_name)));
       }
-      $definition = $this->fieldStorageDefinitions[$field_name];
+      $definition = $this->getFieldStorageDefinitions()[$field_name];
       $columns = $table_mapping->getColumnNames($field_name);
 
       foreach ($columns as $column_name => $schema_name) {
