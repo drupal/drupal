@@ -422,10 +422,10 @@ class CommentNonNodeTest extends WebTestBase {
   }
 
   /**
-   * Tests comment fields are not available for entity types with string ids.
+   * Tests comment fields cannot be added to entity types without integer IDs.
    */
-  public function testsStringIdEntities() {
-    // Create a bundle for entity_test.
+  public function testsNonIntegerIdEntities() {
+    // Create a bundle for entity_test_string_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_string_id');
     $limited_user = $this->drupalCreateUser(array(
       'administer entity_test_string_id fields',
@@ -433,16 +433,17 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalLogin($limited_user);
     // Visit the Field UI overview.
     $this->drupalGet('entity_test_string_id/structure/entity_test/fields');
-    // Ensure field isn't shown for empty IDs.
+    // Ensure field isn't shown for string IDs.
     $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
 
+    // Create a bundle for entity_test_no_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
     $this->drupalLogin($this->drupalCreateUser(array(
       'administer entity_test_no_id fields',
     )));
     // Visit the Field UI overview.
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
-    // Ensure field isn't shown for string ids.
+    // Ensure field isn't shown for empty IDs.
     $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
   }
 
