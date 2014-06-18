@@ -77,6 +77,13 @@ class File extends ContentEntityBase implements FileInterface {
   /**
    * {@inheritdoc}
    */
+  public function url($rel = 'canonical', $options = array()) {
+    return file_create_url($this->getFileUri());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getMimeType() {
     return $this->get('filemime')->value;
   }
