@@ -433,6 +433,15 @@ class CommentNonNodeTest extends WebTestBase {
     $this->drupalLogin($limited_user);
     // Visit the Field UI overview.
     $this->drupalGet('entity_test_string_id/structure/entity_test/fields');
+    // Ensure field isn't shown for empty IDs.
+    $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
+
+    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
+    $this->drupalLogin($this->drupalCreateUser(array(
+      'administer entity_test_no_id fields',
+    )));
+    // Visit the Field UI overview.
+    $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
     // Ensure field isn't shown for string ids.
     $this->assertNoOption('edit-fields-add-new-field-type', 'comment');
   }

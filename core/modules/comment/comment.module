@@ -863,6 +863,9 @@ function comment_entity_predelete(EntityInterface $entity) {
 function _comment_entity_uses_integer_id($entity_type_id) {
   $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
   $entity_type_id_key = $entity_type->getKey('id');
+  if ($entity_type_id_key === FALSE) {
+    return FALSE;
+  }
   $field_definitions = \Drupal::entityManager()->getBaseFieldDefinitions($entity_type->id());
   $entity_type_id_definition = $field_definitions[$entity_type_id_key];
   return $entity_type_id_definition->getType() === 'integer';
