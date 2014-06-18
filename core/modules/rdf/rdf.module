@@ -215,7 +215,7 @@ function rdf_entity_prepare_view($entity_type, array $entities, array $displays)
     // be displayed.
     foreach ($displays[$entity->bundle()]->getComponents() as $name => $options) {
       $field_mapping = $mapping->getPreparedFieldMapping($name);
-      if ($field_mapping['properties']) {
+      if ($field_mapping) {
         foreach ($entity->get($name) as $item) {
           $item->_attributes += rdf_rdfa_attributes($field_mapping, $item->getValue());
         }
@@ -532,16 +532,18 @@ function rdf_preprocess_taxonomy_term(&$variables) {
   $bundle_mapping = $mapping->getPreparedBundleMapping();
   $name_field_mapping = $mapping->getPreparedFieldMapping('name');
   // Adds the RDF type of the term and the term name in a <meta> tag.
-  $term_label_meta = array(
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'about' => url('taxonomy/term/' . $term->id()),
-      'typeof' => $bundle_mapping['types'],
-      'property' => $name_field_mapping['properties'],
-      'content' => $term->getName(),
-    ),
-  );
-  drupal_add_html_head($term_label_meta, 'rdf_term_label');
+  if (!empty($name_field_mapping)) {
+    $term_label_meta = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'about' => url('taxonomy/term/' . $term->id()),
+        'typeof' => $bundle_mapping['types'],
+        'property' => $name_field_mapping['properties'],
+        'content' => $term->getName(),
+      ),
+    );
+    drupal_add_html_head($term_label_meta, 'rdf_term_label');
+  }
 }
 
 /**

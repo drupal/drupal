@@ -34,8 +34,8 @@ interface RdfMappingInterface extends ConfigEntityInterface {
    * serialization format, such as RDFa, then getPreparedBundleMapping() should
    * be used instead.
    *
-   * @return array|null
-   *   The bundle mapping, or NULL if there is no mapping.
+   * @return array
+   *   The bundle mapping, or an empty array if there is no mapping.
    */
   public function getBundleMapping();
 
@@ -75,7 +75,7 @@ interface RdfMappingInterface extends ConfigEntityInterface {
    *   The name of the field.
    *
    * @return array
-   *   The prepared field mapping.
+   *   The prepared field mapping, or an empty array if there is no mapping.
    */
   public function getPreparedFieldMapping($field_name);
 
@@ -90,8 +90,8 @@ interface RdfMappingInterface extends ConfigEntityInterface {
    * @param string $field_name
    *   The name of the field.
    *
-   * @return array|null
-   *   The field mapping config array, or NULL if there is no mapping.
+   * @return array
+   *   The field mapping config array, or an empty array if there is no mapping.
    */
   public function getFieldMapping($field_name);
 
