@@ -9,6 +9,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 
 /**
@@ -116,7 +117,7 @@ abstract class SqlBase extends SourcePluginBase {
       //      OR above highwater).
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
-      if ($this->getIds() && ($this->migration->getIdMap() instanceof \Drupal\migrate\Plugin\migrate\id_map\Sql)) {
+      if ($this->mapJoinable()) {
         // Build the join to the map table. Because the source key could have
         // multiple fields, we need to build things up.
         $count = 1;
@@ -192,4 +193,21 @@ abstract class SqlBase extends SourcePluginBase {
     return $this->iterator;
   }
 
+  protected function mapJoinable() {
+    if (!$this->getIds()) {
+      return FALSE;
+    }
+    $id_map = $this->migration->getIdMap();
+    if (!$id_map instanceof Sql) {
+      return FALSE;
+    }
+    $id_map_database_options = $id_map->getDatabase()->getConnectionOptions();
+    $source_database_options = $this->getDatabase()->getConnectionOptions();
+    foreach (array('username', 'password', 'host', 'port', 'namespace', 'driver') as $key) {
+      if ($id_map_database_options[$key] != $source_database_options[$key]) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
 }

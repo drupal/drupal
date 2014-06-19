@@ -219,7 +219,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
    * @return \Drupal\Core\Database\Connection
    *   The database connection object.
    */
-  protected function getDatabase() {
+  public function getDatabase() {
     if (!isset($this->database)) {
       $this->database = \Drupal::database();
     }
