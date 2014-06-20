@@ -105,6 +105,10 @@ abstract class KernelTestBase extends UnitTestBase {
    * Create and set new configuration directories.
    *
    * @see config_get_config_directory()
+   *
+   * @throws \RuntimeException
+   *   Thrown when CONFIG_ACTIVE_DIRECTORY or CONFIG_STAGING_DIRECTORY cannot
+   *   be created or made writable.
    */
   protected function prepareConfigDirectories() {
     $this->configDirectories = array();
@@ -294,6 +298,9 @@ abstract class KernelTestBase extends UnitTestBase {
    *
    * @param array $modules
    *   A list of modules for which to install default configuration.
+   *
+   * @throws \RuntimeException
+   *   Thrown when any module listed in $modules is not enabled.
    */
   protected function installConfig(array $modules) {
     foreach ($modules as $module) {
@@ -316,6 +323,10 @@ abstract class KernelTestBase extends UnitTestBase {
    *   The name of the module that defines the table's schema.
    * @param string|array $tables
    *   The name or an array of the names of the tables to install.
+   *
+   * @throws \RuntimeException
+   *   Thrown when $module is not enabled or when the table schema cannot be
+   *   found in the module specified.
    */
   protected function installSchema($module, $tables) {
     // drupal_get_schema_unprocessed() is technically able to install a schema
@@ -356,6 +367,9 @@ abstract class KernelTestBase extends UnitTestBase {
    *
    * @param string $entity_type_id
    *   The ID of the entity type.
+   *
+   * @throws \RuntimeException
+   *   Thrown when the entity type does not support automatic schema installation.
    */
   protected function installEntitySchema($entity_type_id) {
     /** @var \Drupal\Core\Entity\EntityManagerInterface $entity_manager */
