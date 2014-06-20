@@ -105,7 +105,11 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
  *
  * @param array $variables
  *   An associative array containing:
- *   - account: The user account.
+ *   - elements: An associative array containing the user information and any
+ *     fields attached to the user. Properties used:
+ *     - #user: A \Drupal\user\Entity\User object. The user account of the
+ *       profile being viewed.
+ *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_user(&$variables) {
   $account = $variables['elements']['#user'];
