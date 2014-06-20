@@ -364,20 +364,53 @@
  *   \Drupal\Core\Entity\EntityType.
  *
  * @section load_query Loading and querying entities
- * To load entities, use the entity storage manager, which is a class
+ * To load entities, use the entity storage manager, which is an object
  * implementing \Drupal\Core\Entity\EntityStorageInterface that you can
  * retrieve with:
  * @code
  * $storage = \Drupal::entityManager()->getStorage('your_entity_type');
+ * // Or if you have a $container variable:
+ * $storage = $container->get('entity.manager')->getStorage('your_entity_type');
  * @endcode
  * Here, 'your_entity_type' is the machine name of your entity type ('id'
- * annotation on the entity class).
+ * annotation on the entity class), and note that you should use dependency
+ * injection to retrieve this object if possible. See the
+ * @link container Services and Dependency Injection topic @endlink for more
+ * about how to properly retrieve services.
  *
- * To query to find entities to load, use an entity query, which is a class
+ * To query to find entities to load, use an entity query, which is a object
  * implementing \Drupal\Core\Entity\Query\QueryInterface that you can retrieve
  * with:
  * @code
- * $storage = \Drupal::entityQuery('your_entity_type');
+ * // Simple query:
+ * $query = \Drupal::entityQuery('your_entity_type');
+ * // Or, if you have a $container variable:
+ * $query_service = $container->get('entity.query');
+ * $query = $query_service->get('your_entity_type');
+ * @endcode
+ * If you need aggregation, there is an aggregate query avaialable, which
+ * implements \Drupal\Core\Entity\Query\QueryAggregateInterface:
+ * @code
+ * $query \Drupal::entityQueryAggregate('your_entity_type');
+ * // Or:
+ * $query = $query_service->getAggregate('your_entity_type');
+ * Also, you should use dependency injection to get this object if
+ * possible; the service you need is entity.query, and its methods getQuery()
+ * or getAggregateQuery() will get the query object.
+ *
+ * In either case, you can then add conditions to your query, using methods
+ * like condition(), exists(), etc. on $query; add sorting, pager, and range
+ * if needed, and execute the query to return a list of entity IDs that match
+ * the query.
+ *
+ * Here is an example, using the core File entity:
+ * @code
+ * $fids = Drupal::entityQuery('file')
+ *   ->condition('status', FILE_STATUS_PERMANENT, '<>')
+ *   ->condition('changed', REQUEST_TIME - $age, '<')
+ *   ->range(0, 100)
+ *   ->execute();
+ * $files = $storage->loadMultiple($fids);
  * @endcode
  * @}
  */

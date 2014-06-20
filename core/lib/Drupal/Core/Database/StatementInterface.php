@@ -25,6 +25,8 @@ namespace Drupal\Core\Database;
  * @code
  * class Drupal\Core\Database\Driver\oracle\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
  * @endcode
+ *
+ * @ingroup database
  */
 interface StatementInterface extends \Traversable {
 

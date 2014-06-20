@@ -11,6 +11,8 @@ use Drupal\Core\Database\Database;
 
 /**
  * General class for an abstracted INSERT query.
+ *
+ * @ingroup database
  */
 class Insert extends Query {
 

@@ -9,6 +9,8 @@ namespace Drupal\Core\Database\Query;
 
 /**
  * Interface definition for a Select Query object.
+ *
+ * @ingroup database
  */
 interface SelectInterface extends ConditionInterface, AlterableInterface, ExtendableInterface, PlaceholderInterface {
 

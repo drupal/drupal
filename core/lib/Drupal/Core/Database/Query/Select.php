@@ -13,6 +13,8 @@ use Drupal\Core\Database\Connection;
 
 /**
  * Query builder for SELECT statements.
+ *
+ * @ingroup database
  */
 class Select extends Query implements SelectInterface {
 

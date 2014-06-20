@@ -18,123 +18,150 @@ use Drupal\Core\Site\Settings;
  * @{
  * Allow the use of different database servers using the same code base.
  *
- * Drupal provides a database abstraction layer to provide developers with
- * the ability to support multiple database servers easily. The intent of
- * this layer is to preserve the syntax and power of SQL as much as possible,
- * but also allow developers a way to leverage more complex functionality in
- * a unified way. It also provides a structured interface for dynamically
- * constructing queries when appropriate, and enforcing security checks and
- * similar good practices.
+ * @sec sec_intro Overview
+ * Drupal's database abstraction layer provides a unified database query API
+ * that can query different underlying databases. It is built upon PHP's
+ * PDO (PHP Data Objects) database API, and inherits much of its syntax and
+ * semantics. Besides providing a unified API for database queries, the
+ * database abstraction layer also provides a structured way to construct
+ * complex queries, and it protects the database by using good security
+ * practices.
  *
- * The system is built atop PHP's PDO (PHP Data Objects) database API and
- * inherits much of its syntax and semantics.
+ * For more detailed information on the database abstraction layer, see
+ * https://drupal.org/developing/api/database
  *
- * Most Drupal database SELECT queries are performed by a call to db_query() or
- * db_query_range(). Module authors should also consider using the
- * Drupal\Core\Database\Query\PagerSelectExtender for queries that return
- * results that need to be presented on multiple pages
- * (see https://drupal.org/node/508796), and the
- * Drupal\Core\Database\Query\TableSortExtender for generating appropriate
- * queries for sortable tables (see https://drupal.org/node/1848372).
+ * @sec sec_entity Querying entities
+ * Any query on Drupal entities or fields should use the Entity Query API. See
+ * the @link entity_api entity API topic @endlink for more information.
  *
- * For example, one might wish to return a list of the most recent 10 rows
- * authored by a given user. Instead of directly issuing the SQL query
+ * @sec sec_simple Simple SELECT database queries
+ * For simple SELECT queries that do not involve entities, the Drupal database
+ * abstraction layer provides the functions db_query() and db_query_range(),
+ * which execute SELECT queries (optionally with range limits) and return result
+ * sets that you can iterate over using foreach loops. (The result sets are
+ * objects implementing the \Drupal\Core\Database\StatementInterface interface.)
+ * You can use the simple query functions for query strings that are not
+ * dynamic (except for placeholders, see below), and that you are certain will
+ * work in any database engine. See @ref sec_dynamic below if you have a more
+ * complex query, or a query whose syntax would be different in some databases.
+ *
+ * As a note, db_query() and similar functions are wrappers on connection object
+ * methods. In most classes, you should use dependency injection and the
+ * database connection object instead of these wrappers; See @ref sec_connection
+ * below for details.
+ *
+ * To use the simple database query functions, you will need to make a couple of
+ * modifications to your bare SQL query:
+ * - Enclose your table name in {}. Drupal allows site builders to use
+ *   database table name prefixes, so you cannot be sure what the actual
+ *   name of the table will be. So, use the name that is in the hook_schema(),
+ *   enclosed in {}, and Drupal will calculate the right name.
+ * - Instead of putting values for conditions into the query, use placeholders.
+ *   The placeholders are named and start with :, and they take the place of
+ *   putting variables directly into the query, to protect against SQL
+ *   injection attacks.
+ * - LIMIT syntax differs between databases, so if you have a ranged query,
+ *   use db_query_range() instead of db_query().
+ *
+ * For example, if the query you want to run is:
  * @code
  * SELECT e.id, e.title, e.created FROM example e WHERE e.uid = $uid
  *   ORDER BY e.created DESC LIMIT 0, 10;
  * @endcode
- * one would instead call the Drupal functions:
+ * you would do it like this:
  * @code
  * $result = db_query_range('SELECT e.id, e.title, e.created
- *   FROM {example} e WHERE e.uid = :uid
- *   ORDER BY e.created DESC', 0, 10, array(':uid' => $uid));
+ *   FROM {example} e
+ *   WHERE e.uid = :uid
+ *   ORDER BY e.created DESC',
+ *   0, 10, array(':uid' => $uid));
  * foreach ($result as $record) {
  *   // Perform operations on $record->title, etc. here.
  * }
  * @endcode
- * Curly braces are used around "example" to provide table prefixing via
- * DatabaseConnection::prefixTables(). The explicit use of a user ID is pulled
- * out into an argument passed to db_query() so that SQL injection attacks
- * from user input can be caught and nullified. The LIMIT syntax varies between
- * database servers, so that is abstracted into db_query_range() arguments.
- * Finally, note the PDO-based ability to iterate over the result set using
- * foreach ().
  *
- * All queries are passed as a prepared statement string. A
- * prepared statement is a "template" of a query that omits literal or variable
- * values in favor of placeholders. The values to place into those
- * placeholders are passed separately, and the database driver handles
- * inserting the values into the query in a secure fashion. That means you
- * should never quote or string-escape a value to be inserted into the query.
- *
- * There are two formats for placeholders: named and unnamed. Named placeholders
- * are strongly preferred in all cases as they are more flexible and
- * self-documenting. Named placeholders should start with a colon ":" and can be
- * followed by one or more letters, numbers or underscores.
- *
- * Named placeholders begin with a colon followed by a unique string. Example:
+ * Note that if your query has a string condition, like:
  * @code
- * SELECT id, title FROM {example} WHERE uid=:uid;
+ * WHERE e.my_field = 'foo'
+ * @endcode
+ * when you convert it to placeholders, omit the quotes:
+ * @code
+ * WHERE e.my_field = :my_field
+ * ... array(':my_field' => 'foo') ...
  * @endcode
  *
- * ":uid" is a placeholder that will be replaced with a literal value when
- * the query is executed. A given placeholder label cannot be repeated in a
- * given query, even if the value should be the same. When using named
- * placeholders, the array of arguments to the query must be an associative
- * array where keys are a placeholder label (e.g., :uid) and the value is the
- * corresponding value to use. The array may be in any order.
+ * @sec sec_dynamic Dynamic SELECT queries
+ * For SELECT queries where the simple query API described in @ref sec_simple
+ * will not work well, you need to use the dynamic query API. However, you
+ * should still use the Entity Query API if your query involves entities or
+ * fields (see the @link entity_api Entity API topic @endlink for more on
+ * entity queries).
  *
- * Unnamed placeholders are simply a question mark. Example:
+ * As a note, db_select() and similar functions are wrappers on connection
+ * object methods. In most classes, you should use dependency injection and the
+ * database connection object instead of these wrappers; See @ref sec_connection
+ * below for details.
+ *
+ * The dynamic query API lets you build up a query dynamically using method
+ * calls. As an illustration, the query example from @ref sec_simple above
+ * would be:
  * @code
- * SELECT id, title FROM {example} WHERE uid=?;
+ * $result = db_select('example', 'e')
+ *   ->fields('e', array('id', 'title', 'created'))
+ *   ->condition('e.uid', $uid)
+ *   ->orderBy('e.created', 'DESC')
+ *   ->range(0, 10)
+ *   ->execute();
  * @endcode
  *
- * In this case, the array of arguments must be an indexed array of values to
- * use in the exact same order as the placeholders in the query.
+ * There are also methods to join to other tables, add fields with aliases,
+ * isNull() to have a @code WHERE e.foo IS NULL @code condition, etc. See
+ * https://drupal.org/developing/api/database for many more details.
  *
- * Note that placeholders should be a "complete" value. For example, when
- * running a LIKE query the SQL wildcard character, %, should be part of the
- * value, not the query itself. Thus, the following is incorrect:
- * @code
- * SELECT id, title FROM {example} WHERE title LIKE :title%;
- * @endcode
- * It should instead read:
- * @code
- * SELECT id, title FROM {example} WHERE title LIKE :title;
- * @endcode
- * and the value for :title should include a % as appropriate. Again, note the
- * lack of quotation marks around :title. Because the value is not inserted
- * into the query as one big string but as an explicitly separate value, the
- * database server knows where the query ends and a value begins. That is
- * considerably more secure against SQL injection than trying to remember
- * which values need quotation marks and string escaping and which don't.
+ * One note on chaining: It is common in the dynamic database API to chain
+ * method calls (as illustrated here), because most of the query methods modify
+ * the query object and then return the modified query as their return
+ * value. However, there are some important exceptions; these methods (and some
+ * others) do not support chaining:
+ * - join(), innerJoin(), etc.: These methods return the joined table alias.
+ * - addField(): This method returns the field alias.
+ * Check the documentation for the query method you are using to see if it
+ * returns the query or something else, and only chain methods that return the
+ * query.
  *
+ * @sec_insert INSERT, UPDATE, and DELETE queries
  * INSERT, UPDATE, and DELETE queries need special care in order to behave
- * consistently across all different databases. Therefore, they use a special
- * object-oriented API for defining a query structurally. For example, rather
- * than:
+ * consistently across databases; you should never use db_query() to run
+ * an INSERT, UPDATE, or DELETE query. Instead, use functions db_insert(),
+ * db_update(), and db_delete() to obtain a base query on your table, and then
+ * add dynamic conditions (as illustrated in @ref sec_dynamic above).
+ *
+ * As a note, db_insert() and similar functions are wrappers on connection
+ * object methods. In most classes, you should use dependency injection and the
+ * database connection object instead of these wrappers; See @ref sec_connection
+ * below for details.
+ *
+ * For example, if your query is:
  * @code
- * INSERT INTO {example} (id, uid, path, name) VALUES (1, 2, 'path', 'Name');
+ * INSERT INTO example (id, uid, path, name) VALUES (1, 2, 'path', 'Name');
  * @endcode
- * one would instead write:
+ * You can execute it via:
  * @code
  * $fields = array('id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name');
  * db_insert('example')
  *   ->fields($fields)
  *   ->execute();
  * @endcode
- * This method allows databases that need special data type handling to do so,
- * while also allowing optimizations such as multi-insert queries. UPDATE and
- * DELETE queries have a similar pattern.
  *
- * Drupal also supports transactions, including a transparent fallback for
+ * @sec sec_transaction Tranactions
+ * Drupal supports transactions, including a transparent fallback for
  * databases that do not support transactions. To start a new transaction,
- * simply call $txn = db_transaction(); in your own code. The transaction will
- * remain open for as long as the variable $txn remains in scope.  When $txn is
- * destroyed, the transaction will be committed.  If your transaction is nested
+ * call @code $txn = db_transaction(); @endcode The transaction will
+ * remain open for as long as the variable $txn remains in scope; when $txn is
+ * destroyed, the transaction will be committed. If your transaction is nested
  * inside of another then Drupal will track each transaction and only commit
  * the outer-most transaction when the last transaction object goes out out of
- * scope, that is, all relevant queries completed successfully.
+ * scope (when all relevant queries have completed successfully).
  *
  * Example:
  * @code
@@ -177,7 +204,26 @@ use Drupal\Core\Site\Settings;
  * }
  * @endcode
  *
+ * @sec sec_connection Database connection objects
+ * The examples here all use functions like db_select() and db_query(), which
+ * can be called from any Drupal method or function code. In some classes, you
+ * may already have a database connection object in a member variable, or it may
+ * be passed into a class constructor via dependency injection. If that is the
+ * case, you can look at the code for db_select() and the other functions to see
+ * how to get a query object from your connection variable. For example:
+ * @code
+ * $query = $connection->select('example', 'e');
+ * @endcode
+ * would be the equivalent of
+ * @code
+ * $query = db_select('example', 'e');
+ * @endcode
+ * if you had a connection object variable $connection available to use. See
+ * also the @link container Services and Dependency Injection topic. @endlink
+ *
  * @see http://drupal.org/developing/api/database
+ * @see entity_api
+ * @see schemaapi
  */
 
 

@@ -12,6 +12,8 @@ use Drupal\Core\Database\Connection;
 
 /**
  * General class for an abstracted DELETE operation.
+ *
+ * @ingroup database
  */
 class Delete extends Query implements ConditionInterface {
 

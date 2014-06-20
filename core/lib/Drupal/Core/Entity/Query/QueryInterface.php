@@ -15,6 +15,8 @@ use Drupal\Core\Database\Query\AlterableInterface;
  *
  * Never instantiate classes implementing this interface directly. Always use
  * the QueryFactory class.
+ *
+ * @ingroup database
  */
 interface QueryInterface extends AlterableInterface {
 

@@ -12,6 +12,8 @@ use Drupal\Core\Database\Connection;
 
 /**
  * General class for an abstracted UPDATE operation.
+ *
+ * @ingroup database
  */
 class Update extends Query implements ConditionInterface {
 
