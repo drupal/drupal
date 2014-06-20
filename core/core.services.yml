@@ -451,11 +451,14 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@module_handler']
+  resolver_manager.entity:
+    class: Drupal\Core\Entity\EntityResolverManager
+    arguments: ['@entity.manager', '@controller_resolver', '@class_resolver']
   route_subscriber.entity:
     class: Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@entity.manager']
+    arguments: ['@resolver_manager.entity']
   reverse_proxy_subscriber:
     class: Drupal\Core\EventSubscriber\ReverseProxySubscriber
     tags:

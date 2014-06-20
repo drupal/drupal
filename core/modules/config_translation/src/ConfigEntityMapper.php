@@ -15,6 +15,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\locale\LocaleConfigManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 /**
  * Configuration mapper for configuration entities.
@@ -231,6 +232,20 @@ class ConfigEntityMapper extends ConfigNamesMapper {
       default:
         return NULL;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function processRoute(Route $route) {
+    // Add entity upcasting information.
+    $parameters = $route->getOption('parameters') ?: array();
+    $parameters += array(
+      $this->entityType => array(
+        'type' => 'entity:' . $this->entityType,
+      )
+    );
+    $route->setOption('parameters', $parameters);
   }
 
 }

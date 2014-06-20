@@ -214,4 +214,20 @@ class EntityResource extends ResourceBase {
       throw new HttpException(422, $message);
     }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getBaseRoute($canonical_path, $method) {
+    $route = parent::getBaseRoute($canonical_path, $method);
+    $definition = $this->getPluginDefinition();
+
+    $parameters = $route->getOption('parameters') ?: array();
+    $parameters[$definition['entity_type']]['type'] = 'entity:' . $definition['entity_type'];
+    $route->setOption('parameters', $parameters);
+
+    return $route;
+  }
+
+
 }

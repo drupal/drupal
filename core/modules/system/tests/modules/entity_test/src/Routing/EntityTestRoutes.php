@@ -38,7 +38,7 @@ class EntityTestRoutes {
         array('_content' => '\Drupal\entity_test\Controller\EntityTestController::testEdit', '_entity_type' => $entity_type),
         array('_permission' => 'administer entity_test content'),
         array('parameters' => array(
-          'entity' => array('type' => 'entity:' . $entity_type),
+          $entity_type => array('type' => 'entity:' . $entity_type),
         ))
       );
 

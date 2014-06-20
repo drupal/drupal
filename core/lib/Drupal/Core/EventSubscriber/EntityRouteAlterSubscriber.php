@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityResolverManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Routing\RouteBuildEvent;
@@ -26,20 +26,20 @@ use Drupal\Core\Routing\RouteBuildEvent;
 class EntityRouteAlterSubscriber implements EventSubscriberInterface {
 
   /**
-   * Entity manager.
+   * The entity resolver manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityResolverManager
    */
-  protected $entityManager;
+  protected $resolverManager;
 
   /**
-   * Constructs a new EntityRouteAlterSubscriber.
+   * Constructs an EntityRouteAlterSubscriber instance.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityResolverManager
+   *   The entity resolver manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityResolverManager $entity_resolver_manager) {
+    $this->resolverManager = $entity_resolver_manager;
   }
 
   /**
@@ -49,22 +49,8 @@ class EntityRouteAlterSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRoutingRouteAlterSetType(RouteBuildEvent $event) {
-    $entity_types = array_keys($this->entityManager->getDefinitions());
     foreach ($event->getRouteCollection() as $route) {
-      $parameter_definitions = $route->getOption('parameters') ?: array();
-      // For all route parameter names that match an entity type, add the 'type'
-      // to the parameter definition if it's not already explicitly provided.
-      foreach (array_intersect($route->compile()->getVariables(), $entity_types) as $parameter_name) {
-        if (!isset($parameter_definitions[$parameter_name])) {
-          $parameter_definitions[$parameter_name] = array();
-        }
-        $parameter_definitions[$parameter_name] += array(
-          'type' => 'entity:' . $parameter_name,
-        );
-      }
-      if (!empty($parameter_definitions)) {
-        $route->setOption('parameters', $parameter_definitions);
-      }
+      $this->resolverManager->setRouteOptions($route);
     }
   }
 

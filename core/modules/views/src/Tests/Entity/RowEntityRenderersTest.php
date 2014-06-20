@@ -23,7 +23,7 @@ class RowEntityRenderersTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'field', 'filter', 'text', 'node', 'user', 'language');
+  public static $modules = array('entity', 'field', 'filter', 'text', 'node', 'user', 'language', 'menu_link');
 
   /**
    * Views used by this test.

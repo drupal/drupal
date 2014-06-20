@@ -150,12 +150,12 @@ class LocaleContentTest extends WebTestBase {
     $edit = array();
     $edit['predefined_langcode'] = 'ar';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
-    \Drupal::languageManager()->reset();
 
     // Install Spanish language.
     $edit = array();
     $edit['predefined_langcode'] = 'es';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    \Drupal::languageManager()->reset();
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type->type}");
