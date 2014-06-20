@@ -63,8 +63,11 @@ class ConfigEntityType extends EntityType {
   /**
    * {@inheritdoc}
    */
-  public function getControllerClasses() {
-    return parent::getControllerClasses() + array(
+  public function __construct($definition) {
+    parent::__construct($definition);
+    // Always add a default 'uuid' key.
+    $this->entity_keys['uuid'] = 'uuid';
+    $this->controllers += array(
       'storage' => 'Drupal\Core\Config\Entity\ConfigEntityStorage',
     );
   }
@@ -93,15 +96,6 @@ class ConfigEntityType extends EntityType {
     }
     return $config_prefix;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getKeys() {
-    // Always add a default 'uuid' key.
-    return array('uuid' => 'uuid') + parent::getKeys();
-  }
-
 
   /**
    * {@inheritdoc}
