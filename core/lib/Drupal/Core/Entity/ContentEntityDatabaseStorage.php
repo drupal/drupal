@@ -342,6 +342,10 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
    * {@inheritdoc}
    */
   protected function doLoadMultiple(array $ids = NULL) {
+    if (!empty($ids)) {
+      $ids = $this->cleanIds($ids);
+    }
+
     // Build and execute the query.
     $records = $this
       ->buildQuery($ids)
@@ -349,6 +353,39 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       ->fetchAllAssoc($this->idKey);
 
     return $this->mapFromStorageRecords($records);
+  }
+
+  /**
+   * Sanitizes the entity IDs to the correct data type.
+   *
+   * The identifier sanitization provided by this method has been introduced
+   * as Drupal used to rely on the database to facilitate this, which worked
+   * correctly with MySQL but led to errors with other DBMS such as PostgeSQL.
+   *
+   * @param array $ids
+   *   The entity IDs to verify.
+   * @return array
+   *   The sanitized list of entity IDs.
+   */
+  protected function cleanIds(array $ids) {
+    $keys = $this->entityType->getKeys();
+    $bundle = $keys['bundle'] ? $keys['bundle'] : $this->entityTypeId;
+
+    $definitions = $this->entityManager->getFieldDefinitions($this->entityTypeId, $bundle);
+    $info = $this->entityManager->getDefinition($this->entityTypeId);
+    $id_definition = $definitions[$info->getKey('id')];
+
+    switch ($id_definition->getType()) {
+      case 'integer':
+        $ids = array_filter($ids, 'is_numeric');
+        $ids = array_map('intval', $ids);
+        break;
+      case 'string':
+        $ids = array_filter($ids, 'is_string');
+        $ids = array_map('strval', $ids);
+        break;
+    }
+    return $ids;
   }
 
   /**
