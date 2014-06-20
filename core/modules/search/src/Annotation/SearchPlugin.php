@@ -17,6 +17,8 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @see SearchPluginBase
  *
+ * @ingroup search
+ *
  * @Annotation
  */
 class SearchPlugin extends Plugin {
