@@ -76,11 +76,6 @@ class EntityViewControllerTest extends WebTestBase {
       $this->assertRaw($entity->label());
       $this->assertRaw('full');
     }
-
-    // As entity_test IDs must be integers, make sure requests for non-integer
-    // IDs return a page not found error.
-    $this->drupalGet('entity_test/invalid');
-    $this->assertResponse(404);
   }
 
   /**
