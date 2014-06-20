@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * \Drupal\Core\Entity\EntityType and are accessed using get/set methods defined
  * in \Drupal\Core\Entity\EntityTypeInterface.
  *
- * @see \Drupal\Core\Entity\Annotation\EntityType
+ * @ingroup entity_api
  *
  * @Annotation
  */

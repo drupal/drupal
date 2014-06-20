@@ -10,6 +10,14 @@ namespace Drupal\Core\Entity\Annotation;
 /**
  * Defines a content entity type annotation object.
  *
+ * Content Entity type plugins use an object-based annotation method, rather than an
+ * array-type annotation method (as commonly used on other annotation types).
+ * The annotation properties of content entity types are found on
+ * \Drupal\Core\Entity\ContentEntityType and are accessed using
+ * get/set methods defined in \Drupal\Core\Entity\ContentEntityTypeInterface.
+ *
+ * @ingroup entity_api
+ *
  * @Annotation
  */
 class ContentEntityType extends EntityType {
