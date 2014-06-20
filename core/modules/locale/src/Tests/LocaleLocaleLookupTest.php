@@ -17,7 +17,7 @@ class LocaleLocaleLookupTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'menu_link');
+  public static $modules = array('locale');
 
   /**
    * {@inheritdoc}

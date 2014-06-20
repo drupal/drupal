@@ -20,7 +20,7 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('telephone', 'menu_link');
+  public static $modules = array('telephone');
 
   public static function getInfo() {
     return array(

@@ -68,9 +68,6 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
             'entity' => array(
               'type' => 'entity:' . $entity_type_id,
             ),
-            $entity_type_id => array(
-              'type' => 'entity:' . $entity_type_id,
-            ),
           ),
           '_admin_route' => $is_admin,
         )
@@ -97,9 +94,6 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
             'entity' => array(
               'type' => 'entity:' . $entity_type_id,
             ),
-            $entity_type_id => array(
-              'type' => 'entity:' . $entity_type_id,
-            ),
           ),
           '_admin_route' => $is_admin,
         )
@@ -124,9 +118,6 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
             'entity' => array(
               'type' => 'entity:' . $entity_type_id,
             ),
-            $entity_type_id => array(
-              'type' => 'entity:' . $entity_type_id,
-            ),
           ),
           '_admin_route' => $is_admin,
         )
@@ -148,9 +139,6 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
         array(
           'parameters' => array(
             'entity' => array(
-              'type' => 'entity:' . $entity_type_id,
-            ),
-            $entity_type_id => array(
               'type' => 'entity:' . $entity_type_id,
             ),
           ),

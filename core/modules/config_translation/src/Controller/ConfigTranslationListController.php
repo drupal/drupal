@@ -18,20 +18,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ConfigTranslationListController extends ControllerBase {
 
   /**
-   * The mapper manager.
+   * The definition of the config mapper.
    *
-   * @var \Drupal\config_translation\ConfigMapperManagerInterface
+   * @var array
    */
-  protected $mapperManager;
+  protected $mapperDefinition;
+
+  /**
+   * The config mapper.
+   *
+   * @var \Drupal\config_translation\ConfigEntityMapper
+   */
+  protected $mapper;
 
   /**
    * Constructs a new ConfigTranslationListController object.
    *
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $mapper_manager
    *   The config mapper manager.
+   * @param string $config_translation_mapper
+   *   The config mapper id.
    */
-  public function __construct(ConfigMapperManagerInterface $mapper_manager) {
-    $this->mapperManager = $mapper_manager;
+  public function __construct(ConfigMapperManagerInterface $mapper_manager, $config_translation_mapper) {
+    $this->mapperDefinition = $mapper_manager->getDefinition($config_translation_mapper);
+    $this->mapper = $mapper_manager->createInstance($config_translation_mapper, $this->mapperDefinition);
   }
 
   /**
@@ -39,15 +49,13 @@ class ConfigTranslationListController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.config_translation.mapper')
+      $container->get('plugin.manager.config_translation.mapper'),
+      $container->get('request')->attributes->get('_raw_variables')->get('config_translation_mapper')
     );
   }
 
   /**
    * Provides the listing page for any entity type.
-   *
-   * @param string $mapper_id
-   *   The name of the mapper.
    *
    * @return array
    *   A render array as expected by drupal_render().
@@ -56,22 +64,20 @@ class ConfigTranslationListController extends ControllerBase {
    *   Throws an exception if a mapper plugin could not be instantiated from the
    *   mapper definition in the constructor.
    */
-  public function listing($mapper_id) {
-    $mapper_definition = $this->mapperManager->getDefinition($mapper_id);
-    $mapper = $this->mapperManager->createInstance($mapper_id, $mapper_definition);
-    if (!$mapper) {
+  public function listing() {
+    if (!$this->mapper) {
       throw new NotFoundHttpException();
     }
-    $entity_type = $mapper->getType();
+    $entity_type = $this->mapper->getType();
     // If the mapper, for example the mapper for field instances, has a custom
     // list controller defined, use it. Other mappers, for examples the ones for
     // node_type and block, fallback to the generic configuration translation
     // list controller.
     $build = $this->entityManager()
       ->getController($entity_type, 'config_translation_list')
-      ->setMapperDefinition($mapper_definition)
+      ->setMapperDefinition($this->mapperDefinition)
       ->render();
-    $build['#title'] = $mapper->getTypeLabel();
+    $build['#title'] = $this->mapper->getTypeLabel();
     return $build;
   }
 

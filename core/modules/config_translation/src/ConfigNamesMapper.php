@@ -47,13 +47,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   protected $configMapperManager;
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
    * The base route object that the mapper is attached to.
    *
    * @return \Symfony\Component\Routing\Route
@@ -176,15 +169,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   }
 
   /**
-   * Allows to process all config translation routes.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route object to process.
-   */
-  protected function processRoute(Route $route) {
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getBasePath() {
@@ -209,7 +193,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * {@inheritdoc}
    */
   public function getOverviewRoute() {
-    $route = new Route(
+    return new Route(
       $this->getBaseRoute()->getPath() . '/translate',
       array(
         '_content' => '\Drupal\config_translation\Controller\ConfigTranslationController::itemPage',
@@ -217,8 +201,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
       ),
       array('_config_translation_overview_access' => 'TRUE')
     );
-    $this->processRoute($route);
-    return $route;
   }
 
   /**
@@ -250,7 +232,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * {@inheritdoc}
    */
   public function getAddRoute() {
-    $route = new Route(
+    return new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/add',
       array(
         '_form' => '\Drupal\config_translation\Form\ConfigTranslationAddForm',
@@ -258,8 +240,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
       ),
       array('_config_translation_form_access' => 'TRUE')
     );
-    $this->processRoute($route);
-    return $route;
   }
 
   /**
@@ -280,7 +260,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * {@inheritdoc}
    */
   public function getEditRoute() {
-    $route = new Route(
+    return new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/edit',
       array(
         '_form' => '\Drupal\config_translation\Form\ConfigTranslationEditForm',
@@ -288,8 +268,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
       ),
       array('_config_translation_form_access' => 'TRUE')
     );
-    $this->processRoute($route);
-    return $route;
   }
 
   /**
@@ -310,7 +288,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    * {@inheritdoc}
    */
   public function getDeleteRoute() {
-    $route = new Route(
+    return new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/delete',
       array(
         '_form' => '\Drupal\config_translation\Form\ConfigTranslationDeleteForm',
@@ -318,8 +296,6 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
       ),
       array('_config_translation_form_access' => 'TRUE')
     );
-    $this->processRoute($route);
-    return $route;
   }
 
   /**

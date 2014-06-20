@@ -244,7 +244,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
       ->method('getInstanceFromDefinition')
       ->will($this->returnCallback(function ($class) {
         if (is_subclass_of($class, 'Drupal\Core\DependencyInjection\ContainerInjectionInterface')) {
-          return $class::create(new ContainerBuilder());
+          return $class::create(\Drupal::getContainer());
         }
         else {
           return new $class();

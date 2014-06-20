@@ -87,7 +87,18 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
 
     $methods = $this->availableMethods();
     foreach ($methods as $method) {
-      $route = $this->getBaseRoute($canonical_path, $method);
+      $lower_method = strtolower($method);
+      $route = new Route($canonical_path, array(
+        '_controller' => 'Drupal\rest\RequestHandler::handle',
+        // Pass the resource plugin ID along as default property.
+        '_plugin' => $this->pluginId,
+      ), array(
+        // The HTTP method is a requirement for this route.
+        '_method' => $method,
+        '_permission' => "restful $lower_method $this->pluginId",
+      ), array(
+        '_access_mode' => 'ANY',
+      ));
 
       switch ($method) {
         case 'POST':
@@ -162,34 +173,6 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
       }
     }
     return $available;
-  }
-
-  /**
-   * Setups the base route for all HTTP methods.
-   *
-   * @param string $canonical_path
-   *   The canonical path for the resource.
-   * @param string $method
-   *   The HTTP method to be used for the route.
-   *
-   * @return \Symfony\Component\Routing\Route
-   *   The created base route.
-   */
-  protected function getBaseRoute($canonical_path, $method) {
-    $lower_method = strtolower($method);
-
-    $route = new Route($canonical_path, array(
-      '_controller' => 'Drupal\rest\RequestHandler::handle',
-      // Pass the resource plugin ID along as default property.
-      '_plugin' => $this->pluginId,
-    ), array(
-      // The HTTP method is a requirement for this route.
-      '_method' => $method,
-      '_permission' => "restful $lower_method $this->pluginId",
-    ), array(
-      '_access_mode' => 'ANY',
-    ));
-    return $route;
   }
 
 }
