@@ -9,6 +9,8 @@ namespace Drupal\Core\Field;
 
 /**
  * Base class for 'Field formatter' plugin implementations.
+ *
+ * @ingroup field_formatter
  */
 abstract class FormatterBase extends PluginSettingsBase implements FormatterInterface {
 

@@ -16,6 +16,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  * to override. See Drupal\Core\Field\WidgetBaseInterface for base
  * wrapping methods that should most likely be inherited directly from
  * Drupal\Core\Field\WidgetBase..
+ *
+ * @ingroup field_widget
  */
 interface WidgetInterface extends WidgetBaseInterface {
 

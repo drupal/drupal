@@ -21,6 +21,8 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @see \Drupal\Core\Field\WidgetPluginManager
  * @see \Drupal\Core\Field\WidgetInterface
+ *
+ * @ingroup field_widget
  */
 class FieldWidget extends Plugin {
 

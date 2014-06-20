@@ -15,6 +15,8 @@ use Drupal\Core\TypedData\Annotation\DataType;
  * Additional annotation keys for field types can be defined in
  * hook_field_info_alter().
  *
+ * @ingroup field_types
+ *
  * @Annotation
  */
 class FieldType extends DataType {

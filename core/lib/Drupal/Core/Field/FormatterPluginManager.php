@@ -14,6 +14,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Plugin type manager for field formatters.
+ *
+ * @ingroup field_formatter
  */
 class FormatterPluginManager extends DefaultPluginManager {
 

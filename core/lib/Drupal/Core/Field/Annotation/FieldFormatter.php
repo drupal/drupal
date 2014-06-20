@@ -22,6 +22,8 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @see \Drupal\Core\Field\FormatterPluginManager
  * @see \Drupal\Core\Field\FormatterInterface
+ *
+ * @ingroup field_formatter
  */
 class FieldFormatter extends Plugin {
 

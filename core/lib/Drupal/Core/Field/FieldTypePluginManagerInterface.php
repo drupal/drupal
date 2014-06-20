@@ -11,6 +11,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Defines an interface for the field type plugin manager.
+ *
+ * @ingroup field_types
  */
 interface FieldTypePluginManagerInterface extends PluginManagerInterface {
 

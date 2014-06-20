@@ -20,6 +20,7 @@ use Drupal\user;
  * the static method propertyDefinitions().
  *
  * @see \Drupal\Core\Field\FieldItemInterface
+ * @ingroup field_types
  */
 abstract class FieldItemBase extends Map implements FieldItemInterface {
 

@@ -8,7 +8,9 @@
 namespace Drupal\Core\Field;
 
 /**
- * Interface definition for field widget plugins.
+ * Interface definition for field formatter plugins.
+ *
+ * @ingroup field_formatter
  */
 interface FormatterInterface extends PluginSettingsInterface {
 

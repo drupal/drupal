@@ -15,6 +15,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Base class for 'Field widget' plugin implementations.
+ *
+ * @ingroup field_widget
  */
 abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface {
 

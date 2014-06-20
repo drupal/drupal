@@ -18,6 +18,15 @@ use Drupal\field\FieldConfigUpdateForbiddenException;
  * and so on. The data type(s) accepted by a field are defined in
  * hook_field_schema().
  *
+ * Field types are plugins annotated with class
+ * \Drupal\Core\Entity\Annotation\FieldType, and implement plugin interface
+ * \Drupal\Core\Field\FieldItemInterface. Field Type plugins are managed by the
+ * \Drupal\Core\Field\FieldTypePluginManager class. Field type classes usually
+ * extend base class \Drupal\Core\Field\FieldItemBase. Field-type plugins need
+ * to be in the namespace \Drupal\{your_module}\Plugin\Field\FieldType. See the
+ * @link plugin_api Plugin API topic @endlink for more information on how to
+ * define plugins.
+ *
  * The Field Types API also defines two kinds of pluggable handlers: widgets
  * and formatters. @link field_widget Widgets @endlink specify how the field
  * appears in edit forms, while @link field_formatter formatters @endlink
@@ -25,6 +34,11 @@ use Drupal\field\FieldConfigUpdateForbiddenException;
  *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
+ *
+ * @see field
+ * @see field_widget
+ * @see field_formatter
+ * @see plugin_api
  */
 
 
@@ -57,11 +71,11 @@ function hook_field_info_alter(&$info) {
  * which widget to use.
  *
  * Widgets are Plugins managed by the
- * Drupal\Core\Field\WidgetPluginManager class. A widget is
- * implemented by providing a class that implements
- * Drupal\Core\Field\WidgetInterface (in most cases, by
- * subclassing Drupal\Core\Field\WidgetBase), and provides the
- * proper annotation block.
+ * \Drupal\Core\Field\WidgetPluginManager class. A widget is a plugin annotated
+ * with class \Drupal\Core\Entity\Annotation\FieldWidget that implements
+ * \Drupal\Core\Field\WidgetInterface (in most cases, by
+ * subclassing \Drupal\Core\Field\WidgetBase). Widget plugins need to be in the
+ * namespace \Drupal\{your_module}\Plugin\Field\FieldWidget.
  *
  * Widgets are @link forms_api_reference.html Form API @endlink
  * elements with additional processing capabilities. The methods of the
@@ -71,6 +85,7 @@ function hook_field_info_alter(&$info) {
  * @see field
  * @see field_types
  * @see field_formatter
+ * @see plugin_api
  */
 
 /**
@@ -157,15 +172,16 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
  * choose which formatter to use.
  *
  * Formatters are Plugins managed by the
- * Drupal\Core\Field\FormatterPluginManager class. A formatter
- * is implemented by providing a class that implements
- * Drupal\Core\Field\FormatterInterface (in most cases, by
- * subclassing Drupal\Core\Field\FormatterBase), and provides
- * the proper annotation block.
+ * \Drupal\Core\Field\FormatterPluginManager class. A formatter is a plugin
+ * annotated with class \Drupal\Core\Entity\Annotation\FieldFormatter that
+ * implements \Drupal\Core\Field\FormatterInterface (in most cases, by
+ * subclassing \Drupal\Core\Field\FormatterBase). Formatter plugins need to be
+ * in the namespace \Drupal\{your_module}\Plugin\Field\FieldFormatter.
  *
  * @see field
  * @see field_types
  * @see field_widget
+ * @see plugin_api
  */
 
 /**

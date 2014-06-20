@@ -20,6 +20,7 @@ use Drupal\Core\TypedData\ComplexDataInterface;
  *
  * @see \Drupal\Core\Field\FieldItemListInterface
  * @see \Drupal\Core\Field\FieldItemBase
+ * @ingroup field_types
  */
 interface FieldItemInterface extends ComplexDataInterface {
 
