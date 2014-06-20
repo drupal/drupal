@@ -21,7 +21,7 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system');
+  public static $modules = array('system', 'menu_link');
 
   public static function getInfo() {
     return array(

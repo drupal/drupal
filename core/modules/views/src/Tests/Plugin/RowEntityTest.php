@@ -23,7 +23,7 @@ class RowEntityTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'text', 'filter', 'field', 'entity', 'system');
+  public static $modules = array('taxonomy', 'text', 'filter', 'field', 'entity', 'system', 'menu_link');
 
   /**
    * Views used by this test.

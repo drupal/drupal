@@ -35,6 +35,9 @@ class RegistryTest extends WebTestBase {
    * Tests the behavior of the theme registry class.
    */
   function testRaceCondition() {
+    // The theme registry is not marked as persistable in case we don't have a
+    // proper request.
+    \Drupal::getContainer()->enterScope('request');
     \Drupal::request()->setMethod('GET');
     $cid = 'test_theme_registry';
 

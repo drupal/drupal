@@ -43,7 +43,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf');
+  public static $modules = array('rdf', 'menu_link');
 
   /**
    * {@inheritdoc}

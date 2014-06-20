@@ -1,0 +1,15 @@
+# Turn off all options we don't need.
+Options None
+Options +FollowSymLinks
+
+# Set the catch-all handler to prevent scripts from being executed.
+SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+<Files *>
+  # Override the handler again if we're run later in the evaluation list.
+  SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003
+</Files>
+
+# If we know how to do it safely, disable the PHP engine entirely.
+<IfModule mod_php5.c>
+  php_flag engine off
+</IfModule>

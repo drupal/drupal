@@ -93,6 +93,7 @@ views_ui.edit:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
   requirements:
@@ -104,6 +105,7 @@ views_ui.edit_display:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
     display_id: NULL
@@ -116,6 +118,7 @@ views_ui.preview:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _entity_form: 'view.preview'
     display_id: NULL
@@ -136,6 +139,7 @@ views_ui.form_add_handler:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\AddHandler::getForm'
   requirements:
@@ -148,6 +152,7 @@ views_ui.form_edit_details:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
   requirements:
@@ -160,6 +165,7 @@ views_ui.form_reorder_displays:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
   requirements:
@@ -172,6 +178,7 @@ views_ui.form_analyze:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
   requirements:
@@ -184,6 +191,7 @@ views_ui.form_rearrange:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
   requirements:
@@ -196,6 +204,7 @@ views_ui.form_rearrange_filter:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
   requirements:
@@ -208,6 +217,7 @@ views_ui.form_display:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\Display::getForm'
   requirements:
@@ -220,6 +230,7 @@ views_ui.form_handler:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\ConfigHandler::getForm'
   requirements:
@@ -232,6 +243,7 @@ views_ui.form_handler_extra:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerExtra::getForm'
   requirements:
@@ -244,6 +256,7 @@ views_ui.form_handler_group:
     parameters:
       view:
         tempstore: TRUE
+        type: entity:view
   defaults:
     _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerGroup::getForm'
     form_state: NULL

@@ -7,7 +7,7 @@ config_translation.mapper_list:
     _permission: 'translate configuration'
 
 config_translation.entity_list:
-  path: '/admin/config/regional/config-translation/{config_translation_mapper}'
+  path: '/admin/config/regional/config-translation/{mapper_id}'
   defaults:
     _content: '\Drupal\config_translation\Controller\ConfigTranslationListController::listing'
   requirements:

@@ -56,8 +56,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
     $this->cache = $cache;
     $this->lock = $lock;
     $this->tags = $tags;
-    $request = \Drupal::request();
-    $this->persistable = $modules_loaded && $request->isMethod('GET');
+    $this->persistable = $modules_loaded && \Drupal::hasRequest() && \Drupal::request()->isMethod('GET');
 
      // @todo: Implement lazyload.
     $this->cacheLoaded = TRUE;
