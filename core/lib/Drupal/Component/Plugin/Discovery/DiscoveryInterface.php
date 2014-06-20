@@ -10,6 +10,8 @@ namespace Drupal\Component\Plugin\Discovery;
 /**
  * An interface defining the minimum requirements of building a plugin
  * discovery component.
+ *
+ * @ingroup plugin_api
  */
 interface DiscoveryInterface {
 

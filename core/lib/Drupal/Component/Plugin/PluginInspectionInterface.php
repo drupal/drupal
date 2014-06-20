@@ -11,6 +11,8 @@ namespace Drupal\Component\Plugin;
  *
  * This interface provides some simple tools for code receiving a plugin to
  * interact with the plugin system.
+ *
+ * @ingroup plugin_api
  */
 interface PluginInspectionInterface {
 

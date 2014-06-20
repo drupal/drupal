@@ -14,6 +14,8 @@ use Drupal\Component\Plugin\Exception\PluginException;
  *
  * Context aware plugins can specify an array of context definitions keyed by
  * context name at the plugin definition under the "context" key.
+ *
+ * @ingroup plugin_api
  */
 interface ContextAwarePluginInterface extends PluginInspectionInterface {
 

@@ -11,6 +11,8 @@ namespace Drupal\Core\Entity;
  * Provides an interface for an object utilizing a plugin bag.
  *
  * @see \Drupal\Component\Plugin\PluginBag
+ *
+ * @ingroup plugin_api
  */
 interface EntityWithPluginBagsInterface extends EntityInterface {
 

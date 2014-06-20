@@ -9,6 +9,8 @@ namespace Drupal\Component\Plugin;
 
 /**
  * Defines an object which stores multiple plugin instances to lazy load them.
+ *
+ * @ingroup plugin_api
  */
 abstract class PluginBag implements \Iterator, \Countable {
 

@@ -9,6 +9,8 @@ namespace Drupal\Core\Plugin;
 
 /**
  * Provides an interface for a plugin that contains a form.
+ *
+ * @ingroup plugin_api
  */
 interface PluginFormInterface {
 

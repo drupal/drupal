@@ -26,6 +26,8 @@ use Drupal\Component\Plugin\Mapper\MapperInterface;
  * class, which contains the proxying logic.
  *
  * @see \Drupal\Component\Plugin\PluginManagerBase
+ *
+ * @ingroup plugin_api
  */
 interface PluginManagerInterface extends DiscoveryInterface, FactoryInterface, MapperInterface {
 }

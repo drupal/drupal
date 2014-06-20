@@ -12,7 +12,8 @@ use Drupal\Core\Language\LanguageInterface;
  *
  * Views plugins are objects that are used to build and render the view.
  * Plugins are registered by extending one of the Views base plugin classes
- * and defining settings in the plugin annotation.
+ * and defining settings in the plugin annotation. For more information about
+ * plugins, see the @link plugin_api Plugin API topic. @endlink
  *
  * Views has the following types of plugins:
  * - Access: Access plugins are responsible for controlling access to the
@@ -83,7 +84,6 @@ use Drupal\Core\Language\LanguageInterface;
  *   \Drupal\views\Plugin\views\style\StylePluginBase.
  *
  * @todo Add an explanation for each type of handler.
- * @todo Document how to use annotations and what goes in them.
  * @todo Add @ingroup to all the base plugins for this group.
  * @todo Add a separate @ingroup for all plugins?
  * @todo Document specific options on the appropriate plugin base classes.
@@ -91,6 +91,8 @@ use Drupal\Core\Language\LanguageInterface;
  *
  * @see \Drupal\views\Plugin\views\PluginBase
  * @see \Drupal\views\Plugin\views\HandlerBase
+ * @see plugin_api
+ * @see annotation
  */
 
 /**

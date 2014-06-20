@@ -9,6 +9,8 @@ namespace Drupal\Component\Plugin\Derivative;
 
 /**
  * Plugin interface for derivative plugin handling.
+ *
+ * @ingroup plugin_api
  */
 interface DerivativeInterface {
 

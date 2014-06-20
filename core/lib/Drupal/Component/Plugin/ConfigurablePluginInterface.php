@@ -9,6 +9,8 @@ namespace Drupal\Component\Plugin;
 
 /**
  * Provides an interface for a configurable plugin.
+ *
+ * @ingroup plugin_api
  */
 interface ConfigurablePluginInterface {
 

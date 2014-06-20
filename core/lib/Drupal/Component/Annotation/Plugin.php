@@ -18,6 +18,8 @@ use Drupal\Component\Utility\NestedArray;
  * of a class to be located with the class itself, rather than in module-based
  * info hooks.
  *
+ * @ingroup plugin_api
+ *
  * @Annotation
  */
 class Plugin implements AnnotationInterface {

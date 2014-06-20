@@ -23,6 +23,8 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
 
 /**
  * Base class for plugin managers.
+ *
+ * @ingroup plugin_api
  */
 class DefaultPluginManager extends PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface {
 
