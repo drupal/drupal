@@ -8,6 +8,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\field\FieldInstanceConfigInterface;
@@ -77,7 +78,7 @@ class FieldEditForm extends FormBase {
     $this->instance = $form_state['instance'] = $field_instance_config;
     $form['#title'] = $this->instance->label();
 
-    $field = $this->instance->getField();
+    $field = $this->instance->getFieldStorageDefinition();
     $form['#field'] = $field;
     $form['#bundle'] = $this->instance->bundle;
 
@@ -114,13 +115,13 @@ class FieldEditForm extends FormBase {
       '#title_display' => 'invisible',
       '#options' => array(
         'number' => $this->t('Limited'),
-        FieldInstanceConfigInterface::CARDINALITY_UNLIMITED => $this->t('Unlimited'),
+        FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED => $this->t('Unlimited'),
       ),
-      '#default_value' => ($cardinality == FieldInstanceConfigInterface::CARDINALITY_UNLIMITED) ? FieldInstanceConfigInterface::CARDINALITY_UNLIMITED : 'number',
+      '#default_value' => ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 'number',
     );
     $form['field']['cardinality_container']['cardinality_number'] = array(
       '#type' => 'number',
-      '#default_value' => $cardinality != FieldInstanceConfigInterface::CARDINALITY_UNLIMITED ? $cardinality : 1,
+      '#default_value' => $cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED ? $cardinality : 1,
       '#min' => 1,
       '#title' => $this->t('Limit'),
       '#title_display' => 'invisible',
@@ -136,6 +137,7 @@ class FieldEditForm extends FormBase {
     $form['field']['field_name'] = array('#type' => 'value', '#value' => $field->getName());
     $form['field']['type'] = array('#type' => 'value', '#value' => $field->getType());
     $form['field']['module'] = array('#type' => 'value', '#value' => $field->module);
+    $form['field']['translatable'] = array('#type' => 'value', '#value' => $field->isTranslatable());
 
     // Add settings provided by the field module. The field module is
     // responsible for not returning settings that cannot be changed if
@@ -185,7 +187,7 @@ class FieldEditForm extends FormBase {
     unset($field_values['container']);
 
     // Merge incoming form values into the existing field.
-    $field = $this->instance->getField();
+    $field = $this->instance->getFieldStorageDefinition();
     foreach ($field_values as $key => $value) {
       $field->{$key} = $value;
     }

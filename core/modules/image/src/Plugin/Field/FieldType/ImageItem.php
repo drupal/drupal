@@ -158,7 +158,7 @@ class ImageItem extends FileItem {
     // We need the field-level 'default_image' setting, and $this->getSettings()
     // will only provide the instance-level one, so we need to explicitly fetch
     // the field.
-    $settings = $this->getFieldDefinition()->getField()->getSettings();
+    $settings = $this->getFieldDefinition()->getFieldStorageDefinition()->getSettings();
 
     $scheme_options = array();
     foreach (file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE) as $scheme => $stream_wrapper) {

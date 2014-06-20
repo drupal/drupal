@@ -15,7 +15,7 @@ use Drupal\field\FieldException;
 /**
  * A class for defining entity fields.
  */
-class FieldDefinition extends ListDataDefinition implements FieldDefinitionInterface {
+class FieldDefinition extends ListDataDefinition implements FieldDefinitionInterface, FieldStorageDefinitionInterface {
 
   /**
    * The field type.
@@ -253,7 +253,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * Sets the maximum number of items allowed for the field.
    *
    * Possible values are positive integers or
-   * FieldDefinitionInterface::CARDINALITY_UNLIMITED.
+   * FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED.
    *
    * @param int $cardinality
    *  The field cardinality.
@@ -589,6 +589,13 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    */
   public function setCustomStorage($custom_storage) {
     $this->definition['custom_storage'] = $custom_storage;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldStorageDefinition() {
     return $this;
   }
 

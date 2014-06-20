@@ -109,12 +109,12 @@ class SelectionBase implements SelectionInterface {
         });
         foreach ($bundle_fields as $instance_name => $field_definition) {
           /* @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
-          $columns = $field_definition->getColumns();
+          $columns = $field_definition->getFieldStorageDefinition()->getColumns();
           // If there is more than one column, display them all, otherwise just
           // display the field label.
           // @todo: Use property labels instead of the column name.
           if (count($columns) > 1) {
-            foreach ($field_definition->getColumns() as $column_name => $column_info) {
+            foreach ($columns as $column_name => $column_info) {
               $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $field_definition->getLabel(), '@column' => $column_name));
             }
           }

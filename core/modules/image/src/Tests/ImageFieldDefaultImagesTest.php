@@ -77,7 +77,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $instance_field_settings = $instance->getSettings();
     $this->assertEqual($instance_field_settings['default_image']['fid'], $default_images['instance']->id());
 
-    $field = $instance->getField();
+    $field = $instance->getFieldStorageDefinition();
 
     // The field default image id should be 1.
     $default_image = $field->getSetting('default_image');

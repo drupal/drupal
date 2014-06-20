@@ -67,7 +67,7 @@ class FieldInstanceEditForm extends FormBase {
 
     $bundle = $this->instance->bundle;
     $entity_type = $this->instance->entity_type;
-    $field = $this->instance->getField();
+    $field = $this->instance->getFieldStorageDefinition();
     $bundles = entity_get_bundles();
 
     $form_title = $this->t('%instance settings for %bundle', array(

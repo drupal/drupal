@@ -61,21 +61,21 @@ class FieldItemDataDefinition extends DataDefinition implements ComplexDataDefin
    * {@inheritdoc}
    */
   public function getPropertyDefinition($name) {
-    return $this->fieldDefinition->getPropertyDefinition($name);
+    return $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinition($name);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-    return $this->fieldDefinition->getPropertyDefinitions();
+    return $this->fieldDefinition->getFieldStorageDefinition()->getPropertyDefinitions();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getMainPropertyName() {
-    return $this->fieldDefinition->getMainPropertyName();
+    return $this->fieldDefinition->getFieldStorageDefinition()->getMainPropertyName();
   }
 
 }

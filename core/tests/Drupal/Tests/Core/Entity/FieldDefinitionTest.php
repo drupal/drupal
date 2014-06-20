@@ -9,7 +9,7 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -192,8 +192,8 @@ class FieldDefinitionTest extends UnitTestCase {
     $this->assertEquals(1, $definition->getCardinality());
     $definition->setCardinality(2);
     $this->assertEquals(2, $definition->getCardinality());
-    $definition->setCardinality(FieldDefinitionInterface::CARDINALITY_UNLIMITED);
-    $this->assertEquals(FieldDefinitionInterface::CARDINALITY_UNLIMITED, $definition->getCardinality());
+    $definition->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->assertEquals(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, $definition->getCardinality());
   }
 
   /**

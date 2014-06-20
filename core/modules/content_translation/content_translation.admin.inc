@@ -6,10 +6,10 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldInstanceConfigInterface;
 
 /**
@@ -79,7 +79,9 @@ function _content_translation_form_language_content_settings_form_alter(array &$
   $dependent_options_settings = array();
   $entity_manager = Drupal::entityManager();
   foreach ($form['#labels'] as $entity_type_id => $label) {
-    $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+    $entity_type = $entity_manager->getDefinition($entity_type_id);
+    $storage_definitions = $entity_type instanceof ContentEntityTypeInterface ? $entity_manager->getFieldStorageDefinitions($entity_type_id) : array();
+
     foreach (entity_get_bundles($entity_type_id) as $bundle => $bundle_info) {
       // Here we do not want the widget to be altered and hold also the "Enable
       // translation" checkbox, which would be redundant. Hence we add this key
@@ -98,44 +100,33 @@ function _content_translation_form_language_content_settings_form_alter(array &$
 
           $field_settings = content_translation_get_config($entity_type_id, $bundle, 'fields');
           foreach ($fields as $field_name => $definition) {
-            $translatable = !empty($field_settings[$field_name]);
-
-            // We special case Field API fields as they always natively support
-            // translation.
-            // @todo Remove this special casing as soon as configurable and
-            //   base field definitions are "unified".
-            if ($definition instanceof FieldInstanceConfigInterface) {
+            // Allow to configure only fields supporting multilingual storage.
+            if (!empty($storage_definitions[$field_name]) && $storage_definitions[$field_name]->isTranslatable()) {
               $form['settings'][$entity_type_id][$bundle]['fields'][$field_name] = array(
                 '#label' => $definition->getLabel(),
                 '#type' => 'checkbox',
-                '#default_value' => $translatable,
+                '#default_value' => $definition->isTranslatable(),
               );
-              $column_element = content_translation_field_sync_widget($definition);
-              if ($column_element) {
-                $form['settings'][$entity_type_id][$bundle]['columns'][$field_name] = $column_element;
-
-                // @todo This should not concern only files.
-                if (isset($column_element['#options']['file'])) {
-                  $dependent_options_settings["settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]"] = array('file');
+              // Display the column translatability configuration widget.
+              // @todo Remove this special casing when arbitrary settings can be
+              //   stored for any field. See https://drupal.org/node/2224761.
+              if ($definition instanceof FieldInstanceConfigInterface) {
+                $column_element = content_translation_field_sync_widget($definition);
+                if ($column_element) {
+                  $form['settings'][$entity_type_id][$bundle]['columns'][$field_name] = $column_element;
+                  // @todo This should not concern only files.
+                  if (isset($column_element['#options']['file'])) {
+                    $dependent_options_settings["settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]"] = array('file');
+                  }
                 }
               }
-            }
-            // Instead we need to rely on field definitions to determine whether
-            // fields support translation. Whether they are actually enabled is
-            // determined through our settings. As a consequence only fields
-            // that support translation can be enabled or disabled.
-            elseif (isset($field_settings[$field_name]) || $definition->isTranslatable()) {
-              $form['settings'][$entity_type_id][$bundle]['fields'][$field_name] = array(
-                '#label' => $definition->getLabel(),
-                '#type' => 'checkbox',
-                '#default_value' => $translatable,
-              );
             }
           }
         }
       }
     }
   }
+
   $settings = array('dependent_selectors' => $dependent_options_settings);
   $form['#attached']['js'][] = array('data' => array('contentTranslationDependentOptions' => $settings), 'type' => 'setting');
   $form['#validate'][] = 'content_translation_form_language_content_settings_validate';
@@ -300,68 +291,40 @@ function content_translation_form_language_content_settings_submit(array $form, 
   // If an entity type is not translatable all its bundles and fields must be
   // marked as non-translatable. Similarly, if a bundle is made non-translatable
   // all of its fields will be not translatable.
-  foreach ($settings as $entity_type => &$entity_settings) {
-    foreach ($entity_settings as &$bundle_settings) {
+  foreach ($settings as $entity_type_id => &$entity_settings) {
+    foreach ($entity_settings as $bundle => &$bundle_settings) {
       if (!empty($bundle_settings['translatable'])) {
-        $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type];
+        $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type_id];
       }
       if (!empty($bundle_settings['fields'])) {
+        $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type_id, $bundle);
         foreach ($bundle_settings['fields'] as $field_name => $translatable) {
-          $bundle_settings['fields'][$field_name] = $translatable && $bundle_settings['translatable'];
+          $translatable = $translatable && $bundle_settings['translatable'];
           // If we have column settings and no column is translatable, no point
           // in making the field translatable.
           if (isset($bundle_settings['columns'][$field_name]) && !array_filter($bundle_settings['columns'][$field_name])) {
-            $bundle_settings['fields'][$field_name] = FALSE;
+            $translatable = FALSE;
+          }
+          // If we have a storable field definition we directly persist any
+          // change to translatability, otherwise we store changes in our config
+          // so we can properly alter field definitions later.
+          // @todo Remove this special casing when any field definition can have
+          //   a configurable bundle override. See
+          //   https://drupal.org/node/2224761.
+          $definition = $definitions[$field_name];
+          if ($definition instanceof FieldInstanceConfigInterface) {
+            if ($definition->isTranslatable() != $translatable) {
+              $definition->setTranslatable($translatable);
+              $definition->save();
+            }
+            // Do not save configurable fields unnecessarily.
+            unset($bundle_settings['fields'][$field_name]);
           }
         }
       }
-    }
-  }
-
-  _content_translation_update_field_translatability($settings);
-  drupal_set_message(t('Settings successfully updated.'));
-}
-
-/**
- * Stores content translation settings.
- *
- * @param array $settings
- *   An associative array of settings keyed by entity type and bundle. At bundle
- *   level the following keys are available:
- *   - translatable: The bundle translatability status, which is a bool.
- *   - settings: An array of language configuration settings as defined by
- *     language_save_default_configuration().
- *   - fields: An associative array with field names as keys and a boolean as
- *     value, indicating field translatability.
- */
-function _content_translation_update_field_translatability($settings) {
-  // Update translatability for configurable fields.
-  // @todo Remove this once configurable fields rely on entity field info to
-  //   track translatability. See https://drupal.org/node/2018685.
-  foreach ($settings as $entity_type => $entity_settings) {
-    $fields = array();
-    foreach ($entity_settings as $bundle_settings) {
-      // Collapse field settings since here we have per instance settings, but
-      // translatability has per-field scope. We assume that all the field
-      // instances have the same value.
-      if (!empty($bundle_settings['fields'])) {
-        foreach ($bundle_settings['fields'] as $field_name => $translatable) {
-          // If translatability changes for at least one field instance we need
-          // to switch field translatability.
-          $field = FieldConfig::loadByName($entity_type, $field_name);
-          if ($field && $field->isTranslatable() !== $translatable) {
-            $fields[$field_name] = $translatable;
-          }
-        }
-      }
-    }
-    // Store updated fields.
-    foreach ($fields as $field_name => $translatable) {
-      $field = FieldConfig::loadByName($entity_type, $field_name);
-      $field->translatable = $translatable;
-      $field->save();
     }
   }
 
   content_translation_save_settings($settings);
+  drupal_set_message(t('Settings successfully updated.'));
 }

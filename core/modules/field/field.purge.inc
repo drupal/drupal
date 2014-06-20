@@ -98,7 +98,7 @@ function field_purge_batch($batch_size, $field_uuid = NULL) {
     );
     // Retrieve some entities.
     $query = $factory->get($entity_type)
-      ->condition('id:' . $instance->getField()->uuid() . '.deleted', 1)
+      ->condition('id:' . $instance->getFieldStorageDefinition()->uuid() . '.deleted', 1)
       ->range(0, $batch_size);
     // If there's no bundle key, all results will have the same bundle.
     if ($bundle_key = $info[$entity_type]->getKey('bundle')) {

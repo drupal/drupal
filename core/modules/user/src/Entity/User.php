@@ -8,11 +8,10 @@
 namespace Drupal\user\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -530,7 +529,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['roles'] = FieldDefinition::create('string')
       ->setCustomStorage(TRUE)
       ->setLabel(t('Roles'))
-      ->setCardinality(FieldDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setCardinality(FieldDefinition::CARDINALITY_UNLIMITED)
       ->setDescription(t('The roles the user has.'));
 
     return $fields;

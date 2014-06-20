@@ -8,9 +8,9 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\Tags;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Tags;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -37,7 +37,7 @@ class TermTest extends TaxonomyTestBase {
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(

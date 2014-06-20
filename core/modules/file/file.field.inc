@@ -215,7 +215,7 @@ function template_preprocess_file_upload_help(&$variables) {
  *   fid, FALSE if it does not.
  */
 function file_field_find_file_reference_column(FieldDefinitionInterface $field) {
-  $schema = $field->getSchema();
+  $schema = $field->getFieldStorageDefinition()->getSchema();
   foreach ($schema['foreign keys'] as $data) {
     if ($data['table'] == 'file_managed') {
       foreach ($data['columns'] as $field_column => $column) {

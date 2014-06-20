@@ -85,7 +85,7 @@ class ImageWidget extends FileWidget {
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
-    $cardinality = $this->fieldDefinition->getCardinality();
+    $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
     $file_upload_help = array(
       '#theme' => 'file_upload_help',
       '#description' => '',

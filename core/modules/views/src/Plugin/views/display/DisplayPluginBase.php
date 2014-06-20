@@ -180,11 +180,11 @@ abstract class DisplayPluginBase extends PluginBase {
       $this->unpackOptions($this->options, $options);
     }
 
-    // Convert the field_language and field_language_add_to_query settings.
-    $field_language = $this->getOption('field_language');
+    // Convert the field_langcode and field_language_add_to_query settings.
+    $field_langcode = $this->getOption('field_langcode');
     $field_language_add_to_query = $this->getOption('field_language_add_to_query');
     if (isset($field_langcode)) {
-      $this->setOption('field_langcode', $field_language);
+      $this->setOption('field_langcode', $field_langcode);
       $this->setOption('field_langcode_add_to_query', $field_language_add_to_query);
       $changed = TRUE;
     }
@@ -1950,7 +1950,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'group_by':
         $this->setOption($section, $form_state['values'][$section]);
         break;
-      case 'field_language':
+      case 'field_langcode':
         $this->setOption('field_langcode', $form_state['values']['field_langcode']);
         $this->setOption('field_langcode_add_to_query', $form_state['values']['field_langcode_add_to_query']);
         break;

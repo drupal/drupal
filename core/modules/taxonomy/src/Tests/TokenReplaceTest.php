@@ -7,9 +7,9 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Test taxonomy token replacement in strings.
@@ -34,7 +34,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
       'name' => $this->field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(

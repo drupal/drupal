@@ -8,7 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests field form handling.
@@ -79,7 +79,7 @@ class FormTest extends FieldTestBase {
       'name' => 'field_unlimited',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     );
 
     $this->instance = array(

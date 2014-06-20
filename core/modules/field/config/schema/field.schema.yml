@@ -76,6 +76,9 @@ field.instance.*.*.*:
     required:
       type: boolean
       label: 'Required field'
+    translatable:
+      type: boolean
+      label: 'Translatable'
     default_value:
       type: field.[%parent.field_type].value
     default_value_function:

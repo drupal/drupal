@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -76,7 +76,7 @@ class RebuildTest extends WebTestBase {
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'text',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     );
     entity_create('field_config', $field)->save();
     $instance = array(

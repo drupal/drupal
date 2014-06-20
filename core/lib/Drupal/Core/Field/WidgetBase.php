@@ -142,12 +142,12 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    */
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
     $field_name = $this->fieldDefinition->getName();
-    $cardinality = $this->fieldDefinition->getCardinality();
+    $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
     $parents = $form['#parents'];
 
     // Determine the number of widgets to display.
     switch ($cardinality) {
-      case FieldDefinitionInterface::CARDINALITY_UNLIMITED:
+      case FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED:
         $field_state = field_form_get_state($parents, $field_name, $form_state);
         $max = $field_state['items_count'];
         $is_multiple = TRUE;
@@ -198,7 +198,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         '#theme' => 'field_multiple_value_form',
         '#field_name' => $field_name,
         '#cardinality' => $cardinality,
-        '#cardinality_multiple' => $this->fieldDefinition->isMultiple(),
+        '#cardinality_multiple' => $this->fieldDefinition->getFieldStorageDefinition()->isMultiple(),
         '#required' => $this->fieldDefinition->isRequired(),
         '#title' => $title,
         '#description' => $description,
@@ -206,7 +206,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       );
 
       // Add 'add more' button, if not working with a programmed form.
-      if ($cardinality == FieldDefinitionInterface::CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
+      if ($cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
 
         $id_prefix = implode('-', array_merge($parents, array($field_name)));
         $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
@@ -264,7 +264,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
 
     // Ensure the widget allows adding additional items.
-    if ($element['#cardinality'] != FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
+    if ($element['#cardinality'] != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       return;
     }
 

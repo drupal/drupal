@@ -27,7 +27,7 @@ class WysiwygEditor extends InPlaceEditorBase {
     $field_definition = $items->getFieldDefinition();
 
     // This editor is incompatible with multivalued fields.
-    if ($field_definition->getCardinality() != 1) {
+    if ($field_definition->getFieldStorageDefinition()->getCardinality() != 1) {
       return FALSE;
     }
     // This editor is compatible with processed ("rich") text fields; but only

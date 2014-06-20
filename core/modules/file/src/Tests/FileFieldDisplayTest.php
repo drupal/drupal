@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests that formatters are working properly.
@@ -31,7 +31,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $field_settings = array(
       'display_field' => '1',
       'display_default' => '1',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     );
     $instance_settings = array(
       'description_field' => '1',

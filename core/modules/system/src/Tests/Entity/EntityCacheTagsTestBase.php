@@ -11,7 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\EventSubscriber\HtmlViewSubscriber;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\system\Tests\Cache\PageCacheTagsTestBase;
 
 /**
@@ -162,7 +162,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       'name' => $field_name,
       'entity_type' => $entity_type,
       'type' => 'entity_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
         'target_type' => $referenced_entity->getEntityTypeId(),
       ),

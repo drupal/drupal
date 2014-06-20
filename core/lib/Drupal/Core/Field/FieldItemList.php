@@ -7,12 +7,12 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
-use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Represents an entity field; that is, a list of field item objects.
@@ -285,8 +285,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     // Check that the number of values doesn't exceed the field cardinality. For
     // form submitted values, this can only happen with 'multiple value'
     // widgets.
-    $cardinality = $this->getFieldDefinition()->getCardinality();
-    if ($cardinality != FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
+    $cardinality = $this->getFieldDefinition()->getFieldStorageDefinition()->getCardinality();
+    if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       $constraints[] = \Drupal::typedDataManager()
         ->getValidationConstraintManager()
         ->create('Count', array(

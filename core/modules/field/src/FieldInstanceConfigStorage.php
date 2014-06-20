@@ -132,7 +132,7 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
     $matching_instances = array();
     foreach ($instances as $instance) {
       // Some conditions are checked against the field.
-      $field = $instance->getField();
+      $field = $instance->getFieldStorageDefinition();
 
       // Only keep the instance if it matches all conditions.
       foreach ($conditions as $key => $value) {

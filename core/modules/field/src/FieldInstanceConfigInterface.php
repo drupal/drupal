@@ -21,7 +21,7 @@ interface FieldInstanceConfigInterface extends ConfigEntityInterface, FieldDefin
    * @return \Drupal\field\FieldConfigInterface
    *   The field entity for this instance.
    */
-  public function getField();
+  public function getFieldStorageDefinition();
 
   /**
    * Allows a bundle to be renamed.

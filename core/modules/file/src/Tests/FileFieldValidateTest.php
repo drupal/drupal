@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
@@ -54,7 +54,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Try again with a multiple value field.
     $field->delete();
-    $this->createFileField($field_name, 'node', $type_name, array('cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED), array('required' => '1'));
+    $this->createFileField($field_name, 'node', $type_name, array('cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED), array('required' => '1'));
 
     // Try to post a new node without uploading a file in the multivalue field.
     $edit = array();

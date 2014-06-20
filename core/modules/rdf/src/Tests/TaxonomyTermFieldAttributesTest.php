@@ -7,7 +7,7 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\taxonomy\Tests\TaxonomyTestBase;
 
 /**
@@ -159,7 +159,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(

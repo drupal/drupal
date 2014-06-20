@@ -7,9 +7,9 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
@@ -49,7 +49,7 @@ class FileItemTest extends FieldUnitTestBase {
       'name' => 'file_test',
       'entity_type' => 'entity_test',
       'type' => 'file',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
     entity_create('field_instance_config', array(
       'entity_type' => 'entity_test',

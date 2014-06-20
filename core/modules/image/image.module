@@ -361,7 +361,7 @@ function image_entity_presave(EntityInterface $entity) {
   $field = FALSE;
   $entity_type_id = $entity->getEntityTypeId();
   if ($entity_type_id == 'field_instance_config') {
-    $field = $entity->getField();
+    $field = $entity->getFieldStorageDefinition();
     $default_settings = \Drupal::service('plugin.manager.field.field_type')->getDefaultInstanceSettings('image');
   }
   elseif ($entity_type_id == 'field_config') {
@@ -440,7 +440,7 @@ function image_field_config_update(FieldConfigInterface $field) {
  * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
  */
 function image_field_instance_config_update(FieldInstanceConfigInterface $field_instance) {
-  $field = $field_instance->getField();
+  $field = $field_instance->getFieldStorageDefinition();
   if ($field->type != 'image') {
     // Only act on image fields.
     return;
@@ -494,7 +494,7 @@ function image_field_config_delete(FieldConfigInterface $field) {
  * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
  */
 function image_field_instance_config_delete(FieldInstanceConfigInterface $field_instance) {
-  $field = $field_instance->getField();
+  $field = $field_instance->getFieldStorageDefinition();
   if ($field->type != 'image') {
     // Only act on image fields.
     return;

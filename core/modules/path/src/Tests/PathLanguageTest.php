@@ -61,9 +61,6 @@ class PathLanguageTest extends PathTestBase {
     // Enable translation for page node.
     $edit = array(
       'entity_types[node]' => 1,
-      'settings[node][article][translatable]' => 1,
-      'settings[node][article][fields][path]' => 1,
-      'settings[node][article][fields][body]' => 1,
       'settings[node][page][translatable]' => 1,
       'settings[node][page][fields][path]' => 1,
       'settings[node][page][fields][body]' => 1,
@@ -71,8 +68,9 @@ class PathLanguageTest extends PathTestBase {
     );
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
 
-    $field = FieldConfig::loadByName('node', 'body');
-    $this->assertTrue($field->isTranslatable(), 'Node body is translatable.');
+    $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'page');
+    $this->assertTrue($definitions['path']->isTranslatable(), 'Node path is translatable.');
+    $this->assertTrue($definitions['body']->isTranslatable(), 'Node body is translatable.');
   }
 
   /**
@@ -81,7 +79,6 @@ class PathLanguageTest extends PathTestBase {
   function testAliasTranslation() {
     $english_node = $this->drupalCreateNode(array('type' => 'page', 'langcode' => 'en'));
     $english_alias = $this->randomName();
-    $translatable = !$english_node->isNew() && $english_node->isTranslatable() && count($english_node->getTranslationLanguages()) > 1 && ($field = $english_node->getFieldDefinition('status')) && $field->isTranslatable();
 
     // Edit the node to set language and path.
     $edit = array();
@@ -101,7 +98,7 @@ class PathLanguageTest extends PathTestBase {
     $edit['body[0][value]'] = $this->randomName();
     $french_alias = $this->randomName();
     $edit['path[0][alias]'] = $french_alias;
-    $this->drupalPostForm(NULL, $edit, t('Save') . ' ' . ($translatable ? t('(this translation)') : t('(all translations)')));
+    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
 
     // Clear the path lookup cache.
     $this->container->get('path.alias_manager')->cacheClear();

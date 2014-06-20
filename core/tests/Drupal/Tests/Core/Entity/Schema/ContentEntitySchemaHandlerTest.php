@@ -788,7 +788,7 @@ class ContentEntitySchemaHandlerTest extends UnitTestCase {
    *   The field name.
    * @param array $schema
    *   The schema array of the field definition, as returned from
-   *   FieldDefinitionInterface::schema().
+   *   FieldStorageDefinitionInterface::getSchema().
    */
   public function setUpStorageDefinition($field_name, array $schema) {
     $this->storageDefinitions[$field_name] = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');

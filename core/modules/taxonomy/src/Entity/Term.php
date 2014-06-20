@@ -11,8 +11,6 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -163,7 +161,7 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['parent'] = FieldDefinition::create('integer')
       ->setLabel(t('Term Parents'))
       ->setDescription(t('The parents of this term.'))
-      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setCardinality(FieldDefinition::CARDINALITY_UNLIMITED)
       // Save new terms with no parents by default.
       ->setDefaultValue(0)
       ->setSetting('unsigned', TRUE)

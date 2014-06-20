@@ -248,7 +248,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ),
     );
 
-    $this->fieldDefinitions['id'] = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $this->fieldDefinitions['id'] = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $this->fieldDefinitions['id']->expects($this->once())
       ->method('getColumns')
       ->will($this->returnValue($columns));
@@ -366,7 +366,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $base_field_names = array('title', 'description', 'owner');
     $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
 
-    $definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $this->fieldDefinitions = array_fill_keys($field_names, $definition);
 
     $this->entityType->expects($this->any())
@@ -502,11 +502,11 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       $base_field_names = array('title');
       $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
 
-      $definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
       $this->fieldDefinitions = array_fill_keys($field_names, $definition);
 
       $revisionable_field_names = array('description', 'owner');
-      $definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
       // isRevisionable() is only called once, but we re-use the same definition
       // for all revisionable fields.
       $definition->expects($this->any())
@@ -627,7 +627,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
     $base_field_names = array('title', 'description', 'owner');
     $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
 
-    $definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+    $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $this->fieldDefinitions = array_fill_keys($field_names, $definition);
 
     $this->entityType->expects($this->exactly(2))
@@ -809,11 +809,11 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       $base_field_names = array('title');
       $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
 
-      $definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
       $this->fieldDefinitions = array_fill_keys($field_names, $definition);
 
       $revisionable_field_names = array('description', 'owner');
-      $definition = $this->getMock('Drupal\Core\Field\FieldDefinitionInterface');
+      $definition = $this->getMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
       // isRevisionable() is only called once, but we re-use the same definition
       // for all revisionable fields.
       $definition->expects($this->any())

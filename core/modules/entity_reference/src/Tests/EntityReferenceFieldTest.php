@@ -7,10 +7,10 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Tests for the entity reference field.
@@ -88,7 +88,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
       $this->referencedEntityType,
       'default',
       array('target_bundles' => array($this->bundle)),
-      FieldDefinitionInterface::CARDINALITY_UNLIMITED
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
     );
 
     $this->field = FieldConfig::loadByName($this->entityType, $this->fieldName);

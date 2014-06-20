@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -44,7 +44,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
         'target_type' => 'node',
       ),
       'type' => 'entity_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
 
     entity_create('field_instance_config', array(

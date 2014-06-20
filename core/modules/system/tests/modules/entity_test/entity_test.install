@@ -22,13 +22,13 @@ function entity_test_install() {
       'entity_type' => $entity_type,
       'type' => 'text',
       'cardinality' => 1,
-      'translatable' => FALSE,
     ))->save();
     entity_create('field_instance_config', array(
       'entity_type' => $entity_type,
       'field_name' => 'field_test_text',
       'bundle' => $entity_type,
       'label' => 'Test text-field',
+      'translatable' => FALSE,
     ))->save();
 
     entity_get_form_display($entity_type, $entity_type, 'default')

@@ -133,7 +133,8 @@ function node_access_test_entity_base_field_info(EntityTypeInterface $entity_typ
   if ($entity_type->id() === 'node') {
     $fields['private'] = FieldDefinition::create('boolean')
       ->setLabel(t('Private'))
-      ->setComputed(TRUE);
+      ->setComputed(TRUE)
+      ->setCustomStorage(TRUE);
 
     return $fields;
   }

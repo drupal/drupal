@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -253,7 +253,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertEqual($new_user->test_user_field->value, $value, 'The field value was correclty saved.');
 
     // Check that the 'add more' button works.
-    $field->cardinality = FieldDefinitionInterface::CARDINALITY_UNLIMITED;
+    $field->cardinality = FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
     $field->save();
     foreach (array('js', 'nojs') as $js) {
       $this->drupalGet('user/register');

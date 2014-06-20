@@ -111,11 +111,11 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * Flag indicating whether the field is translatable.
    *
-   * Defaults to FALSE.
+   * Defaults to TRUE.
    *
    * @var bool
    */
-  public $translatable = FALSE;
+  public $translatable = TRUE;
 
   /**
    * Flag indicating whether the field is available for editing.
@@ -544,12 +544,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   }
 
   /**
-   * Sets whether the field is translatable.
-   *
-   * @param bool $translatable
-   *   Whether the field is translatable.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setTranslatable($translatable) {
     $this->translatable = $translatable;

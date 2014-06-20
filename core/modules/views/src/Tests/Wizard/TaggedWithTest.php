@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Tests\Wizard;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
@@ -59,7 +59,7 @@ class TaggedWithTest extends WizardTestBase {
       'name' => 'field_views_testing_tags',
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(

@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Tests;
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -49,7 +49,7 @@ class ImageThemeFunctionTest extends WebTestBase {
       'name' => 'image_test',
       'entity_type' => 'entity_test',
       'type' => 'image',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
     entity_create('field_instance_config', array(
       'entity_type' => 'entity_test',
