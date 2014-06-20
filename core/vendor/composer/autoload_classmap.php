@@ -87,7 +87,6 @@ return array(
     'PHPUnit_Framework_MockObject_Matcher' => $vendorDir . '/phpunit/phpunit-mock-objects/src/Framework/MockObject/Matcher.php',
     'PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount' => $vendorDir . '/phpunit/phpunit-mock-objects/src/Framework/MockObject/Matcher/AnyInvokedCount.php',
     'PHPUnit_Framework_MockObject_Matcher_AnyParameters' => $vendorDir . '/phpunit/phpunit-mock-objects/src/Framework/MockObject/Matcher/AnyParameters.php',
-    'PHPUnit_Framework_MockObject_Matcher_ConsecutiveParameters' => $vendorDir . '/phpunit/phpunit-mock-objects/src/Framework/MockObject/Matcher/ConsecutiveParameters.php',
     'PHPUnit_Framework_MockObject_Matcher_Invocation' => $vendorDir . '/phpunit/phpunit-mock-objects/src/Framework/MockObject/Matcher/Invocation.php',
     'PHPUnit_Framework_MockObject_Matcher_InvokedAtIndex' => $vendorDir . '/phpunit/phpunit-mock-objects/src/Framework/MockObject/Matcher/InvokedAtIndex.php',
     'PHPUnit_Framework_MockObject_Matcher_InvokedAtLeastOnce' => $vendorDir . '/phpunit/phpunit-mock-objects/src/Framework/MockObject/Matcher/InvokedAtLeastOnce.php',

@@ -212,12 +212,13 @@ class PHPUnit_Framework_MockObject_Builder_InvocationMocker implements PHPUnit_F
     }
 
     /**
-     * Validate that a parameters matcher can be defined, throw exceptions otherwise.
-     *
-     * @throws PHPUnit_Framework_Exception
+     * @param  mixed                                                 $argument, ...
+     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
      */
-    private function canDefineParameters()
+    public function with()
     {
+        $args = func_get_args();
+
         if ($this->matcher->methodNameMatcher === NULL) {
             throw new PHPUnit_Framework_Exception(
               'Method name matcher is not defined, cannot define parameter ' .
@@ -230,35 +231,8 @@ class PHPUnit_Framework_MockObject_Builder_InvocationMocker implements PHPUnit_F
               'Parameter matcher is already defined, cannot redefine'
             );
         }
-    }
-
-    /**
-     * @param  mixed                                                 $argument, ...
-     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
-     */
-    public function with()
-    {
-        $args = func_get_args();
-
-        $this->canDefineParameters();
 
         $this->matcher->parametersMatcher = new PHPUnit_Framework_MockObject_Matcher_Parameters($args);
-
-        return $this;
-    }
-
-    /**
-     * @param  mixed ...$argument
-     * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
-     */
-    public function withConsecutive() {
-
-        $args = func_get_args();
-
-        $this->canDefineParameters();
-
-        $this->matcher->parametersMatcher =
-          new PHPUnit_Framework_MockObject_Matcher_ConsecutiveParameters($args);
 
         return $this;
     }
@@ -268,7 +242,18 @@ class PHPUnit_Framework_MockObject_Builder_InvocationMocker implements PHPUnit_F
      */
     public function withAnyParameters()
     {
-        $this->canDefineParameters();
+        if ($this->matcher->methodNameMatcher === NULL) {
+            throw new PHPUnit_Framework_Exception(
+              'Method name matcher is not defined, cannot define parameter ' .
+              'matcher without one'
+            );
+        }
+
+        if ($this->matcher->parametersMatcher !== NULL) {
+            throw new PHPUnit_Framework_Exception(
+              'Parameter matcher is already defined, cannot redefine'
+            );
+        }
 
         $this->matcher->parametersMatcher = new PHPUnit_Framework_MockObject_Matcher_AnyParameters;
 
