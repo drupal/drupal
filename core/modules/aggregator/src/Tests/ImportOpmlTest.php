@@ -42,7 +42,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
-    $this->assertText('A single OPML document may contain a collection of many feeds.', 'Found OPML help text.');
+    $this->assertText('A single OPML document may contain many feeds.', 'Found OPML help text.');
     $this->assertField('files[upload]', 'Found file upload field.');
     $this->assertField('remote', 'Found Remote URL field.');
     $this->assertField('refresh', '', 'Found Refresh field.');
@@ -56,7 +56,7 @@ class ImportOpmlTest extends AggregatorTestBase {
 
     $edit = array();
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), 'Error if no fields are filled.');
+    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'), 'Error if no fields are filled.');
 
     $path = $this->getEmptyOpml();
     $edit = array(
@@ -64,7 +64,7 @@ class ImportOpmlTest extends AggregatorTestBase {
       'remote' => file_create_url($path),
     );
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), 'Error if both fields are filled.');
+    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'), 'Error if both fields are filled.');
 
     $edit = array('remote' => 'invalidUrl://empty');
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));

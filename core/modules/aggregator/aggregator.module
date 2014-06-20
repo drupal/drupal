@@ -33,21 +33,21 @@ function aggregator_help($route_name, Request $request) {
       $output .= '<dt>' . t('<abbr title="Outline Processor Markup Language">OPML</abbr> integration') . '</dt>';
       $output .= '<dd>' . t('A <a href="!aggregator-opml">machine-readable OPML file</a> of all feeds is available. OPML is an XML-based file format used to share outline-structured information such as a list of RSS feeds. Feeds can also be <a href="!import-opml">imported via an OPML file</a>.', array('!aggregator-opml' => \Drupal::url('aggregator.opml_page'), '!import-opml' => \Drupal::url('aggregator.opml_add'))) . '</dd>';
       $output .= '<dt>' . t('Configuring cron') . '</dt>';
-      $output .= '<dd>' . t('A correctly configured <a href="!cron">cron maintenance task</a> is required to update feeds automatically.', array('!cron' => \Drupal::url('system.cron_settings'))) . '</dd>';
+      $output .= '<dd>' . t('A working <a href="!cron">cron maintenance task</a> is required to update feeds automatically.', array('!cron' => \Drupal::url('system.cron_settings'))) . '</dd>';
       $output .= '</dl>';
       return $output;
 
     case 'aggregator.admin_overview':
       // Don't use placeholders for possibility to change URLs for translators.
-      $output = '<p>' . t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="http://cyber.law.harvard.edu/rss/">RSS</a>, <a href="http://www.w3.org/RDF/">RDF</a>, and <a href="http://www.atomenabled.org">Atom</a>.') . '</p>';
-      $output .= '<p>' . t('Current feeds are listed below, and <a href="!addfeed">new feeds may be added</a>. At the <a href="!block">blocks administration page</a> you can enable for each feed the block <em>Aggregator feed</em> that contains the <em>latest items</em> .', array('!addfeed' => \Drupal::url('aggregator.feed_add'), '!block' => \Drupal::url('block.admin_display'))) . '</p>';
+      $output = '<p>' . t('Many sites publish their headlines and posts in feeds, using a number of standardized XML-based formats. The aggregator supports <a href="http://en.wikipedia.org/wiki/Rss">RSS</a>, <a href="http://en.wikipedia.org/Resource_Description_Framework">RDF</a>, and <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29">Atom</a>.') . '</p>';
+      $output .= '<p>' . t('Current feeds are listed below, and <a href="!addfeed">new feeds may be added</a>. For each feed, the <em>latest items</em> block may be enabled at the <a href="!block">blocks administration page</a>.', array('!addfeed' =>  \Drupal::url('aggregator.feed_add'), '!block' => \Drupal::url('block.admin_display'))) . '</p>';
       return $output;
 
     case 'aggregator.feed_add':
       return '<p>' . t('Add a feed in RSS, RDF or Atom format. A feed may only have one entry.') . '</p>';
 
     case 'aggregator.opml_add':
-      return '<p>' . t('<abbr title="Outline Processor Markup Language">OPML</abbr> is an XML format used to exchange multiple feeds between aggregators. A single OPML document may contain a collection of many feeds. Drupal can parse such a file and import all feeds at once, saving you the effort of adding them manually. You may either upload a local file from your computer or enter a URL where Drupal can download it.') . '</p>';
+      return '<p>' . t('<abbr title="Outline Processor Markup Language">OPML</abbr> is an XML format for exchanging feeds between aggregators. A single OPML document may contain many feeds. Aggregator uses this file to import all feeds at once. Upload a file from your computer or enter a URL where the OPML file can be downloaded.') . '</p>';
   }
 }
 
