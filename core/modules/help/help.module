@@ -30,13 +30,11 @@ function help_help($route_name, Request $request) {
     case 'help.page.help':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Help module provides <a href="!help-page">Help reference pages</a> and context-sensitive advice to guide you through the use and configuration of modules. It is a starting point for <a href="!handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href="!help">online documentation for the Help module</a>.', array('!help' => 'https://drupal.org/documentation/modules/help/', '!handbook' => 'https://drupal.org/documentation', '!help-page' => \Drupal::url('help.main'))) . '</p>';
+      $output .= '<p>' . t('The Help module provides <a href="!help-page">Help reference pages</a> to guide you through the use and configuration of modules. It is a starting point for <a href="!handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href="!help">online documentation for the Help module</a>.', array('!help' => 'https://drupal.org/documentation/modules/help/', '!handbook' => 'https://drupal.org/documentation', '!help-page' => \Drupal::url('help.main'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Providing a help reference') . '</dt>';
       $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href="!help">Help reference page</a>.', array('!help' => \Drupal::url('help.main'))) . '</dd>';
-      $output .= '<dt>' . t('Providing context-sensitive help') . '</dt>';
-      $output .= '<dd>' . t('The Help module displays context-sensitive advice and explanations on various pages.') . '</dd>';
       $output .= '</dl>';
       return $output;
   }
