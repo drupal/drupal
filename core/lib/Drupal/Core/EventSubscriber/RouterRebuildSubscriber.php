@@ -74,9 +74,10 @@ class RouterRebuildSubscriber implements EventSubscriberInterface {
       try {
         // Ensure the menu links are up to date.
         menu_link_rebuild_defaults();
-        // Clear the menu, page and block caches.
+        // Clear the menu cache.
         menu_cache_clear_all();
-        _menu_clear_page_cache();
+        // Track which menu items are expanded.
+        _menu_update_expanded_menus();
       }
       catch (\Exception $e) {
         $transaction->rollback();

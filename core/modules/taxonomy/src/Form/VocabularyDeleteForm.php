@@ -8,7 +8,6 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
 
 /**
@@ -59,7 +58,6 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
     drupal_set_message($this->t('Deleted vocabulary %name.', array('%name' => $this->entity->label())));
     watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
     $form_state['redirect_route'] = $this->getCancelRoute();
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

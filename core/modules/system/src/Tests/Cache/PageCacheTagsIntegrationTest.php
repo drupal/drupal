@@ -75,7 +75,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
     // Full node page 1.
     $this->verifyPageCacheTags('node/' . $node_1->id(), array(
-      'content:1',
+      'rendered:1',
       'theme:bartik',
       'theme_global_settings:1',
       'block_view:1',
@@ -100,7 +100,7 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
 
     // Full node page 2.
     $this->verifyPageCacheTags('node/' . $node_2->id(), array(
-      'content:1',
+      'rendered:1',
       'theme:bartik',
       'theme_global_settings:1',
       'block_view:1',

@@ -552,8 +552,8 @@ function views_field_instance_config_delete(FieldInstanceConfigInterface $field_
  * Invalidate the views cache, forcing a rebuild on the next grab of table data.
  */
 function views_invalidate_cache() {
-  // Clear the page and block cache and Views' info cache entries.
-  Cache::deleteTags(array('content' => TRUE, 'extension' => 'views'));
+  // Clear Views' info cache entries.
+  Cache::deleteTags(array('extension' => 'views'));
 
   // Set the menu as needed to be rebuilt.
   \Drupal::service('router.builder')->setRebuildNeeded();

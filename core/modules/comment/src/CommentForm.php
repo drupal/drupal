@@ -10,7 +10,6 @@ namespace Drupal\comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -411,9 +410,5 @@ class CommentForm extends ContentEntityForm {
       // Redirect the user to the entity they are commenting on.
     }
     $form_state['redirect_route'] = $uri;
-    // Clear the block and page caches so that anonymous users see the comment
-    // they have posted.
-    Cache::invalidateTags(array('content' => TRUE));
-    $this->entityManager->getViewBuilder($entity->getEntityTypeId())->resetCache(array($entity));
   }
 }

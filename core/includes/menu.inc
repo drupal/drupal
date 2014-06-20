@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -905,24 +904,22 @@ function menu_delete_links($menu_name) {
 }
 
 /**
- * Clears the page and block caches at most twice per page load.
+ * Updates the expanded menu item state at most twice per page load.
  */
-function _menu_clear_page_cache() {
-  $cache_cleared = &drupal_static(__FUNCTION__, 0);
+function _menu_update_expanded_menus() {
+  $expanded_menus_updated = &drupal_static(__FUNCTION__, 0);
 
-  // Clear the page and block caches, but at most twice, including at
+  // Update the expanded menu item state, but at most twice, including at
   //  the end of the page load when there are multiple links saved or deleted.
-  if ($cache_cleared == 0) {
-    Cache::invalidateTags(array('content' => TRUE));
+  if ($expanded_menus_updated == 0) {
     // Keep track of which menus have expanded items.
     _menu_set_expanded_menus();
-    $cache_cleared = 1;
+    $expanded_menus_updated = 1;
   }
-  elseif ($cache_cleared == 1) {
-    drupal_register_shutdown_function('Drupal\Core\Cache\Cache::invalidateTags', array('content' => TRUE));
+  elseif ($expanded_menus_updated == 1) {
     // Keep track of which menus have expanded items.
     drupal_register_shutdown_function('_menu_set_expanded_menus');
-    $cache_cleared = 2;
+    $expanded_menus_updated = 2;
   }
 }
 

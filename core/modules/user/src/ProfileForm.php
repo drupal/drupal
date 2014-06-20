@@ -7,7 +7,6 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\LanguageManager;
@@ -50,10 +49,6 @@ class ProfileForm extends AccountForm {
     $account = $this->entity;
     $account->save();
     $form_state['values']['uid'] = $account->id();
-
-    // Clear the page cache because pages can contain usernames and/or profile
-    // information:
-    Cache::invalidateTags(array('content' => TRUE));
 
     drupal_set_message($this->t('The changes have been saved.'));
   }

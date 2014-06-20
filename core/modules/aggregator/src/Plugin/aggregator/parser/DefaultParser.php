@@ -9,7 +9,6 @@ namespace Drupal\aggregator\Plugin\aggregator\parser;
 
 use Drupal\aggregator\Plugin\ParserInterface;
 use Drupal\aggregator\FeedInterface;
-use Drupal\Core\Cache\Cache;
 use Zend\Feed\Reader\Reader;
 use Zend\Feed\Reader\Exception\ExceptionInterface;
 
@@ -68,9 +67,6 @@ class DefaultParser implements ParserInterface {
       // Store on $feed object. This is where processors will look for parsed items.
       $feed->items[] = $parsed_item;
     }
-
-    // Clear the page and block caches.
-    Cache::invalidateTags(array('content' => TRUE));
 
     return TRUE;
   }

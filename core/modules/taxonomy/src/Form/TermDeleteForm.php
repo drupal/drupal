@@ -11,7 +11,6 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
-use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a deletion confirmation form for taxonomy term.
@@ -67,7 +66,6 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
     drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->getName())));
     watchdog('taxonomy', 'Deleted term %name.', array('%name' => $this->entity->getName()), WATCHDOG_NOTICE);
     $form_state['redirect_route'] = $this->getCancelRoute();
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

@@ -3,7 +3,6 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -991,9 +990,6 @@ function _user_cancel($edit, $account, $method) {
   if ($account->id() == $user->id()) {
     $user = new AnonymousUserSession();
   }
-
-  // Clear the cache for anonymous users.
-  Cache::invalidateTags(array('content' => TRUE));
 }
 
 /**

@@ -8,7 +8,6 @@
 namespace Drupal\user\Form;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\user\RoleStorageInterface;
@@ -188,9 +187,6 @@ class UserPermissionsForm extends FormBase {
     }
 
     drupal_set_message($this->t('The changes have been saved.'));
-
-    // Clear the cached pages and blocks.
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

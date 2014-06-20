@@ -9,7 +9,6 @@ namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -120,7 +119,6 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   public function submitForm(array &$form, array &$form_state) {
     if ($form_state['values']['confirm']) {
       $this->commentStorage->delete($this->comments);
-      Cache::invalidateTags(array('content' => TRUE));
       $count = count($form_state['values']['comments']);
       watchdog('content', 'Deleted @count comments.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));

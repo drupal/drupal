@@ -3658,14 +3658,17 @@ function drupal_render_cache_set(&$markup, array $elements) {
     $data['#post_render_cache'] = $elements['#post_render_cache'];
   }
 
+  // Tag every render cache item with the "rendered" cache tag. This allows us
+  // to invalidate the entire render cache, regardless of the cache bin.
+  $cache_tags = $elements['#cache']['tags'] ?: array();
+  $cache_tags['rendered'] = TRUE;
+
   // Persist cache tags associated with this element.
-  if (isset($elements['#cache']['tags'])) {
-    $data['#cache']['tags'] = $elements['#cache']['tags'];
-  }
+  $data['#cache']['tags'] = $cache_tags;
 
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
-  \Drupal::cache($bin)->set($cid, $data, $expire, $elements['#cache']['tags']);
+  \Drupal::cache($bin)->set($cid, $data, $expire, $cache_tags);
 }
 
 /**

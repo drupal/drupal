@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Form;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 
 /**
@@ -52,8 +51,6 @@ class DeleteForm extends ContentEntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('The comment and all its replies have been deleted.'));
     watchdog('content', 'Deleted comment @cid and its replies.', array('@cid' => $this->entity->id()));
-    // Clear the cache so an anonymous user sees that his comment was deleted.
-    Cache::invalidateTags(array('content' => TRUE));
 
     $form_state['redirect_route'] = $this->getCancelRoute();
   }

@@ -67,8 +67,8 @@ class PageCacheTest extends WebTestBase {
     $cache_entry = \Drupal::cache('render')->get($cid);
     sort($cache_entry->tags);
     $expected_tags = array(
-      'content:1',
       'pre_render:1',
+      'rendered:1',
       'system_test_cache_tags_page:1',
       'theme:stark',
       'theme_global_settings:1',

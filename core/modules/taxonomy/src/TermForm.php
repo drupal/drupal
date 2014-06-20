@@ -7,7 +7,6 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -146,8 +145,6 @@ class TermForm extends ContentEntityForm {
       case SAVED_UPDATED:
         drupal_set_message($this->t('Updated term %term.', array('%term' => $term->getName())));
         watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->getName()), WATCHDOG_NOTICE, l($this->t('Edit'), 'taxonomy/term/' . $term->id() . '/edit'));
-        // Clear the page and block caches to avoid stale data.
-        Cache::invalidateTags(array('content' => TRUE));
         break;
     }
 

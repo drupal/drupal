@@ -427,9 +427,6 @@ class ThemeSettingsForm extends ConfigFormBase {
     else {
       Cache::invalidateTags(array('theme_global_settings' => TRUE));
     }
-
-    // @todo Remove this in https://drupal.org/node/2124957.
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
   /**

@@ -8,7 +8,6 @@
 namespace Drupal\node;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Language\LanguageInterface;
@@ -468,9 +467,6 @@ class NodeForm extends ContentEntityForm {
       drupal_set_message(t('The post could not be saved.'), 'error');
       $form_state['rebuild'] = TRUE;
     }
-
-    // Clear the page and block caches.
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

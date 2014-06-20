@@ -10,7 +10,6 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -284,7 +283,6 @@ class CommentAdminOverview extends FormBase {
     $form_state['redirect_route'] = array(
       'route_name' => 'comment.admin',
     );
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

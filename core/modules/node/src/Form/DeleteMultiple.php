@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Component\Utility\String;
@@ -123,7 +122,6 @@ class DeleteMultiple extends ConfirmFormBase {
       $count = count($this->nodes);
       watchdog('content', 'Deleted @count posts.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
-      Cache::invalidateTags(array('content' => TRUE));
     }
     $form_state['redirect_route']['route_name'] = 'system.admin_content';
   }

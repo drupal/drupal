@@ -7,7 +7,6 @@
 
 namespace Drupal\block_content;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -232,9 +231,6 @@ class BlockContentForm extends ContentEntityForm {
       drupal_set_message($this->t('The block could not be saved.'), 'error');
       $form_state['rebuild'] = TRUE;
     }
-
-    // Clear the page and block caches.
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
   /**

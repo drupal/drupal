@@ -7,7 +7,6 @@
 
 namespace Drupal\block;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -177,9 +176,6 @@ class BlockForm extends EntityForm {
     $entity->save();
 
     drupal_set_message($this->t('The block configuration has been saved.'));
-    // Invalidate the content cache and redirect to the block listing,
-    // because we need to remove cached block contents for each cache backend.
-    Cache::invalidateTags(array('content' => TRUE));
     $form_state['redirect_route'] = array(
       'route_name' => 'block.admin_display_theme',
       'route_parameters' => array(

@@ -10,7 +10,6 @@ namespace Drupal\block;
 use Drupal\block\BlockManagerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -411,8 +410,6 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
     // Remove any previously set block placement.
     $this->request->query->remove('block-placement');
-
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Plugin\Action;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Action\ActionBase;
 
 /**
@@ -26,7 +25,6 @@ class SaveComment extends ActionBase {
    */
   public function execute($comment = NULL) {
     $comment->save();
-    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

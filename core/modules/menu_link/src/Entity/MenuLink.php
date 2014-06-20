@@ -463,7 +463,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
 
     // Also clear the menu system static caches.
     menu_reset_static_cache();
-    _menu_clear_page_cache();
+    _menu_update_expanded_menus();
   }
 
   /**
@@ -556,8 +556,8 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     // Also clear the menu system static caches.
     menu_reset_static_cache();
 
-    // Now clear the cache.
-    _menu_clear_page_cache();
+    // Track which menu items are expanded.
+    _menu_update_expanded_menus();
   }
 
   /**

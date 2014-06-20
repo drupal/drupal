@@ -29,13 +29,13 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // Generate the standardized entity cache tags.
     $cache_tag = $entity_type . ':' . $this->entity->id();
     $view_cache_tag = $entity_type . '_view:1';
+    $render_cache_tag = 'rendered:1';
 
 
-    // Prime the page cache.
+    $this->pass("Test entity.", 'Debug');
     $this->verifyPageCache($entity_path, 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
-    $tags = array('content:1', $view_cache_tag, $cache_tag);
     $this->verifyPageCache($entity_path, 'HIT');
 
     // Also verify the existence of an entity render cache entry, if this entity
@@ -43,7 +43,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     if (\Drupal::entityManager()->getDefinition($entity_type)->isRenderCacheable()) {
       $cid = 'entity_view:' . $entity_type . ':' . $this->entity->id() . ':full:stark:r.anonymous:' . date_default_timezone_get();
       $cache_entry = \Drupal::cache('render')->get($cid);
-      $expected_cache_tags = array_merge(array($view_cache_tag, $cache_tag), $this->getAdditionalCacheTagsForEntity($this->entity));
+      $expected_cache_tags = array_merge(array($view_cache_tag, $cache_tag), $this->getAdditionalCacheTagsForEntity($this->entity), array($render_cache_tag));
       $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
     }
 
