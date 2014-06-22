@@ -313,10 +313,8 @@ function block_theme_suggestions_block(array $variables) {
     $suggestions[] = $suggestion .= '__' . strtr($part, '-', '_');
   }
 
-  if ($id = $variables['elements']['#block']->id()) {
-    $config_id = explode('.', $id);
-    $machine_name = array_pop($config_id);
-    $suggestions[] = 'block__' . $machine_name;
+  if (!empty($variables['elements']['#id'])) {
+    $suggestions[] = 'block__' . $variables['elements']['#id'];
   }
 
   return $suggestions;
@@ -363,14 +361,14 @@ function template_preprocess_block(&$variables) {
   $variables['content_attributes']['class'][] = 'content';
 
   // Create a valid HTML ID and make sure it is unique.
-  if ($id = $variables['elements']['#block']->id()) {
-    $variables['attributes']['id'] = drupal_html_id('block-' . $id);
+  if (!empty($variables['elements']['#id'])) {
+    $variables['attributes']['id'] = drupal_html_id('block-' . $variables['elements']['#id']);
   }
 
   // Proactively add aria-describedby if possible to improve accessibility.
-  if (isset($variables['elements']['#block']->subject) && isset($variables['attributes']['role'])) {
-    $variables['title_attributes']['id'] = drupal_html_id($variables['elements']['#block']->subject);
-    $variables['attributes']['aria-describedby'] =  $variables['title_attributes']['id'];
+  if ($variables['label'] && isset($variables['attributes']['role'])) {
+    $variables['title_attributes']['id'] = drupal_html_id($variables['label']);
+    $variables['attributes']['aria-describedby'] = $variables['title_attributes']['id'];
   }
 
 }

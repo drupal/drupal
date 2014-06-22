@@ -44,10 +44,10 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
     ));
 
     $variables = array();
-    $variables['elements']['#block'] = $block;
     $plugin = $block->getPlugin();
     $variables['elements']['#configuration'] = $plugin->getConfiguration();
     $variables['elements']['#plugin_id'] = $plugin->getPluginId();
+    $variables['elements']['#id'] = $block->id();
     $variables['elements']['#base_plugin_id'] = $plugin->getBasePluginId();
     $variables['elements']['#derivative_plugin_id'] = $plugin->getDerivativeId();
     $variables['elements']['content'] = array();

@@ -38,7 +38,7 @@ class BlockViewBuilder extends EntityViewBuilder {
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $build = array();
-    foreach ($entities as $key => $entity) {
+    foreach ($entities as  $entity) {
       $entity_id = $entity->id();
       $plugin = $entity->getPlugin();
       $plugin_id = $plugin->getPluginId();
@@ -62,7 +62,8 @@ class BlockViewBuilder extends EntityViewBuilder {
         '#plugin_id' => $plugin_id,
         '#base_plugin_id' => $base_id,
         '#derivative_plugin_id' => $derivative_id,
-        // @todo Remove after fixing http://drupal.org/node/1989568.
+        '#id' => $entity->id(),
+        // Add the entity so that it can be used in the #pre_render method.
         '#block' => $entity,
       );
       $build[$entity_id]['#configuration']['label'] = String::checkPlain($configuration['label']);
@@ -99,9 +100,6 @@ class BlockViewBuilder extends EntityViewBuilder {
         $build[$entity_id] = $this->buildBlock($build[$entity_id]);
       }
 
-      // @todo Remove after fixing http://drupal.org/node/1989568.
-      $build[$key]['#block'] = $entity;
-
       // Don't run in ::buildBlock() to ensure cache keys can be altered. If an
       // alter hook wants to modify the block contents, it can append another
       // #pre_render hook.
@@ -121,6 +119,9 @@ class BlockViewBuilder extends EntityViewBuilder {
    */
   public function buildBlock($build) {
     $content = $build['#block']->getPlugin()->build();
+    // Remove the block entity from the render array, to ensure that blocks
+    // can be rendered without the block config entity.
+    unset($build['#block']);
     if (!empty($content)) {
       // Place the $content returned by the block plugin into a 'content' child
       // element, as a way to allow the plugin to have complete control of its

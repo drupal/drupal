@@ -183,6 +183,10 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
     // Rebuild the render array (creating a new cache entry in the process) and
     // delete the block to check the cache entry is deleted.
     unset($build['#printed']);
+    // Re-add the block because \Drupal\block\BlockViewBuilder::buildBlock()
+    // removes it.
+    $build['#block'] = $this->block;
+
     drupal_render($build);
     $this->assertTrue($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
     $this->block->delete();
