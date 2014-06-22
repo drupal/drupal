@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 /**
  * Tests the event subscriber that disables the replica database.
  */
-class IgnoreSecondarySubscriberTest extends UnitTestBase {
+class IgnoreReplicaSubscriberTest extends UnitTestBase {
 
   public static function getInfo() {
     return array(
