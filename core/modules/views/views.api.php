@@ -233,7 +233,7 @@ function hook_views_data() {
     'help' => t('Just a numeric field.'),
     'field' => array(
       'id' => 'numeric',
-     ),
+    ),
     'filter' => array(
       'id' => 'numeric',
     ),
@@ -328,6 +328,145 @@ function hook_views_data_alter(array &$data) {
   );
 
   // Note that the $data array is not returned – it is modified by reference.
+}
+
+/**
+ * Override the default Views data for a Field API field.
+ *
+ * The field module's implementation of hook_views_data() invokes this for each
+ * field, in the module that defines the field type (as declared in the field
+ * array). It is not invoked in other modules.
+ *
+ * If no hook implementation exists, hook_views_data() falls back to
+ * field_views_field_default_views_data().
+ *
+ * @param \Drupal\field\FieldConfigInterface $field
+ *   The field config entity.
+ *
+ * @return array
+ *   An array of views data, in the same format as the return value of
+ *   hook_views_data().
+ *
+ * @see field_views_data()
+ * @see hook_field_views_data_alter()
+ * @see hook_field_views_data_views_data_alter()
+ */
+function hook_field_views_data(\Drupal\field\FieldConfigInterface $field) {
+  $data = field_views_field_default_views_data($field);
+  foreach ($data as $table_name => $table_data) {
+    // Add the relationship only on the target_id field.
+    $data[$table_name][$field->getName() . '_target_id']['relationship'] = array(
+      'id' => 'standard',
+      'base' => 'file_managed',
+      'base field' => 'target_id',
+      'label' => t('image from !field_name', array('!field_name' => $field->getName())),
+    );
+  }
+
+  return $data;
+}
+
+/**
+ * Alter the Views data for a single Field API field.
+ *
+ * This is called on all modules even if there is no hook_field_views_data()
+ * implementation for the field, and therefore may be used to alter the
+ * default data that field_views_field_default_views_data() supplies for the
+ * field.
+ *
+ *  @param array $data
+ *    The views data for the field. This has the same format as the return
+ *    value of hook_views_data().
+ *  @param \Drupal\field\FieldConfigInterface $field
+ *    The field config entity.
+ *
+ * @see field_views_data()
+ * @see hook_field_views_data()
+ * @see hook_field_views_data_views_data_alter()
+ */
+function hook_field_views_data_alter(array &$data, \Drupal\field\FieldConfigInterface $field) {
+  $entity_type_id = $field->entity_type;
+  $field_name = $field->getName();
+  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
+
+  list($label) = field_views_field_label($entity_type_id, $field_name);
+
+  $data['file_managed'][$pseudo_field_name]['relationship'] = array(
+    'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'id' => 'entity_reverse',
+    'field_name' => $field_name,
+    'entity_type' => $entity_type_id,
+    'field table' => ContentEntityDatabaseStorage::_fieldTableName($field),
+    'field field' => $field_name . '_target_id',
+    'base' => $entity_type->getBaseTable(),
+    'base field' => $entity_type->getKey('id'),
+    'label' => t('!field_name', array('!field_name' => $field_name)),
+    'join_extra' => array(
+      0 => array(
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Alter the Views data on a per field basis.
+ *
+ * The field module's implementation of hook_views_data_alter() invokes this for
+ * each field, in the module that defines the field type (as declared in the
+ * field array). It is not invoked in other modules.
+ *
+ * Unlike hook_field_views_data_alter(), this operates on the whole of the views
+ * data. This allows a field module to add data that concerns its fields in
+ * other tables, which would not yet be defined at the point when
+ * hook_field_views_data() and hook_field_views_data_alter() are invoked. For
+ * example, entityreference adds reverse relationships on the tables for the
+ * entities which are referenced by entityreference fields.
+ *
+ * (Note: this is weirdly named so as not to conflict with
+ * hook_field_views_data_alter().)
+ *
+ * @param array $data
+ *   The views data.
+ * @param \Drupal\field\FieldConfigInterface $field
+ *   The field config entity.
+ *
+ * @see hook_field_views_data()
+ * @see hook_field_views_data_alter()
+ * @see field_views_data_alter()
+ */
+function hook_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldConfigInterface $field) {
+  $field_name = $field->getName();
+  $data_key = 'field_data_' . $field_name;
+  $entity_type_id = $field->entity_type;
+  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
+  list($label) = field_views_field_label($entity_type_id, $field_name);
+
+  // Views data for this field is in $data[$data_key].
+  $data[$data_key][$pseudo_field_name]['relationship'] = array(
+    'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'id' => 'entity_reverse',
+    'field_name' => $field_name,
+    'entity_type' => $entity_type_id,
+    'field table' => ContentEntityDatabaseStorage::_fieldTableName($field),
+    'field field' => $field_name . '_target_id',
+    'base' => $entity_type->getBaseTable(),
+    'base field' => $entity_type->getKey('id'),
+    'label' => t('!field_name', array('!field_name' => $field_name)),
+    'join_extra' => array(
+      0 => array(
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ),
+    ),
+  );
 }
 
 /**
