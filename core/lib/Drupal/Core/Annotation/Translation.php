@@ -36,6 +36,8 @@ use Drupal\Core\StringTranslation\TranslationWrapper;
  * @endcode
  * Other t() arguments like language code are not valid to pass in. Only
  * context is supported.
+ *
+ * @see i18n
  * @}
  */
 
@@ -47,9 +49,9 @@ use Drupal\Core\StringTranslation\TranslationWrapper;
  * specified, a context for that string. The string (with optional context)
  * is passed into t().
  *
- * @Annotation
- *
  * @ingroup plugin_translatable
+ *
+ * @Annotation
  */
 class Translation extends AnnotationBase {
 

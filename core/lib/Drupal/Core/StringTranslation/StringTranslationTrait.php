@@ -18,6 +18,8 @@ namespace Drupal\Core\StringTranslation;
  * Procedural code must use the global function t(). Any other approach will
  * result in untranslatable strings, because the string extractor will not be
  * able to find them.
+ *
+ * @ingroup i18n
  */
 trait StringTranslationTrait {
 

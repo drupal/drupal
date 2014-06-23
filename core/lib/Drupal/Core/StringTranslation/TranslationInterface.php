@@ -7,6 +7,11 @@
 
 namespace Drupal\Core\StringTranslation;
 
+/**
+ * Interface for the translation.manager translation service.
+ *
+ * @ingroup i18n
+ */
 interface TranslationInterface {
 
   /**

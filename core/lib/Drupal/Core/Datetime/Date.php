@@ -18,6 +18,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a service to handler various date related functionality.
+ *
+ * @ingroup i18n
  */
 class Date {
   use StringTranslationTrait;

@@ -8,7 +8,6 @@
 /**
  * @defgroup interface_translation_properties Interface translation properties
  * @{
- *
  * .info.yml file properties for interface translation settings.
  *
  * For modules hosted on drupal.org, a project definition is automatically added
@@ -78,7 +77,8 @@
  * - "%version": Project version release. Value examples: "8.1", "8.x-1.0".
  * - "%language": Language code. Value examples: "fr", "pt-pt".
  *
- * @} End of "defgroup interface_translation_properties".
+ * @see i18n
+ * @}
  */
 
 /**
@@ -110,6 +110,7 @@
  *   Project data as returned by update_get_projects().
  *
  * @see locale_translation_project_list().
+ * @ingroup interface_translation_properties
  */
 function hook_locale_translation_projects_alter(&$projects) {
   // The translations are located at a custom translation sever.
