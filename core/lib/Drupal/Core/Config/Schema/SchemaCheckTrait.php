@@ -53,7 +53,8 @@ trait SchemaCheckTrait {
       return FALSE;
     }
     $definition = $typed_config->getDefinition($config_name);
-    $this->schema = $typed_config->create($definition, $config_data);
+    $data_definition = $typed_config->buildDataDefinition($definition, $config_data);
+    $this->schema = $typed_config->create($data_definition, $config_data);
     $errors = array();
     foreach ($config_data as $key => $value) {
       $errors = array_merge($errors, $this->checkValue($key, $value));

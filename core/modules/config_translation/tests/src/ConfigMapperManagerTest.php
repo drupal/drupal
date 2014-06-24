@@ -12,6 +12,8 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
  * Tests ConfigMapperManager.
@@ -162,10 +164,11 @@ class ConfigMapperManagerTest extends UnitTestCase {
    *   The mocked schema element.
    */
   protected function getElement(array $definition) {
+    $data_definition = new DataDefinition($definition);
     $element = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
     $element->expects($this->any())
       ->method('getDataDefinition')
-      ->will($this->returnValue($definition));
+      ->will($this->returnValue($data_definition));
     return $element;
   }
 

@@ -48,6 +48,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected = array();
     $expected['label'] = 'Undefined';
     $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
+    $expected['type'] = 'undefined';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for nonexistent configuration.');
 
     // Configuration file without schema will return Undefined as well.
@@ -63,21 +65,25 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['testitem'] = array('label' => 'Test item');
     $expected['mapping']['testlist'] = array('label' => 'Test list');
+    $expected['type'] = 'config_schema_test.someschema';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for configuration with only some schema.');
 
     // Check type detection on elements with undefined types.
     $config = \Drupal::service('config.typed')->get('config_schema_test.someschema');
-    $definition = $config['testitem']->getDataDefinition();
+    $definition = $config['testitem']->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Test item';
     $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
     $expected['type'] = 'undefined';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for a scalar is undefined.');
-    $definition = $config['testlist']->getDataDefinition();
+    $definition = $config['testlist']->getDataDefinition()->toArray();
     $expected = array();
     $expected['label'] = 'Test list';
     $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
     $expected['type'] = 'undefined';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for a list is undefined.');
 
     // Simple case, straight metadata.
@@ -93,6 +99,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
       'label' => 'Default language',
       'type' => 'string',
     );
+    $expected['type'] = 'system.maintenance';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for system.maintenance');
 
     // Mixed schema with ignore elements.
@@ -100,6 +108,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected = array();
     $expected['label'] = 'Ignore test';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['label'] = array(
       'label' =>  'Label',
       'type' => 'label',
@@ -116,16 +125,19 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
       'label' => 'Weight',
       'type' => 'integer',
     );
+    $expected['type'] = 'config_schema_test.ignore';
+
     $this->assertEqual($definition, $expected);
 
     // The ignore elements themselves.
-    $definition = \Drupal::service('config.typed')->get('config_schema_test.ignore')->get('irrelevant')->getDataDefinition();
+    $definition = \Drupal::service('config.typed')->get('config_schema_test.ignore')->get('irrelevant')->getDataDefinition()->toArray();
     $expected = array();
     $expected['type'] = 'ignore';
     $expected['label'] = 'Irrelevant';
     $expected['class'] = '\Drupal\Core\Config\Schema\Ignore';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected);
-    $definition = \Drupal::service('config.typed')->get('config_schema_test.ignore')->get('indescribable')->getDataDefinition();
+    $definition = \Drupal::service('config.typed')->get('config_schema_test.ignore')->get('indescribable')->getDataDefinition()->toArray();
     $expected['label'] = 'Indescribable';
     $this->assertEqual($definition, $expected);
 
@@ -134,6 +146,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected = array();
     $expected['label'] = 'Image style';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['name']['type'] = 'string';
     $expected['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['uuid']['label'] = 'UUID';
@@ -152,6 +165,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['mapping']['effects']['sequence'][0]['mapping']['data']['type'] = 'image.effect.[%parent.id]';
     $expected['mapping']['effects']['sequence'][0]['mapping']['weight']['type'] = 'integer';
     $expected['mapping']['effects']['sequence'][0]['mapping']['uuid']['type'] = 'string';
+    $expected['type'] = 'image.style.*';
 
     $this->assertEqual($definition, $expected);
 
@@ -161,18 +175,21 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected = array();
     $expected['label'] = 'Image scale';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['width']['type'] = 'integer';
     $expected['mapping']['width']['label'] = 'Width';
     $expected['mapping']['height']['type'] = 'integer';
     $expected['mapping']['height']['label'] = 'Height';
     $expected['mapping']['upscale']['type'] = 'boolean';
     $expected['mapping']['upscale']['label'] = 'Upscale';
+    $expected['type'] = 'image.effect.image_scale';
+
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for image.effect.image_scale');
 
     // Most complex case, get metadata for actual configuration element.
     $effects = \Drupal::service('config.typed')->get('image.style.medium')->get('effects');
-    $definition = $effects['bddf0d06-42f9-4c75-a700-a33cafa25ea0']['data']->getDataDefinition();
+    $definition = $effects['bddf0d06-42f9-4c75-a700-a33cafa25ea0']['data']->getDataDefinition()->toArray();
     // This should be the schema for image.effect.image_scale, reuse previous one.
     $expected['type'] =  'image.effect.image_scale';
 
@@ -188,6 +205,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['mapping']['testid']['label'] = 'ID';
     $expected['mapping']['testdescription']['type'] = 'text';
     $expected['mapping']['testdescription']['label'] = 'Description';
+    $expected['type'] = 'config_schema_test.someschema.somemodule.*.*';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for config_schema_test.someschema.somemodule.section_one.subsection');
 
@@ -204,31 +223,34 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
     // Test fetching parent one level up.
     $entry = $config_data->get('one_level');
-    $definition = $entry['testitem']->getDataDefinition();
+    $definition = $entry['testitem']->getDataDefinition()->toArray();
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_1',
       'label' => 'Test item nested one level',
       'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+      'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
 
     // Test fetching parent two levels up.
     $entry = $config_data->get('two_levels');
-    $definition = $entry['wrapper']['testitem']->getDataDefinition();
+    $definition = $entry['wrapper']['testitem']->getDataDefinition()->toArray();
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_2',
       'label' => 'Test item nested two levels',
       'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+      'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
 
     // Test fetching parent three levels up.
     $entry = $config_data->get('three_levels');
-    $definition = $entry['wrapper_1']['wrapper_2']['testitem']->getDataDefinition();
+    $definition = $entry['wrapper_1']['wrapper_2']['testitem']->getDataDefinition()->toArray();
     $expected = array(
       'type' => 'config_schema_test.someschema.with_parents.key_3',
       'label' => 'Test item nested three levels',
       'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+      'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
     );
     $this->assertEqual($definition, $expected);
   }
@@ -359,10 +381,12 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected = array();
     $expected['label'] = 'Schema wildcard fallback test';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['testid']['type'] = 'string';
     $expected['mapping']['testid']['label'] = 'ID';
     $expected['mapping']['testdescription']['type'] = 'text';
     $expected['mapping']['testdescription']['label'] = 'Description';
+    $expected['type'] = 'config_schema_test.wildcard_fallback.*';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for config_schema_test.wildcard_fallback.something');
 

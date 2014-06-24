@@ -7,16 +7,14 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\TypedData\TypedDataManager;
 
 /**
  * Manages config type plugins.
  */
-class TypedConfigManager extends PluginManagerBase implements TypedConfigManagerInterface {
+class TypedConfigManager extends TypedDataManager implements TypedConfigManagerInterface {
 
   /**
    * The cache ID for the definitions.
@@ -80,19 +78,19 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
    */
   public function get($name) {
     $data = $this->configStorage->read($name);
-    $definition = $this->getDefinition($name);
-    return $this->create($definition, $data);
+    $type_definition = $this->getDefinition($name);
+    $data_definition =  $this->buildDataDefinition($type_definition, $data);
+    return $this->create($data_definition, $data);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function create(array $definition, $value = NULL, $name = NULL, $parent = NULL) {
-    if (!isset($definition['type'])) {
-      // By default elements without a type are undefined.
-      $definition['type'] = 'undefined';
-    }
-    elseif (strpos($definition['type'], ']')) {
+  public function buildDataDefinition(array $definition, $value, $name = NULL, $parent = NULL) {
+    // Add default values for data type and replace variables.
+    $definition += array('type' => 'undefined');
+
+    if (strpos($definition['type'], ']')) {
       // Replace variable names in definition.
       $replace = is_array($value) ? $value : array();
       if (isset($parent)) {
@@ -103,45 +101,18 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
       }
       $definition['type'] = $this->replaceName($definition['type'], $replace);
     }
-    // Create typed config object.
-    $wrapper = $this->createInstance($definition['type'], array(
-      'data_definition' => $definition,
-      'name' => $name,
-      'parent' => $parent,
-    ));
-    if (isset($value)) {
-      $wrapper->setValue($value, FALSE);
-    }
-    return $wrapper;
-  }
+    // Add default values from type definition.
+    $definition += $this->getDefinition($definition['type']);
 
-  /**
-   * {@inheritdoc}
-   */
-  public function createInstance($data_type, array $configuration = array()) {
-    $data_definition = $configuration['data_definition'];
-    $type_definition = $this->getDefinition($data_type);
+    $data_definition = $this->createDataDefinition($definition['type']);
 
-    if (!isset($type_definition)) {
-      throw new \InvalidArgumentException(String::format('Invalid data type %plugin_id has been given.', array('%plugin_id' => $data_type)));
+    // Pass remaining values from definition array to data definition.
+    foreach ($definition as $key => $value) {
+      if (!isset($data_definition[$key])) {
+        $data_definition[$key] = $value;
+      }
     }
-
-    // Allow per-data definition overrides of the used classes, i.e. take over
-    // classes specified in the type definition.
-    $data_definition += $type_definition;
-
-    $key = empty($data_definition['list']) ? 'class' : 'list class';
-    if (isset($data_definition[$key])) {
-      $class = $data_definition[$key];
-    }
-    elseif (isset($type_definition[$key])) {
-      $class = $type_definition[$key];
-    }
-
-    if (!isset($class)) {
-      throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $data_type));
-    }
-    return new $class($data_definition, $configuration['name'], $configuration['parent']);
+    return $data_definition;
   }
 
   /**
@@ -169,7 +140,11 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
       unset($definition['type']);
       $this->definitions[$type] = $definition;
     }
-    return $definition;
+    // Add type and default definition class.
+    return $definition + array(
+      'definition_class' => '\Drupal\Core\TypedData\DataDefinition',
+      'type' => $type,
+    );
   }
 
   /**

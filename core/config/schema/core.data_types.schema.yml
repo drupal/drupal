@@ -42,9 +42,11 @@ uri:
 mapping:
   label: Mapping
   class: '\Drupal\Core\Config\Schema\Mapping'
+  definition_class: '\Drupal\Core\TypedData\MapDataDefinition'
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
+  definition_class: '\Drupal\Core\TypedData\ListDataDefinition'
 
 # Simple extended data types:
 
@@ -109,7 +111,6 @@ filter:
       label: 'Weight'
     settings:
       type: filter_settings.[%parent.id]
-
 
 # System action configuration base.
 action_configuration_default:

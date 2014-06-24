@@ -9,6 +9,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
  * Defines an interface for typed configuration manager.
@@ -36,7 +37,8 @@ Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDisc
    *   instantiated.
    * @param array $configuration
    *   The plugin configuration array, i.e. an array with the following keys:
-   *   - data definition: The data definition array.
+   *   - data definition: The data definition object, i.e. an instance of
+   *     \Drupal\Core\TypedData\DataDefinitionInterface.
    *   - name: (optional) If a property or list item is to be created, the name
    *     of the property or the delta of the list item.
    *   - parent: (optional) If a property or list item is to be created, the
@@ -51,10 +53,10 @@ Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDisc
   /**
    * Creates a new typed configuration object instance.
    *
-   * @param array $definition
-   *   The data definition of the typed data object
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   *   The data definition of the typed data object.
    * @param mixed $value
-   *   (optional) The data value. If set, it has to match one of the supported
+   *   The data value. If set, it has to match one of the supported
    *   data type format as documented for the data type classes.
    * @param string $name
    *   (optional) If a property or list item is to be created, the name of the
@@ -67,7 +69,27 @@ Interface TypedConfigManagerInterface extends PluginManagerInterface, CachedDisc
    * @return \Drupal\Core\Config\Schema\Element
    *   The instantiated typed data object.
    */
-  public function create(array $definition, $value = NULL, $name = NULL, $parent = NULL);
+  public function create(DataDefinitionInterface $definition, $value, $name = NULL, $parent = NULL);
+
+  /**
+   * Creates a new data definition object from a type definition array and
+   * actual configuration data. Since type definitions may contain variables
+   * to be replaced, we need the configuration value to create it.
+   *
+   * @param array $definition
+   *   The base type definition array, for which a data definition should be
+   *   created.
+   * @param $value
+   *   Optional value of the configuraiton element.
+   * @param string $name
+   *   Optional name of the configuration element.
+   * @param object $parent
+   *   Optional parent element.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
+   *   A data definition for the given data type.
+   */
+  public function buildDataDefinition(array $definition, $value, $name = NULL, $parent = NULL);
 
   /**
    * Checks if the configuration schema with the given config name exists.

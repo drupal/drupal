@@ -15,13 +15,25 @@ use Drupal\Core\TypedData\ListInterface;
 class Sequence extends ArrayElement implements ListInterface {
 
   /**
+   * Data definition
+   *
+   * @var \Drupal\Core\TypedData\DataDefinitionInterface
+   */
+  protected $itemDefinition;
+
+  /**
    * Overrides ArrayElement::parse()
    */
   protected function parse() {
-    $definition = $this->getItemDefinition();
+    // Creates a new data definition object for each item from the generic type
+    // definition array and actual configuration data for that item. Type
+    // definitions may contain variables to be replaced and those depend on
+    // each item's data.
+    $definition = isset($this->definition['sequence'][0]) ? $this->definition['sequence'][0] : array();
     $elements = array();
     foreach ($this->value as $key => $value) {
-      $elements[$key] = $this->parseElement($key, $value, $definition);
+      $data_definition =  $this->buildDataDefinition($definition, $value, $key);
+      $elements[$key] = $this->parseElement($key, $value, $data_definition);
     }
     return $elements;
   }
@@ -37,7 +49,11 @@ class Sequence extends ArrayElement implements ListInterface {
    * Implements Drupal\Core\TypedData\ListInterface::getItemDefinition().
    */
   public function getItemDefinition() {
-    return $this->definition['sequence'][0];
+    if (!isset($this->itemDefinition)) {
+      $definition = isset($this->definition['sequence'][0]) ? $this->definition['sequence'][0] : array();
+      $this->itemDefinition = $this->buildDataDefinition($definition, NULL);
+    }
+    return $this->itemDefinition;
   }
 
   /**

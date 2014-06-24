@@ -131,6 +131,13 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   /**
    * {@inheritdoc}
    */
+  public function buildDataDefinition(array $definition, $value = NULL, $name = NULL, $parent = NULL) {
+    return $this->typedConfigManager->buildDataDefinition($definition, $value, $name, $parent);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function findDefinitions() {
     $definitions = $this->discovery->getDefinitions();
     foreach ($definitions as $plugin_id => &$definition) {

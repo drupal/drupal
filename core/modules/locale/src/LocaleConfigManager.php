@@ -96,9 +96,10 @@ class LocaleConfigManager extends TypedConfigManager {
     // We get only the data that didn't change from default.
     $data = $this->compareConfigData($default, $updated);
     $definition = $this->getDefinition($name);
+    $data_definition = $this->buildDataDefinition($definition, $data);
     // Unless the configuration has a explicit language code we assume English.
     $langcode = isset($default['langcode']) ? $default['langcode'] : 'en';
-    $wrapper = new LocaleTypedConfig($definition, $name, $langcode, $this);
+    $wrapper = new LocaleTypedConfig($data_definition, $name, $langcode, $this);
     $wrapper->setValue($data);
     return $wrapper;
   }

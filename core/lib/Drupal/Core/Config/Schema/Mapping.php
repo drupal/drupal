@@ -20,11 +20,20 @@ use Drupal\Component\Utility\String;
 class Mapping extends ArrayElement implements ComplexDataInterface {
 
   /**
+   * An array of data definitions.
+   *
+   * @var \Drupal\Core\TypedData\DataDefinitionInterface[]
+   */
+  protected $propertyDefinitions;
+
+  /**
    * Overrides ArrayElement::parse()
+   *
+   * Note this only returns elements that have a data definition.
    */
   protected function parse() {
     $elements = array();
-    foreach ($this->definition['mapping'] as $key => $definition) {
+    foreach ($this->getPropertyDefinitions() as $key => $definition) {
       if (isset($this->value[$key]) || array_key_exists($key, $this->value)) {
         $elements[$key] = $this->parseElement($key, $this->value[$key], $definition);
       }
@@ -103,13 +112,12 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
    * @param string $name
    *   The name of property.
    *
-   * @return array|null
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface|null
    *   The definition of the property or NULL if the property does not exist.
    */
   public function getPropertyDefinition($name) {
-    if (isset($this->definition['mapping'][$name])) {
-      return $this->definition['mapping'][$name];
-    }
+    $definitions = $this->getPropertyDefinitions();
+    return isset($definitions[$name]) ? isset($definitions[$name]) : NULL;
   }
 
   /**
@@ -120,11 +128,14 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
    *   property name.
    */
   public function getPropertyDefinitions() {
-    $list = array();
-    foreach ($this->getAllKeys() as $key) {
-      $list[$key] = $this->getPropertyDefinition($key);
+    if (!isset($this->propertyDefinitions)) {
+      $this->propertyDefinitions = array();
+      foreach ($this->definition['mapping'] as $key => $definition) {
+        $value = isset($this->value[$key]) ? $this->value[$key] : NULL;
+        $this->propertyDefinitions[$key] = $this->buildDataDefinition($definition, $value, $key);
+      }
     }
-    return $list;
+    return $this->propertyDefinitions;
   }
 
   /**

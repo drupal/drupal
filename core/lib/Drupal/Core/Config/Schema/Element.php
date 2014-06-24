@@ -28,4 +28,13 @@ abstract class Element extends TypedData {
     return \Drupal::service('config.typed')->create($definition, $data, $key, $this);
   }
 
+  /**
+   * Build data definition object for contained elements.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
+   */
+  protected function buildDataDefinition($definition, $value, $key) {
+    return  \Drupal::service('config.typed')->buildDataDefinition($definition, $value, $key, $this);
+  }
+
 }

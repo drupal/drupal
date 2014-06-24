@@ -272,7 +272,10 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     foreach ($schema as $key => $element) {
       // Make the specific element key, "$base_key.$key".
       $element_key = implode('.', array_filter(array($base_key, $key)));
-      $definition = $element->getDataDefinition() + array('label' => $this->t('N/A'));
+      $definition = $element->getDataDefinition();
+      if (!$definition->getLabel()) {
+        $definition->setLabel($this->t('N/A'));
+      }
       if ($element instanceof Element) {
         // Build sub-structure and include it with a wrapper in the form
         // if there are any translatable elements there.
@@ -336,7 +339,9 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
           '#type' => 'item',
         );
 
-        $definition += array('form_element_class' => '\Drupal\config_translation\FormElement\Textfield');
+        if (!isset($definition['form_element_class'])) {
+          $definition['form_element_class'] = '\Drupal\config_translation\FormElement\Textfield';
+        }
 
         /** @var \Drupal\config_translation\FormElement\ElementInterface $form_element */
         $form_element = new $definition['form_element_class']();

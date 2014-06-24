@@ -8,6 +8,7 @@
 namespace Drupal\locale;
 
 use Drupal\Core\TypedData\ContextAwareInterface;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\Config\Schema\Element;
 use Drupal\Core\Config\Schema\ArrayElement;
 
@@ -49,7 +50,7 @@ class LocaleTypedConfig extends Element {
    * @param \Drupal\locale\LocaleConfigManager $localeConfig;
    *   The locale configuration manager object.
    */
-  public function __construct($definition, $name, $langcode, LocaleConfigManager $localeConfig) {
+  public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $localeConfig) {
     parent::__construct($definition, $name);
     $this->langcode = $langcode;
     $this->localeConfig = $localeConfig;
