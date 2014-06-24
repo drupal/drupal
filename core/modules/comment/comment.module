@@ -839,12 +839,10 @@ function comment_entity_predelete(EntityInterface $entity) {
   // entity type that has an integer ID, $entity->id() might be a string
   // containing a number), and then cast it to an integer when querying.
   if ($entity->getEntityType()->isFieldable() && is_numeric($entity->id())) {
-    $cids = db_select('comment', 'c')
-      ->fields('c', array('cid'))
-      ->condition('entity_id', (int) $entity->id())
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->execute()
-      ->fetchCol();
+    $entity_query = \Drupal::entityQuery('comment');
+    $entity_query->condition('entity_id', (int) $entity->id());
+    $entity_query->condition('entity_type', $entity->getEntityTypeId());
+    $cids = $entity_query->execute();
     entity_delete_multiple('comment', $cids);
     \Drupal::service('comment.statistics')->delete($entity);
   }
