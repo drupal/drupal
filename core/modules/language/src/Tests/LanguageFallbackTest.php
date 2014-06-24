@@ -29,10 +29,12 @@ class LanguageFallbackTest extends LanguageTestBase {
   protected function setUp() {
     parent::setUp();
 
-    for ($i = 0; $i < 3; $i++) {
-      $language = new Language();
-      $language->id = $this->randomName(2);
-      $language->weight = -$i;
+    $i = 0;
+    foreach (array('af', 'am', 'ar') as $langcode) {
+      $language = new Language(array(
+        'id' => $langcode,
+        'weight' => $i--,
+      ));
       language_save($language);
     }
   }
