@@ -46,10 +46,7 @@ class FileStorage extends ContentEntityDatabaseStorage implements FileStorageInt
       'file__changed' => array('changed'),
     );
     $schema['file_managed']['unique keys'] += array(
-      // FIXME We have an index size of 255, but the max URI length is 2048 so
-      // this might now always work. Should we replace this with a regular
-      // index?
-      'file__uri' => array(array('uri', 255)),
+      'file__uri' => array('uri'),
     );
 
     return $schema;
