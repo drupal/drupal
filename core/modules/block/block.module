@@ -8,7 +8,6 @@
 use Drupal\block\BlockInterface;
 use Drupal\language\Entity\Language;
 use Drupal\system\Entity\Menu;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -86,7 +85,7 @@ function block_page_build(&$page) {
 
   // Fetch a list of regions for the current theme.
   $all_regions = system_region_list($theme);
-  if (\Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME) != 'block.admin_demo') {
+  if (\Drupal::routeMatch()->getRouteName() != 'block.admin_demo') {
     // Load all region content assigned via blocks.
     foreach (array_keys($all_regions) as $region) {
       // Assign blocks to region.

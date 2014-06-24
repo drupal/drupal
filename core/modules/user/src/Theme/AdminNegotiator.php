@@ -10,10 +10,9 @@ namespace Drupal\user\Theme;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\AdminContext;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Sets the active theme on admin pages.
@@ -68,14 +67,14 @@ class AdminNegotiator implements ThemeNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(Request $request) {
-    return ($this->entityManager->hasController('user_role', 'storage') && $this->user->hasPermission('view the administration theme') && $this->adminContext->isAdminRoute($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)));
+  public function applies(RouteMatchInterface $route_match) {
+    return ($this->entityManager->hasController('user_role', 'storage') && $this->user->hasPermission('view the administration theme') && $this->adminContext->isAdminRoute($route_match->getRouteObject()));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function determineActiveTheme(Request $request) {
+  public function determineActiveTheme(RouteMatchInterface $route_match) {
     return $this->configFactory->get('system.theme')->get('admin');
   }
 

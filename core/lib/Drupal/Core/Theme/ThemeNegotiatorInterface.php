@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Theme;
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines an interface for classes which determine the active theme.
@@ -30,24 +30,24 @@ interface ThemeNegotiatorInterface {
   /**
    * Whether this theme negotiator should be used to set the theme.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match object.
    *
    * @return bool
    *   TRUE if this negotiator should be used or FALSE to let other negotiators
    *   decide.
    */
-  public function applies(Request $request);
+  public function applies(RouteMatchInterface $route_match);
 
   /**
    * Determine the active theme for the request.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The active request of the site.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match object.
    *
    * @return string|null
    *   Returns the active theme name, else return NULL.
    */
-  public function determineActiveTheme(Request $request);
+  public function determineActiveTheme(RouteMatchInterface $route_match);
 
 }

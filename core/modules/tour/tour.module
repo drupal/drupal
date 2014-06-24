@@ -5,7 +5,6 @@
  * Main functions of the module.
  */
 use Drupal\Core\Cache\CacheBackendInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -83,8 +82,8 @@ function tour_preprocess_page(&$variables) {
   }
 
   // Load all of the items and match on route name.
-  $request = \Drupal::request();
-  $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+  $route_match = \Drupal::routeMatch();
+  $route_name = $route_match->getRouteName();
 
   $results = \Drupal::entityQuery('tour')
     ->condition('routes.*.route_name', $route_name)
@@ -92,7 +91,7 @@ function tour_preprocess_page(&$variables) {
   if (!empty($results) && $tours = entity_load_multiple('tour', array_keys($results))) {
     foreach ($tours as $id => $tour) {
       // Match on params.
-      if (!$tour->hasMatchingRoute($route_name, $request->attributes->get('_raw_variables')->all())) {
+      if (!$tour->hasMatchingRoute($route_name, $route_match->getRawParameters()->all())) {
         unset($tours[$id]);
       }
     }

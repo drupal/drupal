@@ -110,8 +110,7 @@ function forum_menu_local_tasks(&$data, $route_name) {
 
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
   if (in_array($route_name, array('forum.index', 'forum.page'))) {
-    $request = \Drupal::request();
-    $forum_term = $request->attributes->get('taxonomy_term');
+    $forum_term = \Drupal::routeMatch()->getParameter('taxonomy_term');
     $vid = \Drupal::config('forum.settings')->get('vocabulary');
     $links = array();
     // Loop through all bundles for forum taxonomy vocabulary field.

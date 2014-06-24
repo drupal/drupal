@@ -8,7 +8,6 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * @defgroup menu Menu and routing system
@@ -479,7 +478,7 @@ function menu_local_tasks($level = 0) {
     $data['tabs'] = array();
     $data['actions'] = array();
 
-    $route_name = \Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
+    $route_name = \Drupal::routeMatch()->getRouteName();
     if (!empty($route_name)) {
       $manager = \Drupal::service('plugin.manager.menu.local_task');
       $local_tasks = $manager->getTasksBuild($route_name);
@@ -534,7 +533,7 @@ function menu_secondary_local_tasks() {
  */
 function menu_get_local_actions() {
   $links = menu_local_tasks();
-  $route_name = Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
+  $route_name = Drupal::routeMatch()->getRouteName();
   $manager = \Drupal::service('plugin.manager.menu.local_action');
   return $manager->getActionsForRoute($route_name) + $links['actions'];
 }

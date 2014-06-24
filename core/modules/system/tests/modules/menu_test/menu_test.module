@@ -139,7 +139,7 @@ function menu_test_theme_page_callback($inherited = FALSE) {
   // Initialize the theme system so that $theme_key will be populated.
   drupal_theme_initialize();
   // Now we check what the theme negotiator service returns.
-  $active_theme = \Drupal::service('theme.negotiator')->getActiveTheme('getActiveTheme');
+  $active_theme = \Drupal::service('theme.negotiator')->determineActiveTheme(\Drupal::routeMatch());
   $output = "Active theme: $active_theme. Actual theme: $theme_key.";
   if ($inherited) {
     $output .= ' Theme negotiation inheritance is being tested.';

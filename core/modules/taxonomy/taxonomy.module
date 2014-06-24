@@ -332,9 +332,7 @@ function template_preprocess_taxonomy_term(&$variables) {
  *   A taxonomy term entity.
  */
 function taxonomy_term_is_page(Term $term) {
-  $request = \Drupal::request();
-  if ($request->attributes->has('taxonomy_term')) {
-    $page_term = $request->attributes->get('taxonomy_term');
+  if ($page_term = \Drupal::routeMatch()->getParameter('taxonomy_term')) {
     return $page_term->id() == $term->id();
   }
   return FALSE;

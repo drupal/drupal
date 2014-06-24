@@ -7,8 +7,7 @@
 
 namespace Drupal\Core\Theme;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Provides a class which determines the active theme of the page.
@@ -38,13 +37,6 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
   protected $sortedNegotiators;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * The access checker for themes.
    *
    * @var \Drupal\Core\Theme\ThemeAccessCheck
@@ -57,9 +49,8 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
    * @param \Drupal\Core\Theme\ThemeAccessCheck $theme_access
    *   The access checker for themes.
    */
-  public function __construct(ThemeAccessCheck $theme_access, RequestStack $request_stack) {
+  public function __construct(ThemeAccessCheck $theme_access) {
     $this->themeAccess = $theme_access;
-    $this->requestStack = $request_stack;
   }
 
   /**
@@ -97,36 +88,21 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
   }
 
   /**
-   * Get the current active theme.
-   *
-   * @return string
-   *   The current active string.
-   */
-  public function getActiveTheme() {
-    $request = $this->requestStack->getCurrentRequest();
-    if (!$request->attributes->has('_theme_active')) {
-      $this->determineActiveTheme($request);
-    }
-    return $request->attributes->get('_theme_active');
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function applies(Request $request) {
+  public function applies(RouteMatchInterface $route_match) {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function determineActiveTheme(Request $request) {
+  public function determineActiveTheme(RouteMatchInterface $route_match) {
     foreach ($this->getSortedNegotiators() as $negotiator) {
-      if ($negotiator->applies($request)) {
-        $theme = $negotiator->determineActiveTheme($request);
+      if ($negotiator->applies($route_match)) {
+        $theme = $negotiator->determineActiveTheme($route_match);
         if ($theme !== NULL && $this->themeAccess->checkAccess($theme)) {
-          $request->attributes->set('_theme_active', $theme);
-          return $request->attributes->get('_theme_active');
+          return $theme;
         }
       }
     }

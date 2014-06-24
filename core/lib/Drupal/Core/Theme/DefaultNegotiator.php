@@ -8,7 +8,7 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Determines the default theme of the site.
@@ -35,14 +35,14 @@ class DefaultNegotiator implements ThemeNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(Request $request) {
+  public function applies(RouteMatchInterface $route_match) {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function determineActiveTheme(Request $request) {
+  public function determineActiveTheme(RouteMatchInterface $route_match) {
     return $this->config->get('default');
   }
 

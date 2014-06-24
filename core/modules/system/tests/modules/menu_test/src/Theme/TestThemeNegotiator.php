@@ -7,8 +7,8 @@
 
 namespace Drupal\menu_test\Theme;
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the theme negotiation functionality.
@@ -21,15 +21,15 @@ class TestThemeNegotiator implements ThemeNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(Request $request) {
-    return $request->attributes->has('inherited');
+  public function applies(RouteMatchInterface $route_match) {
+    return (bool) $route_match->getParameter('inherited');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function determineActiveTheme(Request $request) {
-    $argument = $request->attributes->get('inherited');
+  public function determineActiveTheme(RouteMatchInterface $route_match) {
+    $argument = $route_match->getParameter('inherited');
     // Test using the variable administrative theme.
     if ($argument == 'use-admin-theme') {
       return \Drupal::config('system.theme')->get('admin');

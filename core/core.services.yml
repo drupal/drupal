@@ -19,7 +19,7 @@ services:
       - { name: cache.context}
   cache_context.theme:
     class: Drupal\Core\Cache\ThemeCacheContext
-    arguments: ['@request_stack', '@theme.negotiator']
+    arguments: ['@current_route_match', '@theme.negotiator']
     tags:
       - { name: cache.context}
   cache_context.timezone:
@@ -201,7 +201,7 @@ services:
       - { name: service_collector, tag: http_client_subscriber, call: attach }
   theme.negotiator:
     class: Drupal\Core\Theme\ThemeNegotiator
-    arguments: ['@access_check.theme', '@request_stack']
+    arguments: ['@access_check.theme']
     tags:
       - { name: service_collector, tag: theme_negotiator, call: addNegotiator }
   theme.negotiator.default:
@@ -211,7 +211,7 @@ services:
       - { name: theme_negotiator, priority: -100 }
   theme.negotiator.ajax_base_page:
     class: Drupal\Core\Theme\AjaxBasePageNegotiator
-    arguments: ['@csrf_token', '@config.factory']
+    arguments: ['@csrf_token', '@config.factory', '@request_stack']
     tags:
       - { name: theme_negotiator, priority: 1000 }
   container.namespaces:
@@ -273,6 +273,9 @@ services:
     class: Symfony\Component\HttpFoundation\RequestStack
     tags:
       - { name: persist }
+  current_route_match:
+     class: Drupal\Core\Routing\CurrentRouteMatch
+     arguments: ['@request_stack']
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']

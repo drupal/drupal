@@ -104,8 +104,7 @@ function drupal_theme_initialize() {
   // @todo Let the theme.negotiator listen to the kernel request event.
   // Determine the active theme for the theme negotiator service. This includes
   // the default theme as well as really specific ones like the ajax base theme.
-  $request = \Drupal::request();
-  $theme = \Drupal::service('theme.negotiator')->determineActiveTheme($request);
+  $theme = \Drupal::service('theme.negotiator')->determineActiveTheme(\Drupal::routeMatch());
 
   // If no theme could be negotiated, or if the negotiated theme is not within
   // the list of enabled themes, fall back to the default theme output of core
@@ -2133,7 +2132,7 @@ function template_preprocess_page(&$variables) {
     );
   }
 
-  if ($node = \Drupal::request()->attributes->get('node')) {
+  if ($node = \Drupal::routeMatch()->getParameter('node')) {
     $variables['node'] = $node;
   }
 

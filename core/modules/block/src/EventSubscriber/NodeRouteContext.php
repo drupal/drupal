@@ -8,9 +8,8 @@
 namespace Drupal\block\EventSubscriber;
 
 use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Sets the current node as a context on node routes.
@@ -18,36 +17,35 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class NodeRouteContext extends BlockConditionContextSubscriberBase {
 
   /**
-   * The request stack.
+   * The route match object.
    *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var \Drupal\Core\Routing\RouteMatchInterface
    */
-  protected $requestStack;
+  protected $routeMatch;
 
   /**
    * Constructs a new NodeRouteContext.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match object.
    */
-  public function __construct(RequestStack $request_stack) {
-    $this->requestStack = $request_stack;
+  public function __construct(RouteMatchInterface $route_match) {
+    $this->routeMatch = $route_match;
   }
 
   /**
    * {@inheritdoc}
    */
   protected function determineBlockContext() {
-    $request = $this->requestStack->getCurrentRequest();
-    if ($request->attributes->has(RouteObjectInterface::ROUTE_OBJECT) && ($route_contexts = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getOption('parameters')) && isset($route_contexts['node'])) {
+    if (($route_object = $this->routeMatch->getRouteObject()) && ($route_contexts = $route_object->getOption('parameters')) && isset($route_contexts['node'])) {
       $context = new Context($route_contexts['node']);
-      if ($request->attributes->has('node')) {
-        $context->setContextValue($request->attributes->get('node'));
+      if ($node = $this->routeMatch->getParameter('node')) {
+        $context->setContextValue($node);
       }
       $this->addContext('node', $context);
     }
-    elseif ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'node.add') {
-      $node_type = $request->attributes->get('node_type');
+    elseif ($this->routeMatch->getRouteName() == 'node.add') {
+      $node_type = $this->routeMatch->getParameter('node_type');
       $context = new Context(array('type' => 'entity:node'));
       $context->setContextValue(Node::create(array('type' => $node_type->id())));
       $this->addContext('node', $context);

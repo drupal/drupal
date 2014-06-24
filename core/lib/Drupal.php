@@ -188,6 +188,16 @@ class Drupal {
   }
 
   /**
+   * Retrieves the currently active route match object.
+   *
+   * @return \Drupal\Core\Routing\RouteMatchInterface
+   *   The currently active route match object.
+   */
+  public static function routeMatch() {
+    return static::$container->get('current_route_match');
+  }
+
+  /**
    * Gets the current active user.
    *
    * @return \Drupal\Core\Session\AccountProxyInterface

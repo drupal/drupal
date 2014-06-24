@@ -9,8 +9,8 @@ namespace Drupal\Core\Theme;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines a theme negotiator that deals with the active theme on ajax requests.
@@ -46,24 +46,34 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
   protected $configFactory;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a new AjaxBasePageNegotiator.
    *
    * @param \Drupal\Core\Access\CsrfTokenGenerator $token_generator
    *   The CSRF token generator.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack used to retrieve the current request.
    */
-  public function __construct(CsrfTokenGenerator $token_generator, ConfigFactoryInterface $config_factory) {
+  public function __construct(CsrfTokenGenerator $token_generator, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
     $this->csrfGenerator = $token_generator;
     $this->configFactory = $config_factory;
+    $this->requestStack = $request_stack;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Request $request) {
+  public function applies(RouteMatchInterface $route_match) {
     // Check whether the route was configured to use the base page theme.
-    return ($route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT))
+    return ($route = $route_match->getRouteObject())
       && $route->hasOption('_theme')
       && $route->getOption('_theme') == 'ajax_base_page';
   }
@@ -71,8 +81,8 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function determineActiveTheme(Request $request) {
-    if (($ajax_page_state = $request->request->get('ajax_page_state'))  && !empty($ajax_page_state['theme']) && !empty($ajax_page_state['theme_token'])) {
+  public function determineActiveTheme(RouteMatchInterface $route_match) {
+    if (($ajax_page_state = $this->requestStack->getCurrentRequest()->request->get('ajax_page_state'))  && !empty($ajax_page_state['theme']) && !empty($ajax_page_state['theme_token'])) {
       $theme = $ajax_page_state['theme'];
       $token = $ajax_page_state['theme_token'];
 

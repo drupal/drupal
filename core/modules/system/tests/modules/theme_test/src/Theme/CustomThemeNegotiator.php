@@ -7,10 +7,8 @@
 
 namespace Drupal\theme_test\Theme;
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 
 /**
  * Just forces the 'test_theme' theme.
@@ -20,16 +18,16 @@ class CustomThemeNegotiator implements ThemeNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(Request $request) {
-    return (($route_object = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) && $route_object instanceof Route && $route_object->hasOption('_custom_theme'));
+  public function applies(RouteMatchInterface $route_match) {
+    $route = $route_match->getRouteObject();
+    return ($route && $route->hasOption('_custom_theme'));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function determineActiveTheme(Request $request) {
-    $route_object = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT);
-    return $route_object->getOption('_custom_theme');
+  public function determineActiveTheme(RouteMatchInterface $route_match) {
+    return $route_match->getRouteObject()->getOption('_custom_theme');
   }
 
 }

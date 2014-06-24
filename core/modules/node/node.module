@@ -28,7 +28,6 @@ use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\Entity\File;
 use Drupal\language\Entity\Language as LanguageEntity;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Session\AccountInterface;
 
@@ -559,9 +558,9 @@ function node_revision_delete($revision_id) {
  *   The ID of the node if this is a full page view, otherwise FALSE.
  */
 function node_is_page(NodeInterface $node) {
-  $request = \Drupal::request();
-  if ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'node.view') {
-    $page_node = $request->attributes->get('node');
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() == 'node.view') {
+    $page_node = $route_match->getParameter('node');
   }
   return (!empty($page_node) ? $page_node->id() == $node->id() : FALSE);
 }
@@ -571,7 +570,7 @@ function node_is_page(NodeInterface $node) {
  */
 function node_preprocess_html(&$variables) {
   // If on an individual node page, add the node type to body classes.
-  if (($node = \Drupal::request()->attributes->get('node')) && $node instanceof NodeInterface) {
+  if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
     $variables['attributes']['class'][] = drupal_html_class('node--type-' . $node->getType());
   }
 }
