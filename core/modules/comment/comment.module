@@ -991,7 +991,9 @@ function comment_user_cancel($edit, $account, $method) {
  * Implements hook_user_predelete().
  */
 function comment_user_predelete($account) {
-  $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->id()))->fetchCol();
+  $entity_query = \Drupal::entityQuery('comment');
+  $entity_query->condition('uid', $account->id());
+  $cids = $entity_query->execute();
   entity_delete_multiple('comment', $cids);
 }
 
