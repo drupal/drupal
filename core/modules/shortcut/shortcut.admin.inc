@@ -21,7 +21,6 @@ use Drupal\shortcut\Entity\ShortcutSet;
  * @return
  *   An array representing the form definition.
  *
- * @ingroup forms
  * @see shortcut_set_switch_validate()
  * @see shortcut_set_switch_submit()
  *

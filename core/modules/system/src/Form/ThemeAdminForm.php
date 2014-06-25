@@ -10,8 +10,6 @@ use Drupal\Core\Form\FormBase;
 
 /**
  * Form to select the administration theme.
- *
- * @ingroup forms
  */
 class ThemeAdminForm extends FormBase {
 

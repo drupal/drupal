@@ -164,7 +164,6 @@ function color_get_palette($theme, $default = FALSE) {
  *
  * @see color_scheme_form_validate()
  * @see color_scheme_form_submit()
- * @ingroup forms
  */
 function color_scheme_form($complete_form, &$form_state, $theme) {
   $base = drupal_get_path('module', 'color');

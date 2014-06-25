@@ -62,7 +62,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @see update_manager_update_form_validate()
  * @see update_manager_update_form_submit()
  * @see update_menu()
- * @ingroup forms
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
  *   \Drupal\update\Form\UpdateForm::reportUpdate() or
@@ -397,7 +396,6 @@ function update_manager_download_batch_finished($success, $results) {
  *
  * @see update_manager_update_ready_form_submit()
  * @see update_menu()
- * @ingroup forms
  */
 function update_manager_update_ready_form($form, &$form_state) {
   if (!_update_manager_check_backends($form, 'update')) {
@@ -511,7 +509,6 @@ function update_manager_update_ready_form_submit($form, &$form_state) {
  * @see update_manager_install_form_validate()
  * @see update_manager_install_form_submit()
  * @see update_menu()
- * @ingroup forms
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
  *   \Drupal\update\Form\UpdateForm::reportInstall() or

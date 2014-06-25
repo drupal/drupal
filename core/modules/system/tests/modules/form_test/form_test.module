@@ -1159,7 +1159,6 @@ function form_test_number($form, &$form_state, $element = 'number') {
  * Form constructor for testing #type 'range' elements.
  *
  * @see form_test_range_submit()
- * @ingroup forms
  *
  * @deprecated Use \Drupal\form_test\testRange()
  */
@@ -1208,8 +1207,6 @@ function form_test_range($form, &$form_state) {
 /**
  * Form constructor for testing invalid #type 'range' elements.
  *
- * @ingroup forms
- *
  * @deprecated Use \Drupal\form_test\testRangeInvalid()
  */
 function form_test_range_invalid($form, &$form_state) {
@@ -1231,7 +1228,6 @@ function form_test_range_invalid($form, &$form_state) {
  * Form constructor for testing #type 'color' elements.
  *
  * @see form_test_color_submit()
- * @ingroup forms
  *
  * @deprecated Use \Drupal\form_test\testColor()
  */
@@ -1331,7 +1327,6 @@ function form_test_checkboxes_radios($form, &$form_state, $customize = FALSE) {
  * Form constructor for testing #type 'email' elements.
  *
  * @see form_test_email_submit()
- * @ingroup forms
  *
  * @deprecated Use \Drupal\form_test\testEmail()
  */
@@ -1359,7 +1354,6 @@ function form_test_email($form, &$form_state) {
  * Form constructor for testing #type 'url' elements.
  *
  * @see form_test_url_submit()
- * @ingroup forms
  *
  * @deprecated Use \Drupal\form_test\testUrl()
  */

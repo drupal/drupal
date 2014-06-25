@@ -14,7 +14,6 @@ use Drupal\field\FieldConfigInterface;
  *
  * @see file_module_test_menu()
  * @see file_module_test_form_submit()
- * @ingroup forms
  *
  * @deprecated Use \Drupal\file_module_test\Form\FileModuleTestForm::managedFileTest()
  */

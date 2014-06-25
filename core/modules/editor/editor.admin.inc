@@ -23,7 +23,6 @@ use Drupal\Component\Utility\NestedArray;
  *   The image upload settings form.
  *
  * @see \Drupal\editor\Form\EditorImageDialog
- * @ingroup forms
  */
 function editor_image_upload_settings_form(Editor $editor) {
   // Defaults.

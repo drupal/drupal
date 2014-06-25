@@ -70,8 +70,6 @@ class ImportForm extends FormBase {
 
   /**
    * Form constructor for the translation import screen.
-   *
-   * @ingroup forms
    */
   public function buildForm(array $form, array &$form_state) {
     $languages = $this->languageManager->getLanguages();
