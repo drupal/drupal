@@ -11,6 +11,12 @@ use Drupal\Core\Executable\ExecutablePluginBase;
 
 /**
  * Provides a basis for fulfilling contexts for condition plugins.
+ *
+ * @see \Drupal\Core\Condition\Annotation\Condition
+ * @see \Drupal\Core\Condition\ConditionInterface
+ * @see \Drupal\Core\Condition\ConditionManager
+ *
+ * @ingroup plugin_api
  */
 abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface {
 

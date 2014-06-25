@@ -30,6 +30,11 @@ use Drupal\Core\Plugin\PluginFormInterface;
  *
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  * @see \Drupal\Core\Executable\ExecutableInterface
+ * @see \Drupal\Core\Condition\ConditionManager
+ * @see \Drupal\Core\Condition\Annotation\Condition
+ * @see \Drupal\Core\Condition\ConditionPluginBase
+ *
+ * @ingroup plugin_api
  */
 interface ConditionInterface extends ExecutableInterface, PluginFormInterface, ConfigurablePluginInterface, PluginInspectionInterface {
 

@@ -67,39 +67,6 @@
  */
 
 /**
- * @defgroup block_api Block API
- * @{
- * Information about the classes and interfaces that make up the Block API.
- *
- * Blocks are a combination of a configuration entity and a plugin. The
- * configuration entity stores placement information (theme, region, weight) and
- * any other configuration that is specific to the block. The block plugin does
- * the work of rendering the block's content for display.
- *
- * To define a block in a module you need to:
- * - Define a Block plugin by creating a new class that implements the
- *   \Drupal\block\BlockPluginInterface. For more information about how block
- *   plugins are discovered see the @link plugin_api Plugin API topic @endlink.
- * - Usually you will want to extend the \Drupal\block\BlockBase class, which
- *   provides a common configuration form and utility methods for getting and
- *   setting configuration in the block configuration entity.
- * - Block plugins use the annotations defined by
- *   \Drupal\block\Annotation\Block. See the
- *   @link annotation Annotations topic @endlink for more information about
- *   annotations.
- *
- * Further information and examples:
- * - \Drupal\system\Plugin\Block\SystemPoweredByBlock provides a simple example
- *   of defining a block.
- * - \Drupal\book\Plugin\Block\BookNavigationBlock is an example of a block with
- *   a custom configuration form.
- * - For a more in-depth discussion of the Block API see
- *   https://drupal.org/developing/api/8/block_api
- * - The examples project also provides a Block example in
- *   https://drupal.org/project/examples.
- */
-
-/**
  * @defgroup third_party REST and Application Integration
  * @{
  * Integrating third-party applications using REST and related operations.

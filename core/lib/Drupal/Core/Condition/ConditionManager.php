@@ -16,6 +16,12 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * A plugin manager for condition plugins.
+ *
+ * @see \Drupal\Core\Condition\Annotation\Condition
+ * @see \Drupal\Core\Condition\ConditionInterface
+ * @see \Drupal\Core\Condition\ConditionPluginBase
+ *
+ * @ingroup plugin_api
  */
 class ConditionManager extends DefaultPluginManager implements ExecutableManagerInterface {
 

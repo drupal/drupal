@@ -9,7 +9,21 @@ namespace Drupal\Core\Condition\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a condition annotation object.
+ * Defines a condition plugin annotation object.
+ *
+ * Condition plugins provide generalized conditions for use in other
+ * operations, such as conditional block placement.
+ *
+ * Plugin Namespace: Plugin\Condition
+ *
+ * For a working example, see \Drupal\user\Plugin\Condition\UserRole.
+ *
+ * @see \Drupal\Core\Condition\ConditionManager
+ * @see \Drupal\Core\Condition\ConditionInterface
+ * @see \Drupal\Core\Condition\ConditionPluginBase
+ * @see block_api
+ *
+ * @ingroup plugin_api
  *
  * @Annotation
  */

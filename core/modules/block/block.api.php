@@ -6,6 +6,56 @@
  */
 
 /**
+ * @defgroup block_api Block API
+ * @{
+ * Information about the classes and interfaces that make up the Block API.
+ *
+ * Blocks are a combination of a configuration entity and a plugin. The
+ * configuration entity stores placement information (theme, region, weight) and
+ * any other configuration that is specific to the block. The block plugin does
+ * the work of rendering the block's content for display.
+ *
+ * To define a block in a module you need to:
+ * - Define a Block plugin by creating a new class that implements the
+ *   \Drupal\block\BlockPluginInterface, in namespace Plugin\Block under your
+ *   module namespace. For more information about creating plugins, see the
+ *   @link plugin_api Plugin API topic. @endlink
+ * - Usually you will want to extend the \Drupal\block\BlockBase class, which
+ *   provides a common configuration form and utility methods for getting and
+ *   setting configuration in the block configuration entity.
+ * - Block plugins use the annotations defined by
+ *   \Drupal\block\Annotation\Block. See the
+ *   @link annotation Annotations topic @endlink for more information about
+ *   annotations.
+ *
+ * The Block API also makes use of Condition plugins, for conditional block
+ * placement. Condition plugins have interface
+ * \Drupal\Core\Condition\ConditionInterface, base class
+ * \Drupal\Core\Condition\ConditionPluginBase, and go in plugin namespace
+ * Plugin\Condition. Again, see the Plugin API and Annotations topics for
+ * details of how to create a plugin class and annotate it.
+ *
+ * There are also several block-related hooks, which allow you to affect
+ * the content and access permissions for blocks:
+ * - hook_block_view_alter()
+ * - hook_block_view_BASE_BLOCK_ID_alter()
+ * - hook_block_access()
+ *
+ * Further information and examples:
+ * - \Drupal\system\Plugin\Block\SystemPoweredByBlock provides a simple example
+ *   of defining a block.
+ * - \Drupal\user\Plugin\Condition\UserRole is a straightforward example of a
+ *   block placement condition plugin.
+ * - \Drupal\book\Plugin\Block\BookNavigationBlock is an example of a block with
+ *   a custom configuration form.
+ * - For a more in-depth discussion of the Block API see
+ *   https://drupal.org/developing/api/8/block_api
+ * - The Examples for Developers project also provides a Block example in
+ *   https://drupal.org/project/examples.
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
@@ -35,6 +85,7 @@
  *   The block plugin instance.
  *
  * @see hook_block_view_BASE_BLOCK_ID_alter()
+ * @ingroup block_api
  */
 function hook_block_view_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {
   // Remove the contextual links on all blocks that provide them.
@@ -62,6 +113,7 @@ function hook_block_view_alter(array &$build, \Drupal\block\BlockPluginInterface
  *   The block plugin instance.
  *
  * @see hook_block_view_alter()
+ * @ingroup block_api
  */
 function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {
   // Change the title of the specific block.
@@ -90,6 +142,7 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockP
  *
  * @see \Drupal\Core\Entity\EntityAccessController::access()
  * @see \Drupal\block\BlockAccessController::checkAccess()
+ * @ingroup block_api
  */
 function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupal\user\Entity\User $account, $langcode) {
   // Example code that would prevent displaying the 'Powered by Drupal' block in
