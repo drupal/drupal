@@ -12,6 +12,15 @@ use \Drupal\Component\Annotation\Plugin;
 /**
  * Defines a REST resource annotation object.
  *
+ * Plugin Namespace: Plugin\rest\resource
+ *
+ * For a working example, see \Drupal\rest\Plugin\rest\resource\DBLogResource
+ *
+ * @see \Drupal\rest\Plugin\Type\ResourcePluginManager
+ * @see \Drupal\rest\Plugin\ResourceBase
+ * @see \Drupal\rest\Plugin\ResourceInterface
+ * @see plugin_api
+ *
  * @Annotation
  */
 class RestResource extends Plugin {

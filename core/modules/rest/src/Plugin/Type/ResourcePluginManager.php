@@ -13,6 +13,11 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages discovery and instantiation of resource plugins.
+ *
+ * @see \Drupal\rest\Annotation\RestResource
+ * @see \Drupal\rest\Plugin\ResourceBase
+ * @see \Drupal\rest\Plugin\ResourceInterface
+ * @see plugin_api
  */
 class ResourcePluginManager extends DefaultPluginManager {
 

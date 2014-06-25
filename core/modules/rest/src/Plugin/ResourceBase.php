@@ -15,6 +15,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Common base class for resource plugins.
+ *
+ * @see \Drupal\rest\Annotation\RestResource
+ * @see \Drupal\rest\Plugin\Type\ResourcePluginManager
+ * @see \Drupal\rest\Plugin\ResourceInterface
+ * @see plugin_api
  */
 abstract class ResourceBase extends PluginBase implements ContainerFactoryPluginInterface, ResourceInterface {
 
