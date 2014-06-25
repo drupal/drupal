@@ -33,13 +33,11 @@ interface ContextInterface {
   /**
    * Sets the definition that the context must conform to.
    *
-   * @param array $contextDefinition
+   * @param \Drupal\Component\Plugin\Context\ContextDefinitionInterface $context_definition
    *   A defining characteristic representation of the context against which
-   *   that context can be validated. This is typically an array having a
-   *   class name set under the 'class' key, but it could be extended to support
-   *   other notations.
+   *   that context can be validated.
    */
-  public function setContextDefinition(array $contextDefinition);
+  public function setContextDefinition(ContextDefinitionInterface $context_definition);
 
   /**
    * Gets the provided definition that the context must conform to.

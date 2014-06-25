@@ -13,12 +13,10 @@ use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Core\Condition\ConditionPluginBag;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
-use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -47,6 +45,13 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * @var \Drupal\Core\Executable\ExecutableManagerInterface
    */
   protected $conditionPluginManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function contextDefinitions() {
+    return [];
+  }
 
   /**
    * {@inheritdoc}

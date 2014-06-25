@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Discovery\StaticDiscovery;
 use Drupal\Component\Plugin\Discovery\DerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\Factory\ReflectionFactory;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
  * Defines a plugin manager used by Plugin API derivative unit tests.
@@ -77,7 +78,16 @@ class MockBlockManager extends PluginManagerBase {
       'label' => t('User name'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
       'context' => array(
-        'user' => array('class' => 'Drupal\user\UserInterface')
+        'user' => new ContextDefinition('entity:user', t('User')),
+      ),
+    ));
+
+    // An optional context version of the previous block plugin.
+    $this->discovery->setDefinition('user_name_optional', array(
+      'label' => t('User name optional'),
+      'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserNameBlock',
+      'context' => array(
+        'user' => new ContextDefinition('entity:user', t('User'), FALSE),
       ),
     ));
 
@@ -85,9 +95,6 @@ class MockBlockManager extends PluginManagerBase {
     $this->discovery->setDefinition('string_context', array(
       'label' => t('String typed data'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\TypedDataStringBlock',
-      'context' => array(
-        'string' => array('type' => 'string'),
-      ),
     ));
 
     // A complex context plugin that requires both a user and node for context.
@@ -95,8 +102,8 @@ class MockBlockManager extends PluginManagerBase {
       'label' => t('Complex context'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockComplexContextBlock',
       'context' => array(
-        'user' => array('class' => 'Drupal\user\UserInterface'),
-        'node' => array('class' => 'Drupal\node\NodeInterface'),
+        'user' => new ContextDefinition('entity:user', t('User')),
+        'node' => new ContextDefinition('entity:node', t('Node')),
       ),
     ));
 

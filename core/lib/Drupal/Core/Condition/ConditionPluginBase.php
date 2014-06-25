@@ -23,6 +23,13 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
   /**
    * {@inheritdoc}
    */
+  public static function contextDefinitions() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 

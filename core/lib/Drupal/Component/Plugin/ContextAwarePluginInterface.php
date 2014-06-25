@@ -7,7 +7,7 @@
 
 namespace Drupal\Component\Plugin;
 
-use Drupal\Component\Plugin\Exception\PluginException;
+use \Drupal\Component\Plugin\Context\ContextInterface;
 
 /**
  * Interface for defining context aware plugins.
@@ -36,7 +36,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   If the requested context is not defined.
    *
-   * @return array
+   * @return \Drupal\Component\Plugin\Context\ContextDefinitionInterface.
    *   The definition against which the context value must validate.
    */
   public function getContextDefinition($name);
@@ -88,6 +88,16 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    *   The currently set context value.
    */
   public function getContextValue($name);
+
+  /**
+   * Set a context on this plugin.
+   *
+   * @param string $name
+   *   The name of the context in the plugin configuration.
+   * @param \Drupal\Component\Plugin\Context\ContextInterface $context
+   *   The context object to set.
+   */
+  public function setContext($name, ContextInterface $context);
 
   /**
    * Sets the value for a defined context.

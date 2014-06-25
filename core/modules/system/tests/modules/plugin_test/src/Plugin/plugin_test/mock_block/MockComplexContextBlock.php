@@ -7,6 +7,7 @@
 
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;
 
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\ContextAwarePluginBase;
 
 /**

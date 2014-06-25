@@ -17,11 +17,10 @@ use Drupal\Core\Language\LanguageInterface;
  *   id = "language",
  *   label = @Translation("Language"),
  *   context = {
- *     "language" = {
- *       "type" = "language"
- *     }
+ *     "language" = @ContextDefinition("language", label = @Translation("Language"))
  *   }
  * )
+ *
  */
 class Language extends ConditionPluginBase {
 

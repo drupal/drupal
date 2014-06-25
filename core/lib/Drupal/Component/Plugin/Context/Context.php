@@ -26,14 +26,17 @@ class Context implements ContextInterface {
   /**
    * The definition to which a context must conform.
    *
-   * @var array
+   * @var \Drupal\Component\Plugin\Context\ContextDefinitionInterface
    */
   protected $contextDefinition;
 
   /**
    * Sets the contextDefinition for us without needing to call the setter.
+   *
+   * @param \Drupal\Component\Plugin\Context\ContextDefinitionInterface $context_definition
+   *   The context definition.
    */
-  public function __construct(array $context_definition) {
+  public function __construct(ContextDefinitionInterface $context_definition) {
     $this->contextDefinition = $context_definition;
   }
 
@@ -48,13 +51,22 @@ class Context implements ContextInterface {
    * Implements \Drupal\Component\Plugin\Context\ContextInterface::getContextValue().
    */
   public function getContextValue() {
+    // Support optional contexts.
+    if (!isset($this->contextValue)) {
+      $definition = $this->getContextDefinition();
+      if ($definition->isRequired()) {
+        $type = $definition->getDataType();
+        throw new ContextException(sprintf("The %s context is required and not present.", $type));
+      }
+      return NULL;
+    }
     return $this->contextValue;
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::setContextDefinition().
+   * {@inheritdoc}
    */
-  public function setContextDefinition(array $context_definition) {
+  public function setContextDefinition(ContextDefinitionInterface $context_definition) {
     $this->contextDefinition = $context_definition;
   }
 

@@ -50,6 +50,14 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
    */
   public function createInstance($plugin_id, array $configuration = array()) {
     $plugin = $this->factory->createInstance($plugin_id, $configuration);
+
+    // If we receive any context values via config set it into the plugin.
+    if (!empty($configuration['context'])) {
+      foreach ($configuration['context'] as $name => $context) {
+        $plugin->setContextValue($name, $context);
+      }
+    }
+
     return $plugin->setExecutableManager($this);
   }
 

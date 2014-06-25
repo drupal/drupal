@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\Core\Condition;
 
+use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Condition\ConditionAccessResolverTrait;
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -58,7 +58,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
     $condition_exception = $this->getMock('Drupal\Core\Condition\ConditionInterface');
     $condition_exception->expects($this->any())
       ->method('execute')
-      ->will($this->throwException(new PluginException()));
+      ->will($this->throwException(new ContextException()));
 
     $conditions = array();
     $data[] = array($conditions, 'and', TRUE);

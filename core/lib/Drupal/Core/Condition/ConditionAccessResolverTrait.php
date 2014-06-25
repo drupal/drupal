@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Condition;
 
-use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\Exception\ContextException;
 
 /**
  * Resolves a set of conditions.
@@ -30,7 +30,7 @@ trait ConditionAccessResolverTrait {
       try {
         $pass = $condition->execute();
       }
-      catch (PluginException $e) {
+      catch (ContextException $e) {
         // If a condition is missing context, consider that a fail.
         $pass = FALSE;
       }

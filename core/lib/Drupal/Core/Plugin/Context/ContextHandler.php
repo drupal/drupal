@@ -8,7 +8,7 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
-use Drupal\Component\Plugin\Context\ContextInterface;
+use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterface;
 use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Utility\String;
@@ -97,7 +97,7 @@ class ContextHandler implements ContextHandlerInterface {
    * {@inheritdoc}
    */
   public function getMatchingContexts(array $contexts, DataDefinitionInterface $definition) {
-    return array_filter($contexts, function (ContextInterface $context) use ($definition) {
+    return array_filter($contexts, function (ComponentContextInterface $context) use ($definition) {
       // @todo getContextDefinition() should return a DataDefinitionInterface.
       $context_definition = new DataDefinition($context->getContextDefinition());
 

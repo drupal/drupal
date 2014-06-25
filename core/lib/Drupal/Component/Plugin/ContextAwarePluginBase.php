@@ -7,10 +7,10 @@
 
 namespace Drupal\Component\Plugin;
 
-use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\Context\ContextInterface;
+use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Context\Context;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
  * Base class for plugins that are context aware.
@@ -20,7 +20,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
   /**
    * The data objects representing the context of this plugin.
    *
-   * @var array
+   * @var \Drupal\Component\Plugin\Context\ContextInterface[]
    */
   protected $context;
 
@@ -55,7 +55,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContextDefinitions().
+   * {@inheritdoc}
    */
   public function getContextDefinitions() {
     $definition = $this->getPluginDefinition();
@@ -63,50 +63,47 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContextDefinition().
+   * {@inheritdoc}
    */
   public function getContextDefinition($name) {
     $definition = $this->getPluginDefinition();
     if (empty($definition['context'][$name])) {
-      throw new PluginException("The $name context is not a valid context.");
+      throw new ContextException(sprintf("The %s context is not a valid context.", $name));
     }
     return $definition['context'][$name];
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContexts().
+   * {@inheritdoc}
    */
   public function getContexts() {
-    $definitions = $this->getContextDefinitions();
-    if ($definitions && empty($this->context)) {
-      throw new PluginException("There are no set contexts.");
+    // Make sure all context objects are initialized.
+    foreach ($this->getContextDefinitions() as $name => $definition) {
+      $this->getContext($name);
     }
-    $contexts = array();
-    foreach (array_keys($definitions) as $name) {
-      if (empty($this->context[$name])) {
-        throw new PluginException("The $name context is not yet set.");
-      }
-      $contexts[$name] = $this->context[$name];
-    }
-    return $contexts;
+    return $this->context;
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContext().
+   * {@inheritdoc}
    */
   public function getContext($name) {
-    // Check for a valid context definition.
-    $this->getContextDefinition($name);
     // Check for a valid context value.
     if (!isset($this->context[$name])) {
-      throw new PluginException("The $name context is not yet set.");
+      $this->context[$name] = new Context($this->getContextDefinition($name));
     }
-
     return $this->context[$name];
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContextValues().
+   * {@inheritdoc}
+   */
+  public function setContext($name, ContextInterface $context) {
+    $this->context[$name] = $context;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getContextValues() {
     $values = array();
@@ -117,36 +114,30 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::getContextValue().
+   * {@inheritdoc}
    */
   public function getContextValue($name) {
     return $this->getContext($name)->getContextValue();
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::setContextValue().
+   * {@inheritdoc}
    */
   public function setContextValue($name, $value) {
-    $context_definition = $this->getContextDefinition($name);
-    $this->context[$name] = new Context($context_definition);
-    $this->context[$name]->setContextValue($value);
+    $this->getContext($name)->setContextValue($value);
     return $this;
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\ContextAwarePluginInterface::valdidateContexts().
+   * {@inheritdoc}
    */
   public function validateContexts() {
     $violations = new ConstraintViolationList();
     // @todo: Implement symfony validator API to let the validator traverse
     // and set property paths accordingly.
 
-    foreach ($this->getContextDefinitions() as $name => $definition) {
-      // Validate any set values.
-      if (isset($this->context[$name])) {
-        $violations->addAll($this->context[$name]->validate());
-      }
-      // @todo: If no value is set, make sure any mapping is validated.
+    foreach ($this->getContexts() as $context) {
+      $violations->addAll($context->validate());
     }
     return $violations;
   }

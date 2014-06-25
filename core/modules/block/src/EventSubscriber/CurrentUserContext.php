@@ -9,6 +9,7 @@ namespace Drupal\block\EventSubscriber;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -52,10 +53,7 @@ class CurrentUserContext extends BlockConditionContextSubscriberBase {
   protected function determineBlockContext() {
     $current_user = $this->userStorage->load($this->account->id());
 
-    $context = new Context(array(
-      'type' => 'entity:user',
-      'label' => $this->t('Current user'),
-    ));
+    $context = new Context(new ContextDefinition('entity:user', $this->t('Current user')));
     $context->setContextValue($current_user);
     $this->addContext('current_user', $context);
   }

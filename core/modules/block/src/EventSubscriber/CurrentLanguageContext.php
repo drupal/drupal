@@ -9,6 +9,7 @@ namespace Drupal\block\EventSubscriber;
 
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -39,10 +40,7 @@ class CurrentLanguageContext extends BlockConditionContextSubscriberBase {
    * {@inheritdoc}
    */
   protected function determineBlockContext() {
-    $context = new Context(array(
-      'type' => 'language',
-      'label' => $this->t('Current language'),
-    ));
+    $context = new Context(new ContextDefinition('language', $this->t('Current language')));
     $context->setContextValue($this->languageManager->getCurrentLanguage());
     $this->addContext('language', $context);
   }

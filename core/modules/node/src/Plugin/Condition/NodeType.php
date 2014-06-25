@@ -16,11 +16,10 @@ use Drupal\Core\Condition\ConditionPluginBase;
  *   id = "node_type",
  *   label = @Translation("Node Bundle"),
  *   context = {
- *     "node" = {
- *       "type" = "entity:node"
- *     }
+ *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
  *   }
  * )
+ *
  */
 class NodeType extends ConditionPluginBase {
 

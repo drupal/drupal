@@ -8,6 +8,7 @@
 namespace Drupal\block\EventSubscriber;
 
 use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 
@@ -38,7 +39,7 @@ class NodeRouteContext extends BlockConditionContextSubscriberBase {
    */
   protected function determineBlockContext() {
     if (($route_object = $this->routeMatch->getRouteObject()) && ($route_contexts = $route_object->getOption('parameters')) && isset($route_contexts['node'])) {
-      $context = new Context($route_contexts['node']);
+      $context = new Context(new ContextDefinition($route_contexts['node']['type']));
       if ($node = $this->routeMatch->getParameter('node')) {
         $context->setContextValue($node);
       }
@@ -46,7 +47,7 @@ class NodeRouteContext extends BlockConditionContextSubscriberBase {
     }
     elseif ($this->routeMatch->getRouteName() == 'node.add') {
       $node_type = $this->routeMatch->getParameter('node_type');
-      $context = new Context(array('type' => 'entity:node'));
+      $context = new Context(new ContextDefinition('entity:node'));
       $context->setContextValue(Node::create(array('type' => $node_type->id())));
       $this->addContext('node', $context);
     }

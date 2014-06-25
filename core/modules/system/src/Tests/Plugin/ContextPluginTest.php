@@ -7,14 +7,15 @@
 
 namespace Drupal\system\Tests\Plugin;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\plugin_test\Plugin\MockBlockManager;
-use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests that context aware plugins function correctly.
  */
-class ContextPluginTest extends DrupalUnitTestBase {
+class ContextPluginTest extends KernelTestBase {
 
   public static $modules = array('system', 'user', 'node', 'field', 'filter', 'text');
 
@@ -36,50 +37,31 @@ class ContextPluginTest extends DrupalUnitTestBase {
     // Create a node, add it as context, catch the exception.
     $node = entity_create('node', array('title' => $name, 'type' => 'page'));
 
-    // Try to get a valid context that has not been set.
+    // Try to get context that is missing its definition.
     try {
-      $plugin->getContext('user');
+      $plugin->getContextDefinition('not_exists');
       $this->fail('The user context should not yet be set.');
     }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The user context is not yet set.');
+    catch (ContextException $e) {
+      $this->assertEqual($e->getMessage(), 'The not_exists context is not a valid context.');
     }
 
-    // Try to get an invalid context.
-    try {
-      $plugin->getContext('node');
-      $this->fail('The node context should not be a valid context.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The node context is not a valid context.');
-    }
+    // Test the getContextDefinitions() method.
+    $user_context_definition = ContextDefinition::create('entity:user')->setLabel(t('User'));
+    $this->assertEqual($plugin->getContextDefinitions()['user']->getLabel(), $user_context_definition->getLabel());
 
-    // Try to get a valid context value that has not been set.
+    // Test the getContextDefinition() method for a valid context.
+    $this->assertEqual($plugin->getContextDefinition('user')->getLabel(), $user_context_definition->getLabel());
+
+    // Try to get a context with valid definition.
+    $this->assertNotNull($plugin->getContext('user'), 'Succeeded to get a context with a valid definition.');
+
+    // Try to get a value of a valid context, while this value has not been set.
     try {
       $plugin->getContextValue('user');
-      $this->fail('The user context should not yet be set.');
     }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The user context is not yet set.');
-    }
-
-    // Try to call a method of the plugin that requires context before it has
-    // been set.
-    try {
-      $plugin->getTitle();
-      $this->fail('The user context should not yet be set.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The user context is not yet set.');
-    }
-
-    // Try to get a context value that is not valid.
-    try {
-      $plugin->getContextValue('node');
-      $this->fail('The node context should not be a valid context.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The node context is not a valid context.');
+    catch(ContextException $e) {
+      $this->assertIdentical("The entity:user context is required and not present.", $e->getMessage(), 'Requesting a non-set value of a required context should throw a context exception.');
     }
 
     // Try to pass the wrong class type as a context value.
@@ -87,80 +69,21 @@ class ContextPluginTest extends DrupalUnitTestBase {
     $violations = $plugin->validateContexts();
     $this->assertTrue(!empty($violations), 'The provided context value does not pass validation.');
 
-    // Set an appropriate context value appropriately and check to make sure
-    // its methods work as expected.
+    // Set an appropriate context value and check to make sure its methods work
+    // as expected.
     $user = entity_create('user', array('name' => $name));
     $plugin->setContextValue('user', $user);
+
+    $this->assertEqual($plugin->getContextValue('user')->getName(), $user->getName());
     $this->assertEqual($user->label(), $plugin->getTitle());
 
-    // Test the getContextDefinitions() method.
-    $this->assertIdentical($plugin->getContextDefinitions(), array('user' => array('class' => 'Drupal\user\UserInterface')));
-
-    // Test the getContextDefinition() method for a valid context.
-    $this->assertEqual($plugin->getContextDefinition('user'), array('class' => 'Drupal\user\UserInterface'));
-
-    // Test the getContextDefinition() method for an invalid context.
-    try {
-      $plugin->getContextDefinition('node');
-      $this->fail('The node context should not be a valid context.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The node context is not a valid context.');
-    }
-
-    // Test typed data context plugins.
-    $typed_data_plugin = $manager->createInstance('string_context');
-
-    // Try to get a valid context value that has not been set.
-    try {
-      $typed_data_plugin->getContextValue('string');
-      $this->fail('The string context should not yet be set.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The string context is not yet set.');
-    }
-
-    // Try to call a method of the plugin that requires a context value before
-    // it has been set.
-    try {
-      $typed_data_plugin->getTitle();
-      $this->fail('The string context should not yet be set.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The string context is not yet set.');
-    }
-
-    // Set the context value appropriately and check the title.
-    $typed_data_plugin->setContextValue('string', $name);
-    $this->assertEqual($name, $typed_data_plugin->getTitle());
+    // Test Optional context handling.
+    $plugin = $manager->createInstance('user_name_optional');
+    $this->assertNull($plugin->getContextValue('user'), 'Requesting a non-set value of a valid context should return NULL.');
 
     // Test Complex compound context handling.
     $complex_plugin = $manager->createInstance('complex_context');
-
-    // With no contexts set, try to get the contexts.
-    try {
-      $complex_plugin->getContexts();
-      $this->fail('There should not be any contexts set yet.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'There are no set contexts.');
-    }
-
-    // With no contexts set, try to get the context values.
-    $values = $complex_plugin->getContextValues();
-    $this->assertIdentical(array_filter($values), array(), 'There are no set contexts.');
-
-    // Set the user context value.
     $complex_plugin->setContextValue('user', $user);
-
-    // With only the user context set, try to get the contexts.
-    try {
-      $complex_plugin->getContexts();
-      $this->fail('The node context should not yet be set.');
-    }
-    catch (PluginException $e) {
-      $this->assertEqual($e->getMessage(), 'The node context is not yet set.');
-    }
 
     // With only the user context set, try to get the context values.
     $values = $complex_plugin->getContextValues();

@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
  * Provides a 'User Role' condition.
@@ -16,11 +17,10 @@ use Drupal\Core\Condition\ConditionPluginBase;
  *   id = "user_role",
  *   label = @Translation("User Role"),
  *   context = {
- *     "user" = {
- *       "type" = "entity:user"
- *     }
+ *     "user" = @ContextDefinition("entity:user", label = @Translation("User"))
  *   }
  * )
+ *
  */
 class UserRole extends ConditionPluginBase {
 

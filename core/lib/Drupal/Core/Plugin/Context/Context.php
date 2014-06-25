@@ -8,84 +8,99 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
-use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\ListInterface;
+use Drupal\Component\Plugin\Exception\ContextException;
+use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\TypedData\TypedDataTrait;
 
 /**
  * A Drupal specific context wrapper class.
- *
- * The validate method is specifically overridden in order to support typed
- * data definitions instead of just class names in the contextual definitions
- * of plugins that extend ContextualPluginBase.
  */
-class Context extends ComponentContext {
+class Context extends ComponentContext implements ContextInterface {
+
+  use TypedDataTrait;
 
   /**
-   * Overrides \Drupal\Component\Plugin\Context\Context::getContextValue().
+   * The data associated with the context.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataInterface
+   */
+  protected $contextData;
+
+  /**
+   * The definition to which a context must conform.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface
+   */
+  protected $contextDefinition;
+
+  /**
+   * {@inheritdoc}
    */
   public function getContextValue() {
-    $typed_value = parent::getContextValue();
-    // If the typed data is complex, pass it on as typed data. Else pass on its
-    // plain value, such that e.g. a string will be directly returned as PHP
-    // string.
-    $is_complex = $typed_value instanceof ComplexDataInterface;
-    if (!$is_complex && $typed_value instanceof ListInterface) {
-      $is_complex = $typed_value[0] instanceof ComplexDataInterface;
+    if (!isset($this->contextData)) {
+      $definition = $this->getContextDefinition();
+      if ($definition->isRequired()) {
+        $type = $definition->getDataType();
+        throw new ContextException(String::format("The @type context is required and not present.", array('@type' => $type)));
+      }
+      return NULL;
     }
-    if ($typed_value instanceof TypedDataInterface && !$is_complex) {
-      return $typed_value->getValue();
+    // Special case entities.
+    // @todo: Remove once entities do not implemented TypedDataInterface.
+    if ($this->contextData instanceof ContentEntityInterface) {
+      return $this->contextData;
     }
-    return $typed_value;
+    return $this->contextData->getValue();
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::setContextValue().
+   * {@inheritdoc}
    */
   public function setContextValue($value) {
-    // Make sure the value set is a typed data object.
-    if (!empty($this->contextDefinition['type']) && !$value instanceof TypedDataInterface) {
-      $value = \Drupal::typedDataManager()->create(new DataDefinition($this->contextDefinition), $value);
+    if ($value instanceof TypedDataInterface) {
+      return $this->setContextData($value);
     }
-    parent::setContextValue($value);
+    else {
+      return $this->setContextData($this->getTypedDataManager()->create($this->contextDefinition->getDataDefinition(), $value));
+    }
   }
 
   /**
-   * Gets the context value as typed data object.
-   *
-   * parent::getContextValue() does not do all the processing required to
-   * return plain value of a TypedData object. This class overrides that method
-   * to return the appropriate values from TypedData objects, but the object
-   * itself can be useful as well, so this method is provided to allow for
-   * access to the TypedData object. Since parent::getContextValue() already
-   * does all the processing we need, we simply proxy to it here.
-   *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   */
-  public function getTypedContext() {
-    return parent::getContextValue();
-  }
-
-  /**
-   * Implements \Drupal\Component\Plugin\Context\ContextInterface::getConstraints().
+   * {@inheritdoc}
    */
   public function getConstraints() {
-    if (!empty($this->contextDefinition['type'])) {
-      // If we do have typed data, leverage it for getting constraints.
-      return $this->getTypedContext()->getConstraints();
-    }
-    return parent::getConstraints();
+    return $this->contextDefinition->getConstraints();
   }
 
   /**
-   * Overrides \Drupal\Component\Plugin\Context\Context::getConstraints().
+   * {@inheritdoc}
+   */
+  public function getContextData() {
+    return $this->contextData;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setContextData(TypedDataInterface $data) {
+    $this->contextData = $data;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContextDefinition() {
+    return $this->contextDefinition;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function validate() {
-    // If the context is typed data, defer to its validation.
-    if (!empty($this->contextDefinition['type'])) {
-      return $this->getTypedContext()->validate();
-    }
-    return parent::validate();
+    return $this->getContextData()->validate();
   }
+
 }
