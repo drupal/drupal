@@ -12,7 +12,13 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines an archiver annotation object.
  *
+ * Plugin Namespace: Plugin\Archiver
+ *
+ * For a working example, see \Drupal\system\Plugin\Archiver\Zip
+ *
  * @see \Drupal\Core\Archiver\ArchiverManager
+ * @see \Drupal\Core\Archiver\ArchiverInterface
+ * @see plugin_api
  * @see hook_archiver_info_alter()
  *
  * @Annotation

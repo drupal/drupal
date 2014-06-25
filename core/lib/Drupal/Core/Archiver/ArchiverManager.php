@@ -12,7 +12,11 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * Archiver plugin manager.
+ * Provides an Archiver plugin manager.
+ *
+ * @see \Drupal\Core\Archiver\Annotation\Archiver
+ * @see \Drupal\Core\Archiver\ArchiverInterface
+ * @see plugin_api
  */
 class ArchiverManager extends DefaultPluginManager {
 

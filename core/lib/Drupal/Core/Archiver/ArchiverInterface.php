@@ -9,6 +9,10 @@ namespace Drupal\Core\Archiver;
 
 /**
  * Defines the common interface for all Archiver classes.
+ *
+ * @see \Drupal\Core\Archiver\ArchiverManager
+ * @see \Drupal\Core\Archiver\Annotation\Archiver
+ * @see plugin_api
  */
 interface ArchiverInterface {
 
