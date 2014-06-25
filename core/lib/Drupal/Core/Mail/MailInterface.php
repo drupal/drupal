@@ -9,6 +9,10 @@ namespace Drupal\Core\Mail;
 
 /**
  * Defines an interface for pluggable mail back-ends.
+ *
+ * @see \Drupal\Core\Annotation\Mail
+ * @see \Drupal\Core\Mail\MailManager
+ * @see plugin_api
  */
 interface MailInterface {
 

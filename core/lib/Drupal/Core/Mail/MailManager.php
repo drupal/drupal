@@ -15,7 +15,11 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 
 /**
- * Mail plugin manager.
+ * Provides a Mail plugin manager.
+ *
+ * @see \Drupal\Core\Annotation\Mail
+ * @see \Drupal\Core\Mail\MailInterface
+ * @see plugin_api
  */
 class MailManager extends DefaultPluginManager {
 
