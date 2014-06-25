@@ -17,10 +17,10 @@
  *
  * @section essentials Essential background concepts
  *
- * - @link architecture Drupal's architecture @endlink
  * - @link oo_conventions Object-oriented conventions used in Drupal @endlink
  * - @link extending Extending and altering Drupal @endlink
  * - @link best_practices Security and best practices @endlink
+ * - @link info_types Types of information in Drupal @endlink
  *
  * @section interface User interface
  *
@@ -117,7 +117,7 @@
  * Information about the State API.
  *
  * The State API is one of several methods in Drupal for storing information.
- * See @link architecture Drupal's architecture topic @endlink for an
+ * See the @link info_types Information types topic @endlink for an
  * overview of the different types of information.
  *
  * The basic entry point into the State API is \Drupal::state(), which returns
@@ -143,7 +143,7 @@
  * Information about the Configuration API.
  *
  * The Configuration API is one of several methods in Drupal for storing
- * information. See @link architecture Drupal's architecture topic @endlink for
+ * information. See the @link info_types Information types topic @endlink for
  * an overview of the different types of information. The sections below have
  * more information about the configuration API; see
  * https://drupal.org/developing/api/8/configuration for more details.
@@ -163,6 +163,10 @@
  * a configuration object, configuration settings have data types (integer,
  * string, Boolean, etc.) and settings can also exist in a nested hierarchy,
  * known as a "mapping".
+ *
+ * Configuration can also be overridden on a global, per-language, or
+ * per-module basis. See https://www.drupal.org/node/1928898 for more
+ * information.
  *
  * @section sec_yaml Configuration YAML files
  * Whether or not configuration files are being used for the active
@@ -275,8 +279,8 @@
  *
  * Entities, in Drupal, are objects that are used for persistent storage of
  * content and configuration information. See the
- * @link architecture Drupal's architecture topic @endlink for an overview of
- * the different types of information, and the
+ * @link info_types Information types topic @endlink for an overview of the
+ * different types of information, and the
  * @link config_api Configuration API topic @endlink for more about the
  * configuration API.
  *
@@ -976,18 +980,10 @@
  */
 
 /**
- * @defgroup architecture Architecture overview
+ * @defgroup info_types Information types
  * @{
- * Overview of Drupal's architecture for developers.
+ * Types of information in Drupal.
  *
- * @todo write this
- *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
- *
- * Should include: modules, info.yml files, location of files, etc.
- *
- * @section Types of information in Drupal
  * Drupal has several distinct types of information, each with its own methods
  * for storage and retrieval:
  * - Content: Information meant to be displayed on your site: articles, basic
@@ -996,7 +992,10 @@
  * - Session: Information about individual users' interactions with the site,
  *   such as whether they are logged in. This is really "state" information, but
  *   it is not stored the same way so it's a separate type here. Session
- *   information is managed ...
+ *   information is managed via the session_manager service in Drupal, which
+ *   implements \Drupal\Core\Session\SessionManagerInterface. See the
+ *   @link container Services topic @endlink for more information about
+ *   services.
  * - State: Information of a temporary nature, generally machine-generated and
  *   not human-edited, about the current state of your site. Examples: the time
  *   when Cron was last run, whether node access permissions need rebuilding,
@@ -1007,9 +1006,8 @@
  *   you have defined, etc. See
  *   @link config_api the Configuration API topic @endlink for more information.
  *
- * @todo Add something relevant to the list item about sessions.
- * @todo Add some information about Settings, the key-value store in general,
- *   and maybe the cache to this list (not sure if cache belongs here?).
+ * @see cache
+ * @see i18n
  * @}
  */
 
