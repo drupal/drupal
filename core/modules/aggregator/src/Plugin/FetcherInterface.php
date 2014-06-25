@@ -17,6 +17,11 @@ use Drupal\aggregator\FeedInterface;
  * active fetcher; second, it is converted to a common format by the active
  * parser; and finally, it is passed to all active processors, which manipulate
  * or store the data.
+ *
+ * @see \Drupal\aggregator\Annotation\AggregatorFetcher
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginSettingsBase
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginManager
+ * @see plugin_api
  */
 interface FetcherInterface {
 

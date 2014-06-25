@@ -13,6 +13,15 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages aggregator plugins.
+ *
+ * @see \Drupal\aggregator\Annotation\AggregatorParser
+ * @see \Drupal\aggregator\Annotation\AggregatorFetcher
+ * @see \Drupal\aggregator\Annotation\AggregatorProcessor
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginSettingsBase
+ * @see \Drupal\aggregator\Plugin\FetcherInterface
+ * @see \Drupal\aggregator\Plugin\ProcessorInterface
+ * @see \Drupal\aggregator\Plugin\ParserInterface
+ * @see plugin_api
  */
 class AggregatorPluginManager extends DefaultPluginManager {
 

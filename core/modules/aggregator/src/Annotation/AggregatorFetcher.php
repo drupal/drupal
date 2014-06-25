@@ -12,6 +12,15 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a Plugin annotation object for aggregator fetcher plugins.
  *
+ * Plugin Namespace: Plugin\aggregator\fetcher
+ *
+ * For a working example, see \Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher
+ *
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginManager
+ * @see \Drupal\aggregator\Plugin\FetcherInterface
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginSettingsBase
+ * @see plugin_api
+ *
  * @Annotation
  */
 class AggregatorFetcher extends Plugin {

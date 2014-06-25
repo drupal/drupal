@@ -13,6 +13,15 @@ use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
  * Base class for aggregator plugins that implement settings forms.
+ *
+ * @see \Drupal\aggregator\Annotation\AggregatorParser
+ * @see \Drupal\aggregator\Annotation\AggregatorFetcher
+ * @see \Drupal\aggregator\Annotation\AggregatorProcessor
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginManager
+ * @see \Drupal\aggregator\Plugin\FetcherInterface
+ * @see \Drupal\aggregator\Plugin\ProcessorInterface
+ * @see \Drupal\aggregator\Plugin\ParserInterface
+ * @see plugin_api
  */
 abstract class AggregatorPluginSettingsBase extends PluginBase implements PluginFormInterface, ConfigurablePluginInterface {
 

@@ -12,6 +12,15 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a Plugin annotation object for aggregator processor plugins.
  *
+ * Plugin Namespace: Plugin\aggregator\processor
+ *
+ * For a working example, see \Drupal\aggregator\Plugin\aggregator\processor\DefaultProcessor
+ *
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginManager
+ * @see \Drupal\aggregator\Plugin\ProcessorInterface
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginSettingsBase
+ * @see plugin_api
+ *
  * @Annotation
  */
 class AggregatorProcessor extends Plugin {

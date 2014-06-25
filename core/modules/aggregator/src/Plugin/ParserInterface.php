@@ -18,6 +18,10 @@ use Drupal\aggregator\FeedInterface;
  * active parser; and finally, it is passed to all active processors which
  * manipulate or store the data.
  *
+ * @see \Drupal\aggregator\Annotation\AggregatorParser
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginSettingsBase
+ * @see \Drupal\aggregator\Plugin\AggregatorPluginManager
+ * @see plugin_api
  */
 interface ParserInterface {
 
