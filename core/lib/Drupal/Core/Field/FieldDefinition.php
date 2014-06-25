@@ -380,7 +380,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    */
   public function getDefaultValue(ContentEntityInterface $entity) {
     // Allow custom default values function.
-    if (isset($this->definition['default_value_callback'])) {
+    if (!empty($this->definition['default_value_callback'])) {
       $value = call_user_func($this->definition['default_value_callback'], $entity, $this);
     }
     else {
@@ -396,9 +396,10 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    *
    * If set, the callback overrides any set default value.
    *
-   * @param string|array $callback
-   *   The callback to invoke for getting the default value. The callback will
-   *   be invoked with the following arguments:
+   * @param callable|null $callback
+   *   The callback to invoke for getting the default value (pass NULL to unset
+   *   a previously set callback). The callback will be invoked with the
+   *   following arguments:
    *   - \Drupal\Core\Entity\ContentEntityInterface $entity
    *     The entity being created.
    *   - \Drupal\Core\Field\FieldDefinitionInterface $definition
