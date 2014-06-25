@@ -16,6 +16,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *
  * @see \Drupal\Core\Annotation\Action
  * @see \Drupal\Core\Action\ActionInterface
+ * @see \Drupal\Core\Action\ActionBase
+ * @see plugin_api
  */
 class ActionManager extends DefaultPluginManager {
 

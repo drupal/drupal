@@ -12,6 +12,11 @@ use Drupal\Core\Action\ActionInterface;
 
 /**
  * Provides a base implementation for an Action plugin.
+ *
+ * @see \Drupal\Core\Annotation\Action
+ * @see \Drupal\Core\Action\ActionManager
+ * @see \Drupal\Core\Action\ActionInterface
+ * @see plugin_api
  */
 abstract class ActionBase extends PluginBase implements ActionInterface {
 

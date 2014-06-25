@@ -12,8 +12,14 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines an Action annotation object.
  *
+ * Plugin Namespace: Plugin\Action
+ *
+ * For a working example, see \Drupal\node\Plugin\Action\UnpublishNode
+ *
  * @see \Drupal\Core\Action\ActionInterface
  * @see \Drupal\Core\Action\ActionManager
+ * @see \Drupal\Core\Action\ActionBase
+ * @see plugin_api
  *
  * @Annotation
  */

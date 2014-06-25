@@ -15,6 +15,8 @@ use Drupal\Core\Executable\ExecutableInterface;
  *
  * @see \Drupal\Core\Annotation\Action
  * @see \Drupal\Core\Action\ActionManager
+ * @see \Drupal\Core\Action\ActionBase
+ * @see plugin_api
  */
 interface ActionInterface extends ExecutableInterface, PluginInspectionInterface {
 
