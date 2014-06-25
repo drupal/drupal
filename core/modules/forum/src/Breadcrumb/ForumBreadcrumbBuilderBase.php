@@ -10,6 +10,7 @@ namespace Drupal\forum\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\forum\ForumManagerInterface;
 
 /**
@@ -60,7 +61,7 @@ abstract class ForumBreadcrumbBuilderBase extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
-  public function build(array $attributes) {
+  public function build(RouteMatchInterface $route_match) {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
 
     $vocabulary = $this->entityManager

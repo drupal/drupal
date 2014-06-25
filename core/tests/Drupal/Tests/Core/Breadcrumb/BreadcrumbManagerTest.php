@@ -16,7 +16,7 @@ use Drupal\Tests\UnitTestCase;
  * @group Drupal
  * @group Breadcrumb
  *
- * @covers \Drupal\Tests\Core\Breadcrumb\BreadcrumbManagerTest
+ * @coversDefaultClass \Drupal\Core\Breadcrumb\BreadcrumbManager
  */
 class BreadcrumbManagerTest extends UnitTestCase {
 
@@ -57,7 +57,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
    * Tests the breadcrumb manager without any set breadcrumb.
    */
   public function testBuildWithoutBuilder() {
-    $result = $this->breadcrumbManager->build(array());
+    $result = $this->breadcrumbManager->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(), $result);
   }
 
@@ -68,8 +68,6 @@ class BreadcrumbManagerTest extends UnitTestCase {
     $builder = $this->getMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $breadcrumb = array('<a href="/example">Test</a>');
 
-    $attributes = array('key' => 'value');
-
     $builder->expects($this->once())
       ->method('applies')
       ->will($this->returnValue(TRUE));
@@ -78,13 +76,14 @@ class BreadcrumbManagerTest extends UnitTestCase {
       ->method('build')
       ->will($this->returnValue($breadcrumb));
 
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
     $this->moduleHandler->expects($this->once())
       ->method('alter')
-      ->with('system_breadcrumb', $breadcrumb, $attributes, array('builder' => $builder));
+      ->with('system_breadcrumb', $breadcrumb, $route_match, array('builder' => $builder));
 
     $this->breadcrumbManager->addBuilder($builder, 0);
 
-    $result = $this->breadcrumbManager->build($attributes);
+    $result = $this->breadcrumbManager->build($route_match);
     $this->assertEquals($breadcrumb, $result);
   }
 
@@ -107,16 +106,16 @@ class BreadcrumbManagerTest extends UnitTestCase {
       ->method('build')
       ->will($this->returnValue($breadcrumb2));
 
-    $attributes = array('key' => 'value');
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
-      ->with('system_breadcrumb', $breadcrumb2, $attributes, array('builder' => $builder2));
+      ->with('system_breadcrumb', $breadcrumb2, $route_match, array('builder' => $builder2));
 
     $this->breadcrumbManager->addBuilder($builder1, 0);
     $this->breadcrumbManager->addBuilder($builder2, 10);
 
-    $result = $this->breadcrumbManager->build($attributes);
+    $result = $this->breadcrumbManager->build($route_match);
     $this->assertEquals($breadcrumb2, $result);
   }
 
@@ -140,16 +139,16 @@ class BreadcrumbManagerTest extends UnitTestCase {
       ->method('build')
       ->will($this->returnValue($breadcrumb2));
 
-    $attributes = array('key' => 'value');
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
-      ->with('system_breadcrumb', $breadcrumb2, $attributes, array('builder' => $builder2));
+      ->with('system_breadcrumb', $breadcrumb2, $route_match, array('builder' => $builder2));
 
     $this->breadcrumbManager->addBuilder($builder1, 10);
     $this->breadcrumbManager->addBuilder($builder2, 0);
 
-    $result = $this->breadcrumbManager->build($attributes);
+    $result = $this->breadcrumbManager->build($route_match);
     $this->assertEquals($breadcrumb2, $result);
   }
 
@@ -168,7 +167,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
       ->will($this->returnValue('invalid_result'));
 
     $this->breadcrumbManager->addBuilder($builder, 0);
-    $this->breadcrumbManager->build(array());
+    $this->breadcrumbManager->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
   }
 
 }

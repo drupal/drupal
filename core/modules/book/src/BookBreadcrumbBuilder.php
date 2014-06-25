@@ -10,6 +10,7 @@ namespace Drupal\book;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
@@ -58,19 +59,18 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
-  public function applies(array $attributes) {
-    return !empty($attributes['node'])
-    && ($attributes['node'] instanceof NodeInterface)
-    && !empty($attributes['node']->book);
+  public function applies(RouteMatchInterface $route_match) {
+    $node = $route_match->getParameter('node');
+    return $node instanceof NodeInterface && !empty($node->book);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function build(array $attributes) {
+  public function build(RouteMatchInterface $route_match) {
     $book_nids = array();
     $links = array($this->l($this->t('Home'), '<front>'));
-    $book = $attributes['node']->book;
+    $book = $route_match->getParameter('node')->book;
     $depth = 1;
     // We skip the current node.
     while (!empty($book['p' . ($depth + 1)])) {

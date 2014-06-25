@@ -140,7 +140,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->method('getPathInfo')
       ->will($this->returnValue('/'));
 
-    $links = $this->builder->build(array());
+    $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(), $links);
   }
 
@@ -156,7 +156,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
     $this->setupLinkGeneratorWithFrontpage();
 
-    $links = $this->builder->build(array());
+    $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(0 => '<a href="/">Home</a>'), $links);
   }
 
@@ -198,7 +198,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->will($this->returnValue($link_front));
     $this->setupAccessManagerWithTrue();
 
-    $links = $this->builder->build(array());
+    $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(0 => '<a href="/">Home</a>', 1 => $link_example), $links);
   }
 
@@ -254,7 +254,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->will($this->returnValue($link_front));
     $this->setupAccessManagerWithTrue();
 
-    $links = $this->builder->build(array());
+    $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(0 => '<a href="/">Home</a>', 1 => $link_example, 2 => $link_example_bar), $links);
   }
 
@@ -277,7 +277,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->will($this->throwException(new $exception_class($exception_argument)));
     $this->setupLinkGeneratorWithFrontpage();
 
-    $links = $this->builder->build(array());
+    $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
 
     // No path matched, though at least the frontpage is displayed.
     $this->assertEquals(array(0 => '<a href="/">Home</a>'), $links);
@@ -319,7 +319,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->will($this->returnValue(array()));
     $this->setupLinkGeneratorWithFrontpage();
 
-    $links = $this->builder->build(array());
+    $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
 
     // No path matched, though at least the frontpage is displayed.
     $this->assertEquals(array(0 => '<a href="/">Home</a>'), $links);
@@ -331,7 +331,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::applies()
    */
   public function testApplies() {
-    $this->assertTrue($this->builder->applies(array()));
+    $this->assertTrue($this->builder->applies($this->getMock('Drupal\Core\Routing\RouteMatchInterface')));
   }
 
   /**
@@ -377,7 +377,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       ->with($this->anything(), $route_1)
       ->will($this->returnValue('Admin'));
 
-    $links = $this->builder->build(array());
+    $links = $this->builder->build($this->getMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals(array(0 => '<a href="/">Home</a>', 1 => $link_user), $links);
   }
 

@@ -147,7 +147,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     $property->setValue($breadcrumb_builder, $link_generator);
 
     // Our empty data set.
-    $attributes = array();
+    $route_match = $this->getMock('Drupal\Core\Routing\RouteMatchInterface');
 
     // Expected result set.
     $expected = array(
@@ -156,7 +156,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
     );
 
     // And finally, the test.
-    $this->assertSame($expected, $breadcrumb_builder->build($attributes));
+    $this->assertSame($expected, $breadcrumb_builder->build($route_match));
   }
 
 }

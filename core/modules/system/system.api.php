@@ -895,16 +895,15 @@ function hook_module_implements_alter(&$implementations, $hook) {
  *   @code
  *     array('<a href="/">Home</a>');
  *   @endcode
- * @param array $attributes
- *   Attributes representing the current page, coming from
- *   \Drupal::request()->attributes.
+ * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+ *   The current route match.
  * @param array $context
  *   May include the following key:
  *   - builder: the instance of
  *     \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface that constructed this
  *     breadcrumb, or NULL if no builder acted based on the current attributes.
  */
-function hook_system_breadcrumb_alter(array &$breadcrumb, array $attributes, array $context) {
+function hook_system_breadcrumb_alter(array &$breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
   // Add an item to the end of the breadcrumb.
   $breadcrumb[] = Drupal::l(t('Text'), 'example_route_name');
 }

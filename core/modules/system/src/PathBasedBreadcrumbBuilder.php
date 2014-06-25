@@ -13,6 +13,7 @@ use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\Request;
@@ -107,14 +108,14 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
-  public function applies(array $attributes) {
+  public function applies(RouteMatchInterface $route_match) {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function build(array $attributes) {
+  public function build(RouteMatchInterface $route_match) {
     $links = array();
 
     // General path-based breadcrumbs. Use the actual request path, prior to

@@ -2150,7 +2150,7 @@ function template_preprocess_page(&$variables) {
   if (!defined('MAINTENANCE_MODE')) {
     $variables['breadcrumb'] = array(
       '#theme' => 'breadcrumb',
-      '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::request()->attributes->all()),
+      '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::routeMatch()),
     );
   }
 }

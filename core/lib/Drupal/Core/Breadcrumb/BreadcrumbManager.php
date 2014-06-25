@@ -9,6 +9,7 @@ namespace Drupal\Core\Breadcrumb;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Provides a breadcrumb manager.
@@ -41,7 +42,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
    *
    * Set to NULL if the array needs to be re-calculated.
    *
-   * @var array|null
+   * @var \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface[]|null
    */
   protected $sortedBuilders;
 
@@ -67,25 +68,25 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(array $attributes) {
+  public function applies(RouteMatchInterface $route_match) {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function build(array $attributes) {
+  public function build(RouteMatchInterface $route_match) {
     $breadcrumb = array();
     $context = array('builder' => NULL);
     // Call the build method of registered breadcrumb builders,
     // until one of them returns an array.
     foreach ($this->getSortedBuilders() as $builder) {
-      if (!$builder->applies($attributes)) {
+      if (!$builder->applies($route_match)) {
         // The builder does not apply, so we continue with the other builders.
         continue;
       }
 
-      $build = $builder->build($attributes);
+      $build = $builder->build($route_match);
 
       if (is_array($build)) {
         // The builder returned an array of breadcrumb links.
@@ -98,7 +99,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
       }
     }
     // Allow modules to alter the breadcrumb.
-    $this->moduleHandler->alter('system_breadcrumb', $breadcrumb, $attributes, $context);
+    $this->moduleHandler->alter('system_breadcrumb', $breadcrumb, $route_match, $context);
     // Fall back to an empty breadcrumb.
     return $breadcrumb;
   }
@@ -106,7 +107,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
   /**
    * Returns the sorted array of breadcrumb builders.
    *
-   * @return array
+   * @return \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface[]
    *   An array of breadcrumb builder objects.
    */
   protected function getSortedBuilders() {

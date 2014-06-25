@@ -5,10 +5,10 @@
  * Enables users to create menu links.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 function menu_link_help($route_name, Request $request) {
@@ -213,11 +213,10 @@ function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
 /**
  * Implements hook_system_breadcrumb_alter().
  */
-function menu_link_system_breadcrumb_alter(array &$breadcrumb, array $attributes, array $context) {
+function menu_link_system_breadcrumb_alter(array &$breadcrumb, RouteMatchInterface $route_match, array $context) {
   // Custom breadcrumb behavior for editing menu links, we append a link to
   // the menu in which the link is found.
-  if (!empty($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'menu_ui.link_edit' && !empty($attributes['menu_link'])) {
-    $menu_link = $attributes['menu_link'];
+  if (($route_match->getRouteName() == 'menu_ui.link_edit') && $menu_link = $route_match->getParameter('menu_link')) {
     if (($menu_link instanceof MenuLinkInterface) && !$menu_link->isNew()) {
       // Add a link to the menu admin screen.
       $menu = entity_load('menu', $menu_link->menu_name);
