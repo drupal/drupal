@@ -21,6 +21,11 @@ use Drupal\Core\Database\Database;
 use Drupal\views\Views;
 use Drupal\views\ViewsData;
 
+/**
+ * Base class for Views handler plugins.
+ *
+ * @ingroup views_plugins
+ */
 abstract class HandlerBase extends PluginBase {
 
   /**

@@ -16,13 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @defgroup views_objects Objects that represent a View or part of a view
- * @{
- * These objects are the core of Views do the bulk of the direction and
- * storing of data. All database activity is in these objects.
- */
-
-/**
+ * Represents a view as a whole.
+ *
  * An object to contain all of the data to generate a view, plus the member
  * functions to build the view query, execute the query and render the output.
  */

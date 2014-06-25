@@ -37,6 +37,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   root directory.
  * - module: machine name of the module. It must be present for any plugin that
  *   wants to register a theme.
+ *
+ * @ingroup views_plugins
  */
 abstract class PluginBase extends ComponentPluginBase implements ContainerFactoryPluginInterface {
 

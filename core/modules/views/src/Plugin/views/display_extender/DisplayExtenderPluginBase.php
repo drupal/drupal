@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
+ * Contains \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\display_extender;
@@ -11,9 +11,30 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
- * @todo.
+ * @defgroup views_display_extender_plugins Views display extender plugins
+ * @{
+ * Plugins that offer additional display options across display types.
  *
- * @ingroup views_display_plugins
+ * Display extender plugins allow additional options or configuration to be
+ * added to views across all display types. For example, if you wanted to allow
+ * site users to add certain metadata to the rendered output of every view
+ * display regardless of display type, you could provide this option as a
+ * display extender.
+ *
+ * Display extender plugins extend
+ * \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
+ * They must be annotated with
+ * \Drupal\views\Plugin\Annotation\ViewsDisplayExtender annotation, and they
+ * must be in namespace directory Plugin\views\display_extender.
+ *
+ * @ingroup views_plugins
+ *
+ * @see plugin_api
+ * @see views_display_plugins
+ */
+
+/**
+ * Base class for Views display extender plugins.
  */
 abstract class DisplayExtenderPluginBase extends PluginBase {
 
@@ -61,3 +82,7 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
   public function defaultableSections(&$sections, $section = NULL) { }
 
 }
+
+/**
+ * @}
+ */

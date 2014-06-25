@@ -12,9 +12,11 @@ use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 /**
  * Defines a Plugin annotation object for views access plugins.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\access\AccessPluginBase
+ *
+ * @ingroup views_access_plugins
+ *
+ * @Annotation
  */
 class ViewsAccess extends ViewsPluginAnnotationBase {
 

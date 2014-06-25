@@ -10,15 +10,22 @@ namespace Drupal\views\Plugin\views\join;
 use Drupal\Core\Plugin\PluginBase;
 
 /**
- * @defgroup views_join_handlers Views join handlers
+ * @defgroup views_join_handlers Views join handler plugins
  * @{
- * Handlers to tell Views how to join tables together.
+ * Handler plugins for Views table joins.
  *
- * Here is an example how to join from table one to example two so it produces
- * the following sql:
+ * Handler plugins help build the view query object. Join handler plugins
+ * handle table joins.
+ *
+ * Views join handlers extend \Drupal\views\Plugin\views\join\JoinPluginBase.
+ * They must be annotated with \Drupal\views\Annotation\ViewsJoin annotation,
+ * and they must be in namespace directory Plugin\views\join.
+ *
+ * Here is an example of how to join from table one to table two so it produces
+ * the following SQL:
  * @code
  * INNER JOIN {two} ON one.field_a = two.field_b
- * @code.
+ * @endcode
  * The required php code for this kind of functionality is the following:
  * @code
  * $configuration = array(
@@ -29,9 +36,9 @@ use Drupal\Core\Plugin\PluginBase;
  *   'operator' => '='
  * );
  * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
+ * @endcode
  *
- * To do complex joins:
- *
+ * Here is an example of a more complex join:
  * @code
  * class JoinComplex extends JoinPluginBase {
  *   public function buildJoin($select_query, $table, $view_query) {
@@ -41,6 +48,9 @@ use Drupal\Core\Plugin\PluginBase;
  *   }
  * }
  * @endcode
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**

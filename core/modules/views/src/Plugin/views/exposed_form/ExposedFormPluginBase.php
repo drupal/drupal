@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase.
+ * Contains \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\exposed_form;
@@ -16,13 +16,21 @@ use Drupal\views\Plugin\views\PluginBase;
 /**
  * @defgroup views_exposed_form_plugins Views exposed form plugins
  * @{
- * Plugins that handle the validation/submission and rendering of exposed forms.
+ * Plugins that handle validation, submission, and rendering of exposed forms.
  *
- * If needed, it is possible to use them to add additional form elements.
+ * Exposed forms are used for filters, sorts, and pager settings that are
+ * exposed to site visitors. Exposed form plugins handle the rendering,
+ * validation, and submission of exposed forms, and may add additional form
+ * elements.
+ *
+ * Exposed form plugins extend
+ * \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase. They must be
+ * annotated with \Drupal\views\Plugin\Annotation\ViewsExposedForm annotation,
+ * and they must be in namespace directory Plugin\views\exposed_form.
  */
 
 /**
- * The base plugin to handle exposed filter forms.
+ * Base class for Views exposed filter form plugins.
  */
 abstract class ExposedFormPluginBase extends PluginBase {
 

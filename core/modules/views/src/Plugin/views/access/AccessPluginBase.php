@@ -14,10 +14,17 @@ use Symfony\Component\Routing\Route;
 /**
  * @defgroup views_access_plugins Views access plugins
  * @{
- * The base plugin to handle access to a view.
+ * Plugins to handle access checking for views.
  *
- * Therefore it primarily has to implement the access and the alterRouteDefinition
- * method.
+ * Access plugins are responsible for controlling access to the view.
+ *
+ * Access plugins extend \Drupal\views\Plugin\views\access\AccessPluginBase,
+ * implementing the access() and alterRouteDefinition() methods. They must be
+ * annotated with \Drupal\views\Annotation\ViewsAccess annotation, and they
+ * must be in namespace directory Plugin\views\access.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**

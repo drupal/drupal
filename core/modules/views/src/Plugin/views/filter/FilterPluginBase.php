@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\filter\FilterPluginBase.
+ * Contains \Drupal\views\Plugin\views\filter\FilterPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\filter;
@@ -14,30 +14,33 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
- * @defgroup views_filter_handlers Views filter handlers
+ * @defgroup views_filter_handlers Views filter handler plugins
  * @{
- * Handlers to tell Views how to filter queries.
+ * Plugins that handle views filtering.
  *
- * Definition items:
+ * Filter handler plugins extend
+ * \Drupal\views\Plugin\views\filter\FilterHandlerBase. They must be annotated
+ * with \Drupal\views\Annotation\ViewsFilter annotation, and they must be in
+ * namespace directory Plugin\views\filter.
+ *
+ * The following items can go into a hook_views_data() implementation in a
+ * filter section to affect how the filter handler will behave:
  * - allow empty: If true, the 'IS NULL' and 'IS NOT NULL' operators become
  *   available as standard operators.
  *
- * Object flags:
- *  You can set some specific behavior by setting up the following flags on
- *  your custom class.
+ * You can refine the behavior of filters by setting the following Boolean
+ * member variables to TRUE in your plugin class:
+ * - $alwaysMultiple: Disable the possibility of forcing a single value.
+ * - $no_operator: Disable the possibility of using operators.
+ * - $always_required: Disable the possibility of allowing an exposed input to
+ *   be optional.
  *
- * - alwaysMultiple:
- *    Disable the possibility to force a single value.
- * - no_operator:
- *    Disable the possibility to use operators.
- * - always_required:
- *    Disable the possibility to allow a exposed input to be optional.
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**
- * Base class for filters.
- *
- * @ingroup views_filter_handlers
+ * Base class for Views filters handler plugins.
  */
 abstract class FilterPluginBase extends HandlerBase {
 

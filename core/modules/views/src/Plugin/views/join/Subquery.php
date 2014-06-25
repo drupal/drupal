@@ -9,13 +9,17 @@ namespace Drupal\views\Plugin\views\join;
 
 /**
  * Join handler for relationships that join with a subquery as the left field.
- * E.g:
- *  LEFT JOIN node node_term_data ON ([YOUR SUBQUERY HERE]) = node_term_data.nid
  *
- * Join definition:
- *   same as \Drupal\views\Plugin\views\join\JoinPluginBase, except:
- *   - left_query: The subquery to use in the left side of the join clause.
+ * For example:
+ * @code
+ * LEFT JOIN node node_term_data ON ([YOUR SUBQUERY HERE]) = node_term_data.nid
+ * @endcode
  *
+ * Join definition: same as \Drupal\views\Plugin\views\join\JoinPluginBase,
+ * except:
+ * - left_query: The subquery to use in the left side of the join clause.
+ *
+ * @ingroup views_join_handlers
  * @ViewsJoin("subquery")
  */
 class Subquery extends JoinPluginBase {

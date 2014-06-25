@@ -10,9 +10,11 @@ namespace Drupal\views\Annotation;
 /**
  * Defines a Plugin annotation object for views field handlers.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
+ *
+ * @ingroup views_field_handlers
+ *
+ * @Annotation
  */
 class ViewsField extends ViewsHandlerAnnotationBase {
 

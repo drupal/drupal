@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\WizardPluginBase.
+ * Contains \Drupal\views\Plugin\views\wizard\WizardPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\wizard;
@@ -16,7 +16,21 @@ use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 
 /**
- * Provides the interface and base class for Views Wizard plugins.
+ * @defgroup views_wizard_plugins Views wizard plugins
+ * @{
+ * Plugins for Views wizards.
+ *
+ * Wizard handlers implement \Drupal\views\Plugin\views\wizard\WizardInterface,
+ * and usually extend \Drupal\views\Plugin\views\wizard\WizardPluginBase. They
+ * must be annotated with \Drupal\views\Annotation\ViewsWizard annotation,
+ * and they must be in namespace directory Plugin\views\wizard.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
+ */
+
+/**
+ * Base class for Views wizard plugins.
  *
  * This is a very generic Views Wizard class that can be constructed for any
  * base table.
@@ -1191,3 +1205,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
 }
+
+/**
+ * @}
+ */

@@ -12,9 +12,11 @@ use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 /**
  * Defines a Plugin annotation object for views argument default plugins.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase
+ *
+ * @ingroup views_argument_default_plugins
+ *
+ * @Annotation
  */
 class ViewsArgumentDefault extends ViewsPluginAnnotationBase {
 

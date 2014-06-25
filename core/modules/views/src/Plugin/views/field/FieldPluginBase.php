@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\field\FieldPluginBase.
+ * Contains \Drupal\views\Plugin\views\field\FieldPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\field;
@@ -17,24 +17,33 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * @defgroup views_field_handlers Views field handlers
+ * @defgroup views_field_handlers Views field handler plugins
  * @{
- * Handlers to tell Views how to build and display fields.
+ * Handler plugins for Views fields.
  *
+ * Field handlers handle both querying and display of fields in views.
+ *
+ * Field handler plugins extend
+ * \Drupal\views\Plugin\views\field\FieldHandlerBase. They must be
+ * annotated with \Drupal\views\Annotation\ViewsField annotation, and they
+ * must be in namespace directory Plugin\views\field.
+ *
+ * The following items can go into a hook_views_data() implementation in a
+ * field section to affect how the field handler will behave:
+ * - additional fields: An array of fields that should be added to the query.
+ *   The array is in the form of:
+ *   @code
+ *   array('identifier' => array('table' => tablename, 'field' => fieldname))
+ *   @endcode
+ *   As many fields as are necessary may be in this array.
+ * - click sortable: If TRUE (default), this field may be click sorted.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**
  * Base field handler that has no options and renders an unformatted field.
- *
- * Definition terms:
- * - additional fields: An array of fields that should be added to the query
- *                      for some purpose. The array is in the form of:
- *                      array('identifier' => array('table' => tablename,
- *                      'field' => fieldname); as many fields as are necessary
- *                      may be in this array.
- * - click sortable: If TRUE, this field may be click sorted.
- *
- * @ingroup views_field_handlers
  */
 abstract class FieldPluginBase extends HandlerBase {
 

@@ -17,12 +17,23 @@ use Drupal\views\Views;
 
 /**
  * @defgroup views_argument_handlers Views argument handlers
- * Handlers to tell Views how to contextually filter queries.
  * @{
+ * Handler plugins for Views contextual filters.
+ *
+ * Handler plugins help build the view query object. Views argument handlers
+ * are for contextual filtering.
+ *
+ * Views argument handlers extend
+ * \Drupal\views\Plugin\views\argument\ArgumentHandlerBase. They must be
+ * annotated with \Drupal\views\Annotation\ViewsArgument annotation, and they
+ * must be in namespace directory Plugin\views\argument.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**
- * Base class for arguments.
+ * Base class for argument (contextual filter) handler plugins.
  *
  * The basic argument works for very simple arguments such as nid and uid
  *
@@ -42,8 +53,6 @@ use Drupal\views\Views;
  *                  and may disappear or change.
  * - numeric: If set to TRUE this field is numeric and will use %d instead of
  *            %s in queries.
- *
- * @ingroup views_argument_handlers
  */
 abstract class ArgumentPluginBase extends HandlerBase {
 

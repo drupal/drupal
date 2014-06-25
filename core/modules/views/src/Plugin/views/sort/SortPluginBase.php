@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\sort\SortPluginBase.
+ * Contains \Drupal\views\Plugin\views\sort\SortPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\sort;
@@ -10,15 +10,20 @@ namespace Drupal\views\Plugin\views\sort;
 use Drupal\views\Plugin\views\HandlerBase;
 
 /**
- * @defgroup views_sort_handlers Views sort handlers
+ * @defgroup views_sort_handlers Views sort handler plugins
  * @{
- * Handlers to tell Views how to sort queries.
+ * Plugins that handle sorting for Views.
+ *
+ * Sort handlers extend \Drupal\views\Plugin\views\sort:SortHandlerBase. They
+ * must be annotated with \Drupal\views\Annotation\ViewsSort annotation, and
+ * they must be in plugin directory Plugin\views\sort.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**
  * Base sort handler that has no options and performs a simple sort.
- *
- * @ingroup views_sort_handlers
  */
 abstract class SortPluginBase extends HandlerBase {
 

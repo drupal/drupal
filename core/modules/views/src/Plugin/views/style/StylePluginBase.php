@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\style\StylePluginBase.
+ * Contains \Drupal\views\Plugin\views\style\StylePluginBase.
  */
 
 namespace Drupal\views\Plugin\views\style;
@@ -15,17 +15,28 @@ use Drupal\views\ViewExecutable;
 /**
  * @defgroup views_style_plugins Views style plugins
  * @{
- * Style plugins control how a view is rendered. For example, they
- * can choose to display a collection of fields, node_view() output,
- * table output, or any kind of crazy output they want.
+ * Plugins that control how the collection of results is rendered in a view.
  *
- * Many style plugins can have an optional 'row' plugin, that displays
- * a single record. Not all style plugins can utilize this, so it is
- * up to the plugin to set this up and call through to the row plugin.
+ * Style plugins control a view is displayed. For the most part, they are
+ * object wrappers around theme templates. Examples of styles include HTML
+ * lists, tables, full or teaser content views, etc.
+ *
+ * Many (but not all) style plugins have an optional row plugin, which
+ * displays a single record. Not all style plugins use row plugins, so it is
+ * up to the style plugin to set this up and call the row plugin. See the
+ * @link views_row_plugins Views row plugins topic @endlink for more
+ * information.
+ *
+ * Style plugins extend \Drupal\views\Plugin\views\style\StylePluginBase. They
+ * must be annotated with \Drupal\views\Plugin\Annotation\ViewsStyle
+ * annotation, and they must be in namespace directory Plugin\views\style.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**
- * Base class to define a style plugin handler.
+ * Base class for views style plugins.
  */
 abstract class StylePluginBase extends PluginBase {
 

@@ -10,12 +10,6 @@ use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\AjaxResponse;
 
 /**
- * @defgroup views_ajax Views AJAX library
- * @{
- * Handles the server side AJAX interactions of Views.
- */
-
-/**
  * Wrapper around drupal_build_form to handle some AJAX stuff automatically.
  * This makes some assumptions about the client.
  */
@@ -67,7 +61,3 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
 
   return (!empty($form_state['title'])) ? array('#title' => $form_state['title'], '#markup' => $output) : $output;
 }
-
-/**
- * @}
- */

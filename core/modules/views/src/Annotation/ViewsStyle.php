@@ -12,9 +12,11 @@ use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 /**
  * Defines a Plugin annotation object for views style plugins.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\style\StylePluginBase
+ *
+ * @ingroup views_style_plugins
+ *
+ * @Annotation
  */
 class ViewsStyle extends ViewsPluginAnnotationBase {
 

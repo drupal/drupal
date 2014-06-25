@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\wizard\WizardInterface.
+ * Contains \Drupal\views\Plugin\views\wizard\WizardInterface.
  */
 
 namespace Drupal\views\Plugin\views\wizard;
 
 /**
  * Defines a common interface for Views Wizard plugins.
+ *
+ * @ingroup views_wizard_plugins
  */
 interface WizardInterface {
 

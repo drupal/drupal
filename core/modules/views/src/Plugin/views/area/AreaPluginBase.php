@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\area\AreaPluginBase.
+ * Contains \Drupal\views\Plugin\views\area\AreaPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\area;
@@ -12,16 +12,20 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 
 /**
- * @defgroup views_area_handlers Views area handlers
+ * @defgroup views_area_handlers Views area handler plugins
  * @{
- * Handlers to tell Views what can display in header, footer
- * and empty text in a view.
+ * Plugins governing areas of views, such as header, footer, and empty text.
+ *
+ * Area handler plugins extend \Drupal\views\Plugin\views\area\AreaHandlerBase.
+ * They must be annotated with \Drupal\views\Annotation\ViewsArea annotation,
+ * and they must be in namespace directory Plugin\views\area.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**
- * Base class for area handlers.
- *
- * @ingroup views_area_handlers
+ * Base class for area handler plugins.
  */
 abstract class AreaPluginBase extends HandlerBase {
 

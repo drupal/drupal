@@ -10,9 +10,11 @@ namespace Drupal\views\Annotation;
 /**
  * Defines a Plugin annotation object for views sort handlers.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\sort\SortPluginBase
+ *
+ * @ingroup views_sort_handlers
+ *
+ * @Annotation
  */
 class ViewsSort extends ViewsHandlerAnnotationBase {
 

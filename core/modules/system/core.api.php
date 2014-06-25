@@ -441,23 +441,6 @@
  */
 
 /**
- * @defgroup views_overview Views overview
- * @{
- * Overview of the Views module API
- *
- * @todo write this
- *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic. Should link to all
- * or most of the existing Views topics, and maybe this should be moved into
- * a different file? This topic should be an overview so that developers know
- * which of the many Views classes and topics are important if they want to
- * accomplish tasks that they may have.
- * @}
- */
-
-
-/**
  * @defgroup i18n Internationalization
  * @{
  * Internationalization and translation

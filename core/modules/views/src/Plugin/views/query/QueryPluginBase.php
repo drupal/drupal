@@ -13,7 +13,26 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
- * @todo.
+ * @defgroup views_query_plugins Views query plugins
+ * @{
+ * Plugins for views queries.
+ *
+ * Query plugins generate and execute a built query object against a
+ * particular storage backend, converting the Views query object into an
+ * actual query. Although query plugins need not necessarily use SQL, most
+ * other handler plugins that affect the query (fields, filters, etc.)
+ * implicitly assume that the query is using SQL.
+ *
+ * Query plugins extend \Drupal\views\Plugin\views\query\QueryPluginBase.
+ * They must be annotated with \Drupal\views\Plugin\Annotation\ViewsQuery
+ * annotation, and they must be in namespace directory Plugin\views\query.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
+ */
+
+/**
+ * Base plugin class for Views queries.
  */
 abstract class QueryPluginBase extends PluginBase {
 
@@ -267,3 +286,7 @@ abstract class QueryPluginBase extends PluginBase {
   }
 
 }
+
+/**
+ * @}
+ */

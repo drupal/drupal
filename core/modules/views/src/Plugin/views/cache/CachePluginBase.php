@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\cache\CachePluginBase.
+ * Contains \Drupal\views\Plugin\views\cache\CachePluginBase.
  */
 
 namespace Drupal\views\Plugin\views\cache;
@@ -14,10 +14,17 @@ use Drupal\Core\Database\Query\Select;
 /**
  * @defgroup views_cache_plugins Views cache plugins
  * @{
- * The base plugin to handler caching of a view.
+ * Plugins to handle the storage and loading of Views caches.
  *
- * Cache plugins can handle both caching of just the database result and
- * the rendered output of the view.
+ * Cache plugins control the storage and loading of caches in Views, for
+ * both result and render caching.
+ *
+ * Cache plugins extend \Drupal\views\Plugin\views\cache\CachePluginBase.
+ * They must be annotated with \Drupal\views\Annotation\ViewsCache
+ * annotation, and must be in namespace directory Plugin\views\cache.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**

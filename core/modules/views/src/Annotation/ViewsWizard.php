@@ -12,9 +12,12 @@ use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 /**
  * Defines a Plugin annotation object for views wizard plugins.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
+ * @see \Drupal\views\Plugin\views\wizard\WizardInterface
+ *
+ * @ingroup views_wizard_plugins
+ *
+ * @Annotation
  */
 class ViewsWizard extends ViewsPluginAnnotationBase {
 

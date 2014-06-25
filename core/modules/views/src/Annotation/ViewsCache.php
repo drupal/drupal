@@ -12,9 +12,11 @@ use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 /**
  * Defines a Plugin annotation object for views cache plugins.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\cache\CachePluginBase
+ *
+ * @ingroup views_cache_plugins
+ *
+ * @Annotation
  */
 class ViewsCache extends ViewsPluginAnnotationBase {
 

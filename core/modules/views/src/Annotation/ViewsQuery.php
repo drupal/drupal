@@ -12,9 +12,11 @@ use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 /**
  * Defines a Plugin annotation object for views query plugins.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\query\QueryPluginBase
+ *
+ * @ingroup views_query_plugins
+ *
+ * @Annotation
  */
 class ViewsQuery extends ViewsPluginAnnotationBase {
 

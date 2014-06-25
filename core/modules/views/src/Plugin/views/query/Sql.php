@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\query\Sql.
+ * Contains \Drupal\views\Plugin\views\query\Sql.
  */
 
 namespace Drupal\views\Plugin\views\query;
@@ -17,7 +17,9 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
- * @todo.
+ * Views query plugin for an SQL query.
+ *
+ * @ingroup views_query_plugins
  *
  * @ViewsQuery(
  *   id = "views_query",

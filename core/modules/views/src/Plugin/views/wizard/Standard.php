@@ -8,6 +8,10 @@
 namespace Drupal\views\Plugin\views\wizard;
 
 /**
+ * Standard Views wizard plugin.
+ *
+ * @ingroup views_wizard_plugins
+ *
  * @ViewsWizard(
  *   id = "standard",
  *   derivative = "Drupal\views\Plugin\Derivative\DefaultWizardDeriver",

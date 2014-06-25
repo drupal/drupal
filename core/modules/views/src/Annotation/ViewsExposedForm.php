@@ -12,9 +12,11 @@ use Drupal\views\Annotation\ViewsPluginAnnotationBase;
 /**
  * Defines a Plugin annotation object for views exposed form plugins.
  *
- * @Annotation
- *
  * @see \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase
+ *
+ * @ingroup views_exposed_form_plugins
+ *
+ * @Annotation
  */
 class ViewsExposedForm extends ViewsPluginAnnotationBase {
 

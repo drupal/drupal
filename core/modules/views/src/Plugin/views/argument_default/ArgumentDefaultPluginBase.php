@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase.
+ * Contains \Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\argument_default;
@@ -14,7 +14,20 @@ use Drupal\views\Plugin\views\PluginBase;
 /**
  * @defgroup views_argument_default_plugins Views argument default plugins
  * @{
- * Allow specialized methods of filling in arguments when they aren't provided.
+ * Plugins for argument defaults in Views.
+ *
+ * Argument default plugins provide default values for contextual filters.
+ * This is useful for blocks and other display types lacking a natural argument
+ * input. Examples are plugins to extract node and user IDs from the URL.
+ *
+ * Argument default plugins extend
+ * \Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase. They
+ * must be annotated with \Drupal\Views\Annotation\ViewsArgumentDefault
+ * annotation, and they must be in namespace directory
+ * Plugin\views\argument_default.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**

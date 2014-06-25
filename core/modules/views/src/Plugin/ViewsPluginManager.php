@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Plugin type manager for all views plugins.
+ *
+ * @ingroup views_plugins
  */
 class ViewsPluginManager extends DefaultPluginManager {
 

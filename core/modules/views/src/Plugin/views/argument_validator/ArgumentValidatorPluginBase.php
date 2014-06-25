@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
+ * Contains \Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\argument_validator;
@@ -14,7 +14,23 @@ use Drupal\views\Plugin\views\PluginBase;
 /**
  * @defgroup views_argument_validate_plugins Views argument validate plugins
  * @{
- * Allow specialized methods of validating arguments.
+ * Plugins for validating views contextual filters.
+ *
+ * Views argument validator plugins validate contextual filters (arguments) on
+ * views. They can ensure arguments are valid, and even do transformations on
+ * the arguments. They can also provide replacement patterns for the view title.
+ * For example, the 'content' validator verifies verifies that the argument
+ * value corresponds to a node, loads that node, and provides the node title
+ * as a replacement pattern for the view title.
+ *
+ * Argument validator plugins extend
+ * \Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
+ * They must be annotated with
+ * \Drupal\views\Plugin\Annotation\ViewsArgumentValidator annotation, and they
+ * must be in namespace directory Plugin\views\argument_validator.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**

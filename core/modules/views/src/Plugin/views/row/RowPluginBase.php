@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\row\RowPluginBase.
+ * Contains \Drupal\views\Plugin\views\row\RowPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\row;
@@ -14,15 +14,31 @@ use Drupal\views\Views;
 /**
  * @defgroup views_row_plugins Views row plugins
  * @{
- * Row plugins control how Views outputs an individual record.
+ * Plugins that control how Views outputs an individual record.
  *
- * They are tightly coupled to style plugins, in that a style plugin is what
- * calls the row plugin.
+ * Row plugins handle rendering each individual record from the view results.
+ * For instance, a row plugin could render fields, render an entire entity
+ * in a particular view mode, or render the raw data from the results.
+ *
+ * Row plugins are used by some (but not all) style plugins. They are not
+ * activated unless the style plugin sets them up. See the
+ * @link views_style_plugins Views style plugins topic @endlink for
+ * more information.
+ *
+ * Row plugins extend \Drupal\views\Plugin\views\row\RowPluginBase. They must
+ * be annotated with \Drupal\views\Plugin\Annotation\ViewsRow annotation, and
+ * they must be in namespace directory Plugin\views\row.
+ *
+ * @ingroup views_plugins
+ * @see plugin_api
  */
 
 /**
- * Default plugin to view a single row of a table. This is really just a wrapper around
- * a theme function.
+ * Base class for Views row plugins.
+ *
+ * This is really just a wrapper around a theme hook. It renders a row
+ * of the result table by putting it into a render array with the set theme
+ * hook.
  */
 abstract class RowPluginBase extends PluginBase {
 
