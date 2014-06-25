@@ -74,7 +74,10 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  * Most implementations want to extend the generic basic implementation for
  * filter plugins.
  *
- * @see \Drupal\filter\Plugin\Filter\FilterBase
+ * @see \Drupal\filter\Annotation\Filter
+ * @see \Drupal\filter\FilterPluginManager
+ * @see \Drupal\filter\Plugin\FilterBase
+ * @see plugin_api
  */
 interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionInterface {
 

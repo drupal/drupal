@@ -12,6 +12,15 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines an filter annotation object.
  *
+ * Plugin Namespace: Plugin\Filter
+ *
+ * For a working example, see \Drupal\filter\Plugin\Filter\FilterHtml
+ *
+ * @see \Drupal\filter\FilterPluginManager
+ * @see \Drupal\filter\Plugin\FilterInterface
+ * @see \Drupal\filter\Plugin\FilterBase
+ * @see plugin_api
+ *
  * @Annotation
  */
 class Filter extends Plugin {

@@ -11,6 +11,11 @@ use Drupal\Core\Plugin\PluginBase;
 
 /**
  * Provides a base class for Filter plugins.
+ *
+ * @see \Drupal\filter\Annotation\Filter
+ * @see \Drupal\filter\FilterPluginManager
+ * @see \Drupal\filter\Plugin\FilterInterface
+ * @see plugin_api
  */
 abstract class FilterBase extends PluginBase implements FilterInterface {
 

@@ -15,6 +15,10 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * Manages text processing filters.
  *
  * @see hook_filter_info_alter()
+ * @see \Drupal\filter\Annotation\Filter
+ * @see \Drupal\filter\Plugin\FilterInterface
+ * @see \Drupal\filter\Plugin\FilterBase
+ * @see plugin_api
  */
 class FilterPluginManager extends DefaultPluginManager {
 
