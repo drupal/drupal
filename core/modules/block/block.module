@@ -86,22 +86,11 @@ function block_page_build(&$page) {
   // Fetch a list of regions for the current theme.
   $all_regions = system_region_list($theme);
   if (\Drupal::routeMatch()->getRouteName() != 'block.admin_demo') {
-    // Load all region content assigned via blocks.
-    foreach (array_keys($all_regions) as $region) {
-      // Assign blocks to region.
-      if ($blocks = block_get_blocks_by_region($region)) {
-        $page[$region] = $blocks;
-      }
-    }
-    // Once we've finished attaching all blocks to the page, clear the static
-    // cache to allow modules to alter the block list differently in different
-    // contexts. For example, any code that triggers hook_page_build() more
-    // than once in the same page request may need to alter the block list
-    // differently each time, so that only certain parts of the page are
-    // actually built. We do not clear the cache any earlier than this, though,
-    // because it is used each time block_get_blocks_by_region() gets called
-    // above.
-    drupal_static_reset('block_list');
+    // Create a full page display variant, which will load blocks into their
+    // regions.
+    $page += \Drupal::service('plugin.manager.display_variant')
+      ->createInstance('full_page')
+      ->build();
   }
   else {
     // Append region description if we are rendering the regions demo page.
@@ -121,33 +110,6 @@ function block_page_build(&$page) {
       '#weight' => -10,
     );
   }
-}
-
-/**
- * Gets a renderable array of a region containing all enabled blocks.
- *
- * @param $region
- *   The requested region.
- *
- * @return
- *   A renderable array of a region containing all enabled blocks.
- */
-function block_get_blocks_by_region($region) {
-  $build = array();
-  if ($list = block_list($region)) {
-    foreach ($list as $key => $block) {
-      if ($block->access('view')) {
-        $build[$key] = entity_view($block, 'block');
-      }
-    }
-    // If none of the blocks in this region are visible, then don't set anything
-    // else in the render array, because that would cause the region to show up.
-    if (!empty($build)) {
-      // block_list() already returned the blocks in sorted order.
-      $build['#sorted'] = TRUE;
-    }
-  }
-  return $build;
 }
 
 /**
@@ -238,43 +200,6 @@ function block_theme_initialize($theme) {
       $block->save();
     }
   }
-}
-
-/**
- * Returns all blocks in the specified region for the current user.
- *
- * @param $region
- *   The name of a region.
- *
- * @return
- *   An array of block objects, indexed with the configuration object name
- *   that represents the configuration. If you are displaying your blocks in
- *   one or two sidebars, you may check whether this array is empty to see
- *   how many columns are going to be displayed.
- */
-function block_list($region) {
-  $blocks = &drupal_static(__FUNCTION__);
-
-  if (!isset($blocks)) {
-    global $theme;
-    $blocks = array();
-    foreach (entity_load_multiple_by_properties('block', array('theme' => $theme)) as $block_id => $block) {
-      // Onlye include valid blocks in the list.
-      // @todo Remove this check as part of https://drupal.org/node/1776830.
-      if ($block->getPlugin()) {
-        $blocks[$block->get('region')][$block_id] = $block;
-      }
-    }
-  }
-
-  // Create an empty array if there are no entries.
-  if (!isset($blocks[$region])) {
-    $blocks[$region] = array();
-  }
-
-  uasort($blocks[$region], 'Drupal\block\Entity\Block::sort');
-
-  return $blocks[$region];
 }
 
 /**

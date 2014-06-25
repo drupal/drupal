@@ -1324,3 +1324,25 @@
  * @see validation
  * @}
  */
+
+/**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
+ * Alter display variant plugin definitions.
+ *
+ * @param array $definitions
+ *   The array of display variant definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\Core\Display\VariantManager
+ * @see \Drupal\Core\Display\Annotation\DisplayVariant
+ */
+function hook_display_variant_plugin_alter(array &$definitions) {
+  $definitions['full_page']['admin_label'] = t('Block layout');
+}
+
+/**
+ * @} End of "addtogroup hooks".
+ */

@@ -312,3 +312,20 @@ condition.plugin:
       label: 'Context assignments'
       sequence:
         - type: string
+
+display_variant.plugin:
+  type: mapping
+  label: 'Display variant'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'Weight'
+    uuid:
+      type: string
+      label: 'UUID'
