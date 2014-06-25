@@ -54,12 +54,6 @@ class DefaultConfigTest extends WebTestBase {
     $default_config_storage = new TestInstallStorage();
 
     foreach ($default_config_storage->listAll() as $config_name) {
-      // @todo: remove once migration (https://drupal.org/node/2183957) schemas
-      // are in.
-      if (strpos($config_name, 'migrate.migration') === 0) {
-        continue;
-      }
-
       // Skip files provided by the config_schema_test module since that module
       // is explicitly for testing schema.
       if (strpos($config_name, 'config_schema_test') === 0) {

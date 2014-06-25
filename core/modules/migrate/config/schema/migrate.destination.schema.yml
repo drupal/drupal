@@ -1,0 +1,29 @@
+# Schema for the migrate destination plugins.
+
+migrate.destination.*:
+  type: migrate_destination
+  label: 'Default destination'
+
+migrate.destination.config:
+  type: migrate_destination
+  label: 'Config'
+  mapping:
+    config_name:
+      type: string
+      label: 'Configuration name'
+
+"migrate.destination.entity:user":
+  type: migrate_destination
+  label: 'User'
+  mapping:
+    md5_passwords:
+      type: boolean
+      label: 'Passwords'
+
+"migrate.destination.entity:file":
+  type: migrate_destination
+  label: 'Picture'
+  mapping:
+    source_path_property:
+      type: string
+      label: 'Source path'

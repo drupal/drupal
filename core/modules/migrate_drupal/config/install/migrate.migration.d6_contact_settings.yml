@@ -15,5 +15,6 @@ process:
 destination:
   plugin: config
   config_name: contact.settings
-dependencies:
-  - d6_contact_category
+migration_dependencies:
+  required:
+    - d6_contact_category

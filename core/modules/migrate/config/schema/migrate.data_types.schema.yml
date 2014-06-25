@@ -1,0 +1,20 @@
+# Basic data types for Migrate.
+
+migrate_plugin:
+  type: mapping
+  mapping:
+    plugin:
+      type: string
+      label: 'Plugin'
+
+migrate_destination:
+  type: migrate_plugin
+  label: 'Destination'
+
+migrate_source:
+  type: migrate_plugin
+  label: 'Source'
+
+migrate_load:
+  type: migrate_plugin
+  label: 'Load'

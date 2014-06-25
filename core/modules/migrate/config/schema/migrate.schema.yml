@@ -1,0 +1,40 @@
+# Schema for the configuration files of the Migrate module.
+
+migrate.migration.*:
+  type: mapping
+  label: 'Migration'
+  mapping:
+    id:
+      type: string
+      lable: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    load:
+      type: migrate.load.[plugin]
+      label: 'Source'
+    source:
+      type: migrate.source.[plugin]
+      label: 'Source'
+    process:
+      type: ignore
+      label: 'Process'
+    destination:
+      type: migrate.destination.[plugin]
+      label: 'Destination'
+    migration_dependencies:
+      type: mapping
+      label: 'Dependencies'
+      mapping:
+        required:
+          type: sequence
+          label: 'Required dependencies'
+          sequence:
+            - type: string
+              label: 'Dependency'
+        optional:
+          type: sequence
+          label: 'Optional dependencies'
+          sequence:
+            - type: string
+              label: 'Dependency'
