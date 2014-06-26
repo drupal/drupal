@@ -1950,7 +1950,7 @@ function drupal_pre_render_page(array $element) {
  *   An associative array containing:
  *   - page: A render element representing the page.
  *
- * @see system_elements()
+ * @see system_element_info()
  */
 function template_preprocess_html(&$variables) {
   /** @var $page \Drupal\Core\Page\HtmlPage */
