@@ -327,7 +327,8 @@ class CommentViewBuilder extends EntityViewBuilder {
    */
   public static function attachNewCommentsLinkMetadata(array $element, array $context) {
     // Build "X new comments" link metadata.
-    $new = (int)comment_num_new($context['entity_id'], $context['entity_type']);
+    $new = \Drupal::service('comment.manager')
+      ->getCountNewComments(entity_load($context['entity_type'], $context['entity_id']));
     // Early-return if there are zero new comments for the current user.
     if ($new === 0) {
       return $element;

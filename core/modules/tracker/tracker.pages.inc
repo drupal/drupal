@@ -76,7 +76,7 @@ function tracker_page($account = NULL) {
       if ($node->comment_count) {
         $comments = $node->comment_count;
 
-        if ($new = comment_num_new($node->id(), 'node')) {
+        if ($new = \Drupal::service('comment.manager')->getCountNewComments($node)) {
           $comments .= '<br />';
           $comments .= l(format_plural($new, '1 new', '@count new'), 'node/' . $node->id(), array('fragment' => 'new'));
         }
