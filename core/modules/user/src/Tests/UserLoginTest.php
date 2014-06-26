@@ -135,6 +135,7 @@ class UserLoginTest extends WebTestBase {
     // users password gets rehashed during the login.
     $overridden_count_log2 = 19;
     \Drupal::moduleHandler()->install(array('user_custom_phpass_params_test'));
+    $this->resetAll();
 
     $account->pass_raw = $password;
     $this->drupalLogin($account);

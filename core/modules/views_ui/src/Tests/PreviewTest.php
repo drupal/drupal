@@ -34,6 +34,8 @@ class PreviewTest extends UITestBase {
    */
   protected function testPreviewContextual() {
     \Drupal::moduleHandler()->install(array('contextual'));
+    $this->resetAll();
+
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
     $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));

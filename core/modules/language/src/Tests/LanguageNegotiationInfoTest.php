@@ -85,7 +85,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
       'language_test.content_language_type' => TRUE,
     ));
     $this->container->get('module_handler')->install(array('language_test'));
-    $this->rebuildContainer();
+    $this->resetAll();
 
     // Check that fixed language types are properly configured without the need
     // of saving the language negotiation settings.

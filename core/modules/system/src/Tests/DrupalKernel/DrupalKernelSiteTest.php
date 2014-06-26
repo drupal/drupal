@@ -48,7 +48,7 @@ EOD;
     file_put_contents($this->siteDirectory . '/services.yml', $doc);
 
     // Rebuild the container.
-    $this->kernel->updateModules(array());
+    $this->kernel->rebuildContainer();
 
     $this->assertTrue($this->container->has('site.service.yml'));
     $this->assertIdentical(get_class($this->container->get('cache.backend.database')), 'Drupal\Core\Cache\MemoryBackendFactory');

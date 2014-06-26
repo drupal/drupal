@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\Reference;
 // Change the directory to the Drupal root.
 chdir('..');
 
-require_once __DIR__ . '/vendor/autoload.php';
+$autoloader = require_once __DIR__ . '/vendor/autoload.php';
 
 // Exit early if an incompatible PHP version would cause fatal errors.
 // The minimum version is specified explicitly, as DRUPAL_MINIMUM_PHP is not
@@ -297,18 +297,17 @@ ini_set('display_errors', FALSE);
 
 // We prepare a minimal bootstrap for the update requirements check to avoid
 // reaching the PHP memory limit.
-require_once __DIR__ . '/includes/bootstrap.inc';
 require_once __DIR__ . '/includes/update.inc';
-require_once __DIR__ . '/includes/common.inc';
-require_once __DIR__ . '/includes/file.inc';
-require_once __DIR__ . '/includes/unicode.inc';
 require_once __DIR__ . '/includes/install.inc';
-require_once __DIR__ . '/includes/schema.inc';
-// Bootstrap to configuration.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
-// Bootstrap the database.
-require_once __DIR__ . '/includes/database.inc';
+$request = Request::createFromGlobals();
+$kernel = DrupalKernel::createFromRequest($request, $autoloader, 'update', FALSE);
+
+// Enable UpdateServiceProvider service overrides.
+// @see update_flush_all_caches()
+$GLOBALS['conf']['container_service_providers']['UpdateServiceProvider'] = 'Drupal\Core\DependencyInjection\UpdateServiceProvider';
+$GLOBALS['conf']['update_service_provider_overrides'] = TRUE;
+$kernel->boot();
 
 // Updating from a site schema version prior to 8000 should block the update
 // process. Ensure that the site is not attempting to update a database
@@ -321,27 +320,9 @@ if (db_table_exists('system')) {
   }
 }
 
-// Enable UpdateServiceProvider service overrides.
-// @see update_flush_all_caches()
-$GLOBALS['conf']['container_service_providers']['UpdateServiceProvider'] = 'Drupal\Core\DependencyInjection\UpdateServiceProvider';
-$GLOBALS['conf']['update_service_provider_overrides'] = TRUE;
-
-// module.inc is not yet loaded but there are calls to module_config_sort()
-// below.
-require_once __DIR__ . '/includes/module.inc';
-
-$settings = Settings::getAll();
-new Settings($settings);
-$kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
-$kernel->boot();
-$request = Request::createFromGlobals();
-$container = \Drupal::getContainer();
-$container->set('request', $request);
-$container->get('request_stack')->push($request);
+$kernel->prepareLegacyRequest($request);
 
 // Determine if the current user has access to run update.php.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
-
 \Drupal::service('session_manager')->initialize();
 
 // Ensure that URLs generated for the home and admin pages don't have 'update.php'
@@ -378,7 +359,6 @@ if (is_null($op) && update_access_allowed()) {
   install_goto('core/update.php?op=info');
 }
 
-drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
 // Turn error reporting back on. From now on, only fatal errors (which are

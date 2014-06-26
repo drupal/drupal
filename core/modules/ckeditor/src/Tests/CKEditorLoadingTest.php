@@ -122,6 +122,7 @@ class CKEditorLoadingTest extends WebTestBase {
     // configuration also results in modified CKEditor configuration, so we
     // don't test that here.
     \Drupal::moduleHandler()->install(array('ckeditor_test'));
+    $this->resetAll();
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor_settings = $editor->getSettings();
     $editor_settings['toolbar']['buttons'][0][] = 'Llama';
@@ -129,12 +130,14 @@ class CKEditorLoadingTest extends WebTestBase {
     $editor->save();
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
-    $expected = array('formats' => array('filtered_html' => array(
-      'format' => 'filtered_html',
-      'editor' => 'ckeditor',
-      'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
-      'editorSupportsContentFiltering' => TRUE,
-      'isXssSafe' => FALSE,
+    $expected = array(
+      'formats' => array(
+        'filtered_html' => array(
+          'format' => 'filtered_html',
+          'editor' => 'ckeditor',
+          'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
+          'editorSupportsContentFiltering' => TRUE,
+          'isXssSafe' => FALSE,
     )));
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");

@@ -312,6 +312,7 @@ class MenuRouterTest extends WebTestBase {
   protected function doTestMenuOnRoute() {
     \Drupal::moduleHandler()->install(array('router_test'));
     \Drupal::service('router.builder')->rebuild();
+    $this->resetAll();
 
     $this->drupalGet('router_test/test2');
     $this->assertLinkByHref('menu_no_title_callback');

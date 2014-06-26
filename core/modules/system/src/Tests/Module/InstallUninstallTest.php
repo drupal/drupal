@@ -36,6 +36,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertEqual($this->container->get('state')->get('system_test_preinstall_module'), 'module_test');
     $this->container->get('module_handler')->uninstall(array('module_test'));
     $this->assertEqual($this->container->get('state')->get('system_test_preuninstall_module'), 'module_test');
+    $this->resetAll();
 
     // Try to install and uninstall book, toolbar modules and its dependencies.
     $all_modules = system_rebuild_module_data();

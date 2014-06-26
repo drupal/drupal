@@ -120,7 +120,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   $is_installer = drupal_installation_attempted();
   // Initialize a maintenance theme if the bootstrap was not complete.
   // Do it early because drupal_set_message() triggers a drupal_theme_initialize().
-  if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
+  if ($fatal && drupal_get_bootstrap_phase() < DRUPAL_BOOTSTRAP_CODE) {
     // The installer initializes a maintenance theme at the earliest possible
     // point in time already. Do not unset that.
     if (!$is_installer) {
@@ -244,9 +244,9 @@ function _drupal_log_error($error, $fatal = FALSE) {
 /**
  * Returns the current error level.
  *
- * This function should only be used to get the current error level pre
- * DRUPAL_BOOTSTRAP_KERNEL or before Drupal is installed. In all other
- * situations the following code is preferred:
+ * This function should only be used to get the current error level prior to
+ * DRUPAL_BOOTSTRAP_KERNEL or before Drupal is installed. In all other situations
+ * the following code is preferred:
  * @code
  * \Drupal::config('system.logging')->get('error_level');
  * @endcode

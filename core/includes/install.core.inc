@@ -9,6 +9,7 @@ use Drupal\Core\Database\Install\TaskException;
 use Drupal\Core\Installer\Exception\AlreadyInstalledException;
 use Drupal\Core\Installer\Exception\InstallerException;
 use Drupal\Core\Installer\Exception\NoProfilesException;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
@@ -272,12 +273,6 @@ function install_begin_request(&$install_state) {
   // Allow command line scripts to override server variables used by Drupal.
   require_once __DIR__ . '/bootstrap.inc';
 
-  // Initialize conf_path().
-  // This primes the site path to be used during installation. By not requiring
-  // settings.php, a bare site folder can be prepared in the /sites directory,
-  // which will be used for installing Drupal.
-  conf_path(FALSE);
-
   // If the hash salt leaks, it becomes possible to forge a valid testing user
   // agent, install a new copy of Drupal, and take over the original site.
   // The user agent header is used to pass a database prefix in the request when
@@ -288,7 +283,8 @@ function install_begin_request(&$install_state) {
     exit;
   }
 
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+  $site_path = DrupalKernel::findSitePath($request, FALSE);
+  Settings::initialize($site_path);
 
   // Ensure that procedural dependencies are loaded as early as possible,
   // since the error/exception handlers depend on them.
@@ -359,22 +355,17 @@ function install_begin_request(&$install_state) {
     $environment = 'prod';
   }
 
-  $kernel = new DrupalKernel($environment, drupal_classloader(), FALSE);
+  $kernel = InstallerKernel::createFromRequest($request, drupal_classloader(), $environment);
+  $kernel->setSitePath($site_path);
   $kernel->boot();
-
-  // Enter the request scope and add the Request.
-  // @todo Remove this after converting all installer screens into controllers.
   $container = $kernel->getContainer();
-  $container->enterScope('request');
-  $container->set('request', $request, 'request');
-  $container->get('request_stack')->push($request);
 
   // Register the file translation service.
   if (isset($GLOBALS['config']['locale.settings']['translation.path'])) {
     $directory = $GLOBALS['config']['locale.settings']['translation.path'];
   }
   else {
-    $directory = conf_path() . '/files/translations';
+    $directory = $site_path . '/files/translations';
   }
   $container->set('string_translator.file_translation', new FileTranslation($directory));
   $container->get('string_translation')
@@ -418,6 +409,8 @@ function install_begin_request(&$install_state) {
   // ModuleHandler::isLoaded() returns TRUE, since that is a condition being
   // checked by other subsystems (e.g., the theme system).
   $module_handler->loadAll();
+
+  $kernel->prepareLegacyRequest($request);
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -1458,7 +1451,6 @@ function install_load_profile(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_bootstrap_full() {
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   \Drupal::service('session_manager')->initialize();
 }
 

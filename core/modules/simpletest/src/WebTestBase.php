@@ -20,6 +20,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\block\Entity\Block;
@@ -175,6 +176,8 @@ abstract class WebTestBase extends TestBase {
 
   /**
    * The kernel used in this test.
+   *
+   * @var \Drupal\Core\DrupalKernel
    */
   protected $kernel;
 
@@ -849,7 +852,6 @@ abstract class WebTestBase extends TestBase {
       'required' => TRUE,
     );
     $this->writeSettings($settings);
-
     // Allow for test-specific overrides.
     $settings_testing_file = DRUPAL_ROOT . '/' . $this->originalSite . '/settings.testing.php';
     if (file_exists($settings_testing_file)) {
@@ -857,7 +859,7 @@ abstract class WebTestBase extends TestBase {
       copy($settings_testing_file, $directory . '/settings.testing.php');
       // Add the name of the testing class to settings.php and include the
       // testing specific overrides
-      file_put_contents($directory . '/settings.php', "\n\$test_class = '" . get_class($this) ."';\n" . 'include DRUPAL_ROOT . \'/\' . $conf_path . \'/settings.testing.php\';' ."\n", FILE_APPEND);
+      file_put_contents($directory . '/settings.php', "\n\$test_class = '" . get_class($this) ."';\n" . 'include DRUPAL_ROOT . \'/\' . $site_path . \'/settings.testing.php\';' ."\n", FILE_APPEND);
     }
     $settings_services_file = DRUPAL_ROOT . '/' . $this->originalSite . '/testing.services.yml';
     if (file_exists($settings_services_file)) {
@@ -868,14 +870,14 @@ abstract class WebTestBase extends TestBase {
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap into DRUPAL_BOOTSTRAP_CONFIGURATION (again). Hence, we have to
     // reload the newly written custom settings.php manually.
-    drupal_settings_initialize();
+    Settings::initialize($directory);
 
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     install_drupal($parameters);
 
     // Import new settings.php written by the installer.
-    drupal_settings_initialize();
+    Settings::initialize($directory);
     foreach ($GLOBALS['config_directories'] as $type => $path) {
       $this->configDirectories[$type] = $path;
     }
@@ -888,7 +890,13 @@ abstract class WebTestBase extends TestBase {
     // Not using File API; a potential error must trigger a PHP warning.
     chmod($directory, 0777);
 
-    $this->rebuildContainer();
+    $request = \Drupal::request();
+    $this->kernel = DrupalKernel::createFromRequest($request, drupal_classloader(), 'prod', TRUE);
+    // Force the container to be built from scratch instead of loaded from the
+    // disk. This forces us to not accidently load the parent site.
+    $container = $this->kernel->rebuildContainer();
+    $this->kernel->prepareLegacyRequest($request);
+    $config = $container->get('config.factory');
 
     // Manually create and configure private and temporary files directories.
     // While these could be preset/enforced in settings.php like the public
@@ -896,7 +904,7 @@ abstract class WebTestBase extends TestBase {
     // UI. If declared in settings.php, they would no longer be configurable.
     file_prepare_directory($this->private_files_directory, FILE_CREATE_DIRECTORY);
     file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
-    \Drupal::config('system.file')
+    $config->get('system.file')
       ->set('path.private', $this->private_files_directory)
       ->set('path.temporary', $this->temp_files_directory)
       ->save();
@@ -905,7 +913,7 @@ abstract class WebTestBase extends TestBase {
     // tests from sending out emails and collect them in state instead.
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
-    \Drupal::config('system.mail')
+    $config->get('system.mail')
       ->set('interface.default', 'test_mail_collector')
       ->save();
 
@@ -913,10 +921,10 @@ abstract class WebTestBase extends TestBase {
     // environment optimizations for all tests to avoid needless overhead and
     // ensure a sane default experience for test authors.
     // @see https://drupal.org/node/2259167
-    \Drupal::config('system.logging')
+    $config->get('system.logging')
       ->set('error_level', 'verbose')
       ->save();
-    \Drupal::config('system.performance')
+    $config->get('system.performance')
       ->set('css.preprocess', FALSE)
       ->set('js.preprocess', FALSE)
       ->save();
@@ -936,22 +944,20 @@ abstract class WebTestBase extends TestBase {
     }
     if ($modules) {
       $modules = array_unique($modules);
-      $success = \Drupal::moduleHandler()->install($modules, TRUE);
+      $success = $container->get('module_handler')->install($modules, TRUE);
       $this->assertTrue($success, String::format('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
       $this->rebuildContainer();
     }
 
-    // Like DRUPAL_BOOTSTRAP_CONFIGURATION above, any further bootstrap phases
-    // are not re-executed by the installer, as Drupal is bootstrapped already.
     // Reset/rebuild all data structures after enabling the modules, primarily
     // to synchronize all data structures and caches between the test runner and
     // the child site.
     // Affects e.g. file_get_stream_wrappers().
-    // @see _drupal_bootstrap_code()
-    // @see _drupal_bootstrap_full()
+    // @see \Drupal\Core\DrupalKernel::bootCode()
     // @todo Test-specific setUp() methods may set up further fixtures; find a
     //   way to execute this after setUp() is done, or to eliminate it entirely.
     $this->resetAll();
+    $this->kernel->prepareLegacyRequest($request);
 
     // Temporary fix so that when running from run-tests.sh we don't get an
     // empty current path which would indicate we're on the home page.
@@ -1101,34 +1107,16 @@ abstract class WebTestBase extends TestBase {
    * @see TestBase::prepareEnvironment()
    * @see TestBase::restoreEnvironment()
    *
-   * @todo Fix http://drupal.org/node/1708692 so that module enable/disable
+   * @todo Fix https://www.drupal.org/node/2021959 so that module enable/disable
    *   changes are immediately reflected in \Drupal::getContainer(). Until then,
    *   tests can invoke this workaround when requiring services from newly
    *   enabled modules to be immediately available in the same request.
    */
-  protected function rebuildContainer($environment = 'prod') {
-    // Preserve the request object after the container rebuild.
+  protected function rebuildContainer() {
+    // Maintain the current global request object.
     $request = \Drupal::request();
-    // When called from InstallerTestBase, the current container is the minimal
-    // container from TestBase::prepareEnvironment(), which does not contain a
-    // request stack.
-    if (\Drupal::getContainer()->initialized('request_stack')) {
-      $request_stack = \Drupal::service('request_stack');
-    }
-
-    $this->kernel = new DrupalKernel($environment, drupal_classloader(), TRUE, FALSE);
-    $this->kernel->boot();
-    // DrupalKernel replaces the container in \Drupal::getContainer() with a
-    // different object, so we need to replace the instance on this test class.
-    $this->container = \Drupal::getContainer();
-    // The current user is set in TestBase::prepareEnvironment().
-    $this->container->set('request', $request);
-    if (isset($request_stack)) {
-      $this->container->set('request_stack', $request_stack);
-    }
-    else {
-      $this->container->get('request_stack')->push($request);
-    }
+    // Rebuild the kernel and bring it back to a fully bootstrapped state.
+    $this->container = $this->kernel->rebuildContainer();
     $this->container->get('current_user')->setAccount(\Drupal::currentUser());
 
     // The request context is normally set by the router_listener from within
@@ -1450,7 +1438,7 @@ abstract class WebTestBase extends TestBase {
    *   TRUE if this test was instantiated in a request within the test site,
    *   FALSE otherwise.
    *
-   * @see _drupal_bootstrap_configuration()
+   * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    */
   protected function isInChildSite() {
     return DRUPAL_TEST_IN_CHILD_SITE;
