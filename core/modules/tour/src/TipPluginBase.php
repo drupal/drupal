@@ -11,7 +11,12 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\tour\TipPluginInterface;
 
 /**
- * Defines a base tour implementation.
+ * Defines a base tour item implementation.
+ *
+ * @see \Drupal\tour\Annotation\Tip
+ * @see \Drupal\tour\TipPluginInterface
+ * @see \Drupal\tour\TipPluginManager
+ * @see plugin_api
  */
 abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
 

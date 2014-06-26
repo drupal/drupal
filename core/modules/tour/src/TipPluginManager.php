@@ -12,7 +12,12 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * Configurable tour manager.
+ * Provides a plugin manager for tour items.
+ *
+ * @see \Drupal\tour\Annotation\Tip
+ * @see \Drupal\tour\TipPluginBase
+ * @see \Drupal\tour\TipPluginInterface
+ * @see plugin_api
  */
 class TipPluginManager extends DefaultPluginManager {
 

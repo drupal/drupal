@@ -10,7 +10,16 @@ namespace Drupal\tour\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a Tip annotation object.
+ * Defines a tour item annotation object.
+ *
+ * Plugin Namespace: Plugin\tour\tip
+ *
+ * For a working example, see \Drupal\tour\Plugin\tour\tip\TipPluginText
+ *
+ * @see \Drupal\tour\TipPluginBase
+ * @see \Drupal\tour\TipPluginInterface
+ * @see \Drupal\tour\TipPluginManager
+ * @see plugin_api
  *
  * @Annotation
  */

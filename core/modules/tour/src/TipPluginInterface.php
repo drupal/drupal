@@ -9,6 +9,11 @@ namespace Drupal\tour;
 
 /**
  * Defines an interface for tour items.
+ *
+ * @see \Drupal\tour\Annotation\Tip
+ * @see \Drupal\tour\TipPluginBase
+ * @see \Drupal\tour\TipPluginManager
+ * @see plugin_api
  */
 interface TipPluginInterface {
 
