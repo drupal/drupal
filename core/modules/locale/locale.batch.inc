@@ -228,7 +228,7 @@ function locale_translation_batch_fetch_finished($success, $results) {
  *   TRUE if the file is not found. FALSE if a fault occurred.
  */
 function locale_translation_http_check($uri) {
-
+  $logger = \Drupal::logger('locale');
   try {
     $response = \Drupal::httpClient()->head($uri);
     $result = array();
@@ -250,10 +250,10 @@ function locale_translation_http_check($uri) {
       // theme does not define the location of a translation file. By default
       // the file is checked at the translation server, but it will not be
       // found there.
-      watchdog('locale', 'Translation file not found: @uri.', array('@uri' => $uri));
+      $logger->notice('Translation file not found: @uri.', array('@uri' => $uri));
       return TRUE;
     }
-    watchdog('locale', 'HTTP request to @url failed with error: @error.', array('@url' => $uri, '@error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()));
+    $logger->notice('HTTP request to @url failed with error: @error.', array('@url' => $uri, '@error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()));
   }
 
   return FALSE;
@@ -285,6 +285,6 @@ function locale_translation_download_source($source_file, $directory = 'temporar
     $file->timestamp = filemtime($uri);
     return $file;
   }
-  watchdog('locale', 'Unable to download translation file @uri.', array('@uri' => $source_file->uri), WATCHDOG_ERROR);
+  \Drupal::logger('locale')->error('Unable to download translation file @uri.', array('@uri' => $source_file->uri));
   return FALSE;
 }

@@ -184,7 +184,7 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $reply = 
       $message['result'] = $system->mail($message);
       // Log errors.
       if (!$message['result']) {
-        watchdog('mail', 'Error sending email (from %from to %to with reply-to %reply).', array('%from' => $message['from'], '%to' => $message['to'], '%reply' => $message['reply-to'] ? $message['reply-to'] : t('not set')), WATCHDOG_ERROR);
+        \Drupal::logger('mail')->error('Error sending email (from %from to %to with reply-to %reply).', array('%from' => $message['from'], '%to' => $message['to'], '%reply' => $message['reply-to'] ? $message['reply-to'] : t('not set')));
         drupal_set_message(t('Unable to send email. Contact the site administrator if the problem persists.'), 'error');
       }
     }

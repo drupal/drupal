@@ -152,7 +152,7 @@ function filter_pre_render_text(array $element) {
   // If the requested text format does not exist, the text cannot be filtered.
   /** @var \Drupal\filter\Entity\FilterFormat $format **/
   if (!$format = entity_load('filter_format', $format_id)) {
-    watchdog('filter', 'Missing text format: %format.', array('%format' => $format_id), WATCHDOG_ALERT);
+    \Drupal::logger('filter')->alert('Missing text format: %format.', array('%format' => $format_id));
     $element['#markup'] = '';
     return $element;
   }

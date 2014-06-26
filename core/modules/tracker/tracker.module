@@ -110,7 +110,7 @@ function tracker_cron() {
       // Prepare a starting point for the next run.
       $state->set('tracker.index_nid', $last_nid - 1);
 
-      watchdog('tracker', 'Indexed %count content items for tracking.', array('%count' => $count));
+      \Drupal::logger('tracker')->notice('Indexed %count content items for tracking.', array('%count' => $count));
     }
     else {
       // If all nodes have been indexed, set to zero to skip future cron runs.

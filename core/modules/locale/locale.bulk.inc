@@ -256,7 +256,7 @@ function locale_translate_batch_import($file, $options, &$context) {
     catch (Exception $exception) {
       // Import failed. Store the data of the failing file.
       $context['results']['failed_files'][] = $file;
-      watchdog('locale', 'Unable to import translations file: @file', array('@file' => $file->uri));
+      \Drupal::logger('locale')->notice('Unable to import translations file: @file', array('@file' => $file->uri));
     }
   }
 }
@@ -343,6 +343,7 @@ function locale_translate_batch_refresh(array &$context) {
  * Finished callback of system page locale import batch.
  */
 function locale_translate_batch_finished($success, $results) {
+  $logger = \Drupal::logger('locale');
   if ($success) {
     $additions = $updates = $deletes = $skips = $config = 0;
     if (isset($results['failed_files'])) {
@@ -374,7 +375,7 @@ function locale_translate_batch_finished($success, $results) {
         '@count translation files imported. %number translations were added, %update translations were updated and %delete translations were removed.',
         array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)
       ));
-      watchdog('locale', 'Translations imported: %number added, %update updated, %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
+      $logger->notice('Translations imported: %number added, %update updated, %delete removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes));
 
       if ($skips) {
         if (\Drupal::moduleHandler()->moduleExists('dblog')) {
@@ -384,7 +385,7 @@ function locale_translate_batch_finished($success, $results) {
           $message = format_plural($skips, 'One translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
         }
         drupal_set_message($message, 'warning');
-        watchdog('locale', '@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)), WATCHDOG_WARNING);
+        $logger->warning('@count disallowed HTML string(s) in files: @files.', array('@count' => $skips, '@files' => implode(',', $skipped_files)));
       }
     }
   }
@@ -606,11 +607,11 @@ function locale_config_batch_finished($success, array $results) {
     $configuration = isset($results['stats']['config']) ? $results['stats']['config'] : 0;
     if ($configuration) {
       drupal_set_message(t('The configuration was successfully updated. There are %number configuration objects updated.', array('%number' => $configuration)));
-      watchdog('locale', 'The configuration was successfully updated. %number configuration objects updated.', array('%number' => $configuration));
+      \Drupal::logger('locale')->notice('The configuration was successfully updated. %number configuration objects updated.', array('%number' => $configuration));
     }
     else {
       drupal_set_message(t('No configuration objects have been updated.'));
-      watchdog('locale', 'No configuration objects have been updated.', array(), WATCHDOG_WARNING);
+      \Drupal::logger('locale')->warning('No configuration objects have been updated.');
     }
   }
 }

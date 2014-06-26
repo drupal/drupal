@@ -809,7 +809,7 @@ function menu_link_rebuild_defaults() {
       }
       else {
         if (empty($link['route_name']) && empty($link['link_path'])) {
-          watchdog('error', 'Menu_link %machine_name does neither provide a route_name nor a link_path, so it got skipped.', array('%machine_name' => $machine_name));
+          \Drupal::logger('menu_link')->error('Menu_link %machine_name does neither provide a route_name nor a link_path, so it got skipped.', array('%machine_name' => $machine_name));
           continue;
         }
         $menu_link = $menu_link_storage->createFromDefaultLink($link);

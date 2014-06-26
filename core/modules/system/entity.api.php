@@ -345,7 +345,7 @@ function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $tra
     '@language' => $translation->language()->name,
     '@label' => $translation->getUntranslated()->label(),
   );
-  watchdog('example', 'The @language translation of @label has just been stored.', $variables);
+  \Drupal::logger('example')->notice('The @language translation of @label has just been stored.', $variables);
 }
 
 /**
@@ -362,7 +362,7 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
     '@language' => $languages[$langcode]->name,
     '@label' => $entity->label(),
   );
-  watchdog('example', 'The @language translation of @label has just been deleted.', $variables);
+  \Drupal::logger('example')->notice('The @language translation of @label has just been deleted.', $variables);
 }
 
 /**

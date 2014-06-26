@@ -813,20 +813,21 @@ function request_uri($omit_query_string = FALSE) {
  */
 function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
 
-   // Use a default value if $message is not set.
-   if (empty($message)) {
-     // The exception message is run through
-     // \Drupal\Component\Utility\String::checkPlain() by
-     // \Drupal\Core\Utility\Error:decodeException().
-     $message = '%type: !message in %function (line %line of %file).';
-   }
-   // $variables must be an array so that we can add the exception information.
-   if (!is_array($variables)) {
-     $variables = array();
-   }
+  // Use a default value if $message is not set.
+  if (empty($message)) {
+    // The exception message is run through
+    // \Drupal\Component\Utility\String::checkPlain() by
+    // \Drupal\Core\Utility\Error:decodeException().
+    $message = '%type: !message in %function (line %line of %file).';
+  }
 
-   $variables += Error::decodeException($exception);
-   watchdog($type, $message, $variables, $severity, $link);
+  if ($link) {
+    $variables['link'] = $link;
+  }
+
+  $variables += Error::decodeException($exception);
+
+  \Drupal::logger($type)->log($severity, $message, $variables);
 }
 
 /**

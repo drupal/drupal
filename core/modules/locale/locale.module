@@ -1345,23 +1345,24 @@ function _locale_rebuild_js($langcode = NULL) {
   }
 
   // Log the operation and return success flag.
+  $logger = \Drupal::logger('locale');
   switch ($status) {
     case 'updated':
-      watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
+      $logger->notice('Updated JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
 
     case 'rebuilt':
-      watchdog('locale', 'JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->id]), WATCHDOG_WARNING);
+      $logger->warning('JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->id]));
     // Proceed to the 'created' case as the JavaScript translation file has
     // been created again.
     case 'created':
-      watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => $language->name));
+      $logger->notice('Created JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
     case 'deleted':
-      watchdog('locale', 'Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => $language->name));
+      $logger->notice('Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => $language->name));
       return TRUE;
     case 'error':
-      watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => $language->name), WATCHDOG_ERROR);
+      $logger->error('An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => $language->name));
       return FALSE;
     default:
       // No operation needed.

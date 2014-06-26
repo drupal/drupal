@@ -774,7 +774,7 @@ function user_authenticate($name, $password) {
 function user_login_finalize(UserInterface $account) {
   global $user;
   $user = $account;
-  watchdog('user', 'Session opened for %name.', array('%name' => $account->getUsername()));
+  \Drupal::logger('user')->notice('Session opened for %name.', array('%name' => $account->getUsername()));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
   $account->setLastLoginTime(REQUEST_TIME);
@@ -906,7 +906,7 @@ function user_cancel($edit, $uid, $method) {
 
   if (!$account) {
     drupal_set_message(t('The user account %id does not exist.', array('%id' => $uid)), 'error');
-    watchdog('user', 'Attempted to cancel non-existing user account: %id.', array('%id' => $uid), WATCHDOG_ERROR);
+    \Drupal::logger('user')->error('Attempted to cancel non-existing user account: %id.', array('%id' => $uid));
     return;
   }
 
@@ -956,6 +956,7 @@ function user_cancel($edit, $uid, $method) {
  */
 function _user_cancel($edit, $account, $method) {
   global $user;
+  $logger = \Drupal::logger('user');
 
   switch ($method) {
     case 'user_cancel_block':
@@ -968,7 +969,7 @@ function _user_cancel($edit, $account, $method) {
       $account->block();
       $account->save();
       drupal_set_message(t('%name has been disabled.', array('%name' => $account->getUsername())));
-      watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'), WATCHDOG_NOTICE);
+      $logger->notice('Blocked user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'));
       break;
 
     case 'user_cancel_reassign':
@@ -979,7 +980,7 @@ function _user_cancel($edit, $account, $method) {
       }
       $account->delete();
       drupal_set_message(t('%name has been deleted.', array('%name' => $account->getUsername())));
-      watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'), WATCHDOG_NOTICE);
+      $logger->notice('Deleted user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'));
       break;
   }
 
@@ -1686,7 +1687,7 @@ function user_toolbar() {
 function user_logout() {
   $user = \Drupal::currentUser();
 
-  watchdog('user', 'Session closed for %name.', array('%name' => $user->getUsername()));
+  \Drupal::logger('user')->notice('Session closed for %name.', array('%name' => $user->getUsername()));
 
   \Drupal::moduleHandler()->invokeAll('user_logout', array($user));
 

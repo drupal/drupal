@@ -140,7 +140,7 @@ if (authorize_access_allowed()) {
 }
 else {
   drupal_add_http_header('Status', '403 Forbidden');
-  watchdog('access denied', 'authorize.php', array(), WATCHDOG_WARNING);
+  \Drupal::logger('access denied')->warning('authorize.php');
   $page_title = t('Access denied');
   $output = t('You are not allowed to access this page.');
 }

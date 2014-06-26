@@ -1107,16 +1107,17 @@ function system_check_directory($form_element) {
     return $form_element;
   }
 
+  $logger = \Drupal::logger('file system');
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
     // If the directory does not exists and cannot be created.
     form_set_error($form_element['#parents'][0], $form_state, t('The directory %directory does not exist and could not be created.', array('%directory' => $directory)));
-    watchdog('file system', 'The directory %directory does not exist and could not be created.', array('%directory' => $directory), WATCHDOG_ERROR);
+    $logger->error('The directory %directory does not exist and could not be created.', array('%directory' => $directory));
   }
 
   if (is_dir($directory) && !is_writable($directory) && !drupal_chmod($directory)) {
     // If the directory is not writable and cannot be made so.
     form_set_error($form_element['#parents'][0], $form_state, t('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory)));
-    watchdog('file system', 'The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory), WATCHDOG_ERROR);
+    $logger->error('The directory %directory exists but is not writable and could not be made writable.', array('%directory' => $directory));
   }
   elseif (is_dir($directory)) {
     if ($form_element['#name'] == 'file_public_path') {

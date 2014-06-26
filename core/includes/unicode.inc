@@ -102,7 +102,7 @@ function drupal_xml_parser_create(&$data) {
       $data = preg_replace('/^(<\?xml[^>]+encoding)="(.+?)"/', '\\1="utf-8"', $out);
     }
     else {
-      watchdog('php', 'Could not convert XML encoding %s to UTF-8.', array('%s' => $encoding), WATCHDOG_WARNING);
+      \Drupal::logger('php')->warning('Could not convert XML encoding %s to UTF-8.', array('%s' => $encoding));
       return FALSE;
     }
   }
@@ -128,7 +128,7 @@ function drupal_xml_parser_create(&$data) {
 function drupal_convert_to_utf8($data, $encoding) {
   $out = Unicode::convertToUtf8($data, $encoding);
   if ($out === FALSE) {
-    watchdog('php', 'Unsupported encoding %s. Please install iconv, GNU recode or mbstring for PHP.', array('%s' => $encoding), WATCHDOG_ERROR);
+    \Drupal::logger('php')->error('Unsupported encoding %s. Please install iconv, GNU recode or mbstring for PHP.', array('%s' => $encoding));
   }
 
   return $out;

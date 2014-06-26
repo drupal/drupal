@@ -442,10 +442,10 @@ function language_save($language) {
   if ($language->is_new) {
     // Install any available language configuration overrides for the language.
     \Drupal::service('language.config_factory_override')->installLanguageOverrides($language->getId());
-    watchdog('language', 'The %language (%langcode) language has been created.', $t_args);
+    \Drupal::logger('language')->notice('The %language (%langcode) language has been created.', $t_args);
   }
   else {
-    watchdog('language', 'The %language (%langcode) language has been updated.', $t_args);
+    \Drupal::logger('language')->notice('The %language (%langcode) language has been updated.', $t_args);
   }
 
   return $language;
@@ -481,7 +481,7 @@ function language_delete($langcode) {
     }
 
     $t_args = array('%language' => $language->name, '%langcode' => $language->id);
-    watchdog('language', 'The %language (%langcode) language has been removed.', $t_args);
+    \Drupal::logger('language')->notice('The %language (%langcode) language has been removed.', $t_args);
     return TRUE;
   }
   return FALSE;
