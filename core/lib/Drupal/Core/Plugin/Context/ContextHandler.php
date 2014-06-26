@@ -8,7 +8,6 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
-use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterface;
 use Drupal\Component\Plugin\ContextAwarePluginInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Utility\String;
@@ -51,19 +50,20 @@ class ContextHandler implements ContextHandlerInterface {
       // Build an array of requirements out of the contexts specified by the
       // plugin definition.
       $requirements = array();
+      /** @var $plugin_context \Drupal\Core\Plugin\Context\ContextDefinitionInterface */
       foreach ($plugin_definition['context'] as $context_id => $plugin_context) {
-        $definition = $this->typedDataManager->getDefinition($plugin_context['type']);
-        $definition['type'] = $plugin_context['type'];
+        $definition = $this->typedDataManager->getDefinition($plugin_context->getDataType());
+        $definition['type'] = $plugin_context->getDataType();
 
         // If the plugin specifies additional constraints, add them to the
         // constraints defined by the plugin type.
-        if (isset($plugin_context['constraints'])) {
+        if ($plugin_constraints = $plugin_context->getConstraints()) {
           // Ensure the array exists before adding in constraints.
           if (!isset($definition['constraints'])) {
             $definition['constraints'] = array();
           }
 
-          $definition['constraints'] += $plugin_context['constraints'];
+          $definition['constraints'] += $plugin_constraints;
         }
 
         // Assume the requirement is required if unspecified.
@@ -97,9 +97,8 @@ class ContextHandler implements ContextHandlerInterface {
    * {@inheritdoc}
    */
   public function getMatchingContexts(array $contexts, DataDefinitionInterface $definition) {
-    return array_filter($contexts, function (ComponentContextInterface $context) use ($definition) {
-      // @todo getContextDefinition() should return a DataDefinitionInterface.
-      $context_definition = new DataDefinition($context->getContextDefinition());
+    return array_filter($contexts, function (ContextInterface $context) use ($definition) {
+      $context_definition = $context->getContextDefinition()->getDataDefinition();
 
       // If the data types do not match, this context is invalid.
       if ($definition->getDataType() != $context_definition->getDataType()) {

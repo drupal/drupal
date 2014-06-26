@@ -42,7 +42,7 @@ interface ContextInterface {
   /**
    * Gets the provided definition that the context must conform to.
    *
-   * @return array
+   * @return \Drupal\Component\Plugin\Context\ContextDefinitionInterface
    *   The defining characteristic representation of the context.
    */
   public function getContextDefinition();

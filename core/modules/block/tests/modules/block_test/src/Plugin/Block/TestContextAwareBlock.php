@@ -16,9 +16,7 @@ use Drupal\block\BlockBase;
  *   id = "test_context_aware",
  *   admin_label = @Translation("Test context-aware block"),
  *   context = {
- *     "user" = {
- *       "type" = "entity:user"
- *     }
+ *     "user" = @ContextDefinition("entity:user")
  *   }
  * )
  */

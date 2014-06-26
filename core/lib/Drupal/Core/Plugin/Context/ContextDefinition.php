@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Plugin\Context;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\TypedData\TypedDataTrait;
 
 /**
@@ -217,10 +218,15 @@ class ContextDefinition implements ContextDefinitionInterface {
     else {
       $definition = $this->getTypedDataManager()->createDataDefinition($this->getDataType());
     }
+
+    if (!$definition) {
+      throw new \Exception(String::format('The data type "@type" is invalid', array('@type' => $this->getDataType())));
+    }
     $definition->setLabel($this->getLabel())
       ->setDescription($this->getDescription())
-      ->setRequired($this->isRequired())
-      ->setConstraints($this->getConstraints());
+      ->setRequired($this->isRequired());
+    $constraints = $definition->getConstraints() + $this->getConstraints();
+      $definition->setConstraints($constraints);
     return $definition;
   }
 

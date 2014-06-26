@@ -22,7 +22,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
   /**
    * Gets the context definitions of the plugin.
    *
-   * @return array
+   * @return \Drupal\Component\Plugin\Context\ContextDefinitionInterface[]
    *   The array of context definitions, keyed by context name.
    */
   public function getContextDefinitions();

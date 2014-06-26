@@ -1,10 +1,13 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\Core\Annotation\ContextDefinition.
  */
 
 namespace Drupal\Core\Annotation;
+
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * @defgroup plugin_context context definition plugin metadata
@@ -46,7 +49,6 @@ namespace Drupal\Core\Annotation;
  * @endcode
  * @}
  */
-use Drupal\Component\Annotation\Plugin;
 
 /**
  * Defines a context definition annotation object.
