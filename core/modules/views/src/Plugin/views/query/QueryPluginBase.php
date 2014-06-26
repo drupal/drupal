@@ -175,7 +175,7 @@ abstract class QueryPluginBase extends PluginBase {
    *   Either 'AND' or 'OR'
    */
   public function setGroupOperator($type = 'AND') {
-    $this->group_operator = strtoupper($type);
+    $this->groupOperator = strtoupper($type);
   }
 
   /**

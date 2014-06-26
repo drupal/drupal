@@ -32,7 +32,7 @@ class Sql extends QueryPluginBase {
   /**
    * A list of tables in the order they should be added, keyed by alias.
    */
-  var $table_queue = array();
+  protected $tableQueue = array();
 
   /**
    * Holds an array of tables and counts added so that we can create aliases
@@ -61,7 +61,7 @@ class Sql extends QueryPluginBase {
    * The default operator to use when connecting the WHERE groups. May be
    * AND or OR.
    */
-  var $group_operator = 'AND';
+  protected $groupOperator = 'AND';
 
   /**
    * A simple array of order by clauses.
@@ -84,17 +84,17 @@ class Sql extends QueryPluginBase {
    */
   var $distinct = FALSE;
 
-  var $has_aggregate = FALSE;
+  protected $hasAggregate = FALSE;
 
   /**
    * Should this query be optimized for counts, for example no sorts.
    */
-  var $get_count_optimized = NULL;
+  protected $getCountOptimized = NULL;
 
   /**
    * An array mapping table aliases and field names to field aliases.
    */
-  var $field_aliases = array();
+  protected $fieldAliases = array();
 
   /**
    * Query tags which will be passed over to the dbtng query object.
@@ -106,7 +106,7 @@ class Sql extends QueryPluginBase {
    *
    * @var bool
    */
-  var $no_distinct;
+  protected $noDistinct;
 
   /**
    * Overrides \Drupal\views\Plugin\views\PluginBase::init().
@@ -124,7 +124,7 @@ class Sql extends QueryPluginBase {
     );
 
     // init the table queue with our primary table.
-    $this->table_queue[$base_table] = array(
+    $this->tableQueue[$base_table] = array(
       'alias' => $base_table,
       'table' => $base_table,
       'relationship' => $base_table,
@@ -152,7 +152,7 @@ class Sql extends QueryPluginBase {
    *   Should the view by distincted.
    */
   protected function setDistinct($value = TRUE) {
-    if (!(isset($this->no_distinct) && $value)) {
+    if (!(isset($this->noDistinct) && $value)) {
       $this->distinct = $value;
     }
   }
@@ -297,7 +297,7 @@ class Sql extends QueryPluginBase {
 
     // Add the table directly to the queue to avoid accidentally marking
     // it.
-    $this->table_queue[$alias] = array(
+    $this->tableQueue[$alias] = array(
       'table' => $join->table,
       'num' => 1,
       'alias' => $alias,
@@ -390,7 +390,7 @@ class Sql extends QueryPluginBase {
    */
   public function queueTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
-    if (isset($this->table_queue[$alias])) {
+    if (isset($this->tableQueue[$alias])) {
       return $alias;
     }
 
@@ -413,7 +413,7 @@ class Sql extends QueryPluginBase {
 
     // Check this again to make sure we don't blow up existing aliases for already
     // adjusted joins.
-    if (isset($this->table_queue[$alias])) {
+    if (isset($this->tableQueue[$alias])) {
       return $alias;
     }
 
@@ -440,7 +440,7 @@ class Sql extends QueryPluginBase {
       $join = $this->adjustJoin($join, $relationship);
     }
 
-    $this->table_queue[$alias] = array(
+    $this->tableQueue[$alias] = array(
       'table' => $table,
       'num' => $this->tables[$relationship][$table]['count'],
       'alias' => $alias,
@@ -547,12 +547,12 @@ class Sql extends QueryPluginBase {
       // scan through the table queue to see if a matching join and
       // relationship exists.  If so, use it instead of this join.
 
-      // TODO: Scanning through $this->table_queue results in an
+      // TODO: Scanning through $this->tableQueue results in an
       // O(N^2) algorithm, and this code runs every time the view is
       // instantiated (Views 2 does not currently cache queries).
       // There are a couple possible "improvements" but we should do
       // some performance testing before picking one.
-      foreach ($this->table_queue as $queued_table) {
+      foreach ($this->tableQueue as $queued_table) {
         // In PHP 4 and 5, the == operation returns TRUE for two objects
         // if they are instances of the same class and have the same
         // attributes and values.
@@ -657,8 +657,8 @@ class Sql extends QueryPluginBase {
         $join->leftTable = $this->tables[$relationship][$join->leftTable]['alias'];
       }
       // But if we're already looking at an alias, use that instead.
-      elseif (isset($this->table_queue[$relationship]['alias'])) {
-        $join->leftTable = $this->table_queue[$relationship]['alias'];
+      elseif (isset($this->tableQueue[$relationship]['alias'])) {
+        $join->leftTable = $this->tableQueue[$relationship]['alias'];
       }
     }
 
@@ -680,8 +680,8 @@ class Sql extends QueryPluginBase {
   public function getJoinData($table, $base_table) {
     // Check to see if we're linking to a known alias. If so, get the real
     // table's data instead.
-    if (!empty($this->table_queue[$table])) {
-      $table = $this->table_queue[$table]['table'];
+    if (!empty($this->tableQueue[$table])) {
+      $table = $this->tableQueue[$table]['table'];
     }
     return HandlerBase::getTableJoin($table, $base_table);
   }
@@ -693,15 +693,15 @@ class Sql extends QueryPluginBase {
    * ensureTable().
    */
   public function getTableInfo($table) {
-    if (!empty($this->table_queue[$table])) {
-      return $this->table_queue[$table];
+    if (!empty($this->tableQueue[$table])) {
+      return $this->tableQueue[$table];
     }
 
     // In rare cases we might *only* have aliased versions of the table.
     if (!empty($this->tables[$this->view->storage->get('base_table')][$table])) {
       $alias = $this->tables[$this->view->storage->get('base_table')][$table]['alias'];
-      if (!empty($this->table_queue[$alias])) {
-        return $this->table_queue[$alias];
+      if (!empty($this->tableQueue[$alias])) {
+        return $this->tableQueue[$alias];
       }
     }
   }
@@ -734,7 +734,7 @@ class Sql extends QueryPluginBase {
       $alias = $this->view->storage->get('base_field');
     }
 
-    if ($table && empty($this->table_queue[$table])) {
+    if ($table && empty($this->tableQueue[$table])) {
       $this->ensureTable($table);
     }
 
@@ -772,7 +772,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Keep track of all aliases used.
-    $this->field_aliases[$table][$field] = $alias;
+    $this->fieldAliases[$table][$field] = $alias;
 
     return $alias;
   }
@@ -979,7 +979,7 @@ class Sql extends QueryPluginBase {
    * @see \Drupal\views\Plugin\views\query\Sql::addField
    */
   protected function getFieldAlias($table_alias, $field) {
-    return isset($this->field_aliases[$table_alias][$field]) ? $this->field_aliases[$table_alias][$field] : FALSE;
+    return isset($this->fieldAliases[$table_alias][$field]) ? $this->fieldAliases[$table_alias][$field] : FALSE;
   }
 
   /**
@@ -1022,7 +1022,7 @@ class Sql extends QueryPluginBase {
     $has_filter = FALSE;
 
     $main_group = db_and();
-    $filter_group = $this->group_operator == 'OR' ? db_or() : db_and();
+    $filter_group = $this->groupOperator == 'OR' ? db_or() : db_and();
 
     foreach ($this->$where as $group => $info) {
 
@@ -1096,7 +1096,7 @@ class Sql extends QueryPluginBase {
       }
 
       if (!empty($field['function'])) {
-        $this->has_aggregate = TRUE;
+        $this->hasAggregate = TRUE;
       }
       // This is a formula, using no tables.
       elseif (empty($field['table'])) {
@@ -1106,7 +1106,7 @@ class Sql extends QueryPluginBase {
         $non_aggregates[] = $fieldname;
       }
 
-      if ($this->get_count_optimized) {
+      if ($this->getCountOptimized) {
         // We only want the first field in this case.
         break;
       }
@@ -1143,7 +1143,7 @@ class Sql extends QueryPluginBase {
           $query->addExpression($string, $fieldname, $placeholders);
         }
 
-        $this->has_aggregate = TRUE;
+        $this->hasAggregate = TRUE;
       }
       // This is a formula, using no tables.
       elseif (empty($field['table'])) {
@@ -1157,7 +1157,7 @@ class Sql extends QueryPluginBase {
         $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $fieldname);
       }
 
-      if ($this->get_count_optimized) {
+      if ($this->getCountOptimized) {
         // We only want the first field in this case.
         break;
       }
@@ -1173,7 +1173,7 @@ class Sql extends QueryPluginBase {
    */
   public function query($get_count = FALSE) {
     // Check query distinct value.
-    if (empty($this->no_distinct) && $this->distinct && !empty($this->fields)) {
+    if (empty($this->noDistinct) && $this->distinct && !empty($this->fields)) {
       $base_field_alias = $this->addField($this->view->storage->get('base_table'), $this->view->storage->get('base_field'));
       $this->addGroupBy($base_field_alias);
       $distinct = TRUE;
@@ -1186,16 +1186,16 @@ class Sql extends QueryPluginBase {
     if ($get_count && !$this->groupby) {
       foreach ($this->fields as $field) {
         if (!empty($field['distinct']) || !empty($field['function'])) {
-          $this->get_count_optimized = FALSE;
+          $this->getCountOptimized = FALSE;
           break;
         }
       }
     }
     else {
-      $this->get_count_optimized = FALSE;
+      $this->getCountOptimized = FALSE;
     }
-    if (!isset($this->get_count_optimized)) {
-      $this->get_count_optimized = TRUE;
+    if (!isset($this->getCountOptimized)) {
+      $this->getCountOptimized = TRUE;
     }
 
     $options = array();
@@ -1228,20 +1228,20 @@ class Sql extends QueryPluginBase {
     }
 
     // Add all the tables to the query via joins. We assume all LEFT joins.
-    foreach ($this->table_queue as $table) {
+    foreach ($this->tableQueue as $table) {
       if (is_object($table['join'])) {
         $table['join']->buildJoin($query, $table, $this);
       }
     }
 
     // Assemble the groupby clause, if any.
-    $this->has_aggregate = FALSE;
+    $this->hasAggregate = FALSE;
     $non_aggregates = $this->getNonAggregates();
     if (count($this->having)) {
-      $this->has_aggregate = TRUE;
+      $this->hasAggregate = TRUE;
     }
     $groupby = array();
-    if ($this->has_aggregate && (!empty($this->groupby) || !empty($non_aggregates))) {
+    if ($this->hasAggregate && (!empty($this->groupby) || !empty($non_aggregates))) {
       $groupby = array_unique(array_merge($this->groupby, $non_aggregates));
     }
 
@@ -1277,7 +1277,7 @@ class Sql extends QueryPluginBase {
       }
     }
 
-    if (!$this->get_count_optimized) {
+    if (!$this->getCountOptimized) {
       // we only add the orderby if we're not counting.
       if ($this->orderby) {
         foreach ($this->orderby as $order) {
