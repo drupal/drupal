@@ -8,7 +8,6 @@
 namespace Drupal\image_test\Plugin\ImageToolkit;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 
 /**
@@ -70,9 +69,9 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function parseFile(ImageInterface $image) {
-    $this->logCall('parseFile', array($image));
-    $data = @getimagesize($image->getSource());
+  public function parseFile() {
+    $this->logCall('parseFile', array());
+    $data = @getimagesize($this->getImage()->getSource());
     if ($data && in_array($data[2], static::supportedTypes())) {
       $this->setType($data[2]);
       $this->width = $data[0];
@@ -85,8 +84,8 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function save(ImageInterface $image, $destination) {
-    $this->logCall('save', array($image, $destination));
+  public function save($destination) {
+    $this->logCall('save', array($destination));
     // Return false so that image_save() doesn't try to chmod the destination
     // file that we didn't bother to create.
     return FALSE;
@@ -95,48 +94,48 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function crop(ImageInterface $image, $x, $y, $width, $height) {
-    $this->logCall('crop', array($image, $x, $y, $width, $height));
+  public function crop($x, $y, $width, $height) {
+    $this->logCall('crop', array($x, $y, $width, $height));
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function resize(ImageInterface $image, $width, $height) {
-    $this->logCall('resize', array($image, $width, $height));
+  public function resize($width, $height) {
+    $this->logCall('resize', array($width, $height));
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rotate(ImageInterface $image, $degrees, $background = NULL) {
-    $this->logCall('rotate', array($image, $degrees, $background));
+  public function rotate($degrees, $background = NULL) {
+    $this->logCall('rotate', array($degrees, $background));
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function desaturate(ImageInterface $image) {
-    $this->logCall('desaturate', array($image));
+  public function desaturate() {
+    $this->logCall('desaturate', array());
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function scale(ImageInterface $image, $width = NULL, $height = NULL, $upscale = FALSE) {
-    $this->logCall('scale', array($image, $width, $height, $upscale));
+  public function scale($width = NULL, $height = NULL, $upscale = FALSE) {
+    $this->logCall('scale', array($width, $height, $upscale));
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function scaleAndCrop(ImageInterface $image, $width, $height) {
-    $this->logCall('scaleAndCrop', array($image, $width, $height));
+  public function scaleAndCrop($width, $height) {
+    $this->logCall('scaleAndCrop', array($width, $height));
     return TRUE;
   }
 
@@ -161,14 +160,14 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function getWidth(ImageInterface $image) {
+  public function getWidth() {
     return $this->width;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getHeight(ImageInterface $image) {
+  public function getHeight() {
     return $this->height;
   }
 
@@ -202,7 +201,7 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function getMimeType(ImageInterface $image) {
+  public function getMimeType() {
     return $this->getType() ? image_type_to_mime_type($this->getType()) : '';
   }
 

@@ -16,6 +16,13 @@ use Drupal\Tests\UnitTestCase;
 class ImageTest extends UnitTestCase {
 
   /**
+   * Path to the image file.
+   *
+   * @var string
+   */
+  protected $source;
+
+  /**
    * Image object.
    *
    * @var \Drupal\Core\Image\Image
@@ -121,11 +128,12 @@ class ImageTest extends UnitTestCase {
    */
   public function testSave() {
     // This will fail if save() method isn't called on the toolkit.
-    $this->toolkit->expects($this->once())
+    $toolkit = $this->getToolkitMock();
+    $toolkit->expects($this->once())
       ->method('save')
       ->will($this->returnValue(TRUE));
 
-    $image = $this->getMock('Drupal\Core\Image\Image', array('chmod'), array($this->toolkit, $this->image->getSource()));
+    $image = $this->getMock('Drupal\Core\Image\Image', array('chmod'), array($toolkit, $this->image->getSource()));
     $image->expects($this->any())
       ->method('chmod')
       ->will($this->returnValue(TRUE));
@@ -150,11 +158,12 @@ class ImageTest extends UnitTestCase {
    */
   public function testChmodFails() {
     // This will fail if save() method isn't called on the toolkit.
-    $this->toolkit->expects($this->once())
+    $toolkit = $this->getToolkitMock();
+    $toolkit->expects($this->once())
       ->method('save')
       ->will($this->returnValue(TRUE));
 
-    $image = $this->getMock('Drupal\Core\Image\Image', array('chmod'), array($this->toolkit, $this->image->getSource()));
+    $image = $this->getMock('Drupal\Core\Image\Image', array('chmod'), array($toolkit, $this->image->getSource()));
     $image->expects($this->any())
       ->method('chmod')
       ->will($this->returnValue(FALSE));
@@ -182,7 +191,7 @@ class ImageTest extends UnitTestCase {
 
     $toolkit->expects($this->any())
       ->method('resize')
-      ->will($this->returnArgument(2));
+      ->will($this->returnArgument(1));
     $height = $image->scale(44);
     $this->assertEquals($height, 50);
   }
@@ -196,7 +205,7 @@ class ImageTest extends UnitTestCase {
 
     $toolkit->expects($this->any())
       ->method('resize')
-      ->will($this->returnArgument(1));
+      ->will($this->returnArgument(0));
     $width = $image->scale(NULL, 50);
     $this->assertEquals($width, 44);
   }
@@ -211,7 +220,7 @@ class ImageTest extends UnitTestCase {
     // Dimensions are the same, resize should not be called.
     $toolkit->expects($this->never())
       ->method('resize')
-      ->will($this->returnArgument(1));
+      ->will($this->returnArgument(0));
 
     $width = $image->scale(88, 100);
     $this->assertEquals($width, 88);
@@ -230,7 +239,7 @@ class ImageTest extends UnitTestCase {
 
     $toolkit->expects($this->once())
       ->method('crop')
-      ->will($this->returnArgument(1));
+      ->will($this->returnArgument(0));
 
     $x = $image->scaleAndCrop(34, 50);
     $this->assertEquals($x, 5);
@@ -249,7 +258,7 @@ class ImageTest extends UnitTestCase {
 
     $toolkit->expects($this->once())
       ->method('crop')
-      ->will($this->returnArgument(2));
+      ->will($this->returnArgument(1));
 
     $y = $image->scaleAndCrop(44, 40);
     $this->assertEquals($y, 5);
@@ -300,7 +309,7 @@ class ImageTest extends UnitTestCase {
 
     $toolkit->expects($this->once())
       ->method('crop')
-      ->will($this->returnArgument(3));
+      ->will($this->returnArgument(2));
     $width = $image->crop(0, 0, 44, 50);
     $this->assertEquals($width, 44);
   }

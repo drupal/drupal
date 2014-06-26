@@ -46,7 +46,7 @@ use Drupal\Core\Image\ImageInterface;
 interface ImageToolkitInterface extends PluginInspectionInterface {
 
   /**
-   * Retrieves toolkit's settings form.
+   * Retrieves the toolkit's settings form.
    *
    * @see system_image_toolkit_settings()
    */
@@ -60,25 +60,40 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public function settingsFormSubmit($form, &$form_state);
 
   /**
-   * Scales an image to the specified size.
+   * Sets the image object that this toolkit instance is tied to.
+   *
+   * @throws \BadMethodCallException
+   *   When called twice.
    *
    * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
+   *   The image that this toolkit instance will be tied to.
+   */
+  public function setImage(ImageInterface $image);
+
+  /**
+   * Gets the image object that this toolkit instance is tied to.
+   *
+   * @return \Drupal\Core\Image\ImageInterface
+   *   The image object that this toolkit instance is tied to.
+   */
+  public function getImage();
+
+  /**
+   * Scales an image to the specified size.
+   *
    * @param int $width
    *   The new width of the resized image, in pixels.
    * @param int $height
    *   The new height of the resized image, in pixels.
    *
    * @return bool
-   *   TRUE or FALSE, based on success.
+   *   TRUE on success, FALSE on failure.
    */
-  public function resize(ImageInterface $image, $width, $height);
+  public function resize($width, $height);
 
   /**
    * Rotates an image the given number of degrees.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
    * @param int $degrees
    *   The number of (clockwise) degrees to rotate the image.
    * @param string $background
@@ -89,15 +104,13 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *   be white.
    *
    * @return bool
-   *   TRUE or FALSE, based on success.
+   *   TRUE on success, FALSE on failure.
    */
-  public function rotate(ImageInterface $image, $degrees, $background = NULL);
+  public function rotate($degrees, $background = NULL);
 
   /**
    * Crops an image.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
    * @param int $x
    *   The starting x offset at which to start the crop, in pixels.
    * @param int $y
@@ -108,46 +121,38 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *   The height of the cropped area, in pixels.
    *
    * @return bool
-   *   TRUE or FALSE, based on success.
+   *   TRUE on success, FALSE on failure.
    *
    * @see image_crop()
    */
-  public function crop(ImageInterface $image, $x, $y, $width, $height);
+  public function crop($x, $y, $width, $height);
 
   /**
    * Converts an image resource to grayscale.
    *
    * Note that transparent GIFs loose transparency when desaturated.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object. The $image->resource value will be modified by this
-   *   call.
-   *
    * @return bool
-   *   TRUE or FALSE, based on success.
+   *   TRUE on success, FALSE on failure.
    */
-  public function desaturate(ImageInterface $image);
+  public function desaturate();
 
   /**
    * Writes an image resource to a destination file.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
    * @param string $destination
    *   A string file URI or path where the image should be saved.
    *
    * @return bool
-   *   TRUE or FALSE, based on success.
+   *   TRUE on success, FALSE on failure.
    */
-  public function save(ImageInterface $image, $destination);
+  public function save($destination);
 
   /**
    * Scales an image while maintaining aspect ratio.
    *
    * The resulting image can be smaller for one or both target dimensions.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
    * @param int $width
    *   (optional) The target width, in pixels. This value is omitted then the
    *   scaling will based only on the height value.
@@ -161,7 +166,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function scale(ImageInterface $image, $width = NULL, $height = NULL, $upscale = FALSE);
+  public function scale($width = NULL, $height = NULL, $upscale = FALSE);
 
   /**
    * Scales an image to the exact width and height given.
@@ -172,8 +177,6 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *
    * The resulting image always has the exact target dimensions.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
    * @param int $width
    *   The target width, in pixels.
    * @param int $height
@@ -182,52 +185,40 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function scaleAndCrop(ImageInterface $image, $width, $height);
+  public function scaleAndCrop($width, $height);
 
   /**
    * Determines if a file contains a valid image.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
-   *
    * @return bool
    *   TRUE if the file could be found and is an image, FALSE otherwise.
    */
-  public function parseFile(ImageInterface $image);
+  public function parseFile();
 
   /**
    * Returns the height of the image.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
-   *
    * @return int|null
    *   The height of the image, or NULL if the image is invalid.
    */
-  public function getHeight(ImageInterface $image);
+  public function getHeight();
 
   /**
    * Returns the width of the image.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
-   *
    * @return int|null
    *   The width of the image, or NULL if the image is invalid.
    */
-  public function getWidth(ImageInterface $image);
+  public function getWidth();
 
   /**
    * Returns the MIME type of the image file.
-   *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
    *
    * @return string
    *   The MIME type of the image file, or an empty string if the image is
    *   invalid.
    */
-  public function getMimeType(ImageInterface $image);
+  public function getMimeType();
 
   /**
    * Gets toolkit requirements in a format suitable for hook_requirements().
@@ -244,10 +235,10 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public function getRequirements();
 
   /**
-   * Verifies Image Toolkit is set up correctly.
+   * Verifies that the Image Toolkit is set up correctly.
    *
    * @return bool
-   *   True if the GD toolkit is available on this machine.
+   *   TRUE if the toolkit is available on this machine, FALSE otherwise.
    */
   public static function isAvailable();
 

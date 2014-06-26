@@ -58,6 +58,7 @@ class Image implements ImageInterface {
    */
   public function __construct(ImageToolkitInterface $toolkit, $source = NULL) {
     $this->toolkit = $toolkit;
+    $this->toolkit->setImage($this);
     if ($source) {
       $this->source = $source;
       $this->parseFile();
@@ -75,14 +76,14 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getHeight() {
-    return $this->toolkit->getHeight($this);
+    return $this->toolkit->getHeight();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getWidth() {
-    return $this->toolkit->getWidth($this);
+    return $this->toolkit->getWidth();
   }
 
   /**
@@ -96,7 +97,7 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getMimeType() {
-    return $this->toolkit->getMimeType($this);
+    return $this->toolkit->getMimeType();
   }
 
   /**
@@ -130,7 +131,7 @@ class Image implements ImageInterface {
     }
 
     $destination = $destination ?: $this->getSource();
-    if ($return = $this->toolkit->save($this, $destination)) {
+    if ($return = $this->toolkit->save($destination)) {
       // Clear the cached file size and refresh the image information.
       clearstatcache(TRUE, $destination);
       $this->fileSize = filesize($destination);
@@ -156,7 +157,7 @@ class Image implements ImageInterface {
    *   image information is populated.
    */
   protected function parseFile() {
-    if ($this->valid = $this->toolkit->parseFile($this)) {
+    if ($this->valid = $this->toolkit->parseFile()) {
       $this->fileSize = filesize($this->source);
     }
     return $this->valid;
@@ -189,13 +190,12 @@ class Image implements ImageInterface {
     //  removed through https://drupal.org/node/2073759, when
     //  call_user_func_array() will be replaced by
     //  $this->toolkit->apply($name, $this, $arguments).
-    if (in_array($method, array('setResource', 'getResource', 'hasResource', 'setWidth', 'setHeight', 'getType'))) {
+    if (in_array($method, array('setResource', 'getResource', 'hasResource', 'setWidth', 'setHeight', 'getType', 'setImage'))) {
       throw new \BadMethodCallException($method);
     }
     if (is_callable(array($this->toolkit, $method))) {
       // @todo In https://drupal.org/node/2073759, call_user_func_array() will
-      //   be replaced by $this->toolkit->apply($name, $this, $arguments).
-      array_unshift($arguments, $this);
+      //   be replaced by $this->toolkit->apply($name, $arguments).
       return call_user_func_array(array($this->toolkit, $method), $arguments);
     }
     throw new \BadMethodCallException($method);

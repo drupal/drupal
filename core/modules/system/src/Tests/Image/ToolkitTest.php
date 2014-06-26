@@ -58,8 +58,8 @@ class ToolkitTest extends ToolkitTestBase {
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['resize'][0][1], 1, 'Width was passed correctly');
-    $this->assertEqual($calls['resize'][0][2], 2, 'Height was passed correctly');
+    $this->assertEqual($calls['resize'][0][0], 1, 'Width was passed correctly');
+    $this->assertEqual($calls['resize'][0][1], 2, 'Height was passed correctly');
   }
 
   /**
@@ -72,8 +72,8 @@ class ToolkitTest extends ToolkitTestBase {
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['scale'][0][1], 10, 'Width was passed correctly');
-    $this->assertEqual($calls['scale'][0][2], 10, 'Height was based off aspect ratio and passed correctly');
+    $this->assertEqual($calls['scale'][0][0], 10, 'Width was passed correctly');
+    $this->assertEqual($calls['scale'][0][1], 10, 'Height was based off aspect ratio and passed correctly');
   }
 
   /**
@@ -86,8 +86,8 @@ class ToolkitTest extends ToolkitTestBase {
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
 
-    $this->assertEqual($calls['scaleAndCrop'][0][1], 5, 'Width was computed and passed correctly');
-    $this->assertEqual($calls['scaleAndCrop'][0][2], 10, 'Height was computed and passed correctly');
+    $this->assertEqual($calls['scaleAndCrop'][0][0], 5, 'Width was computed and passed correctly');
+    $this->assertEqual($calls['scaleAndCrop'][0][1], 10, 'Height was computed and passed correctly');
   }
 
   /**
@@ -99,8 +99,8 @@ class ToolkitTest extends ToolkitTestBase {
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['rotate'][0][1], 90, 'Degrees were passed correctly');
-    $this->assertEqual($calls['rotate'][0][2], 1, 'Background color was passed correctly');
+    $this->assertEqual($calls['rotate'][0][0], 90, 'Degrees were passed correctly');
+    $this->assertEqual($calls['rotate'][0][1], 1, 'Background color was passed correctly');
   }
 
   /**
@@ -112,10 +112,10 @@ class ToolkitTest extends ToolkitTestBase {
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['crop'][0][1], 1, 'X was passed correctly');
-    $this->assertEqual($calls['crop'][0][2], 2, 'Y was passed correctly');
-    $this->assertEqual($calls['crop'][0][3], 3, 'Width was passed correctly');
-    $this->assertEqual($calls['crop'][0][4], 4, 'Height was passed correctly');
+    $this->assertEqual($calls['crop'][0][0], 1, 'X was passed correctly');
+    $this->assertEqual($calls['crop'][0][1], 2, 'Y was passed correctly');
+    $this->assertEqual($calls['crop'][0][2], 3, 'Width was passed correctly');
+    $this->assertEqual($calls['crop'][0][3], 4, 'Height was passed correctly');
   }
 
   /**
@@ -127,6 +127,6 @@ class ToolkitTest extends ToolkitTestBase {
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual(count($calls['desaturate'][0]), 1, 'Only the image was passed.');
+    $this->assertEqual(count($calls['desaturate'][0]), 0, 'No parameters were passed.');
   }
 }
