@@ -7,6 +7,7 @@
 
 namespace Drupal\standard\Tests;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -34,7 +35,11 @@ class StandardTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Test anonymous user can access 'Main navigation' block.
-    $admin = $this->drupalCreateUser(array('administer blocks'));
+    $admin = $this->drupalCreateUser(array(
+      'administer blocks',
+      'post comments',
+      'skip comment approval',
+    ));
     $this->drupalLogin($admin);
     // Configure the block.
     $this->drupalGet('admin/structure/block/add/system_menu_block:main/bartik');
@@ -67,6 +72,26 @@ class StandardTest extends WebTestBase {
     $this->drupalLogout();
     $this->assertText('Main navigation');
 
+    // Ensure comments don't show in the front page RSS feed.
+    // Create an article.
+    $node = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'title' => 'Foobar',
+      'promote' => 1,
+      'status' => 1,
+    ));
+
+    // Add a comment.
+    $this->drupalLogin($admin);
+    $this->drupalGet('node/1');
+    $this->drupalPostForm(NULL, array(
+      'subject' => 'Barfoo',
+      'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
+    ), t('Save'));
+    // Fetch the feed.
+    $this->drupalGet('rss.xml');
+    $this->assertText('Foobar');
+    $this->assertNoText('Then she picked out two somebodies, Sally and me');
   }
 
 }
