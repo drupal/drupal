@@ -172,4 +172,15 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
     return $schema;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getUnapprovedCount() {
+    return  $this->database->select('comment', 'c')
+      ->condition('status', CommentInterface::NOT_PUBLISHED, '=')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+  }
+
 }

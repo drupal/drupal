@@ -156,18 +156,6 @@ function comment_theme() {
 }
 
 /**
- * Returns a menu title which includes the number of unapproved comments.
- *
- * @todo Move to the comment manager and replace by a entity query?
- */
-function comment_count_unpublished() {
-  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE status = :status', array(
-    ':status' => CommentInterface::NOT_PUBLISHED,
-  ))->fetchField();
-  return t('Unapproved comments (@count)', array('@count' => $count));
-}
-
-/**
  * Implements hook_ENTITY_TYPE_create() for 'field_instance_config'.
  */
 function comment_field_instance_config_create(FieldInstanceConfigInterface $instance) {

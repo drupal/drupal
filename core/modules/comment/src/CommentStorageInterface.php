@@ -66,4 +66,12 @@ interface CommentStorageInterface extends EntityStorageInterface {
    */
   public function updateEntityStatistics(CommentInterface $comment);
 
+  /**
+   * Returns the number of unapproved comments.
+   *
+   * @return int
+   *   The number of unapproved comments.
+   */
+  public function getUnapprovedCount();
+
 }
