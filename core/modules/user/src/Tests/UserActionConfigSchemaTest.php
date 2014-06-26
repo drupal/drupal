@@ -8,12 +8,13 @@
 namespace Drupal\user\Tests;
 
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\KernelTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the User action config schema.
  */
-class UserActionConfigSchemaTest extends WebTestBase {
+class UserActionConfigSchemaTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;
 
@@ -22,7 +23,7 @@ class UserActionConfigSchemaTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('user');
+  public static $modules = array('system', 'user');
 
   /**
    * A user with administrative permissions.
@@ -43,7 +44,8 @@ class UserActionConfigSchemaTest extends WebTestBase {
    * Tests whether the user action config schema are valid.
    */
   function testValidUserActionConfigSchema() {
-    $rid = $this->drupalCreateRole(array());
+    $rid = strtolower($this->randomName(8));
+    Role::create(array('id' => $rid))->save();
 
     // Test user_add_role_action configuration.
     $config = \Drupal::config('system.action.user_add_role_action.' . $rid);

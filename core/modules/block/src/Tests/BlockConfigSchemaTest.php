@@ -9,19 +9,19 @@ namespace Drupal\block\Tests;
 
 use Drupal\block\Entity\Block;
 use Drupal\config\Tests\SchemaCheckTestTrait;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the block config schema.
  */
-class BlockConfigSchemaTest extends WebTestBase {
+class BlockConfigSchemaTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('block', 'aggregator', 'book', 'block_content', 'forum', 'statistics');
+  public static $modules = array('block', 'aggregator', 'book', 'block_content', 'forum', 'node', 'statistics', 'taxonomy');
 
   /**
    * The typed config manager.
@@ -56,6 +56,7 @@ class BlockConfigSchemaTest extends WebTestBase {
 
     $this->typedConfig = \Drupal::service('config.typed');
     $this->blockManager = \Drupal::service('plugin.manager.block');
+    $this->installEntitySchema('block_content');
   }
 
   /**
