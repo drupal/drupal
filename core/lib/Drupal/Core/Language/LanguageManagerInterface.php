@@ -23,11 +23,6 @@ interface LanguageManagerInterface {
   public function setTranslation(TranslationInterface $translation);
 
   /**
-   * Initializes each language type to a language object.
-   */
-  public function init();
-
-  /**
    * Returns whether or not the site has more than one language added.
    *
    * @return bool

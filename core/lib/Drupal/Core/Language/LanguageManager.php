@@ -67,12 +67,6 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function init() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isMultilingual() {
     return FALSE;
   }
