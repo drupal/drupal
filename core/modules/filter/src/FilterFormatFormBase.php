@@ -56,7 +56,7 @@ abstract class FilterFormatFormBase extends EntityForm {
 
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#default_value' => $format->label(),
       '#required' => TRUE,
       '#weight' => -30,
@@ -77,13 +77,13 @@ abstract class FilterFormatFormBase extends EntityForm {
     // Add user role access selection.
     $form['roles'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Roles'),
+      '#title' => $this->t('Roles'),
       '#options' => array_map('\Drupal\Component\Utility\String::checkPlain', user_role_names()),
       '#disabled' => $is_fallback,
       '#weight' => -10,
     );
     if ($is_fallback) {
-      $form['roles']['#description'] = t('All roles for this text format must be enabled and cannot be changed.');
+      $form['roles']['#description'] = $this->t('All roles for this text format must be enabled and cannot be changed.');
     }
     if (!$format->isNew()) {
       // If editing an existing text format, pre-select its current permissions.
@@ -103,7 +103,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       // When a filter is missing, it is replaced by the null filter. Remove it
       // here, so that saving the form will remove the missing filter.
       if ($filter instanceof FilterNull) {
-        drupal_set_message(t('The %filter filter is missing, and will be removed once this format is saved.', array('%filter' => $filter_id)), 'warning');
+        drupal_set_message($this->t('The %filter filter is missing, and will be removed once this format is saved.', array('%filter' => $filter_id)), 'warning');
         $filters->removeInstanceID($filter_id);
       }
     }
@@ -111,7 +111,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     // Filter status.
     $form['filters']['status'] = array(
       '#type' => 'item',
-      '#title' => t('Enabled filters'),
+      '#title' => $this->t('Enabled filters'),
       '#prefix' => '<div id="filters-status-wrapper">',
       '#suffix' => '</div>',
       // This item is used as a pure wrapping container with heading. Ignore its
@@ -124,7 +124,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       '#type' => 'table',
       // For filter.admin.js
       '#attributes' => array('id' => 'filter-order'),
-      '#title' => t('Filter processing order'),
+      '#title' => $this->t('Filter processing order'),
       '#tabledrag' => array(
         array(
          'action' => 'order',
@@ -139,7 +139,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     // Filter settings.
     $form['filter_settings'] = array(
       '#type' => 'vertical_tabs',
-      '#title' => t('Filter settings'),
+      '#title' => $this->t('Filter settings'),
     );
 
     foreach ($filters as $name => $filter) {
@@ -159,7 +159,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       );
       $form['filters']['order'][$name]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $filter->getLabel())),
+        '#title' => $this->t('Weight for @title', array('@title' => $filter->getLabel())),
         '#title_display' => 'invisible',
         '#delta' => 50,
         '#default_value' => $filter->weight,
@@ -267,7 +267,7 @@ abstract class FilterFormatFormBase extends EntityForm {
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save configuration');
+    $actions['submit']['#value'] = $this->t('Save configuration');
     return $actions;
   }
 

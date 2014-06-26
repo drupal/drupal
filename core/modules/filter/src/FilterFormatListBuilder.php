@@ -82,8 +82,8 @@ class FilterFormatListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Name');
-    $header['roles'] = t('Roles');
+    $header['label'] = $this->t('Name');
+    $header['roles'] = $this->t('Roles');
     return $header + parent::buildHeader();
   }
 
@@ -98,16 +98,16 @@ class FilterFormatListBuilder extends DraggableListBuilder {
 
       $fallback_choice = $this->configFactory->get('filter.settings')->get('always_show_fallback_choice');
       if ($fallback_choice) {
-        $roles_markup = String::placeholder(t('All roles may use this format'));
+        $roles_markup = String::placeholder($this->t('All roles may use this format'));
       }
       else {
-        $roles_markup = String::placeholder(t('This format is shown when no other formats are available'));
+        $roles_markup = String::placeholder($this->t('This format is shown when no other formats are available'));
       }
     }
     else {
       $row['label'] = $this->getLabel($entity);
       $roles = array_map('\Drupal\Component\Utility\String::checkPlain', filter_get_roles_by_format($entity));
-      $roles_markup = $roles ? implode(', ', $roles) : t('No roles may use this format');
+      $roles_markup = $roles ? implode(', ', $roles) : $this->t('No roles may use this format');
     }
 
     $row['roles'] = !empty($this->weightKey) ? array('#markup' => $roles_markup) : $roles_markup;
@@ -122,7 +122,7 @@ class FilterFormatListBuilder extends DraggableListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Configure');
+      $operations['edit']['title'] = $this->t('Configure');
     }
 
     // The fallback format may not be disabled.
@@ -138,7 +138,7 @@ class FilterFormatListBuilder extends DraggableListBuilder {
    */
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
-    $form['actions']['submit']['#value'] = t('Save changes');
+    $form['actions']['submit']['#value'] = $this->t('Save changes');
     return $form;
   }
   /**
@@ -148,7 +148,7 @@ class FilterFormatListBuilder extends DraggableListBuilder {
     parent::submitForm($form, $form_state);
 
     filter_formats_reset();
-    drupal_set_message(t('The text format ordering has been saved.'));
+    drupal_set_message($this->t('The text format ordering has been saved.'));
   }
 
 }

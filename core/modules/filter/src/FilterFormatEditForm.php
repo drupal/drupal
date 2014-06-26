@@ -33,7 +33,7 @@ class FilterFormatEditForm extends FilterFormatFormBase {
    */
   public function submit(array $form, array &$form_state) {
     parent::submit($form, $form_state);
-    drupal_set_message(t('The text format %format has been updated.', array('%format' => $this->entity->label())));
+    drupal_set_message($this->t('The text format %format has been updated.', array('%format' => $this->entity->label())));
     return $this->entity;
   }
 
