@@ -55,6 +55,7 @@ function drupal_rebuild(ClassLoader $classloader, Request $request) {
 
   // Bootstrap up to where caches exist and clear them.
   $kernel = new DrupalKernel('prod', $classloader);
+  $kernel->setSitePath(DrupalKernel::findSitePath($request));
   $kernel->prepareLegacyRequest($request);
 
   foreach (Cache::getBins() as $bin) {
