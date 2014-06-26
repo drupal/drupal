@@ -70,16 +70,11 @@ class ForumManagerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $comment_manager = $this->getMockBuilder('\Drupal\comment\CommentManagerInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
-
     $manager = $this->getMock('\Drupal\forum\ForumManager', array('getChildren'), array(
       $config_factory,
       $entity_manager,
       $connection,
       $translation_manager,
-      $comment_manager,
     ));
 
     $manager->expects($this->once())

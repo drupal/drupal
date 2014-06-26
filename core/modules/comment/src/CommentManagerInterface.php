@@ -6,9 +6,8 @@
  */
 
 namespace Drupal\comment;
-
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Session\AccountInterface;
+
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**
@@ -84,20 +83,5 @@ interface CommentManagerInterface {
    *   HTML for a "you can't post comments" notice.
    */
   public function forbiddenMessage(EntityInterface $entity, $field_name);
-
-  /**
-   * Returns the number of new comments available on a given entity for a user.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to which the comments are attached to.
-   * @param string $field_name
-   *   The field_name to count comments for. Defaults to any field.
-   * @param int $timestamp
-   *   Time to count from. Defaults to time of last user access the entity.
-   *
-   * @return int|false
-   *   The number of new comments or FALSE if the user is not authenticated.
-   */
-  public function getCountNewComments(EntityInterface $entity, $field_name = NULL, $timestamp = 0);
 
 }

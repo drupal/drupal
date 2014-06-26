@@ -78,7 +78,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Drop default comment field added in CommentTestBase::setup().
     FieldConfig::loadByName('node', 'comment')->delete();
-    if ($field = FieldConfig::loadByName('node', 'comment_forum')) {
+    if ($field = FieldConfig::loadByName('node', 'comment_node_forum')) {
       $field->delete();
     }
 
