@@ -108,6 +108,8 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
     $visibility = array_map(function ($definition) {
       return array('id' => $definition['id']);
     }, $this->conditionPluginManager()->getDefinitions());
+    unset($visibility['current_theme']);
+
     return array(
       'id' => $this->getPluginId(),
       'label' => '',
