@@ -3426,24 +3426,31 @@ function hook_install() {
  * hooks. See @link update_api Update versions of API functions @endlink for
  * details.
  *
- * If your update task is potentially time-consuming, you'll need to implement a
- * multipass update to avoid PHP timeouts. Multipass updates use the $sandbox
- * parameter provided by the batch API (normally, $context['sandbox']) to store
- * information between successive calls, and the $sandbox['#finished'] value
- * to provide feedback regarding completion level.
+ * The $sandbox parameter should be used when a multipass update is needed, in
+ * circumstances where running the whole update at once could cause PHP to
+ * timeout. Each pass is run in a way that avoids PHP timeouts, provided each
+ * pass remains under the timeout limit. To signify that an update requires
+ * at least one more pass, set $sandbox['#finished'] to a number less than 1
+ * (you need to do this each pass). The value of $sandbox['#finished'] will be
+ * unset between passes but all other data in $sandbox will be preserved. The
+ * system will stop iterating this update when $sandbox['#finished'] is left
+ * unset or set to a number higher than 1. It is recommended that
+ * $sandbox['#finished'] is initially set to 0, and then updated each pass to a
+ * number between 0 and 1 that represents the overall % completed for this
+ * update, finishing with 1.
  *
- * See the batch operations page for more information on how to use the
- * @link http://drupal.org/node/180528 Batch API. @endlink
+ * See the @link batch Batch operations topic @endlink for more information on
+ * how to use the Batch API.
  *
- * @param $sandbox
+ * @param array $sandbox
  *   Stores information for multipass updates. See above for more information.
  *
- * @throws DrupalUpdateException, PDOException
+ * @throws DrupalUpdateException|PDOException
  *   In case of error, update hooks should throw an instance of DrupalUpdateException
  *   with a meaningful message for the user. If a database query fails for whatever
  *   reason, it will throw a PDOException.
  *
- * @return
+ * @return string|null
  *   Optionally, update hooks may return a translated string that will be
  *   displayed to the user after the update has completed. If no message is
  *   returned, no message will be presented to the user.
