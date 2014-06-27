@@ -35,7 +35,7 @@ aggregator.opml_add:
   path: '/admin/config/services/aggregator/add/opml'
   defaults:
     _form: '\Drupal\aggregator\Form\OpmlFeedAdd'
-    _title: 'Import OMPL'
+    _title: 'Import OPML'
   requirements:
     _permission: 'administer news feeds'
 

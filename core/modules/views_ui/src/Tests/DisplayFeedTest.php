@@ -40,7 +40,7 @@ class DisplayFeedTest extends UITestBase {
    * Tests feed display admin UI.
    */
   public function testFeedUI() {
-    // Test both RSS and OMPL feeds.
+    // Test both RSS and OPML feeds.
     foreach (self::$testViews as $view_name) {
       $this->checkFeedViewUi($view_name);
     }
