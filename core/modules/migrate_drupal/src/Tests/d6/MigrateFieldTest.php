@@ -56,7 +56,7 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
     $field = entity_load('field_config', 'node.field_test');
     $expected = array('max_length' => 255);
     $this->assertEqual($field->type, "text", "Field type is text.");
-    $this->assertEqual($field->status, TRUE, "Status is TRUE");
+    $this->assertEqual($field->status(), TRUE, "Status is TRUE");
     $this->assertEqual($field->settings, $expected, "Field type text settings are correct");
 
     // Integer field.
@@ -93,7 +93,7 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
     // Date field.
     $field = entity_load('field_config', 'node.field_test_datetime');
     $this->assertEqual($field->type, "datetime", "Field type is datetime.");
-    $this->assertEqual($field->status, FALSE, "Status is FALSE");
+    $this->assertEqual($field->status(), FALSE, "Status is FALSE");
   }
 
 }

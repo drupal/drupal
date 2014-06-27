@@ -55,14 +55,14 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    *
    * @var bool
    */
-  public $status = TRUE;
+  protected $status = TRUE;
 
   /**
    * The UUID for this entity.
    *
    * @var string
    */
-  public $uuid;
+  protected $uuid;
 
   /**
    * Whether the config is being created, updated or deleted through the
@@ -84,7 +84,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    *
    * @var string
    */
-  public $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+  protected $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
 
   /**
    * Overrides Entity::__construct().

@@ -50,7 +50,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    *
    * @var bool
    */
-  public $status = TRUE;
+  protected $status = TRUE;
 
   /**
    * Whether or not the rendered output of this view mode is cached by default.

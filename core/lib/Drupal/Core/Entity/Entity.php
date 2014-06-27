@@ -295,7 +295,8 @@ abstract class Entity implements EntityInterface {
     $language = $this->languageManager()->getLanguage($this->langcode);
     if (!$language) {
       // Make sure we return a proper language object.
-      $language = new Language(array('id' => LanguageInterface::LANGCODE_NOT_SPECIFIED));
+      $langcode = $this->langcode ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;
+      $language = new Language(array('id' => $langcode));
     }
     return $language;
   }

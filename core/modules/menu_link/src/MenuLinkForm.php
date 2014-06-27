@@ -174,7 +174,7 @@ class MenuLinkForm extends EntityForm {
     // Without Language module menu links inherit the menu language and no
     // language selector is shown.
     else {
-      $default_langcode = ($menu_link->isNew() ? entity_load('menu', $menu_link->menu_name)->langcode : $menu_link->langcode);
+      $default_langcode = ($menu_link->isNew() ? entity_load('menu', $menu_link->menu_name)->language()->getId() : $menu_link->langcode);
       $language_show = FALSE;
     }
 

@@ -46,10 +46,10 @@ class ConfigEntityTest extends WebTestBase {
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
     // Verify default properties on a newly created empty entity.
     $empty = entity_create('config_test');
-    $this->assertTrue($empty->uuid);
+    $this->assertTrue($empty->uuid());
     $this->assertIdentical($empty->label, NULL);
     $this->assertIdentical($empty->style, NULL);
-    $this->assertIdentical($empty->langcode, $default_langcode);
+    $this->assertIdentical($empty->language()->getId(), $default_langcode);
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
     $this->assertIdentical($empty->isNew(), TRUE);
@@ -63,7 +63,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertTrue($empty->get('uuid'));
     $this->assertIdentical($empty->get('label'), NULL);
     $this->assertIdentical($empty->get('style'), NULL);
-    $this->assertIdentical($empty->get('langcode'), $default_langcode);
+    $this->assertIdentical($empty->language()->getId(), $default_langcode);
 
     // Verify Entity properties/methods on the newly created empty entity.
     $this->assertIdentical($empty->getEntityTypeId(), 'config_test');
@@ -104,11 +104,11 @@ class ConfigEntityTest extends WebTestBase {
       'label' => $this->randomString(),
       'style' => $this->randomName(),
     ));
-    $this->assertTrue($config_test->uuid);
-    $this->assertNotEqual($config_test->uuid, $empty->uuid);
+    $this->assertTrue($config_test->uuid());
+    $this->assertNotEqual($config_test->uuid(), $empty->uuid());
     $this->assertIdentical($config_test->label, $expected['label']);
     $this->assertIdentical($config_test->style, $expected['style']);
-    $this->assertIdentical($config_test->langcode, $default_langcode);
+    $this->assertIdentical($config_test->language()->getId(), $default_langcode);
 
     // Verify methods on the newly created entity.
     $this->assertIdentical($config_test->isNew(), TRUE);

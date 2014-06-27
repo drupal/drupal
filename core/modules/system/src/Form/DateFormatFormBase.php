@@ -147,7 +147,7 @@ abstract class DateFormatFormBase extends EntityForm {
       '#type' => 'language_select',
       '#title' => t('Language'),
       '#languages' => LanguageInterface::STATE_ALL,
-      '#default_value' => $this->entity->langcode,
+      '#default_value' => $this->entity->language()->getId(),
     );
 
     return parent::form($form, $form_state);

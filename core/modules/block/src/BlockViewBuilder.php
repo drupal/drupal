@@ -85,7 +85,7 @@ class BlockViewBuilder extends EntityViewBuilder {
           'entity_view',
           'block',
           $entity->id(),
-          $entity->langcode,
+          $entity->language()->getId(),
           // Blocks are always rendered in a "per theme" cache context.
           'cache_context.theme',
         );

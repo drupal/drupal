@@ -394,7 +394,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
         $config = $field->toArray();
         $config['deleted'] = TRUE;
         $config['bundles'] = $field->getBundles();
-        $deleted_fields[$field->uuid] = $config;
+        $deleted_fields[$field->uuid()] = $config;
       }
     }
 

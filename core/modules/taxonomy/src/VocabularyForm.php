@@ -58,7 +58,7 @@ class VocabularyForm extends EntityForm {
       '#type' => 'language_select',
       '#title' => $this->t('Vocabulary language'),
       '#languages' => LanguageInterface::STATE_ALL,
-      '#default_value' => $vocabulary->langcode,
+      '#default_value' => $vocabulary->language()->getId(),
     );
     if ($this->moduleHandler->moduleExists('language')) {
       $form['default_terms_language'] = array(

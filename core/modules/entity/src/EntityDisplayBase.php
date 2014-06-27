@@ -59,7 +59,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *
    * @var boolean
    */
-  public $status;
+  protected $status;
 
   /**
    * List of component display options, keyed by component name.

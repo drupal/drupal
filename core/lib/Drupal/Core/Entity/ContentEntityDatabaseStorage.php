@@ -1594,7 +1594,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
       $separator = $revision ? '_r__' : '__';
       // Truncate to the same length for the current and revision tables.
       $entity_type = substr($field->entity_type, 0, 34);
-      $field_hash = substr(hash('sha256', $field->uuid), 0, 10);
+      $field_hash = substr(hash('sha256', $field->uuid()), 0, 10);
       $table_name = $entity_type . $separator . $field_hash;
     }
     return $table_name;

@@ -405,7 +405,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       if (!$instance->deleted) {
         $config = $instance->toArray();
         $config['deleted'] = TRUE;
-        $deleted_instances[$instance->uuid] = $config;
+        $deleted_instances[$instance->uuid()] = $config;
       }
     }
     $state->set('field.instance.deleted', $deleted_instances);

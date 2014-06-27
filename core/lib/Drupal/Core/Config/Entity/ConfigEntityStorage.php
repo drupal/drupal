@@ -59,13 +59,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected $uuidKey = 'uuid';
 
   /**
-   * Name of the entity's status key or FALSE if a status is not supported.
-   *
-   * @var string|bool
-   */
-  protected $statusKey = 'status';
-
-  /**
    * The config factory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -102,8 +95,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_type);
-
-    $this->statusKey = $this->entityType->getKey('status');
 
     $this->configFactory = $config_factory;
     $this->configStorage = $config_storage;
@@ -186,10 +177,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     $values += array('langcode' => $this->languageManager->getDefaultLanguage()->id);
     $entity = new $this->entityClass($values, $this->entityTypeId);
 
-    // Default status to enabled.
-    if (!empty($this->statusKey) && !isset($entity->{$this->statusKey})) {
-      $entity->{$this->statusKey} = TRUE;
-    }
     return $entity;
   }
 

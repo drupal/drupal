@@ -118,7 +118,7 @@ class MenuForm extends EntityForm {
       '#type' => 'language_select',
       '#title' => t('Menu language'),
       '#languages' => LanguageInterface::STATE_ALL,
-      '#default_value' => $menu->langcode,
+      '#default_value' => $menu->language()->getId(),
     );
     // Unlike the menu langcode, the default language configuration for menu
     // links only works with language module installed.

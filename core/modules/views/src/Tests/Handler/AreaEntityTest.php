@@ -103,7 +103,7 @@ class AreaEntityTest extends ViewTestBase {
 
     // Mark entity_test test view_mode as customizable.
     $view_mode = \Drupal::entityManager()->getStorage('view_mode')->load('entity_test.test');
-    $view_mode->status = TRUE;
+    $view_mode->enable();
     $view_mode->save();
 
     // Change the view mode of the area handler.

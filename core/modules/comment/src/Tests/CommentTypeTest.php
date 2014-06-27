@@ -84,7 +84,7 @@ class CommentTypeTest extends CommentTestBase {
 
     // Check that the comment type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
-    $this->assertEqual($comment_type->langcode, $default_langcode);
+    $this->assertEqual($comment_type->language()->getId(), $default_langcode);
   }
 
   /**

@@ -52,7 +52,7 @@ class UserRoleAdminTest extends WebTestBase {
     $this->assertTrue(is_object($role), 'The role was successfully retrieved from the database.');
 
     // Check that the role was created in site default language.
-    $this->assertEqual($role->langcode, $default_langcode);
+    $this->assertEqual($role->language()->getId(), $default_langcode);
 
     // Try adding a duplicate role.
     $this->drupalPostForm('admin/people/roles/add', $edit, t('Save'));
