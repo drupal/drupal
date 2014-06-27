@@ -7,12 +7,17 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
  * Tests the language config schema.
  */
-class MigrateActionConfigSchemaTest extends MigrateConfigSchemaBase {
+class MigrateActionConfigSchemaTest extends MigrateDrupalTestBase {
+
+ use SchemaCheckTestTrait;
+
   /**
    * Modules to enable.
    *
