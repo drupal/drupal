@@ -25,9 +25,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
   function setUp() {
     parent::setUp();
     $this->default_metatags = array(
-      'MobileOptimized' => '<meta name="MobileOptimized" content="width" />',
-      'HandheldFriendly' => '<meta name="HandheldFriendly" content="true" />',
-      'viewport' => '<meta name="viewport" content="width=device-width" />',
+      'viewport' => '<meta name="viewport" content="width=device-width, initial-scale=1.0" />',
     );
   }
 

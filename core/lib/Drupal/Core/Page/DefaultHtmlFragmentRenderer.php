@@ -127,9 +127,7 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     )));
 
     // Display the html.html.twig's default mobile metatags for responsive design.
-    $page->addMetaElement(new MetaElement(NULL, array('name' => 'MobileOptimized', 'content' => 'width')));
-    $page->addMetaElement(new MetaElement(NULL, array('name' => 'HandheldFriendly', 'content' => 'true')));
-    $page->addMetaElement(new MetaElement(NULL, array('name' => 'viewport', 'content' => 'width=device-width')));
+    $page->addMetaElement(new MetaElement(NULL, array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0')));
   }
 
 }
