@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Plugin\FetcherInterface.
+ * Contains \Drupal\aggregator\Plugin\ParserInterface.
  */
 
 namespace Drupal\aggregator\Plugin;
