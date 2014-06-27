@@ -12,6 +12,8 @@ namespace Drupal\Core\Session;
  *
  * Defines an object that has a user id, roles and can have session data. The
  * interface is implemented both by the global session and the user entity.
+ *
+ * @ingroup user_api
  */
 interface AccountInterface {
 

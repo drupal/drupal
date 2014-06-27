@@ -389,6 +389,19 @@
  * $files = $storage->loadMultiple($fids);
  * @endcode
  *
+ * @section sec_access Access checking on entities
+ * Entity types define their access permission scheme in their annotation.
+ * Access permissions can be quite complex, so you should not assume any
+ * particular permission scheme. Instead, once you have an entity object
+ * loaded, you can check for permission for a particular operation (such as
+ * 'view') at the entity or field level by calling:
+ * @code
+ * $entity->access($operation);
+ * $entity->nameOfField->access($operation);
+ * @endcode
+ * The interface related to access checking in entities and fields is
+ * \Drupal\Core\Access\AccessibleInterface.
+ *
  * @see i18n
  * @}
  */
@@ -676,14 +689,94 @@
  */
 
 /**
- * @defgroup user_api User Accounts System
+ * @defgroup user_api User accounts, permissions, and roles
  * @{
  * API for user accounts, access checking, roles, and permissions.
  *
- * @todo write this
+ * @sec sec_overview Overview and terminology
+ * Drupal's permission system is based on the concepts of accounts, roles,
+ * and permissions.
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
+ * Users (site visitors) have accounts, which include a user name, an email
+ * address, a password (or some other means of authentication), and possibly
+ * other fields (if defined on the site). Anonymous users have an implicit
+ * account that does not have a real user name or any account information.
+ *
+ * Each user account is assigned one or more roles. The anonymous user account
+ * automatically has the anonymous user role; real user accounts
+ * automatically have the authenticated user role, plus any roles defined on
+ * the site that they have been assigned.
+ *
+ * Each role, including the special anonymous and authenticated user roles, is
+ * granted one or more named permissions, which allow them to perform certain
+ * tasks or view certain content on the site. It is possible to designate a
+ * role to be the "administrator" role; if this is set up, this role is
+ * automatically granted all available permissions whenever a module is
+ * enabled that defines permissions.
+ *
+ * All code in Drupal that allows users to perform tasks or view content must
+ * check that the current user has the correct permission before allowing the
+ * action. In the standard case, access checking consists of answering the
+ * question "Does the current user have permission 'foo'?", and allowing or
+ * denying access based on the answer. Note that access checking should nearly
+ * always be done at the permission level, not by checking for a particular role
+ * or user ID, so that site administrators can set up user accounts and roles
+ * appropriately for their particular sites.
+ *
+ * @sec sec_define Defining permissions
+ * Modules define permissions by implementing hook_permission(). The return
+ * value defines machine names, human-readable names, and optionally
+ * descriptions for each permission type. The machine names are the canonical
+ * way to refer to permissions for access checking.
+ *
+ * @sec sec_access Access permission checking
+ * Depending on the situation, there are several methods for ensuring that
+ * access checks are done properly in Drupal:
+ * - Routes: When you register a route, include a 'requirements' section that
+ *   either gives the machine name of the permission that is needed to visit the
+ *   URL of the route, or tells Drupal to use an access check method or service
+ *   to check access. See the @link menu Routing topic @endlink for more
+ *   information.
+ * - Entities: Access for various entity operations is designated either with
+ *   simple permissions or access controller classes in the entity annotation.
+ *   See the @link entity_api Entity API topic @endlink for more information.
+ * - Other code: There is a 'current_user' service, which can be injected into
+ *   classes to provide access to the current user account (see the
+ *   @link container Services and Dependency Injection topic @endlink for more
+ *   information on dependency injection). In code that cannot use dependency
+ *   injection, you can access this service and retrieve the current user
+ *   account object by calling \Drupal::currentUser(). Once you have a user
+ *   object for the current user (implementing \Drupal\user\UserInterface), you
+ *   can call inherited method
+ *   \Drupal\Core\Session\AccountInterface::hasPermission() to check
+ *   permissions, or pass this object into other functions/methods.
+ * - Forms: Each element of a form array can have a Boolean '#access' property,
+ *   which determines whether that element is visible and/or usable. This is a
+ *   common need in forms, so the current user service (described above) is
+ *   injected into the form base class as method
+ *   \Drupal\Core\Form\FormBase::currentUser().
+ *
+ * @sec sec_entities User and role objects
+ * User objects in Drupal are entity items, implementing
+ * \Drupal\user\UserInterface. Role objects in Drupal are also entity items,
+ * implementing \Drupal\user\RoleInterface. See the
+ * @link entity_api Entity API topic @endlink for more information about
+ * entities in general (including how to load, create, modify, and query them).
+ *
+ * Roles often need to be manipulated in automated test code, such as to add
+ * permissions to them. Here's an example:
+ * @code
+ * $role = \Drupal\user\Entity\Role::load('authenticated');
+ * $role->grantPermission('access comments');
+ * $role->save();
+ * @endcode
+ *
+ * Other important interfaces:
+ * - \Drupal\Core\Session\AccountInterface: The part of UserInterface that
+ *   deals with access checking. In writing code that checks access, your
+ *   method parameters should use this interface, not UserInterface.
+ * - \Drupal\Core\Session\AccountProxyInterface: The interface for the
+ *   current_user service (described above).
  * @}
  */
 

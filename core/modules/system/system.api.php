@@ -969,6 +969,8 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  *     is specific to the permission you are defining.
  *
  * @see theme_user_permission_description()
+ *
+ * @ingroup user_api
  */
 function hook_permission() {
   return array(

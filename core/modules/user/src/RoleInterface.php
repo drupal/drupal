@@ -11,6 +11,8 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
  * Provides an interface defining a user role entity.
+ *
+ * @ingroup user_api
  */
 interface RoleInterface extends ConfigEntityInterface {
 

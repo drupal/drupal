@@ -11,6 +11,8 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Interface for checking access.
+ *
+ * @ingroup entity_api
  */
 interface AccessibleInterface extends AccessInterface {
 

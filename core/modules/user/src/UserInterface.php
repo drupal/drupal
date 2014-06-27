@@ -12,6 +12,8 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides an interface defining a user entity.
+ *
+ * @ingroup user_api
  */
 interface UserInterface extends ContentEntityInterface, AccountInterface {
 

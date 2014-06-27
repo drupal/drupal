@@ -9,6 +9,8 @@ namespace Drupal\Core\Session;
 
 /**
  * Defines an interface for a service which has the current account stored.
+ *
+ * @ingroup user_api
  */
 interface AccountProxyInterface extends AccountInterface {
 
