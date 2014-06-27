@@ -118,7 +118,7 @@ function hook_file_update(Drupal\file\FileInterface $file) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
     $file->save();
 
-    \Drupal::logger('file')->notice(t('%source has been renamed to %destination', array('%source' => $old_filename, '%destination' => $file->getFilename())));
+    \Drupal::logger('file')->notice('%source has been renamed to %destination', array('%source' => $old_filename, '%destination' => $file->getFilename()));
   }
 }
 
@@ -138,7 +138,7 @@ function hook_file_copy(Drupal\file\FileInterface $file, Drupal\file\FileInterfa
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
     $file->save();
 
-    \Drupal::logger('file')->notice(t('Copied file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->getFilename())));
+    \Drupal::logger('file')->notice('Copied file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->getFilename()));
   }
 }
 
@@ -158,7 +158,7 @@ function hook_file_move(Drupal\file\FileInterface $file, Drupal\file\FileInterfa
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
     $file->save();
 
-    \Drupal::logger('file')->notice(t('Moved file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->getFilename())));
+    \Drupal::logger('file')->notice('Moved file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->getFilename()));
   }
 }
 
