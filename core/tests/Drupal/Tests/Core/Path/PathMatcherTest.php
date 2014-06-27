@@ -12,6 +12,8 @@ use Drupal\Core\Path\PathMatcher;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Tests that path matching is working properly.
+ *
  * @group Drupal
  * @see \Drupal\Core\Path\PathMatcher
  */

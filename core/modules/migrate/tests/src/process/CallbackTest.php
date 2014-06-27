@@ -10,6 +10,8 @@ namespace Drupal\migrate\Tests\process;
 use Drupal\migrate\Plugin\migrate\process\Callback;
 
 /**
+ * Tests the callback process plugin.
+ *
  * @group migrate
  * @group Drupal
  */

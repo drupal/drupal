@@ -10,6 +10,8 @@ namespace Drupal\migrate_drupal\Tests\source;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
+ * Tests the variable source plugin.
+ *
  * @group migrate_drupal
  * @group Drupal
  */

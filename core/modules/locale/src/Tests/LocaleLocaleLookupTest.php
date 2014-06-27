@@ -10,6 +10,9 @@ namespace Drupal\locale\Tests;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests that LocaleLookup does not cause circular references.
+ */
 class LocaleLocaleLookupTest extends WebTestBase {
 
   /**

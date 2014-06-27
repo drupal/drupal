@@ -10,6 +10,8 @@ namespace Drupal\migrate\Tests\process;
 use Drupal\migrate\Plugin\migrate\process\Concat;
 
 /**
+ * Tests the concat process plugin.
+ *
  * @group migrate
  * @group Drupal
  */

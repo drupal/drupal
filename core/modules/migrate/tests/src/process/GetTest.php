@@ -10,6 +10,8 @@ use Drupal\migrate\Plugin\migrate\process\TestGet;
 use Drupal\migrate\Row;
 
 /**
+ * Tests the get process plugin.
+ *
  * @group migrate
  * @group Drupal
  */

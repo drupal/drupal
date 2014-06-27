@@ -9,6 +9,8 @@ namespace Drupal\migrate\Tests\process;
 use Drupal\migrate\Plugin\migrate\process\StaticMap;
 
 /**
+ * Tests the static map process plugin.
+ *
  * @group migrate
  * @group Drupal
  */

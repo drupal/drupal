@@ -10,6 +10,8 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateTestCase;
 
 /**
+ * Tests the D6 SQL base class.
+ *
  * @group migrate_drupal
  * @group Drupal
  */
