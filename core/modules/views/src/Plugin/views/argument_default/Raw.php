@@ -89,6 +89,8 @@ class Raw extends ArgumentDefaultPluginBase {
   }
 
   public function getArgument() {
+    // @todo Remove dependency on the internal _system_path attribute:
+    //   https://www.drupal.org/node/2293581.
     $path = $this->view->getRequest()->attributes->get('_system_path');
     if ($this->options['use_alias']) {
       $path = $this->aliasManager->getAliasByPath($path);

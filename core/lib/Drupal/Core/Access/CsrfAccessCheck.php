@@ -51,6 +51,8 @@ class CsrfAccessCheck implements RoutingAccessInterface {
   public function access(Route $route, Request $request) {
     // If this is the controller request, check CSRF access as normal.
     if ($request->attributes->get('_controller_request')) {
+      // @todo Remove dependency on the internal _system_path attribute:
+      //   https://www.drupal.org/node/2293501.
       return $this->csrfToken->validate($request->query->get('token'), $request->attributes->get('_system_path')) ? static::ALLOW : static::KILL;
     }
 

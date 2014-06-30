@@ -28,6 +28,8 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     $user = \Drupal::currentUser();
     $request = $event->getRequest();
     $site_status = $request->attributes->get('_maintenance');
+    // @todo Remove dependency on the internal _system_path attribute:
+    //   https://www.drupal.org/node/2288911.
     $path = $request->attributes->get('_system_path');
     if ($site_status == CoreMaintenanceModeSubscriber::SITE_OFFLINE) {
       // If the site is offline, log out unprivileged users.

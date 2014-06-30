@@ -142,6 +142,8 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    *   A response object.
    */
   public function on403Html(FlattenException $exception, Request $request) {
+    // @todo Remove dependency on the internal _system_path attribute:
+    //   https://www.drupal.org/node/2293523.
     $system_path = $request->attributes->get('_system_path');
     watchdog('access denied', $system_path, array(), WATCHDOG_WARNING);
 
@@ -200,6 +202,8 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
       }
     }
 
+    // @todo Remove dependency on the internal _system_path attribute:
+    //   https://www.drupal.org/node/2293523.
     $system_path = $request->attributes->get('_system_path');
 
     $path = $this->container->get('path.alias_manager')->getPathByAlias(\Drupal::config('system.site')->get('page.404'));

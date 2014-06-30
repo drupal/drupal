@@ -140,6 +140,8 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
 
     $request = $this->requestStack->getCurrentRequest();
     // Compare the lowercase path alias (if any) and internal path.
+    // @todo Remove dependency on the internal _system_path attribute:
+    //   https://www.drupal.org/node/2293581.
     $path = $request->attributes->get('_system_path');
     $path_alias = Unicode::strtolower($this->aliasManager->getAliasByPath($path));
 
