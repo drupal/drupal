@@ -4,4 +4,4 @@ field_ui.list:
   base_route: field_ui.list
 field_ui.fields:
   class: \Drupal\Core\Menu\LocalTaskDefault
-  derivative: \Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask
+  deriver: \Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask

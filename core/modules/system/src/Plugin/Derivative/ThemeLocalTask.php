@@ -7,15 +7,15 @@
 
 namespace Drupal\system\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic tabs based on active themes.
  */
-class ThemeLocalTask extends DerivativeBase implements ContainerDerivativeInterface {
+class ThemeLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The theme handler.

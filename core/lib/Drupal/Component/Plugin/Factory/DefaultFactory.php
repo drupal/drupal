@@ -8,7 +8,7 @@ namespace Drupal\Component\Plugin\Factory;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverInterface;
 
 /**
  * Default plugin factory.

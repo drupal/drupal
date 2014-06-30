@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\views\Views;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\views\Views;
  *
  * The derivatives store all base table plugin information.
  */
-class DefaultWizardDeriver extends DerivativeBase {
+class DefaultWizardDeriver extends DeriverBase {
   /**
    * {@inheritdoc}
    */

@@ -46,11 +46,11 @@ class ContainerDerivativeDiscoveryDecoratorTest extends UnitTestCase {
     $definitions = array();
     $definitions['container_aware_discovery'] = array(
       'id' => 'container_aware_discovery',
-      'derivative' => '\Drupal\Tests\Core\Plugin\Discovery\TestContainerDerivativeDiscovery',
+      'deriver' => '\Drupal\Tests\Core\Plugin\Discovery\TestContainerDerivativeDiscovery',
     );
     $definitions['non_container_aware_discovery'] = array(
       'id' => 'non_container_aware_discovery',
-      'derivative' => '\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery',
+      'deriver' => '\Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscovery',
     );
 
     $discovery_main = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');

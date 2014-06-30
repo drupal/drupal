@@ -6,9 +6,9 @@
 
 namespace Drupal\menu_test\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 
-class LocalTaskTest extends DerivativeBase {
+class LocalTaskTest extends DeriverBase {
 
   /**
    * {@inheritdoc}

@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Plugin\Derivative\DerivativeInterface.
+ * Contains \Drupal\Component\Plugin\Derivative\DeriverInterface.
  */
 
 namespace Drupal\Component\Plugin\Derivative;
 
 /**
- * Plugin interface for derivative plugin handling.
+ * Provides additional plugin definitions based on an existing definition.
  *
  * @ingroup plugin_api
  */
-interface DerivativeInterface {
+interface DeriverInterface {
 
   /**
    * Returns the definition of a derivative plugin.

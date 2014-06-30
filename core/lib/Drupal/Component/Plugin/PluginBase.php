@@ -70,7 +70,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
   /**
    * {@inheritdoc}
    */
-  public function getBasePluginId() {
+  public function getBaseId() {
     $plugin_id = $this->getPluginId();
     if (strpos($plugin_id, static::DERIVATIVE_SEPARATOR)) {
       list($plugin_id) = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 2);

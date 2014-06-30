@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "language_block",
  *   admin_label = @Translation("Language switcher"),
  *   category = @Translation("System"),
- *   derivative = "Drupal\language\Plugin\Derivative\LanguageBlock"
+ *   deriver = "Drupal\language\Plugin\Derivative\LanguageBlock"
  * )
  */
 class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface {

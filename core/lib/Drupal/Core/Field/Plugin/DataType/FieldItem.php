@@ -18,7 +18,7 @@ namespace Drupal\Core\Field\Plugin\DataType;
  *   id = "field_item",
  *   label = @Translation("Field item"),
  *   list_class = "\Drupal\Core\Field\FieldItemList",
- *   derivative = "Drupal\Core\Field\Plugin\DataType\Deriver\FieldItemDeriver"
+ *   deriver = "Drupal\Core\Field\Plugin\DataType\Deriver\FieldItemDeriver"
  * )
  */
 abstract class FieldItem {

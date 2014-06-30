@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
 /**
  * @MigrateDestination(
  *   id = "entity_revision",
- *   derivative = "Drupal\migrate\Plugin\Derivative\MigrateEntityRevision"
+ *   deriver = "Drupal\migrate\Plugin\Derivative\MigrateEntityRevision"
  * )
  */
 class EntityRevision extends EntityContentBase {

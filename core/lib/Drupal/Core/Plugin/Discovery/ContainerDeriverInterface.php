@@ -2,25 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface.
+ * Contains \Drupal\Core\Plugin\Discovery\ContainerDeriverInterface.
  */
 
 namespace Drupal\Core\Plugin\Discovery;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Derivative fetcher interface to pass the container to static create method.
+ * Provides additional plugin definitions based on an existing definition using
+ * service injection.
  */
-interface ContainerDerivativeInterface extends DerivativeInterface {
+interface ContainerDeriverInterface extends DeriverInterface {
 
   /**
-   * Creates an instance of the derivative fetcher.
+   * Creates a new class instance.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The container to pull out services used in the fetcher.
-   * @param string $plugin_id
+   * @param string $base_plugin_id
    *   The base plugin ID for the plugin ID.
    *
    * @return static

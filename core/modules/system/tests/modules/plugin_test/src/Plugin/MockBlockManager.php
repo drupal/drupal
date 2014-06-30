@@ -52,7 +52,7 @@ class MockBlockManager extends PluginManagerBase {
     // base plugin, are available to the system.
     $this->discovery->setDefinition('menu', array(
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
-      'derivative' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlockDeriver',
+      'deriver' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlockDeriver',
     ));
     // A plugin defining itself as a derivative.
     $this->discovery->setDefinition('menu:foo', array(
@@ -69,7 +69,7 @@ class MockBlockManager extends PluginManagerBase {
     $this->discovery->setDefinition('layout', array(
       'label' => t('Layout'),
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',
-      'derivative' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlockDeriver',
+      'deriver' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlockDeriver',
     ));
 
     // A block plugin that requires context to function. This block requires a

@@ -7,15 +7,15 @@
 
 namespace Drupal\search\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\search\SearchPageRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides local tasks for each search page.
  */
-class SearchLocalTask extends DerivativeBase implements ContainerDerivativeInterface {
+class SearchLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The search page repository.

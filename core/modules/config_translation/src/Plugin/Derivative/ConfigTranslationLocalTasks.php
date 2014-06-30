@@ -8,14 +8,14 @@
 namespace Drupal\config_translation\Plugin\Derivative;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic local tasks for config translation.
  */
-class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDerivativeInterface {
+class ConfigTranslationLocalTasks extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The mapper plugin discovery service.

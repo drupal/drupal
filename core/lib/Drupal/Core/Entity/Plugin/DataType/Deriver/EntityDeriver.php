@@ -8,13 +8,13 @@
 namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides data type plugins for each existing entity type and bundle.
  */
-class EntityDeriver implements ContainerDerivativeInterface {
+class EntityDeriver implements ContainerDeriverInterface {
 
   /**
    * List of derivative definitions.

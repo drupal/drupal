@@ -17,7 +17,7 @@ namespace Drupal\Core\Entity\Plugin\DataType;
  *   id = "entity",
  *   label = @Translation("Entity"),
  *   description = @Translation("All kind of entities, e.g. nodes, comments or users."),
- *   derivative = "\Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver",
+ *   deriver = "\Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver",
  *   definition_class = "\Drupal\Core\Entity\TypedData\EntityDataDefinition"
  * )
  */

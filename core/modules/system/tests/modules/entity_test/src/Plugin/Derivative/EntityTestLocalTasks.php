@@ -7,12 +7,12 @@
 
 namespace Drupal\entity_test\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 
 /**
  * Defines the local tasks for all the entity_test entities.
  */
-class EntityTestLocalTasks extends DerivativeBase {
+class EntityTestLocalTasks extends DeriverBase {
 
   /**
    * {@inheritdoc}

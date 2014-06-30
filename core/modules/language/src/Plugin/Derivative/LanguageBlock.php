@@ -7,13 +7,13 @@
 
 namespace Drupal\language\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 
 /**
  * Provides language switcher block plugin definitions for all languages.
  */
-class LanguageBlock extends DerivativeBase {
+class LanguageBlock extends DeriverBase {
 
   /**
    * {@inheritdoc}

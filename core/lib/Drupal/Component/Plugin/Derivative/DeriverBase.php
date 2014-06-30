@@ -2,20 +2,15 @@
 
 /**
  * @file
- * Contains Drupal\Component\Plugin\Derivative\DerivativeBase.
+ * Contains \Drupal\Component\Plugin\Derivative\DeriverBase.
  */
 
 namespace Drupal\Component\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
-
 /**
- * Default version of getDerivativeDefinition() common to most concrete
- * implementations of DerivativeInterface.
- *
- * See the Aggregator and Mock block derivers for different implementations.
+ * Provides a basic deriver.
  */
-abstract class DerivativeBase implements DerivativeInterface {
+abstract class DeriverBase implements DeriverInterface {
 
   /**
    * List of derivative definitions.

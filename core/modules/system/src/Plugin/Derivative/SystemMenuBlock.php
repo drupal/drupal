@@ -7,9 +7,9 @@
 
 namespace Drupal\system\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\system\Plugin\Block\SystemMenuBlock
  */
-class SystemMenuBlock extends DerivativeBase implements ContainerDerivativeInterface {
+class SystemMenuBlock extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The menu storage.

@@ -58,28 +58,29 @@ class PluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getBasePluginId method.
+   * Tests the getBaseId method.
    *
-   * @dataProvider providerTestGetBasePluginId
+   * @dataProvider providerTestGetBaseId
    *
-   * @see \Drupal\Component\Plugin\PluginBase::getBasePluginId()
+   * @see \Drupal\Component\Plugin\PluginBase::getBaseId()
    */
-  public function testGetBasePluginId($plugin_id, $expected) {
+  public function testGetBaseId($plugin_id, $expected) {
+    /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit_Framework_MockObject_MockObject $plugin_base */
     $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', array(
       array(),
       $plugin_id,
       array(),
     ));
 
-    $this->assertEquals($expected, $plugin_base->getBasePluginId());
+    $this->assertEquals($expected, $plugin_base->getBaseId());
   }
 
   /**
-   * Returns test data for testGetBasePluginId().
+   * Returns test data for testGetBaseId().
    *
    * @return array
    */
-  public function providerTestGetBasePluginId() {
+  public function providerTestGetBaseId() {
     return array(
       array('base_id', 'base_id'),
       array('base_id:derivative', 'base_id'),
@@ -88,13 +89,14 @@ class PluginBaseTest extends UnitTestCase {
 
 
   /**
-   * Tests the getBasePluginId method.
+   * Tests the getDerivativeId method.
    *
    * @dataProvider providerTestGetDerivativeId
    *
-   * @see \Drupal\Component\Plugin\PluginBase::getBasePluginId()
+   * @see \Drupal\Component\Plugin\PluginBase::getDerivativeId()
    */
   public function testGetDerivativeId($plugin_id = NULL, $expected = NULL) {
+    /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit_Framework_MockObject_MockObject $plugin_base */
     $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', array(
       array(),
       $plugin_id,
@@ -105,7 +107,7 @@ class PluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Returns test data for testGetBasePluginId().
+   * Returns test data for testGetDerivativeId().
    *
    * @return array
    */

@@ -18,7 +18,7 @@ interface DerivativeInspectionInterface {
    * @return string
    *   The base_plugin_id of the plugin instance.
    */
-  public function getBasePluginId();
+  public function getBaseId();
 
   /**
    * Returns the derivative_id of the plugin instance.

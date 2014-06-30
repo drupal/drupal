@@ -8,13 +8,13 @@
 namespace Drupal\Core\Field\Plugin\DataType\Deriver;
 
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides data type plugins for each existing field type plugin.
  */
-class FieldItemDeriver implements ContainerDerivativeInterface {
+class FieldItemDeriver implements ContainerDeriverInterface {
 
   /**
    * List of derivative definitions.

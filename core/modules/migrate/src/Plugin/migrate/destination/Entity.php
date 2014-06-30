@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * @MigrateDestination(
  *   id = "entity",
- *   derivative = "Drupal\migrate\Plugin\Derivative\MigrateEntity"
+ *   deriver = "Drupal\migrate\Plugin\Derivative\MigrateEntity"
  * )
  */
 abstract class Entity extends DestinationBase implements ContainerFactoryPluginInterface {

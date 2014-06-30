@@ -8,15 +8,15 @@
 namespace Drupal\config_translation\Plugin\Derivative;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\config_translation\ConfigMapperManagerInterface;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic contextual links for configuration translation.
  */
-class ConfigTranslationContextualLinks extends DerivativeBase implements ContainerDerivativeInterface {
+class ConfigTranslationContextualLinks extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The mapper plugin discovery service.

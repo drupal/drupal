@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsRow(
  *   id = "entity",
- *   derivative = "Drupal\views\Plugin\Derivative\ViewsEntityRow"
+ *   deriver = "Drupal\views\Plugin\Derivative\ViewsEntityRow"
  * )
  */
 class EntityRow extends RowPluginBase {

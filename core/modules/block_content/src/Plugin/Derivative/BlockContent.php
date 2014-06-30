@@ -7,13 +7,12 @@
 
 namespace Drupal\block_content\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 
 /**
  * Retrieves block plugin definitions for all custom blocks.
  */
-class BlockContent extends DerivativeBase {
+class BlockContent extends DeriverBase {
   /**
    * {@inheritdoc}
    */

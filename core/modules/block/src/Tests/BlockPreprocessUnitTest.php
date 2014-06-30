@@ -37,6 +37,7 @@ class BlockPreprocessUnitTest extends WebTestBase {
     // an underscore (not transformed) and a hyphen (transformed to underscore),
     // and generates possibilities for each level of derivative.
     // @todo Clarify this comment.
+    /** @var \Drupal\block\BlockInterface $block */
     $block = entity_create('block', array(
       'plugin' => 'system_menu_block:admin',
       'region' => 'footer',
@@ -48,7 +49,7 @@ class BlockPreprocessUnitTest extends WebTestBase {
     $plugin = $block->getPlugin();
     $variables['elements']['#configuration'] = $plugin->getConfiguration();
     $variables['elements']['#plugin_id'] = $plugin->getPluginId();
-    $variables['elements']['#base_plugin_id'] = $plugin->getBasePluginId();
+    $variables['elements']['#base_plugin_id'] = $plugin->getBaseId();
     $variables['elements']['#derivative_plugin_id'] = $plugin->getDerivativeId();
     $variables['elements']['content'] = array();
 

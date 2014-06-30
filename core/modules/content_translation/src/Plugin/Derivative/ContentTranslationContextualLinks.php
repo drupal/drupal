@@ -7,8 +7,8 @@
 
 namespace Drupal\content_translation\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\content_translation\ContentTranslationManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\content_translation\Plugin\Menu\ContextualLink\ContentTranslationContextualLinks
  */
-class ContentTranslationContextualLinks extends DerivativeBase implements ContainerDerivativeInterface {
+class ContentTranslationContextualLinks extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The content translation manager.

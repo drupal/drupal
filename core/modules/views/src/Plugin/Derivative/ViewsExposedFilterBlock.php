@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\views\Plugin\block\block\ViewsExposedFilterBlock
  */
-class ViewsExposedFilterBlock implements ContainerDerivativeInterface {
+class ViewsExposedFilterBlock implements ContainerDeriverInterface {
 
   /**
    * List of derivative definitions.
@@ -63,7 +63,7 @@ class ViewsExposedFilterBlock implements ContainerDerivativeInterface {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinition().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     if (!empty($this->derivatives) && !empty($this->derivatives[$derivative_id])) {
@@ -74,7 +74,7 @@ class ViewsExposedFilterBlock implements ContainerDerivativeInterface {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     // Check all Views for displays with an exposed filter block.

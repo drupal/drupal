@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\views\Plugin\views\row\EntityRow
  */
-class ViewsEntityRow implements ContainerDerivativeInterface {
+class ViewsEntityRow implements ContainerDeriverInterface {
 
   /**
    * Stores all entity row plugin information.

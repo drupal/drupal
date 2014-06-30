@@ -12,4 +12,4 @@ block.admin_display_theme:
   title: 'Block layout'
   route_name: block.admin_display_theme
   parent_id: block.admin_display
-  derivative: 'Drupal\block\Plugin\Derivative\ThemeLocalTask'
+  deriver: 'Drupal\block\Plugin\Derivative\ThemeLocalTask'

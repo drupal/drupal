@@ -7,12 +7,12 @@
 
 namespace Drupal\entity_reference\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
 
 /**
  * Base class for selection plugins provided by Entity Reference.
  */
-class SelectionBase extends DerivativeBase {
+class SelectionBase extends DeriverBase {
   /**
    * {@inheritdoc}
    */

@@ -14,7 +14,7 @@ namespace Drupal\views\Plugin\views\wizard;
  *
  * @ViewsWizard(
  *   id = "standard",
- *   derivative = "Drupal\views\Plugin\Derivative\DefaultWizardDeriver",
+ *   deriver = "Drupal\views\Plugin\Derivative\DefaultWizardDeriver",
  *   title = @Translation("Default wizard")
  * )
  */

@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Block(
  *   id = "views_block",
  *   admin_label = @Translation("Views Block"),
- *   derivative = "Drupal\views\Plugin\Derivative\ViewsBlock"
+ *   deriver = "Drupal\views\Plugin\Derivative\ViewsBlock"
  * )
  */
 class ViewsBlock extends ViewsBlockBase {

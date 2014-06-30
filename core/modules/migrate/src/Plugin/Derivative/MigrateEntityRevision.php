@@ -7,10 +7,10 @@
 
 namespace Drupal\migrate\Plugin\Derivative;
 
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class MigrateEntityRevision implements ContainerDerivativeInterface {
+class MigrateEntityRevision implements ContainerDeriverInterface {
 
   /**
    * List of derivative definitions.

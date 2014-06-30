@@ -8,8 +8,8 @@
 namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Core\State\StateInterface;
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides local task definitions for all views configured as local tasks.
  */
-class ViewsLocalTask extends DerivativeBase implements ContainerDerivativeInterface {
+class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The route provider.

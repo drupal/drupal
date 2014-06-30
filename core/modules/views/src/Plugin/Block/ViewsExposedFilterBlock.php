@@ -13,7 +13,7 @@ namespace Drupal\views\Plugin\Block;
  * @Block(
  *   id = "views_exposed_filter_block",
  *   admin_label = @Translation("Views Exposed Filter Block"),
- *   derivative = "Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock"
+ *   deriver = "Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock"
  * )
  */
 class ViewsExposedFilterBlock extends ViewsBlockBase {

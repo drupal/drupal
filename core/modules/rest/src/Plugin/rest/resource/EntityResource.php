@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *   id = "entity",
  *   label = @Translation("Entity"),
  *   serialization_class = "Drupal\Core\Entity\Entity",
- *   derivative = "Drupal\rest\Plugin\Derivative\EntityDerivative",
+ *   deriver = "Drupal\rest\Plugin\Derivative\EntityDerivative",
  *   uri_paths = {
  *     "canonical" = "/entity/{entity_type}/{entity}",
  *     "http://drupal.org/link-relations/create" = "/entity/{entity_type}"

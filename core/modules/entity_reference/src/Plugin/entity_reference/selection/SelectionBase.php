@@ -22,7 +22,7 @@ use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
  *   label = @Translation("Default"),
  *   group = "default",
  *   weight = 0,
- *   derivative = "Drupal\entity_reference\Plugin\Derivative\SelectionBase"
+ *   deriver = "Drupal\entity_reference\Plugin\Derivative\SelectionBase"
  * )
  */
 class SelectionBase implements SelectionInterface {

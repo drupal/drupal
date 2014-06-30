@@ -7,17 +7,17 @@
 
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverInterface;
 
 /**
- * Mock implementation of DerivativeInterface for the mock layout block plugin.
+ * Mock implementation of DeriverInterface for the mock layout block plugin.
  *
  * @see \Drupal\plugin_test\Plugin\MockBlockManager
  */
-class MockLayoutBlockDeriver implements DerivativeInterface {
+class MockLayoutBlockDeriver implements DeriverInterface {
 
   /**
-   * Implements Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinition().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     $derivatives = $this->getDerivativeDefinitions($base_plugin_definition);
@@ -27,14 +27,14 @@ class MockLayoutBlockDeriver implements DerivativeInterface {
   }
 
   /**
-   * Implements Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     // This isn't strictly necessary, but it helps reduce clutter in
     // DerivativePluginTest::testDerivativeDecorator()'s $expected variable.
     // Since derivative definitions don't need further deriving, we remove this
     // key from the returned definitions.
-    unset($base_plugin_definition['derivative']);
+    unset($base_plugin_definition['deriver']);
 
     $derivatives = array(
       // Adding a NULL key signifies that the base plugin may also be used in

@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "system_menu_block",
  *   admin_label = @Translation("Menu"),
  *   category = @Translation("Menus"),
- *   derivative = "Drupal\system\Plugin\Derivative\SystemMenuBlock"
+ *   deriver = "Drupal\system\Plugin\Derivative\SystemMenuBlock"
  * )
  */
 class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterface {

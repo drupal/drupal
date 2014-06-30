@@ -7,12 +7,12 @@
 
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverInterface;
 
 /**
  * Defines test derivative discovery using an object..
  */
-class TestDerivativeDiscoveryWithObject implements DerivativeInterface {
+class TestDerivativeDiscoveryWithObject implements DeriverInterface {
 
   /**
    * {@inheritdoc}

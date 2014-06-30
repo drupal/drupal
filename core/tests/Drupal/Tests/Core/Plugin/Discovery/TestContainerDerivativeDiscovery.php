@@ -7,14 +7,14 @@
 
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines container test derivative discovery.
  */
-class TestContainerDerivativeDiscovery extends TestDerivativeDiscovery implements ContainerDerivativeInterface {
+class TestContainerDerivativeDiscovery extends TestDerivativeDiscovery implements ContainerDeriverInterface {
 
   /**
    * Constructs a TestContainerDerivativeDiscovery object.

@@ -8,14 +8,14 @@
 namespace Drupal\content_translation\Plugin\Derivative;
 
 use Drupal\content_translation\ContentTranslationManagerInterface;
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic local tasks for content translation.
  */
-class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDerivativeInterface {
+class ContentTranslationLocalTasks extends DeriverBase implements ContainerDeriverInterface {
 
   /**
    * The base plugin ID

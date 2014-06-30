@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  id = "block_content",
  *  admin_label = @Translation("Custom block"),
  *  category = @Translation("Custom"),
- *  derivative = "Drupal\block_content\Plugin\Derivative\BlockContent"
+ *  deriver = "Drupal\block_content\Plugin\Derivative\BlockContent"
  * )
  */
 class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInterface {

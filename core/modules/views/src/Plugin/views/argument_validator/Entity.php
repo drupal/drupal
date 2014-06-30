@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsArgumentValidator(
  *   id = "entity",
- *   derivative = "Drupal\views\Plugin\Derivative\ViewsEntityArgumentValidator"
+ *   deriver = "Drupal\views\Plugin\Derivative\ViewsEntityArgumentValidator"
  * )
  *
  * @see \Drupal\views\Plugin\Derivative\ViewsEntityArgumentValidator
