@@ -283,11 +283,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $entity = $items->getEntity();
 
     $element += array(
-      '#entity_type' => $entity->getEntityTypeId(),
-      '#bundle' => $entity->bundle(),
-      '#entity' => $entity,
-      '#field_name' => $this->fieldDefinition->getName(),
-      '#language' => $items->getLangcode(),
       '#field_parents' => $form['#parents'],
       // Only the first widget should be required.
       '#required' => $delta == 0 && $this->fieldDefinition->isRequired(),

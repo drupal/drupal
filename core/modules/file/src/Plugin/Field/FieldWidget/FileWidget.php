@@ -159,8 +159,8 @@ class FileWidget extends WidgetBase {
       $elements['#title'] = $title;
 
       $elements['#description'] = $description;
-      $elements['#field_name'] = $element['#field_name'];
-      $elements['#language'] = $element['#language'];
+      $elements['#field_name'] = $field_name;
+      $elements['#language'] = $items->getLangcode();
       $elements['#display_field'] = (bool) $this->getFieldSetting('display_field');
       // The field settings include defaults for the field type. However, this
       // widget is a base class for other widgets (e.g., ImageWidget) that may
@@ -218,6 +218,8 @@ class FileWidget extends WidgetBase {
       // Allows this field to return an array instead of a single value.
       '#extended' => TRUE,
       // Add properties needed by value() and process() methods.
+      '#field_name' => $this->fieldDefinition->getName(),
+      '#entity_type' => $items->getEntity()->getEntityTypeId(),
       '#display_field' => (bool) $field_settings['display_field'],
       '#display_default' => $field_settings['display_default'],
       '#description_field' => $field_settings['description_field'],

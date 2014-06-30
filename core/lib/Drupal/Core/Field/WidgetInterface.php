@@ -79,11 +79,6 @@ interface WidgetInterface extends WidgetBaseInterface {
    *   The order of this item in the array of subelements (0, 1, 2, etc).
    * @param array $element
    *   A form element array containing basic properties for the widget:
-   *   - #entity_type: The name of the entity the field is attached to.
-   *   - #bundle: The name of the field bundle the field is contained in.
-   *   - #entity: The entity the field is attached to.
-   *   - #field_name: The name of the field.
-   *   - #language: The language the field is being edited in.
    *   - #field_parents: The 'parents' space for the field in the form. Most
    *       widgets can simply overlook this property. This identifies the
    *       location where the field values are placed within

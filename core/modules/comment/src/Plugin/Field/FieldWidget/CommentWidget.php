@@ -28,18 +28,13 @@ class CommentWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
-    $field = $this->fieldDefinition;
-    $entity = $items->getParent();
-
-    // Get default value from the field instance.
-    $field_default_values = $this->fieldDefinition->getDefaultValue($entity);
-    $status = $items->status;
+    $entity = $items->getEntity();
 
     $element['status'] = array(
       '#type' => 'radios',
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
-      '#default_value' => $status,
+      '#default_value' => $items->status,
       '#options' => array(
         CommentItemInterface::OPEN => t('Open'),
         CommentItemInterface::CLOSED => t('Closed'),
@@ -58,7 +53,7 @@ class CommentWidget extends WidgetBase {
     // If the entity doesn't have any comments, the "hidden" option makes no
     // sense, so don't even bother presenting it to the user unless this is the
     // default value widget on the field settings form.
-    if ($element['#field_parents'] != array('default_value_input') && !$entity->get($field->getName())->comment_count) {
+    if ($element['#field_parents'] != array('default_value_input') && !$items->comment_count) {
       $element['status'][CommentItemInterface::HIDDEN]['#access'] = FALSE;
       // Also adjust the description of the "closed" option.
       $element['status'][CommentItemInterface::CLOSED]['#description'] = t('Users cannot post comments.');
@@ -67,6 +62,9 @@ class CommentWidget extends WidgetBase {
     // second column on wide-resolutions), place the field as a details element
     // in this tab-set.
     if (isset($form['advanced'])) {
+      // Get default value from the field instance.
+      $field_default_values = $this->fieldDefinition->getDefaultValue($entity);
+
       $element += array(
         '#type' => 'details',
         // Open the details when the selected value is different to the stored
@@ -74,7 +72,7 @@ class CommentWidget extends WidgetBase {
         '#open' => ($items->status != $field_default_values[0]['status']),
         '#group' => 'advanced',
         '#attributes' => array(
-          'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),
+          'class' => array('comment-' . drupal_html_class($entity->getEntityTypeId()) . '-settings-form'),
         ),
         '#attached' => array(
           'library' => array('comment/drupal.comment'),
