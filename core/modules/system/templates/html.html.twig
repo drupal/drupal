@@ -29,17 +29,18 @@
 <!DOCTYPE html>
 <html{{ html_attributes }}>
   <head>
-    {{ head }}
+    {{ page.head }}
     <title>{{ head_title }}</title>
-    {{ styles }}
-    {{ scripts }}
+    {{ page.styles }}
+    {{ page.scripts }}
   </head>
   <body{{ attributes }}>
     <a href="#main-content" class="visually-hidden focusable skip-link">
       {{ 'Skip to main content'|t }}
     </a>
     {{ page_top }}
-    {{ page }}
+    {{ page.content }}
     {{ page_bottom }}
+    {{ page.scripts('footer') }}
   </body>
 </html>

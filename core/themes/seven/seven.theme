@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Template\RenderWrapper;
 use Drupal\Component\Utility\String;
 
 /**

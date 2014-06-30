@@ -78,6 +78,44 @@ class HtmlPage extends HtmlFragment {
   }
 
   /**
+   * Implodes the meta and link elements for the template.
+   *
+   * @return string
+   *   A string of meta and link tags.
+   */
+  public function getHead() {
+    return implode("\n", $this->getMetaElements()) . implode("\n", $this->getLinkElements());
+  }
+
+  /**
+   * Returns a themed presentation of all JavaScript code for the current page.
+   *
+   * @param string $scope
+   *   (optional) The scope for which the JavaScript rules should be returned.
+   *   Defaults to 'header'.
+   *
+   * @return string
+   *   All JavaScript code segments and includes for the scope as HTML tags.
+   *
+   * @see drupal_get_js()
+   */
+  public function getScripts($scope = 'header') {
+    return drupal_get_js($scope);
+  }
+
+  /**
+   * Returns a themed representation of all stylesheets to attach to the page.
+   *
+   * @return string
+   *   A string of XHTML CSS tags.
+   *
+   * @see drupal_get_css()
+   */
+  public function getStyles() {
+    return drupal_get_css();
+  }
+
+  /**
    * Returns the HTML attributes for the body element of this page.
    *
    * @return \Drupal\Core\Template\Attribute

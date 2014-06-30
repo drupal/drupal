@@ -20,7 +20,6 @@ use Drupal\Core\Page\LinkElement;
 use Drupal\Core\Page\MetaElement;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Template\RenderWrapper;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Element;
@@ -1958,7 +1957,7 @@ function template_preprocess_html(&$variables) {
 
   $variables['html_attributes'] = $page->getHtmlAttributes();
   $variables['attributes'] = $page->getBodyAttributes();
-  $variables['page'] = $page->getContent();
+  $variables['page'] = $page;
 
   // Compile a list of classes that are going to be applied to the body element.
   // This allows advanced theming based on context (home page, node of certain type, etc.).
@@ -2028,21 +2027,8 @@ function template_preprocess_html(&$variables) {
       $page->addMetaElement($metatag);
     }
   }
-
   $variables['page_top'][] = array('#markup' => $page->getBodyTop());
   $variables['page_bottom'][] = array('#markup' => $page->getBodyBottom());
-
-  // Add footer scripts as '#markup' so they can be rendered with other
-  // elements in page_bottom.
-  $footer_scripts = new RenderWrapper('drupal_get_js', array('footer'));
-  $variables['page_bottom'][] = array('#markup' => $footer_scripts);
-
-  // Wrap function calls in an object so they can be called when printed.
-  $variables['head'] = new RenderWrapper(function() use ($page) {
-    return implode("\n", $page->getMetaElements()) . implode("\n", $page->getLinkElements());
-  });
-  $variables['styles'] = new RenderWrapper('drupal_get_css');
-  $variables['scripts'] = new RenderWrapper('drupal_get_js');
 }
 
 /**
