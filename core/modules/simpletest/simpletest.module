@@ -4,8 +4,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Page\HtmlPage;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\simpletest\TestBase;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
@@ -16,7 +16,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
 /**
  * Implements hook_help().
  */
-function simpletest_help($route_name, Request $request) {
+function simpletest_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.simpletest':
       $output = '';

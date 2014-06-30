@@ -5,6 +5,7 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
@@ -12,12 +13,11 @@ use Drupal\views_ui\ViewUI;
 use Drupal\views\Analyzer;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function views_ui_help($route_name, Request $request) {
+function views_ui_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.views_ui':
       $output = '';

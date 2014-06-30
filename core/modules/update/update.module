@@ -11,9 +11,9 @@
  * ability to install contributed modules and themes via an user interface.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 // These are internally used constants for this code, do not modify.
 
@@ -65,7 +65,7 @@ const UPDATE_FETCH_PENDING = -4;
 /**
  * Implements hook_help().
  */
-function update_help($route_name, Request $request) {
+function update_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.update':
       $output = '';

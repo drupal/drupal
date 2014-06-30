@@ -7,6 +7,7 @@
 
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\Language as LanguageEntity;
@@ -14,12 +15,11 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
 use Drupal\node\NodeTypeInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function language_help($route_name, Request $request) {
+function language_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.language':
       $output = '';
@@ -73,13 +73,13 @@ function language_help($route_name, Request $request) {
       return $output;
 
     case 'block.admin_edit':
-      if (($block = $request->attributes->get('block')) && $block->get('plugin') == 'language_block:language_interface') {
+      if (($block = $route_match->getParameter('block')) && $block->get('plugin') == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;
 
     case 'block.admin_add':
-      if ($request->attributes->get('plugin_id') == 'language_block:language_interface') {
+      if ($route_match->getParameter('plugin_id') == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages added, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
       break;

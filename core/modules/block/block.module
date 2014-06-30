@@ -6,14 +6,14 @@
  */
 
 use Drupal\block\BlockInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\language\Entity\Language;
 use Drupal\system\Entity\Menu;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function block_help($route_name, Request $request) {
+function block_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block':
       $output = '';
@@ -37,7 +37,7 @@ function block_help($route_name, Request $request) {
       return $output;
   }
   if ($route_name == 'block.admin_display' || $route_name == 'block.admin_display_theme') {
-    $demo_theme = $request->attributes->get('theme', \Drupal::config('system.theme')->get('default'));
+    $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
     $themes = list_themes();
     $output = '<p>' . t('This page provides a drag-and-drop interface for adding a block to a region, and for controlling the order of blocks within regions. To add a block to a region, or to configure its specific title and visibility settings, click the block title under <em>Place blocks</em>. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
     $output .= '<p>' . l(t('Demonstrate block regions (!theme)', array('!theme' => $themes[$demo_theme]->info['name'])), 'admin/structure/block/demo/' . $demo_theme) . '</p>';

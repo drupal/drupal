@@ -5,12 +5,12 @@
  * Enables XML-RPC functionality.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function xmlrpc_help($route_name, Request $request) {
+function xmlrpc_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.xmlrpc':
       $output = '';

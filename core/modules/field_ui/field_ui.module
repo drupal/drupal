@@ -7,15 +7,15 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\EntityViewModeInterface;
 use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function field_ui_help($route_name, Request $request) {
+function field_ui_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.field_ui':
       $output = '';

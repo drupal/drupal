@@ -7,8 +7,8 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_toolbar().
@@ -64,7 +64,7 @@ function contextual_page_build(&$page) {
 /**
  * Implements hook_help().
  */
-function contextual_help($route_name, Request $request) {
+function contextual_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.contextual':
       $output = '';

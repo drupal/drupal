@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
@@ -16,7 +17,6 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\VocabularyInterface;
 use Drupal\Component\Utility\String;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -44,7 +44,7 @@ const TAXONOMY_HIERARCHY_MULTIPLE = 2;
 /**
  * Implements hook_help().
  */
-function taxonomy_help($route_name, Request $request) {
+function taxonomy_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.taxonomy':
       $output = '';
@@ -79,7 +79,7 @@ function taxonomy_help($route_name, Request $request) {
       return $output;
 
     case 'taxonomy.overview_terms':
-      $vocabulary = $request->attributes->get('taxonomy_vocabulary');
+      $vocabulary = $route_match->getParameter('taxonomy_vocabulary');
       switch ($vocabulary->hierarchy) {
         case TAXONOMY_HIERARCHY_DISABLED:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';

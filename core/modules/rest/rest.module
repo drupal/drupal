@@ -5,7 +5,7 @@
  * RESTful web services module.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_permission().
@@ -26,7 +26,7 @@ function rest_permission() {
 /**
  * Implements hook_help().
  */
-function rest_help($route_name, Request $request) {
+function rest_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.rest':
       $output = '';

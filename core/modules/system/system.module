@@ -8,13 +8,13 @@
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\block\BlockPluginInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use GuzzleHttp\Exception\RequestException;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * New users will be set to the default time zone at registration.
@@ -75,7 +75,7 @@ const EMAIL_MAX_LENGTH = 254;
 /**
  * Implements hook_help().
  */
-function system_help($route_name, Request $request) {
+function system_help($route_name, RouteMatchInterface $route_match) {
   global $base_url;
 
   switch ($route_name) {
@@ -109,7 +109,7 @@ function system_help($route_name, Request $request) {
 
     case 'system.theme_settings_theme':
       $theme_list = list_themes();
-      $theme = $theme_list[$request->attributes->get('theme')];
+      $theme = $theme_list[$route_match->getParameter('theme')];
       return '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', array('%name' => $theme->info['name'])) . '</p>';
 
     case 'system.theme_settings':
@@ -134,13 +134,13 @@ function system_help($route_name, Request $request) {
       return '<p>' . t('The uninstall process removes all data related to a module.') . '</p>';
 
     case 'block.admin_edit':
-      if (($block = $request->attributes->get('block')) && $block->get('plugin') == 'system_powered_by_block') {
+      if (($block = $route_match->getParameter('block')) && $block->get('plugin') == 'system_powered_by_block') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
       break;
 
     case 'block.admin_add':
-      if ($request->attributes->get('plugin_id') == 'system_powered_by_block') {
+      if ($route_match->getParameter('plugin_id') == 'system_powered_by_block') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
       break;

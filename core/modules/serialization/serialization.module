@@ -5,12 +5,12 @@
  * Provides a service for (de)serializing data to/from formats such as JSON and XML.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function serialization_help($route_name, Request $request) {
+function serialization_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.serialization':
       $output = '';

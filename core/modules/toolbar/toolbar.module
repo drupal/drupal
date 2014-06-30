@@ -8,9 +8,9 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\menu_link\MenuLinkInterface;
 use Drupal\user\RoleInterface;
@@ -19,7 +19,7 @@ use Drupal\user\UserInterface;
 /**
  * Implements hook_help().
  */
-function toolbar_help($route_name, Request $request) {
+function toolbar_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.toolbar':
       $output = '<h3>' . t('About') . '</h3>';

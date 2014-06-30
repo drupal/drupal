@@ -17,6 +17,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Access\AccessManager;
@@ -67,6 +68,13 @@ class ModulesListForm extends FormBase {
   protected $queryFactory;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -76,7 +84,8 @@ class ModulesListForm extends FormBase {
       $container->get('access_manager'),
       $container->get('entity.manager'),
       $container->get('entity.query'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('current_route_match')
     );
   }
 
@@ -95,14 +104,17 @@ class ModulesListForm extends FormBase {
    *   The entity query factory.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory, AccountInterface $current_user) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory, AccountInterface $current_user, RouteMatchInterface $route_match) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
     $this->accessManager = $access_manager;
     $this->entityManager = $entity_manager;
     $this->queryFactory = $query_factory;
     $this->currentUser = $current_user;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -211,7 +223,7 @@ class ModulesListForm extends FormBase {
     // Generate link for module's help page, if there is one.
     $row['links']['help'] = array();
     if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
-      if ($this->moduleHandler->invoke($module->getName(), 'help', array('help.page.' . $module->getName(), $this->getRequest()))) {
+      if ($this->moduleHandler->invoke($module->getName(), 'help', array('help.page.' . $module->getName(), $this->routeMatch))) {
         $row['links']['help'] = array(
           '#type' => 'link',
           '#title' => $this->t('Help'),

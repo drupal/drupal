@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\datetime\DateHelper;
 use Drupal\node\NodeInterface;
@@ -29,8 +30,8 @@ const DATETIME_DATE_STORAGE_FORMAT = 'Y-m-d';
 /**
  * Implements hook_help().
  */
-function datetime_help($path, $arg) {
-  switch ($path) {
+function datetime_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
     case 'help.page.datetime':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';

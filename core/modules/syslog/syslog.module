@@ -5,12 +5,12 @@
  * Redirects logging messages to syslog.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function syslog_help($route_name, Request $request) {
+function syslog_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.syslog':
       $output = '';

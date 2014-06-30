@@ -15,11 +15,11 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\Language as LanguageEntity;
 use Drupal\Component\Utility\Crypt;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -137,7 +137,7 @@ const LOCALE_TRANSLATION_CURRENT = 'current';
 /**
  * Implements hook_help().
  */
-function locale_help($route_name, Request $request) {
+function locale_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.locale':
       $output = '';

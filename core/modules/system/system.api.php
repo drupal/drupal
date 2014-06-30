@@ -1005,14 +1005,14 @@ function hook_permission() {
  *   For page-specific help, use the route name as identified in the
  *   module's routing.yml file. For module overview help, the route name
  *   will be in the form of "help.page.$modulename".
- * @param \Symfony\Component\HttpFoundation\Request $request
- *   The current request. This can be used to generate different help
+ * @param Drupal\Core\Routing\RouteMatchInterface $route_match
+ *   The current route match. This can be used to generate different help
  *   output for different pages that share the same route.
  *
  * @return string
  *   A localized string containing the help text.
  */
-function hook_help($route_name, \Symfony\Component\HttpFoundation\Request $request) {
+function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Main module help for the block module.
     case 'help.page.block':

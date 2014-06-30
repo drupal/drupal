@@ -14,13 +14,13 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block\BlockPluginInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorage;
 use Drupal\node\NodeInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Maximum length of menu name as entered by the user. Database length is 32
@@ -31,7 +31,7 @@ const MENU_MAX_MENU_NAME_LENGTH_UI = 27;
 /**
  * Implements hook_help().
  */
-function menu_ui_help($route_name, Request $request) {
+function menu_ui_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.menu_ui':
       $output = '';

@@ -5,12 +5,12 @@
  * Defines a simple telephone number field type.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function telephone_help($route_name, Request $request) {
+function telephone_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.telephone':
       $output = '';

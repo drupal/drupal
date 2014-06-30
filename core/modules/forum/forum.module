@@ -10,12 +10,12 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\String;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function forum_help($route_name, Request $request) {
+function forum_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.forum':
       $output = '';

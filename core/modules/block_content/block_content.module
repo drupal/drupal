@@ -5,14 +5,14 @@
  * Allows the creation of custom blocks through the user interface.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Implements hook_help().
  */
-function block_content_help($route_name, Request $request) {
+function block_content_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block_content':
       $output = '';

@@ -10,15 +10,15 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\FieldConfigInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function entity_reference_help($route_name, Request $request) {
+function entity_reference_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.entity_reference':
       $output = '';

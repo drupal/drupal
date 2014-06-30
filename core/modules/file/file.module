@@ -8,13 +8,13 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileUsage\FileUsageInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 // Load all Field module hooks for File.
 require_once __DIR__ . '/file.field.inc';
@@ -22,7 +22,7 @@ require_once __DIR__ . '/file.field.inc';
 /**
  * Implements hook_help().
  */
-function file_help($route_name, Request $request) {
+function file_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.file':
       $output = '';

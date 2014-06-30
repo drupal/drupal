@@ -11,7 +11,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Entities changed before this time are always shown as read.
@@ -24,7 +24,7 @@ define('HISTORY_READ_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 /**
  * Implements hook_help().
  */
-function history_help($route_name, Request $request) {
+function history_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.history':
       $output  = '<h3>' . t('About') . '</h3>';

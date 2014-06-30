@@ -1,15 +1,16 @@
 <?php
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @file
  * Enables the use of personal and site-wide contact forms.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
+
 /**
  * Implements hook_help().
  */
-function contact_help($route_name, Request $request) {
+function contact_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.contact':
       $output = '';

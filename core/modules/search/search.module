@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -67,7 +67,7 @@ define('PREG_CLASS_CJK', '\x{1100}-\x{11FF}\x{3040}-\x{309F}\x{30A1}-\x{318E}' .
 /**
  * Implements hook_help().
  */
-function search_help($route_name, Request $request) {
+function search_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.search':
       $output = '';

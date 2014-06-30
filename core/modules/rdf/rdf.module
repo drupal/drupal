@@ -6,13 +6,13 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function rdf_help($route_name, Request $request) {
+function rdf_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.rdf':
       $output = '';

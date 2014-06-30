@@ -5,12 +5,12 @@
  * Manages displaying online help.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function help_help($route_name, Request $request) {
+function help_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.main':
       $output = '<h2>' . t('Getting Started') . '</h2>';

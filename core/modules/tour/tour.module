@@ -4,13 +4,14 @@
  * @file
  * Main functions of the module.
  */
+
 use Drupal\Core\Cache\CacheBackendInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function tour_help($route_name, Request $request) {
+function tour_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.tour':
       $output = '';

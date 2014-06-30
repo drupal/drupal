@@ -7,14 +7,14 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldConfigUpdateForbiddenException;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function options_help($route_name, Request $request) {
+function options_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.options':
       $output = '';

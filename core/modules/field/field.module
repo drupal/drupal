@@ -9,7 +9,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\Extension;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -59,7 +59,7 @@ require_once __DIR__ . '/field.purge.inc';
 /**
  * Implements hook_help().
  */
-function field_help($route_name, Request $request) {
+function field_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.field':
       $output = '';

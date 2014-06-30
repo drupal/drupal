@@ -14,6 +14,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\Core\Template\AttributeArray;
 use Drupal\views\ViewExecutable;
@@ -21,12 +22,11 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\field\FieldInstanceConfigInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function views_help($route_name, Request $request) {
+function views_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.views':
       $output = '';

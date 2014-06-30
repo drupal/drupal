@@ -5,12 +5,12 @@
  * Adds support for serializing entities to Hypertext Application Language.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function hal_help($route_name, Request $request) {
+function hal_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.hal':
       $output = '';

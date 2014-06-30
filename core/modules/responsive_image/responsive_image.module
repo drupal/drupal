@@ -6,13 +6,13 @@
  */
 
 use Drupal\breakpoint\Entity\Breakpoint;
+use Drupal\Core\Routing\RouteMatchInterface;
 use \Drupal\Core\Template\Attribute;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function responsive_image_help($route_name, Request $request) {
+function responsive_image_help($route_name, RouteMatchInterface $route_match) {
   $output = '';
   switch ($route_name) {
     case 'help.page.responsive_image':

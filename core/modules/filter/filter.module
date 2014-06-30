@@ -12,16 +12,16 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function filter_help($route_name, Request $request) {
+function filter_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.filter':
       $output = '';

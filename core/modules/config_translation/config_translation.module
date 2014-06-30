@@ -7,13 +7,13 @@
 
 use Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks;
 use Drupal\Core\Entity\EntityInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Implements hook_help().
  */
-function config_translation_help($route_name, Request $request) {
+function config_translation_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.config_translation':
       $output = '';

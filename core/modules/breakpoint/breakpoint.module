@@ -8,12 +8,12 @@
 use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\breakpoint\Entity\BreakpointGroup;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function breakpoint_help($route_name, Request $request) {
+function breakpoint_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.breakpoint':
       $output = '';

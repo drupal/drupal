@@ -8,7 +8,8 @@
 namespace Drupal\help\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Component\Utility\String;
 
@@ -18,20 +19,43 @@ use Drupal\Component\Utility\String;
 class HelpController extends ControllerBase {
 
   /**
-   * Prints a page listing a glossary of Drupal terminology.
+   * The current route match.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
+   * Creates a new HelpController.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   */
+  public function __construct(RouteMatchInterface $route_match) {
+    $this->routeMatch = $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_route_match')
+    );
+  }
+
+  /**
+   * Prints a page listing a glossary of Drupal terminology.
    *
    * @return string
    *   An HTML string representing the contents of help page.
    */
-  public function helpMain(Request $request) {
+  public function helpMain() {
     $output = array(
       '#attached' => array(
         'css' => array(drupal_get_path('module', 'help') . '/css/help.module.css'),
       ),
-      '#markup' => '<h2>' . $this->t('Help topics') . '</h2><p>' . $this->t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList($request),
+      '#markup' => '<h2>' . $this->t('Help topics') . '</h2><p>' . $this->t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList(),
     );
     return $output;
   }
@@ -39,18 +63,15 @@ class HelpController extends ControllerBase {
   /**
    * Provides a formatted list of available help topics.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
    * @return string
    *   A string containing the formatted list.
    */
-  protected function helpLinksAsList(Request $request) {
+  protected function helpLinksAsList() {
     $module_info = system_rebuild_module_data();
 
     $modules = array();
     foreach ($this->moduleHandler()->getImplementations('help') as $module) {
-      if ($this->moduleHandler()->invoke($module, 'help', array("help.page.$module", $request))) {
+      if ($this->moduleHandler()->invoke($module, 'help', array("help.page.$module", $this->routeMatch))) {
         $modules[$module] = $module_info[$module]->info['name'];
       }
     }
@@ -78,21 +99,19 @@ class HelpController extends ControllerBase {
    *
    * @param string $name
    *   A module name to display a help page for.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
    *
    * @return array
    *   A render array as expected by drupal_render().
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function helpPage($name, Request $request) {
+  public function helpPage($name) {
     $build = array();
     if ($this->moduleHandler()->implementsHook($name, 'help')) {
       $info = system_get_info('module');
       $build['#title'] = String::checkPlain($info[$name]['name']);
 
-      $temp = $this->moduleHandler()->invoke($name, 'help', array("help.page.$name", $request));
+      $temp = $this->moduleHandler()->invoke($name, 'help', array("help.page.$name", $this->routeMatch));
       if (empty($temp)) {
         $build['top']['#markup'] = $this->t('No help is available for module %module.', array('%module' => $info[$name]['name']));
       }

@@ -7,16 +7,16 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlMatcher;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function shortcut_help($route_name, Request $request) {
+function shortcut_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.shortcut':
       $output = '<h3>' . t('About') . '</h3>';

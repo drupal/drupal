@@ -10,8 +10,8 @@ namespace Drupal\system\Plugin\Block;
 use Drupal\block\BlockBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -47,6 +47,13 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
   protected $request;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * Creates a SystemHelpBlock instance.
    *
    * @param array $configuration
@@ -59,12 +66,15 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
    *   The current request.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, ModuleHandlerInterface $module_handler, RouteMatchInterface $route_match) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->request = $request;
     $this->moduleHandler = $module_handler;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -72,7 +82,13 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $configuration, $plugin_id, $plugin_definition, $container->get('request'), $container->get('module_handler'));
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request'),
+      $container->get('module_handler'),
+      $container->get('current_route_match')
+    );
   }
 
   /**
@@ -95,8 +111,7 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
       return '';
     }
 
-    $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
-    $help = $this->moduleHandler->invokeAll('help', array($route_name, $request));
+    $help = $this->moduleHandler->invokeAll('help', array($this->routeMatch->getRouteName(), $this->routeMatch));
     return $help ? implode("\n", $help) : '';
   }
 

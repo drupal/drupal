@@ -7,10 +7,10 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\file\Entity\File;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Image style constant for user presets in the database.
@@ -48,7 +48,7 @@ require_once __DIR__ . '/image.field.inc';
 /**
  * Implements hook_help().
  */
-function image_help($route_name, Request $request) {
+function image_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.image':
       $output = '';
@@ -70,11 +70,11 @@ function image_help($route_name, Request $request) {
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
 
     case 'image.effect_add_form':
-      $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($request->attributes->get('image_effect'));
+      $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($route_match->getParameter('image_effect'));
       return isset($effect['description']) ? ('<p>' . $effect['description'] . '</p>') : NULL;
 
     case 'image.effect_edit_form':
-      $effect = $request->attributes->get('image_style')->getEffect($request->attributes->get('image_effect'));
+      $effect = $route_match->getParameter('image_style')->getEffect($route_match->getParameter('image_effect'));
       $effect_definition = $effect->getPluginDefinition();
       return isset($effect_definition['description']) ? ('<p>' . $effect_definition['description'] . '</p>') : NULL;
   }

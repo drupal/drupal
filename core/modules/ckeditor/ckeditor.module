@@ -5,13 +5,13 @@
  * Provides integration with the CKEditor WYSIWYG editor.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\editor\Entity\Editor;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function ckeditor_help($route_name, Request $request) {
+function ckeditor_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.ckeditor':
       $output = '';

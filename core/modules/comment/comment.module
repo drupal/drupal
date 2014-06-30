@@ -17,6 +17,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -28,7 +29,6 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\node\NodeInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Comments are displayed in a flat list - expanded.
@@ -79,7 +79,7 @@ define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 /**
  * Implements hook_help().
  */
-function comment_help($route_name, Request $request) {
+function comment_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.comment':
       $output = '<h3>' . t('About') . '</h3>';

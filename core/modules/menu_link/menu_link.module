@@ -9,9 +9,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkInterface;
-use Symfony\Component\HttpFoundation\Request;
 
-function menu_link_help($route_name, Request $request) {
+function menu_link_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.menu_link':
       $output = '';

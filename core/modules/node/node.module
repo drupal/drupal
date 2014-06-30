@@ -11,8 +11,8 @@
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -88,7 +88,7 @@ const NODE_ACCESS_IGNORE = NULL;
 /**
  * Implements hook_help().
  */
-function node_help($route_name, Request $request) {
+function node_help($route_name, RouteMatchInterface $route_match) {
   // Remind site administrators about the {node_access} table being flagged
   // for rebuild. We don't need to issue the message on the confirm form, or
   // while the rebuild is being processed.
@@ -128,12 +128,12 @@ function node_help($route_name, Request $request) {
 
     case 'field_ui.form_display_overview_node':
     case 'field_ui.form_display_overview_form_mode_node':
-      $type = $request->attributes->get('node_type');
+      $type = $route_match->getParameter('node_type');
       return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', array('%type' => $type->label())) . '</p>' ;
 
     case 'field_ui.display_overview_node':
     case 'field_ui.display_overview_view_mode_node':
-      $type = $request->attributes->get('node_type');
+      $type = $route_match->getParameter('node_type');
       return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' .
         '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', array('%type' => $type->label())) . '</p>';
 
@@ -141,12 +141,12 @@ function node_help($route_name, Request $request) {
       return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert back to older versions.') . '</p>';
 
     case 'node.page_edit':
-      $node = $request->attributes->get('node');
+      $node = $route_match->getParameter('node');
       $type = $node->getType();
       return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
 
     case 'node.add':
-      $type = $request->attributes->get('node_type');
+      $type = $route_match->getParameter('node_type');
       return (!empty($type->help) ? Xss::filterAdmin($type->help) : '');
   }
 }

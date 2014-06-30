@@ -8,17 +8,17 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
  */
-function editor_help($route_name, Request $request) {
+function editor_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.editor':
       $output = '';

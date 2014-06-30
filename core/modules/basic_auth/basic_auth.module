@@ -5,12 +5,12 @@
  * Provides an HTTP Basic authentication provider.
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function basic_auth_help($route_name, Request $request) {
+function basic_auth_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.basic_auth':
       $output = '';
