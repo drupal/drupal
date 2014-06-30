@@ -44,43 +44,35 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *       FALSE if not.
    *     'widget' => array(
    *       '#field_name' => The name of the field,
-   *       '#language' => $langcode,
+   *       '#title' => The label of the field,
+   *       '#description' => The description text for the field,
+   *       '#required' => Whether or not the field is required,
    *       '#field_parents' => The 'parents' space for the field in the form,
    *          equal to the #parents property of the $form parameter received by
    *          this method,
-   *       '#required' => Whether or not the field is required,
-   *       '#title' => The label of the field instance,
-   *       '#description' => The description text for the field instance,
    *
-   *       // Only for 'single' widgets:
+   *       // For 'multiple-value' widgets, the remaining elements in the
+   *       // sub-array depend on the widget.
+   *
+   *       // For 'single-value' widgets:
    *       '#theme' => 'field_multiple_value_form',
    *       '#cardinality' => The field cardinality,
    *       '#cardinality_multiple => TRUE if the field can contain multiple
    *         items, FALSE otherwise.
    *       // One sub-array per copy of the widget, keyed by delta.
    *       0 => array(
-   *         '#entity_type' => The name of the entity type,
-   *         '#bundle' => The name of the bundle,
-   *         '#field_name' => The name of the field,
-   *         '#field_parents' => The 'parents' space for the field in the form,
-   *            equal to the #parents property of the $form parameter,
    *         '#title' => The title to be displayed by the widget,
-   *         '#default_value' => The field value for delta 0,
+   *         '#description' => The description text for the field instance,
    *         '#required' => Whether the widget should be marked required,
    *         '#delta' => 0,
+   *         '#weight' => 0,
+   *         '#field_parents' => Same as above,
    *         // The remaining elements in the sub-array depend on the widget.
-   *         '#type' => The type of the widget,
    *         ...
    *       ),
    *       1 => array(
    *         ...
    *       ),
-   *
-   *       // Only for multiple widgets:
-   *       '#entity_type' => The name of the entity type,
-   *       '#bundle' => $instance['bundle'],
-   *       // The remaining elements in the sub-array depend on the widget.
-   *       '#type' => The type of the widget,
    *       ...
    *     ),
    *     ...
