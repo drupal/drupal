@@ -146,7 +146,7 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
   /**
    * {@inheritdoc}
    */
-  public function getBasePluginId() {
+  public function getBaseId() {
     $plugin_id = $this->getPluginId();
     if (strpos($plugin_id, 'views.') === 0) {
       $plugin_id = 'views';

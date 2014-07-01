@@ -7,13 +7,13 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DeriverInterface;
 use Drupal\views\Views;
 
 /**
  * Provides menu links for views.
  */
-class ViewsMenuLink implements DerivativeInterface {
+class ViewsMenuLink implements DeriverInterface {
 
   /**
    * {@inheritdoc}
