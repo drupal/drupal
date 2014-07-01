@@ -85,6 +85,13 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['type'] = 'undefined';
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $this->assertEqual($definition, $expected, 'Automatic type detected for a list is undefined.');
+    $definition = $config['testnoschema']->getDataDefinition()->toArray();
+    $expected = array();
+    $expected['label'] = 'Undefined';
+    $expected['class'] = '\Drupal\Core\Config\Schema\Undefined';
+    $expected['type'] = 'undefined';
+    $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
+    $this->assertEqual($definition, $expected, 'Automatic type detected for an undefined integer is undefined.');
 
     // Simple case, straight metadata.
     $definition = \Drupal::service('config.typed')->getDefinition('system.maintenance');

@@ -64,12 +64,15 @@ class SchemaCheckTraitTest extends KernelTestBase {
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
     $this->assertIdentical($ret, TRUE);
 
-    // Add a new key and new array to test the error messages.
+    // Add a new key, a new array and overwrite boolean with array to test the
+    // error messages.
     $config_data = array('new_key' => 'new_value', 'new_array' => array()) + $config_data;
+    $config_data['boolean'] = array();
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
     $expected = array(
-      'config_test.types:new_key' => 'Missing schema',
-      'config_test.types:new_array' => 'Non-scalar value but not defined as an array (such as mapping or sequence)',
+      'config_test.types:new_key' => 'Missing schema.',
+      'config_test.types:new_array' => 'Missing schema.',
+      'config_test.types:boolean' => 'Non-scalar value but not defined as an array (such as mapping or sequence).',
     );
     $this->assertIdentical($ret, $expected);
   }

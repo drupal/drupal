@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -65,6 +66,15 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupalTestBase {
       'entity_type' => 'node',
       'name' => 'tags',
       'type' => 'taxonomy_term_reference',
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vocabulary' => 'tags',
+            'parent' => 0,
+          ),
+        ),
+      ),
     ))->save();
 
     $migration = entity_load('migration', 'd6_vocabulary_field_instance');
@@ -84,15 +94,11 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupalTestBase {
     $field_id = 'node.article.tags';
     $field = entity_load('field_instance_config', $field_id);
     $this->assertEqual($field->id(), $field_id, 'Field instance exists on article bundle.');
-    $settings = $field->getSettings();
-    $this->assertEqual('tags', $settings['allowed_values'][0]['vocabulary'], "Vocabulary has correct settings.");
 
     // Test the page bundle as well.
     $field_id = 'node.page.tags';
     $field = entity_load('field_instance_config', $field_id);
     $this->assertEqual($field->id(), $field_id, 'Field instance exists on page bundle.');
-    $settings = $field->getSettings();
-    $this->assertEqual('tags', $settings['allowed_values'][0]['vocabulary'], "Vocabulary has correct settings.");
 
     $this->assertEqual(array('node', 'article', 'tags'), entity_load('migration', 'd6_vocabulary_field_instance')->getIdMap()->lookupDestinationID(array(4, 'article')));
   }

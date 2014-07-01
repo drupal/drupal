@@ -41,9 +41,13 @@ config_test.query.*:
       label: 'Label'
     array:
       type: sequence
-      label: 'Array'
+      label: 'Array level 1'
       sequence:
-        - type: string
+        - type: sequence
+          label: 'Array level 2'
+          sequence:
+            - type: integer
+              label: 'Value'
     number:
       type: integer
       label: 'number'

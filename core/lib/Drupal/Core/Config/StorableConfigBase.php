@@ -9,7 +9,6 @@ namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Schema\Ignore;
-use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
@@ -137,8 +136,15 @@ abstract class StorableConfigBase extends ConfigBase {
   /**
    * Validate the values are allowed data types.
    *
-   * @throws UnsupportedDataTypeConfigException
-   *   If there is any invalid value.
+   * @param string $key
+   *   A string that maps to a key within the configuration data.
+   * @param string $value
+   *   Value to associate with the key.
+   *
+   * @return null
+   *
+   * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
+   *   If the value is unsupported in configuration.
    */
   protected function validateValue($key, $value) {
     // Minimal validation. Should not try to serialize resources or non-arrays.
@@ -167,21 +173,15 @@ abstract class StorableConfigBase extends ConfigBase {
    *   The value cast to the type indicated in the schema.
    *
    * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
-   *   Exception on unsupported/undefined data type deducted.
+   *   If the value is unsupported in configuration.
    */
   protected function castValue($key, $value) {
-    $element = FALSE;
-    try {
-      $element = $this->getSchemaWrapper()->get($key);
-    }
-    catch (SchemaIncompleteException $e) {
-      // @todo Consider making schema handling more strict by throwing
-      // SchemaIncompleteException for all incomplete schema conditions *and*
-      // throwing it forward. See https://drupal.org/node/2183983.
-      // Until then, we need to handle the Undefined case below.
-    }
+    $element = $this->getSchemaWrapper()->get($key);
     // Do not cast value if it is unknown or defined to be ignored.
     if ($element && ($element instanceof Undefined || $element instanceof Ignore)) {
+      // Do validate the value (may throw UnsupportedDataTypeConfigException)
+      // to ensure unsupported types are not supported in this case either.
+      $this->validateValue($key, $value);
       return $value;
     }
     if (is_scalar($value) || $value === NULL) {

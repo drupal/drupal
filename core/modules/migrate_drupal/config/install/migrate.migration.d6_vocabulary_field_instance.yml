@@ -12,8 +12,6 @@ process:
     plugin: migration
     migration: d6_taxonomy_vocabulary
     source: vid
-  'settings.allowed_values.0.vocabulary': @field_name
-  'settings.allowed_values.0.parent': constants.parent
 destination:
   plugin: entity:field_instance_config
 migration_dependencies:

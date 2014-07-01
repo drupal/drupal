@@ -45,8 +45,8 @@ field.field.*.*:
         - type: sequence
           label: 'Indexes'
           sequence:
-            - type: string
-              label: 'Column'
+            - type: ignore
+              label: 'Index'
 
 field.instance.*.*.*:
   type: config_entity

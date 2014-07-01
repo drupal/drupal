@@ -78,15 +78,11 @@ trait SchemaCheckTrait {
    */
   protected function checkValue($key, $value) {
     $error_key = $this->configName . ':' . $key;
-    $element = FALSE;
-    try {
-      $element = $this->schema->get($key);
+    $element = $this->schema->get($key);
+    if ($element instanceof Undefined) {
+      return array($error_key => 'Missing schema.');
     }
-    catch (SchemaIncompleteException $e) {
-      if (is_scalar($value) || $value === NULL) {
-        return array($error_key => 'Missing schema');
-      }
-    }
+
     // Do not check value if it is defined to be ignored.
     if ($element && $element instanceof Ignore) {
       return array();
@@ -112,7 +108,7 @@ trait SchemaCheckTrait {
     else {
       $errors = array();
       if (!$element instanceof ArrayElement) {
-        $errors[$error_key] = 'Non-scalar value but not defined as an array (such as mapping or sequence)';
+        $errors[$error_key] = 'Non-scalar value but not defined as an array (such as mapping or sequence).';
       }
 
       // Go on processing so we can get errors on all levels. Any non-scalar

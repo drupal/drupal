@@ -9,11 +9,15 @@ views.access.perm:
       label: 'Permission'
 
 views.access.role:
-  type: sequence
-  label: 'Role'
-  sequence:
-    - type: string
-      label: 'Role'
+  type: mapping
+  label: 'Roles'
+  mapping:
+    role:
+      type: sequence
+      label: 'List of roles'
+      sequence:
+        - type: string
+          label: 'Role'
 
 views.argument.user_uid:
   type: views.argument.numeric

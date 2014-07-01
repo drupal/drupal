@@ -27,22 +27,18 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
   protected $propertyDefinitions;
 
   /**
-   * Overrides ArrayElement::parse()
-   *
-   * Note this only returns elements that have a data definition.
+   * {@inheritdoc}
    */
   protected function parse() {
     $elements = array();
     foreach ($this->getPropertyDefinitions() as $key => $definition) {
-      if (isset($this->value[$key]) || array_key_exists($key, $this->value)) {
-        $elements[$key] = $this->parseElement($key, $this->value[$key], $definition);
-      }
+      $elements[$key] = $this->parseElement($key, $this->value[$key], $definition);
     }
     return $elements;
   }
 
   /**
-   * Implements Drupal\Core\TypedData\ComplexDataInterface::get().
+   * {@inheritdoc}
    *
    * Since all configuration objects are mappings the function will except a dot
    * delimited key to access nested values, for example, 'page.front'.
@@ -53,19 +49,22 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
     $elements = $this->getElements();
     if (isset($elements[$root_key])) {
       $element = $elements[$root_key];
+      // If $property_name contained a dot recurse into the keys.
+      while ($element && ($key = array_shift($parts)) !== NULL) {
+        if (method_exists($element, 'get')) {
+          $element = $element->get($key);
+        }
+        else {
+          $element = NULL;
+        }
+      }
+    }
+    if (isset($element)) {
+      return $element;
     }
     else {
-      throw new SchemaIncompleteException(String::format("The configuration property @key doesn't exist.", array('@key' => $property_name)));
+      throw new \InvalidArgumentException(String::format("The configuration property @key doesn't exist.", array('@key' => $property_name)));
     }
-
-    // If $property_name contained a dot recurse into the keys.
-    foreach ($parts as $key) {
-     if (!is_object($element) || !method_exists($element, 'get')) {
-        throw new SchemaIncompleteException(String::format("The configuration property @key does not exist.", array('@key' => $property_name)));
-      }
-      $element = $element->get($key);
-    }
-    return $element;
   }
 
   /**
@@ -130,9 +129,9 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
   public function getPropertyDefinitions() {
     if (!isset($this->propertyDefinitions)) {
       $this->propertyDefinitions = array();
-      foreach ($this->definition['mapping'] as $key => $definition) {
-        $value = isset($this->value[$key]) ? $this->value[$key] : NULL;
-        $this->propertyDefinitions[$key] = $this->buildDataDefinition($definition, $value, $key);
+      foreach ($this->getAllKeys() as $key) {
+        $definition = isset($this->definition['mapping'][$key]) ? $this->definition['mapping'][$key] : array();
+        $this->propertyDefinitions[$key] = $this->buildDataDefinition($definition, $this->value[$key], $key);
       }
     }
     return $this->propertyDefinitions;

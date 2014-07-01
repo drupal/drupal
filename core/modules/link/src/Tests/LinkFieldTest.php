@@ -376,10 +376,10 @@ class LinkFieldTest extends WebTestBase {
       'rel' => array(NULL, 'nofollow'),
       'target' => array(NULL, '_blank'),
       'url_only' => array(
-        array('url_only' => array(FALSE)),
-        array('url_only' => array(FALSE), 'url_plain' => TRUE),
-        array('url_only' => array(TRUE)),
-        array('url_only' => array(TRUE), 'url_plain' => TRUE),
+        array('url_only' => FALSE),
+        array('url_only' => FALSE, 'url_plain' => TRUE),
+        array('url_only' => TRUE),
+        array('url_only' => TRUE, 'url_plain' => TRUE),
       ),
     );
     foreach ($options as $setting => $values) {

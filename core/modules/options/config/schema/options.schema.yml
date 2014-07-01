@@ -35,11 +35,8 @@ field.list_float.settings:
   label: 'List (float) settings'
   mapping:
     allowed_values:
-      type: sequence
+      type: ignore
       label: 'Allowed values list'
-      sequence:
-        - type: string
-          label: 'Value'
     allowed_values_function:
       type: string
       label: 'Allowed values function'
