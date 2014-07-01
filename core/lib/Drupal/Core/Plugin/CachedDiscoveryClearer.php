@@ -21,7 +21,7 @@ class CachedDiscoveryClearer {
    *
    * @var \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface[]
    */
-  protected $cachedDiscoveries;
+  protected $cachedDiscoveries = array();
 
   /**
    * Adds a plugin manager to the active list.

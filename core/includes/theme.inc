@@ -2102,27 +2102,17 @@ function template_preprocess_page(&$variables) {
 
   // Pass the main menu and secondary menu to the template as render arrays.
   if (!empty($variables['main_menu'])) {
-    $variables['main_menu'] = array(
-      '#theme' =>'links__system_main_menu',
-      '#links' => $variables['main_menu'],
-      '#heading' => array(
-        'text' => t('Main menu'),
-        'class' => array('visually-hidden'),
-        'attributes' => array('id' => 'links__system_main_menu'),
-      ),
-      '#set_active_class' => TRUE,
+    $variables['main_menu']['#heading'] = array(
+      'text' => t('Main menu'),
+      'class' => array('visually-hidden'),
+      'attributes' => array('id' => 'links__system_main_menu'),
     );
   }
   if (!empty($variables['secondary_menu'])) {
-    $variables['secondary_menu'] = array(
-      '#theme' =>'links__system_secondary_menu',
-      '#links' => $variables['secondary_menu'],
-      '#heading' => array(
-        'text' => t('Secondary menu'),
-        'class' => array('visually-hidden'),
-        'attributes' => array('id' => 'links__system_secondary_menu'),
-      ),
-      '#set_active_class' => TRUE,
+    $variables['secondary_menu']['#heading'] = array(
+      'text' => t('Secondary menu'),
+      'class' => array('visually-hidden'),
+      'attributes' => array('id' => 'links__system_secondary_menu'),
     );
   }
 
@@ -2592,6 +2582,7 @@ function drupal_common_theme() {
     ),
     'menu_tree' => array(
       'render element' => 'tree',
+      'template' => 'menu-tree',
     ),
     'menu_local_task' => array(
       'render element' => 'element',

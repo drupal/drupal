@@ -58,6 +58,13 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [entity]
+  cache.menu:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [menu]
   cache.render:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -260,6 +267,21 @@ services:
   plugin.manager.action:
     class: Drupal\Core\Action\ActionManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.menu.link:
+    class: Drupal\Core\Menu\MenuLinkManager
+    arguments: ['@menu.tree_storage', '@menu_link.static.overrides', '@module_handler']
+  menu.link_tree:
+    class: Drupal\Core\Menu\MenuLinkTree
+    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver']
+  menu.default_tree_manipulators:
+    class: Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
+    arguments: ['@access_manager', '@current_user']
+  menu.active_trail:
+    class: Drupal\Core\Menu\MenuActiveTrail
+    arguments: ['@plugin.manager.menu.link', '@request_stack']
+  menu.parent_form_selector:
+    class: Drupal\Core\Menu\MenuParentFormSelector
+    arguments: ['@menu.link_tree', '@entity.manager']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
     arguments: ['@controller_resolver', '@request_stack', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
@@ -274,6 +296,18 @@ services:
     parent: default_plugin_manager
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
+  paramconverter.menu_link:
+    class: Drupal\Core\ParamConverter\MenuLinkPluginConverter
+    tags:
+      - { name: paramconverter }
+    arguments: ['@plugin.manager.menu.link']
+  menu.tree_storage:
+    class: Drupal\Core\Menu\MenuTreeStorage
+    arguments: ['@database', '@cache.menu', 'menu_tree']
+    public: false  # Private to plugin.manager.menu.link and menu.link_tree
+  menu_link.static.overrides:
+    class: Drupal\Core\Menu\StaticMenuLinkOverrides
+    arguments: ['@config.factory']
   request:
     class: Symfony\Component\HttpFoundation\Request
     synthetic: true

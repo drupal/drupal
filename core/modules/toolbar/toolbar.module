@@ -7,12 +7,11 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Menu\MenuLinkTreeParameters;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Crypt;
-use Symfony\Component\HttpFoundation\Response;
-use Drupal\menu_link\MenuLinkInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
@@ -324,8 +323,6 @@ function toolbar_pre_render_item($element) {
  * Implements hook_toolbar().
  */
 function toolbar_toolbar() {
-  $items = array();
-
   // The 'Home' tab is a simple link, with no corresponding tray.
   $items['home'] = array(
     '#type' => 'toolbar_item',
@@ -350,33 +347,13 @@ function toolbar_toolbar() {
     '#weight' => -20,
   );
 
-  // Retrieve the administration menu from the database.
-  $tree = toolbar_get_menu_tree();
-
-  // Add attributes to the links before rendering.
-  toolbar_menu_navigation_links($tree);
-
-  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
-  $menu_tree = \Drupal::service('menu_link.tree');
-
-  $menu = array(
-    '#heading' => t('Administration menu'),
-    'toolbar_administration' => array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'class' => array('toolbar-menu-administration'),
-      ),
-      'administration_menu' => $menu_tree->renderTree($tree),
-    ),
-  );
-
   // To conserve bandwidth, we only include the top-level links in the HTML.
   // The subtrees are fetched through a JSONP script that is generated at the
   // toolbar_subtrees route. We provide the JavaScript requesting that JSONP
   // script here with the hash parameter that is needed for that route.
   // @see toolbar_subtrees_jsonp()
   $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
-  $menu['toolbar_administration']['#attached']['js'][] = array(
+  $subtrees_attached['js'][] = array(
     'type' => 'setting',
     'data' => array('toolbar' => array(
       'subtreesHash' => _toolbar_get_subtrees_hash($langcode),
@@ -403,7 +380,19 @@ function toolbar_toolbar() {
         'data-drupal-subtrees' => '',
       ),
     ),
-    'tray' => $menu,
+    'tray' => array(
+      '#heading' => t('Administration menu'),
+      '#attached' => $subtrees_attached,
+      'toolbar_administration' => array(
+        '#pre_render' => array(
+          'toolbar_prerender_toolbar_administration_tray',
+        ),
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array('toolbar-menu-administration'),
+        ),
+      ),
+    ),
     '#weight' => -15,
   );
 
@@ -411,90 +400,99 @@ function toolbar_toolbar() {
 }
 
 /**
- * Gets only the top level items below the 'admin' path.
+ * #pre_render callback to render the toolbar's administration tray.
  *
- * @return
- *   An array containing a menu tree of top level items below the 'admin' path.
+ * @param array $element
+ *   A renderable array.
+ *
+ * @return array
+ *   The updated renderable array
+ *
+ * @see drupal_render()
  */
-function toolbar_get_menu_tree() {
-  $tree = array();
-  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
-  $menu_tree = \Drupal::service('menu_link.tree');
-  $query = \Drupal::entityQuery('menu_link')
-    ->condition('menu_name', 'admin')
-    ->condition('module', 'system')
-    ->condition('link_path', 'admin');
-  $result = $query->execute();
-  if (!empty($result)) {
-    $admin_link = menu_link_load(reset($result));
-    $tree = $menu_tree->buildTree('admin', array(
-      'expanded' => array($admin_link['mlid']),
-      'min_depth' => $admin_link['depth'] + 1,
-      'max_depth' => $admin_link['depth'] + 1,
-    ));
-  }
-
-  return $tree;
+function toolbar_prerender_toolbar_administration_tray(array $element) {
+  $menu_tree = \Drupal::menuTree();
+  // Render the top-level administration menu links.
+  $parameters = new MenuLinkTreeParameters();
+  $parameters->setRoot('system.admin')->excludeRoot()->topLevelOnly()->excludeHiddenLinks();
+  $tree = $menu_tree->load(NULL, $parameters);
+  $manipulators = array(
+    array('callable' => 'menu.default_tree_manipulators:checkAccess'),
+    array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
+    array('callable' => 'toolbar_menu_navigation_links'),
+  );
+  $tree = $menu_tree->transform($tree, $manipulators);
+  $element['administration_menu'] = $menu_tree->build($tree);
+  return $element;
 }
 
 /**
- * Generates an array of links from a menu tree array.
+ * Menu link tree manipulator that adds toolbar-specific attributes.
  *
- * Based on menu_navigation_links(). Adds path based IDs and icon placeholders
- * to the links.
+ * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
+ *   The menu link tree to manipulate.
  *
- * @return
- *   An array of links as defined above.
+ * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
+ *   The manipulated menu link tree.
  */
-function toolbar_menu_navigation_links(&$tree) {
-  foreach ($tree as $key => $item) {
-    // Configure sub-items.
-    if (!empty($item['below'])) {
-      toolbar_menu_navigation_links($tree[$key]['below']);
+function toolbar_menu_navigation_links(array $tree) {
+  foreach ($tree as $key => $element) {
+    if (!empty($element->subtree)) {
+      toolbar_menu_navigation_links($tree[$key]->subtree);
     }
+
     // Make sure we have a path specific ID in place, so we can attach icons
-    // and behaviors to the items.
-    $tree[$key]['link']['localized_options']['attributes'] = array(
-      'id' => 'toolbar-link-' . str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['link_path']),
-      'class' => array(
-        'toolbar-icon',
-        'toolbar-icon-' . strtolower(str_replace(' ', '-', $item['link']['link_title'])),
-      ),
-      'title' => String::checkPlain($item['link']['description']),
-    );
+    // and behaviors to the menu links.
+    $link = $element->link;
+    $url = $link->getUrlObject();
+    if ($url->isExternal()) {
+      // This is an unusual case, so just get a distinct, safe string.
+      $id = substr(Crypt::hashBase64($url->getPath()), 0, 16);
+    }
+    else {
+      $id = str_replace(array('.', '<', '>'), array('-', '', ''), $url->getRouteName());
+    }
+
+    // Get the non-localized title to make the icon class.
+    $definition = $link->getPluginDefinition();
+
+    $tree[$key]->options['attributes']['id'] = 'toolbar-link-' . $id;
+    $tree[$key]->options['attributes']['class'][] = 'toolbar-icon';
+    $tree[$key]->options['attributes']['class'][] = 'toolbar-icon-' . strtolower(str_replace(' ', '-', $definition['title']));
+    $tree[$key]->options['attributes']['title'] = String::checkPlain($link->getDescription());
   }
+  return $tree;
 }
 
 /**
  * Returns the rendered subtree of each top-level toolbar link.
  */
 function toolbar_get_rendered_subtrees() {
+  /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu.link_tree');
+  $parameters = new MenuLinkTreeParameters();
+  $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth(3)->excludeHiddenLinks();
+  $tree = $menu_tree->load(NULL, $parameters);
+  $manipulators = array(
+    array('callable' => 'menu.default_tree_manipulators:checkAccess'),
+    array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
+    array('callable' => 'toolbar_menu_navigation_links'),
+  );
+  $tree = $menu_tree->transform($tree, $manipulators);
   $subtrees = array();
-  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
-  $menu_tree = \Drupal::service('menu_link.tree');
-  $tree = toolbar_get_menu_tree();
-  foreach ($tree as $tree_item) {
-    $item = $tree_item['link'];
-    if (!$item['hidden'] && $item['access']) {
-      if ($item['has_children']) {
-        $query = \Drupal::entityQuery('menu_link')
-          ->condition('has_children', 1);
-        for ($i=1; $i <= $item['depth']; $i++) {
-          $query->condition('p' . $i, $item['p' . $i]);
-        }
-        $parents = $query->execute();
-        $subtree = $menu_tree->buildTree($item['menu_name'], array('expanded' => $parents, 'min_depth' => $item['depth']+1));
-        toolbar_menu_navigation_links($subtree);
-        $subtree = $menu_tree->renderTree($subtree);
-        $subtree = drupal_render($subtree);
-      }
-      else {
-        $subtree = '';
-      }
-
-      $id = str_replace(array('/', '<', '>'), array('-', '', ''), $item['link_path']);
-      $subtrees[$id] = $subtree;
+  foreach ($tree as $element) {
+    /** @var \Drupal\Core\Menu\MenuLinkInterface $item */
+    $link = $element->link;
+    if (!empty($element->subtree)) {
+      $subtree = $menu_tree->build($element->subtree);
+      $output = drupal_render($subtree);
     }
+    else {
+      $output = '';
+    }
+    $id = str_replace(array('.', '<', '>'), array('-', '', '' ), $link->getUrlObject()->getRouteName());
+
+    $subtrees[$id] = $output;
   }
   return $subtrees;
 }
@@ -521,7 +519,7 @@ function _toolbar_get_subtrees_hash($langcode) {
     // caches later, based on the user's ID regardless of language.
     // Clear the cache when the 'locale' tag is deleted. This ensures a fresh
     // subtrees rendering when string translations are made.
-    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user' => array($uid), 'locale' => TRUE,));
+    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user' => array($uid), 'locale' => TRUE, 'menu' => 'admin'));
   }
   return $hash;
 }
@@ -538,15 +536,6 @@ function toolbar_modules_installed($modules) {
  */
 function toolbar_modules_uninstalled($modules) {
   _toolbar_clear_user_cache();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update().
- */
-function toolbar_menu_link_update(MenuLinkInterface $menu_link) {
-  if ($menu_link->menu_name === 'admin') {
-    _toolbar_clear_user_cache();
-  }
 }
 
 /**

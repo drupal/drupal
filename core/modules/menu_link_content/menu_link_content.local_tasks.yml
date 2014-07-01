@@ -1,0 +1,4 @@
+menu_link_content.link_edit:
+  route_name: menu_link_content.link_edit
+  base_route: menu_link_content.link_edit
+  title: Edit

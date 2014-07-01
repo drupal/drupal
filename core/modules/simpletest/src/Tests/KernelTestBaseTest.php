@@ -220,7 +220,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   function testEnableModulesFixedList() {
     // Install system module.
-    $this->container->get('module_handler')->install(array('system', 'menu_link'));
+    $this->container->get('module_handler')->install(array('system', 'menu_link_content'));
     $entity_manager = \Drupal::entityManager();
 
     // entity_test is loaded via $modules; its entity type should exist.

@@ -43,16 +43,11 @@ function standard_install() {
     ->fields(array('uid' => 1, 'rid' => 'administrator'))
     ->execute();
 
-  // Create a Home link in the main menu.
-  $menu_link = entity_create('menu_link', array(
-    'link_title' => t('Home'),
-    'link_path' => '<front>',
-    'menu_name' => 'main',
-  ));
-  $menu_link->save();
-
   // Enable the Contact link in the footer menu.
-  menu_link_maintain('contact', 'enable', 'contact');
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $menu_link_manager->updateLink('contact.site_page', array('hidden' => 0));
+
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
 

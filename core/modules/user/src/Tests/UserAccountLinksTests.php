@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Core\Menu\MenuLinkTreeParameters;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -49,14 +50,14 @@ class UserAccountLinksTests extends WebTestBase {
     // For a logged-in user, expect the secondary menu to have links for "My
     // account" and "Log out".
     $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
-      ':menu_class' => 'links',
+      ':menu_class' => 'menu',
       ':href' => 'user',
       ':text' => 'My account',
     ));
     $this->assertEqual(count($link), 1, 'My account link is in secondary menu.');
 
     $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
-      ':menu_class' => 'links',
+      ':menu_class' => 'menu',
       ':href' => 'user/logout',
       ':text' => 'Log out',
     ));
@@ -67,13 +68,16 @@ class UserAccountLinksTests extends WebTestBase {
     $this->drupalGet('<front>');
 
     // For a logged-out user, expect no secondary links.
-    /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
-    $menu_tree = \Drupal::service('menu_link.tree');
-    $tree = $menu_tree->buildTree('account');
+    /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
+    $menu_tree = \Drupal::service('menu.link_tree');
+    $tree = $menu_tree->load('account', new MenuLinkTreeParameters());
+    $manipulators = array(
+      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
+    );
+    $tree = $menu_tree->transform($tree, $manipulators);
     $this->assertEqual(count($tree), 1, 'The secondary links menu contains only one menu link.');
-    $link = reset($tree);
-    $link = $link['link'];
-    $this->assertTrue((bool) $link->hidden, 'The menu link is hidden.');
+    $element = reset($tree);
+    $this->assertTrue($element->link->isHidden(), 'The menu link is hidden.');
   }
 
   /**

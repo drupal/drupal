@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ class DisplayPageTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'menu_link', 'field', 'entity');
+  public static $modules = array('system', 'user', 'field', 'entity');
 
   /**
    * The router dumper to get all routes.
@@ -56,13 +57,13 @@ class DisplayPageTest extends ViewUnitTestBase {
 
     // Setup the needed tables in order to make the drupal router working.
     $this->installSchema('system', array('url_alias'));
-    $this->installSchema('menu_link', 'menu_links');
   }
 
   /**
    * Checks the behavior of the page for access denied/not found behaviors.
    */
   public function testPageResponses() {
+    \Drupal::currentUser()->setAccount(new AnonymousUserSession());
     $subrequest = Request::create('/test_page_display_403', 'GET');
     $response = $this->container->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
     $this->assertEqual($response->getStatusCode(), 403);

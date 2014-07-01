@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Menu\MenuLinkTreeParameters;
 use Drupal\block\BlockPluginInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1455,76 +1456,49 @@ function system_admin_compact_mode() {
  *   An array of task links.
  */
 function system_get_module_admin_tasks($module, array $info) {
-  $links = &drupal_static(__FUNCTION__);
+  $tree = &drupal_static(__FUNCTION__);
 
-  if (!isset($links)) {
-    $links = array();
-    $menu_links = entity_get_controller('menu_link')->loadModuleAdminTasks();
-    foreach ($menu_links as $link) {
-      _menu_link_translate($link);
-      if ($link['access']) {
-        $links[$link['machine_name']] = $link;
-      }
-    }
+  /* @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu.link_tree');
+
+  if (!isset($tree)) {
+    $parameters = new MenuLinkTreeParameters();
+    $parameters->setRoot('system.admin')->excludeRoot()->excludeHiddenLinks();
+    $tree = $menu_tree->load('system.admin', $parameters);
+    $manipulators = array(
+      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
+      array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
+      array('callable' => 'menu.default_tree_manipulators:flatten'),
+    );
+    $tree = $menu_tree->transform($tree, $manipulators);
   }
 
   $admin_tasks = array();
-  $titles = array();
-  foreach ($links as $item) {
-    if ($item['module'] != $module) {
+  foreach ($tree as $element) {
+    $link = $element->link;
+    if ($link->getProvider() != $module) {
       continue;
     }
-    $machine_name = $item['machine_name'];
-    if (isset($links[$machine_name])) {
-      $task = $links[$machine_name];
-      // The link description, either derived from 'description' in the default
-      // menu link or customized via Menu UI module is used as title attribute.
-      if (!empty($task['localized_options']['attributes']['title'])) {
-        $task['description'] = $task['localized_options']['attributes']['title'];
-        unset($task['localized_options']['attributes']['title']);
-      }
-
-      // Check the admin tasks for duplicate names. If one is found,
-      // append the parent menu item's title to differentiate.
-      $duplicate_path = array_search($task['title'], $titles);
-      if ($duplicate_path !== FALSE) {
-        if ($parent = menu_link_load($task['plid'])) {
-          // Append the parent item's title to this task's title.
-          $task['title'] = t('@original_title (@parent_title)', array('@original_title' => $task['title'], '@parent_title' => $parent['title']));
-        }
-        if ($parent = menu_link_load($admin_tasks[$duplicate_path]['plid'])) {
-          // Append the parent item's title to the duplicated task's title.
-          // We use $links[$duplicate_path] in case there are triplicates.
-          $admin_tasks[$duplicate_path]['title'] = t('@original_title (@parent_title)', array('@original_title' => $links[$duplicate_path]['title'], '@parent_title' => $parent['title']));
-        }
-      }
-      else {
-        $titles[$machine_name] = $task['title'];
-      }
-
-      $admin_tasks[$machine_name] = $task;
-    }
+    $admin_tasks[] = array(
+      'title' => $link->getTitle(),
+      'description' => $link->getDescription(),
+      'url' => $link->getUrlObject(),
+    );
   }
 
   // Append link for permissions.
   if (\Drupal::moduleHandler()->implementsHook($module, 'permission')) {
     /** @var \Drupal\Core\Access\AccessManager $access_manager */
     $access_manager = \Drupal::service('access_manager');
-    /** @var \Drupal\menu_link\MenuLinkStorageInterface $menu_link_storage */
-    $menu_link_storage = \Drupal::entityManager()
-      ->getStorage('menu_link');
     if ($access_manager->checkNamedRoute('user.admin_permissions', array(), \Drupal::currentUser())) {
-      $path = \Drupal::urlGenerator()
-        ->getPathFromRoute('user.admin_permissions');
-      $options = array();
-      $options['fragment'] = 'module-' . $module;
-      $menu_link = $menu_link_storage->create(array(
-        'route_name' => 'user.admin_permissions',
-        'link_path' => $path,
+      /** @var \Drupal\Core\Url $url */
+      $url = new \Drupal\Core\Url('user.admin_permissions');
+      $url->setOption('fragment', 'module-' . $module);
+      $admin_tasks["user.admin_permissions.$module"] = array(
         'title' => t('Configure @module permissions', array('@module' => $info['name'])),
-        'localized_options' => $options
-      ));
-      $admin_tasks["user.admin.people.permissions.$module"] = $menu_link;
+        'description' => '',
+        'url' => $url,
+      );
     }
   }
 

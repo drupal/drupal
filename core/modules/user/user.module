@@ -707,19 +707,6 @@ function theme_username($variables) {
 }
 
 /**
- * Implements hook_menu_link_presave().
- */
-function user_menu_link_presave(MenuLink $menu_link) {
-  // The path 'user' must be accessible for anonymous users, but only visible
-  // for authenticated users. Authenticated users should see "My account", but
-  // anonymous users should not see it at all. Therefore, invoke
-  // user_menu_link_load() to conditionally hide the link.
-  if ($menu_link->machine_name == 'user.page') {
-    $menu_link->options['alter'] = TRUE;
-  }
-}
-
-/**
  * Implements hook_menu_breadcrumb_alter().
  */
 function user_menu_breadcrumb_alter(&$active_trail, $item) {
@@ -727,16 +714,6 @@ function user_menu_breadcrumb_alter(&$active_trail, $item) {
   // of system path user/%.
   if (isset($active_trail[1]['module']) && $active_trail[1]['machine_name'] == 'user.page' && strpos($item['path'], 'user/%') === 0) {
     array_splice($active_trail, 1, 1);
-  }
-}
-
-/**
- * Implements hook_translated_menu_link_alter().
- */
-function user_translated_menu_link_alter(MenuLink &$menu_link) {
-  // Hide the "User account" link for anonymous users.
-  if ($menu_link->machine_name == 'user.page' && \Drupal::currentUser()->isAnonymous()) {
-    $menu_link->hidden = 1;
   }
 }
 
