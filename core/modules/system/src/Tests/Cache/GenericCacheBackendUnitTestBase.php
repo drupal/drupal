@@ -188,6 +188,25 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $cached = $backend->get('test6');
     $this->assert(is_object($cached), "Backend returned an object for cache id test6.");
     $this->assertIdentical($with_variable, $cached->data);
+
+    // Make sure that a cached object is not affected by changing the original.
+    $data = new \stdClass();
+    $data->value = 1;
+    $data->obj = new \stdClass();
+    $data->obj->value = 2;
+    $backend->set('test7', $data);
+    $expected_data = clone $data;
+    // Add a property to the original. It should not appear in the cached data.
+    $data->this_should_not_be_in_the_cache = TRUE;
+    $cached = $backend->get('test7');
+    $this->assert(is_object($cached), "Backend returned an object for cache id test7.");
+    $this->assertEqual($expected_data, $cached->data);
+    $this->assertFalse(isset($cached->data->this_should_not_be_in_the_cache));
+    // Add a property to the cache data. It should not appear when we fetch
+    // the data from cache again.
+    $cached->data->this_should_not_be_in_the_cache = TRUE;
+    $fresh_cached = $backend->get('test7');
+    $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
   }
 
   /**

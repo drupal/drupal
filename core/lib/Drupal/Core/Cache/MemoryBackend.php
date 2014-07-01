@@ -73,6 +73,9 @@ class MemoryBackend implements CacheBackendInterface {
    *
    * @param object $cache
    *   An item loaded from cache_get() or cache_get_multiple().
+   * @param bool $allow_invalid
+   *   (optional) If TRUE, cache items may be returned even if they have expired
+   *   or been invalidated.
    *
    * @return mixed
    *   The item with data as appropriate or FALSE if there is no
@@ -82,15 +85,22 @@ class MemoryBackend implements CacheBackendInterface {
     if (!isset($cache->data)) {
       return FALSE;
     }
+    // The object passed into this function is the one stored in $this->cache.
+    // We must clone it as part of the preparation step so that the actual
+    // cache object is not affected by the unserialize() call or other
+    // manipulations of the returned object.
+
+    $prepared = clone $cache;
+    $prepared->data = unserialize($prepared->data);
 
     // Check expire time.
-    $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
+    $prepared->valid = $prepared->expire == Cache::PERMANENT || $prepared->expire >= REQUEST_TIME;
 
-    if (!$allow_invalid && !$cache->valid) {
+    if (!$allow_invalid && !$prepared->valid) {
       return FALSE;
     }
 
-    return $cache;
+    return $prepared;
   }
 
   /**
@@ -99,7 +109,7 @@ class MemoryBackend implements CacheBackendInterface {
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     $this->cache[$cid] = (object) array(
       'cid' => $cid,
-      'data' => $data,
+      'data' => serialize($data),
       'created' => REQUEST_TIME,
       'expire' => $expire,
       'tags' => $this->flattenTags($tags),
