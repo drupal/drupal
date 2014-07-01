@@ -429,10 +429,10 @@ function toolbar_prerender_toolbar_administration_tray(array $element) {
 /**
  * Menu link tree manipulator that adds toolbar-specific attributes.
  *
- * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
+ * @param \Drupal\Core\Menu\MenuTreeElement[] $tree
  *   The menu link tree to manipulate.
  *
- * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
+ * @return \Drupal\Core\Menu\MenuTreeElement[]
  *   The manipulated menu link tree.
  */
 function toolbar_menu_navigation_links(array $tree) {

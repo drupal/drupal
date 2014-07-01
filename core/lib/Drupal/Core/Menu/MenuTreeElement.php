@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Menu\MenuLinkTreeElement.
+ * Contains \Drupal\Core\Menu\MenuTreeElement.
  */
 
 namespace Drupal\Core\Menu;
@@ -27,7 +27,7 @@ namespace Drupal\Core\Menu;
  *
  * @see \Drupal\Core\Menu\MenuTreeStorage::loadTreeData()
  */
-class MenuLinkTreeElement {
+class MenuTreeElement {
 
   /**
    * The menu link for this element in a menu link tree.
@@ -42,7 +42,7 @@ class MenuLinkTreeElement {
    * (Children of a link are only loaded if a link is marked as "expanded" by
    * the query.)
    *
-   * @var \Drupal\Core\Menu\MenuLinkTreeElement[]
+   * @var \Drupal\Core\Menu\MenuTreeElement[]
    */
   public $subtree;
 
@@ -84,14 +84,14 @@ class MenuLinkTreeElement {
   public $options;
 
   /**
-   * Constructs a new MenuLinkTreeElement.
+   * Constructs a new MenuTreeElement.
    *
    * @param \Drupal\Core\Menu\MenuLinkInterface|array $link
    *   The menu link for this element in the menu link tree.
    * @param bool $has_children
    * @param int $depth
    * @param bool $in_active_trail
-   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $subtree
+   * @param \Drupal\Core\Menu\MenuTreeElement[] $subtree
    *   The children of this element in the menu link tree.
    */
   public function __construct($link, $has_children, $depth, $in_active_trail, array $subtree) {
@@ -111,11 +111,11 @@ class MenuLinkTreeElement {
    * Counts all menu links in the current subtree.
    *
    * @return int
-   *   The number of menu links in this subtree (one plus the number of menu
-   *   links in all descendants).
+   *   The number of menu links in this subtree (one plus the number of elements
+   *   in all descendants).
    */
   public function count() {
-    $sum = function ($carry, MenuLinkTreeElement $element) {
+    $sum = function ($carry, MenuTreeElement $element) {
       return $carry + $element->count();
     };
     return 1 + array_reduce($this->subtree, $sum);

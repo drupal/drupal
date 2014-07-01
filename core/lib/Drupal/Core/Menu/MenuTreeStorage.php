@@ -1029,10 +1029,10 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected function treeDataRecursive(array &$links, array $parents, $depth) {
     $tree = array();
     while ($tree_link_definition = array_pop($links)) {
-      // Build a MenuLinkTreeElement out of the menu link tree definition:
+      // Build a MenuTreeElement out of the menu link tree definition:
       // transform the menu link tree definition into a menu link definition and
-      // store tree metadata in MenuLinkTreeElement.
-      $tree[$tree_link_definition['id']] = new MenuLinkTreeElement(
+      // store tree metadata in MenuTreeElement.
+      $tree[$tree_link_definition['id']] = new MenuTreeElement(
         $this->prepareLink($tree_link_definition, TRUE),
         (bool) $tree_link_definition['has_children'],
         (int) $tree_link_definition['depth'],

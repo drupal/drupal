@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
-use Drupal\Core\Menu\MenuLinkTreeElement;
+use Drupal\Core\Menu\MenuTreeElement;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -103,17 +103,17 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       8 => MenuLinkMock::create(array('id' => 'test.example8', 'route_name' => 'example8', 'title' => 'quxqux', 'parent' => '')),
     );
     $this->originalTree = array();
-    $this->originalTree[1] = new MenuLinkTreeElement($this->links[1], FALSE, 1, FALSE, array());
-    $this->originalTree[2] = new MenuLinkTreeElement($this->links[2], TRUE, 1, FALSE, array(
-      3 => new MenuLinkTreeElement($this->links[3], TRUE, 2, FALSE, array(
-          4 => new MenuLinkTreeElement($this->links[4], FALSE, 3, FALSE, array()),
+    $this->originalTree[1] = new MenuTreeElement($this->links[1], FALSE, 1, FALSE, array());
+    $this->originalTree[2] = new MenuTreeElement($this->links[2], TRUE, 1, FALSE, array(
+      3 => new MenuTreeElement($this->links[3], TRUE, 2, FALSE, array(
+          4 => new MenuTreeElement($this->links[4], FALSE, 3, FALSE, array()),
         )),
     ));
-    $this->originalTree[5] = new MenuLinkTreeElement($this->links[5], TRUE, 1, FALSE, array(
-      7 => new MenuLinkTreeElement($this->links[7], FALSE, 2, FALSE, array()),
+    $this->originalTree[5] = new MenuTreeElement($this->links[5], TRUE, 1, FALSE, array(
+      7 => new MenuTreeElement($this->links[7], FALSE, 2, FALSE, array()),
     ));
-    $this->originalTree[6] = new MenuLinkTreeElement($this->links[6], FALSE, 1, FALSE, array());
-    $this->originalTree[8] = new MenuLinkTreeElement($this->links[8], FALSE, 1, FALSE, array());
+    $this->originalTree[6] = new MenuTreeElement($this->links[6], FALSE, 1, FALSE, array());
+    $this->originalTree[8] = new MenuTreeElement($this->links[8], FALSE, 1, FALSE, array());
   }
 
   /**
