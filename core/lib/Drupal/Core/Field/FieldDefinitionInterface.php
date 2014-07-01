@@ -76,6 +76,15 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface {
   public function getType();
 
   /**
+   * Gets the bundle the field is defined for.
+   *
+   * @return string|null
+   *   The bundle the field is defined for, or NULL if it is a base field; i.e.,
+   *   it is not bundle-specific.
+   */
+  public function getBundle();
+
+  /**
    * Returns whether the display for the field can be configured.
    *
    * @param string $display_context

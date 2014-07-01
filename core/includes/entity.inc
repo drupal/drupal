@@ -57,16 +57,22 @@ function entity_get_bundles($entity_type = NULL) {
  *   NULL.
  */
 function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = NULL) {
-  \Drupal::entityManager()->clearCachedBundles();
+  $entity_manager = \Drupal::entityManager();
+
+  $entity_manager->clearCachedBundles();
 
   // Notify the entity storage.
   $method = 'onBundle' . ucfirst($hook);
-  $storage = \Drupal::entityManager()->getStorage($entity_type);
+  $storage = $entity_manager->getStorage($entity_type);
   if (method_exists($storage, $method)) {
     $storage->$method($bundle, $bundle_new);
   }
   // Invoke hook_entity_bundle_*() hooks.
   \Drupal::moduleHandler()->invokeAll('entity_bundle_' . $hook, array($entity_type, $bundle, $bundle_new));
+  // Clear the cached field definitions (not needed in case of 'create').
+  if ($hook == 'rename' || $hook == 'delete') {
+    $entity_manager->clearCachedFieldDefinitions();
+  }
 }
 
 /**

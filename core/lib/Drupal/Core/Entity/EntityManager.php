@@ -394,11 +394,13 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       }
     }
 
-    // Automatically set the field name for non-configurable fields.
+    // Automatically set the field name, target entity type and bundle
+    // for non-configurable fields.
     foreach ($base_field_definitions as $field_name => $base_field_definition) {
       if ($base_field_definition instanceof FieldDefinition) {
         $base_field_definition->setName($field_name);
         $base_field_definition->setTargetEntityTypeId($entity_type_id);
+        $base_field_definition->setBundle(NULL);
       }
     }
 
@@ -491,11 +493,13 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
       }
     }
 
-    // Automatically set the field name for non-configurable fields.
+    // Automatically set the field name, target entity type and bundle
+    // for non-configurable fields.
     foreach ($bundle_field_definitions as $field_name => $field_definition) {
       if ($field_definition instanceof FieldDefinition) {
         $field_definition->setName($field_name);
         $field_definition->setTargetEntityTypeId($entity_type_id);
+        $field_definition->setBundle($bundle);
       }
     }
 

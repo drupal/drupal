@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\field\FieldConfigUpdateForbiddenException;
 
 /**
  * @defgroup field_types Field Types API
@@ -248,7 +247,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  * that cannot be updated.
  *
  * To forbid the update from occurring, throw a
- * Drupal\field\FieldConfigUpdateForbiddenException.
+ * \Drupal\Core\Entity\Exception\StorageDefinitionUpdateForbiddenException.
  *
  * @param \Drupal\field\FieldConfigInterface $field
  *   The field as it will be post-update.
@@ -270,7 +269,7 @@ function hook_field_config_update_forbid(\Drupal\field\FieldConfigInterface $fie
       ->range(0, 1)
       ->execute();
     if ($found) {
-      throw new FieldConfigUpdateForbiddenException("Cannot update a list field not to include keys with existing data");
+      throw new \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException("Cannot update a list field not to include keys with existing data");
     }
   }
 }

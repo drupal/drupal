@@ -336,7 +336,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       // Set the default instance settings.
       $this->settings += $field_type_manager->getDefaultInstanceSettings($field->type);
       // Notify the entity storage.
-      $entity_manager->getStorage($this->entity_type)->onInstanceCreate($this);
+      $entity_manager->getStorage($this->entity_type)->onFieldDefinitionCreate($this);
     }
     else {
       // Some updates are always disallowed.
@@ -352,7 +352,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       // Set the default instance settings.
       $this->settings += $field_type_manager->getDefaultInstanceSettings($field->type);
       // Notify the entity storage.
-      $entity_manager->getStorage($this->entity_type)->onInstanceUpdate($this);
+      $entity_manager->getStorage($this->entity_type)->onFieldDefinitionUpdate($this, $this->original);
     }
     if (!$this->isSyncing()) {
       // Ensure the correct dependencies are present.
@@ -423,7 +423,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     // Notify the entity storage.
     foreach ($instances as $instance) {
       if (!$instance->deleted) {
-        \Drupal::entityManager()->getStorage($instance->entity_type)->onInstanceDelete($instance);
+        \Drupal::entityManager()->getStorage($instance->entity_type)->onFieldDefinitionDelete($instance);
       }
     }
 
@@ -601,6 +601,13 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public function getDisplayOptions($display_context) {
     // Hide configurable fields by default.
     return array('type' => 'hidden');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundle() {
+    return $this->bundle;
   }
 
   /**

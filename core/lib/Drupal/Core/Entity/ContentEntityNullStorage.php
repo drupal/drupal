@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Query\QueryException;
-use Drupal\field\FieldInstanceConfigInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines a null entity storage.
@@ -109,13 +109,14 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
   /**
    * {@inheritdoc}
    */
-  protected function readFieldItemsToPurge(EntityInterface $entity, FieldInstanceConfigInterface $instance) {
+  protected function readFieldItemsToPurge(FieldDefinitionInterface $field_definition, $batch_size) {
+    return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function purgeFieldItems(EntityInterface $entity, FieldInstanceConfigInterface $instance) {
+  protected function purgeFieldItems(ContentEntityInterface $entity, FieldDefinitionInterface $field_definition) {
   }
 
   /**
@@ -128,6 +129,13 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function has($id, EntityInterface $entity) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function countFieldData($storage_definition, $as_bool = FALSE) {
+    return $as_bool ? FALSE : 0;
   }
 
 }

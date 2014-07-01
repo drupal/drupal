@@ -85,9 +85,6 @@ class CommentFieldsTest extends CommentTestBase {
     // Purge field data now to allow comment module to be uninstalled once the
     // field has been deleted.
     field_purge_batch(10);
-    // Call again as field_purge_batch() won't remove both the instances and
-    // field in a single pass.
-    field_purge_batch(10);
 
     // Disable the comment module.
     $edit = array();

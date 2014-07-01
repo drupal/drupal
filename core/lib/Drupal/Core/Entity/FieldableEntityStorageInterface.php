@@ -7,71 +7,78 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\field\FieldConfigInterface;
-use Drupal\field\FieldInstanceConfigInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 interface FieldableEntityStorageInterface extends EntityStorageInterface {
 
   /**
-   * Allows reaction to the creation of a configurable field.
+   * Reacts to the creation of a field storage definition.
    *
-   * @param \Drupal\field\FieldConfigInterface $field
-   *   The field being created.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The definition being created.
    */
-  public function onFieldCreate(FieldConfigInterface $field);
+  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition);
 
   /**
-   * Allows reaction to the update of a configurable field.
+   * Reacts to the update of a field storage definition.
    *
-   * @param \Drupal\field\FieldConfigInterface $field
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field being updated.
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $original
+   *   The original storage definition; i.e., the definition before the update.
+   *
+   * @throws \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException
+   *   Thrown when the update to the field is forbidden.
    */
-  public function onFieldUpdate(FieldConfigInterface $field);
+  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original);
 
   /**
-   * Allows reaction to the deletion of a configurable field.
+   * Reacts to the deletion of a field storage definition.
    *
    * Stored values should not be wiped at once, but marked as 'deleted' so that
    * they can go through a proper purge process later on.
    *
-   * @param \Drupal\field\FieldConfigInterface $field
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field being deleted.
    *
-   * @see fieldPurgeData()
+   * @see purgeFieldData()
    */
-  public function onFieldDelete(FieldConfigInterface $field);
+  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition);
 
   /**
-   * Allows reaction to the creation of a configurable field instance.
+   * Reacts to the creation of a field.
    *
-   * @param \Drupal\field\FieldInstanceConfigInterface $instance
-   *   The instance being created.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition created.
    */
-  public function onInstanceCreate(FieldInstanceConfigInterface $instance);
+  public function onFieldDefinitionCreate(FieldDefinitionInterface $field_definition);
 
   /**
-   * Allows reaction to the update of a configurable field instance.
+   * Reacts to the update of a field.
    *
-   * @param \Drupal\field\FieldInstanceConfigInterface $instance
-   *   The instance being updated.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition being updated.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The original field definition; i.e., the definition before the update.
    */
-  public function onInstanceUpdate(FieldInstanceConfigInterface $instance);
+  public function onFieldDefinitionUpdate(FieldDefinitionInterface $field_definition, FieldDefinitionInterface $original);
 
   /**
-   * Allows reaction to the deletion of a configurable field instance.
+   * Reacts to the deletion of a field.
    *
    * Stored values should not be wiped at once, but marked as 'deleted' so that
    * they can go through a proper purge process later on.
    *
-   * @param \Drupal\field\FieldInstanceConfigInterface $instance
-   *   The instance being deleted.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition being deleted.
    *
-   * @see fieldPurgeData()
+   * @see purgeFieldData()
    */
-  public function onInstanceDelete(FieldInstanceConfigInterface $instance);
+  public function onFieldDefinitionDelete(FieldDefinitionInterface $field_definition);
 
   /**
-   * Allows reaction to a bundle being created.
+   * Reacts to a bundle being created.
    *
    * @param string $bundle
    *   The name of the bundle created.
@@ -79,10 +86,9 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface {
   public function onBundleCreate($bundle);
 
   /**
-   * Allows reaction to a bundle being renamed.
+   * Reacts to a bundle being renamed.
    *
-   * This method runs before field instance definitions are updated with the new
-   * bundle name.
+   * This method runs before fields are updated with the new bundle name.
    *
    * @param string $bundle
    *   The name of the bundle being renamed.
@@ -92,9 +98,9 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface {
   public function onBundleRename($bundle, $bundle_new);
 
   /**
-   * Allows reaction to a bundle being deleted.
+   * Reacts to a bundle being deleted.
    *
-   * This method runs before field and instance definitions are deleted.
+   * This method runs before fields are deleted.
    *
    * @param string $bundle
    *   The name of the bundle being deleted.
@@ -102,24 +108,43 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface {
   public function onBundleDelete($bundle);
 
   /**
-   * Purges the field data for a single field on a single entity.
+   * Purges a batch of field data.
    *
-   * The entity itself is not being deleted, and it is quite possible that
-   * other field data will remain attached to it.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The deleted field whose data is being purged.
+   * @param $batch_size
+   *   The maximum number of field data records to purge before returning,
+   *   relating to the count of field data records returned by
+   *   \Drupal\Core\Entity\FieldableEntityStorageInterface::countFieldData().
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity whose field data is being purged.
-   * @param \Drupal\field\FieldInstanceConfigInterface $instance
-   *   The deleted field instance whose data is being purged.
+   * @return int
+   *   The number of field data records that have been purged.
    */
-  public function onFieldItemsPurge(EntityInterface $entity, FieldInstanceConfigInterface $instance);
+  public function purgeFieldData(FieldDefinitionInterface $field_definition, $batch_size);
 
   /**
-   * Performs final cleanup after all data on all instances has been purged.
+   * Determines the number of entities with values for a given field.
    *
-   * @param \Drupal\field\FieldConfigInterface $instance
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field for which to count data records.
+   * @param bool $as_bool
+   *   (Optional) Optimises the query for checking whether there are any records
+   *   or not. Defaults to FALSE.
+   *
+   * @return bool|int
+   *   The number of entities. If $as_bool parameter is TRUE then the
+   *   value will either be TRUE or FALSE.
+   *
+   * @see \Drupal\Core\Entity\FieldableEntityStorageInterface::purgeFieldData()
+   */
+  public function countFieldData($storage_definition, $as_bool = FALSE);
+
+  /**
+   * Performs final cleanup after all data of a field has been purged.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field being purged.
    */
-  public function onFieldPurge(FieldConfigInterface $field);
+  public function finalizePurge(FieldStorageDefinitionInterface $storage_definition);
 
 }

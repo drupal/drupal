@@ -10,7 +10,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\FieldConfigInterface;
-use Drupal\field\FieldConfigUpdateForbiddenException;
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 
 /**
  * Implements hook_field_widget_info_alter().
@@ -24,7 +24,7 @@ function field_test_field_widget_info_alter(&$info) {
  */
 function field_test_field_config_update_forbid(FieldConfigInterface $field, FieldConfigInterface $prior_field) {
   if ($field->getType() == 'test_field' && $field->getSetting('unchangeable') != $prior_field->getSetting('unchangeable')) {
-    throw new FieldConfigUpdateForbiddenException("field_test 'unchangeable' setting cannot be changed'");
+    throw new FieldStorageDefinitionUpdateForbiddenException("field_test 'unchangeable' setting cannot be changed'");
   }
 }
 

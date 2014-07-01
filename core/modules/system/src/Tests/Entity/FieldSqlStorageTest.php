@@ -9,9 +9,8 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
-use Drupal\field\FieldException;
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests field storage.
@@ -322,7 +321,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       $field->save();
       $this->fail(t('Cannot update field schema with data.'));
     }
-    catch (FieldException $e) {
+    catch (FieldStorageDefinitionUpdateForbiddenException $e) {
       $this->pass(t('Cannot update field schema with data.'));
     }
   }
@@ -560,9 +559,9 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       'deleted' => TRUE,
     ));
     $expected = 'field_deleted_data_' . substr(hash('sha256', $field->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldTableName($field), $expected);
+    $this->assertEqual(ContentEntityDatabaseStorage::_fieldTableName($field, TRUE), $expected);
     $expected = 'field_deleted_revision_' . substr(hash('sha256', $field->uuid()), 0, 10);
-    $this->assertEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field), $expected);
+    $this->assertEqual(ContentEntityDatabaseStorage::_fieldRevisionTableName($field, TRUE), $expected);
   }
 
 }

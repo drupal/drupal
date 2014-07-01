@@ -161,7 +161,10 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
         }
       }
 
-      $matching_instances[] = $instance;
+      // When returning deleted instances, key the results by UUID since they
+      // can include several instances with the same ID.
+      $key = $include_deleted ? $instance->uuid() : $instance->id();
+      $matching_instances[$key] = $instance;
     }
 
     return $matching_instances;

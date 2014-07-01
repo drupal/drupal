@@ -78,4 +78,11 @@ function standard_install() {
 
   // Enable the admin theme.
   \Drupal::config('node.settings')->set('use_admin_theme', '1')->save();
+
+  // @todo Remove in https://www.drupal.org/node/2295129.
+  // Resave the plain_text formatter so that default filter plugins and
+  // dependencies are calculated correctly. This resolves an issue caused by the
+  // fact that filter is installed before editor but the standard profile also
+  // enables the file module.
+  entity_load('filter_format', 'plain_text')->save();
 }

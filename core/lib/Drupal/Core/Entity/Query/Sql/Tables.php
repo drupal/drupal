@@ -106,15 +106,7 @@ class Tables implements TablesInterface {
       // This can either be the name of an entity base field or a configurable
       // field.
       $specifier = $specifiers[$key];
-      // Normally it is a field name, but field_purge_batch() is passing in
-      // id:$field_id so check that first.
-      /* @var \Drupal\Core\Field\FieldDefinitionInterface $field */
-      if (substr($specifier, 0, 3) == 'id:') {
-        if ($fields = entity_load_multiple_by_properties('field_config', array('uuid' => substr($specifier, 3), 'include_deleted' => TRUE))) {
-          $field = current($fields);
-        }
-      }
-      elseif (isset($field_storage_definitions[$specifier])) {
+      if (isset($field_storage_definitions[$specifier])) {
         $field = $field_storage_definitions[$specifier];
       }
       else {

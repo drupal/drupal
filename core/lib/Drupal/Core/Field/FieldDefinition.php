@@ -509,11 +509,30 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * @param string $entity_type_id
    *   The name of the target entity type to set.
    *
-   * @return static
-   *   The object itself for chaining.
+   * @return $this
    */
   public function setTargetEntityTypeId($entity_type_id) {
     $this->definition['entity_type'] = $entity_type_id;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundle() {
+    return isset($this->definition['bundle']) ? $this->definition['bundle'] : NULL;
+  }
+
+  /**
+   * Sets the bundle this field is defined for.
+   *
+   * @param string|null $bundle
+   *   The bundle, or NULL if the field is not bundle-specific.
+   *
+   * @return $this
+   */
+  public function setBundle($bundle) {
+    $this->definition['bundle'] = $bundle;
     return $this;
   }
 
@@ -576,7 +595,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * {@inheritdoc}
    */
   public function hasCustomStorage() {
-    return !empty($this->definition['custom_storage']);
+    return !empty($this->definition['custom_storage']) || $this->isComputed();
   }
 
   /**
@@ -587,8 +606,14 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    *   TRUE otherwise.
    *
    * @return $this
+   *
+   * @throws \LogicException
+   *   Thrown if custom storage is to be set to FALSE for a computed field.
    */
   public function setCustomStorage($custom_storage) {
+    if (!$custom_storage && $this->isComputed()) {
+      throw new \LogicException("Entity storage cannot store a computed field.");
+    }
     $this->definition['custom_storage'] = $custom_storage;
     return $this;
   }
@@ -598,6 +623,13 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    */
   public function getFieldStorageDefinition() {
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUniqueStorageIdentifier() {
+    return $this->getTargetEntityTypeId() . '-' . $this->getName();
   }
 
 }

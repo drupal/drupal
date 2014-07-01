@@ -75,7 +75,8 @@ class ConfigImporterFieldPurger {
     $context['sandbox']['field']['steps_to_delete'] = 0;
     $fields = static::getFieldsToPurge($context['sandbox']['field']['extensions'], $config_importer->getUnprocessedConfiguration('delete'));
     foreach ($fields as $field) {
-      $row_count = $field->entityCount();
+      $row_count = \Drupal::entityManager()->getStorage($field->getTargetEntityTypeId())
+        ->countFieldData($field);
       if ($row_count > 0) {
         // The number of steps to delete each field is determined by the
         // purge_batch_size setting. For example if the field has 9 rows and the
@@ -84,8 +85,8 @@ class ConfigImporterFieldPurger {
         $context['sandbox']['field']['steps_to_delete'] += $how_many_steps;
       }
     }
-    // Each field needs one last field_purge_batch() call to remove the last
-    // instance and the field itself.
+    // Each field possibly needs one last field_purge_batch() call to remove the
+    // last instance and the field itself.
     $context['sandbox']['field']['steps_to_delete'] += count($fields);
 
     $context['sandbox']['field']['current_progress'] = 0;

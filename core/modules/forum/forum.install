@@ -108,10 +108,7 @@ function forum_uninstall() {
   }
 
   // Purge field data now to allow taxonomy and options module to be uninstalled
-  // if this is the only field remaining. We need to run it twice because
-  // field_purge_batch() will not remove the instance and the field in the same
-  // pass.
-  field_purge_batch(10);
+  // if this is the only field remaining.
   field_purge_batch(10);
   // Allow to delete a forum's node type.
   $locked = \Drupal::state()->get('node.type.locked');

@@ -957,14 +957,16 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->will($this->returnValue($this->fieldDefinitions));
 
     // Define a field definition for a test_field field.
-    $field = $this->getMock('\Drupal\field\FieldConfigInterface');
+    $field = $this->getMock('\Drupal\Core\Field\FieldStorageDefinitionInterface');
     $field->deleted = FALSE;
-    $field->entity_type = 'test_entity';
-    $field->name = 'test_field';
 
     $field->expects($this->any())
       ->method('getName')
-      ->will($this->returnValue('test'));
+      ->will($this->returnValue('test_field'));
+
+    $field->expects($this->any())
+      ->method('getTargetEntityTypeId')
+      ->will($this->returnValue('test_entity'));
 
     $field_schema = array(
       'columns' => array(

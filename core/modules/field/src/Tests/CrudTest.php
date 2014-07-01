@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldException;
 
@@ -440,7 +441,7 @@ class CrudTest extends FieldUnitTestBase {
       $field->save();
       $this->pass(t("A changeable setting can be updated."));
     }
-    catch (FieldException $e) {
+    catch (FieldStorageDefinitionUpdateForbiddenException $e) {
       $this->fail(t("An unchangeable setting cannot be updated."));
     }
     $field->settings['unchangeable']++;
@@ -448,7 +449,7 @@ class CrudTest extends FieldUnitTestBase {
       $field->save();
       $this->fail(t("An unchangeable setting can be updated."));
     }
-    catch (FieldException $e) {
+    catch (FieldStorageDefinitionUpdateForbiddenException $e) {
       $this->pass(t("An unchangeable setting cannot be updated."));
     }
   }

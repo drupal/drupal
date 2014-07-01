@@ -7,7 +7,7 @@
 
 namespace Drupal\options\Tests;
 
-use Drupal\field\FieldException;
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 
 /**
  * Tests for the 'Options' field types.
@@ -50,7 +50,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
       $this->field->save();
       $this->fail(t('Cannot update a list field to not include keys with existing data.'));
     }
-    catch (FieldException $e) {
+    catch (FieldStorageDefinitionUpdateForbiddenException $e) {
       $this->pass(t('Cannot update a list field to not include keys with existing data.'));
     }
     // Empty the value, so that we can actually remove the option.

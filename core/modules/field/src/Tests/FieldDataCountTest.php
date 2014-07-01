@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Tests\FieldEntityCountTest.
+ * Contains \Drupal\field\Tests\FieldDataCountTest.
  */
 
 namespace Drupal\field\Tests;
@@ -10,19 +10,35 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 
 /**
- * Tests entityCount() and hasData() methods on FieldConfig entity.
+ * Tests counting field data records.
  *
- * @see \Drupal\field\Entity\FieldConfig::entityCount()
+ * @see \Drupal\Core\Entity\FieldableEntityStorageInterface::countFieldData()
  * @see \Drupal\field\Entity\FieldConfig::hasData()
  */
-class FieldEntityCountTest extends FieldUnitTestBase {
+class FieldDataCountTest extends FieldUnitTestBase {
 
+  /**
+   * @var \Drupal\Core\Entity\FieldableEntityStorageInterface
+   */
+  protected $storage;
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
-      'name' => 'Field config entityCount() and hasData() tests.',
-      'description' => 'Tests entityCount() and hasData() methods on FieldConfig entity.',
+      'name' => 'Field config hasData() tests.',
+      'description' => 'Tests counting field data records and the hasData() method on FieldConfig entity.',
       'group' => 'Field API',
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->storage = \Drupal::entityManager()->getStorage('entity_test');
   }
 
   /**
@@ -45,7 +61,7 @@ class FieldEntityCountTest extends FieldUnitTestBase {
     ))->save();
 
     $this->assertIdentical($field->hasdata(), FALSE, 'There are no entities with field data.');
-    $this->assertIdentical($field->entityCount(), 0, 'There are 0 entities with field data.');
+    $this->assertIdentical($this->storage->countFieldData($field), 0, 'There are 0 entities with field data.');
 
     // Create 1 entity without the field.
     $entity = entity_create('entity_test');
@@ -53,7 +69,7 @@ class FieldEntityCountTest extends FieldUnitTestBase {
     $entity->save();
 
     $this->assertIdentical($field->hasdata(), FALSE, 'There are no entities with field data.');
-    $this->assertIdentical($field->entityCount(), 0, 'There are 0 entities with field data.');
+    $this->assertIdentical($this->storage->countFieldData($field), 0, 'There are 0 entities with field data.');
 
     // Create 12 entities to ensure that the purging works as expected.
     for ($i=0; $i < 12; $i++) {
@@ -79,16 +95,16 @@ class FieldEntityCountTest extends FieldUnitTestBase {
     }
 
     $this->assertIdentical($field->hasdata(), TRUE, 'There are entities with field data.');
-    $this->assertEqual($field->entityCount(), 12, 'There are 12 entities with field data.');
+    $this->assertEqual($this->storage->countFieldData($field), 12, 'There are 12 entities with field data.');
 
     // Ensure the methods work on deleted fields.
     $field->delete();
     $this->assertIdentical($field->hasdata(), TRUE, 'There are entities with deleted field data.');
-    $this->assertEqual($field->entityCount(), 12, 'There are 12 entities with deleted field data.');
+    $this->assertEqual($this->storage->countFieldData($field), 12, 'There are 12 entities with deleted field data.');
 
     field_purge_batch(6);
     $this->assertIdentical($field->hasdata(), TRUE, 'There are entities with deleted field data.');
-    $this->assertEqual($field->entityCount(), 6, 'There are 6 entities with deleted field data.');
+    $this->assertEqual($this->storage->countFieldData($field), 6, 'There are 6 entities with deleted field data.');
   }
 
 }

@@ -86,7 +86,8 @@ function path_entity_base_field_info(EntityTypeInterface $entity_type) {
         'type' => 'path',
         'weight' => 30,
       ))
-      ->setDisplayConfigurable('form', TRUE);
+      ->setDisplayConfigurable('form', TRUE)
+      ->setCustomStorage(TRUE);
 
     return $fields;
   }
