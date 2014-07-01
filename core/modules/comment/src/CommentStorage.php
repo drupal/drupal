@@ -58,30 +58,6 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
     );
   }
 
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function buildQuery($ids, $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $revision_id);
-    // Specify additional fields from the user table.
-    $query->innerJoin('users', 'u', 'base.uid = u.uid');
-    // @todo: Move to a computed 'name' field instead.
-    $query->addField('u', 'name', 'registered_name');
-    return $query;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function mapFromStorageRecords(array $records) {
-    // Prepare standard comment fields.
-    foreach ($records as $record) {
-      $record->name = $record->uid ? $record->registered_name : $record->name;
-    }
-    return parent::mapFromStorageRecords($records);
-  }
-
   /**
    * {@inheritdoc}
    */
