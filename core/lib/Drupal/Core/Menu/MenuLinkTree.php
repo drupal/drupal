@@ -79,7 +79,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   public function getDefaultRenderedMenuTreeLinkParameters($menu_name) {
     $active_trail = $this->menuActiveTrail->getActiveTrailIds($menu_name);
 
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setActiveTrail($active_trail)
       // We want links in the active trail to be expanded.
       ->addExpanded($active_trail)
@@ -94,30 +94,34 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   /**
    * {@inheritdoc}
    */
-  public function load($menu_name, MenuLinkTreeParameters $parameters) {
+  public function load($menu_name, MenuTreeParameters $parameters) {
     $data = $this->treeStorage->loadTreeData($menu_name, $parameters);
-    // Pre-load all the route objects in the subtree for access checks.
+    // Pre-load all the route objects in the tree for access checks.
     if ($data['route_names']) {
       $this->routeProvider->getRoutesByNames($data['route_names']);
     }
-    $tree = $data['tree'];
-    $this->createInstances($tree);
-    return $tree;
+    return $this->createInstances($data['tree']);
   }
 
   /**
    * Helper function that recursively instantiates the plugins.
    */
-  protected function createInstances(&$tree) {
-    foreach (array_keys($tree) as $id) {
-      // Upcast the MenuLinkTreeElement's "link" property from a definition to
-      // an instance.
-      $tree[$id]->link = $this->menuLinkManager->createInstance($tree[$id]->link['id']);
-
-      if (!empty($tree[$id]->subtree)) {
-        $this->createInstances($tree[$id]->subtree);
-      }
+  protected function createInstances($data_tree) {
+    $tree = array();
+    foreach ($data_tree as $key => $element) {
+      $subtree = $this->createInstances($element['subtree']);
+      // Build a MenuLinkTreeElement out of the menu tree link definition:
+      // transform the tree link definition into a link definition and store
+      // tree metadata.
+      $tree[$key] = new MenuLinkTreeElement(
+        $this->menuLinkManager->createInstance($element['definition']['id']),
+        (bool) $element['has_children'],
+        (int) $element['depth'],
+        (bool) $element['in_active_trail'],
+        $subtree
+      );
     }
+    return $tree;
   }
 
   /**

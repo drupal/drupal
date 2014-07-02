@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Menu\MenuTreeStorage;
 use Drupal\simpletest\KernelTestBase;
 
@@ -254,28 +254,28 @@ class MenuTreeStorageTest extends KernelTestBase {
     $this->addMenuLink('test4');
     $this->addMenuLink('test5', 'test4');
 
-    $data = $this->treeStorage->loadTreeData('tools', new MenuLinkTreeParameters());
+    $data = $this->treeStorage->loadTreeData('tools', new MenuTreeParameters());
     $tree = $data['tree'];
-    $this->assertEqual(count($tree['test1']->subtree), 1);
-    $this->assertEqual(count($tree['test1']->subtree['test2']->subtree), 1);
-    $this->assertEqual(count($tree['test1']->subtree['test2']->subtree['test3']->subtree), 0);
-    $this->assertEqual(count($tree['test4']->subtree), 1);
-    $this->assertEqual(count($tree['test4']->subtree['test5']->subtree), 0);
+    $this->assertEqual(count($tree['test1']['subtree']), 1);
+    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']), 1);
+    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']['test3']['subtree']), 0);
+    $this->assertEqual(count($tree['test4']['subtree']), 1);
+    $this->assertEqual(count($tree['test4']['subtree']['test5']['subtree']), 0);
 
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setActiveTrail(array('test4', 'test5'));
     $data = $this->treeStorage->loadTreeData('tools', $parameters);
     $tree = $data['tree'];
-    $this->assertEqual(count($tree['test1']->subtree), 1);
-    $this->assertFalse($tree['test1']->inActiveTrail);
-    $this->assertEqual(count($tree['test1']->subtree['test2']->subtree), 1);
-    $this->assertFalse($tree['test1']->subtree['test2']->inActiveTrail);
-    $this->assertEqual(count($tree['test1']->subtree['test2']->subtree['test3']->subtree), 0);
-    $this->assertFalse($tree['test1']->subtree['test2']->subtree['test3']->inActiveTrail);
-    $this->assertEqual(count($tree['test4']->subtree), 1);
-    $this->assertTrue($tree['test4']->inActiveTrail);
-    $this->assertEqual(count($tree['test4']->subtree['test5']->subtree), 0);
-    $this->assertTrue($tree['test4']->subtree['test5']->inActiveTrail);
+    $this->assertEqual(count($tree['test1']['subtree']), 1);
+    $this->assertFalse($tree['test1']['in_active_trail']);
+    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']), 1);
+    $this->assertFalse($tree['test1']['subtree']['test2']['in_active_trail']);
+    $this->assertEqual(count($tree['test1']['subtree']['test2']['subtree']['test3']['subtree']), 0);
+    $this->assertFalse($tree['test1']['subtree']['test2']['subtree']['test3']['in_active_trail']);
+    $this->assertEqual(count($tree['test4']['subtree']), 1);
+    $this->assertTrue($tree['test4']['in_active_trail']);
+    $this->assertEqual(count($tree['test4']['subtree']['test5']['subtree']), 0);
+    $this->assertTrue($tree['test4']['subtree']['test5']['in_active_trail']);
   }
 
   /**
@@ -388,7 +388,7 @@ class MenuTreeStorageTest extends KernelTestBase {
     if ($parents) {
       $this->assertEqual($raw['parent'], end($parents), 'Ensure that the parent field is set properly');
     }
-    $found_children = array_keys($this->treeStorage->loadAllChildLinks($id));
+    $found_children = array_keys($this->treeStorage->loadAllChildren($id));
     // We need both these checks since the 2nd will pass if there are extra
     // IDs loaded in $found_children.
     $this->assertEqual(count($children), count($found_children)); //, "Found expected number of children for $id");

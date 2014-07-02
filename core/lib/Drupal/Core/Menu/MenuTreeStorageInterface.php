@@ -121,7 +121,7 @@ interface MenuTreeStorageInterface {
    *
    * @param string $menu_name
    *   The name of the menu.
-   * @param \Drupal\Core\Menu\MenuLinkTreeParameters $parameters
+   * @param \Drupal\Core\Menu\MenuTreeParameters $parameters
    *   The parameters to determine which menu links to be loaded into a tree.
    *
    * @return array
@@ -129,7 +129,7 @@ interface MenuTreeStorageInterface {
    *   - tree: A fully built menu tree.
    *   - route_names: An array of all route names used in the tree.
    */
-  public function loadTreeData($menu_name, MenuLinkTreeParameters $parameters);
+  public function loadTreeData($menu_name, MenuTreeParameters $parameters);
 
   /**
    * Loads all the visible menu links that are below the given ID.
@@ -146,7 +146,7 @@ interface MenuTreeStorageInterface {
    * @return array
    *   An array of visible (not hidden) link definitions, keyed by ID.
    */
-  public function loadAllChildLinks($id, $max_relative_depth = NULL);
+  public function loadAllChildren($id, $max_relative_depth = NULL);
 
   /**
    * Loads all the IDs for menu links that are below the given ID.
@@ -160,7 +160,7 @@ interface MenuTreeStorageInterface {
   public function getAllChildIds($id);
 
   /**
-   * Loads a subtree rooted by the given menu link plugin ID.
+   * Loads a subtree rooted by the given ID.
    *
    * The returned links are structured like those from loadTreeData().
    *

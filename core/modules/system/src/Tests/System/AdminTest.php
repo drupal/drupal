@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -134,7 +134,7 @@ class AdminTest extends WebTestBase {
     $menu_tree = $this->container->get('menu.link_tree');
 
     // The system.admin link is normally the parent of all top-level admin links.
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setRoot('system.admin')->excludeRoot()->topLevelOnly()->excludeHiddenLinks();
     $tree = $menu_tree->load(NULL, $parameters);
     $manipulators = array(

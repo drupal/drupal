@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
@@ -413,7 +413,7 @@ function toolbar_toolbar() {
 function toolbar_prerender_toolbar_administration_tray(array $element) {
   $menu_tree = \Drupal::menuTree();
   // Render the top-level administration menu links.
-  $parameters = new MenuLinkTreeParameters();
+  $parameters = new MenuTreeParameters();
   $parameters->setRoot('system.admin')->excludeRoot()->topLevelOnly()->excludeHiddenLinks();
   $tree = $menu_tree->load(NULL, $parameters);
   $manipulators = array(
@@ -470,7 +470,7 @@ function toolbar_menu_navigation_links(array $tree) {
 function toolbar_get_rendered_subtrees() {
   /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
   $menu_tree = \Drupal::service('menu.link_tree');
-  $parameters = new MenuLinkTreeParameters();
+  $parameters = new MenuTreeParameters();
   $parameters->setRoot('system.admin')->excludeRoot()->setMaxDepth(3)->excludeHiddenLinks();
   $tree = $menu_tree->load(NULL, $parameters);
   $manipulators = array(

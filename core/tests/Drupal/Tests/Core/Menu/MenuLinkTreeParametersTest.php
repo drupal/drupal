@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Tests\UnitTestCase;
  * @group Drupal
  * @group Menu
  *
- * @coversDefaultClass \Drupal\Core\Menu\MenuLinkTreeParameters
+ * @coversDefaultClass \Drupal\Core\Menu\MenuTreeParameters
  */
 class MenuLinkTreeParametersTest extends UnitTestCase {
 
@@ -46,7 +46,7 @@ class MenuLinkTreeParametersTest extends UnitTestCase {
     $data[] = array(-10000, 1);
     $data[] = array(0, 1);
     // … except for those invalid values that reach beyond the maximum depth,
-    // because MenuLinkTreeParameters is a value object and hence cannot depend
+    // because MenuTreeParameters is a value object and hence cannot depend
     // on anything; to know the actual maximum depth, it'd have to depend on the
     // MenuTreeStorage service.
     $data[] = array(10, 10);
@@ -62,7 +62,7 @@ class MenuLinkTreeParametersTest extends UnitTestCase {
    * @dataProvider providerTestSetMinDepth
    */
   public function testSetMinDepth($min_depth, $expected) {
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setMinDepth($min_depth);
     $this->assertEquals($expected, $parameters->minDepth);
   }
@@ -73,7 +73,7 @@ class MenuLinkTreeParametersTest extends UnitTestCase {
    * @covers ::addExpanded
    */
   public function testAddExpanded() {
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
 
     // Verify default value.
     $this->assertEquals(array(), $parameters->expanded);
@@ -99,7 +99,7 @@ class MenuLinkTreeParametersTest extends UnitTestCase {
    * @covers ::addCondition
    */
   public function testAddCondition() {
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
 
     // Verify default value.
     $this->assertEquals(array(), $parameters->conditions);
@@ -132,7 +132,7 @@ class MenuLinkTreeParametersTest extends UnitTestCase {
    * @covers ::excludeHiddenLinks
    */
   public function testExcludeHiddenLinks() {
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->excludeHiddenLinks();
     $this->assertEquals(0, $parameters->conditions['hidden']);
   }
@@ -143,7 +143,7 @@ class MenuLinkTreeParametersTest extends UnitTestCase {
    * @covers ::topLevelOnly
    */
   public function testTopLevelOnly() {
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->topLevelOnly();
     $this->assertEquals(1, $parameters->maxDepth);
   }
@@ -154,7 +154,7 @@ class MenuLinkTreeParametersTest extends UnitTestCase {
    * @covers ::excludeRoot
    */
   public function testExcludeRoot() {
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->excludeRoot();
     $this->assertEquals(1, $parameters->minDepth);
   }

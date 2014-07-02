@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Theme\ThemeAccessCheck;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -118,7 +118,7 @@ class SystemController extends ControllerBase {
     if ($this->systemManager->checkRequirements() && $this->currentUser()->hasPermission('administer site configuration')) {
       drupal_set_message($this->t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
     }
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setRoot($link_id)->excludeRoot()->topLevelOnly()->excludeHiddenLinks();
     $tree = $this->menuLinkTree->load(NULL, $parameters);
     $manipulators = array(

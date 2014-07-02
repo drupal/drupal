@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -70,7 +70,7 @@ class UserAccountLinksTests extends WebTestBase {
     // For a logged-out user, expect no secondary links.
     /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
     $menu_tree = \Drupal::service('menu.link_tree');
-    $tree = $menu_tree->load('account', new MenuLinkTreeParameters());
+    $tree = $menu_tree->load('account', new MenuTreeParameters());
     $manipulators = array(
       array('callable' => 'menu.default_tree_manipulators:checkAccess'),
     );

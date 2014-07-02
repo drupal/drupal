@@ -11,7 +11,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslationWrapper;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\block\BlockPluginInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1462,7 +1462,7 @@ function system_get_module_admin_tasks($module, array $info) {
   $menu_tree = \Drupal::service('menu.link_tree');
 
   if (!isset($tree)) {
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setRoot('system.admin')->excludeRoot()->excludeHiddenLinks();
     $tree = $menu_tree->load('system.admin', $parameters);
     $manipulators = array(

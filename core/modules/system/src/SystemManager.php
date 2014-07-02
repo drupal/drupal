@@ -10,7 +10,7 @@ use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -214,7 +214,7 @@ class SystemManager {
     $content = array();
     // Only find the children of this link.
     $link_id = $instance->getPluginId();
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setRoot($link_id)->excludeRoot()->topLevelOnly()->excludeHiddenLinks();
     $tree = $this->menuTree->load(NULL, $parameters);
     $manipulators = array(

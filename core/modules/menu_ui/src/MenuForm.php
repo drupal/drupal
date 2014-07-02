@@ -14,7 +14,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\Element;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -204,7 +204,7 @@ class MenuForm extends EntityForm {
 
     $form['#attached']['css'] = array(drupal_get_path('module', 'menu') . '/css/menu.admin.css');
 
-    $tree = $this->menuTree->load($this->entity->id(), new MenuLinkTreeParameters());
+    $tree = $this->menuTree->load($this->entity->id(), new MenuTreeParameters());
 
     // We indicate that a menu administrator is running the menu access check.
     $manipulators = array(

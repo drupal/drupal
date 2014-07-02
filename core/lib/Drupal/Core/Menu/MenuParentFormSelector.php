@@ -45,7 +45,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
     foreach ($menus as $menu_name => $menu_title) {
       $options[$menu_name . ':'] = '<' . $menu_title . '>';
 
-      $parameters = new MenuLinkTreeParameters();
+      $parameters = new MenuTreeParameters();
       $parameters->setMaxDepth($depth_limit);
       $tree = $this->menuLinkTree->load($menu_name, $parameters);
       $manipulators = array(

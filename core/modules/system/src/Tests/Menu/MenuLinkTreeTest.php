@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Menu;
 
 use Drupal\Core\Menu\MenuLinkTreeElement;
-use Drupal\Core\Menu\MenuLinkTreeParameters;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 
@@ -76,17 +76,17 @@ class MenuLinkTreeTest extends KernelTestBase {
     \Drupal::entityManager()->getStorage('menu_link_content')->create(array('route_name' => 'menu_test.menu_name_test', 'menu_name' => 'menu1', 'bundle' => 'menu_link_content'))->save();
     \Drupal::entityManager()->getStorage('menu_link_content')->create(array('route_name' => 'menu_test.menu_name_test', 'menu_name' => 'menu2', 'bundle' => 'menu_link_content'))->save();
 
-    $output = $this->linkTree->load('menu1', new MenuLinkTreeParameters());
+    $output = $this->linkTree->load('menu1', new MenuTreeParameters());
     $this->assertEqual(count($output), 2);
-    $output = $this->linkTree->load('menu2', new MenuLinkTreeParameters());
+    $output = $this->linkTree->load('menu2', new MenuTreeParameters());
     $this->assertEqual(count($output), 1);
 
     $this->menuLinkManager->deleteLinksInMenu('menu1');
 
-    $output = $this->linkTree->load('menu1', new MenuLinkTreeParameters());
+    $output = $this->linkTree->load('menu1', new MenuTreeParameters());
     $this->assertEqual(count($output), 0);
 
-    $output = $this->linkTree->load('menu2', new MenuLinkTreeParameters());
+    $output = $this->linkTree->load('menu2', new MenuTreeParameters());
     $this->assertEqual(count($output), 1);
   }
 
@@ -117,7 +117,7 @@ class MenuLinkTreeTest extends KernelTestBase {
     foreach ($links as $instance) {
       $this->menuLinkManager->createLink($instance->getPluginId(), $instance->getPluginDefinition());
     }
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $tree = $this->linkTree->load('mock', $parameters);
 
     $count = function(array $tree) {
@@ -128,7 +128,7 @@ class MenuLinkTreeTest extends KernelTestBase {
     };
 
     $this->assertEqual($count($tree), 8);
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setRoot('test.example2');
     $tree = $this->linkTree->load($instance->getMenuName(), $parameters);
     $top_link = reset($tree);

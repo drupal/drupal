@@ -56,7 +56,7 @@ interface MenuLinkTreeInterface {
    *   The menu name, needed for retrieving the active trail and links with the
    *   'expanded' flag enabled.
    *
-   * @return \Drupal\Core\Menu\MenuLinkTreeParameters $parameters
+   * @return \Drupal\Core\Menu\MenuTreeParameters $parameters
    *   The parameters to determine which menu links to be loaded into a tree.
    */
   public function getDefaultRenderedMenuTreeLinkParameters($menu_name);
@@ -66,13 +66,13 @@ interface MenuLinkTreeInterface {
    *
    * @param string $menu_name
    *   The name of the menu.
-   * @param \Drupal\Core\Menu\MenuLinkTreeParameters $parameters
+   * @param \Drupal\Core\Menu\MenuTreeParameters $parameters
    *   The parameters to determine which menu links to be loaded into a tree.
    *
-   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
+   * @return array
    *   A menu link tree.
    */
-  public function load($menu_name, MenuLinkTreeParameters $parameters);
+  public function load($menu_name, MenuTreeParameters $parameters);
 
   /**
    * Applies menu link tree manipulators to transform the given tree.

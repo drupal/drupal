@@ -81,12 +81,12 @@ class MenuLinkTreeElement {
    * \Drupal\Core\Menu\MenuLinkInterface::getOptions(), to allow menu link tree
    * manipulators to add or override link options.
    */
-  public $options;
+  public $options = array();
 
   /**
    * Constructs a new MenuLinkTreeElement.
    *
-   * @param \Drupal\Core\Menu\MenuLinkInterface|array $link
+   * @param \Drupal\Core\Menu\MenuLinkInterface $link
    *   The menu link for this element in the menu link tree.
    * @param bool $has_children
    * @param int $depth
@@ -101,10 +101,6 @@ class MenuLinkTreeElement {
     $this->depth = $depth;
     $this->subtree = $subtree;
     $this->inActiveTrail = $in_active_trail;
-
-    // Properties that will be updated by menu link tree manipulators.
-    $this->access = NULL;
-    $this->options = array();
   }
 
   /**

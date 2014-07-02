@@ -749,7 +749,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadTreeData($menu_name, MenuLinkTreeParameters $parameters) {
+  public function loadTreeData($menu_name, MenuTreeParameters $parameters) {
     // Build the cache id; sort 'expanded' and 'conditions' to prevent duplicate
     // cache items.
     sort($parameters->expanded);
@@ -781,17 +781,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *
    * @param string $menu_name
    *   A menu name.
-   * @param MenuLinkTreeParameters &$parameters
+   * @param MenuTreeParameters $parameters
    *   The parameters to determine which menu links to be loaded into a tree.
-   *   Passed by reference, so that ::loadLinks() can set the absolute minimum
-   *   depth, which is used by ::doBuildTreeData().
+   *   ::loadLinks() will set the absolute minimum depth, which is used
+   *   ::doBuildTreeData().
    * @return array
    *   A flat array of menu links that are part of the menu. Each array element
    *   is an associative array of information about the menu link, containing
    *   the fields from the {menu_tree} table. This array must be ordered
    *   depth-first.
    */
-  protected function loadLinks($menu_name, MenuLinkTreeParameters &$parameters) {
+  protected function loadLinks($menu_name, MenuTreeParameters $parameters) {
     $query = $this->connection->select($this->table, $this->options);
     $query->fields($this->table);
 
@@ -906,13 +906,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected function doCollectRoutesAndDefinitions(array $tree, array &$definitions) {
     $route_names = array();
     foreach (array_keys($tree) as $id) {
-      $definition = $this->definitions[$id];
-      $definitions[$id] = $definition;
+      $definitions[$id] = $this->definitions[$id];
       if (!empty($definition['route_name'])) {
         $route_names[$definition['route_name']] = $definition['route_name'];
       }
-      if (!empty($tree[$id]->subtree)) {
-        $route_names += $this->doCollectRoutesAndDefinitions($tree[$id]->subtree, $definitions);
+      if ($tree[$id]['subtree']) {
+        $route_names += $this->doCollectRoutesAndDefinitions($tree[$id]['subtree'], $definitions);
       }
     }
     return $route_names;
@@ -927,7 +926,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     if (!$root) {
       return $tree;
     }
-    $parameters = new MenuLinkTreeParameters();
+    $parameters = new MenuTreeParameters();
     $parameters->setRoot($id)->excludeHiddenLinks();
     return $this->loadTreeData($root['menu_name'], $parameters);
   }
@@ -986,8 +985,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadAllChildLinks($id, $max_relative_depth = NULL) {
-    $parameters = new MenuLinkTreeParameters();
+  public function loadAllChildren($id, $max_relative_depth = NULL) {
+    $parameters = new MenuTreeParameters();
     $parameters->setRoot($id)->excludeRoot()->setMaxDepth($max_relative_depth)->excludeHiddenLinks();
     $links = $this->loadLinks(NULL, $parameters);
     foreach ($links as $id => $link) {
@@ -1029,19 +1028,15 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected function treeDataRecursive(array &$links, array $parents, $depth) {
     $tree = array();
     while ($tree_link_definition = array_pop($links)) {
-      // Build a MenuLinkTreeElement out of the menu link tree definition:
-      // transform the menu link tree definition into a menu link definition and
-      // store tree metadata in MenuLinkTreeElement.
-      $tree[$tree_link_definition['id']] = new MenuLinkTreeElement(
-        $this->prepareLink($tree_link_definition, TRUE),
-        (bool) $tree_link_definition['has_children'],
-        (int) $tree_link_definition['depth'],
+      $tree[$tree_link_definition['id']] = array(
+        'definition' => $this->prepareLink($tree_link_definition, TRUE),
+        'has_children' => $tree_link_definition['has_children'],
         // We need to determine if we're on the path to root so we can later build
         // the correct active trail.
-        in_array($tree_link_definition['id'], $parents),
-        array()
+        'in_active_trail' => in_array($tree_link_definition['id'], $parents),
+        'subtree' => array(),
+        'depth' => $tree_link_definition['depth'],
       );
-
       // Look ahead to the next link, but leave it on the array so it's
       // available to other recursive function calls if we return or build a
       // sub-tree.
@@ -1049,7 +1044,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       // Check whether the next link is the first in a new sub-tree.
       if ($next && $next['depth'] > $depth) {
         // Recursively call doBuildTreeData to build the sub-tree.
-        $tree[$tree_link_definition['id']]->subtree = $this->treeDataRecursive($links, $parents, $next['depth']);
+        $tree[$tree_link_definition['id']]['subtree'] = $this->treeDataRecursive($links, $parents, $next['depth']);
         // Fetch next link after filling the sub-tree.
         $next = end($links);
       }

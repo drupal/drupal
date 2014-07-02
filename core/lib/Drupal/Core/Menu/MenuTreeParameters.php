@@ -2,25 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Menu\MenuLinkTreeParameters.
+ * Contains \Drupal\Core\Menu\MenuTreeParameters.
  */
 
 namespace Drupal\Core\Menu;
 
 /**
- * Provides a value object to model menu link tree parameters.
+ * Provides a value object to model menu tree parameters.
  *
- * Menu link tree parameters are used to determine the set of menu links to be
- * loaded from \Drupal\Core\Menu\MenuTreeStorageInterface. Hence they indirectly
- * affect the shape of the menu link tree:
+ * Menu tree parameters are used to determine the set of definitions to be
+ * loaded from \Drupal\Core\Menu\MenuTreeStorageInterface. Hence they determine
+ * the shape and content of the tree:
  * - which links should be expanded, i.e. subtrees will get loaded that may not
  *   be loaded otherwise
  * - which menu links are omitted, i.e. minimum and maximum depth
  *
- * All of the methods on this value object class can be considered aliases to
- * help improve DX. None of them are necessary, since all properties are public.
+ * @todo - add getter methods and make all properties protected.
+ * @todo - define an interface instead of using the concrete class to type hint.
  */
-class MenuLinkTreeParameters {
+class MenuTreeParameters {
 
   /**
    * A menu link plugin ID that should be used as the root.
@@ -92,7 +92,7 @@ class MenuLinkTreeParameters {
    * @codeCoverageIgnore
    */
   public function setRoot($root) {
-    $this->root = $root;
+    $this->root = (string) $root;
     return $this;
   }
 
