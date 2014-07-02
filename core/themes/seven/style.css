@@ -79,19 +79,6 @@ ul.menu li.expanded {
   background-color: #e0e0d8;
   padding: 24px 0 0;
 }
-/* This layout styling is a copy of #page.
- * @TODO: Replace with reuseable layout classes.
- **/
-.branding__inner {
-  margin-left: 1.25em;
-  margin-right: 1.25em;
-}
-@media screen and (min-width:45em) { /* 720px */
-  .branding__inner {
-    margin-left: 2.5em;
-    margin-right: 2.5em;
-  }
-}
 [dir="rtl"] #branding {
   padding: 20px 20px 0 20px;
 }
@@ -164,8 +151,8 @@ ul.menu li.expanded {
 }
 
 /* Span the full width of the viewport */
-.branding__inner .is-horizontal .tabs:before,
-.branding__inner .is-collapse-enabled .tabs:before {
+#branding .is-horizontal .tabs:before,
+#branding .is-collapse-enabled .tabs:before {
   left: -2.5em;
   right: -2.5em;
 }

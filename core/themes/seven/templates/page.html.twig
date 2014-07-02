@@ -64,7 +64,7 @@
  */
 #}
   <header id="branding" class="clearfix">
-    <div class="branding__inner">
+    <div class="layout-container">
       {{ title_prefix }}
       {% if title %}
         <h1 class="page-title">{{ title }}</h1>
@@ -76,7 +76,7 @@
     </div>
   </header>
 
-  <div id="page">
+  <div id="page" class="layout-container">
     {% if secondary_local_tasks %}
       <div class="tabs-secondary clearfix" role="navigation">{{ secondary_local_tasks }}</div>
     {% endif %}
@@ -101,7 +101,7 @@
       {{ page.content }}
     </main>
 
-    <footer id="footer" role="contentinfo">
+    <footer id="footer" role="contentinfo" class="layout-column">
       {{ feed_icons }}
     </footer>
 

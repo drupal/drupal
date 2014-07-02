@@ -173,6 +173,7 @@ class ThemeHandlerTest extends UnitTestCase {
       'screen' => array(
         'seven.base.css' => DRUPAL_ROOT . '/core/themes/seven/seven.base.css',
         'style.css' => DRUPAL_ROOT . '/core/themes/seven/style.css',
+        'css/layout.css' => DRUPAL_ROOT . '/core/themes/seven/css/layout.css',
         'css/components/buttons.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.css',
         'css/components/buttons.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.theme.css',
         'css/components/dropbutton.component.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/dropbutton.component.css',

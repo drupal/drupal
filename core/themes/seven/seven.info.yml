@@ -10,6 +10,7 @@ stylesheets:
   screen:
     - seven.base.css
     - style.css
+    - css/layout.css
     - css/components/buttons.css
     - css/components/buttons.theme.css
     - css/components/dropbutton.component.css

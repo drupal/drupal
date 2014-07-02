@@ -14,26 +14,6 @@ div.admin-panel .description {
   margin: 0 0 3px;
   padding: 2px 0 3px 0;
 }
-
-div.admin {
-  padding-top: 15px;
-}
-@media screen and (min-width: 40em) {
-  div.admin .left {
-    float: left; /* LTR */
-    width: 47%;
-  }
-  [dir="rtl"] div.admin .left {
-    float: right;
-  }
-  div.admin .right {
-    float: right; /* LTR */
-    width: 47%;
-  }
-  [dir="rtl"] div.admin .right {
-    float: left;
-  }
-}
 div.admin .expert-link {
   text-align: right; /* LTR */
   margin-right: 1em; /* LTR */

@@ -16,8 +16,8 @@
 #}
 <div class="admin clearfix">
   {{ system_compact_link }}
-  {% for position, container in containers %}
-    <div class="{{ position }} clearfix">
+  {% for container in containers %}
+    <div class="layout-column half clearfix">
       {% for block in container.blocks %}
         {{ block }}
       {% endfor %}
