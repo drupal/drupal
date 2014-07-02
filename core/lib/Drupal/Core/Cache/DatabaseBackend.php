@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\SchemaObjectExistsException;
 
@@ -62,6 +63,10 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
+    $cid_mapping = array();
+    foreach ($cids as $cid) {
+      $cid_mapping[$this->normalizeCid($cid)] = $cid;
+    }
     // When serving cached pages, the overhead of using ::select() was found
     // to add around 30% overhead to the request. Since $this->bin is a
     // variable, this means the call to ::query() here uses a concatenated
@@ -71,13 +76,15 @@ class DatabaseBackend implements CacheBackendInterface {
     // ::select() is a much smaller proportion of the request.
     $result = array();
     try {
-      $result = $this->connection->query('SELECT cid, data, created, expire, serialized, tags, checksum_invalidations, checksum_deletions FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE cid IN (:cids)', array(':cids' => $cids));
+      $result = $this->connection->query('SELECT cid, data, created, expire, serialized, tags, checksum_invalidations, checksum_deletions FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE cid IN (:cids)', array(':cids' => array_keys($cid_mapping)));
     }
     catch (\Exception $e) {
       // Nothing to do.
     }
     $cache = array();
     foreach ($result as $item) {
+      // Map the cache ID back to the original.
+      $item->cid = $cid_mapping[$item->cid];
       $item = $this->prepareItem($item, $allow_invalid);
       if ($item) {
         $cache[$item->cid] = $item;
@@ -196,7 +203,7 @@ class DatabaseBackend implements CacheBackendInterface {
     }
 
     $this->connection->merge($this->bin)
-      ->key('cid', $cid)
+      ->key('cid', $this->normalizeCid($cid))
       ->fields($fields)
       ->execute();
   }
@@ -284,14 +291,14 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
   public function deleteMultiple(array $cids) {
+    $cids = array_values(array_map(array($this, 'normalizeCid'), $cids));
     try {
       // Delete in chunks when a large array is passed.
-      do {
+      foreach (array_chunk($cids, 1000) as $cids_chunk) {
         $this->connection->delete($this->bin)
-          ->condition('cid', array_splice($cids, 0, 1000), 'IN')
+          ->condition('cid', $cids_chunk, 'IN')
           ->execute();
       }
-      while (count($cids));
     }
     catch (\Exception $e) {
       // Create the cache table, which will be empty. This fixes cases during
@@ -357,15 +364,15 @@ class DatabaseBackend implements CacheBackendInterface {
    * Implements Drupal\Core\Cache\CacheBackendInterface::invalideMultiple().
    */
   public function invalidateMultiple(array $cids) {
+    $cids = array_values(array_map(array($this, 'normalizeCid'), $cids));
     try {
       // Update in chunks when a large array is passed.
-      do {
+      foreach (array_chunk($cids, 1000) as $cids_chunk) {
         $this->connection->update($this->bin)
           ->fields(array('expire' => REQUEST_TIME - 1))
-          ->condition('cid', array_splice($cids, 0, 1000), 'IN')
+          ->condition('cid', $cids_chunk, 'IN')
           ->execute();
       }
-      while (count($cids));
     }
     catch (\Exception $e) {
       $this->catchException($e);
@@ -546,6 +553,26 @@ class DatabaseBackend implements CacheBackendInterface {
     if ($this->connection->schema()->tableExists($table_name ?: $this->bin)) {
       throw $e;
     }
+  }
+
+  /**
+   * Ensures that cache IDs have a maximum length of 255 characters.
+   *
+   * @param string $cid
+   *   The passed in cache ID.
+   *
+   * @return string
+   *   A cache ID that is at most 255 characters long.
+   */
+  protected function normalizeCid($cid) {
+    // Nothing to do if the ID length is 255 characters or less.
+    if (strlen($cid) <= 255) {
+      return $cid;
+    }
+    // Return a string that uses as much as possible of the original cache ID
+    // with the hash appended.
+    $hash = Crypt::hashBase64($cid);
+    return substr($cid, 0, 255 - strlen($hash)) . $hash;
   }
 
   /**

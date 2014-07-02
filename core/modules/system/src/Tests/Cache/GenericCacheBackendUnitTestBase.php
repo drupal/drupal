@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Cache\GenericCacheBackendUnitTestBase.
+ * Contains \Drupal\system\Tests\Cache\GenericCacheBackendUnitTestBase.
  */
 
 namespace Drupal\system\Tests\Cache;
@@ -207,6 +207,11 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $cached->data->this_should_not_be_in_the_cache = TRUE;
     $fresh_cached = $backend->get('test7');
     $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
+
+    // Check with a long key.
+    $cid = str_repeat('a', 300);
+    $backend->set($cid, 'test');
+    $this->assertEqual('test', $backend->get($cid)->data);
   }
 
   /**
@@ -230,6 +235,11 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
 
     $backend->delete('test2');
     $this->assertIdentical(FALSE, $backend->get('test2'), "Backend does not contain data for cache id test2 after deletion.");
+
+    $long_cid = str_repeat('a', 300);
+    $backend->set($long_cid, 'test');
+    $backend->delete($long_cid);
+    $this->assertIdentical(FALSE, $backend->get($long_cid), "Backend does not contain data for long cache id after deletion.");
   }
 
   /**
@@ -267,6 +277,7 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $backend = $this->getCacheBackend();
 
     // Set numerous testing keys.
+    $long_cid = str_repeat('a', 300);
     $backend->set('test1', 1);
     $backend->set('test2', 3);
     $backend->set('test3', 5);
@@ -274,6 +285,7 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $backend->set('test5', 11);
     $backend->set('test6', 13);
     $backend->set('test7', 17);
+    $backend->set($long_cid, 300);
 
     // Mismatch order for harder testing.
     $reference = array(
@@ -341,6 +353,12 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $this->assertFalse(in_array('test2', $cids), "Existing cache id test2 is not in cids array.");
     $this->assertFalse(in_array('test7', $cids), "Existing cache id test7 is not in cids array.");
     $this->assertFalse(in_array('test19', $cids), "Added cache id test19 is not in cids array.");
+
+    // Test with a long $cid and non-numeric array key.
+    $cids = array('key:key' => $long_cid);
+    $return = $backend->getMultiple($cids);
+    $this->assertEqual(300, $return[$long_cid]->data);
+    $this->assertTrue(empty($cids));
   }
 
   /**
@@ -420,6 +438,9 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     // Test if that expected keys do not exist.
     $this->assertIdentical(FALSE, $backend->get('test19'), "Cache id test19 does not exist.");
     $this->assertIdentical(FALSE, $backend->get('test21'), "Cache id test21 does not exist.");
+
+    // Calling deleteMultiple() with an empty array should not cause an error.
+    $this->assertFalse($backend->deleteMultiple(array()));
   }
 
   /**
@@ -528,6 +549,10 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $cids = $reference;
     $ret = $backend->getMultiple($cids, TRUE);
     $this->assertEqual(count($ret), 4, 'Four items returned.');
+
+    // Calling invalidateMultiple() with an empty array should not cause an
+    // error.
+    $this->assertFalse($backend->invalidateMultiple(array()));
   }
 
   /**

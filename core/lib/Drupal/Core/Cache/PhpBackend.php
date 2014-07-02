@@ -8,7 +8,7 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Core\PhpStorage\PhpStorageFactory;
-use Drupal\Component\Utility\Variable;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Defines a PHP cache implementation.
@@ -49,7 +49,22 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function get($cid, $allow_invalid = FALSE) {
-    if ($file = $this->storage()->getFullPath($cid)) {
+    return $this->getByHash($this->normalizeCid($cid), $allow_invalid);
+  }
+
+  /**
+   * Fetch a cache item using a hashed cache ID.
+   *
+   * @param string $cidhash
+   *   The hashed version of the original cache ID after being normalized.
+   * @param bool $allow_invalid
+   *   (optional) If TRUE, a cache item may be returned even if it is expired or
+   *   has been invalidated.
+   *
+   * @return bool|mixed
+   */
+  protected function getByHash($cidhash, $allow_invalid = FALSE) {
+    if ($file = $this->storage()->getFullPath($cidhash)) {
       $cache = @include $file;
     }
     if (isset($cache)) {
@@ -125,14 +140,14 @@ class PhpBackend implements CacheBackendInterface {
       'expire' => $expire,
     );
     $item->tags = $this->flattenTags($tags);
-    $this->writeItem($cid, $item);
+    $this->writeItem($this->normalizeCid($cid), $item);
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete($cid) {
-    $this->storage()->delete($cid);
+    $this->storage()->delete($this->normalizeCid($cid));
   }
 
   /**
@@ -149,10 +164,10 @@ class PhpBackend implements CacheBackendInterface {
    */
   public function deleteTags(array $tags) {
     $flat_tags = $this->flattenTags($tags);
-    foreach ($this->storage()->listAll() as $cid) {
-      $item = $this->get($cid);
+    foreach ($this->storage()->listAll() as $cidhash) {
+      $item = $this->getByHash($cidhash);
       if (is_object($item) && array_intersect($flat_tags, $item->tags)) {
-        $this->delete($cid);
+        $this->delete($item->cid);
       }
     }
   }
@@ -168,9 +183,19 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidate($cid) {
-    if ($item = $this->get($cid)) {
+    $this->invalidatebyHash($this->normalizeCid($cid));
+  }
+
+  /**
+   * Invalidate one cache item.
+   *
+   * @param string $cidhash
+   *   The hashed version of the original cache ID after being normalized.
+   */
+  protected function invalidatebyHash($cidhash) {
+    if ($item = $this->getByHash($cidhash)) {
       $item->expire = REQUEST_TIME - 1;
-      $this->writeItem($cid, $item);
+      $this->writeItem($cidhash, $item);
     }
   }
 
@@ -188,10 +213,10 @@ class PhpBackend implements CacheBackendInterface {
    */
   public function invalidateTags(array $tags) {
     $flat_tags = $this->flattenTags($tags);
-    foreach ($this->storage()->listAll() as $cid) {
-      $item = $this->get($cid);
+    foreach ($this->storage()->listAll() as $cidhash) {
+      $item = $this->getByHash($cidhash);
       if ($item && array_intersect($flat_tags, $item->tags)) {
-        $this->invalidate($cid);
+        $this->invalidate($item->cid);
       }
     }
   }
@@ -200,7 +225,9 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function invalidateAll() {
-    $this->invalidateMultiple($this->storage()->listAll());
+    foreach($this->storage()->listAll() as $cidhash) {
+      $this->invalidatebyHash($cidhash);
+    }
   }
 
   /**
@@ -248,26 +275,39 @@ class PhpBackend implements CacheBackendInterface {
   /**
    * Writes a cache item to PhpStorage.
    *
-   * @param string $cid
-   *   The cache ID of the data to store.
+   * @param string $cidhash
+   *   The hashed version of the original cache ID after being normalized.
    * @param \stdClass $item
    *   The cache item to store.
    */
-  protected function writeItem($cid, \stdClass $item) {
+  protected function writeItem($cidhash, \stdClass $item) {
     $content = '<?php return unserialize(' . var_export(serialize($item), TRUE) . ');';
-    $this->storage()->save($cid, $content);
+    $this->storage()->save($cidhash, $content);
   }
 
   /**
    * Gets the PHP code storage object to use.
    *
-   * @return \Drupal\Core\PhpStorage\PhpStorageInterface
+   * @return \Drupal\Component\PhpStorage\PhpStorageInterface
    */
   protected function storage() {
     if (!isset($this->storage)) {
       $this->storage = PhpStorageFactory::get($this->bin);
     }
     return $this->storage;
+  }
+
+  /**
+   * Ensures a normalized cache ID.
+   *
+   * @param string $cid
+   *   The passed in cache ID.
+   *
+   * @return string
+   *   A normalized cache ID.
+   */
+  protected function normalizeCid($cid) {
+    return Crypt::hashBase64($cid);
   }
 
 }
