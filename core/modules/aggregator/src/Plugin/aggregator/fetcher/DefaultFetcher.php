@@ -91,7 +91,7 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
     }
     catch (RequestException $e) {
       watchdog('aggregator', 'The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->label(), '%error' => $e->getMessage()), WATCHDOG_WARNING);
-      drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->label(), '%error' => $e->getMessage())));
+      drupal_set_message(t('The feed from %site seems to be broken because of error "%error".', array('%site' => $feed->label(), '%error' => $e->getMessage())) , 'warning');
       return FALSE;
     }
   }
