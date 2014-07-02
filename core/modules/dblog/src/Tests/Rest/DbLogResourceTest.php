@@ -5,22 +5,22 @@
  * Definition of Drupal\rest\test\DBLogTest.
  */
 
-namespace Drupal\rest\Tests;
+namespace Drupal\dblog\Tests\Rest;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
- * Tests the Watchdog resource to retrieve log messages.
+ * Tests the Watchdog REST resource to retrieve log messages.
  */
-class DBLogTest extends RESTTestBase {
+class DbLogResourceTest extends RESTTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('hal', 'rest', 'dblog');
+  public static $modules = array('hal', 'dblog');
 
   public static function getInfo() {
     return array(

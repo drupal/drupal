@@ -5,11 +5,11 @@
  * Definition of Drupal\rest\Plugin\rest\resource\DBLogResource.
  */
 
-namespace Drupal\rest\Plugin\rest\resource;
+namespace Drupal\dblog\Plugin\rest\resource;
 
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
-
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -24,17 +24,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * )
  */
 class DBLogResource extends ResourceBase {
-
-  /**
-   * Overrides \Drupal\rest\Plugin\ResourceBase::routes().
-   */
-  public function routes() {
-    // Only expose routes if the dblog module is enabled.
-    if (\Drupal::moduleHandler()->moduleExists('dblog')) {
-      return parent::routes();
-    }
-    return new RouteCollection();
-  }
 
   /**
    * Responds to GET requests.
@@ -53,7 +42,10 @@ class DBLogResource extends ResourceBase {
       if (!empty($record)) {
         return new ResourceResponse($record);
       }
+
+      throw new NotFoundHttpException(t('Log entry with ID @id was not found', array('@id' => $id)));
     }
-    throw new NotFoundHttpException(t('Log entry with ID @id was not found', array('@id' => $id)));
+
+    throw new HttpException(t('No log entry ID was provided'));
   }
 }
