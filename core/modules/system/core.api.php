@@ -313,13 +313,13 @@
  *   entity interface you have defined as its parameter, and returns routing
  *   information for the entity page; see node_uri() for an example. You will
  *   also need to add a corresponding route to your module's routing.yml file;
- *   see the node.view route in node.routing.yml for an example, and see the
- *   @link menu Menu and routing @endlink topic for more information about
- *   routing.
+ *   see the node.view route in node.routing.yml for an example, and see
+ *   @ref sec_routes below for some notes.
  * - Define routing and links for the various URLs associated with the entity.
  *   These go into the 'links' annotation, with the link type as the key, and
  *   the route machine name (defined in your module's routing.yml file) as the
- *   value. Typical link types are:
+ *   value; see @ref sec_routes below for some routing notes. Typical link
+ *   types are:
  *   - canonical: Default link, either to view (if entities are viewed on their
  *     own pages) or edit the entity.
  *   - delete-form: Confirmation form to delete the entity.
@@ -338,6 +338,37 @@
  *   \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
  *   (configuration). These annotations are documented on
  *   \Drupal\Core\Entity\EntityType.
+ *
+ * @section sec_routes Entity routes
+ * Entity routes, like other routes, are defined in *.routing.yml files; see
+ * the @link menu Menu and routing @endlink topic for more information. Here
+ * is a typical entry, for the block configure form:
+ * @code
+ * block.admin_edit:
+ *   path: '/admin/structure/block/manage/{block}'
+ *   defaults:
+ *     _entity_form: 'block.default'
+ *     _title: 'Configure block'
+ *   requirements:
+ *     _entity_access: 'block.update'
+ * @endcode
+ * Some notes:
+ * - path: The {block} in the path is a placeholder, which (for an entity) must
+ *   always take the form of {machine_name_of_entity_type}. In the URL, the
+ *   placeholder value will be the ID of an entity item. When the route is used,
+ *   the entity system will load the corresponding entity item and pass it in as
+ *   an object to the controller for the route.
+ * - defaults: For entity form routes, use _entity_form rather than the generic
+ *   _content or _form. The value is composed of the entity type machine name
+ *   and a form controller type from the entity annotation (see @ref define
+ *   above more more on controllers and annotation). So, in this example,
+ *   block.default refers to the 'default' form controller on the block entity
+ *   type, whose annotation contains:
+ *   @code
+ *   controllers = {
+ *     "form" = {
+ *       "default" = "Drupal\block\BlockForm",
+ *   @endcode
  *
  * @section load_query Loading and querying entities
  * To load entities, use the entity storage manager, which is an object

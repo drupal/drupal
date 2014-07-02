@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * service.
  *
  * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
+ *
+ * @ingroup menu
  */
 abstract class ControllerBase implements ContainerInjectionInterface {
   use StringTranslationTrait;

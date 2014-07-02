@@ -437,6 +437,8 @@ function hook_page_build(&$page) {
  *     in the UI.
  *   - options: (optional) An array of options to be passed to l() when
  *     generating a link from this menu item.
+ *
+ * @ingroup menu
  */
 function hook_menu_link_defaults_alter(&$links) {
   // Change the weight and title of the user.logout link.
@@ -511,6 +513,8 @@ function hook_menu_local_tasks(&$data, $route_name) {
  *   The route name of the page.
  *
  * @see hook_menu_local_tasks()
+ *
+ * @ingroup menu
  */
 function hook_menu_local_tasks_alter(&$data, $route_name) {
 }
@@ -523,6 +527,8 @@ function hook_menu_local_tasks_alter(&$data, $route_name) {
  *
  * @see \Drupal\Core\Menu\LocalActionInterface
  * @see \Drupal\Core\Menu\LocalActionManager
+ *
+ * @ingroup menu
  */
 function hook_menu_local_actions_alter(&$local_actions) {
 }
@@ -572,6 +578,8 @@ function hook_local_tasks_alter(&$local_tasks) {
  *   @endcode
  *
  * @see \Drupal\Core\Menu\ContextualLinkManager
+ *
+ * @ingroup menu
  */
 function hook_contextual_links_alter(array &$links, $group, array $route_parameters) {
   if ($group == 'menu') {

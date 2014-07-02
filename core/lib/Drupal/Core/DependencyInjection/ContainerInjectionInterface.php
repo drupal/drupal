@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * ControllerBase as that allows direct access to the container. That renders
  * the controller very difficult to unit test so should only be used for
  * controllers that are trivial in complexity.
+ *
+ * @ingroup menu
  */
 interface ContainerInjectionInterface {
 

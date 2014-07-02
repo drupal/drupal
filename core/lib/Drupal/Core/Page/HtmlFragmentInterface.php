@@ -14,6 +14,8 @@ namespace Drupal\Core\Page;
  * HTML that would not be part of the HTML string itself. That includes, for
  * example, required CSS files, Javascript files, link tags, meta tags, and the
  * title of a page or page section.
+ *
+ * @ingroup menu
  */
 interface HtmlFragmentInterface {
 
