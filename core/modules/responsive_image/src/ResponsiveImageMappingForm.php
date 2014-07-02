@@ -73,6 +73,7 @@ class ResponsiveImageMappingForm extends EntityForm {
     );
 
     $image_styles = image_style_options(TRUE);
+    $image_styles[RESPONSIVE_IMAGE_EMPTY_IMAGE] = $this->t('- empty image -');
     foreach ($responsive_image_mapping->getMappings() as $breakpoint_id => $mapping) {
       foreach ($mapping as $multiplier => $image_style) {
         $breakpoint = $responsive_image_mapping->getBreakpointGroup()->getBreakpointById($breakpoint_id);

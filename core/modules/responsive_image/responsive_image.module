@@ -10,6 +10,11 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use \Drupal\Core\Template\Attribute;
 
 /**
+ * The machine name for the empty image breakpoint image style option.
+ */
+const RESPONSIVE_IMAGE_EMPTY_IMAGE = '_empty image_';
+
+/**
  * Implements hook_help().
  */
 function responsive_image_help($route_name, RouteMatchInterface $route_match) {
@@ -194,7 +199,7 @@ function theme_responsive_image($variables) {
 
   // Fallback image, output as source with media query.
   $sources[] = array(
-    'src' => entity_load('image_style', $variables['style_name'])->buildUrl($variables['uri']),
+    'src' => _responsive_image_image_style_url($variables['style_name'], $variables['uri']),
     'dimensions' => responsive_image_get_image_dimensions($variables),
   );
 
@@ -213,7 +218,7 @@ function theme_responsive_image($variables) {
       // Only one image, use src.
       if (count($new_sources) == 1) {
         $sources[] = array(
-          'src' => entity_load('image_style', $new_sources[0]['style_name'])->buildUrl($new_sources[0]['uri']),
+          'src' => _responsive_image_image_style_url($new_sources[0]['style_name'], $new_sources[0]['uri']),
           'dimensions' => responsive_image_get_image_dimensions($new_sources[0]),
           'media' => $breakpoint->mediaQuery,
         );
@@ -222,7 +227,7 @@ function theme_responsive_image($variables) {
         // Multiple images, use srcset.
         $srcset = array();
         foreach ($new_sources as $new_source) {
-          $srcset[] = entity_load('image_style', $new_source['style_name'])->buildUrl($new_source['uri']) . ' ' . $new_source['#multiplier'];
+          $srcset[] = _responsive_image_image_style_url($new_source['style_name'], $new_source['uri']) . ' ' . $new_source['#multiplier'];
         }
         $sources[] = array(
           'srcset' => implode(', ', $srcset),
@@ -310,7 +315,27 @@ function responsive_image_get_image_dimensions($variables) {
     'height' => $variables['height'],
   );
 
-  entity_load('image_style', $variables['style_name'])->transformDimensions($dimensions);
+  if ($variables['style_name'] == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
+    $dimensions = array(
+      'width' => 1,
+      'height' => 1,
+    );
+  }
+  else {
+    entity_load('image_style', $variables['style_name'])->transformDimensions($dimensions);
+  }
 
   return $dimensions;
 }
+
+/**
+ * Wrapper around image_style_url() so we can return an empty image.
+ */
+function _responsive_image_image_style_url($style_name, $path) {
+  if ($style_name == RESPONSIVE_IMAGE_EMPTY_IMAGE) {
+    // The smallest data URI for a 1px square transparent GIF image.
+    return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  }
+  return entity_load('image_style', $style_name)->buildUrl($path);
+}
+
