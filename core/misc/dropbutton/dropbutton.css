@@ -32,6 +32,22 @@
 .js .form-actions .dropbutton-widget {
   position: static;
 }
+.js td .dropbutton-widget {
+  position: absolute;
+}
+.js td .dropbutton-multiple {
+  display: block;
+  min-height: 2em;
+  position: relative;
+  padding-right: 10em;
+  margin-right: 2em;
+  max-width: 100%;
+}
+.js td .dropbutton-multiple .dropbutton-action a,
+.js td .dropbutton-multiple .dropbutton-action input,
+.js td .dropbutton-multiple .dropbutton-action button {
+  width: auto;
+}
 
 /* UL styles are over-scoped in core, so this selector needs weight parity. */
 .js .dropbutton-widget .dropbutton {

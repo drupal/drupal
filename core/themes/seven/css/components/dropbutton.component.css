@@ -31,19 +31,6 @@
   border-radius: 0;
   box-shadow: none;
 }
-.js td .dropbutton-multiple {
-  display: block;
-  min-height: 2em;
-  position: relative;
-  padding-right: 10em;
-  margin-right: 2em;
-  max-width: 100%;
-}
-.js td .dropbutton-multiple .dropbutton-action a,
-.js td .dropbutton-multiple .dropbutton-action input,
-.js td .dropbutton-multiple .dropbutton-action button {
-  width: auto;
-}
 .dropbutton-multiple .dropbutton {
   border-right: 0;
 }
@@ -60,9 +47,6 @@
   background-image: -o-linear-gradient(top, #f6f6f3, #e7e7df);
   background-image: linear-gradient(to bottom, #f6f6f3, #e7e7df);
   text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
-}
-.js td .dropbutton-widget {
-  position: absolute;
 }
 .dropbutton-multiple.open .dropbutton-widget {
   border-radius: 1em;
