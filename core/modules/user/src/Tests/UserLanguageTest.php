@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -48,7 +49,7 @@ class UserLanguageTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
-      'direction' => '0',
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->drupalLogout();

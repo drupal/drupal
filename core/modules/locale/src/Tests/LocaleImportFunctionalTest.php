@@ -8,6 +8,7 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Functional tests for the import of translation files.
@@ -268,7 +269,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $this->randomName(16),
-      'direction' => '0',
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 

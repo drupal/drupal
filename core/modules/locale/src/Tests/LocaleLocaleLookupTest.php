@@ -41,7 +41,7 @@ class LocaleLocaleLookupTest extends WebTestBase {
     $new_language_default = new Language(array(
       'id' => 'fr',
       'name' => 'French',
-      'direction' => 0,
+      'direction' => LANGUAGE::DIRECTION_LTR,
       'weight' => 0,
       'method_id' => 'language-default',
       'default' => TRUE,

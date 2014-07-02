@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -231,7 +232,7 @@ class TwigTransTest extends WebTestBase {
           'predefined_langcode' => 'custom',
           'langcode' => $langcode,
           'name' => $name,
-          'direction' => '0',
+          'direction' => LanguageInterface::DIRECTION_LTR,
         );
 
         // Install the language in Drupal.

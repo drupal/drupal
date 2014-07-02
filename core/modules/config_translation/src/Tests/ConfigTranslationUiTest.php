@@ -577,7 +577,7 @@ class ConfigTranslationUiTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
-      'direction' => '0',
+      'direction' => Language::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 

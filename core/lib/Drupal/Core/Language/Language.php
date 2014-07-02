@@ -22,7 +22,7 @@ class Language implements LanguageInterface {
   public static $defaultValues = array(
     'id' => 'en',
     'name' => 'English',
-    'direction' => 0,
+    'direction' => self::DIRECTION_LTR,
     'weight' => 0,
     'locked' => 0,
     'default' => TRUE,

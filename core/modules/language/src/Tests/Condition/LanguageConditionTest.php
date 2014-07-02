@@ -57,7 +57,7 @@ class LanguageConditionTest extends DrupalUnitTestBase {
     $language = new Language(array(
       'id' => 'it',
       'name' => 'Italian',
-      'direction' => '0',
+      'direction' => Language::DIRECTION_LTR,
     ));
     language_save($language);
 

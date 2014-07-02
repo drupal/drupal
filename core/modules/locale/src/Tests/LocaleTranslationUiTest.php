@@ -65,7 +65,7 @@ class LocaleTranslationUiTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
-      'direction' => '0',
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Add string.
@@ -222,7 +222,7 @@ class LocaleTranslationUiTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
-      'direction' => '0',
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->container->get('language_manager')->reset();
@@ -292,7 +292,7 @@ class LocaleTranslationUiTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
-      'direction' => '0',
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Add string.
@@ -342,7 +342,7 @@ class LocaleTranslationUiTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => $langcode,
       'name' => $name,
-      'direction' => '0',
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
@@ -350,7 +350,7 @@ class LocaleTranslationUiTest extends WebTestBase {
       'predefined_langcode' => 'custom',
       'langcode' => 'yy',
       'name' => $this->randomName(16),
-      'direction' => '0',
+      'direction' => LanguageInterface::DIRECTION_LTR,
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
