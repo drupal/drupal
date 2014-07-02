@@ -132,7 +132,7 @@ class CommentManager implements CommentManagerInterface {
         'entity_type' => $entity_type,
         'name' => $field_name,
         'type' => 'comment',
-        'translatable' => '0',
+        'translatable' => TRUE,
         'settings' => array(
           'comment_type' => $comment_type_id,
         ),

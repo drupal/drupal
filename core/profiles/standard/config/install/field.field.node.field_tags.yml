@@ -10,7 +10,7 @@ settings:
       parent: 0
 locked: false
 cardinality: -1
-translatable: false
+translatable: true
 indexes:
   target_id:
     - target_id
