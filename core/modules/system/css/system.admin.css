@@ -82,7 +82,8 @@ small .admin-link:after {
 #system-modules td {
   vertical-align: top;
 }
-#system-modules label {
+#system-modules label,
+#system-modules-uninstall label {
   color: #1d1d1d;
   font-size: 1.15em;
 }
