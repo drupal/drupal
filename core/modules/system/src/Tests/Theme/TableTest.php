@@ -138,6 +138,77 @@ class TableTest extends DrupalUnitTestBase {
   }
 
   /**
+   * Tests that the 'responsive-table' class is applied correctly.
+   */
+  public function testThemeTableResponsive() {
+    $header = array('one', 'two', 'three');
+    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $table = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#responsive' => TRUE,
+    );
+    $this->render($table);
+    $this->assertRaw('responsive-enabled', 'The responsive-enabled class was printed correctly.');
+  }
+
+  /**
+   * Tests that the 'responsive-table' class is not applied without headers.
+   */
+  public function testThemeTableNotResponsiveHeaders() {
+    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $table = array(
+      '#type' => 'table',
+      '#rows' => $rows,
+      '#responsive' => TRUE,
+    );
+    $this->render($table);
+    $this->assertNoRaw('responsive-enabled', 'The responsive-enabled class is not applied without table headers.');
+  }
+
+  /**
+   * Tests that 'responsive-table' class only applied when responsive is TRUE.
+   */
+  public function testThemeTableNotResponsiveProperty() {
+    $header = array('one', 'two', 'three');
+    $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
+    $table = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#responsive' => FALSE,
+    );
+    $this->render($table);
+    $this->assertNoRaw('responsive-enabled', 'The responsive-enabled class is not applied without the "responsive" property set to TRUE.');
+  }
+
+  /**
+   * Tests 'priority-medium' and 'priority-low' classes.
+   */
+  public function testThemeTableResponsivePriority() {
+    $header = array(
+      array('data' => 1, 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
+      array('data' => 2, 'class' => array(RESPONSIVE_PRIORITY_LOW)),
+      array('data' => 3),
+    );
+    $rows = array(array(4, 5, 6));
+    $table = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#responsive' => TRUE,
+    );
+    $this->render($table);
+    $this->assertRaw('<th class="priority-medium">1</th>', 'Header 1: the priority-medium class was applied correctly.');
+    $this->assertRaw('<th class="priority-low">2</th>', 'Header 2: the priority-low class was applied correctly.');
+    $this->assertRaw('<th>3</th>', 'Header 3: no priority classes were applied.');
+    $this->assertRaw('<td class="priority-medium">4</td>', 'Cell 1: the priority-medium class was applied correctly.');
+    $this->assertRaw('<td class="priority-low">5</td>', 'Cell 2: the priority-low class was applied correctly.');
+    $this->assertRaw('<td>6</td>', 'Cell 3: no priority classes were applied.');
+  }
+
+  /**
    * Renders a given render array.
    *
    * @param array $elements
