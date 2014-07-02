@@ -64,7 +64,8 @@ label.option {
   font-weight: normal;
 }
 .form-composite > legend,
-h4.label {
+.label {
+  display:inline;
   font-size: inherit;
   font-weight: bold;
   margin: 0;
@@ -114,7 +115,8 @@ abbr.ajax-changed {
 /**
  * Inline items.
  */
-.container-inline label:after {
+.container-inline label:after,
+.container-inline .label:after {
   content: ':';
 }
 .form-type-radios .container-inline label:after {

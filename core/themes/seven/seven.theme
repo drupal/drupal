@@ -323,6 +323,7 @@ function seven_form_node_form_alter(&$form, &$form_state) {
   );
 
   $form['advanced']['#type'] = 'container';
+  $is_new = !$node->isNew() ? format_date($node->getChangedTime(), 'short') : t('Not saved yet');
   $form['meta'] = array(
     '#attributes' => array('class' => array('entity-meta-header')),
     '#type' => 'container',
@@ -337,14 +338,12 @@ function seven_form_node_form_alter(&$form, &$form_state) {
     'changed' => array(
       '#type' => 'item',
       '#wrapper_attributes' => array('class' => array('changed', 'container-inline')),
-      '#title' => t('Last saved'),
-      '#markup' => !$node->isNew() ? format_date($node->getChangedTime(), 'short') : t('Not saved yet'),
+      '#markup' => '<h4 class="label inline">' . t('Last saved') . '</h4> ' . $is_new,
     ),
     'author' => array(
       '#type' => 'item',
       '#wrapper_attributes' => array('class' => array('author', 'container-inline')),
-      '#title' => t('Author'),
-      '#markup' => $node->getOwner()->getUsername(),
+      '#markup' => '<h4 class="label inline">' . t('Author') . '</h4> ' . $node->getOwner()->getUsername(),
     ),
   );
   $form['revision_information']['#type'] = 'container';
