@@ -37,6 +37,7 @@ if (window.jQuery) {
     }
     this.message = messageList.join(' ; ');
   }
+
   DrupalBehaviorError.prototype = new Error();
 
   /**

@@ -141,7 +141,7 @@
     _populate: function () {
       var transliterated = this.getTransliterated();
       var suffix = this.suffix;
-      this.target.each( function (i) {
+      this.target.each(function (i) {
         // Ensure that the maxlength is not exceeded by prepopulating the field.
         var maxlength = $(this).attr('maxlength') - suffix.length;
         $(this).val(transliterated.substr(0, maxlength) + suffix);
@@ -164,7 +164,6 @@
       this.bind();
     }
   });
-
 
   Drupal.behaviors.addItemForm = {
     attach: function (context) {
@@ -764,7 +763,6 @@
     }
   });
 
-
   /**
    * Add a select all checkbox, which checks each checkbox at once.
    */
@@ -835,6 +833,7 @@
           $('input.default-radios').show();
         }
       }
+
       // Update on widget change.
       $('input[name="options[group_info][multiple]"]')
         .on('change', changeDefaultWidget)

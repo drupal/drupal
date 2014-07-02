@@ -144,7 +144,6 @@
     }
   });
 
-
   $.extend(Drupal.theme, {
     /**
      * A toggle is an interactive element often bound to a click handler.

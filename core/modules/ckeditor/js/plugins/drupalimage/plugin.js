@@ -80,7 +80,7 @@
         widgetDefinition._dataToDialogValues = function (data) {
           var dialogValues = {};
           var map = widgetDefinition._mapDataToDialog;
-          Object.keys(widgetDefinition._mapDataToDialog).forEach(function(key) {
+          Object.keys(widgetDefinition._mapDataToDialog).forEach(function (key) {
             dialogValues[map[key]] = data[key];
           });
           return dialogValues;
@@ -90,7 +90,7 @@
         widgetDefinition._dialogValuesToData = function (dialogReturnValues) {
           var data = {};
           var map = widgetDefinition._mapDataToDialog;
-          Object.keys(widgetDefinition._mapDataToDialog).forEach(function(key) {
+          Object.keys(widgetDefinition._mapDataToDialog).forEach(function (key) {
             if (dialogReturnValues.hasOwnProperty(map[key])) {
               data[key] = dialogReturnValues[map[key]];
             }
@@ -177,7 +177,7 @@
       editor.addCommand('editdrupalimage', {
         allowedContent: 'img[alt,!src,width,height,!data-editor-file-uuid]',
         requiredContent: 'img[alt,src,width,height,data-editor-file-uuid]',
-        modes: { wysiwyg : 1 },
+        modes: { wysiwyg: 1 },
         canUndo: true,
         exec: function (editor, data) {
           var dialogSettings = {
@@ -234,7 +234,7 @@
 
   });
 
-  function isImageWidget (editor, element) {
+  function isImageWidget(editor, element) {
     var widget = editor.widgets.getByElement(element.getChild(0), true);
     return widget && widget.name === 'image';
   }

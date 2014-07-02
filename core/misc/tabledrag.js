@@ -994,6 +994,7 @@
     var currentRow = $(this.element, this.table).next('tr.draggable');
     var rows = [];
     var child = 0;
+
     function rowIndentation(el, indentNum) {
       var self = $(el);
       if (child === 1 && (indentNum === parentIndentation)) {
@@ -1006,6 +1007,7 @@
         self.addClass('tree-child-horizontal');
       }
     }
+
     while (currentRow.length) {
       // A greater indentation indicates this is a child.
       if (currentRow.find('.indentation').length > parentIndentation) {

@@ -20,6 +20,7 @@
       'handleOpen': Drupal.t('Extend'),
       'handleClose': Drupal.t('Collapse')
     };
+
     /**
      * Handle clicks from the disclosure button on an item with sub-items.
      *
@@ -35,6 +36,7 @@
       var $openItems = $item.siblings().filter('.open');
       toggleList($openItems, false);
     }
+
     /**
      * Toggle the open/close state of a list is a menu.
      *
@@ -58,6 +60,7 @@
         // Expand Structure, Collapse Structure
         .text((switcher) ? ui.handleClose : ui.handleOpen);
     }
+
     /**
      * Add markup to the menu elements.
      *
@@ -88,6 +91,7 @@
         }
       });
     }
+
     /**
      * Adds a level class to each list based on its depth in the menu.
      *
@@ -108,6 +112,7 @@
         markListLevels($lists, level + 1);
       }
     }
+
     /**
      * On page load, open the active menu item.
      *
@@ -128,6 +133,7 @@
         toggleList($activeTrail, true);
       }
     }
+
     // Bind event handlers.
     $(document)
       .on('click.toolbar', '.toolbar-handle', toggleClickHandler);

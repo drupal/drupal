@@ -11,20 +11,20 @@
 
   "use strict";
 
-  function init (i, tab) {
+  function init(i, tab) {
     var $tab = $(tab);
     var $target = $tab.find('[data-drupal-nav-tabs-target]');
     var isCollapsible = $tab.hasClass('is-collapsible');
 
-    function openMenu (e) {
+    function openMenu(e) {
       $target.toggleClass('is-open');
     }
 
-    function handleResize (e) {
+    function handleResize(e) {
       $tab.addClass('is-horizontal');
       var isHorizontal = $tab.parent().width() > $tab.intrinsic('width');
       $tab.toggleClass('is-horizontal', isHorizontal);
-      if(isCollapsible) {
+      if (isCollapsible) {
         $tab.toggleClass('is-collapse-enabled', !isHorizontal);
       }
       if (isHorizontal) {

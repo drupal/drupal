@@ -192,7 +192,6 @@
     }
   });
 
-
   /**
    * Get the surrounding link element of current selection.
    *

@@ -153,13 +153,16 @@
     if (strength < 60) {
       indicatorText = translate.weak;
       indicatorColor = '#bb5555';
-    } else if (strength < 70) {
+    }
+    else if (strength < 70) {
       indicatorText = translate.fair;
       indicatorColor = '#bbbb55';
-    } else if (strength < 80) {
+    }
+    else if (strength < 80) {
       indicatorText = translate.good;
       indicatorColor = '#4863a0';
-    } else if (strength <= 100) {
+    }
+    else if (strength <= 100) {
       indicatorText = translate.strong;
       indicatorColor = '#47c965';
     }

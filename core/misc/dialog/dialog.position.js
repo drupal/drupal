@@ -62,7 +62,7 @@
     'dialog:aftercreate': function (event, dialog, $element, settings) {
       var autoResize = debounce(resetSize, 20);
       var eventData = { settings: settings, $element: $element };
-      if (settings.autoResize === true || settings.autoResize === 'true') {
+      if (settings.autoResize === true || settings.autoResize === 'true') {
         $element
           .dialog('option', { resizable: false, draggable: false })
           .dialog('widget').css('position', 'fixed');

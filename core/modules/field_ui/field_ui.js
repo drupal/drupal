@@ -166,7 +166,6 @@
     }
   };
 
-
   /**
    * Row handlers for the 'Manage display' screen.
    */

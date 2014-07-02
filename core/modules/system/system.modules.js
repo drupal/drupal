@@ -18,6 +18,7 @@
       var $table = $($input.attr('data-table'));
       var $rowsAndDetails, $rows, $details;
       var searching = false;
+
       function hidePackageDetails(index, element) {
         var $packDetails = $(element);
         var $visibleRows = $packDetails.find('table:not(.sticky-header)').find('tbody tr:visible');

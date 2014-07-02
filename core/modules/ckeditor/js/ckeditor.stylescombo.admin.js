@@ -30,11 +30,12 @@
           var stylesSet = that._generateStylesSetSetting(styles);
           if (!_.isEqual(previousStylesSet, stylesSet)) {
             previousStylesSet = stylesSet;
-            $ckeditorActiveToolbar.trigger('CKEditorPluginSettingsChanged', [{ stylesSet: stylesSet }]);
+            $ckeditorActiveToolbar.trigger('CKEditorPluginSettingsChanged', [
+              { stylesSet: stylesSet }
+            ]);
           }
         });
     },
-
 
     /**
      * Builds the "stylesSet" configuration part of the CKEditor JS settings.

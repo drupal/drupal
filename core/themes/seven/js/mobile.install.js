@@ -2,7 +2,7 @@
 
   "use strict";
 
-  function findActiveStep (steps) {
+  function findActiveStep(steps) {
     for (var i = 0; i < steps.length; i++) {
       if (steps[i].className === 'active') {
         return i + 1;
@@ -15,7 +15,7 @@
     return 0;
   }
 
-  function installStepsSetup () {
+  function installStepsSetup() {
     var steps = document.querySelectorAll('.task-list li');
     if (steps.length) {
       var header = document.querySelector('header[role="banner"]');

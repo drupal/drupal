@@ -8,7 +8,7 @@
 
   Drupal.color = {
     logoChanged: false,
-    callback: function(context, settings, form, farb, height, width) {
+    callback: function (context, settings, form, farb, height, width) {
       // Change the logo to be the real one.
       if (!this.logoChanged) {
         $('#preview #preview-logo img').attr('src', drupalSettings.color.logo);

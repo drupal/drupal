@@ -58,10 +58,10 @@
         // attributes.
         widgetDefinition.downcast = function (element) {
           // Find an image element in the one being downcasted (can be itself).
-          var img = findElementByName(element, 'img'),
-            caption = this.editables.caption,
-            captionHtml = caption && caption.getData(),
-            attrs = img.attributes;
+          var img = findElementByName(element, 'img');
+          var caption = this.editables.caption;
+          var captionHtml = caption && caption.getData();
+          var attrs = img.attributes;
 
           // If image contains a non-empty caption, serialize caption to the
           // data-caption attribute.
@@ -91,8 +91,8 @@
             return;
           }
 
-          var attrs = element.attributes,
-            retElement = element;
+          var attrs = element.attributes;
+          var retElement = element;
 
           // We won't need the attributes during editing: we'll use widget.data
           // to store them (except the caption, which is stored in the DOM).
@@ -107,9 +107,9 @@
           // Captioned image will be transformed to <figure>, so we don't want
           // the <p> anymore.
           if (element.parent.name === 'p' && caption) {
-            var index = element.getIndex(),
-                splitBefore = index > 0,
-                splitAfter = index + 1 < element.parent.children.length;
+            var index = element.getIndex();
+            var splitBefore = index > 0;
+            var splitAfter = index + 1 < element.parent.children.length;
 
             if (splitBefore) {
               element.parent.split(index);
@@ -203,7 +203,7 @@
    * @param String name
    * @return CKEDITOR.htmlParser.element
    */
-  function findElementByName (element, name) {
+  function findElementByName(element, name) {
     if (element.name === name) {
       return element;
     }

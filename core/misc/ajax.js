@@ -107,7 +107,8 @@
     // xmlhttp.responseText is going to throw an exception. So we'll catch it.
     try {
       responseText = "\n" + Drupal.t("ResponseText: !responseText", {'!responseText': $.trim(xmlhttp.responseText) });
-    } catch (e) {}
+    }
+    catch (e) {}
 
     // Make the responseText more readable by stripping HTML tags and newlines.
     responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, "");

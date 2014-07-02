@@ -563,6 +563,7 @@
       function hasOtherRegion(contextualLink) {
         return contextualLink.region !== entityElement;
       }
+
       contextualLinksQueue = _.filter(contextualLinksQueue, hasOtherRegion);
     });
 
@@ -576,6 +577,7 @@
       function hasOtherFieldElement(field) {
         return field.el !== fieldElement;
       }
+
       fieldsMetadataQueue = _.filter(fieldsMetadataQueue, hasOtherFieldElement);
       fieldsAvailableQueue = _.filter(fieldsAvailableQueue, hasOtherFieldElement);
     });

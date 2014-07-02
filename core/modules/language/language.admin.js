@@ -18,6 +18,7 @@
           .find('table, .tabledrag-toggle-weight')
           .toggle($checkbox.prop('checked'));
       }
+
       // Bind hide/show and rearrange customization checkboxes.
       $configForm.once('negotiation-language-admin-bind').on('change', inputSelector, function (event) {
         toggleTable(event.target);

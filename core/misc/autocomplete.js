@@ -162,10 +162,10 @@
    *
    * @return {Object}
    */
-  function renderItem (ul, item) {
+  function renderItem(ul, item) {
     return $("<li>")
-      .append( $("<a>").html(item.label))
-      .appendTo( ul );
+      .append($("<a>").html(item.label))
+      .appendTo(ul);
   }
 
   /**

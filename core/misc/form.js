@@ -116,7 +116,6 @@
     }
   };
 
-
   /**
    * Sends a 'formUpdated' event each time a form element is modified.
    */
@@ -148,7 +147,6 @@
       var $context = $(context);
       var contextIsForm = $context.is('form');
       var $forms = (contextIsForm ? $context : $context.find('form')).once('form-updated');
-
 
       if ($forms.length) {
         // Initialize form behaviors, use $.makeArray to be able to use native

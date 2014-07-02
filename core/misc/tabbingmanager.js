@@ -280,13 +280,11 @@
     }
   });
 
-
   // Mark this behavior as processed on the first pass and return if it is
   // already processed.
   if (Drupal.tabbingManager) {
     return;
   }
   Drupal.tabbingManager = new TabbingManager();
-
 
 }(jQuery, Drupal));

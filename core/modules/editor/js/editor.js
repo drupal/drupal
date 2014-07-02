@@ -259,7 +259,7 @@
    *   A callback to be called (with no parameters) after the field's value has
    *   been XSS filtered.
    */
-  function filterXssWhenSwitching (field, format, originalFormatID, callback) {
+  function filterXssWhenSwitching(field, format, originalFormatID, callback) {
     // A text editor that already is XSS-safe needs no additional measures.
     if (format.editor.isXssSafe) {
       callback(field, format);

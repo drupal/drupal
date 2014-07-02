@@ -41,7 +41,7 @@
    * @param string html
    *   The server-side rendered HTML for this contextual link.
    */
-  function initContextual ($contextual, html) {
+  function initContextual($contextual, html) {
     var $region = $contextual.closest('.contextual-region');
     var contextual = Drupal.contextual;
 
@@ -101,7 +101,7 @@
    *   A contextual links placeholder DOM element, containing the actual
    *   contextual links as rendered by the server.
    */
-  function adjustIfNestedAndOverlapping ($contextual) {
+  function adjustIfNestedAndOverlapping($contextual) {
     var $contextuals = $contextual
       // @todo confirm that .closest() is not sufficient
       .parents('.contextual-region').eq(-1)
@@ -156,7 +156,7 @@
       });
 
       // Update all contextual links placeholders whose HTML is cached.
-      var uncachedIDs = _.filter(ids, function initIfCached (contextualID) {
+      var uncachedIDs = _.filter(ids, function initIfCached(contextualID) {
         var html = storage.getItem('Drupal.contextual.' + contextualID);
         if (html !== null) {
           // Initialize after the current executation cycle, to make the AJAX

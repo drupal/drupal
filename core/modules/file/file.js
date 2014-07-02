@@ -19,7 +19,7 @@
       var $context = $(context);
       var elements;
 
-      function initFileValidation (selector) {
+      function initFileValidation(selector) {
         $context.find(selector)
           .once('fileValidate')
           .on('change.fileValidate', { extensions: elements[selector] }, Drupal.file.validateExtension);
@@ -34,7 +34,7 @@
       var $context = $(context);
       var elements;
 
-      function removeFileValidation (selector) {
+      function removeFileValidation(selector) {
         $context.find(selector)
           .removeOnce('fileValidate')
           .off('change.fileValidate', Drupal.file.validateExtension);

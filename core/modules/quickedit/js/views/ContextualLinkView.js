@@ -15,6 +15,7 @@
         event.preventDefault();
         event.target.click();
       }
+
       return {
         'click a': function (event) {
           event.preventDefault();

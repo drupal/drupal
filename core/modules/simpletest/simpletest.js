@@ -52,6 +52,7 @@
           });
           $groupCheckbox.prop('checked', allChecked);
         }
+
         $testCheckboxes.on('change', updateGroupCheckbox);
       });
     }
