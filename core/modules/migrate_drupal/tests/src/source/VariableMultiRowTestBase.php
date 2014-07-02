@@ -10,9 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Base test class for the variable multirow source tests.
+ * Base class for variable multirow source unit tests.
  */
-class VariableMultiRowTestBase extends MigrateSqlSourceTestCase {
+abstract class VariableMultiRowTestBase extends MigrateSqlSourceTestCase {
 
   // The plugin system is not working during unit testing so the source plugin
   // class needs to be manually specified.
@@ -43,16 +43,6 @@ class VariableMultiRowTestBase extends MigrateSqlSourceTestCase {
     ),
   );
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 variable multirow source functionality',
-      'description' => 'Tests D6 variable multirow source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 }
 
 namespace Drupal\migrate_drupal\Tests\source;

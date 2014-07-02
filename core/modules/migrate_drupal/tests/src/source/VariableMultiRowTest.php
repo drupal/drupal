@@ -15,4 +15,15 @@ namespace Drupal\migrate_drupal\Tests\source;
  */
 class VariableMultiRowTest extends VariableMultiRowTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'D6 variable multirow source functionality',
+      'description' => 'Tests D6 variable multirow source plugin.',
+      'group' => 'Migrate Drupal',
+    );
+  }
+
 }

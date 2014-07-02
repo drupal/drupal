@@ -15,4 +15,15 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
  */
 class TermTest extends TermTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'D6 taxonomy term source functionality',
+      'description' => 'Tests D6 taxonomy term source plugin.',
+      'group' => 'Migrate Drupal',
+    );
+  }
+
 }

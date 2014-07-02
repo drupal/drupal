@@ -10,9 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Base class for the term source tests.
+ * Base class for taxonomy term source unit tests.
  */
-class TermTestBase extends MigrateSqlSourceTestCase {
+abstract class TermTestBase extends MigrateSqlSourceTestCase {
 
   const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Term';
 
@@ -75,17 +75,6 @@ class TermTestBase extends MigrateSqlSourceTestCase {
       'parent' => array(3, 2),
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 taxonomy term source functionality',
-      'description' => 'Tests D6 taxonomy term source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

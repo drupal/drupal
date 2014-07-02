@@ -11,7 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\migrate\Source;
 
 /**
- * Provides setup and helper methods for Migrate module source tests.
+ * Base class for Migrate module source unit tests.
  */
 abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
 
@@ -110,17 +110,6 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    */
   protected function getValue($row, $key) {
     return $row->getSourceProperty($key);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'SQL source test',
-      'description' => 'Tests for SQL source plugin.',
-      'group' => 'Migrate',
-    );
   }
 
 }
