@@ -15,7 +15,16 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 
 /**
- * Plugin implementation of the 'selection' entity_reference.
+ * Default plugin implementation of the Entity Reference Selection plugin.
+ *
+ * Also serves as a base class for specific types of Entity Reference
+ * Selection plugins.
+ *
+ * @see \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
+ * @see \Drupal\entity_reference\Annotation\EntityReferenceSelection
+ * @see \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
+ * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
+ * @see plugin_api
  *
  * @EntityReferenceSelection(
  *   id = "default",

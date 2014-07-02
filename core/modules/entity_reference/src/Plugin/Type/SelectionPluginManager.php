@@ -18,7 +18,13 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionBroken;
 
 /**
- * Plugin type manager for the Entity Reference Selection plugin.
+ * Plugin type manager for Entity Reference Selection plugins.
+ *
+ * @see \Drupal\entity_reference\Annotation\EntityReferenceSelection
+ * @see \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
+ * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase
+ * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
+ * @see plugin_api
  */
 class SelectionPluginManager extends DefaultPluginManager {
 

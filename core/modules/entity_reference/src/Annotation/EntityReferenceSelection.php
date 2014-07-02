@@ -10,7 +10,18 @@ namespace Drupal\entity_reference\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines a EntityReferenceSelection annotation object.
+ * Defines an EntityReferenceSelection plugin annotation object.
+ *
+ * Plugin Namespace: Plugin\entity_reference\selection
+ *
+ * For a working example, see
+ * \Drupal\comment\Plugin\entity_reference\selection\CommentSelection
+ *
+ * @see \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
+ * @see \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
+ * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase
+ * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
+ * @see plugin_api
  *
  * @Annotation
  */

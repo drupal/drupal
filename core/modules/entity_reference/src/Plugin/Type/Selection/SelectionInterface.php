@@ -11,12 +11,13 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
- * Interface definition for Entity Reference selection plugins.
+ * Interface definition for Entity Reference Selection plugins.
  *
- * This interface details the methods that most plugin implementations will want
- * to override. See \Drupal\field\Plugin\Type\Selection\SelectionBaseInterface
- * for base wrapping methods that should most likely be inherited directly from
- * Drupal\entity_reference\Plugin\Type\Selection\SelectionBase.
+ * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase
+ * @see \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
+ * @see \Drupal\entity_reference\Annotation\EntityReferenceSelection
+ * @see \Drupal\entity_reference\Plugin\Derivative\SelectionBase
+ * @see plugin_api
  */
 interface SelectionInterface {
 

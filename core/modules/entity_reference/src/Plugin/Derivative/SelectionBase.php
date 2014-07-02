@@ -10,7 +10,13 @@ namespace Drupal\entity_reference\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 
 /**
- * Base class for selection plugins provided by Entity Reference.
+ * Provides derivative plugins for Entity Reference Selection plugins.
+ *
+ * @see \Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase
+ * @see \Drupal\entity_reference\Plugin\Type\SelectionPluginManager
+ * @see \Drupal\entity_reference\Annotation\EntityReferenceSelection
+ * @see \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
+ * @see plugin_api
  */
 class SelectionBase extends DeriverBase {
   /**
