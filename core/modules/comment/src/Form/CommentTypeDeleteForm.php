@@ -11,9 +11,9 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,9 +43,9 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
   protected $entityManager;
 
   /**
-   * The comment channel logger.
+   * A logger instance.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
@@ -65,10 +65,10 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
    *   The comment manager service.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager service.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
-   *   The logger channel.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(QueryFactory $query_factory, CommentManagerInterface $comment_manager, EntityManager $entity_manager, LoggerChannelInterface $logger) {
+  public function __construct(QueryFactory $query_factory, CommentManagerInterface $comment_manager, EntityManager $entity_manager, LoggerInterface $logger) {
     $this->queryFactory = $query_factory;
     $this->commentManager = $comment_manager;
     $this->entityManager = $entity_manager;

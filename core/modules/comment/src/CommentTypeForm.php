@@ -10,7 +10,7 @@ namespace Drupal\comment;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Logger\LoggerChannelInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,9 +26,9 @@ class CommentTypeForm extends EntityForm {
   protected $entityManager;
 
   /**
-   * Logger Channel service.
+   * A logger instance.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   * @var \Psr\Log\LoggerInterface
    */
   protected $logger;
 
@@ -47,10 +47,10 @@ class CommentTypeForm extends EntityForm {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface
-   *   The logger channel.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  function __construct(EntityManagerInterface $entity_manager, LoggerChannelInterface $logger) {
+  public function __construct(EntityManagerInterface $entity_manager, LoggerInterface $logger) {
     $this->entityManager = $entity_manager;
     $this->logger = $logger;
   }
