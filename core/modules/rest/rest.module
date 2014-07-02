@@ -31,7 +31,15 @@ function rest_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.rest':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The REST module provides a framework for exposing Drupal\'s data structures as RESTful web services. It can be used to read and write resources remotely, such as entity types like nodes or users. For more information, see the online handbook entry for the <a href="@rest">RESTful web services module</a>.', array('@rest' => 'http://drupal.org/documentation/modules/rest')) . '</p>';
+      $output .= '<p>' . t('The RESTful Web Services module provides a framework for exposing REST resources on your site. It provides support for content entities (see the <a href="!entity">Entity module help page</a> for more information about entities) such as content, users, taxonomy terms, etc.; REST support for content items of the Node module is enabled by default, and support for other types of content entities can be enabled. Other modules may add support for other types of REST resources. For more information, see the <a href="!rest">online documentation for the RESTful Web Services module</a>.', array('!rest' => 'https://drupal.org/documentation/modules/rest', '!entity' => \Drupal::url('help.page', array('name' => 'entity')))) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Enabling supporting modules') . '</dt>';
+      $output .= '<dd>' . t('In order to use REST on a web site, you need to install and enable modules that provide serialization and authentication services. You can use the Core module <a href="!hal">HAL</a> for serialization and <a href="!basic_auth">HTTP Basic Authentication</a> for authentication, or install a contributed or custom module.', array('!hal' => (\Drupal::moduleHandler()->moduleExists('hal')) ? \Drupal::url('help.page', array('name' => 'hal')) : '#', '!basic_auth' => (\Drupal::moduleHandler()->moduleExists('basic_auth')) ? \Drupal::url('help.page', array('name' => 'basic_auth')) : '#')) . '</dd>';
+      $output .= '<dt>' . t('Enabling REST support for an entity type') . '</dt>';
+      $output .= '<dd>' . t('REST support for content items of the Node module is enabled by default, and support for other types of content entities can be enabled. To enable support, you can use a <a href="!config">process based on configuration editing</a> or the contributed <a href="!restui">Rest UI module</a>.', array('!config' => 'https://drupal.org/documentation/modules/rest', '!restui' => 'https://drupal.org/project/restui')) . '</dd>';
+      $output .= '<dd>' . t('You will also need to grant anonymous users permission to perform each of the REST operations you want to be available, and set up authentication properly to authorize web requests.') . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
