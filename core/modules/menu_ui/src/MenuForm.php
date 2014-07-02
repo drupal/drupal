@@ -11,7 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Menu\MenuTreeElement;
+use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Menu\MenuLinkTreeParameters;
@@ -217,7 +217,7 @@ class MenuForm extends EntityForm {
 
     // Determine the delta; the number of weights to be made available.
     $count = function(array $tree) {
-      $sum = function ($carry, MenuTreeElement $item) {
+      $sum = function ($carry, MenuLinkTreeElement $item) {
         return $carry + $item->count();
       };
       return array_reduce($tree, $sum);

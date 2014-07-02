@@ -47,10 +47,10 @@ class DefaultMenuLinkTreeManipulators {
    * Makes the resulting menu tree impossible to render cache, unless render
    * caching per user is acceptable.
    *
-   * @param \Drupal\Core\Menu\MenuTreeElement[] $tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The menu link tree to manipulate.
    *
-   * @return \Drupal\Core\Menu\MenuTreeElement[]
+   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   The manipulated menu link tree.
    */
   public function checkAccess(array $tree) {
@@ -98,10 +98,10 @@ class DefaultMenuLinkTreeManipulators {
   /**
    * Menu link tree manipulator that generates a unique index, and sorts by it.
    *
-   * @param \Drupal\Core\Menu\MenuTreeElement[] $tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The menu link tree to manipulate.
    *
-   * @return \Drupal\Core\Menu\MenuTreeElement[]
+   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   The manipulated menu link tree.
    */
   public function generateIndexAndSort(array $tree) {
@@ -125,10 +125,10 @@ class DefaultMenuLinkTreeManipulators {
   /**
    * Menu link tree manipulator that flattens the tree to a single level.
    *
-   * @param \Drupal\Core\Menu\MenuTreeElement[] $tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The menu link tree to manipulate.
    *
-   * @return \Drupal\Core\Menu\MenuTreeElement[]
+   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   The manipulated menu link tree.
    */
   public function flatten(array $tree) {
@@ -144,12 +144,12 @@ class DefaultMenuLinkTreeManipulators {
   /**
    * Menu link tree manipulator that extracts a subtree of the active trail.
    *
-   * @param \Drupal\Core\Menu\MenuTreeElement[] $tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The menu link tree to manipulate.
    * @param int $level
    *   The level in the active trail to extract.
    *
-   * @return \Drupal\Core\Menu\MenuTreeElement[]
+   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   The manipulated menu link tree.
    */
   public function extractSubtreeOfActiveTrail(array $tree, $level) {

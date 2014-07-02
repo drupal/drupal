@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\Menu\MenuTreeElement;
+use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Tests\UnitTestCase;
  * @group Drupal
  * @group Menu
  *
- * @coversDefaultClass \Drupal\Core\Menu\MenuTreeElement
+ * @coversDefaultClass \Drupal\Core\Menu\MenuLinkTreeElement
  */
 class MenuLinkTreeElementTest extends UnitTestCase {
 
@@ -38,7 +38,7 @@ class MenuLinkTreeElementTest extends UnitTestCase {
    */
   public function testConstruction() {
     $link = array();
-    $item = new MenuTreeElement($link, FALSE, 3, FALSE, array());
+    $item = new MenuLinkTreeElement($link, FALSE, 3, FALSE, array());
     $this->assertSame($link, $item->link);
     $this->assertSame(FALSE, $item->hasChildren);
     $this->assertSame(3, $item->depth);
@@ -54,8 +54,8 @@ class MenuLinkTreeElementTest extends UnitTestCase {
   public function testCount() {
     $link_1 = array();
     $link_2 = array();
-    $child_item = new MenuTreeElement($link_2, FALSE, 2, FALSE, array());
-    $parent_item = new MenuTreeElement($link_1, FALSE, 2, FALSE, array($child_item));
+    $child_item = new MenuLinkTreeElement($link_2, FALSE, 2, FALSE, array());
+    $parent_item = new MenuLinkTreeElement($link_1, FALSE, 2, FALSE, array($child_item));
     $this->assertSame(1, $child_item->count());
     $this->assertSame(2, $parent_item->count());
   }

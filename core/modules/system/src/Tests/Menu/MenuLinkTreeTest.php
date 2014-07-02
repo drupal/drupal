@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
-use Drupal\Core\Menu\MenuTreeElement;
+use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Core\Menu\MenuLinkTreeParameters;
 use Drupal\simpletest\KernelTestBase;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
@@ -121,7 +121,7 @@ class MenuLinkTreeTest extends KernelTestBase {
     $tree = $this->linkTree->load('mock', $parameters);
 
     $count = function(array $tree) {
-      $sum = function ($carry, MenuTreeElement $item) {
+      $sum = function ($carry, MenuLinkTreeElement $item) {
         return $carry + $item->count();
       };
       return array_reduce($tree, $sum);

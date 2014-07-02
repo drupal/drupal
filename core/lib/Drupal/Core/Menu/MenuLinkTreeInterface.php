@@ -69,7 +69,7 @@ interface MenuLinkTreeInterface {
    * @param \Drupal\Core\Menu\MenuLinkTreeParameters $parameters
    *   The parameters to determine which menu links to be loaded into a tree.
    *
-   * @return \Drupal\Core\Menu\MenuTreeElement[]
+   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   A menu link tree.
    */
   public function load($menu_name, MenuLinkTreeParameters $parameters);
@@ -77,7 +77,7 @@ interface MenuLinkTreeInterface {
   /**
    * Applies menu link tree manipulators to transform the given tree.
    *
-   * @param \Drupal\Core\Menu\MenuTreeElement[] $tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The menu tree to manipulate.
    * @param array $manipulators
    *   The menu link tree manipulators to apply. Each is an array with keys:
@@ -85,7 +85,7 @@ interface MenuLinkTreeInterface {
    *               by ControllerResolverInterface::getControllerFromDefinition()
    *   - args: optional array of arguments to pass to the callable after $tree.
    *
-   * @return \Drupal\Core\Menu\MenuTreeElement[]
+   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   The manipulated menu link tree.
    */
   public function transform(array $tree, array $manipulators);

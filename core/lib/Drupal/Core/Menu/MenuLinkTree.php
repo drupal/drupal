@@ -110,7 +110,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    */
   protected function createInstances(&$tree) {
     foreach (array_keys($tree) as $id) {
-      // Upcast the MenuTreeElement's "link" property from a definition to
+      // Upcast the MenuLinkTreeElement's "link" property from a definition to
       // an instance.
       $tree[$id]->link = $this->menuLinkManager->createInstance($tree[$id]->link['id']);
 
