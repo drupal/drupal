@@ -182,6 +182,6 @@ class TourTest extends TourTestBasic {
       ':data_id' => 'tour-test-1',
       ':text' => 'The first tip',
     ));
-    $this->assertEqual(count($elements), 0, 'Found English variant of tip 1.');
+    $this->assertEqual(count($elements), 0, 'Did not find English variant of tip 1.');
   }
 }
