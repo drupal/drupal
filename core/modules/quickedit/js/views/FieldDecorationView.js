@@ -232,6 +232,8 @@
         self.$el
           .css({
             'position': 'relative',
+            'display': 'block',
+            'width': '100%',
             'top': posProp.top - 5 + 'px',
             'left': posProp.left - 5 + 'px',
             'padding-top': posProp['padding-top'] + 5 + 'px',
