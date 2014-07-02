@@ -572,16 +572,18 @@ caption {
   text-align: right;
 }
 th {
+  text-align: left; /* LTR */
   padding: 10px 12px;
+}
+[dir="rtl"] th {
+  text-align: right;
+}
+thead th {
   background: #f5f5f2;
   border: solid #bfbfba;
   border-width: 1px 0;
   color: #333;
-  text-align: left; /* LTR */
   text-transform: uppercase;
-}
-[dir="rtl"] th {
-  text-align: right;
 }
 tr {
   border-bottom: 1px solid #e6e4df;
