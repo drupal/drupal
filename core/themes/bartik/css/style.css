@@ -1403,8 +1403,11 @@ details .details-description {
   font-style: italic;
 }
 label {
-  display: block;
+  display: table;
   font-weight: bold;
+}
+label[for] {
+  cursor: pointer;
 }
 input {
   margin: 2px 0;
