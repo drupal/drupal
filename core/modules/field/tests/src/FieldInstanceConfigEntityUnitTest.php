@@ -150,7 +150,6 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
       'uuid' => NULL,
       'status' => TRUE,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'field_uuid' => NULL,
       'field_name' => 'field_test',
       'entity_type' => 'test_entity_type',
       'bundle' => 'test_bundle',

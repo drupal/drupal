@@ -55,13 +55,6 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public $field_name;
 
   /**
-   * The UUID of the field attached to the bundle by this instance.
-   *
-   * @var string
-   */
-  public $field_uuid;
-
-  /**
    * The name of the entity type the instance is attached to.
    *
    * @var string
@@ -193,7 +186,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public $deleted = FALSE;
 
   /**
-   * The field ConfigEntity object corresponding to $field_uuid.
+   * The field ConfigEntity object this is an instance of.
    *
    * @var \Drupal\field\Entity\FieldConfig
    */
@@ -306,10 +299,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public function postCreate(EntityStorageInterface $storage) {
     // Validate that we have a valid field for this instance. This throws an
     // exception if the field is invalid.
-    $field = $this->getFieldStorageDefinition();
-
-    // Make sure the field_uuid is populated.
-    $this->field_uuid = $field->uuid();
+    $this->getFieldStorageDefinition();
 
     // 'Label' defaults to the field name (mostly useful for field instances
     // created in tests).
@@ -346,7 +336,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       if ($this->bundle != $this->original->bundle && empty($this->bundle_rename_allowed)) {
         throw new FieldException("Cannot change an existing instance's bundle.");
       }
-      if ($this->field_uuid != $this->original->field_uuid) {
+      if ($field->uuid() != $this->original->getFieldStorageDefinition()->uuid()) {
         throw new FieldException("Cannot change an existing instance's field.");
       }
       // Set the default instance settings.
@@ -405,6 +395,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       if (!$instance->deleted) {
         $config = $instance->toArray();
         $config['deleted'] = TRUE;
+        $config['field_uuid'] = $instance->getFieldStorageDefinition()->uuid();
         $deleted_instances[$instance->uuid()] = $config;
       }
     }
@@ -440,7 +431,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       $field = $instance->getFieldStorageDefinition();
       if (!$instance->deleted && empty($instance->noFieldDelete) && !$instance->isUninstalling() && count($field->getBundles()) == 0) {
         // Key by field UUID to avoid deleting the same field twice.
-        $fields_to_delete[$instance->field_uuid] = $field;
+        $fields_to_delete[$field->uuid()] = $field;
       }
     }
     if ($fields_to_delete) {

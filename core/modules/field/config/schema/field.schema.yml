@@ -58,9 +58,6 @@ field.instance.*.*.*:
     label:
       type: label
       label: 'Label'
-    field_uuid:
-      type: string
-      label: 'Field UUID'
     field_name:
       type: string
       label: 'Field name'

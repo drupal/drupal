@@ -143,7 +143,8 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
             break;
 
           case 'field_id':
-            $checked_value = $instance->field_uuid;
+          case 'field_uuid':
+            $checked_value = $field->uuid();
             break;
 
           case 'uuid';
