@@ -1042,47 +1042,13 @@ function comment_load($cid, $reset = FALSE) {
  *
  * @return int|false
  *   The number of new comments or FALSE if the user is not logged in.
+ *
+ * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
+ *   Use \Drupal\comment\CommentManager::getCountNewComments().
  */
 function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestamp = 0) {
-  if (\Drupal::currentUser()->isAuthenticated() && \Drupal::moduleHandler()->moduleExists('history')) {
-    // Retrieve the timestamp at which the current user last viewed this entity.
-    if (!$timestamp) {
-      if ($entity_type == 'node') {
-        $timestamp = history_read($entity_id);
-      }
-      else {
-        $function = $entity_type . '_last_viewed';
-        if (function_exists($function)) {
-          $timestamp = $function($entity_id);
-        }
-        else {
-          // Default to 30 days ago.
-          // @todo Remove once http://drupal.org/node/1029708 lands.
-          $timestamp = COMMENT_NEW_LIMIT;
-        }
-      }
-    }
-    $timestamp = ($timestamp > HISTORY_READ_LIMIT ? $timestamp : HISTORY_READ_LIMIT);
-
-    // Use the timestamp to retrieve the number of new comments.
-    $query = db_select('comment', 'c');
-    $query->addExpression('COUNT(cid)');
-    $query->condition('c.entity_type', $entity_type)
-      ->condition('c.entity_id', $entity_id)
-      ->condition('c.status', CommentInterface::PUBLISHED)
-      ->condition('c.created', $timestamp, '>');
-    if ($field_name) {
-      // Limit to a particular field.
-      $query->condition('c.field_name', $field_name);
-    }
-
-    return $query->execute()
-      ->fetchField();
-  }
-  else {
-    return FALSE;
-  }
-
+  $entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity_id);
+  return \Drupal::service('comment.manager')->getCountNewComments($entity, $field_name, $timestamp);
 }
 
 /**

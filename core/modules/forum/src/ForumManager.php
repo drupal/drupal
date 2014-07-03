@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\comment\CommentManagerInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -68,6 +69,13 @@ class ForumManager implements ForumManagerInterface {
   protected $connection;
 
   /**
+   * The comment manager service.
+   *
+   * @var \Drupal\comment\CommentManagerInterface
+   */
+  protected $commentManager;
+
+  /**
    * Array of last post information keyed by forum (term) id.
    *
    * @var array
@@ -113,12 +121,15 @@ class ForumManager implements ForumManagerInterface {
    *   The current database connection.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager service.
+   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   *   The comment manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Connection $connection, TranslationInterface $string_translation) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager) {
     $this->configFactory = $config_factory;
     $this->entityManager = $entity_manager;
     $this->connection = $connection;
-    $this->translationManager = $string_translation;
+    $this->stringTranslation = $string_translation;
+    $this->commentManager = $comment_manager;
   }
 
   /**
@@ -225,7 +236,7 @@ class ForumManager implements ForumManagerInterface {
         }
         else {
           $history = $this->lastVisit($topic->id(), $account);
-          $topic->new_replies = $this->numberNew($topic->id(), $history);
+          $topic->new_replies = $this->commentManager->getCountNewComments($topic, 'comment_forum', $history);
           $topic->new = $topic->new_replies || ($topic->last_comment_timestamp > $history);
         }
       }
@@ -286,21 +297,6 @@ class ForumManager implements ForumManagerInterface {
         return array('field' => 'f.comment_count', 'sort' => 'asc');
 
     }
-  }
-
-  /**
-   * Wraps comment_num_new() in a method.
-   *
-   * @param int $nid
-   *   Node ID.
-   * @param int $timestamp
-   *   Timestamp of last read.
-   *
-   * @return int
-   *   Number of new comments.
-   */
-  protected function numberNew($nid, $timestamp) {
-    return comment_num_new($nid, $timestamp);
   }
 
   /**

@@ -264,7 +264,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'comment-count-new':
-          $replacements[$original] = comment_num_new($entity->id(), $entity->getEntityTypeId());
+          $replacements[$original] = \Drupal::service('comment.manager')->getCountNewComments($entity);
           break;
       }
     }

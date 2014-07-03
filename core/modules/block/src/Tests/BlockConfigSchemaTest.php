@@ -21,7 +21,17 @@ class BlockConfigSchemaTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('block', 'aggregator', 'book', 'block_content', 'forum', 'node', 'statistics', 'taxonomy');
+  public static $modules = array(
+    'block',
+    'aggregator',
+    'book',
+    'block_content',
+    'comment',
+    'forum',
+    'node',
+    'statistics',
+    'taxonomy',
+  );
 
   /**
    * The typed config manager.

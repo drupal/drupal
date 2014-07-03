@@ -289,7 +289,7 @@ class CommentController extends ControllerBase {
     $links = array();
     foreach ($nids as $nid) {
       $node = node_load($nid);
-      $new = comment_num_new($node->id(), 'node');
+      $new = $this->commentManager->getCountNewComments($node);
       $query = comment_new_page_count($node->{$field_name}->comment_count, $new, $node);
       $links[$nid] = array(
         'new_comment_count' => (int) $new,
