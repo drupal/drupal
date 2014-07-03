@@ -5,12 +5,10 @@
  * Module that implements various hooks for menu tests.
  */
 
-use Drupal\menu_link\Entity\MenuLink;
-
 /**
- * Implements hook_menu_link_defaults_alter().
+ * Implements hook_menu_links_alter().
  */
-function menu_test_menu_link_defaults_alter(&$links) {
+function menu_test_menu_links_alter(&$links) {
   // Many of the machine names here are slightly different from the route name.
   // Since the machine name is arbitrary, this helps ensure that core does not
   // add mistaken assumptions about the correlation.
@@ -97,29 +95,6 @@ function menu_test_callback() {
 }
 
 /**
- * Page callback: Tests menu_test_menu_tree_set_path().
- *
- * Retrieves the current menu path and if the menu path is not empty updates
- * the menu path that is used to determine the active menu trail.
- *
- * @return string
- *   A string that can be used for comparison.
- *
- * @see menu_test_menu().
- *
- * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::menuTrail()
- */
-function menu_test_menu_trail_callback() {
-  $menu_path = \Drupal::state()->get('menu_test.menu_tree_set_path') ?: array();
-  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
-  $menu_tree = \Drupal::service('menu_link.tree');
-  if (!empty($menu_path)) {
-    $menu_tree->setPath($menu_path['menu_name'], $menu_path['path']);
-  }
-  return 'This is menu_test_menu_trail_callback().';
-}
-
-/**
  * Page callback: Tests the theme negotiation functionality.
  *
  * @param bool $inherited
@@ -164,44 +139,6 @@ function menu_test_menu_name($new_name = '') {
     $menu_name = $new_name;
   }
   return $menu_name;
-}
-
-/**
- * Implements hook_menu_link_insert().
- */
-function menu_test_menu_link_insert(MenuLink $item) {
-  menu_test_static_variable('insert');
-}
-
-/**
- * Implements hook_menu_link_update().
- */
-function menu_test_menu_link_update(MenuLink $item) {
-  menu_test_static_variable('update');
-}
-
-/**
- * Implements hook_menu_link_delete().
- */
-function menu_test_menu_link_delete(MenuLink $item) {
-  menu_test_static_variable('delete');
-}
-
-/**
- * Sets a static variable for testing hook results.
- *
- * @param null|string $value
- *   (optional) The value to set or NULL to return the current value.
- *
- * @return null|string
- *   A text string for comparison to test assertions.
- */
-function menu_test_static_variable($value = NULL) {
-  static $variable;
-  if (!empty($value)) {
-    $variable = $value;
-  }
-  return $variable;
 }
 
 /**

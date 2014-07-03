@@ -440,7 +440,7 @@ function hook_page_build(&$page) {
  *
  * @ingroup menu
  */
-function hook_menu_link_defaults_alter(&$links) {
+function hook_menu_links_alter(&$links) {
   // Change the weight and title of the user.logout link.
   $links['user.logout']['weight'] = -10;
   $links['user.logout']['title'] = 'Logout';

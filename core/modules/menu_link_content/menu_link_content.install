@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the menu_link_content module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function menu_link_content_uninstall() {
+  // Call the manager and delete all the plugins.
+  $uuids = db_query('SELECT uuid FROM {menu_link_content}')->fetchCol();
+  $menu_tree = \Drupal::menuTree();
+  foreach ($uuids as $uuid) {
+    // Manually build the plugin ID, and remove it from the menu tree.
+    $menu_tree->deleteLink("menu_link_content:$uuid", FALSE);
+  }
+}

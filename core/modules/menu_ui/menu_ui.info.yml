@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 configure: menu_ui.overview_page
 dependencies:
-  - menu_link
+  - menu_link_content

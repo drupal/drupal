@@ -34,27 +34,11 @@ class MenuController extends ControllerBase {
         $available_menus[$menu] = $menu;
       }
     }
-    $options = _menu_ui_get_options(menu_ui_get_menus(), $available_menus, array('mlid' => 0));
+    /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
+    $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
+    $options = $menu_parent_selector->getParentSelectOptions('', $available_menus);
 
     return new JsonResponse($options);
-  }
-
-  /**
-   * Provides the menu link submission form.
-   *
-   * @param \Drupal\system\MenuInterface $menu
-   *   An entity representing a custom menu.
-   *
-   * @return array
-   *   Returns the menu link submission form.
-   */
-  public function addLink(MenuInterface $menu) {
-    $menu_link = $this->entityManager()->getStorage('menu_link')->create(array(
-      'mlid' => 0,
-      'plid' => 0,
-      'menu_name' => $menu->id(),
-    ));
-    return $this->entityFormBuilder()->getForm($menu_link);
   }
 
   /**

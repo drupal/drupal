@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Enables users to create menu link content.
+ */
+
+use Drupal\system\MenuInterface;
+
+/**
+ * Implements hook_menu_delete().
+ */
+function menu_link_content_menu_delete(MenuInterface $menu) {
+  $storage = \Drupal::entityManager()->getStorage('menu_link_content');
+  $menu_links = $storage->loadByProperties(array('menu_name' => $menu->id()));
+  $storage->delete($menu_links);
+}

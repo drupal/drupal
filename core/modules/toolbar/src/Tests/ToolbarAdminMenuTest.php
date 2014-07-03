@@ -131,30 +131,16 @@ class ToolbarAdminMenuTest extends WebTestBase {
   }
 
   /**
-   * Tests toolbar_menu_link_update() hook implementation.
+   * Tests toolbar cache tags implementation.
    */
   function testMenuLinkUpdateSubtreesHashCacheClear() {
-    // Get subtree items for the admin menu.
-    $query = \Drupal::entityQuery('menu_link');
-    for ($i = 1; $i <= 3; $i++) {
-      $query->sort('p' . $i, 'ASC');
-    }
-    $query->condition('menu_name', 'admin');
-    $query->condition('depth', '2', '>=');
-
-    // Build an ordered array of links using the query result object.
-    $links = array();
-    if ($result = $query->execute()) {
-      $links = menu_link_load_multiple($result);
-    }
-    // Get the first link in the set.
-    $links = array_values($links);
-    $link = array_shift($links);
+    // The ID of a (any) admin menu link.
+    $admin_menu_link_id = 'system.admin_config_development';
 
     // Disable the link.
     $edit = array();
     $edit['enabled'] = FALSE;
-    $this->drupalPostForm("admin/structure/menu/item/" . $link['mlid'] . "/edit", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/menu/link/" . $admin_menu_link_id . "/edit", $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertText('The menu link has been saved.');
 
