@@ -203,9 +203,9 @@ function content_translation_entity_operation_alter(array &$operations, \Drupal\
 }
 
 /**
- * Implements hook_menu_link_defaults_alter().
+ * Implements hook_menu_links_alter().
  */
-function content_translation_menu_link_defaults_alter(array &$links) {
+function content_translation_menu_links_alter(array &$links) {
   // Clarify where translation settings are located.
   $links['language.content_settings_page']['title'] = 'Content language and translation';
   $links['language.content_settings_page']['description'] = 'Configure language and translation support for content.';

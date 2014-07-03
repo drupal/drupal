@@ -37,9 +37,9 @@ function dblog_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_menu_link_defaults_alter().
+ * Implements hook_menu_links_alter().
  */
-function dblog_menu_link_defaults_alter(&$links) {
+function dblog_menu_links_alter(&$links) {
   if (\Drupal::moduleHandler()->moduleExists('search')) {
     $links['dblog.search'] = array(
       'title' => 'Top search phrases',

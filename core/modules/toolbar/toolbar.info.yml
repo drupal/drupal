@@ -6,4 +6,3 @@ package: Core
 version: VERSION
 dependencies:
   - breakpoint
-  - menu_link
