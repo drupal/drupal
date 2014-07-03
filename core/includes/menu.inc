@@ -273,7 +273,7 @@ use Drupal\Core\Template\Attribute;
  * what the menu blocks offer you. If that's the case, you'll want to:
  * - Instantiate \Drupal\Core\Menu\MenuTreeParameters, and set its values to
  *   match your needs. Alternatively, you can use
- *   MenuLinkTree::getDefaultRenderedMenuTreeLinkParameters() to get a typical
+ *   MenuLinkTree::getCurrentRouteMenuTreeParameters() to get a typical
  *   default set of parameters, and then customize them to suit your needs.
  * - Call \Drupal\Core\MenuLinkTree::load() with your menu link tree parameters,
  *   this will return a menu link tree.
@@ -500,7 +500,7 @@ function _menu_get_links_source($name, $default) {
 function menu_navigation_links($menu_name, $level = 0) {
   /** @var \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree */
   $menu_tree = \Drupal::service('menu.link_tree');
-  $parameters = $menu_tree->getDefaultRenderedMenuTreeLinkParameters($menu_name);
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
   $parameters->setMaxDepth($level + 1);
   $tree = $menu_tree->load($menu_name, $parameters);
   $manipulators = array(

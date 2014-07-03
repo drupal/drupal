@@ -19,7 +19,12 @@ class MenuLinkContentUITest extends ContentTranslationUITest {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'menu_link_content', 'menu_ui');
+  public static $modules = array(
+    'language',
+    'content_translation',
+    'menu_link_content',
+    'menu_ui',
+  );
 
   /**
    * {@inheritdoc}

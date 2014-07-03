@@ -76,7 +76,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultRenderedMenuTreeLinkParameters($menu_name) {
+  public function getCurrentRouteMenuTreeParameters($menu_name) {
     $active_trail = $this->menuActiveTrail->getActiveTrailIds($menu_name);
 
     $parameters = new MenuTreeParameters();

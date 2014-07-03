@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators.
+ */
+
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Access\AccessManager;
@@ -110,7 +115,6 @@ class DefaultMenuLinkTreeManipulators {
       if ($tree[$key]->subtree) {
         $tree[$key]->subtree = $this->generateIndexAndSort($tree[$key]->subtree);
       }
-      /** @var \Drupal\Core\Menu\MenuLinkInterface $instance */
       $instance = $tree[$key]->link;
       // The weights are made a uniform 5 digits by adding 50000 as an offset.
       // After $this->menuLinkCheckAccess(), $instance->getTitle() has the

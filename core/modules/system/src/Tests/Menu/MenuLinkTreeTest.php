@@ -38,7 +38,12 @@ class MenuLinkTreeTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'menu_test', 'menu_link_content', 'field');
+  public static $modules = array(
+    'system',
+    'menu_test',
+    'menu_link_content',
+    'field',
+  );
 
   /**
    * {@inheritdoc}
@@ -90,6 +95,9 @@ class MenuLinkTreeTest extends KernelTestBase {
     $this->assertEqual(count($output), 1);
   }
 
+  /**
+   * Tests creating links with an expected tree structure.
+   */
   public function testCreateLinksInMenu() {
     /**
      * This creates a tree with the following structure:

@@ -133,7 +133,7 @@ class MenuTreeStorageTest extends KernelTestBase {
 
     $this->assertMenuLink('test1', array('has_children' => 1, 'depth' => 1), array(), array('test2', 'test3'));
     $this->assertMenuLink('test2', array('has_children' => 1, 'depth' => 2), array('test1'), array('test3'));
-    $this->assertMenuLink('test4', array('has_children' => 1, 'depth' => 1), array(),  array('test5', 'test6'));
+    $this->assertMenuLink('test4', array('has_children' => 1, 'depth' => 1), array(), array('test5', 'test6'));
     $this->assertMenuLink('test5', array('has_children' => 1, 'depth' => 2), array('test4'), array('test6'));
     $this->assertMenuLink('test6', array('has_children' => 0, 'depth' => 3), array('test5', 'test4'));
 
@@ -391,8 +391,8 @@ class MenuTreeStorageTest extends KernelTestBase {
     $found_children = array_keys($this->treeStorage->loadAllChildren($id));
     // We need both these checks since the 2nd will pass if there are extra
     // IDs loaded in $found_children.
-    $this->assertEqual(count($children), count($found_children)); //, "Found expected number of children for $id");
-    $this->assertEqual(array_intersect($children, $found_children), $children); //, 'Child IDs match');
+    $this->assertEqual(count($children), count($found_children), "Found expected number of children for $id");
+    $this->assertEqual(array_intersect($children, $found_children), $children, 'Child IDs match');
   }
 
 }

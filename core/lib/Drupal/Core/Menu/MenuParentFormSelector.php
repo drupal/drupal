@@ -27,6 +27,14 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    */
   protected $entityManager;
 
+  /**
+   * Constructs a \Drupal\Core\Menu\MenuParentFormSelector
+   *
+   * @param MenuLinkTreeInterface $menu_link_tree
+   *   The menu link tree service.
+   * @param EntityManagerInterface $entity_manager
+   *   The entity manager.
+   */
   public function __construct(MenuLinkTreeInterface $menu_link_tree, EntityManagerInterface $entity_manager) {
     $this->menuLinkTree = $menu_link_tree;
     $this->entityManager = $entity_manager;
@@ -61,7 +69,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus =  NULL) {
+  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL) {
     $options = $this->getParentSelectOptions($id, $menus);
     // If no options were found, there is nothing to select.
     if ($options) {
@@ -103,7 +111,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * Iterates over all items in the tree to prepare the parents select options.
    *
-   * @param array $tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   The menu tree.
    * @param string $menu_name
    *   The menu name.
@@ -122,7 +130,6 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         // Don't iterate through any links on this level.
         break;
       }
-      /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
       $link = $element->link;
       if ($link->getPluginId() != $exclude) {
         $title = $indent . ' ' . Unicode::truncate($link->getTitle(), 30, TRUE, FALSE);

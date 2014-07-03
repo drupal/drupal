@@ -55,7 +55,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected $options = array();
 
   /**
-   * Stores the definitions that have already been loaded for better performance.
+   * Stores definitions that have already been loaded for better performance.
    */
   protected $definitions = array();
 
@@ -570,7 +570,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     }
   }
 
-  protected function prepareLink($link, $intersect = FALSE) {
+  /**
+   * Prepare a link by unserializing values and saving the definition.
+   *
+   * @param array $link
+   *   The data loaded in the query.
+   * @param bool $intersect
+   *   If TRUE, filter out values that are not part of the actual definition.
+   * @return array
+   *   The prepared link data.
+   */
+  protected function prepareLink(array $link, $intersect = FALSE) {
     foreach ($this->serializedFields() as $name) {
       $link[$name] = unserialize($link[$name]);
     }
@@ -789,6 +799,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   The parameters to determine which menu links to be loaded into a tree.
    *   ::loadLinks() will set the absolute minimum depth, which is used
    *   ::doBuildTreeData().
+   *
    * @return array
    *   A flat array of menu links that are part of the menu. Each array element
    *   is an associative array of information about the menu link, containing
@@ -1035,8 +1046,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $tree[$tree_link_definition['id']] = array(
         'definition' => $this->prepareLink($tree_link_definition, TRUE),
         'has_children' => $tree_link_definition['has_children'],
-        // We need to determine if we're on the path to root so we can later build
-        // the correct active trail.
+        // We need to determine if we're on the path to root so we can later
+        // build the correct active trail.
         'in_active_trail' => in_array($tree_link_definition['id'], $parents),
         'subtree' => array(),
         'depth' => $tree_link_definition['depth'],

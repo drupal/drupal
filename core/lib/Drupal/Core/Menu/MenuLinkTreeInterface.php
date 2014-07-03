@@ -20,7 +20,7 @@ namespace Drupal\Core\Menu;
  * language.
  * Which links are loaded can be specified in the menu link tree parameters that
  * passed to ::load(). You can build your own set of parameter, but you can also
- * start from a typical default (::getDefaultRenderedMenuTreeLinkParameters()).
+ * start from a typical default (::getCurrentRouteMenuTreeParameters()).
  *
  * @see \Drupal\Core\Menu\MenuLinkTreeParameters
  *
@@ -56,10 +56,10 @@ interface MenuLinkTreeInterface {
    *   The menu name, needed for retrieving the active trail and links with the
    *   'expanded' flag enabled.
    *
-   * @return \Drupal\Core\Menu\MenuTreeParameters $parameters
+   * @return \Drupal\Core\Menu\MenuTreeParameters
    *   The parameters to determine which menu links to be loaded into a tree.
    */
-  public function getDefaultRenderedMenuTreeLinkParameters($menu_name);
+  public function getCurrentRouteMenuTreeParameters($menu_name);
 
   /**
    * Loads a menu tree with a menu link plugin instance at each element.

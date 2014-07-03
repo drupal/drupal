@@ -79,6 +79,8 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   }
 
   /**
+   * Helper function to create a mock tree.
+   *
    * This mocks a tree with the following structure:
    * - 1
    * - 2
@@ -133,9 +135,9 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertEquals($this->links[6]->getPluginId(), $tree['50000 barbar test.example6']->link->getPluginId());
     $this->assertEquals($this->links[8]->getPluginId(), $tree['50000 quxqux test.example8']->link->getPluginId());
 
-    // Validate that child element #4 exists at the correct location in the hierarchy.
+    // Verify that child element #4 is at the correct location in the hierarchy.
     $this->assertEquals($this->links[4]->getPluginId(), $tree['50000 bar test.example2']->subtree['50000 baz test.example3']->subtree['50000 qux test.example4']->link->getPluginId());
-    // Validate that child element #7 exists at the correct location in the hierarchy.
+    // Verify that child element #7 is at the correct location in the hierarchy.
     $this->assertEquals($this->links[7]->getPluginId(), $tree['50000 foofoo test.example5']->subtree['50000 bazbaz test.example7']->link->getPluginId());
   }
 

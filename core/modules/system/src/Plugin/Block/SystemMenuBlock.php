@@ -79,7 +79,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public function build() {
     $menu_name = $this->getDerivativeId();
-    $parameters = $this->menuTree->getDefaultRenderedMenuTreeLinkParameters($menu_name);
+    $parameters = $this->menuTree->getCurrentRouteMenuTreeParameters($menu_name);
     $tree = $this->menuTree->load($menu_name, $parameters);
     $manipulators = array(
       array('callable' => 'menu.default_tree_manipulators:checkAccess'),
