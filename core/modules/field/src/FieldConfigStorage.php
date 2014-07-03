@@ -97,19 +97,25 @@ class FieldConfigStorage extends ConfigEntityStorage {
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
-    // Get fields stored in configuration.
-    if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
-      // Optimize for the most frequent case where we do have a specific ID.
-      $id = $conditions['entity_type'] . $conditions['field_name'];
-      $fields = $this->loadMultiple(array($id));
-    }
-    else {
-      // No specific ID, we need to examine all existing fields.
-      $fields = $this->loadMultiple();
+    $fields = array();
+
+    // Get fields stored in configuration. If we are explicitly looking for
+    // deleted fields only, this can be skipped, because they will be retrieved
+    // from state below.
+    if (empty($conditions['deleted'])) {
+      if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
+        // Optimize for the most frequent case where we do have a specific ID.
+        $id = $conditions['entity_type'] . $conditions['field_name'];
+        $fields = $this->loadMultiple(array($id));
+      }
+      else {
+        // No specific ID, we need to examine all existing fields.
+        $fields = $this->loadMultiple();
+      }
     }
 
     // Merge deleted fields (stored in state) if needed.
-    if ($include_deleted) {
+    if ($include_deleted || !empty($conditions['deleted'])) {
       $deleted_fields = $this->state->get('field.field.deleted') ?: array();
       foreach ($deleted_fields as $id => $config) {
         $fields[$id] = $this->create($config);

@@ -104,19 +104,25 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
-    // Get instances stored in configuration.
-    if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
-      // Optimize for the most frequent case where we do have a specific ID.
-      $id = $conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name'];
-      $instances = $this->loadMultiple(array($id));
-    }
-    else {
-      // No specific ID, we need to examine all existing instances.
-      $instances = $this->loadMultiple();
+    $instances = array();
+
+    // Get instances stored in configuration. If we are explicitly looking for
+    // deleted instances only, this can be skipped, because they will be
+    // retrieved from state below.
+    if (empty($conditions['deleted'])) {
+      if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
+        // Optimize for the most frequent case where we do have a specific ID.
+        $id = $conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name'];
+        $instances = $this->loadMultiple(array($id));
+      }
+      else {
+        // No specific ID, we need to examine all existing instances.
+        $instances = $this->loadMultiple();
+      }
     }
 
     // Merge deleted instances (stored in state) if needed.
-    if ($include_deleted) {
+    if ($include_deleted || !empty($conditions['deleted'])) {
       $deleted_instances = $this->state->get('field.instance.deleted') ?: array();
       $deleted_fields = $this->state->get('field.field.deleted') ?: array();
       foreach ($deleted_instances as $id => $config) {
