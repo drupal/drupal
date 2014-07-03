@@ -323,7 +323,7 @@ if (db_table_exists('system')) {
 $kernel->prepareLegacyRequest($request);
 
 // Determine if the current user has access to run update.php.
-\Drupal::service('session_manager')->initialize();
+\Drupal::service('session_manager')->startLazy();
 
 // Ensure that URLs generated for the home and admin pages don't have 'update.php'
 // in them.

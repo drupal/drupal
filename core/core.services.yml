@@ -800,8 +800,6 @@ services:
   session_manager:
     class: Drupal\Core\Session\SessionManager
     arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@settings']
-    tags:
-      - { name: persist }
   session_manager.metadata_bag:
     class: Drupal\Core\Session\MetadataBag
     arguments: ['@settings']

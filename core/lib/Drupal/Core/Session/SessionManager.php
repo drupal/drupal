@@ -63,7 +63,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    *
    * @var bool
    */
-  protected $lazySession;
+  protected $startedLazy;
 
   /**
    * Whether session management is enabled or temporarily disabled.
@@ -89,10 +89,18 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    *   The settings instance.
    */
   public function __construct(RequestStack $request_stack, Connection $connection, SymfonyMetadataBag $metadata_bag, Settings $settings) {
-    parent::__construct();
+    $options = array();
+
     $this->requestStack = $request_stack;
     $this->connection = $connection;
-    $this->setMetadataBag($metadata_bag);
+
+    // Register the default session handler.
+    // @todo Extract session storage from session handler into a service.
+    $save_handler = new SessionHandler($this, $this->requestStack, $this->connection);
+    $write_check_handler = new WriteCheckSessionHandler($save_handler);
+    $this->setSaveHandler($write_check_handler);
+
+    parent::__construct($options, $write_check_handler, $metadata_bag);
 
     $this->setMixedMode($settings->get('mixed_mode_sessions', FALSE));
 
@@ -108,14 +116,12 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * {@inheritdoc}
    */
-  public function initialize() {
+  public function startLazy() {
     global $user;
 
-    // Register the default session handler.
-    // @todo Extract session storage from session handler into a service.
-    $save_handler = new SessionHandler($this, $this->requestStack, $this->connection);
-    $write_check_handler = new WriteCheckSessionHandler($save_handler);
-    $this->setSaveHandler($write_check_handler);
+    if (($this->started || $this->startedLazy) && !$this->closed) {
+      return $this->started;
+    }
 
     $is_https = $this->requestStack->getCurrentRequest()->isSecure();
     $cookies = $this->requestStack->getCurrentRequest()->cookies;
@@ -125,7 +131,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // session is only started on demand in save(), making
       // anonymous users not use a session cookie unless something is stored in
       // $_SESSION. This allows HTTP proxies to cache anonymous pageviews.
-      $this->start();
+      $result = $this->start();
       if ($user->isAuthenticated() || !$this->isSessionObsolete()) {
         drupal_page_is_cacheable(FALSE);
       }
@@ -135,17 +141,26 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // we lazily start sessions at the end of this request, and some
       // processes (like drupal_get_token()) needs to know the future
       // session ID in advance.
-      $this->lazySession = TRUE;
       $user = new AnonymousUserSession();
       $this->setId(Crypt::randomBytesBase64());
       if ($is_https && $this->isMixedMode()) {
         $session_id = Crypt::randomBytesBase64();
         $cookies->set($insecure_session_name, $session_id);
       }
+      $result = FALSE;
     }
     date_default_timezone_set(drupal_get_user_timezone());
 
-    return $this;
+    $this->startedLazy = TRUE;
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isStartedLazy() {
+    return $this->startedLazy;
   }
 
   /**
@@ -174,7 +189,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   public function save() {
     global $user;
 
-    if (!$this->isEnabled()) {
+    if (!$this->isEnabled() || $this->isCli()) {
       // We don't have anything to do if we are not allowed to save the session.
       return;
     }
@@ -189,7 +204,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     else {
       // There is session data to store. Start the session if it is not already
       // started.
-      if (!$this->isStarted()) {
+      if (!$this->getSaveHandler()->isActive()) {
         $this->start();
         if ($this->requestStack->getCurrentRequest()->isSecure() && $this->isMixedMode()) {
           $insecure_session_name = $this->getInsecureName();
@@ -202,6 +217,8 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // Write the session data.
       parent::save();
     }
+
+    $this->startedLazy = FALSE;
   }
 
   /**
@@ -211,7 +228,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     global $user;
 
     // Nothing to do if we are not allowed to change the session.
-    if (!$this->isEnabled()) {
+    if (!$this->isEnabled() || $this->isCli()) {
       return;
     }
 
@@ -226,7 +243,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
 
     if ($is_https && $this->isMixedMode()) {
       $insecure_session_name = $this->getInsecureName();
-      if (!isset($this->lazySession) && $cookies->has($insecure_session_name)) {
+      if ($this->isStarted() && $cookies->has($insecure_session_name)) {
         $old_insecure_session_id = $cookies->get($insecure_session_name);
       }
       $params = session_get_cookie_params();
@@ -294,7 +311,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    */
   public function delete($uid) {
     // Nothing to do if we are not allowed to change the session.
-    if (!$this->isEnabled()) {
+    if (!$this->isEnabled() || $this->isCli()) {
       return;
     }
     $this->connection->delete('sessions')
