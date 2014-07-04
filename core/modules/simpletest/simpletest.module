@@ -54,8 +54,8 @@ function simpletest_permission() {
 function simpletest_theme() {
   return array(
     'simpletest_result_summary' => array(
-      'render element' => 'form',
-      'file' => 'simpletest.theme.inc',
+      'variables' => array('label' => NULL, 'items' => array(), 'pass' => 0, 'fail' => 0, 'exception' => 0, 'debug' => 0),
+      'template' => 'simpletest-result-summary',
     ),
   );
 }
@@ -72,14 +72,55 @@ function simpletest_js_alter(&$javascript) {
   }
 }
 
-function _simpletest_format_summary_line($summary) {
-  $parts = array();
-  $parts[] = $summary['#pass'] == 1 ? '1 pass' : $summary['#pass'] . ' passes';
-  $parts[] = $summary['#fail'] == 1 ? '1 fail' : $summary['#fail'] . ' fails';
-  $parts[] = $summary['#exception'] == 1 ? '1 exception' : $summary['#exception'] . ' exceptions';
-  if ($summary['#debug']) {
-    $parts[] = $summary['#debug'] == 1 ? '1 debug message' : $summary['#debug'] . ' debug messages';
+/**
+ * Prepares variables for simpletest result summary templates.
+ *
+ * Default template: simpletest-result-summary.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - label: An optional label to be rendered before the results.
+ *   - ok: The overall group result pass or fail.
+ *   - pass: The number of passes.
+ *   - fail: The number of fails.
+ *   - exception: The number of exceptions.
+ *   - debug: The number of debug messages.
+ */
+function template_preprocess_simpletest_result_summary(&$variables) {
+  $variables['items'] = _simpletest_build_summary_line($variables);
+}
+
+/**
+ * Formats each test result type pluralized summary.
+ *
+ * @param array $summary
+ *   A summary of the test results.
+ *
+ * @return array
+ *   The pluralized test summary items.
+ */
+function _simpletest_build_summary_line($summary) {
+  $translation = \Drupal::translation();
+  $items['pass'] = $translation->formatPlural($summary['pass'], '1 pass', '@count passes');
+  $items['fail'] = $translation->formatPlural($summary['fail'], '1 fail', '@count fails');
+  $items['exception'] = $translation->formatPlural($summary['exception'], '1 exception', '@count exceptions');
+  if ($summary['debug']) {
+    $items['debug'] = $translation->formatPlural($summary['debug'], '1 debug message', '@count debug messages');
   }
+  return $items;
+}
+
+/**
+ * Formats test result summaries into a comma separated string for run-tests.sh.
+ *
+ * @param array $summary
+ *   A summary of the test results.
+ *
+ * @return string
+ *   A concatenated string of the formatted test results.
+ */
+function _simpletest_format_summary_line($summary) {
+  $parts = _simpletest_build_summary_line($summary);
   return implode(', ', $parts);
 }
 
@@ -307,10 +348,19 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $test_results[$test_class]['#name'] = $info['name'];
   $items = array();
   foreach (Element::children($test_results) as $class) {
-    array_unshift($items, '<div class="simpletest-' . ($test_results[$class]['#fail'] + $test_results[$class]['#exception'] ? 'fail' : 'pass') . '">' . t('@name: @summary', array('@name' => $test_results[$class]['#name'], '@summary' => _simpletest_format_summary_line($test_results[$class]))) . '</div>');
+    $class_test_result = $test_results[$class] + array(
+      '#theme' => 'simpletest_result_summary',
+      '#label' => t($test_results[$class]['#name'] . ':'),
+    );
+    array_unshift($items, drupal_render($class_test_result));
   }
   $context['message'] = t('Processed test @num of @max - %test.', array('%test' => $info['name'], '@num' => $max - $size, '@max' => $max));
-  $context['message'] .= '<div class="simpletest-' . ($test_results['#fail'] + $test_results['#exception'] ? 'fail' : 'pass') . '">Overall results: ' . _simpletest_format_summary_line($test_results) . '</div>';
+  $overall_results = $test_results + array(
+    '#theme' => 'simpletest_result_summary',
+    '#label' => t('Overall results:'),
+  );
+  $context['message'] .= drupal_render($overall_results);
+
   $item_list = array(
     '#theme' => 'item_list',
     '#items' => $items,
