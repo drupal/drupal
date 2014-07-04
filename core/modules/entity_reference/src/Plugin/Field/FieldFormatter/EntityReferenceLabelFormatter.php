@@ -69,13 +69,21 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
       /** @var $referenced_entity \Drupal\Core\Entity\EntityInterface */
       if ($referenced_entity = $item->entity) {
         $label = $referenced_entity->label();
-        // If the link is to be displayed and the entity has a uri,
-        // display a link.
+        // If the link is to be displayed and the entity has a uri, display a
+        // link.
         if ($this->getSetting('link') && $uri = $referenced_entity->urlInfo()) {
           $elements[$delta] = array(
             '#type' => 'link',
             '#title' => $label,
           ) + $uri->toRenderArray();
+
+          if (!empty($item->_attributes)) {
+            $elements[$delta]['#options'] += array('attributes' => array());
+            $elements[$delta]['#options']['attributes'] += $item->_attributes;
+            // Unset field item attributes since they have been included in the
+            // formatter output and shouldn't be rendered in the field template.
+            unset($item->_attributes);
+          }
         }
         else {
           $elements[$delta] = array('#markup' => String::checkPlain($label));

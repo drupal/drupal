@@ -115,6 +115,12 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
           // Hide the element links.
           $elements[$delta][$target_type][$item->target_id]['links']['#access'] = FALSE;
         }
+        // Add a resource attribute to set the mapping property's value to the
+        // entity's url. Since we don't know what the markup of the entity will
+        // be, we shouldn't rely on it for structured data such as RDFa.
+        if (!empty($item->_attributes)) {
+          $item->_attributes += array('resource' => $item->entity->url());
+        }
       }
       else {
         // This is an "auto_create" item.
