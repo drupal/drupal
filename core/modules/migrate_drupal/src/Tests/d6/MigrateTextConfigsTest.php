@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -14,6 +15,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the Text module.
  */
 class MigrateTextConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -53,6 +56,7 @@ class MigrateTextConfigsTest extends MigrateDrupalTestBase {
   public function testTextSettings() {
     $config = \Drupal::config('text.settings');
     $this->assertIdentical($config->get('default_summary_length'), 456);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'text.settings', $config->get());
   }
 
 }

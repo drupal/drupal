@@ -49,10 +49,6 @@ class Drupal6AggregatorSettings extends Drupal6DumpBase {
       'name' => 'aggregator_summary_items',
       'value' => 's:1:"3";',
     ))
-    ->values(array(
-      'name' => 'aggregator_category_selector',
-      'value' => 's:10:"checkboxes";',
-    ))
     ->execute();
   }
 }

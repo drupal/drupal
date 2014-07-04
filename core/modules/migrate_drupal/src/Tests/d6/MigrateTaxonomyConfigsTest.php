@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -14,6 +15,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the Taxonomy module.
  */
 class MigrateTaxonomyConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -54,5 +57,7 @@ class MigrateTaxonomyConfigsTest extends MigrateDrupalTestBase {
     $config = \Drupal::config('taxonomy.settings');
     $this->assertIdentical($config->get('terms_per_page_admin'), 100);
     $this->assertIdentical($config->get('override_selector'), FALSE);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'taxonomy.settings', $config->get());
   }
+
 }

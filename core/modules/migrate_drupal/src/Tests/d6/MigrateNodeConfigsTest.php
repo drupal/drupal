@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -15,6 +16,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests Drupal 6 node settings to Drupal 8 migration.
  */
 class MigrateNodeConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -54,5 +57,7 @@ class MigrateNodeConfigsTest extends MigrateDrupalTestBase {
   public function testNodeSettings() {
     $config = \Drupal::config('node.settings');
     $this->assertIdentical($config->get('use_admin_theme'), false);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'node.settings', $config->get());
   }
+
 }

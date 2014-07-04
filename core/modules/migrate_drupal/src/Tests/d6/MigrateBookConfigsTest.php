@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -15,6 +16,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the Book module.
  */
 class MigrateBookConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -56,5 +59,7 @@ class MigrateBookConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('child_type'), 'book');
     $this->assertIdentical($config->get('block.navigation.mode'), 'all pages');
     $this->assertIdentical($config->get('allowed_types'), array('book'));
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'book.settings', $config->get());
   }
+
 }

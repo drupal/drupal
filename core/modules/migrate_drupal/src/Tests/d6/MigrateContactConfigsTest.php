@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -15,6 +16,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the Contact module.
  */
 class MigrateContactConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -65,5 +68,7 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('user_default_enabled'), true);
     $this->assertIdentical($config->get('flood.limit'), 3);
     $this->assertIdentical($config->get('default_category'), 'some_other_category');
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'contact.settings', $config->get());
   }
+
 }

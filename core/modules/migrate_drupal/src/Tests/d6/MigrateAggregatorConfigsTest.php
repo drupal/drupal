@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -14,6 +15,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the Aggregator module.
  */
 class MigrateAggregatorConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -59,7 +62,7 @@ class MigrateAggregatorConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('items.allowed_html'), '<a> <b> <br /> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>');
     $this->assertIdentical($config->get('items.expire'), 9676800);
     $this->assertIdentical($config->get('source.list_max'), 3);
-    $this->assertIdentical($config->get('source.category_selector'), 'checkboxes');
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'aggregator.settings', $config->get());
   }
 
 }

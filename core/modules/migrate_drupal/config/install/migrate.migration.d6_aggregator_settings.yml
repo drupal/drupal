@@ -10,7 +10,6 @@ source:
     - aggregator_teaser_length
     - aggregator_clear
     - aggregator_summary_items
-    - aggregator_category_selector
 process:
   fetcher: aggregator_fetcher
   parser: aggregator_parser
@@ -19,7 +18,6 @@ process:
   'items.teaser_length': aggregator_teaser_length
   'items.expire': aggregator_clear
   'source.list_max': aggregator_summary_items
-  'source.category_selector': aggregator_category_selector
 destination:
   plugin: config
   config_name: aggregator.settings

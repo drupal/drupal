@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -15,6 +16,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the Statistics module.
  */
 class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -53,11 +56,13 @@ class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
    */
   public function testStatisticsSettings() {
     $config = \Drupal::config('statistics.settings');
-    $this->assertIdentical($config->get('access_log.enable'), 0);
+    $this->assertIdentical($config->get('access_log.enabled'), FALSE);
     $this->assertIdentical($config->get('access_log.max_lifetime'), 259200);
     $this->assertIdentical($config->get('count_content_views'), 0);
     $this->assertIdentical($config->get('block.popular.top_day_limit'), 0);
     $this->assertIdentical($config->get('block.popular.top_all_limit'), 0);
     $this->assertIdentical($config->get('block.popular.top_recent_limit'), 0);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'statistics.settings', $config->get());
   }
+
 }

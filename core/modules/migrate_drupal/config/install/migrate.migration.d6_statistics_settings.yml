@@ -10,7 +10,7 @@ source:
     - statistics_block_top_all_num
     - statistics_block_top_last_num
 process:
-  'access_log.enable': statistics_enable_access_log
+  'access_log.enabled': statistics_enable_access_log
   'access_log.max_lifetime': statistics_flush_accesslog_timer
   'count_content_views': statistics_count_content_views
   'block.popular.top_day_limit': statistics_block_top_day_num

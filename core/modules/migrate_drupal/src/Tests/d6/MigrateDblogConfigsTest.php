@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -15,6 +16,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the dblog module.
  */
 class MigrateDblogConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -54,5 +57,7 @@ class MigrateDblogConfigsTest extends MigrateDrupalTestBase {
   public function testBookSettings() {
     $config = \Drupal::config('dblog.settings');
     $this->assertIdentical($config->get('row_limit'), 1000);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'dblog.settings', $config->get());
   }
+
 }

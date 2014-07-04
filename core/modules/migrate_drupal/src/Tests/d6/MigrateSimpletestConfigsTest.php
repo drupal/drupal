@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
+use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
@@ -15,6 +16,8 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
  * Tests migration of variables from the Simpletest module.
  */
 class MigrateSimpletestConfigsTest extends MigrateDrupalTestBase {
+
+  use SchemaCheckTestTrait;
 
   /**
    * Modules to enable.
@@ -60,5 +63,7 @@ class MigrateSimpletestConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('httpauth.password'), '');
     $this->assertIdentical($config->get('httpauth.username'), '');
     $this->assertIdentical($config->get('verbose'), TRUE);
+    $this->assertConfigSchema(\Drupal::service('config.typed'), 'simpletest.settings', $config->get());
   }
+
 }

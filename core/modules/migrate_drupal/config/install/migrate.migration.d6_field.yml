@@ -76,9 +76,3 @@ process:
 
 destination:
   plugin: entity:field_config
-migration_dependencies:
-  optional:
-    # It is not possible to make this required as d6_field_settings has no
-    # source id. However it also has no required dependencies so it will always
-    # run so an optional dependency is enough.
-    - d6_field_settings
