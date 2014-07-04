@@ -39,6 +39,13 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   protected $entity;
 
   /**
+   * TRUE if verbose debugging is enabled.
+   *
+   * @var bool
+   */
+  protected $debug = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -84,6 +91,14 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
     $build = entity_view($this->entity, 'default');
     $output = drupal_render($build);
     $graph = new \EasyRdf_Graph($this->uri, $output, 'rdfa');
+
+    // If verbose debugging is turned on, display the HTML and parsed RDF
+    // in the results.
+    if ($this->debug) {
+      debug($output);
+      debug($graph->toRdfPhp());
+    }
+
     $this->assertTrue($graph->hasProperty($this->uri, $property, $expected_rdf_value), "Formatter {$formatter['type']} exposes data correctly for {$this->fieldType} fields.");
   }
 
