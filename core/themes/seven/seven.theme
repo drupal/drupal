@@ -110,104 +110,59 @@ function seven_menu_local_task($variables) {
 }
 
 /**
- * Displays the list of available node types for node creation.
+ * Implements hook_preprocess_HOOK() for list of available node type templates.
  */
-function seven_node_add_list($variables) {
-  $content = $variables['content'];
-  if ($content) {
-    $output = '<ul class="admin-list">';
-    foreach ($content as $type) {
-      $output .= '<li class="clearfix">';
-      $content = '<span class="label">' . String::checkPlain($type->name) . '</span>';
-      $content .= '<div class="description">' . Xss::filterAdmin($type->description) . '</div>';
-      $options['html'] = TRUE;
-      $output .= l($content, 'node/add/' . $type->type, $options);
-      $output .= '</li>';
+function seven_preprocess_node_add_list(&$variables) {
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->type]['label'] = String::checkPlain($type->name);
+      $variables['types'][$type->type]['description'] = Xss::filterAdmin($type->description);
+      $variables['types'][$type->type]['url'] = \Drupal::url('node.add', array('node_type' => $type->type));
     }
-    $output .= '</ul>';
   }
   else {
-    $output = '<p>' . t('You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
+    $variables['add_content_type_url'] = \Drupal::url('node.type_add');
   }
-  return $output;
 }
 
 /**
- * Overrides theme_block_content_add_list().
+ * Implements hook_preprocess_HOOK() for block content add list templates.
  *
- * Displays the list of available custom block types for creation.
+ * Displays the list of available custom block types for creation, adding
+ * separate variables for the label, description, and url.
  */
-function seven_block_content_add_list($variables) {
-  $output = '';
-  if (!empty($variables['types'])) {
-    $output = '<ul class="admin-list">';
-    foreach ($variables['types'] as $id => $type) {
-      $output .= '<li class="clearfix">';
-      $content = '<span class="label">' . String::checkPlain($type['title']) . '</span>';
-      $content .= '<div class="description">' . Xss::filterAdmin($type['description']) . '</div>';
-      $options = $type['localized_options'];
-      $options['html'] = TRUE;
-      $output .= \Drupal::l($content, 'block_content.add_form', array('block_content_type' => $id), $options);
-      $output .= '</li>';
+function seven_preprocess_block_content_add_list(&$variables) {
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->id()]['label'] = String::checkPlain($type->label());
+      $variables['types'][$type->id()]['description'] = Xss::filterAdmin($type->description);
+      $options = array('query' => \Drupal::request()->query->all());
+      $variables['types'][$type->id()]['url'] = \Drupal::url('block_content.add_form', array('block_content_type' => $type->id()), $options);
     }
-    $output .= '</ul>';
   }
-  return $output;
 }
 
 /**
- * Overrides theme_admin_block_content().
- *
- * Uses an unordered list markup in both compact and extended mode.
+ * Implements hook_preprocess_HOOK() for block admin page templates.
  */
-function seven_admin_block_content($variables) {
-  $content = $variables['content'];
-  $output = '';
-  if (!empty($content)) {
-    $output = system_admin_compact_mode() ? '<ul class="admin-list compact">' : '<ul class="admin-list">';
-    foreach ($content as $item) {
-      $output .= '<li>';
-      $content = '<span class="label">' . Xss::filterAdmin($item['title']) . '</span>';
-      $options = $item['localized_options'];
-      $options['html'] = TRUE;
-      if (isset($item['description']) && !system_admin_compact_mode()) {
-        $content .= '<div class="description">' . Xss::filterAdmin($item['description']) . '</div>';
-      }
-      $output .= l($content, $item['link_path'], $options);
-      $output .= '</li>';
+function seven_preprocess_admin_block_content(&$variables) {
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $key => $item) {
+      $variables['content'][$key]['url'] = url($item['link_path']);
     }
-    $output .= '</ul>';
   }
-  return $output;
 }
 
 /**
- * Overrides theme_tablesort_indicator().
+ * Implements hook_preprocess_HOOK() for tablesort indicator templates.
  *
  * Uses Seven's image versions, so the arrows show up as black and not gray on
  * gray.
  */
-function seven_tablesort_indicator($variables) {
+function seven_preprocess_tablesort_indicator(&$variables) {
   $theme_path = drupal_get_path('theme', 'seven');
-
-  if ($variables['style'] == 'asc') {
-    $image_uri = $theme_path . '/images/arrow-asc.png';
-    $text = t('Sort ascending');
-  }
-  else {
-    $image_uri = $theme_path . '/images/arrow-desc.png';
-    $text = t('Sort descending');
-  }
-
-  $image = array(
-    '#theme' => 'image',
-    '#uri' => $image_uri,
-    '#alt' => $text,
-    '#width' => 9,
-    '#height' => 5,
-    '#title' => $text,
-  );
-  return drupal_render($image);
+  $variables['arrow_asc'] = file_create_url($theme_path . '/images/arrow-asc.png');
+  $variables['arrow_desc'] = file_create_url($theme_path . '/images/arrow-desc.png');
 }
 
 /**
