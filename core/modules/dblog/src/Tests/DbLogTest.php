@@ -445,6 +445,8 @@ class DbLogTest extends WebTestBase {
     $this->drupalLogin($this->big_user);
     // Post in order to clear the database table.
     $this->drupalPostForm('admin/reports/dblog', array(), t('Clear log messages'));
+    // Confirm that the logs should be cleared.
+    $this->drupalPostForm(NULL, array(), 'Confirm');
     // Count the rows in watchdog that previously related to the deleted user.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
     $this->assertEqual($count, 0, format_string('DBLog contains :count records after a clear.', array(':count' => $count)));
@@ -523,6 +525,8 @@ class DbLogTest extends WebTestBase {
 
     // Clear all logs and make sure the confirmation message is found.
     $this->drupalPostForm('admin/reports/dblog', array(), t('Clear log messages'));
+    // Confirm that the logs should be cleared.
+    $this->drupalPostForm(NULL, array(), 'Confirm');
     $this->assertText(t('Database log cleared.'), 'Confirmation message found');
   }
 

@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Contains \Drupal\dblog\Form\DblogClearLogForm.
+ * Contains \Drupal\dblog\Form\DblogClearLogConfirmForm.
  */
 
 namespace Drupal\dblog\Form;
 
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Url;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides the form that clears out the log.
+ * Provides a confirmation form before clearing out the logs.
  */
-class DblogClearLogForm extends FormBase {
+class DblogClearLogConfirmForm extends ConfirmFormBase {
 
   /**
    * The database connection.
@@ -25,7 +25,7 @@ class DblogClearLogForm extends FormBase {
   protected $connection;
 
   /**
-   * Constructs a new DblogClearLogForm.
+   * Constructs a new DblogClearLogConfirmForm.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
@@ -46,31 +46,32 @@ class DblogClearLogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
-    return 'dblog_clear_log_form';
+  public function getFormId() {
+    return 'dblog_confirm';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
-    $form['dblog_clear'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Clear log messages'),
-      '#description' => $this->t('This will permanently remove the log messages from the database.'),
-    );
-    $form['dblog_clear']['clear'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Clear log messages'),
-    );
-    return $form;
+  public function getQuestion() {
+    return $this->t('Are you sure you want to delete the recent logs?');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCancelRoute() {
+    return new Url('dblog.overview');
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $form_state['redirect_route'] = new Url('dblog.confirm');
+    $_SESSION['dblog_overview_filter'] = array();
+    $this->connection->delete('watchdog')->execute();
+    drupal_set_message($this->t('Database log cleared.'));
+    $form_state['redirect_route'] = $this->getCancelRoute();
   }
 
 }

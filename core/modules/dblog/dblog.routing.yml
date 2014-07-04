@@ -6,6 +6,14 @@ dblog.overview:
   requirements:
     _permission: 'access site reports'
 
+dblog.confirm:
+  path: '/admin/reports/dblog/confirm'
+  defaults:
+    _form: '\Drupal\dblog\Form\DblogClearLogConfirmForm'
+    _title: 'Confirm delete recent log messages'
+  requirements:
+    _permission: 'access site reports'
+
 dblog.event:
   path: '/admin/reports/dblog/event/{event_id}'
   defaults:
