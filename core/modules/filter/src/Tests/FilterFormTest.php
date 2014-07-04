@@ -180,13 +180,15 @@ class FilterFormTest extends WebTestBase {
    *
    * @param string $id
    *   The HTML ID of the select element.
+   *
+   * @return bool
+   *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertNoSelect($id) {
     $select = $this->xpath('//select[@id=:id]', array(':id' => $id));
-    $this->assertFalse($select, String::format('Field @id does not exist.', array(
+    return $this->assertFalse($select, String::format('Field @id does not exist.', array(
       '@id' => $id,
     )));
-    return $select;
   }
 
   /**
@@ -198,11 +200,14 @@ class FilterFormTest extends WebTestBase {
    *   An array of option values.
    * @param string $selected
    *   The value of the selected option.
+   *
+   * @return bool
+   *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertOptions($id, array $expected_options, $selected) {
     $select = $this->xpath('//select[@id=:id]', array(':id' => $id));
     $select = reset($select);
-    $this->assertTrue($select instanceof \SimpleXMLElement, String::format('Field @id exists.', array(
+    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, String::format('Field @id exists.', array(
       '@id' => $id,
     )));
 
@@ -226,15 +231,17 @@ class FilterFormTest extends WebTestBase {
         '@option' => $expected_option,
         '@id' => $id,
       )));
+      $passed = FALSE;
     }
     foreach ($found_options as $found_option) {
       $this->fail(String::format('Option @option for field @id does not exist.', array(
         '@option' => $found_option->attributes()->value,
         '@id' => $id,
       )));
+      $passed = FALSE;
     }
 
-    $this->assertOptionSelected($id, $selected);
+    return $passed && $this->assertOptionSelected($id, $selected);
   }
 
   /**
@@ -245,19 +252,22 @@ class FilterFormTest extends WebTestBase {
    * @param array $options
    *   An array of option values that are contained in the select element
    *   besides the "- Select -" option.
+   *
+   * @return bool
+   *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertRequiredSelectAndOptions($id, array $options) {
     $select = $this->xpath('//select[@id=:id and contains(@required, "required")]', array(
       ':id' => $id,
     ));
     $select = reset($select);
-    $this->assertTrue($select instanceof \SimpleXMLElement, String::format('Required field @id exists.', array(
+    $passed = $this->assertTrue($select instanceof \SimpleXMLElement, String::format('Required field @id exists.', array(
       '@id' => $id,
     )));
     // A required select element has a "- Select -" option whose key is an empty
     // string.
     $options[] = '';
-    $this->assertOptions($id, $options, '');
+    return $passed && $this->assertOptions($id, $options, '');
   }
 
   /**
@@ -265,13 +275,16 @@ class FilterFormTest extends WebTestBase {
    *
    * @param string $id
    *   The HTML ID of the textarea.
+   *
+   * @return bool
+   *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertEnabledTextarea($id) {
     $textarea = $this->xpath('//textarea[@id=:id and not(contains(@disabled, "disabled"))]', array(
       ':id' => $id,
     ));
     $textarea = reset($textarea);
-    $this->assertTrue($textarea instanceof \SimpleXMLElement, String::format('Enabled field @id exists.', array(
+    return $this->assertTrue($textarea instanceof \SimpleXMLElement, String::format('Enabled field @id exists.', array(
       '@id' => $id,
     )));
   }
@@ -281,22 +294,25 @@ class FilterFormTest extends WebTestBase {
    *
    * @param string $id
    *   The HTML ID of the textarea.
+   *
+   * @return bool
+   *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertDisabledTextarea($id) {
     $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', array(
       ':id' => $id,
     ));
     $textarea = reset($textarea);
-    $this->assertTrue($textarea instanceof \SimpleXMLElement, String::format('Disabled field @id exists.', array(
+    $passed = $this->assertTrue($textarea instanceof \SimpleXMLElement, String::format('Disabled field @id exists.', array(
       '@id' => $id,
     )));
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual((string) $textarea, $expected, String::format('Disabled textarea @id hides text in an inaccessible text format.', array(
+    $passed = $passed && $this->assertEqual((string) $textarea, $expected, String::format('Disabled textarea @id hides text in an inaccessible text format.', array(
       '@id' => $id,
     )));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
-    $this->assertNoSelect($select_id);
+    return $passed && $this->assertNoSelect($select_id);
   }
 
 }
