@@ -53,7 +53,8 @@ class ProfileFieldValues extends DrupalSqlBase implements SourceEntityInterface 
         $row->setSourceProperty($profile_value['name'], array('value' => $date));
       }
       elseif ($profile_value['type'] == 'list') {
-        $row->setSourceProperty($profile_value['name'], explode("\n", $profile_value['value']));
+        // Explode by newline and comma.
+        $row->setSourceProperty($profile_value['name'], preg_split("/[\r\n,]+/", $profile_value['value']));
       }
       else {
         $row->setSourceProperty($profile_value['name'], array($profile_value['value']));

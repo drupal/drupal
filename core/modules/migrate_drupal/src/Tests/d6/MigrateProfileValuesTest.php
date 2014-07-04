@@ -152,7 +152,11 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     $this->assertEqual($user->profile_sold_to->value, 'Fitness spammers');
     $this->assertEqual($user->profile_bands[0]->value, 'AC/DC');
     $this->assertEqual($user->profile_bands[1]->value, 'Eagles');
-    #$this->assertEqual($user->profile_blog->url, 'http://example.com/blog');
+    $this->assertEqual($user->profile_bands[2]->value, 'Elton John');
+    $this->assertEqual($user->profile_bands[3]->value, 'Lemonheads');
+    $this->assertEqual($user->profile_bands[4]->value, 'Rolling Stones');
+    $this->assertEqual($user->profile_bands[5]->value, 'Queen');
+    $this->assertEqual($user->profile_bands[6]->value, 'The White Stripes');
     $this->assertEqual($user->profile_birthdate->value, '1974-06-02');
   }
 
