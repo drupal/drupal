@@ -42,7 +42,7 @@ class Drupal6NodeType extends Drupal6DumpBase {
         'has_title' => 1,
         'title_label' => 'Title',
         'has_body' => 1,
-        'body_label' => 'Body',
+        'body_label' => 'This is the body field label',
         'min_word_count' => 0,
         'custom' => 1,
         'modified' => 1,

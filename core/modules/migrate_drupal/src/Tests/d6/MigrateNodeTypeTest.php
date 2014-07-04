@@ -72,7 +72,7 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
 
     // Test we have a body field.
     $instance = FieldInstanceConfig::loadByName('node', 'test_page', 'body');
-    $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
+    $this->assertEqual($instance->getLabel(), 'This is the body field label', 'Body field was found.');
 
     // Test the test_story content type.
     $node_type_story = entity_load('node_type', 'test_story');
