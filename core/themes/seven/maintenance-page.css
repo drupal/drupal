@@ -67,7 +67,7 @@
     color: #1a1a1a;
   }
   [dir="rtl"] .task-list li {
-    padding: 0.5em 1em 0.5em 1em;
+    padding: 0.5em 3.85em 0.5em 1em;
   }
   .task-list .active {
     background: #ebeae4;
