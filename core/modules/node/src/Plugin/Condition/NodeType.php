@@ -8,6 +8,9 @@
 namespace Drupal\node\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'Node Type' condition.
@@ -21,18 +24,58 @@ use Drupal\Core\Condition\ConditionPluginBase;
  * )
  *
  */
-class NodeType extends ConditionPluginBase {
+class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The entity storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $entityStorage;
+
+  /**
+   * Creates a new NodeType instance.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
+   *   The entity storage.
+   * @param array $configuration
+   *   The plugin configuration, i.e. an array with configuration values keyed
+   *   by configuration option name. The special key 'context' may be used to
+   *   initialize the defined contexts by setting it to an array of context
+   *   values keyed by context names.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   */
+  public function __construct(EntityStorageInterface $entity_storage, array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityStorage = $entity_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $container->get('entity.manager')->getStorage('node_type'),
+      $configuration,
+      $plugin_id,
+      $plugin_definition
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, array &$form_state) {
     $options = array();
-    foreach (node_type_get_types() as $type) {
+    $node_types = $this->entityStorage->loadMultiple();
+    foreach ($node_types as $type) {
       $options[$type->type] = $type->name;
     }
     $form['bundles'] = array(
-      '#title' => t('Node types'),
+      '#title' => $this->t('Node types'),
       '#type' => 'checkboxes',
       '#options' => $options,
       '#default_value' => $this->configuration['bundles'],
@@ -56,10 +99,10 @@ class NodeType extends ConditionPluginBase {
       $bundles = $this->configuration['bundles'];
       $last = array_pop($bundles);
       $bundles = implode(', ', $bundles);
-      return t('The node bundle is @bundles or @last', array('@bundles' => $bundles, '@last' => $last));
+      return $this->t('The node bundle is @bundles or @last', array('@bundles' => $bundles, '@last' => $last));
     }
     $bundle = reset($this->configuration['bundles']);
-    return t('The node bundle is @bundle', array('@bundle' => $bundle));
+    return $this->t('The node bundle is @bundle', array('@bundle' => $bundle));
   }
 
   /**
