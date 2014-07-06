@@ -506,33 +506,6 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
 }
 
 /**
- * Returns a rendered form to comment the given entity.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to which the comments are in reply to.
- * @param string $field_name
- *   The field name where the comments were entered.
- * @param int $pid
- *   (optional) Some comments are replies to other comments. In those cases,
- *   $pid is the parent comment's comment ID. Defaults to NULL.
- *
- * @return array
- *   The renderable array for the comment addition form.
- */
-function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NULL) {
-  $field = Fieldconfig::loadByName($entity->getEntityTypeId(), $field_name);
-  $values = array(
-    'entity_type' => $entity->getEntityTypeId(),
-    'entity_id' => $entity->id(),
-    'field_name' => $field_name,
-    'comment_type' => $field->getSetting('bundle'),
-    'pid' => $pid,
-  );
-  $comment = entity_create('comment', $values);
-  return \Drupal::service('entity.form_builder')->getForm($comment);
-}
-
-/**
  * Retrieves comments for a thread.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
