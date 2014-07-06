@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Dummy module emptying comment titles to test for approriate and accessible
+ * markup in edge case scenarios where comments have empty titles.
+ */
+
+use Drupal\comment\CommentInterface;
+
+/**
+ * Implements hook_preprocess_comment().
+ */
+function comment_empty_titles_test_preprocess_comment(&$variables) {
+  $variables['title'] = '';
+}

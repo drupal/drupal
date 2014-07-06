@@ -102,9 +102,11 @@
     #}
     <span class="hidden new" data-comment-timestamp="{{ new_indicator_timestamp }}"></span>
 
-    {{ title_prefix }}
-    <h3{{ title_attributes }}>{{ title }}</h3>
-    {{ title_suffix }}
+    {% if title %}
+      {{ title_prefix }}
+      <h3{{ title_attributes }}>{{ title }}</h3>
+      {{ title_suffix }}
+    {% endif %}
 
     <div{{ content_attributes }}>
       {{ content|without('links') }}

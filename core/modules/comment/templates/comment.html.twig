@@ -65,7 +65,9 @@
  */
 #}
 <article{{ attributes }}>
-  {{ title_prefix }}
+  {% if title %}
+    {{ title_prefix }}
+  {% endif %}
 
   {#
   Hide the "new" indicator by default, let a piece of JavaScript ask
@@ -74,9 +76,11 @@
   #}
   <mark class="hidden new" data-comment-timestamp="{{ new_indicator_timestamp }}"></mark>
 
-  <h3{{ title_attributes }}>{{ title }}</h3>
+  {% if title %}
+    <h3{{ title_attributes }}>{{ title }}</h3>
+    {{ title_suffix }}
+  {% endif %}
 
-  {{ title_suffix }}
 
   <footer>
     {{ user_picture }}
