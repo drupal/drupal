@@ -979,7 +979,7 @@ div.admin-options {
 }
 div.admin-options label {
   text-transform: uppercase;
-  font: 0.846em/1.875em Lucida Grande, Lucida Sans Unicode, sans-serif;
+  font: 0.846em/1.875em "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
 }
 div.admin-options label,
 div.admin-options div.form-item {
