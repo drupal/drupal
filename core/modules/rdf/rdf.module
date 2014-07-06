@@ -526,22 +526,27 @@ function rdf_preprocess_comment(&$variables) {
  * Implements hook_preprocess_HOOK() for taxonomy term templates.
  */
 function rdf_preprocess_taxonomy_term(&$variables) {
+  // Adds RDFa markup to the taxonomy term container.
+  // The @about attribute specifies the URI of the resource described within
+  // the HTML element, while the @typeof attribute indicates its RDF type
+  // (e.g., schema:Thing, skos:Concept, and so on).
   $term = $variables['term'];
   $mapping = rdf_get_mapping('taxonomy_term', $term->bundle());
   $bundle_mapping = $mapping->getPreparedBundleMapping();
+  $variables['attributes']['about'] = $term->url();
+  $variables['attributes']['typeof'] = empty($bundle_mapping['types']) ? NULL : $bundle_mapping['types'];
+
+  // Add RDFa markup for the taxonomy term name as metadata, if present.
   $name_field_mapping = $mapping->getPreparedFieldMapping('name');
-  // Adds the RDF type of the term and the term name in a <meta> tag.
-  if (!empty($name_field_mapping)) {
-    $term_label_meta = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'about' => url('taxonomy/term/' . $term->id()),
-        'typeof' => $bundle_mapping['types'],
-        'property' => $name_field_mapping['properties'],
-        'content' => $term->getName(),
-      ),
+  if (!empty($name_field_mapping) && !empty($name_field_mapping['properties'])) {
+    $name_attributes = array(
+      'property' => $name_field_mapping['properties'],
+      'content' => $term->getName(),
     );
-    drupal_add_html_head($term_label_meta, 'rdf_term_label');
+    $variables['title_suffix']['taxonomy_term_rdfa'] = array(
+      '#theme' => 'rdf_metadata',
+      '#metadata' => array($name_attributes),
+    );
   }
 }
 
