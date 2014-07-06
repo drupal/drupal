@@ -53,7 +53,27 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Test the private file transfer system.
    */
-  function testPrivateFileTransfer() {
+  public function testPrivateFileTransferWithoutPageCache() {
+    $this->doPrivateFileTransferTest();
+  }
+
+  /**
+   * Test the private file transfer system with page cache.
+   */
+  public function testPrivateFileTransferWithPageCache() {
+    // Turn on page caching and rerun the test.
+    $config = \Drupal::config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    $this->doPrivateFileTransferTest();
+  }
+
+  /**
+   * Test the private file transfer system.
+   */
+  protected function doPrivateFileTransferTest() {
     // Set file downloads to private so handler functions get called.
 
     // Create a file.
@@ -64,8 +84,8 @@ class DownloadTest extends FileManagedTestBase {
     // Set file_test access header to allow the download.
     file_test_set_return('download', array('x-foo' => 'Bar'));
     $this->drupalGet($url);
-    $headers = $this->drupalGetHeaders();
-    $this->assertEqual($headers['x-foo'], 'Bar', 'Found header set by file_test module on private download.');
+    $this->assertEqual($this->drupalGetHeader('x-foo'), 'Bar', 'Found header set by file_test module on private download.');
+    $this->assertFalse($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
     $this->assertResponse(200, 'Correctly allowed access to a file when file_test provides headers.');
 
     // Test that the file transferred correctly.
