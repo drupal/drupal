@@ -169,21 +169,11 @@ class DbLogController extends ControllerBase {
       ->execute();
 
     foreach ($result as $dblog) {
-      // Check for required properties.
-      if (isset($dblog->message) && isset($dblog->variables)) {
-        // Messages without variables or user specified text.
-        if ($dblog->variables === 'N;') {
-          $message = $dblog->message;
-        }
-        // Message to translate with injected variables.
-        else {
-          $message = $this->t($dblog->message, unserialize($dblog->variables));
-        }
-        if (isset($dblog->wid)) {
-          // Truncate link_text to 56 chars of message.
-          $log_text = Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE);
-          $message = $this->l($log_text, 'dblog.event',  array('event_id' => $dblog->wid), array('html' => TRUE));
-        }
+      $message = $this->formatMessage($dblog);
+      if ($message && isset($dblog->wid)) {
+        // Truncate link_text to 56 chars of message.
+        $log_text = Unicode::truncate(Xss::filter($message, array()), 56, TRUE, TRUE);
+        $message = $this->l($log_text, 'dblog.event',  array('event_id' => $dblog->wid), array('html' => TRUE));
       }
       $username = array(
         '#theme' => 'username',
@@ -235,11 +225,7 @@ class DbLogController extends ControllerBase {
     $build = array();
     if ($dblog = $this->database->query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = :id', array(':id' => $event_id))->fetchObject()) {
       $severity = watchdog_severity_levels();
-      // Check for required properties.
-      if (isset($dblog->message) && isset($dblog->variables)) {
-        // Inject variables into the message if required.
-        $message = $dblog->variables === 'N;' ? $dblog->message : $this->t($dblog->message, unserialize($dblog->variables));
-      }
+      $message = $this->formatMessage($dblog);
       $username = array(
         '#theme' => 'username',
         '#account' => user_load($dblog->uid),
@@ -331,6 +317,35 @@ class DbLogController extends ControllerBase {
   }
 
   /**
+   * Formats a database log message.
+   *
+   * @param stdClass $row
+   *   The record from the watchdog table. The object properties are: wid, uid,
+   *   severity, type, timestamp, message, variables, link, name.
+   *
+   * @return string|false
+   *   The formatted log message or FALSE if the message or variables properties
+   *   are not set.
+   */
+  public function formatMessage($row) {
+    // Check for required properties.
+    if (isset($row->message) && isset($row->variables)) {
+      // Messages without variables or user specified text.
+      if ($row->variables === 'N;') {
+        $message = $row->message;
+      }
+      // Message to translate with injected variables.
+      else {
+        $message = $this->t($row->message, unserialize($row->variables));
+      }
+    }
+    else {
+      $message = FALSE;
+    }
+    return $message;
+  }
+
+  /**
    * Shows the most frequent log messages of a given event type.
    *
    * Messages are not truncated on this page because events detailed herein do
@@ -370,18 +385,9 @@ class DbLogController extends ControllerBase {
 
     $rows = array();
     foreach ($result as $dblog) {
-      // Check for required properties.
-      if (isset($dblog->message) && isset($dblog->variables)) {
-        // Messages without variables or user specified text.
-        if ($dblog->variables === 'N;') {
-          $message = $dblog->message;
-        }
-        // Message to translate with injected variables.
-        else {
-          $message = $this->t($dblog->message, unserialize($dblog->variables));
-        }
+      if ($message = $this->formatMessage($dblog)) {
+        $rows[] = array($dblog->count, $message);
       }
-      $rows[] = array($dblog->count, $message);
     }
 
     $build['dblog_top_table']  = array(
