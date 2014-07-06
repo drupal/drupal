@@ -159,7 +159,7 @@ class BlockContentForm extends ContentEntityForm {
       '#title' => $this->t('Revision log message'),
       '#rows' => 4,
       '#default_value' => $block->getRevisionLog(),
-      '#description' => $this->t('Briefly desribe the changes you have made.'),
+      '#description' => $this->t('Briefly describe the changes you have made.'),
     );
 
     return parent::form($form, $form_state, $block);
