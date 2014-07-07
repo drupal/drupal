@@ -444,11 +444,11 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       if (!$instance->deleted) {
         $view_modes = \Drupal::entityManager()->getViewModeOptions($instance->entity_type, TRUE);
         foreach (array_keys($view_modes) as $mode) {
-          $displays_to_update['entity_view_display'][$instance->entity_type . '.' . $instance->bundle . '.' . $mode][] = $instance->field->name;
+          $displays_to_update['entity_view_display'][$instance->entity_type . '.' . $instance->bundle . '.' . $mode][] = $instance->field_name;
         }
         $form_modes = \Drupal::entityManager()->getFormModeOptions($instance->entity_type, TRUE);
         foreach (array_keys($form_modes) as $mode) {
-          $displays_to_update['entity_form_display'][$instance->entity_type . '.' . $instance->bundle . '.' . $mode][] = $instance->field->name;
+          $displays_to_update['entity_form_display'][$instance->entity_type . '.' . $instance->bundle . '.' . $mode][] = $instance->field_name;
         }
       }
     }
