@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Views\RelationshipRepresentativeNode.
+ * Contains \Drupal\user\Tests\Views\RelationshipRepresentativeNodeTest.
  */
 
 namespace Drupal\user\Tests\Views;
@@ -12,7 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the representative node relationship for users.
  */
-class RelationshipRepresentativeNode extends UserTestBase {
+class RelationshipRepresentativeNodeTest extends UserTestBase {
 
   /**
    * Views used by this test.

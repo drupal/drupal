@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableEntityDisplay.
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableEntityDisplayTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;
@@ -10,7 +10,7 @@ namespace Drupal\migrate_drupal\Tests\d6;
 /**
  * Tests comment variables migrated into an entity display.
  */
-class MigrateCommentVariableEntityDisplay extends MigrateCommentVariableDisplayBase {
+class MigrateCommentVariableEntityDisplayTest extends MigrateCommentVariableDisplayBase {
 
   /**
    * The migration to run.

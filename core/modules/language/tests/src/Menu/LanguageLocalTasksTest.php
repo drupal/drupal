@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Tests\Menu\LanguageLocalTasks.
+ * Contains \Drupal\language\Tests\Menu\LanguageLocalTasksTest.
  */
 
 namespace Drupal\language\Tests\Menu;
@@ -15,7 +15,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
  * @group Drupal
  * @group language
  */
-class LanguageLocalTasks extends LocalTaskIntegrationTest {
+class LanguageLocalTasksTest extends LocalTaskIntegrationTest {
 
   public static function getInfo() {
     return array(

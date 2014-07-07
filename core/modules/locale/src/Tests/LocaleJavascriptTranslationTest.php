@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\locale\Tests\LocaleJavascriptTranslation.
+ * Contains \Drupal\locale\Tests\LocaleJavascriptTranslationTest.
  */
 
 namespace Drupal\locale\Tests;
@@ -13,7 +13,7 @@ use Drupal\Component\Utility\String;
 /**
  * Functional tests for JavaScript parsing for translatable strings.
  */
-class LocaleJavascriptTranslation extends WebTestBase {
+class LocaleJavascriptTranslationTest extends WebTestBase {
 
   /**
    * Modules to enable.

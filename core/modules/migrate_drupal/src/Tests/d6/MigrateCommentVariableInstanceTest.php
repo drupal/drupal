@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableInstance.
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableInstanceTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;
@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 /**
  * Tests comment variables migrated into a field instance.
  */
-class MigrateCommentVariableInstance extends MigrateDrupalTestBase {
+class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
 
   static $modules = array('comment', 'node');
 

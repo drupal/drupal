@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\Tests\Views\DefaultViewRecentComments.
+ * Contains \Drupal\comment\Tests\Views\DefaultViewRecentCommentsTest.
  */
 
 namespace Drupal\comment\Tests\Views;
@@ -14,7 +14,7 @@ use Drupal\views\Tests\ViewTestBase;
 /**
  * Tests the Recent Comments default view.
  */
-class DefaultViewRecentComments extends ViewTestBase {
+class DefaultViewRecentCommentsTest extends ViewTestBase {
 
   /**
    * Modules to enable.

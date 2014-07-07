@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeRevisionsAllTestCase.
+ * Contains \Drupal\node\Tests\NodeRevisionsAllTest.
  */
 
 namespace Drupal\node\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\node\Tests;
 /**
  * Tests actions against revisions for user with access to all revisions.
  */
-class NodeRevisionsAllTestCase extends NodeTestBase {
+class NodeRevisionsAllTest extends NodeTestBase {
   protected $nodes;
   protected $revisionLogs;
   protected $profile = "standard";

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\NodeFieldMultilingualTestCase.
+ * Contains \Drupal\node\Tests\NodeFieldMultilingualTest.
  */
 
 namespace Drupal\node\Tests;
@@ -16,7 +16,7 @@ use Drupal\Core\Language\LanguageInterface;
 /**
  * Functional test for multilingual fields.
  */
-class NodeFieldMultilingualTestCase extends WebTestBase {
+class NodeFieldMultilingualTest extends WebTestBase {
 
   /**
    * Modules to enable.

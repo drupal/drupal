@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Theme\ThemeTestPhpTemplate.
+ * Contains \Drupal\system\Tests\Theme\EnginePhpTemplateTest.
  */
 
 namespace Drupal\system\Tests\Theme;
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests theme functions and templates with the PHPTemplate engine.
  */
-class ThemeTestPhpTemplate extends WebTestBase {
+class EnginePhpTemplateTest extends WebTestBase {
 
   /**
    * Modules to enable.

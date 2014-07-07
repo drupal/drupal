@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Update\InvalidUpdateHook.
+ * Contains \Drupal\system\Tests\Update\InvalidUpdateHookTest.
  */
 
 namespace Drupal\system\Tests\Update;
@@ -13,7 +13,7 @@ use Drupal\Core\Extension\ExtensionSchemaVersionException;
 /**
  * Tests for missing update dependencies.
  */
-class InvalidUpdateHook extends WebTestBase {
+class InvalidUpdateHookTest extends WebTestBase {
 
   /**
    * Modules to enable.

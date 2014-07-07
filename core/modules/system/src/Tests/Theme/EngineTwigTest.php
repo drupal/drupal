@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Theme\ThemeTestTwig.
+ * Contains \Drupal\system\Tests\Theme\EngineTwigTest.
  */
 
 namespace Drupal\system\Tests\Theme;
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests theme functions with the Twig engine.
  */
-class ThemeTestTwig extends WebTestBase {
+class EngineTwigTest extends WebTestBase {
 
   /**
    * Modules to enable.

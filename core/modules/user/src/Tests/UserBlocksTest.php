@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserBlocksTests.
+ * Contains \Drupal\user\Tests\UserBlocksTest.
  */
 
 namespace Drupal\user\Tests;
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Test user blocks.
  */
-class UserBlocksTests extends WebTestBase {
+class UserBlocksTest extends WebTestBase {
 
   /**
    * Modules to enable.

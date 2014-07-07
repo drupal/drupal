@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Update\UpdatesWith7x.
+ * Contains \Drupal\system\Tests\Update\UpdatesWith7xTest.
  */
 
 namespace Drupal\system\Tests\Update;
@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests for missing update dependencies.
  */
-class UpdatesWith7x extends WebTestBase {
+class UpdatesWith7xTest extends WebTestBase {
 
   /**
    * Modules to enable.

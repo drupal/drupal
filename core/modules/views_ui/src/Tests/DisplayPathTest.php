@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\Tests\DisplayPath
+ * Contains \Drupal\views_ui\Tests\DisplayPathTest.
  */
 
 namespace Drupal\views_ui\Tests;
@@ -12,7 +12,7 @@ namespace Drupal\views_ui\Tests;
  *
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
-class DisplayPath extends UITestBase {
+class DisplayPathTest extends UITestBase {
 
   /**
    * Views used by this test.

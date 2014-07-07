@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\Tests\DisplayTestCRUD.
+ * Contains \Drupal\views_ui\Tests\DisplayCRUDTest.
  */
 
 namespace Drupal\views_ui\Tests;
@@ -12,7 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the handling of displays in the UI, adding removing etc.
  */
-class DisplayTestCRUD extends UITestBase {
+class DisplayCRUDTest extends UITestBase {
 
   /**
    * Views used by this test.

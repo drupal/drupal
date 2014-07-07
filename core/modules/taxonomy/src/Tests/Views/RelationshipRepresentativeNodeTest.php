@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\Views\RelationshipRepresentativeNode.
+ * Contains \Drupal\taxonomy\Tests\Views\RelationshipRepresentativeNodeTest.
  */
 
 namespace Drupal\taxonomy\Tests\Views;
@@ -12,7 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the representative node relationship for terms.
  */
-class RelationshipRepresentativeNode extends TaxonomyTestBase {
+class RelationshipRepresentativeNodeTest extends TaxonomyTestBase {
 
   /**
    * Views used by this test.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Tests\Views\RevisionRelationships.
+ * Contains \Drupal\node\Tests\Views\RevisionRelationshipsTest.
  */
 namespace Drupal\node\Tests\Views;
 
@@ -13,7 +13,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests basic node_revision table integration into views.
  */
-class RevisionRelationships extends ViewTestBase {
+class RevisionRelationshipsTest extends ViewTestBase {
 
   /**
    * Modules to enable.
