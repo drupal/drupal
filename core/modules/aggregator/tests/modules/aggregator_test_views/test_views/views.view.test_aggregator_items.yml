@@ -14,7 +14,7 @@ display:
       row:
         type: aggregator_rss
         options:
-          item_length: default
+          view_mode: default
   default:
     display_plugin: default
     id: default

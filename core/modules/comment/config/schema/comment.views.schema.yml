@@ -116,7 +116,7 @@ views.row.comment_rss:
   type: views_row
   label: 'Comment'
   mapping:
-    item_length:
+    view_mode:
       type: string
       label: 'Display type'
     links:

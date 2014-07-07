@@ -250,7 +250,7 @@ views.row.node_rss:
   type: "views.row.entity:node"
   label: 'Content'
   mapping:
-    item_length:
+    view_mode:
       type: string
       label: 'Display type'
     links:

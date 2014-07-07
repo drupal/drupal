@@ -43,7 +43,7 @@ class Rss extends RowPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['item_length'] = array('default' => 'default');
+    $options['view_mode'] = array('default' => 'default');
 
     return $options;
   }
@@ -52,7 +52,7 @@ class Rss extends RowPluginBase {
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
-    $form['item_length'] = array(
+    $form['view_mode'] = array(
       '#type' => 'select',
       '#title' => t('Display type'),
       '#options' => array(
@@ -61,7 +61,7 @@ class Rss extends RowPluginBase {
         'title' => t('Title only'),
         'default' => t('Use default RSS settings'),
       ),
-      '#default_value' => $this->options['item_length'],
+      '#default_value' => $this->options['view_mode'],
     );
   }
 

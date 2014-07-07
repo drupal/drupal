@@ -970,7 +970,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       ->execute();
   }
 
-  $item_length = $rss_config->get('items.view_mode');
+  $view_mode = $rss_config->get('items.view_mode');
   $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
 
   // Load all nodes to be rendered.
@@ -997,7 +997,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       $namespaces = array_merge($namespaces, $node->rss_namespaces);
     }
 
-    if ($item_length != 'title') {
+    if ($view_mode != 'title') {
       // We render node contents and force links to be last.
       $build['links']['#weight'] = 1000;
       $item_text .= drupal_render($build);

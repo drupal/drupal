@@ -237,7 +237,7 @@ display:
         type: node_rss
         options:
           relationship: none
-          item_length: default
+          view_mode: default
           links: false
         provider: views
 label: 'Taxonomy term'

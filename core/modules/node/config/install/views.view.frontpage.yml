@@ -229,7 +229,7 @@ display:
         type: node_rss
         options:
           relationship: none
-          item_length: rss
+          view_mode: rss
           links: false
         provider: views
 label: Frontpage

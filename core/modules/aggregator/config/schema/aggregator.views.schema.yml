@@ -24,6 +24,6 @@ views.row.aggregator_rss:
   type: views_row
   label: 'Aggregator item row'
   mapping:
-    item_length:
+    view_mode:
       type: string
       label: 'Display type'
