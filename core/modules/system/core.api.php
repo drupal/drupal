@@ -71,10 +71,113 @@
  * @{
  * Integrating third-party applications using REST and related operations.
  *
- * @todo write this
+ * @section sec_overview Overview of web services
+ * Web services make it possible for applications and web sites to read and
+ * update information from other web sites. There are several standard
+ * techniques for providing web services, including:
+ * - SOAP: http://en.wikipedia.org/wiki/SOAP SOAP
+ * - XML-RPC: http://en.wikipedia.org/wiki/XML-RPC
+ * - REST: http://en.wikipedia.org/wiki/Representational_state_transfer
+ * Drupal sites can both provide web services and integrate third-party web
+ * services.
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
+ * @section sec_rest_overview Overview of REST
+ * The REST technique uses basic HTTP requests to obtain and update data, where
+ * each web service defines a specific API (HTTP GET and/or POST parameters and
+ * returned response) for its HTTP requests. REST requests are separated into
+ * several types, known as methods, including:
+ * - GET: Requests to obtain data.
+ * - PUT: Requests to update or create data.
+ * - PATCH: Requests to update a subset of data, such as one field.
+ * - DELETE: Requests to delete data.
+ * The Drupal Core REST module provides support for GET, PUT, PATCH, and DELETE
+ * quests on entities, GET requests on the database log from the Database
+ * Logging module, and a plugin framework for providing REST support for other
+ * data and other methods.
+ *
+ * REST requests can be authenticated. The Drupal Core Basic Auth module
+ * provides authentication using the HTTP Basic protocol; contributed module
+ * OAuth (https://www.drupal.org/project/oauth) implements the OAuth
+ * authenticaion protocol. You can also use cookie-based authentication, which
+ * would require users to be logged into the Drupal site while using the
+ * application on the third-party site that is using the REST service.
+ *
+ * @section sec_rest Enabling REST for entities and the log
+ * Here are the steps to take to use the REST operations provided by Drupal
+ * Core:
+ * - Enable the REST module, plus Basic Auth (or another authentication method)
+ *   and HAL.
+ * - Node entity support is configured by default. If you would like to support
+ *   other types of entities, you can copy
+ *   core/modules/rest/config/install/rest.settings.yml to your staging
+ *   configuration directory, appropriately modified for other entity types,
+ *   and import it. Support for GET on the log from the Database Logging module
+ *   can also be enabled in this way; in this case, the 'entity:node' line
+ *   in the configuration would be replaced by the appropriate plugin ID,
+ *   'dblog'.
+ * - Set up permissions to allow the desired REST operations for a role, and set
+ *   up one or more user accounts to perform the operations.
+ * - To perform a REST operation, send a request to either the canonical URL
+ *   for an entity (such as node/12345 for a node), or if the entity does not
+ *   have a canonical URL, a URL like entity/(type)/(ID). The URL for a log
+ *   entry is dblog/(ID). The request must have the following properties:
+ *   - The request method must be set to the REST method you are using (POST,
+ *     GET, PATCH, etc.).
+ *   - The content type for the data you send, or the accept type for the
+ *     data you are receiving, must be set to 'application/hal+json'.
+ *   - If you are sending data, it must be JSON-encoded.
+ *   - You'll also need to make sure the authentication information is sent
+ *     with the request, unless you have allowed access to anonymous users.
+ *
+ * For more detailed information on setting up REST, see
+ * https://www.drupal.org/documentation/modules/rest.
+ *
+ * @section sec_plugins Defining new REST plugins
+ * The REST framework in the REST module has support built in for entities, but
+ * it is also an extensible plugin-based system. REST plugins implement
+ * interface \Drupal\rest\Plugin\ResourceInterface, and generally extend base
+ * class \Drupal\rest\Plugin\ResourceBase. They are annotated with
+ * \Drupal\rest\Annotation\RestResource annotation, and must be in plugin
+ * namespace subdirectory Plugin\rest\resource. For more information on how to
+ * create plugins, see the @link plugin_api Plugin API topic. @endlink
+ *
+ * If you create a new REST plugin, you will also need to enable it by
+ * providing default configuration or configuration import, as outlined in
+ * @ref sec_rest above.
+ *
+ * @section sec_xmlrpc Using XML-RPC
+ * In XML-RPC, a web site can set up one or more XML-RPC methods, which it
+ * will usually service at a central XML-RPC URL. Drupal Core's XML-RPC module
+ * provides both client and server XML-RPC functionality.
+ *
+ * On the server side, the XML-RPC module sets up URL path xmlrpc.php, which
+ * responds to XML-RPC requests. Individual XML-RPC request methods are defined
+ * by modules by implementing hook_xmlrpc(); Drupal Core does not define any
+ * XML-RPC web service requests by default.
+ *
+ * On the client side, XML-RPC requests to other web sites that provide XML-RPC
+ * web services can be performed in Drupal by using the xmlrpc() function.
+ *
+ * @section sec_integrate Integrating data from other sites into Drupal
+ * If you want to integrate data from other web sites into Drupal, here are
+ * some notes:
+ * - There are contributed modules available for integrating many third-party
+ *   sites into Drupal. Search on https://www.drupal.org/project/project_module
+ * - If there is not an existing module, you will need to find documentation on
+ *   the specific web services API for the site you are trying to integrate.
+ * - There are several classes and functions that are useful for interacting
+ *   with web services:
+ *   - You should make requests using the 'http_client' service, which
+ *     implements \GuzzleHttp\ClientInterface. See the
+ *     @link container Services topic @endlink for more information on
+ *     services. If you cannot use dependency injection to retrieve this
+ *     service, the \Drupal::httpClient() method is available. A good example
+ *     of how to use this service can be found in
+ *     \Drupal\aggregator\Plugin\aggregator\fetcher\DefaultFetcher
+ *   - \Drupal\Component\Serialization\Json (JSON encoding and decoding).
+ *   - PHP has functions and classes for parsing XML; see
+ *     http://php.net/manual/refs.xml.php
+ *   - As mentioned above, for XML-RPC requests, use function xmlrpc().
  * @}
  */
 

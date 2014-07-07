@@ -21,6 +21,8 @@ use \Drupal\Component\Annotation\Plugin;
  * @see \Drupal\rest\Plugin\ResourceInterface
  * @see plugin_api
  *
+ * @ingroup third_party
+ *
  * @Annotation
  */
 class RestResource extends Plugin {

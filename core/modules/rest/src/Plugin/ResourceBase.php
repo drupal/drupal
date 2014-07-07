@@ -20,6 +20,8 @@ use Symfony\Component\Routing\RouteCollection;
  * @see \Drupal\rest\Plugin\Type\ResourcePluginManager
  * @see \Drupal\rest\Plugin\ResourceInterface
  * @see plugin_api
+ *
+ * @ingroup third_party
  */
 abstract class ResourceBase extends PluginBase implements ContainerFactoryPluginInterface, ResourceInterface {
 

@@ -16,6 +16,8 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  * @see \Drupal\rest\Plugin\Type\ResourcePluginManager
  * @see \Drupal\rest\Plugin\ResourceBase
  * @see plugin_api
+ *
+ * @ingroup third_party
  */
 interface ResourceInterface extends PluginInspectionInterface {
 

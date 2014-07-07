@@ -37,6 +37,8 @@
  *   - A descriptive help string, enclosed in a t() function for translation
  *     purposes.
  *   Both forms are shown in the example.
+ *
+ * @ingroup third_party
  */
 function hook_xmlrpc() {
   return array(

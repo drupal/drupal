@@ -9,6 +9,8 @@ namespace Drupal\Component\Serialization;
 
 /**
  * Default serialization for JSON.
+ *
+ * @ingroup third_party
  */
 class Json implements SerializationInterface {
 

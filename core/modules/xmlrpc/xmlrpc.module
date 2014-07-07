@@ -47,6 +47,8 @@ function xmlrpc_help($route_name, RouteMatchInterface $route_match) {
  *     An array of results. Each result will either be the result
  *     returned by the method called, or an xmlrpc_error object if the call
  *     failed. See xmlrpc_error().
+ *
+ * @ingroup third_party
  */
 function xmlrpc($url, array $args, array $headers = array()) {
   module_load_include('inc', 'xmlrpc');
