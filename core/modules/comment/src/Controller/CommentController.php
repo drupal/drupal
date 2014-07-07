@@ -293,7 +293,7 @@ class CommentController extends ControllerBase {
       $query = comment_new_page_count($node->{$field_name}->comment_count, $new, $node);
       $links[$nid] = array(
         'new_comment_count' => (int) $new,
-        'first_new_comment_link' => $this->urlGenerator()->generateFromPath('node/' . $node->id(), array('query' => $query, 'fragment' => 'new')),
+        'first_new_comment_link' => $this->getUrlGenerator()->generateFromPath('node/' . $node->id(), array('query' => $query, 'fragment' => 'new')),
       );
     }
 

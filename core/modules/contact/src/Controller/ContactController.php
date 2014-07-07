@@ -75,7 +75,7 @@ class ContactController extends ControllerBase {
       if (empty($contact_category)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
           drupal_set_message($this->t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array(
-            '@add' => $this->urlGenerator()->generateFromRoute('contact.category_add'))), 'error');
+            '@add' => $this->url('contact.category_add'))), 'error');
           return array();
         }
         else {

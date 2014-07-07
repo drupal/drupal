@@ -8,6 +8,8 @@
 namespace Drupal\Core\Controller;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,6 +37,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 abstract class ControllerBase implements ContainerInjectionInterface {
   use StringTranslationTrait;
+  use LinkGeneratorTrait;
+  use UrlGeneratorTrait;
 
   /**
    * The entity manager.
@@ -70,13 +74,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $keyValue;
-
-  /**
-   * The url generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
 
   /**
    * The current user service.
@@ -234,32 +231,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   }
 
   /**
-   * Returns the URL generator service.
-   *
-   * @return \Drupal\Core\Routing\UrlGeneratorInterface
-   *   The URL generator service.
-   */
-  protected function urlGenerator() {
-    if (!$this->urlGenerator) {
-      $this->urlGenerator = $this->container()->get('url_generator');
-    }
-    return $this->urlGenerator;
-  }
-
-  /**
-   * Renders a link to a route given a route name and its parameters.
-   *
-   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate() for details
-   *   on the arguments, usage, and possible exceptions.
-   *
-   * @return string
-   *   An HTML string containing a link to the given route and parameters.
-   */
-  public function l($text, $route_name, array $parameters = array(), array $options = array()) {
-    return $this->container()->get('link_generator')->generate($text, $route_name, $parameters, $options);
-  }
-
-  /**
    * Returns the current user.
    *
    * @return \Drupal\Core\Session\AccountInterface
@@ -314,21 +285,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    *   A redirect response object that may be returned by the controller.
    */
   public function redirect($route_name, array $route_parameters = array(), $status = 302) {
-    $url = $this->urlGenerator()->generate($route_name, $route_parameters, TRUE);
+    $url = $this->url($route_name, $route_parameters, ['absolute' => TRUE]);
     return new RedirectResponse($url, $status);
   }
-
-  /**
-   * Generates a URL or path for a specific route based on the given parameters.
-   *
-   * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
-   *   details on the arguments, usage, and possible exceptions.
-   *
-   * @return string
-   *   The generated URL for the given route.
-   */
-  public function url($route_name, $route_parameters = array(), $options = array()) {
-    return $this->urlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
-  }
-
 }

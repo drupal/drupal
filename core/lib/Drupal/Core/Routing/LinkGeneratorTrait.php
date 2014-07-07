@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file Contains Drupal\Core\Routing\LinkGeneratorTrait.
+ */
+
+namespace Drupal\Core\Routing;
+
+
+use Drupal\Core\Utility\LinkGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
+
+/**
+ * Wrapper methods for the Link Generator.
+ *
+ * This utility trait should only be used in application-level code, such as
+ * classes that would implement ContainerInjectionInterface. Services registered
+ * in the Container should not use this trait but inject the appropriate service
+ * directly for easier testing.
+ */
+trait LinkGeneratorTrait {
+
+  /**
+   * The link generator.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $linkGenerator;
+
+  /**
+   * Renders a link to a route given a route name and its parameters.
+   *
+   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate() for details
+   *   on the arguments, usage, and possible exceptions.
+   *
+   * @return string
+   *   An HTML string containing a link to the given route and parameters.
+   */
+  protected function l($text, $route_name, array $parameters = array(), array $options = array()) {
+    return $this->getLinkGenerator()->generate($text, $route_name, $parameters, $options);
+  }
+
+  /**
+   * Returns the link generator.
+   *
+   * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   *   The link generator
+   */
+  protected function getLinkGenerator() {
+    if (!isset($this->linkGenerator)) {
+      $this->linkGenerator = \Drupal::service('link_generator');
+    }
+    return $this->linkGenerator;
+  }
+
+  /**
+   * Sets the link generator service.
+   *
+   * @param \Drupal\Core\Utility\LinkGeneratorInterface $generator
+   *   The link generator service.
+   *
+   * @return $this
+   */
+  public function setLinkGenerator(LinkGeneratorInterface $generator) {
+    $this->linkGenerator = $generator;
+
+    return $this;
+  }
+}

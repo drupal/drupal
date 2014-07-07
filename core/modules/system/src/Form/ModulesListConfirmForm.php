@@ -107,7 +107,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
 
     // Redirect to the modules list page if the key value store is empty.
     if (!$this->modules) {
-      return new RedirectResponse($this->urlGenerator()->generate('system.modules_list', array(), TRUE));
+      return new RedirectResponse($this->url('system.modules_list', [], ['absolute' => TRUE]));
     }
 
     $items = array();
