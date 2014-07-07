@@ -81,7 +81,8 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    * @endcode
    *
    * Additionally, some processing data is placed in $form_state, and can be
-   * accessed by field_form_get_state() and field_form_set_state().
+   * accessed by \Drupal\Core\Field\WidgetBaseInterface::getWidgetState() and
+   * \Drupal\Core\Field\WidgetBaseInterface::setWidgetState().
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity.

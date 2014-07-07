@@ -83,8 +83,8 @@ interface WidgetInterface extends WidgetBaseInterface {
    *       widgets can simply overlook this property. This identifies the
    *       location where the field values are placed within
    *       $form_state['values'], and is used to access processing information
-   *       for the field through the field_form_get_state() and
-   *       field_form_set_state() functions.
+   *       for the field through the getWidgetState() and setWidgetState()
+   *       methods.
    *   - #title: The sanitized element label for the field instance, ready for
    *     output.
    *   - #description: The sanitized element description for the field instance,

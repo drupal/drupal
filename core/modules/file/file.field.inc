@@ -65,7 +65,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
   foreach (Element::children($element) as $key) {
     $widgets[] = &$element[$key];
   }
-  usort($widgets, '_field_sort_items_value_helper');
+  usort($widgets, '_field_multiple_value_form_sort_helper');
 
   $rows = array();
   foreach ($widgets as $key => &$widget) {

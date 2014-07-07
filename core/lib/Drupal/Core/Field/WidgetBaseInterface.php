@@ -13,9 +13,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * Base interface definition for "Field widget" plugins.
  *
  * This interface details base wrapping methods that most widget implementations
- * will want to directly inherit from Drupal\Core\Field\WidgetBase.
- * See Drupal\Core\Field\WidgetInterface for methods that will more
- * likely be overriden.
+ * will want to directly inherit from Drupal\Core\Field\WidgetBase. See
+ * Drupal\Core\Field\WidgetInterface for methods that will more likely be
+ * overriden in actual widget implementations.
  */
 interface WidgetBaseInterface extends PluginSettingsInterface {
 
@@ -70,5 +70,42 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    *   The form state.
    */
   public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, array &$form_state);
+
+  /**
+   * Retrieves processing information about the widget from $form_state.
+   *
+   * This method is static so that is can be used in static Form API callbacks.
+   *
+   * @param array $parents
+   *   The array of #parents where the field lives in the form.
+   * @param string $field_name
+   *   The field name.
+   * @param array $form_state
+   *   The form state.
+   *
+   * @return array
+   *   An array with the following key/value pairs:
+   *   - items_count: The number of widgets to display for the field.
+   *   - array_parents: The location of the field's widgets within the $form
+   *     structure. This entry is populated at '#after_build' time.
+   */
+  public static function getWidgetState(array $parents, $field_name, array &$form_state);
+
+  /**
+   * Stores processing information about the widget in $form_state.
+   *
+   * This method is static so that is can be used in static Form API #callbacks.
+   *
+   * @param array $parents
+   *   The array of #parents where the widget lives in the form.
+   * @param string $field_name
+   *   The field name.
+   * @param array $form_state
+   *   The form state.
+   * @param array $field_state
+   *   The array of data to store. See getWidgetState() for the structure and
+   *   content of the array.
+   */
+  public static function setWidgetState(array $parents, $field_name, array &$form_state, array $field_state);
 
 }

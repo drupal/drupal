@@ -16,7 +16,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * mechanism for auto-loading core APIs, so we have to load them on
  * every page request.
  */
-require_once __DIR__ . '/field.form.inc';
 require_once __DIR__ . '/field.purge.inc';
 
 /**

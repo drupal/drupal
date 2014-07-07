@@ -2430,7 +2430,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
         $items[] = &$element[$key];
       }
     }
-    usort($items, '_field_sort_items_value_helper');
+    usort($items, '_field_multiple_value_form_sort_helper');
 
     // Add the items as table rows.
     foreach ($items as $item) {
@@ -2477,6 +2477,17 @@ function template_preprocess_field_multiple_value_form(&$variables) {
       $variables['elements'][] = $element[$key];
     }
   }
+}
+
+/**
+ * Callback for usort() within template_preprocess_field_multiple_value_form().
+ *
+ * Sorts using ['_weight']['#value']
+ */
+function _field_multiple_value_form_sort_helper($a, $b) {
+  $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
+  $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
+  return $a_weight - $b_weight;
 }
 
 /**
