@@ -211,7 +211,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Redirect the user to the installation script if Drupal has not been
     // installed yet (i.e., if no $databases array has been defined in the
     // settings.php file) and we are not already installing.
-    if (!Database::getConnectionInfo() && !drupal_installation_attempted() && !drupal_is_cli()) {
+    if (!Database::getConnectionInfo() && !drupal_installation_attempted() && PHP_SAPI !== 'cli') {
       $response = new RedirectResponse($request->getBasePath() . '/core/install.php');
       $response->prepare($request)->send();
     }

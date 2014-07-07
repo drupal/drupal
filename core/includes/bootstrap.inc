@@ -405,7 +405,7 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
   }
 
   return $allow_caching_static && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD')
-    && !drupal_is_cli();
+    && PHP_SAPI !== 'cli';
 }
 
 /**
@@ -1728,6 +1728,9 @@ function drupal_static_reset($name = NULL) {
 
 /**
  * Detects whether the current script is running in a command-line environment.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Check the PHP_SAPI value directly instead.
  */
 function drupal_is_cli() {
   return PHP_SAPI === 'cli';
