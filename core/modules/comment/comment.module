@@ -957,30 +957,6 @@ function comment_user_predelete($account) {
 }
 
 /**
- * Loads comment entities from the database.
- *
- * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
- *   Use \Drupal\comment\Entity\Comment::loadMultiple().
- *
- * @param array $cids
- *   (optional) An array of entity IDs. If omitted, all entities are loaded.
- * @param bool $reset
- *   (optional) Whether to reset the internal static entity cache.
- *
- * @return array
- *   An array of comment objects, indexed by comment ID.
- *
- * @see entity_load()
- * @see \Drupal\Core\Entity\Query\QueryInterface
- */
-function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
-  if ($reset) {
-    \Drupal::entityManager()->getStorage('comment')->resetCache($cids);
-  }
-  return Comment::loadMultiple($cids);
-}
-
-/**
  * Loads the entire comment by comment ID.
  *
  * @param int $cid
