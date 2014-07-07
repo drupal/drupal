@@ -1206,6 +1206,10 @@ function filter_filter_secure_image_alter(&$image) {
   $image->setAttribute('src', base_path() . 'core/misc/message-16-error.png');
   $image->setAttribute('alt', t('Image removed.'));
   $image->setAttribute('title', t('This image has been removed. For security reasons, only images from the local domain are allowed.'));
+  $image_factory = \Drupal::service('image.factory');
+  $error_image = $image_factory->get('core/misc/message-16-error.png');
+  $image->setAttribute('height', $error_image->getHeight());
+  $image->setAttribute('width',  $error_image->getWidth());
 
   // Add a CSS class to aid in styling.
   $class = ($image->getAttribute('class') ? trim($image->getAttribute('class')) . ' ' : '');
