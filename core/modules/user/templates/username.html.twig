@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Default theme implementation for displaying a username.
+ *
+ * Available variables:
+ * - account: The full account information for the user.
+ * - name: The user's name, sanitized.
+ * - extra: Additional text to append to the user's name, sanitized.
+ * - link_path: The path or URL of the user's profile page, home page,
+ *   or other desired page to link to for more information about the user.
+ * - link_options: Options to pass to the url() function's $options parameter if
+ *   linking the user's name to the user's page.
+ * - attributes: HTML attributes for the containing element.
+ *
+ * @see template_preprocess_username()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if link_path -%}
+  <a{{ attributes }}>{{ name }}{{ extra }}</a>
+{%- else -%}
+  <span{{ attributes }}>{{ name }}{{ extra }}</span>
+{%- endif -%}

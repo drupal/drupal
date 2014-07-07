@@ -100,15 +100,9 @@ function user_theme() {
       'file' => 'user.pages.inc',
       'template' => 'user',
     ),
-    'user_permission_description' => array(
-      'variables' => array('permission_item' => NULL, 'hide' => NULL),
-      'file' => 'user.admin.inc',
-    ),
-    'user_signature' => array(
-      'variables' => array('signature' => NULL),
-    ),
     'username' => array(
-      'variables' => array('account' => NULL, 'attributes' => array()),
+      'variables' => array('account' => NULL, 'attributes' => array(), 'link_options' => array()),
+      'template' => 'username',
     ),
   );
 }
@@ -610,7 +604,13 @@ function user_template_preprocess_default_variables_alter(&$variables) {
 }
 
 /**
- * Preprocesses variables for theme_username().
+ * Prepares variables for username templates.
+ *
+ * Default template: username.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - account: The user account (Drupal\user\Plugin\Core\Entity\User).
  *
  * Modules that make any changes to variables like 'name' or 'extra' must ensure
  * that the final string is safe to include directly in the output by using
@@ -647,56 +647,25 @@ function template_preprocess_username(&$variables) {
   // Populate link path and attributes if appropriate.
   if ($variables['uid'] && $variables['profile_access']) {
     // We are linking to a local user.
-    $variables['link_options']['attributes']['title'] = t('View user profile.');
+    $variables['attributes']['title'] = t('View user profile.');
     $variables['link_path'] = 'user/' . $variables['uid'];
   }
   elseif (!empty($account->homepage)) {
     // Like the 'class' attribute, the 'rel' attribute can hold a
     // space-separated set of values, so initialize it as an array to make it
     // easier for other preprocess functions to append to it.
-    $variables['link_options']['attributes']['rel'] = 'nofollow';
+    $variables['attributes']['rel'] = 'nofollow';
     $variables['link_path'] = $account->homepage;
     $variables['homepage'] = $account->homepage;
   }
-  // We do not want the l() function to
-  // \Drupal\Component\Utility\String::checkPlain() a second time.
-  $variables['link_options']['html'] = TRUE;
   // Set a default class.
-  $variables['link_options']['attributes']['class'] = array('username');
-}
-
-/**
- * Returns HTML for a username, potentially linked to the user's page.
- *
- * @param $variables
- *   An associative array containing:
- *   - account: The user object to format.
- *   - name: The user's name, sanitized.
- *   - truncated: A boolean indicating if $variables['name'] has been shortened.
- *   - extra: Additional text to append to the user's name, sanitized.
- *   - link_path: The path or URL of the user's profile page, home page, or
- *     other desired page to link to for more information about the user.
- *   - link_options: An array of options to pass to the l() function's $options
- *     parameter if linking the user's name to the user's page.
- *   - attributes: An array of attributes to instantiate the
- *     Drupal\Core\Template\Attribute class if not linking to the user's page.
- *
- * @see template_preprocess_username()
- */
-function theme_username($variables) {
+  $variables['attributes']['class'] = array('username');
+  // We have a link path, so we should generate a link using url().
+  // Additional classes may be added as array elements like
+  // $variables['attributes']['class'][] = 'myclass';
   if (isset($variables['link_path'])) {
-    // We have a link path, so we should generate a link using l().
-    // Additional classes may be added as array elements like
-    // $variables['link_options']['attributes']['class'][] = 'myclass';
-    $output = l($variables['name'] . $variables['extra'], $variables['link_path'], $variables['link_options']);
+    $variables['attributes']['href'] = url($variables['link_path'], $variables['link_options']);
   }
-  else {
-    // Modules may have added important attributes so they must be included
-    // in the output. Additional classes may be added as array elements like
-    // $variables['attributes']['class'][] = 'myclass';
-    $output = '<span' . new Attribute($variables['attributes']) . '>' . $variables['name'] . $variables['extra'] . '</span>';
-  }
-  return $output;
 }
 
 /**
@@ -1405,29 +1374,6 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
     $role->revokePermission($permission);
   }
   $role->save();
-}
-
-/**
- * Returns HTML for a user signature.
- *
- * @param $variables
- *   An associative array containing:
- *   - signature: The user's signature.
- *
- * @ingroup themeable
- */
-function theme_user_signature($variables) {
-  $signature = $variables['signature'];
-  $output = '';
-
-  if ($signature) {
-    $output .= '<div class="clear">';
-    $output .= '<div>—</div>';
-    $output .= $signature;
-    $output .= '</div>';
-  }
-
-  return $output;
 }
 
 /**

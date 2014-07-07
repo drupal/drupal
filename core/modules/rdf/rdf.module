@@ -375,14 +375,13 @@ function rdf_preprocess_user(&$variables) {
  * Implements hook_preprocess_HOOK() for theme_username().
  */
 function rdf_preprocess_username(&$variables) {
-  $attributes = array();
   // Because lang is set on the HTML element that wraps the page, the
   // username inherits this language attribute. However, since the username
   // might not be transliterated to the same language that the content is in,
   // we do not want it to inherit the language attribute, so we set the
   // attribute to an empty string.
   if (empty($variables['attributes']['lang'])) {
-    $attributes['lang'] = '';
+    $variables['attributes']['lang'] = '';
   }
 
   // The profile URI is used to identify the user account. The about attribute
@@ -393,44 +392,32 @@ function rdf_preprocess_username(&$variables) {
   // a user profile URI for it (only a homepage which cannot be used as user
   // profile in RDF.)
   if ($variables['uid'] > 0) {
-    $attributes['about'] = url('user/' . $variables['uid']);
+    $variables['attributes']['about'] = url('user/' . $variables['uid']);
   }
 
   // Add RDF type of user.
   $mapping = rdf_get_mapping('user', 'user');
   $bundle_mapping = $mapping->getPreparedBundleMapping();
   if (!empty($bundle_mapping['types'])) {
-    $attributes['typeof'] = $bundle_mapping['types'];
+    $variables['attributes']['typeof'] = $bundle_mapping['types'];
   }
   // Annotate the username in RDFa. A property attribute is used with an empty
   // datatype attribute to ensure the username is parsed as a plain literal
   // in RDFa 1.0 and 1.1.
   $name_mapping = $mapping->getPreparedFieldMapping('name');
   if (!empty($name_mapping)) {
-    $attributes['property'] = $name_mapping['properties'];
-    $attributes['datatype'] = '';
+    $variables['attributes']['property'] = $name_mapping['properties'];
+    $variables['attributes']['datatype'] = '';
   }
   // Add the homepage RDFa markup if present.
   $homepage_mapping = $mapping->getPreparedFieldMapping('homepage');
   if (!empty($variables['homepage']) && !empty($homepage_mapping)) {
-    $attributes['rel'] = $homepage_mapping['properties'];
+    $variables['attributes']['rel'] = $homepage_mapping['properties'];
   }
   // Long usernames are truncated by template_preprocess_username(). Store the
   // full name in the content attribute so it can be extracted in RDFa.
   if ($variables['truncated']) {
-    $attributes['content'] = String::checkPlain($variables['name_raw']);
-  }
-  // The remaining attributes can have multiple values listed, with whitespace
-  // separating the values in the RDFa attributes
-  // (see http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes).
-  // Therefore, merge rather than override so as not to clobber values set by
-  // earlier preprocess functions. These attributes will be placed in the a
-  // element if a link is rendered, or on a span element otherwise.
-  if (isset($variables['link_path'])) {
-    $variables['link_options']['attributes'] = array_merge_recursive($variables['link_options']['attributes'], $attributes);
-  }
-  else {
-    $variables['attributes'] = array_merge_recursive($variables['attributes'], $attributes);
+    $variables['attributes']['content'] = String::checkPlain($variables['name_raw']);
   }
 }
 
