@@ -16,21 +16,21 @@ abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface 
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('This action cannot be undone.');
+    return $this->t('This action cannot be undone.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Confirm');
+    return $this->t('Confirm');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCancelText() {
-    return t('Cancel');
+    return $this->t('Cancel');
   }
 
   /**
