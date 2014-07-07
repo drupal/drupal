@@ -145,26 +145,6 @@ function hook_comment_view_alter(array &$build, \Drupal\comment\Entity\Comment $
 }
 
 /**
- * Respond to a comment being published by a moderator.
- *
- * @param \Drupal\comment\Comment $comment
- *   The comment the action is being performed on.
- */
-function hook_comment_publish(Drupal\comment\Comment $comment) {
-  drupal_set_message(t('Comment: @subject has been published', array('@subject' => $comment->getSubject())));
-}
-
-/**
- * Respond to a comment being unpublished by a moderator.
- *
- * @param \Drupal\comment\Comment $comment
- *   The comment the action is being performed on.
- */
-function hook_comment_unpublish(Drupal\comment\Comment $comment) {
-  drupal_set_message(t('Comment: @subject has been unpublished', array('@subject' => $comment->getSubject())));
-}
-
-/**
  * Act before comment deletion.
  *
  * This hook is invoked from entity_delete_multiple() before field values are

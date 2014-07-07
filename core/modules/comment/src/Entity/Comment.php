@@ -146,9 +146,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $this->releaseThreadLock();
     // Update the {comment_entity_statistics} table prior to executing the hook.
     $storage->updateEntityStatistics($this);
-    if ($this->isPublished()) {
-      \Drupal::moduleHandler()->invokeAll('comment_publish', array($this));
-    }
   }
 
   /**

@@ -1673,23 +1673,3 @@ function node_comment_delete($comment) {
     node_reindex_node_search($comment->getCommentedEntityId());
   }
 }
-
-/**
- * Implements hook_comment_publish().
- */
-function node_comment_publish($comment) {
-  // Reindex the node when comments are published.
-  if ($comment->getCommentedEntityTypeId() == 'node') {
-    node_reindex_node_search($comment->getCommentedEntityId());
-  }
-}
-
-/**
- * Implements hook_comment_unpublish().
- */
-function node_comment_unpublish($comment) {
-  // Reindex the node when comments are unpublished.
-  if ($comment->getCommentedEntityTypeId() == 'node') {
-    node_reindex_node_search($comment->getCommentedEntityId());
-  }
-}

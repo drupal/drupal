@@ -186,36 +186,24 @@ function tracker_node_predelete(EntityInterface $node, $arg = 0) {
 
 /**
  * Implements hook_comment_update().
- *
- * Comment module doesn't call hook_comment_unpublish() when saving individual
- * comments so we need to check for those here.
  */
 function tracker_comment_update(CommentInterface $comment) {
-  // $comment->save() calls hook_comment_publish() for all published comments
-  // so we need to handle all other values here.
-  if (!$comment->isPublished() && $comment->getCommentedEntityTypeId() == 'node') {
-    _tracker_remove($comment->getCommentedEntityId(), $comment->getOwnerId(), $comment->getChangedTime());
+  if ($comment->getCommentedEntityTypeId() == 'node') {
+    if ($comment->isPublished()) {
+      _tracker_add($comment->getCommentedEntityId(), $comment->getOwnerId(), $comment->getChangedTime());
+    }
+    else {
+      _tracker_remove($comment->getCommentedEntityId(), $comment->getOwnerId(), $comment->getChangedTime());
+    }
   }
 }
 
 /**
- * Implements hook_comment_publish().
- *
- * This actually handles the insert and update of published nodes since
- * $comment->save() calls hook_comment_publish() for all published comments.
+ * Implements hook_comment_insert().
  */
-function tracker_comment_publish(CommentInterface $comment) {
-  if ($comment->getCommentedEntityTypeId() == 'node') {
+function tracker_comment_insert(CommentInterface $comment) {
+  if ($comment->getCommentedEntityTypeId() == 'node' && $comment->isPublished()) {
     _tracker_add($comment->getCommentedEntityId(), $comment->getOwnerId(), $comment->getChangedTime());
-  }
-}
-
-/**
- * Implements hook_comment_unpublish().
- */
-function tracker_comment_unpublish(CommentInterface $comment) {
-  if ($comment->getCommentedEntityTypeId() == 'node') {
-    _tracker_remove($comment->getCommentedEntityId(), $comment->getOwnerId(), $comment->getChangedTime());
   }
 }
 

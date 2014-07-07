@@ -358,35 +358,18 @@ function forum_permission() {
 }
 
 /**
- * Implements hook_comment_publish().
- *
- * This actually handles the insertion and update of published nodes since
- * $comment->save() calls hook_comment_publish() for all published comments.
+ * Implements hook_comment_update().
  */
-function forum_comment_publish(CommentInterface $comment) {
+function forum_comment_update(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
     \Drupal::service('forum.index_storage')->updateIndex($comment->getCommentedEntity());
   }
 }
 
 /**
- * Implements hook_comment_update().
- *
- * The Comment module doesn't call hook_comment_unpublish() when saving
- * individual comments, so we need to check for those here.
+ * Implements hook_comment_insert().
  */
-function forum_comment_update(CommentInterface $comment) {
-  // $comment->save() calls hook_comment_publish() for all published comments,
-  // so we need to handle all other values here.
-  if (!$comment->isPublished() && $comment->getCommentedEntityTypeId() == 'node') {
-    \Drupal::service('forum.index_storage')->updateIndex($comment->getCommentedEntity());
-  }
-}
-
-/**
- * Implements hook_comment_unpublish().
- */
-function forum_comment_unpublish(CommentInterface $comment) {
+function forum_comment_insert(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
     \Drupal::service('forum.index_storage')->updateIndex($comment->getCommentedEntity());
   }
