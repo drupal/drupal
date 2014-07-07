@@ -10,7 +10,6 @@ namespace Drupal\node\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\node\NodeTypeInterface;
@@ -23,13 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * The date service.
    *
    * @var \Drupal\Core\Datetime\Date
@@ -39,21 +31,18 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   /**
    * Constructs a NodeController object.
    *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
    * @param \Drupal\Core\Datetime\Date $date
    *   The date service.
    */
-  public function __construct(Connection $database, Date $date) {
+  public function __construct(Date $date) {
     $this->date = $date;
-    $this->database = $database;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('database'), $container->get('date'));
+    return new static($container->get('date'));
   }
 
 
@@ -233,42 +222,6 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         'library' => array('node/drupal.node.admin'),
       ),
     );
-
-    return $build;
-  }
-
-  /**
-   * Displays a node.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node we are displaying.
-   *
-   * @return array
-   *   An array suitable for drupal_render().
-   */
-  public function page(NodeInterface $node) {
-    $build = $this->buildPage($node);
-
-    foreach ($node->uriRelationships() as $rel) {
-      $uri = $node->urlInfo($rel);
-      // Set the node path as the canonical URL to prevent duplicate content.
-      $build['#attached']['drupal_add_html_head_link'][] = array(
-        array(
-        'rel' => $rel,
-        'href' => $node->url($rel),
-        )
-        , TRUE);
-
-      if ($rel == 'canonical') {
-        // Set the non-aliased canonical path as a default shortlink.
-        $build['#attached']['drupal_add_html_head_link'][] = array(
-          array(
-            'rel' => 'shortlink',
-            'href' => $node->url($rel, array('alias' => TRUE)),
-          )
-        , TRUE);
-      }
-    }
 
     return $build;
   }

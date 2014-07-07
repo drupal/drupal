@@ -29,10 +29,11 @@ class NodeViewController extends EntityViewController {
       // Set the node path as the canonical URL to prevent duplicate content.
       $build['#attached']['drupal_add_html_head_link'][] = array(
         array(
-        'rel' => $rel,
-        'href' => $node->url($rel),
-        )
-        , TRUE);
+          'rel' => $rel,
+          'href' => $node->url($rel),
+        ),
+        TRUE,
+      );
 
       if ($rel == 'canonical') {
         // Set the non-aliased canonical path as a default shortlink.
@@ -40,8 +41,9 @@ class NodeViewController extends EntityViewController {
           array(
             'rel' => 'shortlink',
             'href' => $node->url($rel, array('alias' => TRUE)),
-          )
-        , TRUE);
+          ),
+          TRUE,
+        );
       }
     }
 
