@@ -16,7 +16,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 abstract class EntityStorageBase extends EntityControllerBase implements EntityStorageInterface, EntityControllerInterface {
 
   /**
-   * Static cache of entities.
+   * Static cache of entities, keyed by entity ID.
    *
    * @var array
    */
