@@ -31,6 +31,15 @@ class DateTimePlus extends \DateTime {
   const FORMAT   = 'Y-m-d H:i:s';
 
   /**
+   * A RFC7231 Compliant date.
+   *
+   * http://tools.ietf.org/html/rfc7231#section-7.1.1.1
+   *
+   * Example: Sun, 06 Nov 1994 08:49:37 GMT
+   */
+  const RFC7231 = 'D, d M Y H:i:s \G\M\T';
+
+  /**
    * An array of possible date parts.
    */
   protected static $dateParts = array(

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -179,7 +180,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // Last-Modified and an ETag header on the response.
     if (!$response->headers->has('Last-Modified')) {
       $timestamp = REQUEST_TIME;
-      $response->setLastModified(new \DateTime(gmdate(DATE_RFC1123, REQUEST_TIME)));
+      $response->setLastModified(new \DateTime(gmdate(DateTimePlus::RFC7231, REQUEST_TIME)));
     }
     else {
       $timestamp = $response->getLastModified()->getTimestamp();

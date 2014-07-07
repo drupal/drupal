@@ -5,13 +5,13 @@
  * Administration toolbar for quick access to top level administration items.
  */
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
-use Symfony\Component\HttpFoundation\Response;
+use Drupal\Component\Utility\String;
 use Drupal\menu_link\MenuLinkInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
@@ -139,7 +139,7 @@ function _toolbar_initialize_page_cache() {
   // accesses the callback URL again (e.g., after clearing the browser cache or
   // when force-reloading a Drupal page).
   $max_age = 3600 * 24 * 365;
-  drupal_add_http_header('Expires', gmdate(DATE_RFC1123, REQUEST_TIME + $max_age));
+  drupal_add_http_header('Expires', gmdate(DateTimePlus::RFC7231, REQUEST_TIME + $max_age));
   drupal_add_http_header('Cache-Control', 'private, max-age=' . $max_age);
 }
 

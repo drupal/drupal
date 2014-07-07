@@ -6,6 +6,7 @@
 
 namespace Drupal\aggregator_test\Controller;
 
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Component\Utility\Crypt;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class AggregatorTestRssController extends ControllerBase {
     // Send appropriate response. We respond with a 304 not modified on either
     // etag or on last modified.
     if ($use_last_modified) {
-      $response->headers->set('Last-Modified', gmdate(DATE_RFC1123, $last_modified));
+      $response->headers->set('Last-Modified', gmdate(DateTimePlus::RFC7231, $last_modified));
     }
     if ($use_etag) {
       $response->headers->set('ETag', $etag);
