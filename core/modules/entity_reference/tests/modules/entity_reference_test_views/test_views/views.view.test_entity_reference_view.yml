@@ -1,0 +1,68 @@
+base_table: entity_test
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        relationships: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: entity_test
+          plugin_id: numeric
+        id_1:
+          field: id
+          id: id_1
+          order: ASC
+          relationship: test_relationship
+          table: entity_test
+          plugin_id: numeric
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: entity_test
+          plugin_id: standard
+      relationships:
+        test_relationship:
+          id: field_test
+          table: entity_test__field_test
+          field: field_test
+          relationship: none
+          plugin_id: standard
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  embed_1:
+    display_options:
+      defaults:
+        relationships: '0'
+      relationships:
+        test_relationship:
+          id: reverse_field_test
+          table: entity_test
+          field: reverse_field_test
+          relationship: none
+          plugin_id: standard
+    display_plugin: embed
+    display_title: Embed
+    id: embed_1
+human_name: ''
+id: test_entity_reference_view
+tag: ''
