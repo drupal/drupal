@@ -77,6 +77,9 @@ class ElementsLabelsTest extends WebTestBase {
     $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-no-show"]');
     $this->assertFalse(isset($elements[0]), 'No label tag when title set not to display.');
 
+    $elements = $this->xpath('//div[contains(@class, "form-item-form-textfield-test-title-invisible") and contains(@class, "form-no-label")]');
+    $this->assertTrue(isset($elements[0]), 'Field class is form-no-label when there is no label.');
+
     // Check #field_prefix and #field_suffix placement.
     $elements = $this->xpath('//span[@class="field-prefix"]/following-sibling::div[@id="edit-form-radios-test"]');
     $this->assertTrue(isset($elements[0]), 'Properly placed the #field_prefix element after the label and before the field.');

@@ -2896,6 +2896,11 @@ function template_preprocess_form_element(&$variables) {
   if (!isset($element['#title'])) {
     $element['#title_display'] = 'none';
   }
+  // If #title_dislay is not some of the visible options, add a CSS class.
+  if ($element['#title_display'] != 'before' && $element['#title_display'] != 'after') {
+    $variables['attributes']['class'][] = 'form-no-label';
+  }
+
   $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
   $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
 
