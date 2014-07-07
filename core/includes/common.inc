@@ -542,23 +542,6 @@ function format_plural($count, $singular, $plural, array $args = array(), array 
 }
 
 /**
- * Parses a given byte count.
- *
- * @param $size
- *   A size expressed as a number of bytes with optional SI or IEC binary unit
- *   prefix (e.g. 2, 3K, 5MB, 10G, 6GiB, 8 bytes, 9mbytes).
- *
- * @return
- *   An integer representation of the size in bytes.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\Bytes::toInt().
- */
-function parse_size($size) {
-  return Bytes::toInt($size);
-}
-
-/**
  * Generates a string representation for the given byte count.
  *
  * @param $size
