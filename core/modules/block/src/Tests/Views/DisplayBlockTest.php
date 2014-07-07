@@ -71,7 +71,10 @@ class DisplayBlockTest extends ViewTestBase {
     $arguments = array(
       ':id' => 'edit-category-lists-views',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-1',
-      ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_1/stark'),
+      ':href' => \Drupal::Url('block.admin_add', array(
+        'plugin_id' => 'views_block:' . $edit['id'] . '-block_1',
+        'theme' => 'stark',
+      )),
       ':text' => $edit['label'],
     );
     $this->drupalGet('admin/structure/block');
@@ -107,7 +110,10 @@ class DisplayBlockTest extends ViewTestBase {
     $arguments = array(
       ':id' => 'edit-category-lists-views',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-2',
-      ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_2/stark'),
+      ':href' => \Drupal::Url('block.admin_add', array(
+        'plugin_id' => 'views_block:' . $edit['id'] . '-block_2',
+        'theme' => 'stark',
+      )),
       ':text' => $edit['label'],
     );
     $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
@@ -116,7 +122,10 @@ class DisplayBlockTest extends ViewTestBase {
     $arguments = array(
       ':id' => $category_id,
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-3',
-      ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_3/stark'),
+      ':href' => \Drupal::Url('block.admin_add', array(
+        'plugin_id' => 'views_block:' . $edit['id'] . '-block_3',
+        'theme' => 'stark',
+      )),
       ':text' => $edit['label'],
     );
     $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);

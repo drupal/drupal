@@ -355,7 +355,11 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       }
       $form['place_blocks']['list'][$category_key]['content']['#links'][$plugin_id] = array(
         'title' => $plugin_definition['admin_label'],
-        'href' => 'admin/structure/block/add/' . $plugin_id . '/' . $this->theme,
+        'route_name' => 'block.admin_add',
+        'route_parameters' => array(
+          'plugin_id' => $plugin_id,
+          'theme' => $this->theme
+        ),
         'attributes' => array(
           'class' => array('use-ajax', 'block-filter-text-source'),
           'data-accepts' => 'application/vnd.drupal-modal',
