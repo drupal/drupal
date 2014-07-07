@@ -152,7 +152,8 @@ class LocaleStringTest extends WebTestBase {
     $found = $this->storage->findTranslation(array('language' => $langcode,  'source' => $source3->source, 'context' => $source3->context));
     $this->assertTrue($found && $found->lid == $source3->lid && !isset($found->translation) && $found->isNew(), 'Translation not found but source string found.');
 
-    // Load all translations. For next queries we'll be loading only translated strings.    $only_translated = array('untranslated' => FALSE);
+    // Load all translations. For next queries we'll be loading only translated
+    // strings.
     $translations = $this->storage->getTranslations(array('translated' => TRUE));
     $this->assertEqual(count($translations), 2 * $language_count, 'Created and retrieved all translations for source strings.');
 
