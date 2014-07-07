@@ -1447,59 +1447,6 @@ function _current_path($path = NULL) {
 }
 
 /**
- * Returns a component of the current Drupal path.
- *
- * When viewing a page at the path "admin/structure/types", for example, arg(0)
- * returns "admin", arg(1) returns "structure", and arg(2) returns "types".
- *
- * Avoid use of this function where possible, as resulting code is hard to
- * read. In menu callback functions, attempt to use named arguments. See the
- * explanation in menu.inc for how to construct callbacks that take arguments.
- * When attempting to use this function to load an element from the current
- * path, e.g. loading the node on a node page, use menu_get_object() instead.
- *
- * @param $index
- *   The index of the component, where each component is separated by a '/'
- *   (forward-slash), and where the first component has an index of 0 (zero).
- * @param $path
- *   A path to break into components. Defaults to the path of the current page.
- *
- * @return
- *   The component specified by $index, or NULL if the specified component was
- *   not found. If called without arguments, it returns an array containing all
- *   the components of the current path.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- */
-function arg($index = NULL, $path = NULL) {
-  // Even though $arguments doesn't need to be resettable for any functional
-  // reasons (the result of explode() does not depend on any run-time
-  // information), it should be resettable anyway in case a module needs to
-  // free up the memory used by it.
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['arguments'] = &drupal_static(__FUNCTION__);
-  }
-  $arguments = &$drupal_static_fast['arguments'];
-
-  if (!isset($path)) {
-    // @todo The public function current_path() is not available during early
-    //   bootstrap.
-    $path = _current_path();
-  }
-  if (!isset($arguments[$path])) {
-    $arguments[$path] = explode('/', $path);
-  }
-  if (!isset($index)) {
-    return $arguments[$path];
-  }
-  if (isset($arguments[$path][$index])) {
-    return $arguments[$path][$index];
-  }
-}
-
-/**
  * Initializes and returns the class loader.
  *
  * The class loader is responsible for lazy-loading all PSR-0 compatible
