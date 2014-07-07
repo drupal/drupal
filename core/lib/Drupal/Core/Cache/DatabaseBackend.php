@@ -253,7 +253,7 @@ class DatabaseBackend implements CacheBackendInterface {
         $fields = array(
           'cid' => $cid,
           'expire' => $item['expire'],
-          'created' => REQUEST_TIME,
+          'created' => round(microtime(TRUE), 3),
           'tags' => implode(' ', $flat_tags),
           'checksum_invalidations' => $checksum['invalidations'],
           'checksum_deletions' => $checksum['deletions'],

@@ -383,6 +383,8 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $cached = $backend->getMultiple($cids);
 
     $this->assertEqual($cached['cid_1']->data, $items['cid_1']['data'], 'Over-written cache item set correctly.');
+    $this->assertTrue($cached['cid_1']->valid, 'Item is marked as valid.');
+    $this->assertTrue($cached['cid_1']->created >= REQUEST_TIME && $cached['cid_1']->created <= round(microtime(TRUE), 3), 'Created time is correct.');
     $this->assertEqual($cached['cid_1']->expire, CacheBackendInterface::CACHE_PERMANENT, 'Cache expiration defaults to permanent.');
 
     $this->assertEqual($cached['cid_2']->data, $items['cid_2']['data'], 'New cache item set correctly.');
