@@ -57,7 +57,7 @@ class PathWidget extends WidgetBase {
       '#default_value' => $path['alias'],
       '#required' => $element['#required'],
       '#maxlength' => 255,
-      '#description' => t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter "about" for the about page.'),
+      '#description' => $this->t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter "about" for the about page.'),
     );
     $element['pid'] = array(
       '#type' => 'value',
@@ -83,20 +83,11 @@ class PathWidget extends WidgetBase {
    *   The form state.
    */
   public static function validateFormElement(array &$element, array &$form_state) {
-    if (!empty($element['alias']['#value'])) {
-      // Trim the submitted value.
-      $alias = trim($element['alias']['#value']);
+    // Trim the submitted value.
+    $alias = trim($element['alias']['#value']);
+    if (!empty($alias)) {
       $form_builder = \Drupal::formBuilder();
       $form_builder->setValue($element['alias'], $alias, $form_state);
-
-      // Entity language needs special care. Since the language of the URL alias
-      // depends on the entity language, and the entity language can be switched
-      // right within the same form, we need to conditionally overload the
-      // originally assigned URL alias language.
-      // @see \Drupal\content_translation\ContentTranslationController::entityFormAlter()
-      if (isset($form_state['values']['langcode'])) {
-        $form_builder->setValue($element['langcode'], $form_state['values']['langcode'], $form_state);
-      }
 
       // Validate that the submitted alias does not exist yet.
       $is_exists = \Drupal::service('path.alias_storage')->aliasExists($alias, $element['langcode']['#value'], $element['source']['#value']);
