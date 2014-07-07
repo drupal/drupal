@@ -7,8 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests the comment module administrative and end-user-facing interfaces.
@@ -109,7 +109,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertText($subject_text, 'Individual comment-reply subject found.');
     $this->assertText($comment_text, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), '', TRUE);
-    $reply_loaded = comment_load($reply->id());
+    $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
     $this->assertEqual($comment->id(), $reply_loaded->getParentComment()->id(), 'Pid of a reply to a comment is set correctly.');
     // Check the thread of reply grows correctly.
@@ -120,7 +120,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertText($comment->getSubject(), 'Individual comment-reply subject found.');
     $this->assertText($comment->comment_body->value, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
-    $reply_loaded = comment_load($reply->id());
+    $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of second reply grows correctly.
     $this->assertEqual(rtrim($comment->getThread(), '/') . '.01/', $reply_loaded->getThread());
@@ -130,7 +130,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertText($reply_loaded->getSubject(), 'Individual comment-reply subject found.');
     $this->assertText($reply_loaded->comment_body->value, 'Individual comment-reply body found.');
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
-    $reply_loaded = comment_load($reply->id());
+    $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of reply to second reply grows correctly.
     $this->assertEqual(rtrim($comment->getThread(), '/') . '.01.00/', $reply_loaded->getThread());

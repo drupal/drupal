@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Entity\Comment;
+
 /**
  * Tests the comment module administrative and end-user-facing interfaces.
  */
@@ -101,7 +103,7 @@ class CommentStatisticsTest extends CommentTestBase {
     // Post comment #3 as anonymous.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', array('name' => $this->randomName()));
-    $comment_loaded = comment_load($anonymous_comment->id());
+    $comment_loaded = Comment::load($anonymous_comment->id());
 
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with a node_load_multiple cache reset.

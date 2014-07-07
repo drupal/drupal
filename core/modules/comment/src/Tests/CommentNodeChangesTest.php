@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Entity\Comment;
+
 /**
  * Tests that comments behave correctly when the node is changed.
  */
@@ -28,7 +30,7 @@ class CommentNodeChangesTest extends CommentTestBase {
     $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
     $this->assertTrue($comment->id(), 'The comment could be loaded.');
     $this->node->delete();
-    $this->assertFalse(comment_load($comment->id()), 'The comment could not be loaded after the node was deleted.');
+    $this->assertFalse(Comment::load($comment->id()), 'The comment could not be loaded after the node was deleted.');
     // Make sure the comment field and all its instances are deleted when node
     // type is deleted.
     $this->assertNotNull(entity_load('field_config', 'node.comment'), 'Comment field exists');

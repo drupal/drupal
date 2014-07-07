@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\CommentInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
@@ -163,7 +164,8 @@ abstract class CommentTestBase extends WebTestBase {
     }
 
     if (isset($match[1])) {
-      return comment_load($match[1], TRUE);
+      \Drupal::entityManager()->getStorage('comment')->resetCache(array($match[1]));
+      return Comment::load($match[1]);
     }
   }
 

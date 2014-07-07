@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Tests previewing comments.
@@ -135,7 +136,9 @@ class CommentPreviewTest extends CommentTestBase {
     $this->drupalPostForm('comment/' . $comment->id() . '/edit', $displayed, t('Save'));
 
     // Check that the saved comment is still correct.
-    $comment_loaded = comment_load($comment->id(), TRUE);
+    $comment_storage = \Drupal::entityManager()->getStorage('comment');
+    $comment_storage->resetCache(array($comment->id()));
+    $comment_loaded = Comment::load($comment->id());
     $this->assertEqual($comment_loaded->getSubject(), $edit['subject'], 'Subject loaded.');
     $this->assertEqual($comment_loaded->comment_body->value, $edit['comment_body[0][value]'], 'Comment body loaded.');
     $this->assertEqual($comment_loaded->getAuthorName(), $edit['name'], 'Name loaded.');
@@ -148,7 +151,8 @@ class CommentPreviewTest extends CommentTestBase {
     $expected_created_time = $comment_loaded->getCreatedTime();
     $this->drupalLogin($web_user);
     $this->drupalPostForm('comment/' . $comment->id() . '/edit', $user_edit, t('Save'));
-    $comment_loaded = comment_load($comment->id(), TRUE);
+    $comment_storage->resetCache(array($comment->id()));
+    $comment_loaded = Comment::load($comment->id());
     $this->assertEqual($comment_loaded->getCreatedTime(), $expected_created_time, 'Expected date and time for comment edited.');
     $this->drupalLogout();
   }

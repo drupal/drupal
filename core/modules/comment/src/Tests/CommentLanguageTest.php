@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
@@ -126,7 +127,7 @@ class CommentLanguageTest extends WebTestBase {
           ->range(0, 1)
           ->execute()
           ->fetchField();
-        $comment = comment_load($cid);
+        $comment = Comment::load($cid);
         $args = array('%node_language' => $node_langcode, '%comment_language' => $comment->langcode->value, '%langcode' => $langcode);
         $this->assertEqual($comment->langcode->value, $langcode, format_string('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
         $this->assertEqual($comment->comment_body->value, $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');

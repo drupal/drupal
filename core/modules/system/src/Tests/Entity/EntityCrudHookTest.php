@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Entity;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
@@ -191,7 +192,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $comment = comment_load($comment->id());
+    $comment = Comment::load($comment->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type comment',
