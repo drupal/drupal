@@ -84,7 +84,7 @@
     {{ breadcrumb }}
 
     <main id="content" class="clearfix" role="main">
-      <div class="visually-hidden"><a id="main-content"></a></div>
+      <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
       {% if messages %}
         <div id="console" class="clearfix">{{ messages }}</div>
       {% endif %}
