@@ -49,7 +49,7 @@ class EntityConverter implements ParamConverterInterface {
   public function applies($definition, $name, Route $route) {
     if (!empty($definition['type']) && strpos($definition['type'], 'entity:') === 0) {
       $entity_type = substr($definition['type'], strlen('entity:'));
-      return (bool) $this->entityManager->getDefinition($entity_type);
+      return $this->entityManager->hasDefinition($entity_type);
     }
     return FALSE;
   }
