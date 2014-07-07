@@ -40,7 +40,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function testShortcutPageLocalTasks($route) {
     $tasks = array(
-      0 => array('shortcut.overview', 'user.view', 'user.edit',),
+      0 => array('shortcut.set_switch', 'user.view', 'user.edit',),
     );
     $this->assertLocalTasks($route, $tasks);
   }
@@ -52,7 +52,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
     return array(
       array('user.view'),
       array('user.edit'),
-      array('shortcut.overview'),
+      array('shortcut.set_switch'),
     );
   }
 

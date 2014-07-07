@@ -8,6 +8,7 @@
 namespace Drupal\shortcut;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines a common interface for shortcut entity controller classes.
@@ -68,4 +69,16 @@ interface ShortcutSetStorageInterface extends ConfigEntityStorageInterface {
    *   The number of users who have this set assigned to them.
    */
   public function countAssignedUsers(ShortcutSetInterface $shortcut_set);
+
+  /**
+   * Gets the default shortcut set for a given user account.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account whose default shortcut set will be returned.
+   *
+   * @return \Drupal\shortcut\ShortcutSetInterface
+   *   An object representing the default shortcut set.
+   */
+  public function getDefaultSet(AccountInterface $account);
+
 }

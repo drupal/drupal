@@ -1,5 +1,5 @@
-shortcut.overview:
-  route_name: shortcut.overview
+shortcut.set_switch:
+  route_name: shortcut.set_switch
   base_route: user.view
   title: 'Shortcuts'
 

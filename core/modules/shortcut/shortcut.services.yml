@@ -1,5 +1,0 @@
-services:
-  access_check.shortcut.shortcut_set_switch:
-    class: Drupal\shortcut\Access\ShortcutSetSwitchAccessCheck
-    tags:
-      - { name: access_check, applies_to: _access_shortcut_set_switch }

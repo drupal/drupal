@@ -70,13 +70,12 @@ shortcut.link_delete:
   requirements:
     _entity_access: 'shortcut.delete'
 
-shortcut.overview:
+shortcut.set_switch:
   path: '/user/{user}/shortcuts'
   defaults:
-    _content: '\Drupal\shortcut\Form\ShortcutForm::overview'
+    _form: 'Drupal\shortcut\Form\SwitchShortcutSet'
     _title: 'Shortcuts'
   requirements:
-    _access_shortcut_set_switch: 'TRUE'
+    _custom_access: 'Drupal\shortcut\Form\SwitchShortcutSet::checkAccess'
   options:
     _admin_route: TRUE
-
