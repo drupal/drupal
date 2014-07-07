@@ -604,9 +604,12 @@ services:
     tags:
       - { name: access_check, applies_to: _csrf_token }
     arguments: ['@csrf_token']
+  maintenance_mode:
+    class: Drupal\Core\Site\MaintenanceMode
+    arguments: ['@state', '@current_user']
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
-    arguments: ['@state', '@config.factory', '@string_translation', '@url_generator', '@current_user']
+    arguments: ['@maintenance_mode', '@config.factory', '@string_translation', '@url_generator', '@current_user']
     tags:
       - { name: event_subscriber }
   path_subscriber:

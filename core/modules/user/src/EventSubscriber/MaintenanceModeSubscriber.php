@@ -7,16 +7,45 @@
 
 namespace Drupal\user\EventSubscriber;
 
+use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\MaintenanceModeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Drupal\Core\EventSubscriber\MaintenanceModeSubscriber as CoreMaintenanceModeSubscriber;
 
 /**
  * Maintenance mode subscriber to logout users.
  */
 class MaintenanceModeSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The maintenance mode.
+   *
+   * @var \Drupal\Core\Site\MaintenanceMode
+   */
+  protected $maintenanceMode;
+
+  /**
+   * The current account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $account;
+
+  /**
+   * Constructs a new MaintenanceModeSubscriber.
+   *
+   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   *   The maintenance mode.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   */
+  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account) {
+    $this->maintenanceMode = $maintenance_mode;
+    $this->account = $account;
+  }
 
   /**
    * Determine whether the page is configured to be offline.
@@ -25,42 +54,25 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onKernelRequestMaintenance(GetResponseEvent $event) {
-    $user = \Drupal::currentUser();
     $request = $event->getRequest();
-    $site_status = $request->attributes->get('_maintenance');
-    // @todo Remove dependency on the internal _system_path attribute:
-    //   https://www.drupal.org/node/2288911.
+    $route_match = RouteMatch::createFromRequest($request);
     $path = $request->attributes->get('_system_path');
-    if ($site_status == CoreMaintenanceModeSubscriber::SITE_OFFLINE) {
+    if ($this->maintenanceMode->applies($route_match)) {
       // If the site is offline, log out unprivileged users.
-      if ($user->isAuthenticated() && !$user->hasPermission('access site in maintenance mode')) {
+      if ($this->account->isAuthenticated() && !$this->maintenanceMode->exempt($this->account)) {
         user_logout();
         // Redirect to homepage.
         $event->setResponse(new RedirectResponse(url('<front>', array('absolute' => TRUE))));
         return;
       }
 
-      if ($user->isAnonymous()) {
-        switch ($path) {
-          case 'user':
-            // Forward anonymous user to login page.
-            $event->setResponse(new RedirectResponse(url('user/login', array('absolute' => TRUE))));
-            return;
-          case 'user/login':
-          case 'user/password':
-            // Disable offline mode.
-            $request->attributes->set('_maintenance', CoreMaintenanceModeSubscriber::SITE_ONLINE);
-            break;
-          default:
-            if (strpos($path, 'user/reset/') === 0) {
-              // Disable offline mode.
-              $request->attributes->set('_maintenance', CoreMaintenanceModeSubscriber::SITE_ONLINE);
-            }
-            break;
-        }
+      if ($this->account->isAnonymous() && $path == 'user') {
+        // Forward anonymous user to login page.
+        $event->setResponse(new RedirectResponse(url('user/login', array('absolute' => TRUE))));
+        return;
       }
     }
-    if ($user->isAuthenticated()) {
+    if ($this->account->isAuthenticated()) {
       if ($path == 'user/login') {
         // If user is logged in, redirect to 'user' instead of giving 403.
         $event->setResponse(new RedirectResponse(url('user', array('absolute' => TRUE))));
@@ -68,7 +80,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       }
       if ($path == 'user/register') {
         // Authenticated user should be redirected to user edit page.
-        $event->setResponse(new RedirectResponse(url('user/' . $user->id() . '/edit', array('absolute' => TRUE))));
+        $event->setResponse(new RedirectResponse(url('user/' . $this->account->id() . '/edit', array('absolute' => TRUE))));
         return;
       }
     }

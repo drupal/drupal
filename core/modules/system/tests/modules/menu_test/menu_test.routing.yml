@@ -20,6 +20,8 @@ menu_test.login_callback:
     _content: '\Drupal\menu_test\TestControllers::testLogin'
   requirements:
     _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
 
 menu_test.callback_description:
   path: '/menu_callback_description'

@@ -1,9 +1,4 @@
 services:
-  menu_test_maintenance_mode_subscriber:
-    class: Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber
-    tags:
-      - { name: event_subscriber }
-
   theme.negotiator.test_theme:
     class: Drupal\menu_test\Theme\TestThemeNegotiator
     tags:

@@ -122,6 +122,8 @@ user.pass:
     _title: 'Request new password'
   requirements:
     _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
 
 user.page:
   path: '/user'
@@ -146,6 +148,8 @@ user.login:
     _title: 'Log in'
   requirements:
     _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
 
 user.edit:
   path: '/user/{user}/edit'
@@ -185,3 +189,5 @@ user.reset:
     operation: NULL
   requirements:
     _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
