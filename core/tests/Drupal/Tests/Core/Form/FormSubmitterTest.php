@@ -116,7 +116,7 @@ class FormSubmitterTest extends UnitTestCase {
    *
    * @dataProvider providerTestRedirectWithResult
    */
-  public function testRedirectWithResult($form_state, $result, $status = 302) {
+  public function testRedirectWithResult($form_state, $result, $status = 303) {
     $form_submitter = $this->getFormSubmitter();
     $this->urlGenerator->expects($this->once())
       ->method('generateFromPath')
@@ -141,7 +141,7 @@ class FormSubmitterTest extends UnitTestCase {
    *
    * @dataProvider providerTestRedirectWithRouteWithResult
    */
-  public function testRedirectWithRouteWithResult($form_state, $result, $status = 302) {
+  public function testRedirectWithRouteWithResult($form_state, $result, $status = 303) {
     $container = new ContainerBuilder();
     $container->set('url_generator', $this->urlGenerator);
     \Drupal::setContainer($container);

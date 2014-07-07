@@ -108,7 +108,7 @@ EOD;
       $this->assertNotEqual($old_user_id, $this->container->get('current_user')->id(), 'Current user service updated.');
       $headers = $this->drupalGetHeaders(TRUE);
       $this->assertEqual(count($headers), 2, 'There was one intermediate request.');
-      $this->assertTrue(strpos($headers[0][':status'], '302') !== FALSE, 'Intermediate response code was 302.');
+      $this->assertTrue(strpos($headers[0][':status'], '303') !== FALSE, 'Intermediate response code was 303.');
       $this->assertFalse(empty($headers[0]['location']), 'Intermediate request contained a Location header.');
       $this->assertEqual($this->getUrl(), $headers[0]['location'], 'HTTP redirect was followed');
       $this->assertFalse($this->drupalGetHeader('Location'), 'Headers from intermediate request were reset.');
