@@ -110,7 +110,7 @@ function system_test_lock_exit() {
  * Implements hook_page_build().
  */
 function system_test_page_build(&$page) {
-  $menu_item['path'] = \Drupal::request()->attributes->get('_system_path');
+  $menu_item['path'] = current_path();
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
   if ($menu_item['path'] == 'system-test/main-content-handling') {
