@@ -42,7 +42,7 @@ class DrupalKernelTest extends DrupalUnitTestBase {
       'bin' => 'service_container',
       'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
       'directory' => DRUPAL_ROOT . '/' . $this->public_files_directory . '/php',
-      'secret' => drupal_get_hash_salt(),
+      'secret' => Settings::getHashSalt(),
     )));
 
     $this->classloader = drupal_classloader();

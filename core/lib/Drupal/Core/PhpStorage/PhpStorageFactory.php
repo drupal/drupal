@@ -44,7 +44,7 @@ class PhpStorageFactory {
     else {
       $configuration = array(
         'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',
-        'secret' => drupal_get_hash_salt(),
+        'secret' => Settings::getHashSalt(),
       );
     }
     $class = isset($configuration['class']) ? $configuration['class'] : 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';

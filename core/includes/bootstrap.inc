@@ -1044,19 +1044,6 @@ function drupal_get_user_timezone() {
 }
 
 /**
- * Gets a salt useful for hardening against SQL injection.
- *
- * @return
- *   A salt based on information in settings.php, not in the database.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
- *   \Drupal\Core\Site\Settings::getHashSalt() instead.
- */
-function drupal_get_hash_salt() {
-  return Settings::getHashSalt();
-}
-
-/**
  * Provides custom PHP error handling.
  *
  * @param $error_level
@@ -1548,7 +1535,7 @@ function drupal_classloader($class_loader = NULL) {
     }
     if ($class_loader === 'apc') {
       require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
-      $apc_loader = new ApcClassLoader('drupal.' . drupal_get_hash_salt(), $loader);
+      $apc_loader = new ApcClassLoader('drupal.' . Settings::getHashSalt(), $loader);
       $loader->unregister();
       $apc_loader->register();
     }

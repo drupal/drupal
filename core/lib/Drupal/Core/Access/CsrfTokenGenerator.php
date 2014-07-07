@@ -49,10 +49,10 @@ class CsrfTokenGenerator {
    *
    * @return string
    *   A 43-character URL-safe token for validation, based on the token seed,
-   *   the hash salt provided by drupal_get_hash_salt(), and the
+   *   the hash salt provided by Settings::getHashSalt(), and the
    *   'drupal_private_key' configuration variable.
    *
-   * @see drupal_get_hash_salt()
+   * @see \Drupal\Core\Site\Settings::getHashSalt()
    * @see \Drupal\Core\Session\SessionManager::start()
    */
   public function get($value = '') {
@@ -92,8 +92,10 @@ class CsrfTokenGenerator {
    *
    * @return string
    *   A 43-character URL-safe token for validation, based on the token seed,
-   *   the hash salt provided by drupal_get_hash_salt(), and the
+   *   the hash salt provided by Settings::getHashSalt(), and the
    *   'drupal_private_key' configuration variable.
+   *
+   * @see \Drupal\Core\Site\Settings::getHashSalt()
    */
   protected function computeToken($seed, $value = '') {
     return Crypt::hmacBase64($value, $seed . $this->privateKey->get() . Settings::getHashSalt());

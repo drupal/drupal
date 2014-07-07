@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use \Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Site\Settings;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -844,7 +845,7 @@ function user_cancel_url($account, $options = array()) {
  *   A string that is safe for use in URLs and SQL statements.
  */
 function user_pass_rehash($password, $timestamp, $login) {
-  return Crypt::hmacBase64($timestamp . $login, drupal_get_hash_salt() . $password);
+  return Crypt::hmacBase64($timestamp . $login, Settings::getHashSalt() . $password);
 }
 
 /**

@@ -7,8 +7,9 @@
 
 namespace Drupal\user\Tests {
 
-use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Site\Settings;
+use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionsHash;
 
 
@@ -80,6 +81,8 @@ class PermissionsHashTest extends UnitTestCase {
    */
   protected function setUp() {
     parent::setUp();
+
+    new Settings(array('hash_salt' => 'test'));
 
     // Account 1: 'administrator' and 'authenticated' roles.
     $roles_1 = array('administrator', 'authenticated');
@@ -193,19 +196,6 @@ namespace {
         $role_permissions[$rid] = array();
       }
       return $role_permissions;
-    }
-  }
-
-  // @todo remove once drupal_get_hash_salt() can be injected.
-  if (!function_exists('drupal_get_hash_salt')) {
-    function drupal_get_hash_salt() {
-      static $salt;
-
-      if (!isset($salt)) {
-        $salt = Drupal\Component\Utility\Crypt::randomBytesBase64(55);
-      }
-
-      return $salt;
     }
   }
 

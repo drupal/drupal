@@ -2569,10 +2569,10 @@ function drupal_get_private_key() {
  *
  * @return string
  *   A 43-character URL-safe token for validation, based on the user session ID,
- *   the hash salt provided from drupal_get_hash_salt(), and the
+ *   the hash salt provided from Settings::getHashSalt(), and the
  *   'drupal_private_key' configuration variable.
  *
- * @see drupal_get_hash_salt()
+ * @see \Drupal\Core\Site\Settings::getHashSalt()
  * @see \Drupal\Core\Access\CsrfTokenGenerator
  * @see \Drupal\Core\Session\SessionManager::start()
  *
