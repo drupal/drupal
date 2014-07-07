@@ -206,11 +206,11 @@ function comment_field_config_insert(FieldConfigInterface $field) {
 function comment_field_instance_config_delete(FieldInstanceConfigInterface $instance) {
   if ($instance->getType() == 'comment') {
     // Delete all comments that used by the entity bundle.
-    $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_name = :field_name", array(
-      ':entity_type' => $instance->getEntityTypeId(),
-      ':field_name' => $instance->getName(),
-    ))->fetchCol();
-    entity_delete_multiple('comment', $comments);
+    $entity_query = \Drupal::entityQuery('comment');
+    $entity_query->condition('entity_type', $instance->getEntityTypeId());
+    $entity_query->condition('field_name', $instance->getName());
+    $cids = $entity_query->execute();
+    entity_delete_multiple('comment', $cids);
   }
 }
 
