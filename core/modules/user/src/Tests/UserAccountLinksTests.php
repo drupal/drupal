@@ -83,6 +83,15 @@ class UserAccountLinksTests extends WebTestBase {
     // Create an admin user and log in.
     $this->drupalLogin($this->drupalCreateUser(array('access administration pages', 'administer menu')));
 
+    // Verify that the 'My account' link exists before we check for its
+    // disappearance.
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+      ':menu_class' => 'links',
+      ':href' => 'user',
+      ':text' => 'My account',
+    ));
+    $this->assertEqual(count($link), 1, 'My account link is in the secondary menu.');
+
     // Verify that the 'My account' link is enabled. Do not assume the value of
     // auto-increment is 1. Use XPath to obtain input element id and name using
     // the consistent label text.
@@ -101,8 +110,8 @@ class UserAccountLinksTests extends WebTestBase {
     $this->drupalGet('<front>');
 
     // Verify that the 'My account' link does not appear when disabled.
-    $link = $this->xpath('//ul[@id=:menu_id]/li/a[contains(@href, :href) and text()=:text]', array(
-      ':menu_id' => 'secondary-menu',
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+      ':menu_class' => 'links',
       ':href' => 'user',
       ':text' => 'My account',
     ));
