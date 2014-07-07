@@ -20,7 +20,7 @@ class BlockCacheTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'block_test');
+  public static $modules = array('block', 'block_test', 'test_page_test');
 
   protected $admin_user;
   protected $normal_user;
@@ -199,17 +199,19 @@ class BlockCacheTest extends WebTestBase {
     $current_content = $this->randomName();
     \Drupal::state()->set('block_test.content', $current_content);
 
-    $this->drupalGet('node');
-    $this->assertText($current_content, 'Block content displays on the node page.');
+    $this->drupalGet('test-page');
+    $this->assertText($current_content, 'Block content displays on the test page.');
 
     $old_content = $current_content;
     $current_content = $this->randomName();
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('user');
-    $this->assertNoText($old_content, 'Block content cached for the node page does not show up for the user page.');
-    $this->drupalGet('node');
-    $this->assertText($old_content, 'Block content cached for the node page.');
+    $this->assertResponse(200);
+    $this->assertNoText($old_content, 'Block content cached for the test page does not show up for the user page.');
+    $this->drupalGet('test-page');
+    $this->assertResponse(200);
+    $this->assertText($old_content, 'Block content cached for the test page.');
   }
 
   /**
