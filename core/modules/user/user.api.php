@@ -160,7 +160,7 @@ function hook_user_cancel($edit, $account, $method) {
  *   An array containing user account cancellation methods, keyed by method id.
  *
  * @see user_cancel_methods()
- * @see user_cancel_confirm_form()
+ * @see \Drupal\user\Form\UserCancelForm
  */
 function hook_user_cancel_methods_alter(&$methods) {
   $account = \Drupal::currentUser();

@@ -126,7 +126,7 @@ function template_preprocess_user(&$variables) {
 /**
  * Menu callback; Cancel a user account via email confirmation link.
  *
- * @see user_cancel_confirm_form()
+ * @see \Drupal\user\Form\UserCancelForm
  * @see user_cancel_url()
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
