@@ -8,7 +8,7 @@
 namespace Drupal\shortcut;
 
 use Drupal\Component\Uuid\UuidInterface;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -34,7 +34,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
    *   The entity info for the entity type.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage service.
@@ -45,7 +45,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityTypeInterface $entity_info, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_info, $config_factory, $config_storage, $uuid_service, $language_manager);
 
     $this->moduleHandler = $module_handler;
