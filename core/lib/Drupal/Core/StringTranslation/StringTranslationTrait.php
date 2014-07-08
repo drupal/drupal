@@ -10,14 +10,17 @@ namespace Drupal\Core\StringTranslation;
 /**
  * Wrapper methods for \Drupal\Core\StringTranslation\TranslationInterface.
  *
- * Injected translation can be performed by using a protected method ::t(), so
- * string extractor tools can find all translatable strings. This method must
- * wrap \Drupal\Core\StringTranslation\TranslationInterface::translate().
- * This trait provides this method in a re-usable way.
+ * Using this trait will add t() and formatPlural() methods to the class. These
+ * must be used for every translatable string, similar to how procedural code
+ * must use the global functions t() and format_plural(). This allows string
+ * extractor tools to find translatable strings.
  *
- * Procedural code must use the global function t(). Any other approach will
- * result in untranslatable strings, because the string extractor will not be
- * able to find them.
+ * If the class is capable of injecting services from the container, it should
+ * inject the 'string_translation' service and assign it to
+ * $this->stringTranslation.
+ *
+ * @see \Drupal\Core\StringTranslation\TranslationInterface
+ * @see container
  *
  * @ingroup i18n
  */
