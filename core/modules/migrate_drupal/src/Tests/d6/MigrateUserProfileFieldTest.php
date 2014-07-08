@@ -86,6 +86,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
     // Migrated date field.
     $field = entity_load('field_config', 'user.profile_birthdate');
     $this->assertEqual($field->type, 'datetime', 'Field type is datetime.');
+    $this->assertEqual($field->settings['datetime_type'], 'date');
   }
 
 }

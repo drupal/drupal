@@ -18,6 +18,9 @@ process:
       textfield: text
       textarea: text_long
       url: link
+  settings:
+    plugin: d6_profile_field_settings
+    source: type
   settings.allowed_values: options
   cardinality:
     plugin: static_map
