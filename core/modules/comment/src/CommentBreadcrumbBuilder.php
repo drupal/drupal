@@ -7,14 +7,18 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Class to define the comment breadcrumb builder.
  */
-class CommentBreadcrumbBuilder extends BreadcrumbBuilderBase {
+class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
+  use LinkGeneratorTrait;
 
   /**
    * Stores the Entity manager service.

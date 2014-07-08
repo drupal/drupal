@@ -7,13 +7,17 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a custom taxonomy breadcrumb builder that uses the term hierarchy.
  */
-class TermBreadcrumbBuilder extends BreadcrumbBuilderBase {
+class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
+  use LinkGeneratorTrait;
 
   /**
    * {@inheritdoc}

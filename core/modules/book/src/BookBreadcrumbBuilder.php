@@ -8,16 +8,20 @@
 namespace Drupal\book;
 
 use Drupal\Core\Access\AccessManager;
-use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 
 /**
  * Provides a breadcrumb builder for nodes in a book.
  */
-class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
+class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
+  use LinkGeneratorTrait;
 
   /**
    * The node storage.

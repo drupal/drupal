@@ -7,10 +7,12 @@
 
 namespace Drupal\forum\Breadcrumb;
 
-use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\forum\ForumManagerInterface;
 
 /**
@@ -19,7 +21,9 @@ use Drupal\forum\ForumManagerInterface;
  * This just holds the dependency-injected config, entity manager, and forum
  * manager objects.
  */
-abstract class ForumBreadcrumbBuilderBase extends BreadcrumbBuilderBase {
+abstract class ForumBreadcrumbBuilderBase  implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
+  use LinkGeneratorTrait;
 
   /**
    * Configuration object for this builder.
