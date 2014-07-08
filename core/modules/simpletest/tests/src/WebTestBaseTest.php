@@ -86,4 +86,130 @@ class WebTestBaseTest extends UnitTestCase {
     $test_method->invokeArgs($web_test, array($name, $value, 'message'));
   }
 
+  /**
+   * Data provider for testClickLink().
+   *
+   * In the test method, we mock drupalGet() to return a known string:
+   * 'This Text Returned By drupalGet()'. Since clickLink() can only return
+   * either the value of drupalGet() or FALSE, our expected return value is the
+   * same as this mocked return value when we expect a link to be found.
+   *
+   * @see https://www.drupal.org/node/1452896
+   *
+   * @return array
+   *   Array of arrays of test data. Test data is structured as follows:
+   *   - Expected return value of clickLink().
+   *   - Parameter $label to clickLink().
+   *   - Parameter $index to clickLink().
+   *   - Test data to be returned by mocked xpath(). Return an empty array here
+   *     to mock no link found on the page.
+   */
+  public function providerTestClickLink() {
+    return array(
+      // Test for a non-existent label.
+      array(
+        FALSE,
+        'does_not_exist',
+        0,
+        array(),
+      ),
+      // Test for an existing label.
+      array(
+        'This Text Returned By drupalGet()',
+        'exists',
+        0,
+        array(0 => array('href' => 'this_is_a_url')),
+      ),
+      // Test for an existing label that isn't the first one.
+      array(
+        'This Text Returned By drupalGet()',
+        'exists',
+        1,
+        array(
+          0 => array('href' => 'this_is_a_url'),
+          1 => array('href' => 'this_is_another_url'),
+        ),
+      ),
+    );
+  }
+
+  /**
+   * Test WebTestBase::clickLink().
+   *
+   * @param mixed $expected
+   *   Expected return value of clickLink().
+   * @param string $label
+   *   Parameter $label to clickLink().
+   * @param int $index
+   *   Parameter $index to clickLink().
+   * @param array $xpath_data
+   *   Test data to be returned by mocked xpath().
+   *
+   * @dataProvider providerTestClickLink
+   * @covers ::clickLink
+   */
+  public function testClickLink($expected, $label, $index, $xpath_data) {
+    // Mock a WebTestBase object and some of its methods.
+    $web_test = $this->getMockBuilder('Drupal\simpletest\WebTestBase')
+      ->disableOriginalConstructor()
+      ->setMethods(array(
+        'pass',
+        'fail',
+        'getUrl',
+        'xpath',
+        'drupalGet',
+        'getAbsoluteUrl',
+      ))
+      ->getMock();
+
+    // Mocked getUrl() is only used for reporting so we just return a string.
+    $web_test->expects($this->any())
+      ->method('getUrl')
+      ->will($this->returnValue('url_before'));
+
+    // Mocked xpath() should return our test data.
+    $web_test->expects($this->any())
+      ->method('xpath')
+      ->will($this->returnValue($xpath_data));
+
+    if ($expected === FALSE) {
+      // If link does not exist clickLink() will not try to do a drupalGet() or
+      // a getAbsoluteUrl()
+      $web_test->expects($this->never())
+        ->method('drupalGet');
+      $web_test->expects($this->never())
+        ->method('getAbsoluteUrl');
+      // The test should fail and not pass.
+      $web_test->expects($this->never())
+        ->method('pass');
+      $web_test->expects($this->once())
+        ->method('fail')
+        ->will($this->returnValue(NULL));
+    }
+    else {
+      // Mocked getAbsoluteUrl() should return whatever comes in.
+      $web_test->expects($this->once())
+        ->method('getAbsoluteUrl')
+        ->with($xpath_data[$index]['href'])
+        ->will($this->returnArgument(0));
+      // We're only testing clickLink(), so drupalGet() always returns a string.
+      $web_test->expects($this->once())
+        ->method('drupalGet')
+        ->with($xpath_data[$index]['href'])
+        ->will($this->returnValue('This Text Returned By drupalGet()'));
+      // The test should pass and not fail.
+      $web_test->expects($this->never())
+        ->method('fail');
+      $web_test->expects($this->once())
+        ->method('pass')
+        ->will($this->returnValue(NULL));
+    }
+
+    // Set the clickLink() method to public so we can test it.
+    $clicklink_method = new \ReflectionMethod($web_test, 'clickLink');
+    $clicklink_method->setAccessible(TRUE);
+
+    $this->assertSame($expected, $clicklink_method->invoke($web_test, $label, $index));
+  }
+
 }
