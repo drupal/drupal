@@ -28,7 +28,7 @@ class DateFormat implements ElementInterface {
     $format = $this->t('Displayed as %date_format', array('%date_format' => \Drupal::service('date')->format(REQUEST_TIME, 'custom', $value)));
     return array(
       '#type' => 'textfield',
-      '#title' => $this->t($definition['label']) . '<span class="visually-hidden"> (' . $language->name . ')</span>',
+      '#title' => $this->t($definition->getLabel()) . '<span class="visually-hidden"> (' . $language->name . ')</span>',
       '#description' => $description,
       '#default_value' => $value,
       '#attributes' => array('lang' => $language->id),
