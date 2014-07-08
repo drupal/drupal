@@ -49,7 +49,7 @@ class ProfileFieldTest extends MigrateSqlSourceTestCase {
       'register' => 0,
       'visibility' => 2,
       'autocomplete' => 0,
-      'options' => '',
+      'options' => array(),
     ),
     array(
       'fid' => 2,
@@ -64,7 +64,7 @@ class ProfileFieldTest extends MigrateSqlSourceTestCase {
       'register' => 0,
       'visibility' => 2,
       'autocomplete' => 0,
-      'options' => '',
+      'options' => array(),
     ),
     array(
       'fid' => 3,
@@ -79,7 +79,7 @@ class ProfileFieldTest extends MigrateSqlSourceTestCase {
       'register' => 1,
       'visibility' => 2,
       'autocomplete' => 0,
-      'options' => '',
+      'options' => array(),
     ),
   );
 

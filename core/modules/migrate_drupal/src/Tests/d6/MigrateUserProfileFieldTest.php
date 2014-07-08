@@ -36,11 +36,11 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
     $migration = entity_load('migration', 'd6_user_profile_field');
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6UserProfileFields.php',
+      $this->getDumpDirectory() . '/Drupal6User.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);
     $executable->import();
-
   }
 
   /**
@@ -62,6 +62,14 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
 
     // Migrated selection field.
     $field = entity_load('field_config', 'user.profile_sold_to');
+    $settings = $field->getSettings();
+    $this->assertEqual($settings['allowed_values'], array(
+      'Pill spammers' => 'Pill spammers',
+      'Spammers' => 'Spammers',
+      'Fitness spammers' => 'Fitness spammers',
+      'Faithful servant' => 'Faithful servant',
+      'Anonymous donor' => 'Anonymous donor',
+    ));
     $this->assertEqual($field->type, 'list_text', 'Field type is list_text.');
 
     // Migrated list field.

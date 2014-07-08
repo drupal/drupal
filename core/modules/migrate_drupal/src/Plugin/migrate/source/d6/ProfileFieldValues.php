@@ -7,9 +7,10 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
+
+use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\SourceEntityInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
-use Drupal\migrate\Row;
 
 
 /**
@@ -46,7 +47,7 @@ class ProfileFieldValues extends DrupalSqlBase implements SourceEntityInterface 
     $results = $query->execute();
 
     foreach ($results as $profile_value) {
-      // Check special case for date. We need unserialize.
+      // Check special case for date. We need to unserialize.
       if ($profile_value['type'] == 'date') {
         $date = unserialize($profile_value['value']);
         $date = date('Y-m-d', mktime(0, 0, 0, $date['month'], $date['day'], $date['year']));
@@ -71,7 +72,7 @@ class ProfileFieldValues extends DrupalSqlBase implements SourceEntityInterface 
     $fields = array(
       'fid' => $this->t('Unique profile field ID.'),
       'uid' => $this->t('The user Id.'),
-      'value' => $this->t('The value for this field..'),
+      'value' => $this->t('The value for this field.'),
     );
 
     $query = $this->select('profile_values', 'pv')

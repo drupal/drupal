@@ -45,6 +45,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupalTestBase {
     $migration = entity_load('migration', 'd6_user_profile_field_instance');
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6UserProfileFields.php',
+      $this->getDumpDirectory() . '/Drupal6User.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

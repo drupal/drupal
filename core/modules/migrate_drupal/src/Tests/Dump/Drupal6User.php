@@ -456,7 +456,7 @@ class Drupal6User extends Drupal6DumpBase {
         array('fid' => 8, 'uid' => 8, 'value' => 'brown'),
         array('fid' => 9, 'uid' => 8, 'value' => 'Nunc condimentum ligula felis, eget lacinia purus accumsan at. Pellentesque eu lobortis felis. Duis at accumsan nisl, vel pulvinar risus. Nullam venenatis, tellus non eleifend hendrerit, augue nulla rhoncus leo, eget convallis enim sem ut velit. Mauris tincidunt enim ut eros volutpat dapibus. Curabitur augue libero, imperdiet eget orci sed, malesuada dapibus tellus. Nam lacus sapien, convallis vitae quam vel, bibendum commodo odio.'),
         array('fid' => 10, 'uid' => 8, 'value' => '0'),
-        array('fid' => 11, 'uid' => 8, 'value' => ''),
+        array('fid' => 11, 'uid' => 8, 'value' => 'Spammers'),
         array('fid' => 12, 'uid' => 8, 'value' => "Deep Purple\nWho\nThe Beatles"),
         array('fid' => 13, 'uid' => 8, 'value' => "http://blog.example.com"),
         array('fid' => 14, 'uid' => 8, 'value' => 'a:3:{s:5:"month";s:1:"9";s:3:"day";s:1:"9";s:4:"year";s:4:"1980";}'),

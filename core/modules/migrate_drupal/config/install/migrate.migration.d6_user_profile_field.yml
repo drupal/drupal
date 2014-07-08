@@ -18,6 +18,7 @@ process:
       textfield: text
       textarea: text_long
       url: link
+  settings.allowed_values: options
   cardinality:
     plugin: static_map
     default_value: 1

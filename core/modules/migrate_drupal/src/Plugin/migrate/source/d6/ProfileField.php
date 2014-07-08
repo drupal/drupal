@@ -8,6 +8,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+use Drupal\migrate\Row;
 
 /**
  * Drupal 6 profile fields source from database.
@@ -41,6 +42,31 @@ class ProfileField extends DrupalSqlBase {
       ));
 
     return $query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareRow(Row $row) {
+    if ($row->getSourceProperty('type') == 'selection') {
+      // Get the current options.
+      $current_options = preg_split("/[\r\n]+/", $row->getSourceProperty('options'));
+      // Select the list values from the profile_values table to ensure we get
+      // them all since they can get out of sync with profile_fields.
+      $options = $this->getDatabase()->query('SELECT DISTINCT value FROM {profile_values} WHERE fid = :fid', array(':fid' => $row->getSourceProperty('fid')))->fetchCol();
+      $options = array_merge($current_options, $options);
+      // array_combine() takes care of any duplicates options.
+      $row->setSourceProperty('options', array_combine($options, $options));
+    }
+
+    if ($row->getSourceProperty('type') == 'checkbox') {
+      // D6 profile checkboxes values are always 0 or 1 (with no labels), so we
+      // need to create two label-less options that will get 0 and 1 for their
+      // keys.
+      $row->setSourceProperty('options', array(NULL, NULL));
+    }
+
+    return parent::prepareRow($row);
   }
 
   /**
