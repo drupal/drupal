@@ -8,7 +8,6 @@
 namespace Drupal\block_content\Tests;
 
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\custom_block\Entity\CustomBlock;
 
 /**
  * Tests block save related functionality.

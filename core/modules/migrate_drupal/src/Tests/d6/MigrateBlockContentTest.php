@@ -10,7 +10,6 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\Core\Language\Language;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\custom_block\Entity\CustomBlock;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
