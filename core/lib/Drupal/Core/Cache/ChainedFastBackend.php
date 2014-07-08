@@ -101,15 +101,6 @@ class ChainedFastBackend implements CacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function setMultiple(array $items) {
-    $this->markAsOutdated();
-    $this->consistentBackend->setMultiple($items);
-    $this->fastBackend->setMultiple($items);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getMultiple(&$cids, $allow_invalid = FALSE) {
     // Retrieve as many cache items as possible from the fast backend. (Some
     // cache entries may have been created before the last write to this cache
@@ -148,6 +139,15 @@ class ChainedFastBackend implements CacheBackendInterface {
     $this->markAsOutdated();
     $this->consistentBackend->set($cid, $data, $expire, $tags);
     $this->fastBackend->set($cid, $data, $expire, $tags);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $items) {
+    $this->markAsOutdated();
+    $this->consistentBackend->setMultiple($items);
+    $this->fastBackend->setMultiple($items);
   }
 
   /**
