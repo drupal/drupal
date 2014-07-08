@@ -300,7 +300,7 @@ function color_palette_color_value($element, $input = FALSE, $form_state = array
     // Start with the provided value for this textfield, and validate that if
     // necessary, falling back on the default value.
     $value = form_type_textfield_value($element, $input, $form_state);
-    if (!$value || !isset($form_state['complete form']['#token']) || color_valid_hexadecimal_string($value) || drupal_valid_token($form_state['values']['form_token'], $form_state['complete form']['#token'])) {
+    if (!$value || !isset($form_state['complete form']['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state['values']['form_token'], $form_state['complete form']['#token'])) {
       return $value;
     }
     else {

@@ -139,7 +139,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     else {
       // Set a session identifier for this request. This is necessary because
       // we lazily start sessions at the end of this request, and some
-      // processes (like drupal_get_token()) needs to know the future
+      // processes (like \Drupal::csrfToken()) needs to know the future
       // session ID in advance.
       $user = new AnonymousUserSession();
       $this->setId(Crypt::randomBytesBase64());

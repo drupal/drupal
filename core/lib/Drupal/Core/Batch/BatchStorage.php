@@ -26,7 +26,7 @@ class BatchStorage implements BatchStorageInterface {
   public function load($id) {
     $batch = $this->connection->query("SELECT batch FROM {batch} WHERE bid = :bid AND token = :token", array(
       ':bid' => $id,
-      ':token' => drupal_get_token($id),
+      ':token' => \Drupal::csrfToken()->get($id),
     ))->fetchField();
     if ($batch) {
       return unserialize($batch);
@@ -71,7 +71,7 @@ class BatchStorage implements BatchStorageInterface {
       ->fields(array(
         'bid' => $batch['id'],
         'timestamp' => REQUEST_TIME,
-        'token' => drupal_get_token($batch['id']),
+        'token' => \Drupal::csrfToken()->get($batch['id']),
         'batch' => serialize($batch),
       ))
       ->execute();

@@ -64,7 +64,7 @@ class CSRFAccessCheck implements AccessCheckInterface {
       && $cookie
     ) {
       $csrf_token = $request->headers->get('X-CSRF-Token');
-      if (!drupal_valid_token($csrf_token, 'rest')) {
+      if (!\Drupal::csrfToken()->validate($csrf_token, 'rest')) {
         return static::KILL;
       }
     }

@@ -1882,7 +1882,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
       $setting['ajaxPageState']['theme'] = $theme_key;
       // Checks that the DB is available before filling theme_token.
       if (!defined('MAINTENANCE_MODE')) {
-        $setting['ajaxPageState']['theme_token'] = drupal_get_token($theme_key);
+        $setting['ajaxPageState']['theme_token'] = \Drupal::csrfToken()->get($theme_key);
       }
 
       // Provide the page with information about the individual JavaScript files
@@ -2522,53 +2522,6 @@ function drupal_json_encode($var) {
  */
 function drupal_json_decode($var) {
   return Json::decode($var);
-}
-
-/**
- * Generates a token based on $value, the user session, and the private key.
- *
- * @param string $value
- *   An additional value to base the token on.
- *
- * The generated token is based on the session ID of the current user. Normally,
- * anonymous users do not have a session, so the generated token will be
- * different on every page request. To generate a token for users without a
- * session, manually start a session prior to calling this function.
- *
- * @return string
- *   A 43-character URL-safe token for validation, based on the user session ID,
- *   the hash salt provided from Settings::getHashSalt(), and the
- *   'drupal_private_key' configuration variable.
- *
- * @see \Drupal\Core\Site\Settings::getHashSalt()
- * @see \Drupal\Core\Access\CsrfTokenGenerator
- * @see \Drupal\Core\Session\SessionManager::start()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::csrfToken()->get().
- */
-function drupal_get_token($value = '') {
-  return \Drupal::csrfToken()->get($value);
-}
-
-/**
- * Validates a token based on $value, the user session, and the private key.
- *
- * @param string $token
- *   The token to be validated.
- * @param string $value
- *   An additional value to base the token on.
- *
- * @return bool
- *   True for a valid token, false for an invalid token.
- *
- * @see \Drupal\Core\Access\CsrfTokenGenerator
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use return \Drupal::csrfToken()->validate().
- */
-function drupal_valid_token($token, $value = '') {
-  return \Drupal::csrfToken()->validate($token, $value);
 }
 
 /**

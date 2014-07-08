@@ -52,7 +52,7 @@ class LinkApprove extends Link {
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['path'] = "comment/" . $comment->id() . "/approve";
-    $this->options['alter']['query'] = drupal_get_destination() + array('token' => drupal_get_token($this->options['alter']['path']));
+    $this->options['alter']['query'] = drupal_get_destination() + array('token' => \Drupal::csrfToken()->get($this->options['alter']['path']));
 
     return $text;
   }

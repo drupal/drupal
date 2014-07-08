@@ -117,6 +117,6 @@ class RequestHandler implements ContainerAwareInterface {
    *   The response object.
    */
   public function csrfToken() {
-    return new Response(drupal_get_token('rest'), 200, array('Content-Type' => 'text/plain'));
+    return new Response(\Drupal::csrfToken()->get('rest'), 200, array('Content-Type' => 'text/plain'));
   }
 }

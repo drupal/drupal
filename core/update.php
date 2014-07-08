@@ -197,7 +197,7 @@ function update_info_page() {
   $keyvalue->get('update')->deleteAll();
   $keyvalue->get('update_available_release')->deleteAll();
 
-  $token = drupal_get_token('update');
+  $token = \Drupal::csrfToken()->get('update');
   $output = '<p>Use this utility to update your database whenever a new release of Drupal or a module is installed.</p><p>For more detailed information, see the <a href="http://drupal.org/upgrade">upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>';
   $output .= "<ol>\n";
   $output .= "<li><strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.</li>\n";
@@ -389,7 +389,7 @@ if (update_access_allowed()) {
 
     case 'selection':
       $token = $request->query->get('token');
-      if (isset($token) && drupal_valid_token($token, 'update')) {
+      if (isset($token) && \Drupal::csrfToken()->validate($token, 'update')) {
         $regions['sidebar_first'] = update_task_list('select');
         $output = update_selection_page();
         break;
@@ -397,7 +397,7 @@ if (update_access_allowed()) {
 
     case 'Apply pending updates':
       $token = $request->query->get('token');
-      if (isset($token) && drupal_valid_token($token, 'update')) {
+      if (isset($token) && \Drupal::csrfToken()->validate($token, 'update')) {
         $regions['sidebar_first'] = update_task_list('run');
         // Generate absolute URLs for the batch processing (using $base_root),
         // since the batch API will pass them to url() which does not handle
