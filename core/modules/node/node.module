@@ -709,9 +709,7 @@ function node_permission() {
     ),
     'access content overview' => array(
       'title' => t('Access the Content overview page'),
-      'description' => user_access('access content overview')
-        ? t('Get an overview of <a href="@url">all content</a>.', array('@url' => url('admin/content')))
-        : t('Get an overview of all content.'),
+      'description' => t('Get an overview of <a href="!url">all content</a>.', array('!url' => \Drupal::url('system.admin_content'))),
     ),
     'access content' => array(
       'title' => t('View published content'),

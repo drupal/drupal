@@ -1951,9 +1951,7 @@ function file_permission() {
   $perms = array(
     'access files overview' => array(
       'title' => t('Access the Files overview page'),
-      'description' => user_access('access files overview')
-        ? t('Get an overview of <a href="@url">all files</a>.', array('@url' => url('admin/content/files')))
-        : t('Get an overview of all files.'),
+      'description' => t('Get an overview of <a href="!url">all files</a>.', array('!url' => url('admin/content/files'))),
     ),
   );
 
