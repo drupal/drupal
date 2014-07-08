@@ -124,18 +124,6 @@ function file_load($fid, $reset = FALSE) {
 }
 
 /**
- * Returns the file usage service.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('file.usage').
- *
- * @return \Drupal\file\FileUsage\FileUsageInterface.
- */
-function file_usage() {
-  return \Drupal::service('file.usage');
-}
-
-/**
  * Copies a file to a new location and adds a file record to the database.
  *
  * This function should be used when manipulating files that have records
