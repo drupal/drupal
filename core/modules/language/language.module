@@ -90,16 +90,6 @@ function language_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Editing or deleting locked languages should not be possible.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\language\LanguageAccessController.
- */
-function language_access_language_edit_or_delete($language) {
-  return !$language->locked && \Drupal::currentUser()->hasPermission('administer languages');
-}
-
-/**
  * Implements hook_permission().
  */
 function language_permission() {
