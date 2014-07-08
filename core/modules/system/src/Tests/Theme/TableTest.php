@@ -188,8 +188,11 @@ class TableTest extends DrupalUnitTestBase {
    */
   public function testThemeTableResponsivePriority() {
     $header = array(
-      array('data' => 1, 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
+      // Test associative header indices.
+      'associative_key' => array('data' => 1, 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
+      // Test non-associative header indices.
       array('data' => 2, 'class' => array(RESPONSIVE_PRIORITY_LOW)),
+      // Test no responsive priorities.
       array('data' => 3),
     );
     $rows = array(array(4, 5, 6));

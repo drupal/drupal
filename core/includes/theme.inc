@@ -1561,7 +1561,13 @@ function template_preprocess_table(&$variables) {
   if (!empty($variables['header'])) {
     $ts = tablesort_init($variables['header']);
 
+    // Use a separate index with responsive classes as headers
+    // may be associative.
+    $responsive_index = -1;
     foreach ($variables['header'] as $col_key => $cell) {
+      // Increase the responsive index.
+      $responsive_index++;
+
       if (!is_array($cell)) {
         $cell_content = $cell;
         $cell_attributes = new Attribute();
@@ -1583,10 +1589,10 @@ function template_preprocess_table(&$variables) {
         // must be transferred to the content cells.
         if (!empty($cell['class']) && is_array($cell['class'])) {
           if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
-            $responsive_classes[$col_key] = RESPONSIVE_PRIORITY_MEDIUM;
+            $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_MEDIUM;
           }
           elseif (in_array(RESPONSIVE_PRIORITY_LOW, $cell['class'])) {
-            $responsive_classes[$col_key] = RESPONSIVE_PRIORITY_LOW;
+            $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_LOW;
           }
         }
 
@@ -1637,7 +1643,12 @@ function template_preprocess_table(&$variables) {
       $variables['rows'][$row_key]['attributes'] = new Attribute($row_attributes);
       $variables['rows'][$row_key]['cells'] = array();
       if (!empty($cells)) {
+        // Reset the responsive index.
+        $responsive_index = -1;
         foreach ($cells as $col_key => $cell) {
+          // Increase the responsive index.
+          $responsive_index++;
+
           if (!is_array($cell)) {
             $cell_content = $cell;
             $cell_attributes = array();
@@ -1665,8 +1676,8 @@ function template_preprocess_table(&$variables) {
           }
           // Copy RESPONSIVE_PRIORITY_LOW/RESPONSIVE_PRIORITY_MEDIUM
           // class from header to cell as needed.
-          if (isset($responsive_classes[$col_key])) {
-            $cell_attributes['class'][] = $responsive_classes[$col_key];
+          if (isset($responsive_classes[$responsive_index])) {
+            $cell_attributes['class'][] = $responsive_classes[$responsive_index];
           }
 
           $variables['rows'][$row_key]['cells'][$col_key]['tag'] = $is_header ? 'th' : 'td';
