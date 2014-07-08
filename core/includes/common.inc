@@ -2525,21 +2525,6 @@ function drupal_json_decode($var) {
 }
 
 /**
- * Ensures the private key variable used to generate tokens is set.
- *
- * @return string
- *   The private key.
- *
- * @see \Drupal\Core\Access\CsrfTokenGenerator
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('private_key')->get().
- */
-function drupal_get_private_key() {
-  return \Drupal::service('private_key')->get();
-}
-
-/**
  * Generates a token based on $value, the user session, and the private key.
  *
  * @param string $value

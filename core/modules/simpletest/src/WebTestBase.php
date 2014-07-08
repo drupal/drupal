@@ -759,7 +759,7 @@ abstract class WebTestBase extends TestBase {
    * Generate a token for the currently logged in user.
    */
   protected function drupalGetToken($value = '') {
-    $private_key = drupal_get_private_key();
+    $private_key = \Drupal::service('private_key')->get();
     return Crypt::hmacBase64($value, $this->session_id . $private_key);
   }
 
