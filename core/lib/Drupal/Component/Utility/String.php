@@ -74,7 +74,10 @@ class String {
    *   - @variable: Escaped to HTML using String::checkPlain(). Use this as the
    *     default choice for anything displayed on a page on the site.
    *   - %variable: Escaped to HTML and formatted using String::placeholder(),
-   *     which makes it display as <em>emphasized</em> text.
+   *     which makes the following HTML code:
+   *     @code
+   *       <em class="placeholder">text output here.</em>
+   *     @endcode
    *   - !variable: Inserted as is, with no sanitization or formatting. Only use
    *     this for text that has already been prepared for HTML display (for
    *     example, user-supplied text that has already been run through
