@@ -47,16 +47,16 @@ small .admin-link:after {
 /**
  * Modules page.
  */
-#system-modules table {
-  table-layout: fixed;
+#system-modules thead > tr {
+  border: 0;
 }
 #system-modules div.incompatible {
   font-weight: bold;
 }
-#system-modules th.checkbox {
+#system-modules td.checkbox {
   width: 4%;
 }
-#system-modules th.name {
+#system-modules td.module {
   width: 25%;
 }
 #system-modules td {
@@ -105,10 +105,10 @@ small .admin-link:after {
 }
 
 @media screen and (max-width: 40em) {
-  #system-modules th.name {
+  #system-modules td.name {
     width: 20%;
   }
-  #system-modules th.description {
+  #system-modules td.description {
     width: 40%;
   }
 }

@@ -175,9 +175,9 @@ class ModulesListForm extends FormBase {
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
         '#header' => array(
-          array('data' => '<span class="visually-hidden">' . $this->t('Installed') . '</span>', 'class' => array('checkbox')),
-          array('data' => $this->t('Name'), 'class' => array('name')),
-          array('data' => $this->t('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
+          array('data' => $this->t('Installed'), 'class' => array('checkbox', 'visually-hidden')),
+          array('data' => $this->t('Name'), 'class' => array('name', 'visually-hidden')),
+          array('data' => $this->t('Description'), 'class' => array('description', 'visually-hidden', RESPONSIVE_PRIORITY_LOW)),
         ),
         '#attributes' => array('class' => array('package-listing')),
         // Ensure that the "Core" package comes first.
