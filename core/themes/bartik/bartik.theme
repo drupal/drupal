@@ -159,14 +159,10 @@ function bartik_menu_tree__shortcut_default($variables) {
 function bartik_preprocess_field(&$variables) {
   $element = $variables['element'];
   if ($element['#field_type'] == 'taxonomy_term_reference') {
-    $label_attributes['class'] = array('field-label');
-    if ($variables['label_hidden']) {
-      $label_attributes['class'][] = 'visually-hidden';
-    }
+    $variables['title_attributes']['class'][] = array('field-label');
     if ($variables['element']['#label_display'] == 'inline') {
-      $label_attributes['class'][] = 'inline';
+      $variables['title_attributes']['class'][] = 'inline';
     }
-    $variables['label_attributes'] = new Attribute($label_attributes);
   }
 }
 

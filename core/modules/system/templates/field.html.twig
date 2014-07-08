@@ -31,7 +31,7 @@
 #}
 <div{{ attributes }}>
   {% if not label_hidden %}
-    <div class="field-label"{{ title_attributes }}>{{ label }}:&nbsp;</div>
+    <div class="field-label{% if title_attributes.class %} {{ title_attributes.class }}{% endif %}"{{ title_attributes|without('class') }}>{{ label }}:&nbsp;</div>
   {% endif %}
   <div class="field-items"{{ content_attributes }}>
     {% for delta, item in items %}

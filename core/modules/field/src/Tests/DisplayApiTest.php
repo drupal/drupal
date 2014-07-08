@@ -135,7 +135,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       $this->assertText($setting . '|' . $value['value'], format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }
 
-    // Check that explicit display settings are used.
+    // Display settings: Check hidden field.
     $display = array(
       'label' => 'hidden',
       'type' => 'field_test_multiple',
@@ -148,6 +148,27 @@ class DisplayApiTest extends FieldUnitTestBase {
     $this->content = drupal_render($output);
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertNoText($this->label, 'Label was not displayed.');
+    $this->assertText('field_test_entity_display_build_alter', 'Alter fired, display passed.');
+    $this->assertText('entity language is ' . LanguageInterface::LANGCODE_NOT_SPECIFIED, 'Language is placed onto the context.');
+    $array = array();
+    foreach ($this->values as $delta => $value) {
+      $array[] = $delta . ':' . $value['value'];
+    }
+    $this->assertText($setting . '|' . implode('|', $array), 'Values were displayed with expected setting.');
+
+    // Display settings: Check visually-hidden field.
+    $display = array(
+      'label' => 'visually-hidden',
+      'type' => 'field_test_multiple',
+      'settings' => array(
+        'test_formatter_setting_multiple' => $this->randomName(),
+        'alter' => TRUE,
+      ),
+    );
+    $output = $items->view($display);
+    $this->content = drupal_render($output);
+    $setting = $display['settings']['test_formatter_setting_multiple'];
+    $this->assertRaw('visually-hidden', 'Label was visually hidden.');
     $this->assertText('field_test_entity_display_build_alter', 'Alter fired, display passed.');
     $this->assertText('entity language is ' . LanguageInterface::LANGCODE_NOT_SPECIFIED, 'Language is placed onto the context.');
     $array = array();
