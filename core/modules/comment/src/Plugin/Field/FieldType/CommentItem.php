@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\Field\FieldType;
 
+use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -40,7 +41,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    */
   public static function defaultInstanceSettings() {
     return array(
-      'default_mode' => COMMENT_MODE_THREADED,
+      'default_mode' => CommentManagerInterface::COMMENT_MODE_THREADED,
       'per_page' => 50,
       'form_location' => COMMENT_FORM_BELOW,
       'anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,

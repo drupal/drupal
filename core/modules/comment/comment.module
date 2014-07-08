@@ -12,6 +12,7 @@
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\String;
@@ -29,16 +30,6 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\node\NodeInterface;
-
-/**
- * Comments are displayed in a flat list - expanded.
- */
-const COMMENT_MODE_FLAT = 0;
-
-/**
- * Comments are displayed as a threaded list - expanded.
- */
-const COMMENT_MODE_THREADED = 1;
 
 /**
  * Anonymous posters cannot enter their contact information.
@@ -261,7 +252,7 @@ function comment_new_page_count($num_comments, $new_replies, ContentEntityInterf
   $mode = $field_definition->getSetting('default_mode');
   $comments_per_page = $field_definition->getSetting('per_page');
   $pagenum = NULL;
-  $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
+  $flat = $mode == CommentManagerInterface::COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
     // Only one page of comments.
     $pageno = 0;
@@ -611,7 +602,7 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
     $query->condition('c.status', CommentInterface::PUBLISHED);
     $count_query->condition('c.status', CommentInterface::PUBLISHED);
   }
-  if ($mode == COMMENT_MODE_FLAT) {
+  if ($mode == CommentManagerInterface::COMMENT_MODE_FLAT) {
     $query->orderBy('c.cid', 'ASC');
   }
   else {
@@ -991,35 +982,16 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
  *   Field definition of the comments.
  *
  * @return int
- *   The display ordinal for the comment.
+ *   The display ordinal for the comment, or 0 if the comment is not found.
  *
- * @see comment_get_display_page()
+ * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
+ *   Use \Drupal\comment\CommentStorageInterface::getDisplayOrdinal().
  */
 function comment_get_display_ordinal($cid, FieldDefinitionInterface $field_definition) {
-  // Count how many comments (c1) are before $cid (c2) in display order. This is
-  // the 0-based display ordinal.
-  $query = db_select('comment', 'c1');
-  $query->innerJoin('comment', 'c2', 'c2.entity_id = c1.entity_id AND c2.entity_type = c1.entity_type AND c2.field_name = c1.field_name');
-  $query->addExpression('COUNT(*)', 'count');
-  $query->condition('c2.cid', $cid);
-  if (!user_access('administer comments')) {
-    $query->condition('c1.status', CommentInterface::PUBLISHED);
-  }
-
-  if ($field_definition->getSetting('default_mode') == COMMENT_MODE_FLAT) {
-    // For flat comments, cid is used for ordering comments due to
-    // unpredictable behavior with timestamp, so we make the same assumption
-    // here.
-    $query->condition('c1.cid', $cid, '<');
-  }
-  else {
-    // For threaded comments, the c.thread column is used for ordering. We can
-    // use the sorting code for comparison, but must remove the trailing slash.
-    // See CommentViewBuilder.
-    $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
-  }
-
-  return $query->execute()->fetchField();
+  $comment_storage = \Drupal::entityManager()->getStorage('comment');
+  $default_mode = $field_definition->getSetting('default_mode');
+  $comment = \Drupal::entityManager()->getStorage('comment')->load($cid);
+  return $comment ? $comment_storage->getDisplayOrdinal($comment, $default_mode) : 0;
 }
 
 /**
@@ -1034,12 +1006,17 @@ function comment_get_display_ordinal($cid, FieldDefinitionInterface $field_defin
  *   Field definition of the comments.
  *
  * @return int
- *   The page number.
+ *   The page number, or 0 if the comment is not found.
+ *
+ * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
+ *   Use \Drupal\comment\CommentStorageInterface::getDisplayOrdinal().
  */
 function comment_get_display_page($cid, FieldDefinitionInterface $field_definition) {
-  $ordinal = comment_get_display_ordinal($cid, $field_definition);
-  $comments_per_page = $field_definition->getSetting('per_page');
-  return floor($ordinal / $comments_per_page);
+  $comment_storage = \Drupal::entityManager()->getStorage('comment');
+  $default_mode = $field_definition->getSetting('default_mode');
+  $items_per_page = $field_definition->getSetting('per_page');
+  $comment = \Drupal::entityManager()->getStorage('comment')->load($cid);
+  return $comment ? $comment_storage->getDisplayOrdinal($comment, $default_mode, $items_per_page) : 0;
 }
 
 /**

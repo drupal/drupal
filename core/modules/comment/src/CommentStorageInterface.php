@@ -39,6 +39,25 @@ interface CommentStorageInterface extends EntityStorageInterface {
   public function getMaxThreadPerThread(EntityInterface $comment);
 
   /**
+   * Gets the display ordinal or page number for a comment.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment to use as a reference point.
+   * @param int $comment_mode
+   *   Comment mode (CommentManagerInterface::COMMENT_MODE_FLAT or
+   *   CommentManagerInterface::COMMENT_MODE_THREADED).
+   * @param int $divisor
+   *   Defaults to 1, which returns the display ordinal for a comment. If the
+   *   number of comments per page is provided, the returned value will be the
+   *   page number. (The return value will be divided by $divisor.)
+   *
+   * @return int
+   *   The display ordinal or page number for the comment. It is 0-based, so
+   *   will represent the number of items before the given comment/page.
+   */
+  public function getDisplayOrdinal(CommentInterface $comment, $comment_mode, $divisor = 1);
+
+  /**
    * Gets the comment ids of the passed comment entities' children.
    *
    * @param array $comments

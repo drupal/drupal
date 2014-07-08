@@ -17,6 +17,16 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 interface CommentManagerInterface {
 
   /**
+   * Comments are displayed in a flat list - expanded.
+   */
+  const COMMENT_MODE_FLAT = 0;
+
+  /**
+   * Comments are displayed as a threaded list - expanded.
+   */
+  const COMMENT_MODE_THREADED = 1;
+
+  /**
    * Utility function to return an array of comment fields.
    *
    * @param string $entity_type_id

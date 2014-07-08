@@ -8,6 +8,7 @@
 namespace Drupal\rdf\Tests;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Tests\CommentTestBase;
 
 /**
@@ -44,7 +45,7 @@ class CommentAttributesTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
+    $this->setCommentSettings('comment_default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
 
     // Prepares commonly used URIs.
     $this->base_uri = url('<front>', array('absolute' => TRUE));

@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,6 +31,13 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
   protected $statistics;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a CommentStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
@@ -40,10 +48,13 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    *   The entity manager.
    * @param \Drupal\comment\CommentStatisticsInterface $comment_statistics
    *   The comment statistics service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, CommentStatisticsInterface $comment_statistics) {
+  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, CommentStatisticsInterface $comment_statistics, AccountInterface $current_user) {
     parent::__construct($entity_info, $database, $entity_manager);
     $this->statistics = $comment_statistics;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -54,7 +65,8 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       $entity_info,
       $container->get('database'),
       $container->get('entity.manager'),
-      $container->get('comment.statistics')
+      $container->get('comment.statistics'),
+      $container->get('current_user')
     );
   }
 
@@ -90,6 +102,38 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
     $query->addExpression('MAX(thread)', 'thread');
     return $query->execute()
       ->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayOrdinal(CommentInterface $comment, $comment_mode, $divisor = 1) {
+    // Count how many comments (c1) are before $comment (c2) in display order.
+    // This is the 0-based display ordinal.
+    $query = $this->database->select('comment', 'c1');
+    $query->innerJoin('comment', 'c2', 'c2.entity_id = c1.entity_id AND c2.entity_type = c1.entity_type AND c2.field_name = c1.field_name');
+    $query->addExpression('COUNT(*)', 'count');
+    $query->condition('c2.cid', $comment->id());
+    if (!$this->currentUser->hasPermission('administer comments')) {
+      $query->condition('c1.status', CommentInterface::PUBLISHED);
+    }
+
+    if ($comment_mode == CommentManagerInterface::COMMENT_MODE_FLAT) {
+      // For rendering flat comments, cid is used for ordering comments due to
+      // unpredictable behavior with timestamp, so we make the same assumption
+      // here.
+      $query->condition('c1.cid', $comment->id(), '<');
+    }
+    else {
+      // For threaded comments, the c.thread column is used for ordering. We can
+      // use the sorting code for comparison, but must remove the trailing
+      // slash.
+      $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) - 1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) - 1))');
+    }
+
+    $ordinal = $query->execute()->fetchField();
+
+    return ($divisor > 1) ? floor($ordinal / $divisor) : $ordinal;
   }
 
   /**
