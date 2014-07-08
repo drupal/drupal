@@ -567,9 +567,6 @@ ul.tabs {
   box-shadow: 8px 0 0 #77b259;
   margin-right: 8px;
 }
-.no-svg .messages--status {
-  background-image: url(../../../misc/icons/73b355/check.png);
-}
 .messages--status,
 .ok {
   color: #325e1c;
@@ -588,9 +585,6 @@ table tr.ok {
   border-color: #f4daa6 transparent #f4daa6 #f4daa6;
   box-shadow: 8px 0 0 #e09600;
 }
-.no-svg .messages--warning {
-  background-image: url(../../../misc/icons/e29700/warning.png);
-}
 .messages--warning,
 .warning {
   color: #734c00;
@@ -608,9 +602,6 @@ table tr.warning {
 [dir="rtl"] .messages--error {
   border-color: #f9c9bf transparent #f9c9bf #f9c9bf;
   box-shadow: -8px 0 0 #e62600;
-}
-.no-svg .messages--error {
-  background-image: url(../../../misc/icons/ea2800/error.png);
 }
 .messages--error,
 .error {

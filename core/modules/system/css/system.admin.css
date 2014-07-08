@@ -149,20 +149,11 @@ a.module-link {
 a.module-link-help {
   background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat;
 }
-.no-svg a.module-link-help {
-  background: url(../../../misc/icons/787878/questionmark-disc.png) 0 50% no-repeat;
-}
 a.module-link-permissions {
   background: url(../../../misc/icons/787878/key.svg) 0 50% no-repeat;
 }
-.no-svg a.module-link-permissions {
-  background: url(../../../misc/icons/787878/key.png) 0 50% no-repeat;
-}
 a.module-link-configure {
   background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat;
-}
-.no-svg a.module-link-configure {
-  background: url(../../../misc/icons/787878/cog.png) 0 50% no-repeat;
 }
 
 /**
@@ -191,14 +182,8 @@ table.system-status-report td.status-icon div {
 table.system-status-report tr.error td.status-icon div {
   background-image: url(../../../misc/icons/ea2800/error.svg);
 }
-.no-svg table.system-status-report tr.error td.status-icon div {
-  background-image: url(../../../misc/icons/ea2800/error.png);
-}
 table.system-status-report tr.warning td.status-icon div {
   background-image: url(../../../misc/icons/e29700/warning.svg);
-}
-.no-svg table.system-status-report tr.warning td.status-icon div {
-  background-image: url(../../../misc/icons/e29700/warning.png);
 }
 table.system-status-report .status-title {
   width: 25%;

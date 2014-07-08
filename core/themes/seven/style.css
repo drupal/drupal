@@ -226,14 +226,8 @@ li.tabs__tab a {
   .tabs.primary a {
     background: url(../../misc/icons/0074bd/chevron-right.svg) 99% center no-repeat;
   }
-  .no-svg .tabs.primary a {
-    background-image: url(../../misc/icons/0074bd/chevron-right.png);
-  }
   [dir="rtl"] .tabs.primary a {
     background: url(../../misc/icons/0074bd/chevron-left.svg) 1% center no-repeat;
-  }
-  [dir="rtl"] .no-svg .tabs.primary a {
-    background-image: url(../../misc/icons/0074bd/chevron-left.png);
   }
   .tabs.primary .tabs__tab.active a {
     background-image: none;
@@ -474,16 +468,10 @@ ul.admin-list {
   padding: 14px 15px 14px 25px; /* LTR */
   min-height: 0;
 }
-.no-svg .admin-list li a {
-  background-image: url(../../misc/icons/bebebe/chevron-disc-right.png); /* LTR */
-}
 [dir="rtl"] .admin-list li a {
   background: url(../../misc/icons/bebebe/chevron-disc-left.svg) no-repeat right 16px;
   padding-right: 25px;
   padding-left: 15px;
-}
-.no-svg [dir="rtl"] .admin-list li a {
-  background-image: url(../../misc/icons/bebebe/chevron-disc-left.png);
 }
 .admin-list.compact li a {
   background-image:  none;

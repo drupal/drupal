@@ -1689,17 +1689,6 @@ div.password-suggestions {
 #search-form input.form-submit:focus {
   background: #dedede url("../../../misc/icons/424242/loupe.svg") no-repeat center;
 }
-.no-svg #search-block-form input.form-submit,
-.no-svg #search-form input.form-submit {
-  background: #f0f0f0 url("../../../misc/icons/505050/loupe.png") no-repeat center;
-}
-.no-svg #search-block-form input.form-submit:hover,
-.no-svg #search-block-form input.form-submit:focus,
-.no-svg #search-form input.form-submit:hover,
-.no-svg #search-form input.form-submit:focus {
-  background: #dedede url("../../../misc/icons/424242/loupe.png") no-repeat center;
-
-}
 #search-form .form-item-keys label {
   display: block;
 }

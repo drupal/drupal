@@ -29,18 +29,9 @@
 .admin-dblog .dblog-warning .icon {
   background-image: url(../../../misc/icons/e29700/warning.svg);
 }
-.no-svg .admin-dblog .dblog-warning .icon {
-  background-image: url(../../../misc/icons/e29700/warning.png);
-}
 .admin-dblog .dblog-error .icon,
 .admin-dblog .dblog-critical .icon,
 .admin-dblog .dblog-alert .icon,
 .admin-dblog .dblog-emergency .icon {
   background-image: url(../../../misc/icons/ea2800/error.svg);
-}
-.no-svg .admin-dblog .dblog-error .icon,
-.no-svg .admin-dblog .dblog-critical .icon,
-.no-svg .admin-dblog .dblog-alert .icon,
-.no-svg .admin-dblog .dblog-emergency .icon {
-  background-image: url(../../../misc/icons/ea2800/error.png);
 }
