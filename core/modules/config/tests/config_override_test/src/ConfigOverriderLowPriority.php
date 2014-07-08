@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\config_override\ConfigOverriderLowPriority.
+ * Contains \Drupal\config_override_test\ConfigOverriderLowPriority.
  */
 
-namespace Drupal\config_override;
+namespace Drupal\config_override_test;
 
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;

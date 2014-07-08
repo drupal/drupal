@@ -1,9 +1,0 @@
-services:
-  config_override.overrider:
-    class: Drupal\config_override\ConfigOverrider
-    tags:
-      - { name: config.factory.override}
-  config_override.low_priority_overrider:
-    class: Drupal\config_override\ConfigOverriderLowPriority
-    tags:
-      - { name: config.factory.override, priority: -100 }

@@ -14,7 +14,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class ConfigModuleOverridesTest extends DrupalUnitTestBase {
 
-  public static $modules = array('system', 'config', 'config_override');
+  public static $modules = array('system', 'config', 'config_override_test');
 
   public static function getInfo() {
     return array(
@@ -55,11 +55,11 @@ class ConfigModuleOverridesTest extends DrupalUnitTestBase {
     // Test overrides of completely new configuration objects. In normal runtime
     // this should only happen for configuration entities as we should not be
     // creating simple configuration objects on the fly.
-    $config = $config_factory->get('config_override.new');
-    $this->assertTrue($config->isNew(), 'The configuration object config_override.new is new');
+    $config = $config_factory->get('config_override_test.new');
+    $this->assertTrue($config->isNew(), 'The configuration object config_override_test.new is new');
     $this->assertIdentical($config->get('module'), 'override');
     $config_factory->setOverrideState(FALSE);
-    $config = \Drupal::config('config_override.new');
+    $config = \Drupal::config('config_override_test.new');
     $this->assertIdentical($config->get('module'), NULL);
 
     $config_factory->setOverrideState($old_state);

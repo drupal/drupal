@@ -2,16 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\config_override\ConfigOverrider.
+ * Contains \Drupal\config_override_test\ConfigOverrider.
  */
 
-namespace Drupal\config_override;
+namespace Drupal\config_override_test;
 
-use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
-use Drupal\Core\Config\ConfigModuleOverridesEvent;
-use Drupal\Core\Config\StorageInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Tests module overrides for configuration.
@@ -27,8 +23,8 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
       if (in_array('system.site', $names)) {
         $overrides = $overrides + array('system.site' => array('name' => 'ZOMG overridden site name'));
       }
-      if (in_array('config_override.new', $names)) {
-        $overrides = $overrides + array('config_override.new' => array('module' => 'override'));
+      if (in_array('config_override_test.new', $names)) {
+        $overrides = $overrides + array('config_override_test.new' => array('module' => 'override'));
       }
     }
     return $overrides;

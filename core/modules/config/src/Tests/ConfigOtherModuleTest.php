@@ -39,29 +39,29 @@ class ConfigOtherModuleTest extends WebTestBase {
    * Tests enabling the provider of the default configuration first.
    */
   public function testInstallOtherModuleFirst() {
-    $this->moduleHandler->install(array('config_other_module_config'));
+    $this->moduleHandler->install(array('config_other_module_config_test'));
 
     // Check that the config entity doesn't exist before the config_test module
     // is enabled. We cannot use the entity system because the config_test
     // entity type does not exist.
-    $config = $this->container->get('config.factory')->get('config_test.dynamic.other_module');
+    $config = $this->container->get('config.factory')->get('config_test.dynamic.other_module_test');
     $this->assertTrue($config->isNew(), 'Default configuration for other modules is not installed if that module is not enabled.');
 
     // Install the module that provides the entity type. This installs the
     // default configuration.
     $this->moduleHandler->install(array('config_test'));
-    $this->assertTrue(entity_load('config_test', 'other_module', TRUE), 'Default configuration has been installed.');
+    $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration has been installed.');
 
     // Uninstall the module that provides the entity type. This will remove the
     // default configuration.
     $this->moduleHandler->uninstall(array('config_test'));
-    $config = $this->container->get('config.factory')->get('config_test.dynamic.other_module');
+    $config = $this->container->get('config.factory')->get('config_test.dynamic.other_module_test');
     $this->assertTrue($config->isNew(), 'Default configuration for other modules is removed when the config entity provider is disabled.');
 
     // Install the module that provides the entity type again. This installs the
     // default configuration.
     $this->moduleHandler->install(array('config_test'));
-    $other_module_config_entity = entity_load('config_test', 'other_module', TRUE);
+    $other_module_config_entity = entity_load('config_test', 'other_module_test', TRUE);
     $this->assertTrue($other_module_config_entity, "Default configuration has been recreated.");
 
     // Update the default configuration to test that the changes are preserved
@@ -70,15 +70,15 @@ class ConfigOtherModuleTest extends WebTestBase {
     $other_module_config_entity->save();
 
     // Uninstall the module that provides the default configuration.
-    $this->moduleHandler->uninstall(array('config_other_module_config'));
-    $this->assertTrue(entity_load('config_test', 'other_module', TRUE), 'Default configuration for other modules is not removed when the module that provides it is uninstalled.');
+    $this->moduleHandler->uninstall(array('config_other_module_config_test'));
+    $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration for other modules is not removed when the module that provides it is uninstalled.');
 
     // Default configuration provided by config_test should still exist.
     $this->assertTrue(entity_load('config_test', 'dotted.default', TRUE), 'The configuration is not deleted.');
 
     // Re-enable module to test that default config is unchanged.
-    $this->moduleHandler->install(array('config_other_module_config'));
-    $config_entity = entity_load('config_test', 'other_module', TRUE);
+    $this->moduleHandler->install(array('config_other_module_config_test'));
+    $config_entity = entity_load('config_test', 'other_module_test', TRUE);
     $this->assertEqual($config_entity->get('style'), "The piano ain't got no wrong notes.", 'Re-enabling the module does not install default config over the existing config entity.');
   }
 
@@ -87,10 +87,10 @@ class ConfigOtherModuleTest extends WebTestBase {
    */
   public function testInstallConfigEnityModuleFirst() {
     $this->moduleHandler->install(array('config_test'));
-    $this->assertFalse(entity_load('config_test', 'other_module', TRUE), 'Default configuration provided by config_other_module_config does not exist.');
+    $this->assertFalse(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration provided by config_other_module_config_test does not exist.');
 
-    $this->moduleHandler->install(array('config_other_module_config'));
-    $this->assertTrue(entity_load('config_test', 'other_module', TRUE), 'Default configuration provided by config_other_module_config has been installed.');
+    $this->moduleHandler->install(array('config_other_module_config_test'));
+    $this->assertTrue(entity_load('config_test', 'other_module_test', TRUE), 'Default configuration provided by config_other_module_config_test has been installed.');
   }
 
   /**

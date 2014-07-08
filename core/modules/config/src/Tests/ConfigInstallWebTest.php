@@ -137,14 +137,14 @@ class ConfigInstallWebTest extends WebTestBase {
     // Turn on the test module, which will attempt to replace the
     // configuration data. This attempt to replace the active configuration
     // should be ignored.
-    \Drupal::moduleHandler()->install(array('config_override_test'));
+    \Drupal::moduleHandler()->install(array('config_existing_default_config_test'));
 
     // Verify that the test module has not been able to change the data.
     $config = \Drupal::config($config_name);
     $this->assertIdentical($config->get(), $expected_profile_data);
 
     // Disable and uninstall the test module.
-    \Drupal::moduleHandler()->uninstall(array('config_override_test'));
+    \Drupal::moduleHandler()->uninstall(array('config_existing_default_config_test'));
 
     // Verify that the data hasn't been altered by removing the test module.
     $config = \Drupal::config($config_name);

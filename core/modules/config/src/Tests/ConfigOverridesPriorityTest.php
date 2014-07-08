@@ -15,7 +15,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
 
-  public static $modules = array('system', 'config', 'config_override', 'language');
+  public static $modules = array('system', 'config', 'config_override_test', 'language');
 
   public static function getInfo() {
     return array(
