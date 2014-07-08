@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provide views data for taxonomy.module.
+ * Provides views data for taxonomy.module.
  */
 
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
@@ -14,8 +14,6 @@ use Drupal\field\FieldConfigInterface;
 function taxonomy_views_data() {
   $data = array();
 
- // taxonomy_term_data table
-
   $data['taxonomy_term_data']['table']['group']  = t('Taxonomy term');
   $data['taxonomy_term_data']['table']['base'] = array(
     'field' => 'tid',
@@ -26,17 +24,14 @@ function taxonomy_views_data() {
   $data['taxonomy_term_data']['table']['entity type'] = 'taxonomy_term';
   $data['taxonomy_term_data']['table']['wizard_id'] = 'taxonomy_term';
 
-
-  // The term data table
   $data['taxonomy_term_data']['table']['join'] = array(
-    // This is provided for many_to_one argument
+    // This is provided for the many_to_one argument.
     'taxonomy_index' => array(
       'field' => 'tid',
       'left_field' => 'tid',
     ),
   );
 
-  // tid field
   $data['taxonomy_term_data']['tid'] = array(
     'title' => t('Term ID'),
     'help' => t('The tid of a taxonomy term.'),
@@ -60,7 +55,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // raw tid field
   $data['taxonomy_term_data']['tid_raw'] = array(
     'title' => t('Term ID'),
     'help' => t('The tid of a taxonomy term.'),
@@ -87,7 +81,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // Term name field
   $data['taxonomy_term_data']['name'] = array(
     'title' => t('Name'),
     'help' => t('The taxonomy term name.'),
@@ -109,7 +102,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // taxonomy weight
   $data['taxonomy_term_data']['weight'] = array(
     'title' => t('Weight'),
     'help' => t('The term weight field'),
@@ -127,7 +119,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // Term description
   $data['taxonomy_term_data']['description__value'] = array(
     'title' => t('Term description'),
     'help' => t('The description associated with a taxonomy term.'),
@@ -141,7 +132,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // Term vocabulary
   $data['taxonomy_term_data']['vid'] = array(
     'title' => t('Vocabulary'),
     'help' => t('Filter the results of "Taxonomy: Term" to a particular vocabulary.'),
@@ -167,7 +157,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // Link to edit the term
   $data['taxonomy_term_data']['edit_term'] = array(
     'field' => array(
       'title' => t('Term edit link'),
@@ -245,7 +234,6 @@ function taxonomy_views_data() {
     ),
   );
 
-  // Content translation field.
   if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
     $data['taxonomy_term_data']['translation_link'] = array(
       'title' => t('Translation link'),
@@ -255,8 +243,6 @@ function taxonomy_views_data() {
       ),
     );
   }
-
-  // taxonomy_index table
 
   $data['taxonomy_index']['table']['group']  = t('Taxonomy term');
 
@@ -289,9 +275,8 @@ function taxonomy_views_data() {
     ),
   );
 
-  // @todo This stuff needs to move to a node field since
-  // really it's all about nodes.
-  // tid field
+  // @todo This stuff needs to move to a node field since really it's all about
+  //   nodes.
   $data['taxonomy_index']['tid'] = array(
     'group' => t('Content'),
     'title' => t('Has taxonomy term ID'),
@@ -314,18 +299,16 @@ function taxonomy_views_data() {
     ),
   );
 
-  // term_hierarchy table
-
   $data['taxonomy_term_hierarchy']['table']['group']  = t('Taxonomy term');
 
   $data['taxonomy_term_hierarchy']['table']['join'] = array(
     'taxonomy_term_hierarchy' => array(
-      // links to self through left.parent = right.tid (going down in depth)
+      // Link to self through left.parent = right.tid (going down in depth).
       'left_field' => 'tid',
       'field' => 'parent',
     ),
     'taxonomy_term_data' => array(
-      // links directly to taxonomy_term_data via tid
+      // Link directly to taxonomy_term_data via tid.
       'left_field' => 'tid',
       'field' => 'tid',
     ),
