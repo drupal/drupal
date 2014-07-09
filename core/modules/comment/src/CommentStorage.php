@@ -8,7 +8,7 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
@@ -80,7 +80,7 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
   /**
    * {@inheritdoc}
    */
-  public function getMaxThread(EntityInterface $comment) {
+  public function getMaxThread(CommentInterface $comment) {
     $query = $this->database->select('comment', 'c')
       ->condition('entity_id', $comment->getCommentedEntityId())
       ->condition('field_name', $comment->getFieldName())
@@ -93,7 +93,7 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
   /**
    * {@inheritdoc}
    */
-  public function getMaxThreadPerThread(EntityInterface $comment) {
+  public function getMaxThreadPerThread(CommentInterface $comment) {
     $query = $this->database->select('comment', 'c')
       ->condition('entity_id', $comment->getCommentedEntityId())
       ->condition('field_name', $comment->getFieldName())
@@ -134,6 +134,64 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
     $ordinal = $query->execute()->fetchField();
 
     return ($divisor > 1) ? floor($ordinal / $divisor) : $ordinal;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNewCommentPageNumber($total_comments, $new_comments, ContentEntityInterface $entity, $field_name = 'comment') {
+    $instance = $entity->getFieldDefinition($field_name);
+    $comments_per_page = $instance->getSetting('per_page');
+
+    if ($total_comments <= $comments_per_page) {
+      // Only one page of comments.
+      $count = 0;
+    }
+    elseif ($instance->getSetting('default_mode') == CommentManagerInterface::COMMENT_MODE_FLAT) {
+      // Flat comments.
+      $count = $total_comments - $new_comments;
+    }
+    else {
+      // Threaded comments.
+
+      // 1. Find all the threads with a new comment.
+      $unread_threads_query = $this->database->select('comment')
+        ->fields('comment', array('thread'))
+        ->condition('entity_id', $entity->id())
+        ->condition('entity_type', $entity->getEntityTypeId())
+        ->condition('field_name', $field_name)
+        ->condition('status', CommentInterface::PUBLISHED)
+        ->orderBy('created', 'DESC')
+        ->orderBy('cid', 'DESC')
+        ->range(0, $new_comments);
+
+      // 2. Find the first thread.
+      $first_thread_query = $this->database->select($unread_threads_query, 'thread');
+      $first_thread_query->addExpression('SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 'torder');
+      $first_thread = $first_thread_query
+        ->fields('thread', array('thread'))
+        ->orderBy('torder')
+        ->range(0, 1)
+        ->execute()
+        ->fetchField();
+
+      // Remove the final '/'.
+      $first_thread = substr($first_thread, 0, -1);
+
+      // Find the number of the first comment of the first unread thread.
+      $count = $this->database->query('SELECT COUNT(*) FROM {comment} WHERE entity_id = :entity_id
+                        AND entity_type = :entity_type
+                        AND field_name = :field_name
+                        AND status = :status AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
+        ':status' => CommentInterface::PUBLISHED,
+        ':entity_id' => $entity->id(),
+        ':field_name' => $field_name,
+        ':entity_type' => $entity->getEntityTypeId(),
+        ':thread' => $first_thread,
+      ))->fetchField();
+    }
+
+    return $comments_per_page > 0 ? (int) ($count / $comments_per_page) : 0;
   }
 
   /**

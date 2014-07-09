@@ -337,7 +337,10 @@ class CommentViewBuilder extends EntityViewBuilder {
       ->getStorage($context['entity_type'])
       ->load($context['entity_id']);
     $field_name = $context['field_name'];
-    $query = comment_new_page_count($entity->{$field_name}->comment_count, $new, $entity);
+    $page_number = \Drupal::entityManager()
+      ->getStorage('comment')
+      ->getNewCommentPageNumber($entity->{$field_name}->comment_count, $new, $entity);
+    $query = $page_number ? array('page' => $page_number) : NULL;
 
     // Attach metadata.
     $element['#attached']['js'][] = array(

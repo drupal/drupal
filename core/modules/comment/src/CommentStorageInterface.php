@@ -7,7 +7,7 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -16,27 +16,44 @@ use Drupal\Core\Entity\EntityStorageInterface;
 interface CommentStorageInterface extends EntityStorageInterface {
 
   /**
-   * Get the maximum encoded thread value for the top level comments.
+   * Gets the maximum encoded thread value for the top level comments.
    *
-   * @param EntityInterface $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   A comment entity.
    *
    * @return string
    *   The maximum encoded thread value among the top level comments of the
    *   node $comment belongs to.
    */
-  public function getMaxThread(EntityInterface $comment);
+  public function getMaxThread(CommentInterface $comment);
 
   /**
-   * Get the maximum encoded thread value for the children of this comment.
+   * Gets the maximum encoded thread value for the children of this comment.
    *
-   * @param EntityInterface $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   A comment entity.
    *
    * @return string
    *   The maximum encoded thread value among all replies of $comment.
    */
-  public function getMaxThreadPerThread(EntityInterface $comment);
+  public function getMaxThreadPerThread(CommentInterface $comment);
+
+  /**
+   * Calculates the page number for the first new comment.
+   *
+   * @param int $total_comments
+   *   The total number of comments that the entity has.
+   * @param int $new_comments
+   *   The number of new comments that the entity has.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity to which the comments belong.
+   * @param string $field_name
+   *   The field name on the entity to which comments are attached.
+   *
+   * @return array|null
+   *   The page number where first new comment appears. (First page returns 0.)
+   */
+  public function getNewCommentPageNumber($total_comments, $new_comments, ContentEntityInterface $entity, $field_name = 'comment');
 
   /**
    * Gets the display ordinal or page number for a comment.

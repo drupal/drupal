@@ -235,81 +235,27 @@ function comment_permission() {
 /**
  * Calculates the page number for the first new comment.
  *
- * @param int $num_comments
- *   Number of comments.
- * @param int $new_replies
- *   Number of new replies.
+ * @param int $total_comments
+ *   The total number of comments that the entity has.
+ * @param int $new_comments
+ *   The number of new comments that the entity has.
  * @param \Drupal\Core\Entity\ContentEntityInterface $entity
- *   The first new comment entity.
+ *   The entity to which the comments belong.
  * @param string $field_name
- *   The field name on the entity to which comments are attached to.
+ *   The field name on the entity to which comments are attached.
  *
  * @return array|null
  *   An array "page=X" if the page number is greater than zero; NULL otherwise.
+ *
+ * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
+ *   Use \Drupal\comment\CommentStorageInterface::getNewCommentPageNumber();
+ *   Note this returns an integer instead of array|null.
  */
-function comment_new_page_count($num_comments, $new_replies, ContentEntityInterface $entity, $field_name = 'comment') {
-  $field_definition = $entity->getFieldDefinition($field_name);
-  $mode = $field_definition->getSetting('default_mode');
-  $comments_per_page = $field_definition->getSetting('per_page');
-  $pagenum = NULL;
-  $flat = $mode == CommentManagerInterface::COMMENT_MODE_FLAT ? TRUE : FALSE;
-  if ($num_comments <= $comments_per_page) {
-    // Only one page of comments.
-    $pageno = 0;
-  }
-  elseif ($flat) {
-    // Flat comments.
-    $count = $num_comments - $new_replies;
-    $pageno = $count / $comments_per_page;
-  }
-  else {
-    // Threaded comments: we build a query with a subquery to find the first
-    // thread with a new comment.
+function comment_new_page_count($total_comments, $new_comments, ContentEntityInterface $entity, $field_name = 'comment') {
+  $page_number = \Drupal::entityManager()->getStorage('comment')
+    ->getNewCommentPageNumber($total_comments, $new_comments, $entity, $field_name);
 
-    // 1. Find all the threads with a new comment.
-    $unread_threads_query = db_select('comment')
-      ->fields('comment', array('thread'))
-      ->condition('entity_id', $entity->id())
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('field_name', $field_name)
-      ->condition('status', CommentInterface::PUBLISHED)
-      ->orderBy('created', 'DESC')
-      ->orderBy('cid', 'DESC')
-      ->range(0, $new_replies);
-
-    // 2. Find the first thread.
-    $first_thread_query = db_select($unread_threads_query, 'thread');
-    $first_thread_query->addExpression('SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 'torder');
-    $first_thread = $first_thread_query
-      ->fields('thread', array('thread'))
-      ->orderBy('torder')
-      ->range(0, 1)
-      ->execute()
-      ->fetchField();
-
-    // Remove the final '/'.
-    $first_thread = substr($first_thread, 0, -1);
-
-    // Find the number of the first comment of the first unread thread.
-    $count = db_query('SELECT COUNT(*) FROM {comment} WHERE entity_id = :entity_id
-                      AND entity_type = :entity_type
-                      AND field_name = :field_name
-                      AND status = :status AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
-      ':status' => CommentInterface::PUBLISHED,
-      ':entity_id' => $entity->id(),
-      ':field_name' => $field_name,
-      ':entity_type' => $entity->getEntityTypeId(),
-      ':thread' => $first_thread,
-    ))->fetchField();
-
-    $pageno = $count / $comments_per_page;
-  }
-
-  if ($pageno >= 1) {
-    $pagenum = array('page' => intval($pageno));
-  }
-
-  return $pagenum;
+  return $page_number ? array('page' => $page_number) : NULL;
 }
 
 /**

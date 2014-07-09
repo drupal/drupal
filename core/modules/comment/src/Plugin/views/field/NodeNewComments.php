@@ -151,9 +151,11 @@ class NodeNewComments extends Numeric {
         'nid' => $this->getValue($values, 'nid'),
         'type' => $this->getValue($values, 'type'),
       ));
+      $page_number = \Drupal::entityManager()->getStorage('comment')
+        ->getNewCommentPageNumber($this->getValue($values, 'comment_count'), $this->getValue($values), $node);
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = 'node/' . $node->id();
-      $this->options['alter']['query'] = comment_new_page_count($this->getValue($values, 'comment_count'), $this->getValue($values), $node);
+      $this->options['alter']['query'] = $page_number ? array('page' => $page_number) : NULL;
       $this->options['alter']['fragment'] = 'new';
     }
 
