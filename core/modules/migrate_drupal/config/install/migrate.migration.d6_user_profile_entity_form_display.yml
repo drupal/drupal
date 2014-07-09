@@ -10,10 +10,10 @@ source:
     options:
       label: hidden
 process:
-  entity_type: constants.entity_type
-  bundle: constants.bundle
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
   field_name: name
-  form_mode: constants.form_mode
+  form_mode: 'constants/form_mode'
   type:
     plugin: static_map
     source: type
@@ -25,14 +25,14 @@ process:
       textfield: text_textfield
       textarea: text_textarea
       url: link_default
-  options: constants.options
-  'options.type': @type
-  'options.settings':
+  options: 'constants/options'
+  'options/type': @type
+  'options/settings':
     plugin: field_instance_widget_settings
     source:
       - @type
-      - constants.empty # we don't have any settings.
-  'options.settings.display_label':  # Single on/off checkboxes need to have display_label = true otherwise their label doesn't show.
+      - 'constants/empty' # we don't have any settings.
+  'options/settings/display_label':  # Single on/off checkboxes need to have display_label = true otherwise their label doesn't show.
     plugin: static_map
     default_value: false
     source: type

@@ -31,8 +31,8 @@ process:
       5: "Print"
       teaser: "Teaser"
       full: "Full"
-  targetEntityType: constants.targetEntityType
-  status: constants.status
+  targetEntityType: 'constants/targetEntityType'
+  status: 'constants/status'
 
 destination:
   plugin: entity:view_mode

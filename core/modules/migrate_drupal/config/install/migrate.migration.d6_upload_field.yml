@@ -12,10 +12,10 @@ source:
     cardinality: -1
     display_field: true
 process:
-  entity_type: constants.entity_type
-  name: constants.name
-  type: constants.type
-  cardinality: constants.cardinality
-  settings.display_field: constants.display_field
+  entity_type: 'constants/entity_type'
+  name: 'constants/name'
+  type: 'constants/type'
+  cardinality: 'constants/cardinality'
+  'settings/display_field': 'constants/display_field'
 destination:
   plugin: entity:field_config

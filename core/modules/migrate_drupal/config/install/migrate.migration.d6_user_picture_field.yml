@@ -10,9 +10,9 @@ source:
     name: user_picture
     cardinality: 1
 process:
-  entity_type: constants.entity_type
-  name: constants.name
-  type: constants.type
-  cardinality: constants.cardinality
+  entity_type: 'constants/entity_type'
+  name: 'constants/name'
+  type: 'constants/type'
+  cardinality: 'constants/cardinality'
 destination:
   plugin: entity:field_config

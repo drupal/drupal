@@ -12,7 +12,7 @@ process:
   description: description
   help: help
   title_label: title_label
-  preview: constants.preview
+  preview: 'constants/preview'
   submitted: submitted
   options: options
   create_body: has_body

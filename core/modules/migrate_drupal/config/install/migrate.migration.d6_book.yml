@@ -4,9 +4,9 @@ source:
   plugin: d6_book
 process:
   nid: nid
-  book.bid: bid
-  book.weight: weight
-  book.pid:
+  'book/bid': bid
+  'book/weight': weight
+  'book/pid':
     -
       plugin: skip_process_on_empty
       source: plid

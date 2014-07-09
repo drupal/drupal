@@ -37,6 +37,11 @@ class Row {
   protected $destination = array();
 
   /**
+   * Level separator of destination and source properties.
+   */
+  const PROPERTY_SEPARATOR = '/';
+
+  /**
    * The mapping between source and destination identifiers.
    *
    * @var array
@@ -119,7 +124,7 @@ class Row {
    *   TRUE if the source has property; FALSE otherwise.
    */
   public function hasSourceProperty($property) {
-    return NestedArray::keyExists($this->source, explode('.', $property));
+    return NestedArray::keyExists($this->source, explode(static::PROPERTY_SEPARATOR, $property));
   }
 
   /**
@@ -132,7 +137,7 @@ class Row {
    *   The found returned property or NULL if not found.
    */
   public function getSourceProperty($property) {
-    $return = NestedArray::getValue($this->source, explode('.', $property), $key_exists);
+    $return = NestedArray::getValue($this->source, explode(static::PROPERTY_SEPARATOR, $property), $key_exists);
     if ($key_exists) {
       return $return;
     }
@@ -165,7 +170,7 @@ class Row {
       throw new \Exception("The source is frozen and can't be changed any more");
     }
     else {
-      NestedArray::setValue($this->source, explode('.', $property), $data, TRUE);
+      NestedArray::setValue($this->source, explode(static::PROPERTY_SEPARATOR, $property), $data, TRUE);
     }
   }
 
@@ -186,7 +191,7 @@ class Row {
    *   TRUE if the destination property exists.
    */
   public function hasDestinationProperty($property) {
-    return NestedArray::keyExists($this->destination, explode('.', $property));
+    return NestedArray::keyExists($this->destination, explode(static::PROPERTY_SEPARATOR, $property));
   }
 
   /**
@@ -199,7 +204,7 @@ class Row {
    */
   public function setDestinationProperty($property, $value) {
     $this->rawDestination[$property] = $value;
-    NestedArray::setValue($this->destination, explode('.', $property), $value, TRUE);
+    NestedArray::setValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property), $value, TRUE);
   }
 
   /**
@@ -215,10 +220,10 @@ class Row {
   /**
    * Returns the raw destination. Rarely necessary.
    *
-   * For example calling setDestination('foo:bar', 'baz') results in
+   * For example calling setDestination('foo/bar', 'baz') results in
    * @code
    * $this->destination['foo']['bar'] = 'baz';
-   * $this->rawDestination['foo.bar'] = 'baz';
+   * $this->rawDestination['foo/bar'] = 'baz';
    * @encode
    *
    * @return array
@@ -238,7 +243,7 @@ class Row {
    *   The destination value.
    */
   public function getDestinationProperty($property) {
-    return NestedArray::getValue($this->destination, explode('.', $property));
+    return NestedArray::getValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property));
   }
 
   /**

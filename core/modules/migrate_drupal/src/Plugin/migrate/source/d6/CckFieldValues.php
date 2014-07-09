@@ -148,15 +148,15 @@ class CckFieldValues extends DrupalSqlBase implements SourceEntityInterface {
           foreach ($field_query->execute() as $field_row) {
             foreach ($field_info['columns'] as $display_name => $column_name) {
               list ( , $column) = explode(':', $display_name);
-              $propery_path = $field_name . '.' . $field_row['delta'] . '.' . $column;
-              $row->setSourceProperty($propery_path, $field_row[$column_name]);
+              $property_path = $field_name . Row::PROPERTY_SEPARATOR . $field_row['delta'] . Row::PROPERTY_SEPARATOR . $column;
+              $row->setSourceProperty($property_path, $field_row[$column_name]);
             }
           }
         }
         else {
           if ($field_row = $field_query->execute()->fetchAssoc()) {
             foreach ($field_info['columns'] as $display_name => $column_name) {
-              $row->setSourceProperty(str_replace(':', '.', $display_name), $field_row[$column_name]);
+              $row->setSourceProperty(str_replace(':', Row::PROPERTY_SEPARATOR, $display_name), $field_row[$column_name]);
             }
           }
         }

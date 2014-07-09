@@ -23,11 +23,11 @@ process:
     -
       plugin: skip_row_on_empty
   bundle: type_name
-  form_mode: constants.form_mode
+  form_mode: 'constants/form_mode'
   field_name: field_name
-  entity_type: constants.entity_type
-  "options.weight": weight
-  "options.type":
+  entity_type: 'constants/entity_type'
+  'options/weight': weight
+  'options/type':
     type:
       plugin: static_map
       bypass: true
@@ -45,13 +45,13 @@ process:
         optionwidgets_onoff: options_onoff
         optionwidgets_buttons: options_buttons
         optionwidgets_select: options_select
-  "options.settings":
+  'options/settings':
     -
       plugin: field_instance_widget_settings
       source:
         - widget_type
         - widget_settings
-  "options.third_party_settings": constants.third_party_settings
+  'options/third_party_settings': 'constants/third_party_settings'
 
 destination:
   plugin: component_entity_form_display

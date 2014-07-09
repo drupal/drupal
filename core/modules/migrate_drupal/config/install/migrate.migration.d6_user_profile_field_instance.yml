@@ -6,8 +6,8 @@ source:
     entity_type: user
     bundle: user
 process:
-  entity_type: constants.entity_type
-  bundle: constants.bundle
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
   label: title
   description: explanation
   field_name: name

@@ -8,19 +8,19 @@ source:
     label: Comment settings
     required: true
 process:
-  entity_type: constants.entity_type
-  field_name: constants.field_name
-  label: constants.label
-  required: constants.required
+  entity_type: 'constants/entity_type'
+  field_name: 'constants/field_name'
+  label: 'constants/label'
+  required: 'constants/required'
 
   bundle: node_type
-  'default_value.0.status': comment
-  'settings.default_mode': comment_default_mode
-  'settings.per_page': comment_default_per_page
-  'settings.anonymous': comment_anonymous
-  'settings.subject': comment_subject_field
-  'settings.form_location': comment_form_location
-  'settings.preview': comment_preview
+  'default_value/0/status': comment
+  'settings/default_mode': comment_default_mode
+  'settings/per_page': comment_default_per_page
+  'settings/anonymous': comment_anonymous
+  'settings/subject': comment_subject_field
+  'settings/form_location': comment_form_location
+  'settings/preview': comment_preview
 destination:
   plugin: entity:field_instance_config
 migration_dependencies:

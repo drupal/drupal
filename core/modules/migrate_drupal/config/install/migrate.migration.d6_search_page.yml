@@ -14,10 +14,10 @@ source:
     path: node
     plugin: node_search
 process:
-  id: constants.id
-  path: constants.path
-  plugin: constants.plugin
-  configuration.rankings:
+  id: 'constants/id'
+  path: 'constants/path'
+  plugin: 'constants/plugin'
+  'configuration/rankings':
     plugin: d6_search_configuration_rankings
 destination:
   plugin: entity:search_page

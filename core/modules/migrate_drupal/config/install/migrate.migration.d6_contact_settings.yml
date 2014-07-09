@@ -7,7 +7,7 @@ source:
     - contact_hourly_threshold
 process:
   user_default_enabled: contact_default_status
-  'flood.limit': contact_hourly_threshold
+  'flood/limit': contact_hourly_threshold
   default_category:
     plugin: migration
     migration: d6_contact_category

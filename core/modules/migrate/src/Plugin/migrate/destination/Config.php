@@ -70,7 +70,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface 
   public function import(Row $row, array $old_destination_id_values = array()) {
     foreach ($row->getRawDestination() as $key => $value) {
       if (isset($value) || !empty($this->configuration['store null'])) {
-        $this->config->set($key, $value);
+        $this->config->set(str_replace(Row::PROPERTY_SEPARATOR, '.', $key), $value);
       }
     }
     $this->config->save();

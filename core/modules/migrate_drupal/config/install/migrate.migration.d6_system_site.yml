@@ -15,9 +15,9 @@ process:
   name: site_name
   mail: site_mail
   slogan: site_slogan
-  'page.front': site_frontpage
-  'page.403': site_403
-  'page.404': site_404
+  'page/front': site_frontpage
+  'page/403': site_403
+  'page/404': site_404
   weight_select_max: drupal_weight_select_max
   admin_compact_mode: admin_compact_mode
 destination:

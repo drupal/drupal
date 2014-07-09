@@ -19,9 +19,9 @@ process:
     plugin: migration
     migration: d6_node
     source: nid
-  entity_type: constants.entity_type
-  field_name: constants.field_name
-  comment_type: constants.comment_type
+  entity_type: 'constants/entity_type'
+  field_name: 'constants/field_name'
+  comment_type: 'constants/comment_type'
   subject: subject
   uid:
     -
@@ -38,8 +38,8 @@ process:
   changed: timestamp
   status: status #In D6, published=0. We reverse the value in prepareRow.
   thread: thread
-  'comment_body.value': comment
-  'comment_body.format':
+  'comment_body/value': comment
+  'comment_body/format':
     plugin: migration
     migration: d6_filter_format
     source: format

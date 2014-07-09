@@ -7,7 +7,7 @@ source:
     - locale_js_directory
 process:
   cache_strings: locale_cache_strings
-  'javascript.directory': locale_js_directory
+  'javascript/directory': locale_js_directory
 destination:
   plugin: config
   config_name: locale.settings

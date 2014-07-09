@@ -10,9 +10,9 @@ source:
     - simpletest_verbose
 process:
   clear_results: simpletest_clear_results
-  'httpauth.method': simpletest_httpauth_method
-  'httpauth.password': simpletest_httpauth_password
-  'httpauth.username': simpletest_httpauth_username
+  'httpauth/method': simpletest_httpauth_method
+  'httpauth/password': simpletest_httpauth_password
+  'httpauth/username': simpletest_httpauth_username
   verbose: simpletest_verbose
 destination:
   plugin: config

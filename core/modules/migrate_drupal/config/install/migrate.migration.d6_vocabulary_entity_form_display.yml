@@ -9,9 +9,9 @@ source:
       type: options_select
       weight: 20
 process:
-  entity_type: constants.entity_type
-  form_mode: constants.form_mode
-  options: constants.options
+  entity_type: 'constants/entity_type'
+  form_mode: 'constants/form_mode'
+  options: 'constants/options'
   bundle: type
   field_name:
     plugin: migration

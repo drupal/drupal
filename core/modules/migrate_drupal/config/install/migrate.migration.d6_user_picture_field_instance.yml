@@ -14,13 +14,13 @@ source:
       alt_field_required: false
       title_field_required: false
 process:
-  entity_type: constants.entity_type
-  bundle: constants.bundle
-  field_name: constants.name
-  settings: constants.settings
-  'settings.file_directory': file_directory
-  'settings.max_filesize': max_filesize
-  'settings.max_resolution': max_resolution
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  field_name: 'constants/name'
+  settings: 'constants/settings'
+  'settings/file_directory': file_directory
+  'settings/max_filesize': max_filesize
+  'settings/max_resolution': max_resolution
 destination:
   plugin: entity:field_instance_config
 migration_dependencies:

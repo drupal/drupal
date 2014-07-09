@@ -54,8 +54,8 @@ process:
       - delta
       - settings
       - visibility
-  'settings.visibility.request_path.pages': pages
-  'settings.visibility.user_role.roles': roles
+  'settings/visibility/request_path/pages': pages
+  'settings/visibility/user_role/roles': roles
 destination:
   plugin: entity:block
 migration_dependencies:

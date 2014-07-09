@@ -14,10 +14,10 @@ process:
   fetcher: aggregator_fetcher
   parser: aggregator_parser
   processors: aggregator_processors
-  'items.allowed_html': aggregator_allowed_html_tags
-  'items.teaser_length': aggregator_teaser_length
-  'items.expire': aggregator_clear
-  'source.list_max': aggregator_summary_items
+  'items/allowed_html': aggregator_allowed_html_tags
+  'items/teaser_length': aggregator_teaser_length
+  'items/expire': aggregator_clear
+  'source/list_max': aggregator_summary_items
 destination:
   plugin: config
   config_name: aggregator.settings

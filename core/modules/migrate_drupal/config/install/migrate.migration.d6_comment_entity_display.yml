@@ -11,10 +11,10 @@ source:
       type: comment_default
       weight: 20
 process:
-  entity_type: constants.entity_type
-  field_name: constants.field_name
-  view_mode: constants.view_mode
-  options: constants.options
+  entity_type: 'constants/entity_type'
+  field_name: 'constants/field_name'
+  view_mode: 'constants/view_mode'
+  options: 'constants/options'
 
   bundle: node_type
 destination:

@@ -6,9 +6,9 @@ source:
     entity_type: node
     langcode: und
 process:
-  entity_type: constants.entity_type
+  entity_type: 'constants/entity_type'
   status: active
-  langcode: constants.langcode
+  langcode: 'constants/langcode'
   name: field_name
   type:
     -

@@ -11,9 +11,9 @@ source:
       weight: 20
 
 process:
-  entity_type: constants.entity_type
-  view_mode: constants.view_mode
-  options: constants.options
+  entity_type: 'constants/entity_type'
+  view_mode: 'constants/view_mode'
+  options: 'constants/options'
   bundle: type
   field_name:
     plugin: migration

@@ -8,12 +8,12 @@ source:
     settings:
       description_field: 1
 process:
-  entity_type: constants.entity_type
+  entity_type: 'constants/entity_type'
   bundle: node_type
-  field_name: constants.name
-  settings: constants.settings
-  'settings.file_extensions': file_extensions
-  'settings.max_filesize': max_filesize
+  field_name: 'constants/name'
+  settings: 'constants/settings'
+  'settings/file_extensions': file_extensions
+  'settings/max_filesize': max_filesize
 destination:
   plugin: entity:field_instance_config
 migration_dependencies:

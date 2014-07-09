@@ -20,7 +20,7 @@ process:
         - 1
     -
       plugin: skip_row_on_empty
-  entity_type: constants.entity_type
+  entity_type: 'constants/entity_type'
   field_name: field_name
   bundle: type_name
   label: label

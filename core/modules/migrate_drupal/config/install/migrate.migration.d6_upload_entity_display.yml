@@ -11,13 +11,13 @@ source:
       label: hidden
       settings: {}
 process:
-  entity_type: constants.entity_type
+  entity_type: 'constants/entity_type'
   bundle: node_type
-  view_mode: constants.view_mode
-  field_name: constants.name
-  type: constants.type
-  options: constants.options
-  'options.type': @type
+  view_mode: 'constants/view_mode'
+  field_name: 'constants/name'
+  type: 'constants/type'
+  options: 'constants/options'
+  'options/type': @type
 destination:
   plugin: component_entity_display
 migration_dependencies:

@@ -6,7 +6,7 @@ source:
     entity_type: node
     parent: 0
 process:
-  entity_type: constants.entity_type
+  entity_type: 'constants/entity_type'
   bundle: type
   field_name:
     plugin: migration

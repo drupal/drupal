@@ -10,10 +10,10 @@ source:
     settings:
       content_type: comment
 process:
-  entity_type: constants.entity_type
-  id: constants.id
-  name: constants.name
-  type: constants.type
-  settings: constants.settings
+  entity_type: 'constants/entity_type'
+  id: 'constants/id'
+  name: 'constants/name'
+  type: 'constants/type'
+  settings: 'constants/settings'
 destination:
   plugin: entity:field_config

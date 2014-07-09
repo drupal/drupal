@@ -10,9 +10,9 @@ source:
       label: hidden
       settings: {}
 process:
-  entity_type: constants.entity_type
-  bundle: constants.bundle
-  view_mode: constants.view_mode
+  entity_type: 'constants/entity_type'
+  bundle: 'constants/bundle'
+  view_mode: 'constants/view_mode'
   field_name: name
   type:
     plugin: static_map
@@ -25,8 +25,8 @@ process:
       textfield: text_default
       textarea: text_default
       url: link_default
-  options: constants.options
-  'options.type': @type
+  options: 'constants/options'
+  'options/type': @type
   hidden:
     plugin: static_map
     source: visibility

@@ -21,7 +21,7 @@ process:
         - 1
     -
       plugin: skip_row_on_empty
-  entity_type: constants.entity_type
+  entity_type: 'constants/entity_type'
   bundle: type_name
   view_mode:
     -
@@ -34,15 +34,15 @@ process:
       index:
         - 1
   field_name: field_name
-  "options.label": label
-  "options.weight": weight
-  "options.type":
+  "options/label": label
+  "options/weight": weight
+  "options/type":
       -
         plugin: static_map
         bypass: true
         source:
           - type
-          - "display_settings.format"
+          - 'display_settings/format'
         map:
           text:
             default: text_default
@@ -164,13 +164,13 @@ process:
             default: string
       -
         plugin: field_type_defaults
-  "options.settings":
+  "options/settings":
     -
       plugin: static_map
       bypass: true
       source:
         - module
-        - "display_settings.format"
+        - 'display_settings/format'
       map:
         number:
           us_0:
@@ -291,7 +291,7 @@ process:
             trim_length: 600
     -
       plugin: field_formatter_settings_defaults
-  "options.third_party_settings": constants.third_party_settings
+  "options/third_party_settings": 'constants/third_party_settings'
 
 destination:
   plugin: component_entity_display

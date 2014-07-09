@@ -75,7 +75,7 @@ class EntityConfigBase extends Entity {
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
     foreach ($row->getRawDestination() as $property => $value) {
-      $this->updateEntityProperty($entity, explode('.', $property), $value);
+      $this->updateEntityProperty($entity, explode(Row::PROPERTY_SEPARATOR, $property), $value);
     }
   }
 

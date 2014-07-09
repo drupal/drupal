@@ -7,8 +7,8 @@ source:
     - cron_threshold_error
     - cron_last
 process:
-  'threshold.warning': cron_threshold_warning
-  'threshold.error': cron_threshold_error
+  'threshold/warning': cron_threshold_warning
+  'threshold/error': cron_threshold_error
 destination:
   plugin: config
   config_name: system.cron

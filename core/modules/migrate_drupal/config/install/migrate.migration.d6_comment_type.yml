@@ -17,9 +17,9 @@ source:
     label: comment
     description: comment
 process:
-  target_entity_type_id: constants.entity_type
-  id: constants.id
-  label: constants.label
-  description: constants.description
+  target_entity_type_id: 'constants/entity_type'
+  id: 'constants/id'
+  label: 'constants/label'
+  description: 'constants/description'
 destination:
   plugin: entity:comment_type

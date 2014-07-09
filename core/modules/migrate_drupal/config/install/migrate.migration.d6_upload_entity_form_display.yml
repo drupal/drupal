@@ -13,13 +13,13 @@ source:
       settings:
         progress_indicator: throbber
 process:
-  entity_type: constants.entity_type
+  entity_type: 'constants/entity_type'
   bundle: node_type
-  field_name: constants.name
-  form_mode: constants.form_mode
-  type: constants.type
-  options: constants.options
-  'options.type': @type
+  field_name: 'constants/name'
+  form_mode: 'constants/form_mode'
+  type: 'constants/type'
+  options: 'constants/options'
+  'options/type': @type
 destination:
   plugin: component_entity_form_display
 migration_dependencies:

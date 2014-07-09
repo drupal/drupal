@@ -14,6 +14,6 @@ process:
       date_format_long: long
       date_format_short: short
       date_format_medium: medium
-  'pattern.php': value
+  pattern: value
 destination:
   plugin: entity:date_format

@@ -8,10 +8,10 @@ source:
     - update_notification_threshold
     - update_notify_emails
 process:
-  'fetch.max_attempts': update_max_fetch_attempts
-  'fetch.url': update_fetch_url
-  'notification.threshold': update_notification_threshold
-  'notification.emails': update_notify_emails
+  'fetch/max_attempts': update_max_fetch_attempts
+  'fetch/url': update_fetch_url
+  'notification/threshold': update_notification_threshold
+  'notification/emails': update_notify_emails
 destination:
   plugin: config
   config_name: update.settings
