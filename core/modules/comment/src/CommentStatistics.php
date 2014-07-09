@@ -69,12 +69,17 @@ class CommentStatistics implements CommentStatisticsInterface {
    * {@inheritdoc}
    */
   public function read($entities, $entity_type) {
-    return $this->database->select('comment_entity_statistics', 'ces')
+    $stats = $this->database->select('comment_entity_statistics', 'ces')
       ->fields('ces')
       ->condition('ces.entity_id', array_keys($entities))
       ->condition('ces.entity_type', $entity_type)
-      ->execute()
-      ->fetchAllAssoc('entity_id');
+      ->execute();
+
+    $statistics_records = array();
+    while ($entry = $stats->fetchObject()) {
+      $statistics_records[] = $entry;
+    }
+    return $statistics_records;
   }
 
   /**

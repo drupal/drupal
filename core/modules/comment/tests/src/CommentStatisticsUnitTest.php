@@ -45,6 +45,13 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    */
   protected $commentStatistics;
 
+  /**
+   * Counts calls to fetchAssoc().
+   *
+   * @var int
+   */
+  protected $calls_to_fetch;
+
   public static function getInfo() {
     return array(
       'name' => 'Comment statistics test',
@@ -62,8 +69,8 @@ class CommentStatisticsUnitTest extends UnitTestCase {
       ->getMock();
 
     $this->statement->expects($this->any())
-      ->method('fetchAllAssoc')
-      ->will($this->returnValue(array('1' => 'something', '2' => 'something-else')));
+      ->method('fetchObject')
+      ->will($this->returnCallback(array($this, 'fetchObjectCallback')));
 
     $this->select = $this->getMockBuilder('Drupal\Core\Database\Query\Select')
       ->disableOriginalConstructor()
@@ -101,8 +108,30 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    * @group Comment
    */
   public function testRead() {
+    $this->calls_to_fetch = 0;
     $results = $this->commentStatistics->read(array('1' => 'boo', '2' => 'foo'), 'snafoos');
-    $this->assertEquals($results, array('1' => 'something', '2' => 'something-else'));
+    $this->assertEquals($results, array('something', 'something-else'));
   }
 
+  /**
+   * Return value callback for fetchObject() function on mocked object.
+   *
+   * @return bool|string
+   *   'Something' on first, 'something-else' on second and FALSE for the
+   *   other calls to function.
+   */
+  public function fetchObjectCallback() {
+    $this->calls_to_fetch++;
+    switch ($this->calls_to_fetch) {
+      case 1:
+        return 'something';
+        break;
+      case 2:
+        return 'something-else';
+        break;
+      default:
+        return FALSE;
+        break;
+    }
+  }
 }

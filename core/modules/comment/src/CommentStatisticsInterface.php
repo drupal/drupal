@@ -34,7 +34,7 @@ interface CommentStatisticsInterface {
    *   The entity type of the passed entities.
    *
    * @return object[]
-   *   Array of statistics records keyed by entity id.
+   *   Array of statistics records.
    */
   public function read($entities, $entity_type);
 
