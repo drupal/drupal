@@ -786,6 +786,16 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
+   * Returns the session name in use on the child site.
+   *
+   * @return string
+   *   The name of the session cookie.
+   */
+  public function getSessionName() {
+    return $this->session_name;
+  }
+
+  /**
    * Sets up a Drupal site for running functional and integration tests.
    *
    * Installs Drupal with the installation profile specified in
@@ -815,6 +825,12 @@ abstract class WebTestBase extends TestBase {
       'mail' => 'admin@example.com',
       'pass_raw' => $this->randomName(),
     ));
+
+    // Some tests (SessionTest and SessionHttpsTest) need to examine whether the
+    // proper session cookies were set on a response. Because the child site
+    // uses the same session name as the test runner, it is necessary to make
+    // that available to test-methods.
+    $this->session_name = $this->originalSessionName;
 
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
@@ -892,10 +908,11 @@ abstract class WebTestBase extends TestBase {
 
     $request = \Drupal::request();
     $this->kernel = DrupalKernel::createFromRequest($request, drupal_classloader(), 'prod', TRUE);
+    $this->kernel->prepareLegacyRequest($request);
     // Force the container to be built from scratch instead of loaded from the
     // disk. This forces us to not accidently load the parent site.
     $container = $this->kernel->rebuildContainer();
-    $this->kernel->prepareLegacyRequest($request);
+
     $config = $container->get('config.factory');
 
     // Manually create and configure private and temporary files directories.
@@ -1117,7 +1134,6 @@ abstract class WebTestBase extends TestBase {
     $request = \Drupal::request();
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
     $this->container = $this->kernel->rebuildContainer();
-    $this->container->get('current_user')->setAccount(\Drupal::currentUser());
 
     // The request context is normally set by the router_listener from within
     // its KernelEvents::REQUEST listener. In the simpletest parent site this
@@ -1234,9 +1250,6 @@ abstract class WebTestBase extends TestBase {
       if (!$result) {
         throw new \UnexpectedValueException('One or more cURL options could not be set.');
       }
-
-      // By default, the child session name should be the same as the parent.
-      $this->session_name = session_name();
     }
     // We set the user agent header on each request so as to use the current
     // time and a new uniqid.

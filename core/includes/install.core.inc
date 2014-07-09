@@ -1694,11 +1694,13 @@ function install_finished(&$install_state) {
   $snapshot = \Drupal::service('config.storage.snapshot');
   \Drupal::service('config.manager')->createSnapshot($active, $snapshot);
 
-  // Load current user and perform final login tasks.
-  // This has to be done after drupal_flush_all_caches()
-  // to avoid session regeneration.
-  $account = user_load(1);
-  user_login_finalize($account);
+  if ($install_state['interactive']) {
+    // Load current user and perform final login tasks.
+    // This has to be done after drupal_flush_all_caches()
+    // to avoid session regeneration.
+    $account = user_load(1);
+    user_login_finalize($account);
+  }
 
   // @todo Temporary hack to satisfy PIFR.
   // @see https://drupal.org/node/1317548
