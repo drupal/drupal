@@ -32,6 +32,13 @@ class ConfigImportAllTest extends ModuleTestBase {
     );
   }
 
+  public function setUp() {
+    parent::setUp();
+
+    $this->web_user = $this->drupalCreateUser(array('synchronize configuration'));
+    $this->drupalLogin($this->web_user);
+  }
+
   /**
    * Tests that a fixed set of modules can be installed and uninstalled.
    */
@@ -82,6 +89,9 @@ class ConfigImportAllTest extends ModuleTestBase {
       return TRUE;
     });
 
+    // Can not uninstall config and use admin/config/development/configuration!
+    unset($modules_to_uninstall['config']);
+
     $this->assertTrue(isset($modules_to_uninstall['comment']), 'The comment module will be disabled');
 
     // Uninstall all modules that can be uninstalled.
@@ -94,7 +104,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     }
 
     // Import the configuration thereby re-installing all the modules.
-    $this->configImporter()->import();
+    $this->drupalPostForm('admin/config/development/configuration', array(), t('Import all'));
 
     // Check that there are no errors.
     $this->assertIdentical($this->configImporter()->getErrors(), array());

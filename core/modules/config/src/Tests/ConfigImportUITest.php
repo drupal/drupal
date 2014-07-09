@@ -331,6 +331,21 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertNotEqual($new_site_name, \Drupal::config('system.site')->get('name'));
   }
 
+  public function testConfigUninstallConfigException() {
+    $staging = $this->container->get('config.storage.staging');
+
+    $core_extension = \Drupal::config('core.extension')->get();
+    unset($core_extension['module']['config']);
+    $staging->write('core.extension', $core_extension);
+
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertText('core.extension');
+
+    // Import and verify that both do not appear anymore.
+    $this->drupalPostForm(NULL, array(), t('Import all'));
+    $this->assertText('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
+  }
+
   function prepareSiteNameUpdate($new_site_name) {
     $staging = $this->container->get('config.storage.staging');
     // Create updated configuration object.

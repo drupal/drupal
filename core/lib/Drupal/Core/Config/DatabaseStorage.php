@@ -10,11 +10,13 @@ namespace Drupal\Core\Config;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\SchemaObjectExistsException;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Defines the Database storage.
  */
 class DatabaseStorage implements StorageInterface {
+  use DependencySerializationTrait;
 
   /**
    * The database connection.

@@ -48,6 +48,12 @@ class SimpletestResultsForm extends FormBase {
    */
   public function __construct(Connection $database) {
     $this->database = $database;
+  }
+
+  /**
+   * Builds the status image map.
+   */
+  protected function buildStatusImageMap() {
     // Initialize image mapping property.
     $image_pass = array(
       '#theme' => 'image',
@@ -96,6 +102,7 @@ class SimpletestResultsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $test_id = NULL) {
+    $this->buildStatusImageMap();
     // Make sure there are test results to display and a re-run is not being
     // performed.
     $results = array();
