@@ -224,21 +224,29 @@ class UrlHelper {
    * @param string $base_url
    *   The base URL string to check against, such as "http://example.com/"
    *
-   * @return
+   * @return bool
    *   TRUE if the URL has the same domain and base path.
+   *
+   * @throws \InvalidArgumentException
+   *   Exception thrown when a either $url or $bath_url are not fully qualified.
    */
   public static function externalIsLocal($url, $base_url) {
     $url_parts = parse_url($url);
-    $base_host = parse_url($base_url, PHP_URL_HOST);
+    $base_parts = parse_url($base_url);
 
-    if (!isset($url_parts['path'])) {
-      return ($url_parts['host'] == $base_host);
+    if (empty($base_parts['host']) || empty($url_parts['host'])) {
+      throw new \InvalidArgumentException(String::format('A path was passed when a fully qualified domain was expected.'));
+    }
+
+    if (!isset($url_parts['path']) || !isset($base_parts['path'])) {
+      return (!isset($base_parts['path']) || $base_parts['path'] == '/')
+        && ($url_parts['host'] == $base_parts['host']);
     }
     else {
       // When comparing base paths, we need a trailing slash to make sure a
       // partial URL match isn't occurring. Since base_path() always returns
       // with a trailing slash, we don't need to add the trailing slash here.
-      return ($url_parts['host'] == $base_host && stripos($url_parts['path'], $base_url) === 0);
+      return ($url_parts['host'] == $base_parts['host'] && stripos($url_parts['path'], $base_parts['path']) === 0);
     }
   }
 

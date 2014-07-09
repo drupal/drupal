@@ -465,4 +465,89 @@ class UrlHelperTest extends UnitTestCase {
     return $data;
   }
 
+  /**
+   * Test detecting external urls that point to local resources.
+   *
+   * @param string $url
+   *   The external url to test.
+   * @param string $base_url
+   *   The base url.
+   * @param bool $expected
+   *   TRUE if an external URL points to this installation as determined by the
+   *   base url.
+   *
+   * @covers ::externalIsLocal
+   * @dataProvider providerTestExternalIsLocal
+   */
+  public function testExternalIsLocal($url, $base_url, $expected) {
+    $this->assertSame($expected, UrlHelper::externalIsLocal($url, $base_url));
+  }
+
+  /**
+   * Provider for local external url detection.
+   *
+   * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocal()
+   */
+  public function providerTestExternalIsLocal() {
+    return array(
+      // Different mixes of trailing slash.
+      array('http://example.com', 'http://example.com', TRUE),
+      array('http://example.com/', 'http://example.com', TRUE),
+      array('http://example.com', 'http://example.com/', TRUE),
+      array('http://example.com/', 'http://example.com/', TRUE),
+      // Sub directory of site.
+      array('http://example.com/foo', 'http://example.com/', TRUE),
+      array('http://example.com/foo/bar', 'http://example.com/foo', TRUE),
+      array('http://example.com/foo/bar', 'http://example.com/foo/', TRUE),
+      // Different sub-domain.
+      array('http://example.com', 'http://www.example.com/', FALSE),
+      array('http://example.com/', 'http://www.example.com/', FALSE),
+      array('http://example.com/foo', 'http://www.example.com/', FALSE),
+      // Different TLD.
+      array('http://example.com', 'http://example.ca', FALSE),
+      array('http://example.com', 'http://example.ca/', FALSE),
+      array('http://example.com/', 'http://example.ca/', FALSE),
+      array('http://example.com/foo', 'http://example.ca', FALSE),
+      array('http://example.com/foo', 'http://example.ca/', FALSE),
+      // Different site path.
+      array('http://example.com/foo', 'http://example.com/bar', FALSE),
+      array('http://example.com', 'http://example.com/bar', FALSE),
+      array('http://example.com/bar', 'http://example.com/bar/', FALSE),
+    );
+  }
+
+  /**
+   * Test invalid url arguments.
+   *
+   * @param string $url
+   *   The url to test.
+   * @param string $base_url
+   *   The base url.
+   *
+   * @covers ::externalIsLocal
+   * @dataProvider providerTestExternalIsLocalInvalid
+   * @expectedException \InvalidArgumentException
+   */
+  public function testExternalIsLocalInvalid($url, $base_url) {
+    UrlHelper::externalIsLocal($url, $base_url);
+  }
+
+  /**
+   * Provides invalid argument data for local external url detection.
+   *
+   * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocalInvalid()
+   */
+  public function providerTestExternalIsLocalInvalid() {
+    return array(
+      array('http://example.com/foo', ''),
+      array('http://example.com/foo', 'bar'),
+      array('http://example.com/foo', 'http://'),
+      // Invalid destination urls.
+      array('', 'http://example.com/foo'),
+      array('bar', 'http://example.com/foo'),
+      array('/bar', 'http://example.com/foo'),
+      array('bar/', 'http://example.com/foo'),
+      array('http://', 'http://example.com/foo'),
+    );
+  }
 }

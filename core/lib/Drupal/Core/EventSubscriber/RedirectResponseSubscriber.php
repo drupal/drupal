@@ -40,7 +40,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
   /**
    * Allows manipulation of the response object when performing a redirect.
    *
-   * @param Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
    *   The Event to process.
    */
   public function checkRedirectUrl(FilterResponseEvent $event) {
@@ -55,7 +55,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
       // the following exception:
       // - Absolute URLs that point to this site (i.e. same base URL and
       //   base path) are allowed.
-      if ($destination && (!UrlHelper::isExternal($destination) || UrlHelper::externalIsLocal($destination, base_path()))) {
+      if ($destination && (!UrlHelper::isExternal($destination) || UrlHelper::externalIsLocal($destination, $GLOBALS['base_url']))) {
         $destination = UrlHelper::parse($destination);
 
         $path = $destination['path'];
