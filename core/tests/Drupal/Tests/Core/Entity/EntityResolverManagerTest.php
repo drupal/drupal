@@ -327,7 +327,7 @@ class EntityResolverManagerTest extends UnitTestCase {
     $this->entityResolverManager->setRouteOptions($route);
     $this->assertEquals($defaults, $route->getDefaults());
     $parameters = $route->getOption('parameters');
-    $this->assertEquals(array('entity_test' => array('type' => 'entity:entity_test')), $parameters);
+    $this->assertNull($parameters);
   }
 
   /**

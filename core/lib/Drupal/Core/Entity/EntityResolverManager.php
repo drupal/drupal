@@ -136,8 +136,7 @@ class EntityResolverManager {
   /**
    * Sets the upcasting information using the _entity_* route defaults.
    *
-   * Supported are the '_entity_view', '_entity_list' and '_entity_form' route
-   * defaults.
+   * Supports the '_entity_view' and '_entity_form' route defaults.
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route object.
@@ -145,9 +144,6 @@ class EntityResolverManager {
   protected function setParametersFromEntityInformation(Route $route) {
     if ($entity_view = $route->getDefault('_entity_view')) {
       list($entity_type) = explode('.', $entity_view, 2);
-    }
-    elseif ($entity_list = $route->getDefault('_entity_list')) {
-      $entity_type = $entity_list;
     }
     elseif ($entity_form = $route->getDefault('_entity_form')) {
       list($entity_type) = explode('.', $entity_form, 2);
@@ -194,7 +190,7 @@ class EntityResolverManager {
       }
     }
 
-    // Try to use _entity_view, _entity_list information on the route.
+    // Try to use _entity_* information on the route.
     $this->setParametersFromEntityInformation($route);
   }
 
