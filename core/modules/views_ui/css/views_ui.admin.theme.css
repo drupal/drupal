@@ -1131,12 +1131,17 @@ div.messages {
   font-size: 11px;
 }
 .js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:first-child a {
-  border-radius: 1.1em 0 0 0;
+  border-radius: 1.1em 0 0 0; /* LTR */
+}
+[dir="rtl"].js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:first-child a {
+  border-radius: 0 1.1em 0 0;
 }
 .js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:last-child a {
-  border-radius: 0 0 0 1.1em;
+  border-radius: 0 0 0 1.1em; /* LTR */
 }
-
+[dir="rtl"].js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:last-child a {
+  border-radius: 0 0 1.1em 0;
+}
 .views-display-top .dropbutton-wrapper {
   position: absolute;
   right: 12px;
