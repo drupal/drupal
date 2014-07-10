@@ -261,7 +261,8 @@ Configuration Translation module
 - Vijayachandran Mani 'vijaycs85' https://drupal.org/user/93488
 
 Contact module
-- ?
+- Lee Rowlands 'larowlan' http://drupal.org/user/395439
+- Tim Eisenhuth 'tim-e' https://www.drupal.org/user/1439114
 
 Content Translation module
 - Francesco Placella 'plach' http://drupal.org/user/183211
