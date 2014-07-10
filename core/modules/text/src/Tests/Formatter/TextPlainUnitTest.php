@@ -29,13 +29,6 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    */
   public static $modules = array('entity', 'field', 'text', 'entity_test', 'system', 'filter', 'user');
 
-  /**
-   * Contains rendered content.
-   *
-   * @var string
-   */
-  protected $content;
-
   public static function getInfo() {
     return array(
       'name'  => 'Text field text_plain formatter',
@@ -123,8 +116,8 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    */
   protected function renderEntityFields(ContentEntityInterface $entity, EntityViewDisplayInterface $display) {
     $content = $display->build($entity);
-    $this->content = drupal_render($content);
-    return $this->content;
+    $content = $this->render($content);
+    return $content;
   }
 
   /**

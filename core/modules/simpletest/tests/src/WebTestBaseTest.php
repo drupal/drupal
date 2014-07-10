@@ -68,11 +68,11 @@ class WebTestBaseTest extends UnitTestCase {
 
     $web_test = $this->getMockBuilder('Drupal\simpletest\WebTestBase')
       ->disableOriginalConstructor()
-      ->setMethods(array('assertTrue', 'drupalGetContent', 'pass'))
+      ->setMethods(array('getRawContent', 'assertTrue', 'pass'))
       ->getMock();
 
     $web_test->expects($this->any())
-      ->method('drupalGetContent')
+      ->method('getRawContent')
       ->will($this->returnValue($content));
 
     $web_test->expects($this->once())

@@ -9,7 +9,6 @@ namespace Drupal\node\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\simpletest\WebTestBase;
 
@@ -124,29 +123,6 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
     $this->assertFalse(entity_load('node_type', $active_type), 'The content no longer exists with the old name.');
     $content_type = entity_load('node_type', $staged_type);
     $this->assertIdentical($staged_type, $content_type->type);
-  }
-
-  /**
-   * Asserts that a Perl regex pattern is found in the text content.
-   *
-   * @param string $pattern
-   *   Perl regex to look for including the regex delimiters.
-   * @param string $message
-   *   (optional) A message to display with the assertion.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on failure.
-   */
-  protected function assertTextPattern($pattern, $message = NULL) {
-    // @see WebTestBase::assertTextHelper()
-    if ($this->plainTextContent === FALSE) {
-      $this->plainTextContent = Xss::filter($this->drupalGetContent(), array());
-    }
-    // @see WebTestBase::assertPattern()
-    if (!$message) {
-      $message = String::format('Pattern "@pattern" found', array('@pattern' => $pattern));
-    }
-    return $this->assert((bool) preg_match($pattern, $this->plainTextContent), $message);
   }
 
 }

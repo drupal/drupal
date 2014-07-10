@@ -36,6 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class KernelTestBase extends UnitTestBase {
 
+  use AssertContentTrait;
+
   /**
    * Modules to enable.
    *
@@ -532,6 +534,22 @@ abstract class KernelTestBase extends UnitTestBase {
         unset($wrappers[$filter][$scheme]);
       }
     }
+  }
+
+  /**
+   * Renders a render array.
+   *
+   * @param array $elements
+   *   The elements to render.
+   *
+   * @return string
+   *   The rendered string output (typically HTML).
+   */
+  protected function render(array $elements) {
+    $content = drupal_render($elements);
+    $this->setRawContent($content);
+    $this->verbose('<pre style="white-space: pre-wrap">' . String::checkPlain($content));
+    return $content;
   }
 
 }

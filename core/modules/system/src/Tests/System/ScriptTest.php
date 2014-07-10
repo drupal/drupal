@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -44,7 +43,7 @@ class ScriptTest extends DrupalUnitTestBase {
     );
     ob_start();
     include DRUPAL_ROOT . '/core/scripts/password-hash.sh';
-    $this->content = ob_get_contents();
+    $this->setRawContent(ob_get_contents());
     ob_end_clean();
     $this->assertRaw('hash: $S$');
   }
@@ -66,22 +65,9 @@ class ScriptTest extends DrupalUnitTestBase {
     );
     ob_start();
     include DRUPAL_ROOT . '/core/scripts/rebuild_token_calculator.sh';
-    $this->content = ob_get_contents();
+    $this->setRawContent(ob_get_contents());
     ob_end_clean();
     $this->assertRaw('token=');
-  }
-
-  /**
-   * Asserts that a given string is found in $this->content.
-   *
-   * @param string $string
-   *   The raw string to assert.
-   */
-  protected function assertRaw($string) {
-    return $this->assert(strpos($this->content, $string) !== FALSE, String::format('Raw @value found in @output.', array(
-      '@value' => var_export($string, TRUE),
-      '@output' => var_export($this->content, TRUE),
-    )));
   }
 
 }

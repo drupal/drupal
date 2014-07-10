@@ -85,7 +85,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // View all fields.
     $content = $display->build($entity);
-    $this->content = drupal_render($content);
+    $this->render($content);
     $this->assertRaw($this->instance->getLabel(), "First field's label is displayed.");
     foreach ($values as $delta => $value) {
       $this->assertRaw("$formatter_setting|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
@@ -100,14 +100,14 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $display_options['label'] = 'hidden';
     $display->setComponent($this->field->getName(), $display_options);
     $content = $display->build($entity);
-    $this->content = drupal_render($content);
+    $this->render($content);
     $this->assertNoRaw($this->instance->getLabel(), "Hidden label: label is not displayed.");
 
     // Field hidden.
     $entity = clone($entity_init);
     $display->removeComponent($this->field->getName());
     $content = $display->build($entity);
-    $this->content = drupal_render($content);
+    $this->render($content);
     $this->assertNoRaw($this->instance->getLabel(), "Hidden field: label is not displayed.");
     foreach ($values as $delta => $value) {
       $this->assertNoRaw("$formatter_setting|{$value['value']}", "Hidden field: value $delta is not displayed.");
@@ -124,7 +124,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       ),
     ));
     $content = $display->build($entity);
-    $this->content = drupal_render($content);
+    $this->render($content);
     $expected_output = $formatter_setting;
     foreach ($values as $delta => $value) {
       $expected_output .= "|$delta:{$value['value']}";
@@ -142,7 +142,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       ),
     ));
     $content = $display->build($entity);
-    $this->content = drupal_render($content);
+    $this->render($content);
     foreach ($values as $delta => $value) {
       $expected = $formatter_setting . '|' . $value['value'] . '|' . ($value['value'] + 1);
       $this->assertRaw($expected, "Value $delta is displayed, formatter settings are applied.");

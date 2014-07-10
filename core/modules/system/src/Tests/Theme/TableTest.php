@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Theme;
 
-use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -209,61 +208,6 @@ class TableTest extends DrupalUnitTestBase {
     $this->assertRaw('<td class="priority-medium">4</td>', 'Cell 1: the priority-medium class was applied correctly.');
     $this->assertRaw('<td class="priority-low">5</td>', 'Cell 2: the priority-low class was applied correctly.');
     $this->assertRaw('<td>6</td>', 'Cell 3: no priority classes were applied.');
-  }
-
-  /**
-   * Renders a given render array.
-   *
-   * @param array $elements
-   *   The render array elements to render.
-   *
-   * @return string
-   *   The rendered HTML.
-   */
-  protected function render(array $elements) {
-    $this->content = drupal_render($elements);
-    $this->verbose('<pre>' . String::checkPlain($this->content));
-  }
-
-  /**
-   * Removes all white-space between HTML tags from $this->content.
-   */
-  protected function removeWhiteSpace() {
-    $this->content = preg_replace('@>\s+<@', '><', $this->content);
-  }
-
-  /**
-   * Asserts that a raw string appears in $this->content.
-   *
-   * @param string $value
-   *   The expected string.
-   * @param string $message
-   *   (optional) A custom assertion message.
-   */
-  protected function assertRaw($value, $message = NULL) {
-    if (!isset($message)) {
-      $message = String::format("Raw value @value found.", array(
-        '@value' => var_export($value, TRUE),
-      ));
-    }
-    $this->assert(strpos($this->content, $value) !== FALSE, $message);
-  }
-
-  /**
-   * Asserts that a raw string does not appear in $this->content.
-   *
-   * @param string $value
-   *   The not expected string.
-   * @param string $message
-   *   (optional) A custom assertion message.
-   */
-  protected function assertNoRaw($value, $message = NULL) {
-    if (!isset($message)) {
-      $message = String::format("Raw value @value not found.", array(
-        '@value' => var_export($value, TRUE),
-      ));
-    }
-    $this->assert(strpos($this->content, $value) === FALSE, $message);
   }
 
 }
