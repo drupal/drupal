@@ -67,60 +67,6 @@ class FormTestForm {
   }
 
   /**
-   * Wraps _form_test_tableselect_multiple_true_form().
-   *
-   * @todo Remove _form_test_tableselect_multiple_true_form().
-   */
-  public function testTableSelectCheckboxes() {
-    return \Drupal::formBuilder()->getForm('_form_test_tableselect_multiple_true_form');
-  }
-
-  /**
-   * Wraps _form_test_tableselect_multiple_false_form().
-   *
-   * @todo Remove _form_test_tableselect_multiple_false_form().
-   */
-  public function testTableSelectRadios() {
-    return \Drupal::formBuilder()->getForm('_form_test_tableselect_multiple_false_form');
-  }
-
-  /**
-   * Wraps _form_test_tableselect_colspan_form().
-   *
-   * @todo Remove _form_test_tableselect_colspan_form().
-   */
-  public function testTableSelectColspan() {
-    return \Drupal::formBuilder()->getForm('_form_test_tableselect_colspan_form');
-  }
-
-  /**
-   * Wraps _form_test_tableselect_empty_form().
-   *
-   * @todo Remove _form_test_tableselect_empty_form().
-   */
-  public function testTableSelectEmptyText() {
-    return \Drupal::formBuilder()->getForm('_form_test_tableselect_empty_form');
-  }
-
-  /**
-   * Wraps _form_test_tableselect_js_select_form().
-   *
-   * @todo Remove _form_test_tableselect_js_select_form().
-   */
-  public function testTableSelectJS($test_action) {
-    return \Drupal::formBuilder()->getForm('_form_test_tableselect_js_select_form', $test_action);
-  }
-
-  /**
-   * Wraps _form_test_vertical_tabs_form().
-   *
-   * @todo Remove _form_test_vertical_tabs_form().
-   */
-  public function testVerticalTabs() {
-    return \Drupal::formBuilder()->getForm('_form_test_vertical_tabs_form');
-  }
-
-  /**
    * Wraps form_test_storage_form().
    *
    * @todo Remove form_test_storage_form().
@@ -145,15 +91,6 @@ class FormTestForm {
    */
   public function testFormStateCleanAdvanced() {
     return \Drupal::formBuilder()->getForm('form_test_form_state_values_clean_advanced_form');
-  }
-
-  /**
-   * Wraps _form_test_checkbox().
-   *
-   * @todo Remove _form_test_checkbox().
-   */
-  public function testCheckbox() {
-    return \Drupal::formBuilder()->getForm('_form_test_checkbox');
   }
 
   /**
@@ -271,15 +208,6 @@ class FormTestForm {
    */
   public function testDisabledElements() {
     return \Drupal::formBuilder()->getForm('_form_test_disabled_elements');
-  }
-
-  /**
-   * Wraps _form_test_input_forgery().
-   *
-   * @todo Remove _form_test_input_forgery().
-   */
-  public function testInputForgery() {
-    return \Drupal::formBuilder()->getForm('_form_test_input_forgery');
   }
 
   /**

@@ -119,7 +119,7 @@ form_test.pattern:
 form_test.tableselect_checkboxes:
   path: '/form_test/tableselect/multiple-true'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectCheckboxes'
+    _form: '\Drupal\form_test\Form\FormTestTableSelectMultipleTrueForm'
     _title: 'Tableselect checkboxes test'
   requirements:
     _access: 'TRUE'
@@ -127,7 +127,7 @@ form_test.tableselect_checkboxes:
 form_test.tableselect_radios:
   path: '/form_test/tableselect/multiple-false'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectRadios'
+    _form: '\Drupal\form_test\Form\FormTestTableSelectMultipleFalseForm'
     _title: 'Tableselect radio button test'
   requirements:
     _access: 'TRUE'
@@ -135,7 +135,7 @@ form_test.tableselect_radios:
 form_test.tableselect_colspan:
   path: '/form_test/tableselect/colspan'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectColspan'
+    _form: '\Drupal\form_test\Form\FormTestTableSelectColspanForm'
     _title: 'Tableselect colspan test'
   requirements:
     _access: 'TRUE'
@@ -143,7 +143,7 @@ form_test.tableselect_colspan:
 form_test.tableselect_empty_text:
   path: '/form_test/tableselect/empty-text'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectEmptyText'
+    _form: '\Drupal\form_test\Form\FormTestTableSelectEmptyForm'
     _title: 'Tableselect empty text test'
   requirements:
     _access: 'TRUE'
@@ -151,7 +151,7 @@ form_test.tableselect_empty_text:
 form_test.tableselect_js:
   path: '/form_test/tableselect/advanced-select/{test_action}'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectJS'
+    _form: '\Drupal\form_test\Form\FormTestTableSelectJsSelectForm'
     _title: 'Tableselect js_select tests'
   requirements:
     _access: 'TRUE'
@@ -159,7 +159,7 @@ form_test.tableselect_js:
 form_test.vertical_tabs:
   path: '/form_test/vertical-tabs'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testVerticalTabs'
+    _form: '\Drupal\form_test\Form\FormTestVerticalTabsForm'
     _title: 'Vertical tabs tests'
   requirements:
     _access: 'TRUE'
@@ -191,7 +191,7 @@ form_test.state_clean_advanced:
 form_test.checkbox:
   path: '/form-test/checkbox'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testCheckbox'
+    _form: '\Drupal\form_test\Form\FormTestCheckboxForm'
     _title: 'Form test'
   requirements:
     _access: 'TRUE'
@@ -304,7 +304,7 @@ form_test.disabled_elements:
 form_test.input_forgery:
   path: '/form-test/input-forgery'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testInputForgery'
+    _form: '\Drupal\form_test\Form\FormTestInputForgeryForm'
     _title: 'Form test'
   requirements:
     _access: 'TRUE'
