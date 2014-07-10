@@ -224,7 +224,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     // Filter out empty items.
     $this->filterEmptyItems();
 
-    $this->delegateMethod('presave');
+    $this->delegateMethod('preSave');
   }
 
   /**
