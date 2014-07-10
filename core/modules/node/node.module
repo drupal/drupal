@@ -211,21 +211,6 @@ function node_entity_form_display_alter(EntityFormDisplayInterface $form_display
 }
 
 /**
- * Entity URI callback.
- *
- * @param \Drupal\node\NodeInterface $node
- *   A node entity.
- *
- * @return \Drupal\core\Url
- *   A Url object that provides a URL to the view page for $node.
- */
-function node_uri(NodeInterface $node) {
-  return new Url('node.view', array(
-    'node' => $node->id(),
-  ));
-}
-
-/**
  * Gathers a listing of links to nodes.
  *
  * @param $result

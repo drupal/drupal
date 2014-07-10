@@ -39,7 +39,6 @@ use Drupal\user\UserInterface;
  *   data_table = "node_field_data",
  *   revision_table = "node_revision",
  *   revision_data_table = "node_field_revision",
- *   uri_callback = "node_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
