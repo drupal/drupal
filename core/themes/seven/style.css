@@ -414,28 +414,6 @@ li.tabs__tab a {
   border-bottom-color: #008ee6;
 }
 
-/**
- * Page layout.
- */
-#page {
-  background: #fff;
-  color: #333;
-  margin-left: 0.8125em;
-  margin-right: 0.8125em;
-  position: relative;
-}
-@media screen and (min-width:28.125em) { /* 450px */
-  #page {
-    margin-left: 1.25em;
-    margin-right: 1.25em;
-  }
-}
-@media screen and (min-width:45em) { /* 720px */
-  #page {
-    margin-left: 2.5em;
-    margin-right: 2.5em;
-  }
-}
 ul.links li,
 ul.inline li {
   padding-right: 1em; /* LTR */
@@ -852,9 +830,6 @@ select.form-select:focus {
  * Improve form element usability on narrow devices.
  */
 @media screen and (max-width: 600px) {
-  #page {
-    margin: 0 10px;
-  }
   input.form-autocomplete,
   input.form-text,
   input.form-tel,
