@@ -355,18 +355,6 @@ function form_set_error($name, array &$form_state, $message = '') {
 }
 
 /**
- * Clears all errors against all form elements made by form_set_error().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->clearErrors().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::clearErrors().
- */
-function form_clear_error(array &$form_state) {
-  \Drupal::formBuilder()->clearErrors($form_state);
-}
-
-/**
  * Returns an associative array of all errors.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
