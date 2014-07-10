@@ -32,7 +32,7 @@ class TestFileTransfer extends FileTransfer {
     return new TestFileTransfer($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
   }
 
-  function connect() {
+  public function connect() {
     $this->connection = new MockTestConnection();
     $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
   }

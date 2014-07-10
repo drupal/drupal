@@ -26,7 +26,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   /**
    * Implements Drupal\Core\FileTransfer\FileTransfer::connect().
    */
-  function connect() {
+  public function connect() {
     $this->connection = @ssh2_connect($this->hostname, $this->port);
     if (!$this->connection) {
       throw new FileTransferException('SSH Connection failed to @host:@port', NULL, array('@host' => $this->hostname, '@port' => $this->port));

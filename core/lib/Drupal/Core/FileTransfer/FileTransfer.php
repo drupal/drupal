@@ -110,7 +110,7 @@ abstract class FileTransfer {
   /**
    * Connects to the server.
    */
-  abstract protected function connect();
+  abstract public function connect();
 
   /**
    * Copies a directory.

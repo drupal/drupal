@@ -15,7 +15,7 @@ class Local extends FileTransfer implements ChmodInterface {
   /**
    * Implements Drupal\Core\FileTransfer\FileTransfer::connect().
    */
-  function connect() {
+  public function connect() {
     // No-op
   }
 
