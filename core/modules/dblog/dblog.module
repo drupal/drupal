@@ -87,14 +87,8 @@ function dblog_cron() {
  *   List of uniquely defined database log message types.
  */
 function _dblog_get_message_types() {
-  $types = array();
-
-  $result = db_query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type');
-  foreach ($result as $object) {
-    $types[] = $object->type;
-  }
-
-  return array_combine($types, $types);
+  return db_query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type')
+    ->fetchAllKeyed(0, 0);
 }
 
 /**
