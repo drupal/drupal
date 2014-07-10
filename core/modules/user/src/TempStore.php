@@ -65,11 +65,8 @@ class TempStore {
    * By default, data is stored for one week (604800 seconds) before expiring.
    *
    * @var int
-   *
-   * @todo Currently, this property is not exposed anywhere, and so the only
-   *   way to override it is by extending the class.
    */
-  protected $expire = 604800;
+  protected $expire;
 
   /**
    * Constructs a new object for accessing data from a key/value store.
@@ -82,11 +79,14 @@ class TempStore {
    *   The lock object used for this data.
    * @param mixed $owner
    *   The owner key to store along with the data (e.g. a user or session ID).
+   * @param int $expire
+   *   The time to live for items, in seconds.
    */
-  public function __construct(KeyValueStoreExpirableInterface $storage, LockBackendInterface $lockBackend, $owner) {
+  public function __construct(KeyValueStoreExpirableInterface $storage, LockBackendInterface $lockBackend, $owner, $expire = 604800) {
     $this->storage = $storage;
     $this->lockBackend = $lockBackend;
     $this->owner = $owner;
+    $this->expire = $expire;
   }
 
   /**

@@ -82,7 +82,7 @@ class TempStoreTest extends UnitTestCase {
     $this->keyValue = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
 
-    $this->tempStore = new TempStore($this->keyValue, $this->lock, $this->owner);
+    $this->tempStore = new TempStore($this->keyValue, $this->lock, $this->owner, 604800);
 
     $this->ownObject = (object) array(
       'data' => 'test_data',

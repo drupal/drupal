@@ -39,6 +39,13 @@ class TempStoreFactory {
   protected $lockBackend;
 
   /**
+   * The time to live for items in seconds.
+   *
+   * @var int
+   */
+  protected $expire;
+
+  /**
    * Constructs a Drupal\user\TempStoreFactory object.
    *
    * @param \Drupal\Component\Serialization\SerializationInterface $serializer
@@ -47,11 +54,14 @@ class TempStoreFactory {
    *   The connection object used for this data.
    * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
    *   The lock object used for this data.
+   * @param int $expire
+   *   The time to live for items, in seconds.
    */
-  function __construct(SerializationInterface $serializer, Connection $connection, LockBackendInterface $lockBackend) {
+  function __construct(SerializationInterface $serializer, Connection $connection, LockBackendInterface $lockBackend, $expire = 604800) {
     $this->serializer = $serializer;
     $this->connection = $connection;
     $this->lockBackend = $lockBackend;
+    $this->expire = $expire;
   }
 
   /**
@@ -77,7 +87,7 @@ class TempStoreFactory {
 
     // Store the data for this collection in the database.
     $storage = new DatabaseStorageExpirable($collection, $this->serializer, $this->connection);
-    return new TempStore($storage, $this->lockBackend, $owner);
+    return new TempStore($storage, $this->lockBackend, $owner, $this->expire);
   }
 
 }

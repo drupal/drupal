@@ -54,4 +54,7 @@ services:
     arguments: ['@entity.manager', '@password']
   user.tempstore:
     class: Drupal\user\TempStoreFactory
-    arguments: ['@serialization.phpserialize', '@database', '@lock']
+    arguments: ['@serialization.phpserialize', '@database', '@lock', '%user.tempstore.expire%']
+
+parameters:
+  user.tempstore.expire: 604800
