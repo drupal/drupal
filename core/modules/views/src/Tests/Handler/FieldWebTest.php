@@ -559,10 +559,10 @@ class FieldWebTest extends HandlerTestBase {
     $row->views_test_data_name = $this->randomName(8);
     $name_field->options['alter']['max_length'] = 5;
     $output = $name_field->advancedRender($row);
-    $this->assertSubString($output, '...', 'An ellipsis should appear if the output is trimmed');
+    $this->assertSubString($output, '…', 'An ellipsis should appear if the output is trimmed');
     $name_field->options['alter']['max_length'] = 10;
     $output = $name_field->advancedRender($row);
-    $this->assertNotSubString($output, '...', 'No ellipsis should appear if the output is not trimmed');
+    $this->assertNotSubString($output, '…', 'No ellipsis should appear if the output is not trimmed');
   }
 
 }

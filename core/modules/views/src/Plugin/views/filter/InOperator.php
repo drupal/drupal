@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Component\Utility\String as UtilityString;
+use Drupal\Component\Utility\Unicode;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -356,7 +357,7 @@ class InOperator extends FilterPluginBase {
             $values .= ', ';
           }
           if (drupal_strlen($values) > 8) {
-            $values .= '...';
+            $values = Unicode::truncate($values, 8, FALSE, TRUE);
             break;
           }
           if (isset($this->value_options[$value])) {

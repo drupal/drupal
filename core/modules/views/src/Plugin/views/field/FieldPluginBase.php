@@ -946,7 +946,7 @@ abstract class FieldPluginBase extends HandlerBase {
 
       $form['alter']['ellipsis'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Add "..." at the end of trimmed text'),
+        '#title' => t('Add "…" at the end of trimmed text'),
         '#default_value' => $this->options['alter']['ellipsis'],
         '#states' => array(
           'visible' => array(
@@ -1655,7 +1655,7 @@ abstract class FieldPluginBase extends HandlerBase {
    *   The alter array of options to use.
    *     - max_length: Maximum length of the string, the rest gets truncated.
    *     - word_boundary: Trim only on a word boundary.
-   *     - ellipsis: Show an ellipsis (...) at the end of the trimmed string.
+   *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
    *     - html: Make sure that the html is correct.
    *
    * @param string $value
@@ -1684,8 +1684,7 @@ abstract class FieldPluginBase extends HandlerBase {
       $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
 
       if (!empty($alter['ellipsis'])) {
-        // @todo: What about changing this to a real ellipsis?
-        $value .= t('...');
+        $value .= t('…');
       }
     }
     if (!empty($alter['html'])) {

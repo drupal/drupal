@@ -516,7 +516,7 @@ views_field:
           label: 'Trim only on a word boundary'
         ellipsis:
           type: boolean
-          label: 'Add "..." at the end of trimmed text'
+          label: 'Add "…" at the end of trimmed text'
         more_link:
           type: boolean
           label: 'Add a read-more link if output is trimmed.'
