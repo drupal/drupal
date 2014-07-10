@@ -141,15 +141,6 @@ function user_js_alter(&$javascript) {
 }
 
 /**
- * Entity URI callback.
- */
-function user_uri($user) {
-  return new Url('user.view', array(
-    'user' => $user->id(),
-  ));
-}
-
-/**
  * Populates $entity->account for each prepared entity.
  *
  * Called by Drupal\Core\Entity\EntityViewBuilderInterface::buildComponents()
