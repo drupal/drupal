@@ -235,6 +235,9 @@ Block module
 - Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 - Ben Dougherty 'benjy' http://drupal.org/user/1852732
 
+Block Content module
+- Lee Rowlands 'larowlan' http://drupal.org/user/395439
+
 Book module
 - Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 
@@ -268,9 +271,6 @@ Content Translation module
 
 Contextual module
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
-
-Custom block module
-- Lee Rowlands 'larowlan' http://drupal.org/user/395439
 
 Database Logging module
 - Khalid Baheyeldin 'kbahey' http://drupal.org/user/4063
