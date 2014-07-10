@@ -703,8 +703,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         }
         if ($session_manager->isStarted()) {
           $session_manager_state |= 0x2;
+          $session_manager->save();
         }
-        $session_manager->save();
         unset($session_manager);
       }
     }
