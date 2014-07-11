@@ -148,9 +148,9 @@ class DisplayApiTest extends FieldUnitTestBase {
     }
     $this->assertText($setting . '|' . implode('|', $array), 'Values were displayed with expected setting.');
 
-    // Display settings: Check visually-hidden field.
+    // Display settings: Check visually_hidden field.
     $display = array(
-      'label' => 'visually-hidden',
+      'label' => 'visually_hidden',
       'type' => 'field_test_multiple',
       'settings' => array(
         'test_formatter_setting_multiple' => $this->randomName(),

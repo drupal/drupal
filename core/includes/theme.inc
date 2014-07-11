@@ -2379,7 +2379,7 @@ function template_preprocess_field(&$variables, $hook) {
   }
 
   // Hide labels visually, but display them to screenreaders if applicable.
-  if ($element['#label_display'] == 'visually-hidden') {
+  if ($element['#label_display'] == 'visually_hidden') {
     $variables['title_attributes']['class'][] = 'visually-hidden';
   }
 
