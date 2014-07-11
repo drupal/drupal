@@ -111,6 +111,28 @@ class TableTest extends DrupalUnitTestBase {
   }
 
   /**
+   * Test that the 'footer' option works correctly.
+   */
+  function testThemeTableFooter() {
+    $footer = array(
+      array(
+        'data' => array(1),
+      ),
+      array('Foo'),
+    );
+
+    $table = array(
+      '#type' => 'table',
+      '#rows' => array(),
+      '#footer' => $footer,
+    );
+
+    $this->render($table);
+    $this->removeWhiteSpace();
+    $this->assertRaw('<tfoot><tr><td>1</td></tr><tr><td>Foo</td></tr></tfoot>', 'Table footer found.');
+  }
+
+  /**
    * Tests that the 'header' option in cells works correctly.
    */
   function testThemeTableHeaderCellOption() {
