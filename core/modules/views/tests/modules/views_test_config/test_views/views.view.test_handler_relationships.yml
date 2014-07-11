@@ -21,7 +21,7 @@ display:
           provider: views
         nid:
           id: nid
-          table: comment
+          table: comment_field_data
           field: node
           relationship: comment_cid
           plugin_id: standard

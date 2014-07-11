@@ -50,7 +50,7 @@ class Comment extends WizardPluginBase {
   protected $filters = array(
     'status' => array(
       'value' => TRUE,
-      'table' => 'comment',
+      'table' => 'comment_field_data',
       'field' => 'status',
       'provider' => 'comment'
     ),
@@ -144,7 +144,7 @@ class Comment extends WizardPluginBase {
 
     // Add a relationship to nodes.
     $display_options['relationships']['node']['id'] = 'node';
-    $display_options['relationships']['node']['table'] = 'comment';
+    $display_options['relationships']['node']['table'] = 'comment_field_data';
     $display_options['relationships']['node']['field'] = 'node';
     $display_options['relationships']['node']['required'] = 1;
     $display_options['relationships']['node']['plugin_id'] = 'standard';
@@ -155,7 +155,7 @@ class Comment extends WizardPluginBase {
 
     /* Field: Comment: Title */
     $display_options['fields']['subject']['id'] = 'subject';
-    $display_options['fields']['subject']['table'] = 'comment';
+    $display_options['fields']['subject']['table'] = 'comment_field_data';
     $display_options['fields']['subject']['field'] = 'subject';
     $display_options['fields']['subject']['provider'] = 'comment';
     $display_options['fields']['subject']['label'] = '';

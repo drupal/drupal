@@ -81,7 +81,7 @@ function tracker_cron() {
         ))
         ->execute();
 
-      $query = db_select('comment', 'c', array('target' => 'replica'));
+      $query = db_select('comment_field_data', 'c', array('target' => 'replica'));
       // Force PostgreSQL to do an implicit cast by adding 0.
       $query->addExpression('0 + :changed', 'changed', array(':changed' => $changed));
       $query->addField('c', 'status', 'published');
@@ -92,7 +92,8 @@ function tracker_cron() {
         ->condition('c.entity_id', $row->nid)
         ->condition('c.entity_type', 'node')
         ->condition('c.uid', $row->uid, '<>')
-        ->condition('c.status', CommentInterface::PUBLISHED);
+        ->condition('c.status', CommentInterface::PUBLISHED)
+        ->condition('c.default_langcode', 1);
 
       // Insert the user-level data for the commenters (except if a commenter
       // is the node's author).
@@ -279,7 +280,7 @@ function _tracker_calculate_changed($nid) {
   // @todo This should be actually filtering on the desired language and just
   //   fall back to the default language.
   $changed = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC', array(':nid' => $nid), array('target' => 'replica'))->fetchField();
-  $latest_comment = db_query_range("SELECT cid, changed FROM {comment} WHERE entity_type = 'node' AND entity_id = :nid AND status = :status ORDER BY changed DESC", 0, 1, array(
+  $latest_comment = db_query_range("SELECT cid, changed FROM {comment_field_data} WHERE entity_type = 'node' AND entity_id = :nid AND status = :status AND default_langcode = 1 ORDER BY changed DESC", 0, 1, array(
     ':nid' => $nid,
     ':status' => CommentInterface::PUBLISHED,
   ), array('target' => 'replica'))->fetchObject();
@@ -312,7 +313,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     // Or if they have commented on the node.
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid.
-      $keep_subscription = db_query_range("SELECT COUNT(*) FROM {comment} WHERE entity_type = 'node' AND entity_id = :nid AND uid = :uid AND status = :status", 0, 1, array(
+      $keep_subscription = db_query_range("SELECT COUNT(*) FROM {comment_field_data} WHERE entity_type = 'node' AND entity_id = :nid AND uid = :uid AND status = :status AND default_langcode = 1", 0, 1, array(
         ':nid' => $nid,
         ':uid' => $uid,
         ':status' => CommentInterface::PUBLISHED,

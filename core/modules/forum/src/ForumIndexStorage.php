@@ -96,14 +96,14 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function updateIndex(NodeInterface $node) {
     $nid = $node->id();
-    $count = $this->database->query("SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_name = 'comment_forum' AND c.entity_type = 'node' AND c.status = :status", array(
+    $count = $this->database->query("SELECT COUNT(cid) FROM {comment_field_data} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_name = 'comment_forum' AND c.entity_type = 'node' AND c.status = :status AND c.default_langcode = 1", array(
       ':nid' => $nid,
       ':status' => CommentInterface::PUBLISHED,
     ))->fetchField();
 
     if ($count > 0) {
       // Comments exist.
-      $last_reply = $this->database->queryRange("SELECT cid, name, created, uid FROM {comment} WHERE entity_id = :nid AND field_name = 'comment_forum' AND entity_type = 'node' AND status = :status ORDER BY cid DESC", 0, 1, array(
+      $last_reply = $this->database->queryRange("SELECT cid, name, created, uid FROM {comment_field_data} WHERE entity_id = :nid AND field_name = 'comment_forum' AND entity_type = 'node' AND status = :status AND default_langcode = 1 ORDER BY cid DESC", 0, 1, array(
         ':nid' => $nid,
         ':status' => CommentInterface::PUBLISHED,
       ))->fetchObject();

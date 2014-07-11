@@ -184,23 +184,25 @@ class CommentStatistics implements CommentStatisticsInterface {
       return;
     }
 
-    $query = $this->database->select('comment', 'c');
+    $query = $this->database->select('comment_field_data', 'c');
     $query->addExpression('COUNT(cid)');
     $count = $query->condition('c.entity_id', $comment->getCommentedEntityId())
       ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
       ->condition('c.field_name', $comment->getFieldName())
       ->condition('c.status', CommentInterface::PUBLISHED)
+      ->condition('default_langcode', 1)
       ->execute()
       ->fetchField();
 
     if ($count > 0) {
       // Comments exist.
-      $last_reply = $this->database->select('comment', 'c')
+      $last_reply = $this->database->select('comment_field_data', 'c')
         ->fields('c', array('cid', 'name', 'changed', 'uid'))
         ->condition('c.entity_id', $comment->getCommentedEntityId())
         ->condition('c.entity_type', $comment->getCommentedEntityTypeId())
         ->condition('c.field_name', $comment->getFieldName())
         ->condition('c.status', CommentInterface::PUBLISHED)
+        ->condition('default_langcode', 1)
         ->orderBy('c.created', 'DESC')
         ->range(0, 1)
         ->execute()

@@ -155,14 +155,14 @@ display:
         pid:
           field: pid
           id: pid
-          table: comment
+          table: comment_field_data
           relationship: comment_cid
           plugin_id: standard
           provider: views
         uid:
           field: uid
           id: uid
-          table: comment
+          table: comment_field_data
           relationship: comment_cid
           plugin_id: standard
           provider: views

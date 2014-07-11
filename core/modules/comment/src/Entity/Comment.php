@@ -34,6 +34,7 @@ use Drupal\user\UserInterface;
  *     "translation" = "Drupal\comment\CommentTranslationHandler"
  *   },
  *   base_table = "comment",
+ *   data_table = "comment_field_data",
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
@@ -225,28 +226,33 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['subject'] = FieldDefinition::create('string')
       ->setLabel(t('Subject'))
       ->setDescription(t('The comment title or subject.'))
+      ->setTranslatable(TRUE)
       ->setSetting('max_length', 64);
 
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The user ID of the comment author.'))
+      ->setTranslatable(TRUE)
       ->setSetting('target_type', 'user')
       ->setDefaultValue(0);
 
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t("The comment author's name."))
+      ->setTranslatable(TRUE)
       ->setSetting('max_length', 60)
       ->setDefaultValue('')
       ->addConstraint('CommentName', array());
 
     $fields['mail'] = FieldDefinition::create('email')
       ->setLabel(t('Email'))
-      ->setDescription(t("The comment author's email address."));
+      ->setDescription(t("The comment author's email address."))
+      ->setTranslatable(TRUE);
 
     $fields['homepage'] = FieldDefinition::create('uri')
       ->setLabel(t('Homepage'))
       ->setDescription(t("The comment author's home page address."))
+      ->setTranslatable(TRUE)
       // URIs are not length limited by RFC 2616, but we can only store 255
       // characters in our comment DB schema.
       ->setSetting('max_length', 255);
@@ -254,19 +260,23 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['hostname'] = FieldDefinition::create('string')
       ->setLabel(t('Hostname'))
       ->setDescription(t("The comment author's hostname."))
+      ->setTranslatable(TRUE)
       ->setSetting('max_length', 128);
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the comment was created.'));
+      ->setDescription(t('The time that the comment was created.'))
+      ->setTranslatable(TRUE);
 
     $fields['changed'] = FieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the comment was last edited.'));
+      ->setDescription(t('The time that the comment was last edited.'))
+      ->setTranslatable(TRUE);
 
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the comment is published.'))
+      ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE);
 
     $fields['thread'] = FieldDefinition::create('string')
@@ -276,7 +286,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
     $fields['entity_type'] = FieldDefinition::create('string')
       ->setLabel(t('Entity type'))
-      ->setDescription(t('The entity type to which this comment is attached.'));
+      ->setDescription(t('The entity type to which this comment is attached.'))
+      ->setSetting('max_length', EntityTypeInterface::ID_MAX_LENGTH);
 
     $fields['comment_type'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Comment Type'))
@@ -286,7 +297,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['field_name'] = FieldDefinition::create('string')
       ->setLabel(t('Comment field name'))
       ->setDescription(t('The field name through which this comment was added.'))
-      ->setSetting('max_length', 32);
+      ->setSetting('max_length', FieldConfig::NAME_MAX_LENGTH);
 
     return $fields;
   }

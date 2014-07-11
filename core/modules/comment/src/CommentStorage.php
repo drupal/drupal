@@ -81,10 +81,11 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    * {@inheritdoc}
    */
   public function getMaxThread(CommentInterface $comment) {
-    $query = $this->database->select('comment', 'c')
+    $query = $this->database->select('comment_field_data', 'c')
       ->condition('entity_id', $comment->getCommentedEntityId())
       ->condition('field_name', $comment->getFieldName())
-      ->condition('entity_type', $comment->getCommentedEntityTypeId());
+      ->condition('entity_type', $comment->getCommentedEntityTypeId())
+      ->condition('default_langcode', 1);
     $query->addExpression('MAX(thread)', 'thread');
     return $query->execute()
       ->fetchField();
@@ -94,11 +95,12 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    * {@inheritdoc}
    */
   public function getMaxThreadPerThread(CommentInterface $comment) {
-    $query = $this->database->select('comment', 'c')
+    $query = $this->database->select('comment_field_data', 'c')
       ->condition('entity_id', $comment->getCommentedEntityId())
       ->condition('field_name', $comment->getFieldName())
       ->condition('entity_type', $comment->getCommentedEntityTypeId())
-      ->condition('thread', $comment->getParentComment()->getThread() . '.%', 'LIKE');
+      ->condition('thread', $comment->getParentComment()->getThread() . '.%', 'LIKE')
+      ->condition('default_langcode', 1);
     $query->addExpression('MAX(thread)', 'thread');
     return $query->execute()
       ->fetchField();
@@ -110,8 +112,8 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
   public function getDisplayOrdinal(CommentInterface $comment, $comment_mode, $divisor = 1) {
     // Count how many comments (c1) are before $comment (c2) in display order.
     // This is the 0-based display ordinal.
-    $query = $this->database->select('comment', 'c1');
-    $query->innerJoin('comment', 'c2', 'c2.entity_id = c1.entity_id AND c2.entity_type = c1.entity_type AND c2.field_name = c1.field_name');
+    $query = $this->database->select('comment_field_data', 'c1');
+    $query->innerJoin('comment_field_data', 'c2', 'c2.entity_id = c1.entity_id AND c2.entity_type = c1.entity_type AND c2.field_name = c1.field_name');
     $query->addExpression('COUNT(*)', 'count');
     $query->condition('c2.cid', $comment->id());
     if (!$this->currentUser->hasPermission('administer comments')) {
@@ -130,6 +132,9 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       // slash.
       $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) - 1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) - 1))');
     }
+
+    $query->condition('c1.default_langcode', 1);
+    $query->condition('c2.default_langcode', 1);
 
     $ordinal = $query->execute()->fetchField();
 
@@ -155,12 +160,13 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       // Threaded comments.
 
       // 1. Find all the threads with a new comment.
-      $unread_threads_query = $this->database->select('comment')
+      $unread_threads_query = $this->database->select('comment_field_data', 'comment')
         ->fields('comment', array('thread'))
         ->condition('entity_id', $entity->id())
         ->condition('entity_type', $entity->getEntityTypeId())
         ->condition('field_name', $field_name)
         ->condition('status', CommentInterface::PUBLISHED)
+        ->condition('default_langcode', 1)
         ->orderBy('created', 'DESC')
         ->orderBy('cid', 'DESC')
         ->range(0, $new_comments);
@@ -179,10 +185,12 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       $first_thread = substr($first_thread, 0, -1);
 
       // Find the number of the first comment of the first unread thread.
-      $count = $this->database->query('SELECT COUNT(*) FROM {comment} WHERE entity_id = :entity_id
+      $count = $this->database->query('SELECT COUNT(*) FROM {comment_field_data} WHERE entity_id = :entity_id
                         AND entity_type = :entity_type
                         AND field_name = :field_name
-                        AND status = :status AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
+                        AND status = :status
+                        AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread
+                        AND default_langcode = 1', array(
         ':status' => CommentInterface::PUBLISHED,
         ':entity_id' => $entity->id(),
         ':field_name' => $field_name,
@@ -198,9 +206,10 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    * {@inheritdoc}
    */
   public function getChildCids(array $comments) {
-    return $this->database->select('comment', 'c')
+    return $this->database->select('comment_field_data', 'c')
       ->fields('c', array('cid'))
       ->condition('pid', array_keys($comments))
+      ->condition('default_langcode', 1)
       ->execute()
       ->fetchCol();
   }
@@ -213,19 +222,16 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
 
     // Marking the respective fields as NOT NULL makes the indexes more
     // performant.
-    $schema['comment']['fields']['pid']['not null'] = TRUE;
-    $schema['comment']['fields']['status']['not null'] = TRUE;
-    $schema['comment']['fields']['entity_id']['not null'] = TRUE;
-    $schema['comment']['fields']['created']['not null'] = TRUE;
-    $schema['comment']['fields']['thread']['not null'] = TRUE;
+    $schema['comment_field_data']['fields']['created']['not null'] = TRUE;
+    $schema['comment_field_data']['fields']['thread']['not null'] = TRUE;
 
-    unset($schema['comment']['indexes']['field__pid']);
-    unset($schema['comment']['indexes']['field__entity_id']);
-    $schema['comment']['indexes'] += array(
+    unset($schema['comment_field_data']['indexes']['comment_field__pid__target_id']);
+    unset($schema['comment_field_data']['indexes']['comment_field__entity_id__target_id']);
+    $schema['comment_field_data']['indexes'] += array(
       'comment__status_pid' => array('pid', 'status'),
       'comment__num_new' => array(
         'entity_id',
-        array('entity_type', 32),
+        'entity_type',
         'comment_type',
         'status',
         'created',
@@ -234,13 +240,13 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       ),
       'comment__entity_langcode' => array(
         'entity_id',
-        array('entity_type', 32),
+        'entity_type',
         'comment_type',
-        'langcode',
+        'default_langcode',
       ),
       'comment__created' => array('created'),
     );
-    $schema['comment']['foreign keys'] += array(
+    $schema['comment_field_data']['foreign keys'] += array(
       'comment__author' => array(
         'table' => 'users',
         'columns' => array('uid' => 'uid'),
@@ -254,8 +260,9 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    * {@inheritdoc}
    */
   public function getUnapprovedCount() {
-    return  $this->database->select('comment', 'c')
+    return  $this->database->select('comment_field_data', 'c')
       ->condition('status', CommentInterface::NOT_PUBLISHED, '=')
+      ->condition('default_langcode', 1)
       ->countQuery()
       ->execute()
       ->fetchField();

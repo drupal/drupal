@@ -278,7 +278,7 @@ class HandlerTest extends ViewTestBase {
     // Setup a broken relationship.
     $view->addHandler('default', 'relationship', $this->randomName(), $this->randomName(), array(), 'broken_relationship');
     // Setup a valid relationship.
-    $view->addHandler('default', 'relationship', 'comment', 'node', array('relationship' => 'cid'), 'valid_relationship');
+    $view->addHandler('default', 'relationship', 'comment_field_data', 'node', array('relationship' => 'cid'), 'valid_relationship');
     $view->initHandlers();
     $field = $view->field['title'];
 

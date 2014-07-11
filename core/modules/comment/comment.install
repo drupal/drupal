@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -48,7 +49,7 @@ function comment_schema() {
         'type' => 'varchar',
         'not null' => TRUE,
         'default' => 'node',
-        'length' => 255,
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
         'description' => 'The entity_type of the entity to which this comment is a reply.',
       ),
       'field_name' => array(

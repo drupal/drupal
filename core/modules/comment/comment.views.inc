@@ -23,7 +23,15 @@ function comment_views_data() {
   $data['comment']['table']['entity type'] = 'comment';
   $data['comment']['table']['wizard_id'] = 'comment';
 
-  $data['comment']['subject'] = array(
+  $data['comment_field_data']['table']['group'] = t('Comment');
+  $data['comment_field_data']['table']['entity type'] = 'comment';
+  $data['comment_field_data']['table']['join']['comment'] = array(
+    'type' => 'INNER',
+    'left_field' => 'cid',
+    'field' => 'cid',
+  );
+
+  $data['comment_field_data']['subject'] = array(
     'title' => t('Title'),
     'help' => t('The title of the comment.'),
     'field' => array(
@@ -57,7 +65,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['name'] = array(
+  $data['comment_field_data']['name'] = array(
     'title' => t('Author'),
     'help' => t("The name of the comment's author. Can be rendered as a link to the author's homepage."),
     'field' => array(
@@ -74,7 +82,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['homepage'] = array(
+  $data['comment_field_data']['homepage'] = array(
     'title' => t("Author's website"),
     'help' => t("The website address of the comment's author. Can be rendered as a link. Will be empty if the author is a registered user."),
     'field' => array(
@@ -91,7 +99,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['hostname'] = array(
+  $data['comment_field_data']['hostname'] = array(
     'title' => t('Hostname'),
     'help' => t('Hostname of user that posted the comment.'),
     'field' => array(
@@ -108,7 +116,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['mail'] = array(
+  $data['comment_field_data']['mail'] = array(
     'title' => t('Email'),
     'help' => t('Email of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
@@ -125,7 +133,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['created'] = array(
+  $data['comment_field_data']['created'] = array(
     'title' => t('Post date'),
     'help' => t('Date and time of when the comment was created.'),
     'field' => array(
@@ -158,7 +166,7 @@ function comment_views_data() {
     );
   }
 
-  $data['comment']['changed'] = array(
+  $data['comment_field_data']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('Date and time of when the comment was last updated.'),
     'field' => array(
@@ -172,7 +180,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['changed_fulldata'] = array(
+  $data['comment_field_data']['changed_fulldata'] = array(
     'title' => t('Created date'),
     'help' => t('Date in the form of CCYYMMDD.'),
     'argument' => array(
@@ -181,7 +189,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['changed_year_month'] = array(
+  $data['comment_field_data']['changed_year_month'] = array(
     'title' => t('Created year + month'),
     'help' => t('Date in the form of YYYYMM.'),
     'argument' => array(
@@ -190,7 +198,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['changed_year'] = array(
+  $data['comment_field_data']['changed_year'] = array(
     'title' => t('Created year'),
     'help' => t('Date in the form of YYYY.'),
     'argument' => array(
@@ -199,7 +207,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['changed_month'] = array(
+  $data['comment_field_data']['changed_month'] = array(
     'title' => t('Created month'),
     'help' => t('Date in the form of MM (01 - 12).'),
     'argument' => array(
@@ -208,7 +216,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['changed_day'] = array(
+  $data['comment_field_data']['changed_day'] = array(
     'title' => t('Created day'),
     'help' => t('Date in the form of DD (01 - 31).'),
     'argument' => array(
@@ -217,7 +225,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['changed_week'] = array(
+  $data['comment_field_data']['changed_week'] = array(
     'title' => t('Created week'),
     'help' => t('Date in the form of WW (01 - 53).'),
     'argument' => array(
@@ -226,7 +234,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['status'] = array(
+  $data['comment_field_data']['status'] = array(
     'title' => t('Approved status'),
     'help' => t('Whether the comment is approved (or still in the moderation queue).'),
     'field' => array(
@@ -285,7 +293,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['thread'] = array(
+  $data['comment_field_data']['thread'] = array(
     'field' => array(
       'title' => t('Depth'),
       'help' => t('Display the depth of the comment if it is threaded.'),
@@ -298,7 +306,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['entity_id'] = array(
+  $data['comment_field_data']['entity_id'] = array(
     'title' => t('Entity ID'),
     'help' => t('The Entity ID to which the comment is a reply to.'),
     'field' => array(
@@ -315,7 +323,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['entity_type'] = array(
+  $data['comment_field_data']['entity_type'] = array(
     'title' => t('Entity type'),
     'help' => t('The Entity type to which the comment is a reply to.'),
     'field' => array(
@@ -332,7 +340,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['field_name'] = array(
+  $data['comment_field_data']['field_name'] = array(
     'title' => t('Comment field name'),
     'help' => t('The Field name from which the comment originated.'),
     'field' => array(
@@ -374,7 +382,7 @@ function comment_views_data() {
       continue;
     }
     if ($fields = \Drupal::service('comment.manager')->getFields($type)) {
-      $data['comment'][$type] = array(
+      $data['comment_field_data'][$type] = array(
         'relationship' => array(
           'title' => $entity_type->getLabel(),
           'help' => t('The @entity_type to which the comment is a reply to.', array('@entity_type' => $entity_type->getLabel())),
@@ -387,7 +395,7 @@ function comment_views_data() {
             array(
               'field' => 'entity_type',
               'value' => $type,
-              'table' => 'comment'
+              'table' => 'comment_field_data'
             ),
           ),
         ),
@@ -395,7 +403,7 @@ function comment_views_data() {
     }
   }
 
-  $data['comment']['uid'] = array(
+  $data['comment_field_data']['uid'] = array(
     'title' => t('Author uid'),
     'help' => t('If you need more fields than the uid add the comment: author relationship'),
     'relationship' => array(
@@ -417,7 +425,7 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['pid'] = array(
+  $data['comment_field_data']['pid'] = array(
     'title' => t('Parent CID'),
     'help' => t('The Comment ID of the parent comment.'),
     'field' => array(
@@ -637,12 +645,9 @@ function comment_views_data_alter(&$data) {
         ),
       );
 
-      if ($entity_type_id == 'node') {
-        // Node properties lives in data_table.
-        $table = $entity_type->getDataTable();
-      }
-      else {
-        $table = $base_table;
+      // Multilingual properties are stored in data table.
+      if (!($table = $entity_type->getDataTable())) {
+        $table = $entity_type->getBaseTable();
       }
       $data[$table]['uid_touch'] = array(
         'title' => t('User posted or commented'),
@@ -673,7 +678,7 @@ function comment_views_data_alter(&$data) {
           'relationship' => array(
             'group' => t('Comment'),
             'label' => t('Comments'),
-            'base' => 'comment',
+            'base' => 'comment_field_data',
             'base field' => 'entity_id',
             'relationship field' => $entity_type->getKey('id'),
             'id' => 'standard',

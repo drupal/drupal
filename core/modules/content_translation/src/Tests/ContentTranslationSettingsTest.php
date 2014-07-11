@@ -63,6 +63,16 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $edit = array(
       'entity_types[comment]' => TRUE,
       'settings[comment][comment_article][translatable]' => TRUE,
+      // Base fields are translatable by default.
+      'settings[comment][comment_article][fields][changed]' => FALSE,
+      'settings[comment][comment_article][fields][created]' => FALSE,
+      'settings[comment][comment_article][fields][homepage]' => FALSE,
+      'settings[comment][comment_article][fields][hostname]' => FALSE,
+      'settings[comment][comment_article][fields][mail]' => FALSE,
+      'settings[comment][comment_article][fields][name]' => FALSE,
+      'settings[comment][comment_article][fields][status]' => FALSE,
+      'settings[comment][comment_article][fields][subject]' => FALSE,
+      'settings[comment][comment_article][fields][uid]' => FALSE,
     );
     $this->assertSettings('comment', 'comment_article', FALSE, $edit);
     $xpath_err = '//div[contains(@class, "error")]';
@@ -88,13 +98,24 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'settings[comment][comment_article][settings][language][language_show]' => TRUE,
       'settings[comment][comment_article][translatable]' => TRUE,
       'settings[comment][comment_article][fields][comment_body]' => TRUE,
+      // Override both comment subject fields to untranslatable.
+      'settings[comment][comment_article][fields][subject]' => FALSE,
+      'settings[comment][comment][fields][subject]' => FALSE,
     );
     $this->assertSettings('comment', 'comment_article', TRUE, $edit);
     $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment_article')['comment_body'];
     $this->assertTrue($definition->isTranslatable(), 'Article comment body is translatable.');
+    $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment_article')['subject'];
+    $this->assertFalse($definition->isTranslatable(), 'Article comment subject is not translatable.');
+
     $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment')['comment_body'];
     $this->assertFalse($definition->isTranslatable(), 'Page comment body is not translatable.');
-    $this->assertNull(content_translation_get_config('comment', 'comment_article', 'fields'), 'Configurable fields are not saved to content_translation.settings.');
+    $definition = $this->entityManager()->getFieldDefinitions('comment', 'comment')['subject'];
+    $this->assertFalse($definition->isTranslatable(), 'Page comment subject is not translatable.');
+
+    $settings = content_translation_get_config('comment', 'comment_article', 'fields');
+    $this->assertFalse(isset($settings['comment_body']), 'Configurable fields are not saved to content_translation.settings.');
+    $this->assertTrue(isset($settings['subject']), 'Base fields are saved to content_translation.settings.');
 
     // Test that translation can be enabled for base fields.
     $edit = array(

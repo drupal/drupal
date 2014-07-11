@@ -45,7 +45,7 @@ display:
           field: node
           id: node
           required: '1'
-          table: comment
+          table: comment_field_data
           plugin_id: standard
           provider: views
         uid:

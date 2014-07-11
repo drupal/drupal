@@ -42,7 +42,7 @@ class LinkApprove extends Link {
   protected function renderLink($data, ResultRow $values) {
     $status = $this->getValue($values, 'status');
 
-    // Don't show an approve link on published nodes.
+    // Don't show an approve link on published comment.
     if ($status == CommentInterface::PUBLISHED) {
       return;
     }

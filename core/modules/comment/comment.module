@@ -515,7 +515,7 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
  * to consider the trailing "/" so we use a substring only.
  */
 function comment_get_thread(EntityInterface $entity, $field_name, $mode, $comments_per_page, $pager_id = 0) {
-  $query = db_select('comment', 'c')
+  $query = db_select('comment_field_data', 'c')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
   if ($pager_id) {
     $query->element($pager_id);
@@ -525,6 +525,7 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
     ->condition('c.entity_id', $entity->id())
     ->condition('c.entity_type', $entity->getEntityTypeId())
     ->condition('c.field_name', $field_name)
+    ->condition('default_langcode', 1)
     ->addTag('entity_access')
     ->addTag('comment_filter')
     ->addMetaData('base_table', 'comment')
@@ -532,12 +533,13 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
     ->addMetaData('field_name', $field_name)
     ->limit($comments_per_page);
 
-  $count_query = db_select('comment', 'c');
+  $count_query = db_select('comment_field_data', 'c');
   $count_query->addExpression('COUNT(*)');
   $count_query
     ->condition('c.entity_id', $entity->id())
     ->condition('c.entity_type', $entity->getEntityTypeId())
     ->condition('c.field_name', $field_name)
+    ->condition('default_langcode', 1)
     ->addTag('entity_access')
     ->addTag('comment_filter')
     ->addMetaData('base_table', 'comment')

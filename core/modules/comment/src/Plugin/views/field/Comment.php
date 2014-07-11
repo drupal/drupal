@@ -38,8 +38,14 @@ class Comment extends FieldPluginBase {
 
     if (!empty($this->options['link_to_comment'])) {
       $this->additional_fields['cid'] = 'cid';
-      $this->additional_fields['entity_id'] = 'entity_id';
-      $this->additional_fields['entity_type'] = 'entity_type';
+      $this->additional_fields['entity_id'] = array(
+        'table' => 'comment_field_data',
+        'field' => 'entity_id'
+      );
+      $this->additional_fields['entity_type'] = array(
+        'table' => 'comment_field_data',
+        'field' => 'entity_type'
+      );
     }
   }
 
@@ -88,7 +94,7 @@ class Comment extends FieldPluginBase {
         $this->options['alter']['path'] = "comment/" . $cid;
         $this->options['alter']['fragment'] = "comment-" . $cid;
       }
-      // If there is no comment link to the node.
+      // If there is no comment link to the entity.
       elseif ($this->options['link_to_entity']) {
         $entity_id = $this->getValue($values, 'entity_id');
         $entity_type = $this->getValue($values, 'entity_type');

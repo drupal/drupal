@@ -54,13 +54,13 @@ display:
         node:
           field: node
           id: node
-          table: comment
+          table: comment_field_data
           required: true
           plugin_id: standard
       fields:
         subject:
           id: subject
-          table: comment
+          table: comment_field_data
           field: subject
           relationship: none
           plugin_id: comment
@@ -111,7 +111,7 @@ display:
           link_to_entity: false
         changed:
           id: changed
-          table: comment
+          table: comment_field_data
           field: changed
           relationship: none
           plugin_id: date
@@ -164,7 +164,7 @@ display:
       filters:
         status:
           value: true
-          table: comment
+          table: comment_field_data
           field: status
           id: status
           plugin_id: boolean
@@ -184,7 +184,7 @@ display:
       sorts:
         created:
           id: created
-          table: comment
+          table: comment_field_data
           field: created
           relationship: none
           group_type: group

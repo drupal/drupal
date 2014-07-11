@@ -36,12 +36,12 @@ display:
           field: node
           id: node
           required: true
-          table: comment
+          table: comment_field_data
           provider: views
       fields:
         subject:
           id: subject
-          table: comment
+          table: comment_field_data
           field: subject
           plugin_id: comment
           label: ''

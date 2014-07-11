@@ -115,10 +115,10 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
     $this->executeView($view);
 
     $map = array(
-      'comment_entity_id' => 'entity_id',
-      'comment_subject' => 'subject',
+      'comment_field_data_entity_id' => 'entity_id',
+      'comment_field_data_subject' => 'subject',
       'cid' => 'cid',
-      'comment_created' => 'created'
+      'comment_field_data_created' => 'created'
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
