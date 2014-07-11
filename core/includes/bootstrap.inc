@@ -1193,18 +1193,6 @@ function module_exists($module) {
 }
 
 /**
- * Determines whether a module implements a hook.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::moduleHandler()->implementsHook($module, $hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::implementsHook()
- */
-function module_hook($module, $hook) {
-  return \Drupal::moduleHandler()->implementsHook($module, $hook);
-}
-
-/**
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
  * @param string $new_prefix
