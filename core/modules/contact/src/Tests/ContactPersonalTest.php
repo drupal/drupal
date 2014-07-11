@@ -52,7 +52,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users', 'administer account settings', 'access site reports'));
 
     // Create some normal users with their contact forms enabled by default.
-    \Drupal::config('contact.settings')->set('user_default_enabled', 1)->save();
+    \Drupal::config('contact.settings')->set('user_default_enabled', TRUE)->save();
     $this->web_user = $this->drupalCreateUser(array('access user contact forms'));
     $this->contact_user = $this->drupalCreateUser();
   }
@@ -214,6 +214,55 @@ class ContactPersonalTest extends WebTestBase {
     // the flood limit was reached.
     $this->drupalLogin($this->admin_user);
     $this->assertNoText('Try again later.', 'Admin user not denied access to flooded contact form.');
+  }
+
+  /**
+   * Tests the personal contact form based access when an admin adds users.
+   */
+  function testAdminContact() {
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
+    $this->checkContactAccess(200);
+    $this->checkContactAccess(403, FALSE);
+    $config = \Drupal::config('contact.settings');
+    $config->set('user_default_enabled', FALSE);
+    $config->save();
+    $this->checkContactAccess(403);
+  }
+
+  /**
+   * Creates a user and then checks contact form access.
+   *
+   * @param integer $response
+   *   The expected response code.
+   * @param boolean $contact_value
+   *   (optional) The value the contact field should be set too.
+   */
+  protected function checkContactAccess($response, $contact_value = NULL) {
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/people/create');
+    if (\Drupal::config('contact.settings')->get('user_default_enabled', TRUE)) {
+      $this->assertFieldChecked('edit-contact--2');
+    }
+    else {
+      $this->assertNoFieldChecked('edit-contact--2');
+    }
+    $name = $this->randomName();
+    $edit = array(
+      'name' => $name,
+      'mail' => $this->randomName() . '@example.com',
+      'pass[pass1]' => $pass = $this->randomString(),
+      'pass[pass2]' => $pass,
+      'notify' => FALSE,
+    );
+    if (isset($contact_value)) {
+      $edit['contact'] = $contact_value;
+    }
+    $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
+    $user = user_load_by_name($name);
+    $this->drupalLogout();
+
+    $this->drupalGet('user/' . $user->id() . '/contact');
+    $this->assertResponse($response);
   }
 
   /**
