@@ -1662,16 +1662,6 @@ function drupal_static_reset($name = NULL) {
 }
 
 /**
- * Detects whether the current script is running in a command-line environment.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Check the PHP_SAPI value directly instead.
- */
-function drupal_is_cli() {
-  return PHP_SAPI === 'cli';
-}
-
-/**
  * Formats text for emphasized display in a placeholder inside a sentence.
  *
  * @see \Drupal\Component\Utility\String::placeholder()
