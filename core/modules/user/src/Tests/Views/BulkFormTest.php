@@ -10,8 +10,9 @@ namespace Drupal\user\Tests\Views;
 use Drupal\views\Views;
 
 /**
- * Tests the views bulk form test.
+ * Tests a user bulk form.
  *
+ * @group user
  * @see \Drupal\user\Plugin\views\field\BulkForm
  */
 class BulkFormTest extends UserTestBase {
@@ -22,14 +23,6 @@ class BulkFormTest extends UserTestBase {
    * @var array
    */
   public static $testViews = array('test_user_bulk_form');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Bulk form',
-      'description' => 'Tests a user bulk form.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the user bulk form.

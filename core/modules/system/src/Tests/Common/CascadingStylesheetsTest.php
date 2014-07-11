@@ -11,7 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the Drupal CSS system.
+ * Tests adding various cascading stylesheets to the page.
+ *
+ * @group Common
  */
 class CascadingStylesheetsTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('language', 'system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cascading stylesheets',
-      'description' => 'Tests adding various cascading stylesheets to the page.',
-      'group' => 'Common',
-    );
-  }
 
   function setUp() {
     parent::setUp();

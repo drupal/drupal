@@ -9,7 +9,9 @@ namespace Drupal\rdf\Tests\Field;
 use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
 
 /**
- * Tests the placement of RDFa in text field formatters.
+ * Tests RDFa output by text field formatters.
+ *
+ * @group rdf
  */
 class TextFieldRdfaTest extends FieldRdfaTestBase {
 
@@ -36,14 +38,6 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('text', 'filter');
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Field formatter: text',
-      'description'  => 'Tests RDFa output by text field formatters.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

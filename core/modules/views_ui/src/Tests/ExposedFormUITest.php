@@ -8,7 +8,9 @@
 namespace Drupal\views_ui\Tests;
 
 /**
- * Tests exposed form UI.
+ * Tests exposed forms UI functionality.
+ *
+ * @group views_ui
  */
 class ExposedFormUITest extends UITestBase {
 
@@ -18,14 +20,6 @@ class ExposedFormUITest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_exposed_admin_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Exposed forms',
-      'description' => 'Test exposed forms UI functionality.',
-      'group' => 'Views UI',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

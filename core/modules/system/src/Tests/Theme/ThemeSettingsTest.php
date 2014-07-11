@@ -13,6 +13,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests theme settings functionality.
+ *
+ * @group Theme
  */
 class ThemeSettingsTest extends DrupalUnitTestBase {
 
@@ -29,14 +31,6 @@ class ThemeSettingsTest extends DrupalUnitTestBase {
    * @var array
    */
   protected $availableThemes;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme settings',
-      'description' => 'Tests theme settings functionality.',
-      'group' => 'Theme',
-    );
-  }
 
   function setUp() {
     parent::setUp();

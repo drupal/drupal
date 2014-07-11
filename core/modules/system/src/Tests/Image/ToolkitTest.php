@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Image;
 
 /**
- * Tests that the methods in Image correctly pass data to the toolkit.
+ * Tests image toolkit functions.
+ *
+ * @group Image
  */
 class ToolkitTest extends ToolkitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Image toolkit tests',
-      'description' => 'Check image toolkit functions.',
-      'group' => 'Image',
-    );
-  }
-
   /**
    * Check that ImageToolkitManager::getAvailableToolkits() only returns
    * available toolkits.

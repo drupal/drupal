@@ -11,9 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Tests\TestHelperPlugin;
 
 /**
- * Tests code of the views plugin base class.
- *
- * @see \Drupal\views\Plugin\views\PluginBase.
+ * @coversDefaultClass \Drupal\views\Plugin\views\PluginBase.
+ * @group views
  */
 class PluginBaseTest extends UnitTestCase {
 
@@ -23,14 +22,6 @@ class PluginBaseTest extends UnitTestCase {
    * @var \Drupal\views\Tests\TestHelperPlugin
    */
   protected $testHelperPlugin;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Plugin base test',
-      'description' => 'Tests code of the views plugin base class.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

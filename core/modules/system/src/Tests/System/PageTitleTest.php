@@ -14,6 +14,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests HTML output escaping of page title, site name, and slogan.
+ *
+ * @group system
  */
 class PageTitleTest extends WebTestBase {
 
@@ -26,17 +28,6 @@ class PageTitleTest extends WebTestBase {
 
   protected $content_user;
   protected $saved_title;
-
-  /**
-   * Implement getInfo().
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Page titles',
-      'description' => 'Tests correct escaping of page title, site name and slogan.',
-      'group' => 'System'
-    );
-  }
 
   /**
    * Implement setUp().

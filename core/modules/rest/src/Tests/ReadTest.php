@@ -11,7 +11,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
- * Tests resource read operations on test entities, nodes and users.
+ * Tests the retrieval of resources.
+ *
+ * @group rest
  */
 class ReadTest extends RESTTestBase {
 
@@ -21,14 +23,6 @@ class ReadTest extends RESTTestBase {
    * @var array
    */
   public static $modules = array('hal', 'rest', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Read resource',
-      'description' => 'Tests the retrieval of resources.',
-      'group' => 'REST',
-    );
-  }
 
   /**
    * Tests several valid and invalid read requests on all entity types.

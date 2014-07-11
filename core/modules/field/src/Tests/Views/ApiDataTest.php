@@ -9,7 +9,9 @@ namespace Drupal\field\Tests\Views;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 
 /**
- * Test the produced views_data.
+ * Tests the Field Views data.
+ *
+ * @group field
  */
 class ApiDataTest extends FieldTestBase {
 
@@ -17,14 +19,6 @@ class ApiDataTest extends FieldTestBase {
    * Stores the fields for this test case.
    */
   var $fields;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Views Data',
-      'description' => 'Tests the Field Views data.',
-      'group' => 'Views module integration',
-    );
-  }
 
   function setUp() {
     parent::setUp();

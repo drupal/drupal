@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test the tableselect form element for expected behavior.
+ * Tests the tableselect form element for expected behavior.
+ *
+ * @group Form
  */
 class ElementsTableSelectTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ElementsTableSelectTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tableselect form element type test',
-      'description' => 'Test the tableselect element for expected behavior',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Test the display of checkboxes when #multiple is TRUE.

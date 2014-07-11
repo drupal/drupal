@@ -11,6 +11,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the node entity preview functionality.
+ *
+ * @group node
  */
 class PagePreviewTest extends NodeTestBase {
 
@@ -27,14 +29,6 @@ class PagePreviewTest extends NodeTestBase {
    * @var string
    */
   protected $field_name;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node preview',
-      'description' => 'Test node preview functionality.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

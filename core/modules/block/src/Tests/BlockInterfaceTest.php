@@ -11,18 +11,12 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\block\BlockInterface;
 
 /**
- * Test BlockInterface methods to ensure no external dependencies exist.
+ * Tests that the block plugin can work properly without a supporting entity.
+ *
+ * @group block
  */
 class BlockInterfaceTest extends DrupalUnitTestBase {
   public static $modules = array('system', 'block', 'block_test', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block Plugins Tests',
-      'description' => 'Tests that the block plugin can work properly without a supporting entity.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Test configuration and subsequent form() and build() method calls.

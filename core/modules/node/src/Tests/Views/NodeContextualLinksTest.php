@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests views contextual links on nodes.
+ *
+ * @group node
  */
 class NodeContextualLinksTest extends NodeTestBase {
 
@@ -28,14 +30,6 @@ class NodeContextualLinksTest extends NodeTestBase {
    * @var array
    */
   public static $testViews = array('test_contextual_links');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: contextual links',
-      'description' => 'Tests views contextual links on nodes.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests contextual links.

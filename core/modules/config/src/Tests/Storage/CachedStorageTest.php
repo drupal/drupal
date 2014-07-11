@@ -14,6 +14,8 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests CachedStorage operations.
+ *
+ * @group config
  */
 class CachedStorageTest extends ConfigStorageTestBase {
 
@@ -30,14 +32,6 @@ class CachedStorageTest extends ConfigStorageTestBase {
    * @var \Drupal\Core\Config\FileStorage
    */
   protected $filestorage;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CachedStorage operations',
-      'description' => 'Tests CachedStorage operations.',
-      'group' => 'Configuration',
-    );
-  }
 
   function setUp() {
     parent::setUp();

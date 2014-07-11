@@ -10,17 +10,11 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests user_delete() and user_delete_multiple() behavior.
+ * Tests account deleting of users.
+ *
+ * @group user
  */
 class UserDeleteTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User delete test',
-      'description' => 'Test account deleting of users.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Test deleting multiple users.

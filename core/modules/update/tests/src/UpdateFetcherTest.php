@@ -16,6 +16,8 @@ if (!defined('DRUPAL_CORE_COMPATIBILITY')) {
 
 /**
  * Tests update functionality unrelated to the database.
+ *
+ * @group update
  */
 class UpdateFetcherTest extends UnitTestCase {
 
@@ -25,14 +27,6 @@ class UpdateFetcherTest extends UnitTestCase {
    * @var \Drupal\update\UpdateFetcher
    */
   protected $updateFetcher;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Core update tests',
-      'description' => 'Test update functionality unrelated to the database.',
-      'group' => 'Update',
-    );
-  }
 
   /**
    * {@inheritdoc}

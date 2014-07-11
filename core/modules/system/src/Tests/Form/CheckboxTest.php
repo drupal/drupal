@@ -10,7 +10,10 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests checkbox element.
+ * Tests form API checkbox handling of various combinations of #default_value
+ * and #return_value.
+ *
+ * @group Form
  */
 class CheckboxTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class CheckboxTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form API checkbox',
-      'description' => 'Tests form API checkbox handling of various combinations of #default_value and #return_value.',
-      'group' => 'Form API',
-    );
-  }
 
   function testFormCheckbox() {
     // Ensure that the checked state is determined and rendered correctly for

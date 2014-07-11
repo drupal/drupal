@@ -10,7 +10,10 @@ namespace Drupal\drupal_system_listing_compatible_test\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Helper to verify tests in installation profile modules.
+ * Verifies that tests in installation profile modules are found and may use
+ * another profile for running tests.
+ *
+ * @group drupal_system_listing_compatible_test
  */
 class SystemListingCompatibleTest extends WebTestBase {
 
@@ -33,14 +36,6 @@ class SystemListingCompatibleTest extends WebTestBase {
    * @see SimpleTestInstallationProfileModuleTestsTestCase
    */
   protected $profile = 'minimal';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Installation profile module tests helper',
-      'description' => 'Verifies that tests in installation profile modules are found and may use another profile for running tests.',
-      'group' => 'Installation profile',
-    );
-  }
 
   /**
    * Non-empty test* method required to executed the test case class.

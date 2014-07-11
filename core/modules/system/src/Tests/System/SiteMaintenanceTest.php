@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests site maintenance functionality.
+ * Tests access to site while in maintenance mode.
+ *
+ * @group system
  */
 class SiteMaintenanceTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class SiteMaintenanceTest extends WebTestBase {
   public static $modules = array('node');
 
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Site maintenance mode functionality',
-      'description' => 'Test access to site while in maintenance mode.',
-      'group' => 'System',
-    );
-  }
 
   function setUp() {
     parent::setUp();

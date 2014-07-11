@@ -11,7 +11,9 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\views\Views;
 
 /**
- * Tests glossary view ( summary of arguments ).
+ * Tests glossary functionality of views.
+ *
+ * @group views
  */
 class GlossaryTest extends ViewTestBase {
 
@@ -21,14 +23,6 @@ class GlossaryTest extends ViewTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Glossary tests',
-      'description' => 'Tests glossary functionality of views.',
-      'group' => 'Views Config',
-    );
-  }
 
   /**
    * Tests the default glossary view.

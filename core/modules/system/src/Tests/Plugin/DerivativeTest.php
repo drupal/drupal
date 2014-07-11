@@ -9,16 +9,10 @@ namespace Drupal\system\Tests\Plugin;
 
 /**
  * Tests that derivative plugins are correctly discovered.
+ *
+ * @group Plugin
  */
 class DerivativeTest extends PluginTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Derivative Discovery',
-      'description' => 'Tests that derivative plugins are correctly discovered.',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * Tests getDefinitions() and getDefinition() with a derivativeDecorator.

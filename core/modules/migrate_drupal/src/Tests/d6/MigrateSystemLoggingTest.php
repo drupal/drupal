@@ -12,22 +12,13 @@ use Drupal\config\Tests\SchemaCheckTestTrait;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of system error_level variables to configuration.
+ * Upgrade error_level variable to system.logging.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemLoggingTest extends MigrateDrupalTestBase {
 
   use SchemaCheckTestTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate error_level variable to system.logging.yml',
-      'description'  => 'Upgrade error_level variable to system.logging.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

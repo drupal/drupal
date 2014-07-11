@@ -12,7 +12,9 @@ use Drupal\simpletest\WebTestBase;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
- * Basic tests for access permissions in routes.
+ * Function Tests for the routing permission system.
+ *
+ * @group Routing
  */
 class RouterPermissionTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class RouterPermissionTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('router_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Router Permission tests',
-      'description' => 'Function Tests for the routing permission system.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * Tests permission requirements on routes.

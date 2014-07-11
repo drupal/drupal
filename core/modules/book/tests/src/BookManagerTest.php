@@ -11,12 +11,8 @@ use Drupal\book\BookManager;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the book manager.
- *
- * @group Drupal
- * @group Book
- *
  * @coversDefaultClass \Drupal\book\BookManager
+ * @group book
  */
 class BookManagerTest extends UnitTestCase {
 
@@ -54,17 +50,6 @@ class BookManagerTest extends UnitTestCase {
    * @var \Drupal\book\BookManager
    */
   protected $bookManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Book manager',
-      'description' => 'Test the book manager.',
-      'group' => 'Book',
-    );
-  }
 
   /**
    * {@inheritdoc}

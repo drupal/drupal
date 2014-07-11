@@ -8,7 +8,9 @@
 namespace Drupal\path\Tests;
 
 /**
- * Tests the user interface for creating path aliases, with languages.
+ * Confirm that the Path module user interface works with languages.
+ *
+ * @group path
  */
 class PathLanguageUiTest extends PathTestBase {
 
@@ -18,14 +20,6 @@ class PathLanguageUiTest extends PathTestBase {
    * @var array
    */
   public static $modules = array('path', 'locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path aliases with languages',
-      'description' => 'Confirm that the Path module user interface works with languages.',
-      'group' => 'Path',
-    );
-  }
 
   function setUp() {
     parent::setUp();

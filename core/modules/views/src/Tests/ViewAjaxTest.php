@@ -11,6 +11,8 @@ use Drupal\Component\Serialization\Json;
 
 /**
  * Tests the ajax view functionality.
+ *
+ * @group views
  */
 class ViewAjaxTest extends ViewTestBase {
 
@@ -20,14 +22,6 @@ class ViewAjaxTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_ajax_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View: Ajax',
-      'description' => 'Tests the ajax view functionality.',
-      'group' => 'Views'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

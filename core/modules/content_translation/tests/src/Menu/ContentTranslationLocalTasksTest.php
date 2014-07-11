@@ -10,20 +10,11 @@ namespace Drupal\content_translation\Tests\Menu;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 
 /**
- * Tests existence of block local tasks.
+ * Tests content translation local tasks.
  *
- * @group Drupal
- * @group Block
+ * @group content_translation
  */
 class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Content translation local tasks test',
-      'description' => 'Test content translation local tasks.',
-      'group' => 'Content Translation',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array(

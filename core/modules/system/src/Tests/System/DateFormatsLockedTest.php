@@ -11,19 +11,10 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the locked functionality of date formats.
+ *
+ * @group system
  */
 class DateFormatsLockedTest extends WebTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Locked date formats',
-      'description' => 'Tests the locked functionality of date formats.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Tests attempts at listing, editing, and deleting locked date formats.

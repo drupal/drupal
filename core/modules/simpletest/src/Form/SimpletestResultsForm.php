@@ -9,6 +9,7 @@ namespace Drupal\simpletest\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
+use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -148,7 +149,7 @@ class SimpletestResultsForm extends FormBase {
     $form['result']['results'] = array();
     foreach ($results as $group => $assertions) {
       // Create group details with summary information.
-      $info = call_user_func(array($group, 'getInfo'));
+      $info = TestDiscovery::getTestInfo(new \ReflectionClass($group));
       $form['result']['results'][$group] = array(
         '#type' => 'details',
         '#title' => $info['name'],

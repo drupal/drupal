@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Date handler.
+ *
+ * @group views
  */
 class FieldDateTest extends ViewUnitTestBase {
 
@@ -21,14 +23,6 @@ class FieldDateTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Date',
-      'description' => 'Test the core Drupal\views\Plugin\views\field\Date handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   function viewsData() {
     $data = parent::viewsData();

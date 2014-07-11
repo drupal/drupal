@@ -10,7 +10,9 @@ namespace Drupal\filter\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the filter format access functionality in the Filter module.
+ * Tests access to text formats.
+ *
+ * @group filter
  */
 class FilterFormatAccessTest extends WebTestBase {
 
@@ -62,14 +64,6 @@ class FilterFormatAccessTest extends WebTestBase {
    * @var object
    */
   protected $disallowed_format;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter format access',
-      'description' => 'Tests access to text formats.',
-      'group' => 'Filter',
-    );
-  }
 
   function setUp() {
     parent::setUp();

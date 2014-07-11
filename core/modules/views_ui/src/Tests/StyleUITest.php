@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the UI of style plugins.
  *
+ * @group views_ui
  * @see \Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
 class StyleUITest extends UITestBase {
@@ -22,14 +23,6 @@ class StyleUITest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: UI',
-      'description' => 'Tests the UI of style plugins.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests changing the style plugin and changing some options of a style.

@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test front page functionality and administration.
+ * Tests front page functionality and administration.
+ *
+ * @group system
  */
 class FrontPageTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class FrontPageTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'system_test', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Front page',
-      'description' => 'Tests front page functionality and administration.',
-      'group' => 'System',
-    );
-  }
 
   function setUp() {
     parent::setUp();

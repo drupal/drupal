@@ -11,23 +11,11 @@ use Drupal\Core\Entity\EntityType;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Unit tests for the comment entity lock behavior.
+ * Tests comment acquires and releases the right lock.
  *
- * @group Drupal
- * @group Comment
+ * @group comment
  */
 class CommentLockTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment locks',
-      'description' => 'Test comment acquires and releases the right lock.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Test the lock behavior.

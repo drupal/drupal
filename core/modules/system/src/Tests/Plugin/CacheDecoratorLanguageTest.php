@@ -12,7 +12,9 @@ use Drupal\plugin_test\Plugin\CachedMockBlockManager;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that the AlterDecorator fires and respects the alter hook.
+ * Tests that the CacheDecorator stores definitions by language appropriately.
+ *
+ * @group Plugin
  */
 class CacheDecoratorLanguageTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class CacheDecoratorLanguageTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('plugin_test', 'locale', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CacheDecoratorLanguage',
-      'description' => 'Tests that the CacheDecorator stores definitions by language appropriately.',
-      'group' => 'Plugin API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

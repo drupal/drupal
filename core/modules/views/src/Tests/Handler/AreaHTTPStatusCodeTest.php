@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the http_status_code area handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\area\HTTPStatusCode
  */
 class AreaHTTPStatusCodeTest extends HandlerTestBase {
@@ -29,14 +30,6 @@ class AreaHTTPStatusCodeTest extends HandlerTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Area: HTTP Status Code',
-      'description' => 'Tests the http_status_code area handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests the area handler.

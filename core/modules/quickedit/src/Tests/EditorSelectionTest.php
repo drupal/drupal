@@ -12,7 +12,9 @@ use Drupal\quickedit\Plugin\InPlaceEditorManager;
 use Drupal\quickedit\EditorSelector;
 
 /**
- * Test in-place field editor selection.
+ * Tests in-place field editor selection.
+ *
+ * @group quickedit
  */
 class EditorSelectionTest extends QuickEditTestBase {
 
@@ -29,14 +31,6 @@ class EditorSelectionTest extends QuickEditTestBase {
    * @var \Drupal\quickedit\EditorSelectorInterface
    */
   protected $editorSelector;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'In-place field editor selection',
-      'description' => 'Tests in-place field editor selection.',
-      'group' => 'Quick Edit',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

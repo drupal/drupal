@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the core Drupal\views\Plugin\views\field\Xss handler.
  *
+ * @group views
  * @see CommonXssUnitTest
  */
 class FieldXssTest extends ViewUnitTestBase {
@@ -23,14 +24,6 @@ class FieldXssTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: XSS',
-      'description' => 'Test the core Drupal\views\Plugin\views\field\Xss handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   function dataHelper() {
     $map = array(

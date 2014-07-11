@@ -19,14 +19,6 @@ class CachedStorageTest extends UnitTestCase {
    */
   protected $cacheFactory;
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Config cached storage test',
-      'description' => 'Tests the interaction of cache and file storage in CachedStorage.',
-      'group' => 'Configuration'
-    );
-  }
-
   public function setUp() {
     $this->cacheFactory = $this->getMock('Drupal\Core\Cache\CacheFactoryInterface');
   }

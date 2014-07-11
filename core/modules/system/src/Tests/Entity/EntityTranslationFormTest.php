@@ -14,6 +14,8 @@ use Drupal\Core\Language\Language;
 
 /**
  * Tests entity translation form.
+ *
+ * @group Entity
  */
 class EntityTranslationFormTest extends WebTestBase {
 
@@ -25,14 +27,6 @@ class EntityTranslationFormTest extends WebTestBase {
   public static $modules = array('entity_test', 'language', 'node');
 
   protected $langcodes;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity translation form',
-      'description' => 'Tests entity translation form functionality.',
-      'group' => 'Entity API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

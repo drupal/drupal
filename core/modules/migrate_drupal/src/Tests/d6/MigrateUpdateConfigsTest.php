@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Update module.
+ * Upgrade variables to update.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateUpdateConfigsTest extends MigrateDrupalTestBase {
 
@@ -24,17 +26,6 @@ class MigrateUpdateConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('update');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to update.settings.yml',
-      'description'  => 'Upgrade variables to update.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -14,24 +14,10 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Scope;
 
 /**
- * Tests the AnonymousUserSession class.
- *
- * @group Drupal
- *
  * @coversDefaultClass \Drupal\Core\Session\AnonymousUserSession
+ * @group Session
  */
 class AnonymousUserSessionTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Anonymous user session object',
-      'description' => 'Tests the anonymous user session object.',
-      'group' => 'Session',
-    );
-  }
 
   /**
    * Tests creating an AnonymousUserSession when the request is available.

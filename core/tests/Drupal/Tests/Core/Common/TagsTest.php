@@ -11,7 +11,9 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests Tags::explodeTags and Tags::implodeTags().
+ * Tests explosion and implosion of autocomplete tags.
+ *
+ * @group Common
  */
 class TagsTest extends UnitTestCase {
 
@@ -21,14 +23,6 @@ class TagsTest extends UnitTestCase {
     '"Legendary Drupal mascot of doom: ""Druplicon"""' => 'Legendary Drupal mascot of doom: "Druplicon"',
     '"Drupal, although it rhymes with sloopal, is as awesome as a troopal!"' => 'Drupal, although it rhymes with sloopal, is as awesome as a troopal!',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Autocomplete tags',
-      'description' => 'Tests explosion and implosion of autocomplete tags.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Explodes a series of tags.

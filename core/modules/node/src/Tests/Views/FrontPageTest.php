@@ -13,6 +13,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the default frontpage provided by views.
+ *
+ * @group node
  */
 class FrontPageTest extends ViewTestBase {
 
@@ -29,14 +31,6 @@ class FrontPageTest extends ViewTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Frontpage view',
-      'description' => 'Tests the default frontpage provided by views.',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

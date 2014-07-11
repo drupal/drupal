@@ -11,7 +11,9 @@ use Drupal\config\Tests\ConfigEntityTest;
 use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
 
 /**
- * Tests config entity CRUD with key value entity storage.
+ * Tests KeyValueEntityStorage for config entities.
+ *
+ * @group KeyValueStore
  */
 class KeyValueConfigEntityStorageTest extends ConfigEntityTest {
 
@@ -26,16 +28,5 @@ class KeyValueConfigEntityStorageTest extends ConfigEntityTest {
    * @var array
    */
   public static $modules = array('keyvalue_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'KeyValueEntityStorage config entity test',
-      'description' => 'Tests KeyValueEntityStorage for config entities.',
-      'group' => 'Entity API',
-    );
-  }
 
 }

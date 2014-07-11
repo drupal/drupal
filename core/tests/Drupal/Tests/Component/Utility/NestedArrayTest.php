@@ -11,11 +11,8 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the NestedArray helper class.
- *
- * @group System
- *
  * @coversDefaultClass \Drupal\Component\Utility\NestedArray
+ * @group Utility
  */
 class NestedArrayTest extends UnitTestCase {
 
@@ -32,17 +29,6 @@ class NestedArrayTest extends UnitTestCase {
    * @var array
    */
   protected $parents;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'NestedArray functionality',
-      'description' => 'Tests the NestedArray helper class.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

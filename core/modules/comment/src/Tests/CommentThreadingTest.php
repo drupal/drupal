@@ -10,17 +10,11 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\CommentManagerInterface;
 
 /**
- * Tests comment threading.
+ * Tests to make sure the comment number increments properly.
+ *
+ * @group comment
  */
 class CommentThreadingTest extends CommentTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment Threading',
-      'description' => 'Test to make sure the comment number increments properly.',
-      'group' => 'Comment',
-    );
-  }
-
   /**
    * Tests the comment threading.
    */

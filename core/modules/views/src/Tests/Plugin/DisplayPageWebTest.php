@@ -9,6 +9,8 @@ namespace Drupal\views\Tests\Plugin;
 
 /**
  * Tests the views page display plugin as webtest.
+ *
+ * @group views
  */
 class DisplayPageWebTest extends PluginTestBase {
 
@@ -18,14 +20,6 @@ class DisplayPageWebTest extends PluginTestBase {
    * @var array
    */
   public static $testViews = array('test_page_display_arguments', 'test_page_display_menu');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display: Page plugin (web)',
-      'description' => 'Tests the page display plugin (web).',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

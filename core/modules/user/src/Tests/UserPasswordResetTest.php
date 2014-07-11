@@ -10,7 +10,9 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests resetting a user password.
+ * Ensure that password reset methods work as expected.
+ *
+ * @group user
  */
 class UserPasswordResetTest extends WebTestBase {
   /**
@@ -19,14 +21,6 @@ class UserPasswordResetTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $account;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Reset password',
-      'description' => 'Ensure that password reset methods work as expected.',
-      'group' => 'User',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

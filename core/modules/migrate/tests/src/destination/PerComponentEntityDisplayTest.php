@@ -14,21 +14,9 @@ use Drupal\migrate\Tests\MigrateTestCase;
 /**
  * Tests the entity display destination plugin.
  *
- * @group Drupal
  * @group migrate
  */
 class PerComponentEntityDisplayTest extends MigrateTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity display destination plugin',
-      'description' => 'Tests the entity display destination plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * Tests the entity display import method.

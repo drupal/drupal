@@ -13,8 +13,6 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Language\Language
- *
- * @group Drupal
  * @group Language
  */
 class LanguageUnitTest extends UnitTestCase {
@@ -25,17 +23,6 @@ class LanguageUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Language\Language
    */
   protected $language;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Core\Language\Language unit test',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

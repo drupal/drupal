@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 menu source.
+ * Tests D6 menu source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class MenuTest extends MigrateSqlSourceTestCase {
 
@@ -48,17 +47,6 @@ class MenuTest extends MigrateSqlSourceTestCase {
       'description' => 'menu custom description value 2',
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 menu source functionality',
-      'description' => 'Tests D6 menu source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

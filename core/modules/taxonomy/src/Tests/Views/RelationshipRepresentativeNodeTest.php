@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the representative node relationship for terms.
+ *
+ * @group taxonomy
  */
 class RelationshipRepresentativeNodeTest extends TaxonomyTestBase {
 
@@ -20,14 +22,6 @@ class RelationshipRepresentativeNodeTest extends TaxonomyTestBase {
    * @var array
    */
   public static $testViews = array('test_groupwise_term');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy: Representative Node Relationship',
-      'description' => 'Tests the representative node relationship for terms.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the relationship.

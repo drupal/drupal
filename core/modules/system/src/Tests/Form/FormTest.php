@@ -13,7 +13,9 @@ use Drupal\Core\Render\Element;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests form element validation.
+ * Tests various form element validation mechanisms.
+ *
+ * @group Form
  */
 class FormTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class FormTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('filter', 'form_test', 'file', 'datetime');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form element validation',
-      'description' => 'Tests various form element validation mechanisms.',
-      'group' => 'Form API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

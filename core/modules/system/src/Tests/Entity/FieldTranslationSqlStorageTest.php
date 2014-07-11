@@ -13,17 +13,11 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Tests entity translation.
+ * Tests Field translation SQL Storage.
+ *
+ * @group Entity
  */
 class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Field translation SQL storage tests',
-      'description'  => "Test Field translation SQL Storage.",
-      'group' => 'Entity API'
-    );
-  }
 
   /**
    * Tests field SQL storage.

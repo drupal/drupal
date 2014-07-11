@@ -9,6 +9,8 @@ namespace Drupal\comment\Tests\Views;
 
 /**
  * Tests the comment row plugin.
+ *
+ * @group comment
  */
 class CommentRowTest extends CommentTestBase {
 
@@ -18,14 +20,6 @@ class CommentRowTest extends CommentTestBase {
    * @var array
    */
   public static $testViews = array('test_comment_row');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment: Row Plugin',
-      'description' => 'Tests the comment row plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Test comment row.

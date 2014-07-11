@@ -10,7 +10,9 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\views\Views;
 
 /**
- * Tests the default/unformatted row style.
+ * Tests unformatted style functionality.
+ *
+ * @group views
  */
 class StyleUnformattedTest extends StyleTestBase {
 
@@ -20,14 +22,6 @@ class StyleUnformattedTest extends StyleTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: Unformatted',
-      'description' => 'Test unformatted style functionality.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * Make sure that the default css classes works as expected.

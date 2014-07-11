@@ -12,16 +12,10 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests scanning system directories in drupal_system_listing().
+ *
+ * @group Common
  */
 class SystemListingTest extends DrupalUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Drupal system listing',
-      'description' => 'Tests scanning system directories in drupal_system_listing().',
-      'group' => 'Common',
-    );
-  }
-
   /**
    * Tests that files in different directories take precedence as expected.
    */

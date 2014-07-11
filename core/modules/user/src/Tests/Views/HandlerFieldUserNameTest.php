@@ -10,8 +10,9 @@ namespace Drupal\user\Tests\Views;
 use Drupal\views\Views;
 
 /**
- * Tests the field username handler.
+ * Tests the handler of the user: name field.
  *
+ * @group user
  * @see views_handler_field_user_name
  */
 class HandlerFieldUserNameTest extends UserTestBase {
@@ -22,14 +23,6 @@ class HandlerFieldUserNameTest extends UserTestBase {
    * @var array
    */
   public static $testViews = array('test_views_handler_field_user_name');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Name Field',
-      'description' => 'Tests the handler of the user: name field.',
-      'group' => 'Views module integration',
-    );
-  }
 
   public function testUserName() {
     $this->drupalLogin($this->drupalCreateUser(array('access user profiles')));

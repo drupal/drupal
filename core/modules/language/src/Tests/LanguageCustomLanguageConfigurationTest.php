@@ -12,7 +12,9 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Functional tests for language configuration.
+ * Adds and configures custom languages.
+ *
+ * @group language
  */
 class LanguageCustomLanguageConfigurationTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Language configuration',
-      'description' => 'Adds and configures custom languages.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * Functional tests for adding, editing and deleting languages.

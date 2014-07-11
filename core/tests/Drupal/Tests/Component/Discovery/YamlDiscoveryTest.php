@@ -11,17 +11,11 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Discovery\YamlDiscovery;
 
 /**
- * Tests the YamlDiscovery component class.
+ * YamlDiscovery component unit tests.
+ *
+ * @group Discovery
  */
 class YamlDiscoveryTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'YamlDiscovery',
-      'description' => 'YamlDiscovery component unit tests.',
-      'group' => 'Discovery',
-    );
-  }
 
   /**
    * Tests the YAML file discovery.

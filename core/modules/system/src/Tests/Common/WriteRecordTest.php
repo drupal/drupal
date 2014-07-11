@@ -11,6 +11,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests writing of data records with drupal_write_record().
+ *
+ * @group Common
  */
 class WriteRecordTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class WriteRecordTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('database_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Data record write functionality',
-      'description' => 'Tests writing of data records with drupal_write_record().',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests the drupal_write_record() API function.

@@ -9,17 +9,11 @@ namespace Drupal\shortcut\Tests;
 use Drupal\shortcut\Entity\ShortcutSet;
 
 /**
- * Defines shortcut set test cases.
+ * Create, view, edit, delete, and change shortcut sets.
+ *
+ * @group shortcut
  */
 class ShortcutSetsTest extends ShortcutTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Shortcut set functionality',
-      'description' => 'Create, view, edit, delete, and change shortcut sets.',
-      'group' => 'Shortcut',
-    );
-  }
 
   /**
    * Tests creating a shortcut set.

@@ -13,7 +13,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Simpletest module.
+ * Upgrade variables to simpletest.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSimpletestConfigsTest extends MigrateDrupalTestBase {
 
@@ -25,17 +27,6 @@ class MigrateSimpletestConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('simpletest');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to simpletest.settings.yml',
-      'description'  => 'Upgrade variables to simpletest.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

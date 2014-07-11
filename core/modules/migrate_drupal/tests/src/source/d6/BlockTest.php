@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 block source.
+ * Tests D6 block source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class BlockTest extends MigrateSqlSourceTestCase {
 
@@ -81,17 +80,6 @@ class BlockTest extends MigrateSqlSourceTestCase {
     $this->databaseContents['blocks'] = $this->expectedResults;
     $this->databaseContents['blocks_roles'] = $this->expectedBlocksRoles;
     parent::setUp();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 block source functionality',
-      'description' => 'Tests D6 block source plugin.',
-      'group' => 'Migrate Drupal',
-    );
   }
 
   /**

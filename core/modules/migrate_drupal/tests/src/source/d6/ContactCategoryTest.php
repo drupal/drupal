@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 contact category source.
+ * Tests D6 contact category source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class ContactCategoryTest extends MigrateSqlSourceTestCase {
 
@@ -45,17 +44,6 @@ class ContactCategoryTest extends MigrateSqlSourceTestCase {
       'selected' => 0,
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 contact category source functionality',
-      'description' => 'Tests D6 contact category source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

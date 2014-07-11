@@ -11,9 +11,8 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Json::encode() and Json::decode() functions.
- *
- * @see \Drupal\Component\Serialization\Json
+ * @coversDefaultClass \Drupal\Component\Serialization\Json
+ * @group Serialization
  */
 class JsonTest extends UnitTestCase {
 
@@ -38,14 +37,6 @@ class JsonTest extends UnitTestCase {
    */
   protected $htmlUnsafeEscaped;
 
-
-  public static function getInfo() {
-    return array(
-      'name' => 'JSON',
-      'description' => 'Tests the Json::encode() and Json::decode() functions to convert PHP variables to JSON strings and back.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * {@inheritdoc}

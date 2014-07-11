@@ -12,6 +12,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests Transliteration component functionality.
+ *
+ * @group Transliteration
  */
 class TransliterationTest extends DrupalUnitTestBase {
   /**
@@ -20,14 +22,6 @@ class TransliterationTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('transliterate_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Transliteration functionality',
-      'description' => 'Tests Transliteration component functionality.',
-      'group' => 'Transliteration',
-    );
-  }
 
   /**
    * Tests the PHPTransliteration class.

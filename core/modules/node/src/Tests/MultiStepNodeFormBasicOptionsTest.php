@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests basic options of multi-step node forms.
+ * Tests the persistence of basic options through multiple steps.
+ *
+ * @group node
  */
 class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
    * @var string
    */
   protected $field_name;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Multistep node form basic options',
-      'description' => 'Test the persistence of basic options through multiple steps.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * Tests changing the default values of basic options to ensure they persist.

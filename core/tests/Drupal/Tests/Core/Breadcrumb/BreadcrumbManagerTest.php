@@ -11,12 +11,8 @@ use Drupal\Core\Breadcrumb\BreadcrumbManager;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the breadcrumb manager.
- *
- * @group Drupal
- * @group Breadcrumb
- *
  * @coversDefaultClass \Drupal\Core\Breadcrumb\BreadcrumbManager
+ * @group Breadcrumb
  */
 class BreadcrumbManagerTest extends UnitTestCase {
 
@@ -40,17 +36,6 @@ class BreadcrumbManagerTest extends UnitTestCase {
   protected function setUp() {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->breadcrumbManager = new BreadcrumbManager($this->moduleHandler);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Breadcrumb manager',
-      'description' => 'Tests the breadcrumb manager.',
-      'group' => 'Menu'
-    );
   }
 
   /**

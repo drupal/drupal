@@ -12,6 +12,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests field form handling.
+ *
+ * @group field
  */
 class FormTest extends FieldTestBase {
 
@@ -49,14 +51,6 @@ class FormTest extends FieldTestBase {
    * @var array
    */
   protected $instance;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field form tests',
-      'description' => 'Test Field form handling.',
-      'group' => 'Field API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

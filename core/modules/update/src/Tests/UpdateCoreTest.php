@@ -8,7 +8,10 @@
 namespace Drupal\update\Tests;
 
 /**
- * Tests behavior related to discovering and listing updates to Drupal core.
+ * Tests the Update Manager module through a series of functional tests using
+ * mock XML data.
+ *
+ * @group update
  */
 class UpdateCoreTest extends UpdateTestBase {
 
@@ -18,14 +21,6 @@ class UpdateCoreTest extends UpdateTestBase {
    * @var array
    */
   public static $modules = array('update_test', 'update', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update core functionality',
-      'description' => 'Tests the Update Manager module through a series of functional tests using mock XML data.',
-      'group' => 'Update',
-    );
-  }
 
   function setUp() {
     parent::setUp();

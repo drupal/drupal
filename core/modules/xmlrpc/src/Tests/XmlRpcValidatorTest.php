@@ -10,7 +10,10 @@ namespace Drupal\xmlrpc\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * XML-RPC validator1 specification.
+ * See <a href="http://www.xmlrpc.com/validator1Docs">the xmlrpc validator1
+ * specification</a>.
+ *
+ * @group xmlrpc
  */
 class XmlRpcValidatorTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class XmlRpcValidatorTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('xmlrpc', 'xmlrpc_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'XML-RPC validator',
-      'description' => 'See <a href="http://www.xmlrpc.com/validator1Docs">the xmlrpc validator1 specification</a>.',
-      'group' => 'XML-RPC',
-    );
-  }
 
   /**
    * Run validator1 tests.

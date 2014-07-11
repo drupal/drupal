@@ -11,9 +11,8 @@ use Drupal\serialization\Encoder\XmlEncoder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the XmlEncoder class.
- *
- * @see \Drupal\serialization\Encoder\XmlEncoder
+ * @coversDefaultClass \Drupal\serialization\Encoder\XmlEncoder
+ * @group serialization
  */
 class XmlEncoderTest extends UnitTestCase {
 
@@ -35,14 +34,6 @@ class XmlEncoderTest extends UnitTestCase {
    * @var array
    */
   protected $testArray = array('test' => 'test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'XmlEncoderTest',
-      'description' => 'Tests the XmlEncoder class.',
-      'group' => 'Serialization',
-    );
-  }
 
   public function setUp() {
     $this->baseEncoder = $this->getMock('Symfony\Component\Serializer\Encoder\XmlEncoder');

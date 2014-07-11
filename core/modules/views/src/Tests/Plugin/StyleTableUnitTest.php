@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests the table style plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\style\Table
  */
 class StyleTableUnitTest extends PluginUnitTestBase {
@@ -24,14 +25,6 @@ class StyleTableUnitTest extends PluginUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_table');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: Table (Unit Test)',
-      'description' => 'Tests the table style plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * Tests the table style.

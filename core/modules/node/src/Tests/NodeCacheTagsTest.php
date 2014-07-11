@@ -12,6 +12,8 @@ use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
  * Tests the Node entity's cache tags.
+ *
+ * @group node
  */
 class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
@@ -19,13 +21,6 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('Node', 'Node');
-  }
 
   /**
    * {@inheritdoc}

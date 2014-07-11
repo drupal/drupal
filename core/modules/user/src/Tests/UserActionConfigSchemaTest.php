@@ -12,7 +12,10 @@ use Drupal\simpletest\KernelTestBase;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests the User action config schema.
+ * Ensures the user action for adding and removing roles have valid config
+ * schema.
+ *
+ * @group user
  */
 class UserActionConfigSchemaTest extends KernelTestBase {
 
@@ -31,14 +34,6 @@ class UserActionConfigSchemaTest extends KernelTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User action config schema',
-      'description' => 'Ensures the user action for adding and removing roles have valid config schema.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Tests whether the user action config schema are valid.

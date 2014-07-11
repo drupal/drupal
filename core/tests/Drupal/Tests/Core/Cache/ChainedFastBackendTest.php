@@ -12,10 +12,7 @@ use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the chained fast cache backend.
- *
  * @coversDefaultClass \Drupal\Core\Cache\ChainedFastBackend
- *
  * @group Cache
  */
 class ChainedFastBackendTest extends UnitTestCase {
@@ -40,17 +37,6 @@ class ChainedFastBackendTest extends UnitTestCase {
    * @var string
    */
   protected $bin;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Chained Fast Cache Test',
-      'description' => 'Tests the chained fast cache',
-      'group' => 'Cache',
-    );
-  }
 
   /**
    * Tests a get() on the fast backend, with no hit on the consistent backend.

@@ -11,7 +11,9 @@ use Drupal\Core\Database\Database;
 use Drupal\block_content\Entity\BlockContent;
 
 /**
- * Tests creating and saving a block.
+ * Create a block and test saving it.
+ *
+ * @group block_content
  */
 class BlockContentCreationTest extends BlockContentTestBase {
 
@@ -23,17 +25,6 @@ class BlockContentCreationTest extends BlockContentTestBase {
    * @var array
    */
   public static $modules = array('block_content_test', 'dblog');
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block creation',
-      'description' => 'Create a block and test saving it.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Sets the test up.

@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\Date handler.
+ *
+ * @group views
  */
 class FilterDateTest extends HandlerTestBase {
 
@@ -27,14 +29,6 @@ class FilterDateTest extends HandlerTestBase {
    * @var array
    */
   public static $modules = array('node', 'views_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Date',
-      'description' => 'Test the core Drupal\views\Plugin\views\filter\Date handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   function setUp() {
     parent::setUp();

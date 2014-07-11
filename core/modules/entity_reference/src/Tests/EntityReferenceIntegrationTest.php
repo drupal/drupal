@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests various Entity reference UI components.
+ *
+ * @group entity_reference
  */
 class EntityReferenceIntegrationTest extends WebTestBase {
 
@@ -41,14 +43,6 @@ class EntityReferenceIntegrationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('config_test', 'entity_test', 'entity_reference', 'options');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity reference components (widgets, formatters, etc.)',
-      'description' => 'Tests for various Entity reference components.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   /**
    * {@inheritdoc}

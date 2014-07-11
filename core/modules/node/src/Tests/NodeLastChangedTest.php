@@ -11,6 +11,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the node_last_changed() function.
+ *
+ * @group node
  */
 class NodeLastChangedTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class NodeLastChangedTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('entity', 'user', 'node', 'field', 'text', 'filter');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node Last Changed',
-      'description' => 'Tests the node_last_changed() function.',
-      'group' => 'Node',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

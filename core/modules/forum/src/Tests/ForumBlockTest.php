@@ -11,7 +11,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
- * Provides automated tests for the Forum blocks.
+ * Tests the forum blocks.
+ *
+ * @group forum
  */
 class ForumBlockTest extends WebTestBase {
 
@@ -26,14 +28,6 @@ class ForumBlockTest extends WebTestBase {
    * A user with various administrative privileges.
    */
   protected $adminUser;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum blocks',
-      'description' => 'Tests the forum blocks.',
-      'group' => 'Forum',
-    );
-  }
 
   function setUp() {
     parent::setUp();

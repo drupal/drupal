@@ -11,7 +11,9 @@ use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests \Drupal\views\Entity\View::calculateDependencies().
+ * Tests the calculation of dependencies for views.
+ *
+ * @group views
  */
 class ViewEntityDependenciesTest extends ViewTestBase {
 
@@ -28,14 +30,6 @@ class ViewEntityDependenciesTest extends ViewTestBase {
    * @var array
    */
   public static $modules = array('node', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View dependencies test',
-      'description' => 'Tests the calculation of dependencies for views.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the calculateDependencies method.

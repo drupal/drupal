@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Path;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests hook_url_alter functions.
+ * Tests altering the inbound path and the outbound path.
+ *
+ * @group Path
  */
 class UrlAlterFunctionalTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class UrlAlterFunctionalTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('path', 'forum', 'url_alter_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'URL altering',
-      'description' => 'Tests altering the inbound path and the outbound path.',
-      'group' => 'Path API',
-    );
-  }
 
   /**
    * Test that URL altering works and that it occurs in the correct order.

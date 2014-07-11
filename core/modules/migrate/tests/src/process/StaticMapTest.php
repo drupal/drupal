@@ -12,20 +12,8 @@ use Drupal\migrate\Plugin\migrate\process\StaticMap;
  * Tests the static map process plugin.
  *
  * @group migrate
- * @group Drupal
  */
 class StaticMapTest extends MigrateProcessTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Map process plugin',
-      'description' => 'Tests the map process plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -16,9 +16,7 @@ use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
- *
- * @group Drupal
- * @group KeyValueEntityStorage
+ * @group Entity
  */
 class KeyValueEntityStorageTest extends UnitTestCase {
 
@@ -75,17 +73,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $cacheBackend;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'KeyValueEntityStorage',
-      'description' => 'Tests \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

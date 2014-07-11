@@ -13,6 +13,8 @@ use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Tests the new entity API for the test field type.
+ *
+ * @group field
  */
 class TestItemTest extends FieldUnitTestBase {
 
@@ -29,14 +31,6 @@ class TestItemTest extends FieldUnitTestBase {
    * @var string
    */
   protected $field_name = 'field_test';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Test field item',
-      'description' => 'Tests the new entity API for the test field type.',
-      'group' => 'Field types',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

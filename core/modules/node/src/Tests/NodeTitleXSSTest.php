@@ -8,17 +8,12 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests XSS functionality with a node entity.
+ * Create a node with dangerous tags in its title and test that they are
+ * escaped.
+ *
+ * @group node
  */
 class NodeTitleXSSTest extends NodeTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Node title XSS filtering',
-      'description' => 'Create a node with dangerous tags in its title and test that they are escaped.',
-      'group' => 'Node',
-    );
-  }
-
   /**
    * Tests XSS functionality with a node entity.
    */

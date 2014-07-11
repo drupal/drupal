@@ -14,10 +14,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\breakpoint\Entity\BreakpointGroup
- *
- * @group Drupal
- * @group Config
- * @group Breakpoint
+ * @group breakpoint
  */
 class BreakpointGroupConfigEntityUnitTest extends UnitTestCase {
 
@@ -55,17 +52,6 @@ class BreakpointGroupConfigEntityUnitTest extends UnitTestCase {
    * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $uuid;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\breakpoint\Entity\BreakpointGroup unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -8,7 +8,9 @@
 namespace Drupal\block_content\Tests;
 
 /**
- * Tests related to custom block types.
+ * Ensures that custom block type functions work correctly.
+ *
+ * @group block_content
  */
 class BlockContentTypeTest extends BlockContentTestBase {
 
@@ -28,17 +30,6 @@ class BlockContentTypeTest extends BlockContentTestBase {
     'administer blocks',
     'administer block_content fields'
   );
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block types',
-      'description' => 'Ensures that custom block type functions work correctly.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Tests creating a block type programmatically and via a form.

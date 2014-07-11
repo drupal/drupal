@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the field language handler.
  *
+ * @group language
  * @see \Drupal\language\Plugin\views\field\Language
  */
 class FieldLanguageTest extends LanguageTestBase {
@@ -22,14 +23,6 @@ class FieldLanguageTest extends LanguageTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Language',
-      'description' => 'Tests the field language handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests the language field.

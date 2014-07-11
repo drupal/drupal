@@ -13,6 +13,8 @@ use Drupal\Component\Utility\Crypt;
 
 /**
  * Tests the JavaScript system.
+ *
+ * @group Common
  */
 class JavaScriptTest extends DrupalUnitTestBase {
 
@@ -27,14 +29,6 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Stores configured value for JavaScript preprocessing.
    */
   protected $preprocess_js = NULL;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'JavaScript',
-      'description' => 'Tests the JavaScript system.',
-      'group' => 'Common',
-    );
-  }
 
   function setUp() {
     parent::setUp();

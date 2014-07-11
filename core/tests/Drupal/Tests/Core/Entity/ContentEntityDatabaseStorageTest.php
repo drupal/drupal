@@ -13,11 +13,7 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests the fieldable database storage.
- *
  * @coversDefaultClass \Drupal\Core\Entity\ContentEntityDatabaseStorage
- *
- * @group Drupal
  * @group Entity
  */
 class ContentEntityDatabaseStorageTest extends UnitTestCase {
@@ -49,17 +45,6 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Fieldable database storage',
-      'description' => 'Tests the fieldable database storage enhancer for entities.',
-      'group' => 'Entity'
-    );
-  }
 
   /**
    * {@inheritdoc}

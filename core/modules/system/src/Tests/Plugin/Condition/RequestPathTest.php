@@ -13,7 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests the Request Path condition plugin.
+ * Tests that the Request Path Condition, provided by the system module, is
+ * working properly.
+ *
+ * @group Plugin
  */
 class RequestPathTest extends KernelTestBase {
 
@@ -44,17 +47,6 @@ class RequestPathTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array('system', 'user', 'field', 'path');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Request Path Condition Plugin',
-      'description' => 'Tests that the Request Path Condition, provided by the system module, is working properly.',
-      'group' => 'Condition API',
-    );
-  }
 
   /**
    * {@inheritdoc}

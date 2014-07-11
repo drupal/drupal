@@ -10,7 +10,9 @@ namespace Drupal\config_translation\Tests;
 use Drupal\views_ui\Tests\UITestBase;
 
 /**
- * Tests for the views_ui module that should have translate operation.
+ * Visit view list and test if translate is available.
+ *
+ * @group config_translation
  */
 class ConfigTranslationViewListUiTest extends UITestBase {
 
@@ -38,14 +40,6 @@ class ConfigTranslationViewListUiTest extends UITestBase {
 
     // Create and log in user.
     $this->drupalLogin($this->drupalCreateUser($permissions));
-  }
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration Translation view list',
-      'description' => 'Visit view list and test if translate is available.',
-      'group' => 'Configuration Translation',
-    );
   }
 
   /**

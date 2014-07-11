@@ -10,7 +10,9 @@ namespace Drupal\rest\Tests;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
- * Tests resource deletion on user, node and test entities.
+ * Tests the deletion of resources.
+ *
+ * @group rest
  */
 class DeleteTest extends RESTTestBase {
 
@@ -20,14 +22,6 @@ class DeleteTest extends RESTTestBase {
    * @var array
    */
   public static $modules = array('hal', 'rest', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Delete resource',
-      'description' => 'Tests the deletion of resources.',
-      'group' => 'REST',
-    );
-  }
 
   /**
    * Tests several valid and invalid delete requests on all entity types.

@@ -14,6 +14,7 @@ use Drupal\views\Tests\ViewUnitTestBase;
 /**
  * Tests the permission field handler.
  *
+ * @group user
  * @see \Drupal\user\Plugin\views\field\Permissions
  */
 class HandlerFieldPermissionTest extends UserUnitTestBase {
@@ -24,14 +25,6 @@ class HandlerFieldPermissionTest extends UserUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_field_permission');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Permissions Field',
-      'description' => 'Tests the permission field handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the permission field handler output.

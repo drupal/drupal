@@ -11,17 +11,11 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 
 /**
- * Tests entity translation.
+ * Tests entity translation functionality.
+ *
+ * @group Entity
  */
 class EntityTranslationTest extends EntityLanguageTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Translation',
-      'description' => 'Tests entity translation functionality.',
-      'group' => 'Entity API',
-    );
-  }
 
   /**
    * Tests language related methods of the Entity class.

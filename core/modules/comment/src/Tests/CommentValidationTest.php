@@ -12,6 +12,8 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests comment validation constraints.
+ *
+ * @group comment
  */
 class CommentValidationTest extends EntityUnitTestBase {
 
@@ -21,17 +23,6 @@ class CommentValidationTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('comment', 'node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment Validation',
-      'description' => 'Tests the comment validation constraints.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * {@inheritdoc}

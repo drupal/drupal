@@ -18,7 +18,9 @@ use Drupal\Core\Routing\MatcherDumper;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
 
 /**
- * Basic tests for the UrlMatcherDumper.
+ * Confirm that the matcher dumper is functioning properly.
+ *
+ * @group Routing
  */
 class MatcherDumperTest extends UnitTestBase {
 
@@ -35,14 +37,6 @@ class MatcherDumperTest extends UnitTestBase {
    * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Dumper tests',
-      'description' => 'Confirm that the matcher dumper is functioning properly.',
-      'group' => 'Routing',
-    );
-  }
 
   function __construct($test_id = NULL) {
     parent::__construct($test_id);

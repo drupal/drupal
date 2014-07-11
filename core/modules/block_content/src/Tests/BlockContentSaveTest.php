@@ -10,7 +10,9 @@ namespace Drupal\block_content\Tests;
 use Drupal\block_content\Entity\BlockContent;
 
 /**
- * Tests block save related functionality.
+ * Tests $block_content->save() for saving content.
+ *
+ * @group block_content
  */
 class BlockContentSaveTest extends BlockContentTestBase {
 
@@ -20,17 +22,6 @@ class BlockContentSaveTest extends BlockContentTestBase {
    * @var array
    */
   public static $modules = array('block_content_test');
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block save',
-      'description' => 'Test $block_content->save() for saving content.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Sets the test up.

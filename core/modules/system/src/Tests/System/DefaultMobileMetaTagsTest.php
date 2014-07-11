@@ -11,17 +11,11 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests default mobile meta tags on HTML pages.
+ * Confirm that the default mobile meta tags appear as expected.
+ *
+ * @group system
  */
 class DefaultMobileMetaTagsTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Default mobile meta tags',
-      'description' => 'Confirm that the default mobile meta tags appear as expected.',
-      'group' => 'System'
-    );
-  }
-
   function setUp() {
     parent::setUp();
     $this->default_metatags = array(

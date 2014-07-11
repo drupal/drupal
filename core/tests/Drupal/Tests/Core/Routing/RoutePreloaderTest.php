@@ -15,9 +15,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the non admin routes preloader.
- *
- * @see \Drupal\Core\Routing\RoutePreloader
+ * @coversDefaultClass \Drupal\Core\Routing\RoutePreloader
+ * @group Routing
  */
 class RoutePreloaderTest extends UnitTestCase {
 
@@ -48,17 +47,6 @@ class RoutePreloaderTest extends UnitTestCase {
    * @var \Drupal\Core\Routing\RoutePreloader
    */
   protected $preloader;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Route preloader',
-      'description' => 'Tests the non admin routes preloader.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -12,17 +12,11 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
 /**
- * Provides testing for basic block module functionality.
+ * Tests basic block functionality.
+ *
+ * @group block
  */
 class BlockTest extends BlockTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block functionality',
-      'description' => 'Tests basic block functionality.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Tests block visibility.

@@ -11,17 +11,11 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Password\PhpassHashedPassword;
 
 /**
- * Functional tests for user logins, including rate limiting of login attempts.
+ * Ensure that login works as expected.
+ *
+ * @group user
  */
 class UserLoginTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'User login',
-      'description' => 'Ensure that login works as expected.',
-      'group' => 'User',
-    );
-  }
-
   /**
    * Tests login with destination.
    */

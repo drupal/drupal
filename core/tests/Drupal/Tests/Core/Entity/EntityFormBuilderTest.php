@@ -7,6 +7,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityFormBuilder
+ * @group Entity
  */
 class EntityFormBuilderTest extends UnitTestCase {
 
@@ -30,17 +31,6 @@ class EntityFormBuilderTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityFormBuilderInterface
    */
   protected $entityFormBuilder;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Form Builder test',
-      'description' => 'Unit test the entity form builder.',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

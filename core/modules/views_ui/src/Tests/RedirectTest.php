@@ -9,6 +9,8 @@ namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the redirecting after saving a views.
+ *
+ * @group views_ui
  */
 class RedirectTest extends UITestBase {
 
@@ -18,14 +20,6 @@ class RedirectTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view', 'test_redirect_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Redirect',
-      'description' => 'Tests the redirecting after saving a views',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the redirecting.

@@ -8,20 +8,11 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests the node revision functionality.
+ * Tests the UI for controlling node revision behavior.
+ *
+ * @group node
  */
 class NodeRevisionsUiTest extends NodeTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Node revisions UI test',
-      'description' => 'Checks the UI for controlling node revision behavior.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests drupal_render() in a full environment.
+ * Performs integration tests on drupal_render().
+ *
+ * @group Common
  */
 class RenderWebTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class RenderWebTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('common_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'drupal_render() in a full environment',
-      'description' => 'Performs integration tests on drupal_render().',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests rendering form elements without passing through form_builder().

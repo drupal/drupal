@@ -11,19 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\String;
 
 /**
- * Tests string filtering.
- *
- * @see \Drupal\Component\Utility\String
+ * @coversDefaultClass \Drupal\Component\Utility\String
+ * @group Utility
  */
 class StringTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'String filtering tests',
-      'description' => 'Confirm that String::checkPlain() and String::format() work correctly, including invalid multi-byte sequences.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests String::checkPlain().

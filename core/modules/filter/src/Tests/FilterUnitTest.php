@@ -13,7 +13,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\filter\FilterBag;
 
 /**
- * Unit tests for core filters.
+ * Tests Filter module filters individually.
+ *
+ * @group filter
  */
 class FilterUnitTest extends DrupalUnitTestBase {
 
@@ -28,14 +30,6 @@ class FilterUnitTest extends DrupalUnitTestBase {
    * @var \Drupal\filter\Plugin\FilterInterface[]
    */
   protected $filters;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter module filters',
-      'description' => 'Tests Filter module filters individually.',
-      'group' => 'Filter',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

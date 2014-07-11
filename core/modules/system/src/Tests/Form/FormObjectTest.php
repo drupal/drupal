@@ -12,6 +12,8 @@ use Drupal\form_test\FormTestObject;
 
 /**
  * Tests building a form from an object.
+ *
+ * @group Form
  */
 class FormObjectTest extends SystemConfigFormTestBase {
 
@@ -21,14 +23,6 @@ class FormObjectTest extends SystemConfigFormTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form object tests',
-      'description' => 'Tests building a form from an object.',
-      'group' => 'Form API',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

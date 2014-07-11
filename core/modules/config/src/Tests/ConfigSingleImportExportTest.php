@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the user interface for importing/exporting a single configuration.
+ *
+ * @group config
  */
 class ConfigSingleImportExportTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class ConfigSingleImportExportTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('config', 'config_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration Single Import/Export UI',
-      'description' => 'Tests the user interface for importing/exporting a single configuration.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests importing a single configuration file.

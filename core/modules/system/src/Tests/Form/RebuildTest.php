@@ -11,8 +11,9 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests form rebuilding.
+ * Tests functionality of drupal_rebuild_form().
  *
+ * @group Form
  * @todo Add tests for other aspects of form rebuilding.
  */
 class RebuildTest extends WebTestBase {
@@ -23,14 +24,6 @@ class RebuildTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form rebuilding',
-      'description' => 'Tests functionality of drupal_rebuild_form().',
-      'group' => 'Form API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

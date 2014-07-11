@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the display extender UI.
+ *
+ * @group views_ui
  */
 class DisplayExtenderUITest extends UITestBase {
 
@@ -20,14 +22,6 @@ class DisplayExtenderUITest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display extender: UI',
-      'description' => 'Tests the display extender UI.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the display extender UI.

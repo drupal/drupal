@@ -13,6 +13,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Utility\Token
+ * @group Utility
  */
 class TokenTest extends UnitTestCase {
 
@@ -43,17 +44,6 @@ class TokenTest extends UnitTestCase {
    * @var \Drupal\Core\Utility\Token|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $token;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Tests\Core\Utility\Token unit test',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,9 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 
 /**
- * Tests plugin YAML discovery.
- *
- * @see \Drupal\Core\Plugin\Discovery\YamlDiscovery
+ * @coversDefaultClass \Drupal\Core\Plugin\Discovery\YamlDiscovery
+ * @group Plugin
  */
 class YamlDiscoveryTest extends UnitTestCase {
 
@@ -35,14 +34,6 @@ class YamlDiscoveryTest extends UnitTestCase {
     'another_provider_2' => 'test_2_a',
     'test_2' => 'test_2_b',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'YamlDiscovery',
-      'description' => 'YamlDiscovery unit tests.',
-      'group' => 'Plugin',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

@@ -11,7 +11,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for language configuration's effect on negotiation setup.
+ * Adds and configures languages to check negotiation changes.
+ *
+ * @group language
  */
 class LanguageConfigurationTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LanguageConfigurationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language negotiation autoconfiguration',
-      'description' => 'Adds and configures languages to check negotiation changes.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * Functional tests for adding, editing and deleting languages.

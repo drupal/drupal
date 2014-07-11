@@ -14,7 +14,10 @@ use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Component\Utility\Unicode;
 
 /**
- * Tests loading of Quick Edit and lazy-loading of in-place editors.
+ * Tests loading of in-place editing functionality and lazy loading of its
+ * in-place editors.
+ *
+ * @group quickedit
  */
 class QuickEditLoadingTest extends WebTestBase {
 
@@ -24,14 +27,6 @@ class QuickEditLoadingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('contextual', 'quickedit', 'filter', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'In-place editing loading',
-      'description' => 'Tests loading of in-place editing functionality and lazy loading of its in-place editors.',
-      'group' => 'Quick Edit',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

@@ -12,11 +12,13 @@ use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserException;
 
 /**
- * Tests InfoParser class.
+ * Tests InfoParser class and exception.
  *
  * Files for this test are stored in core/modules/system/tests/fixtures and end
  * with .info.txt instead of info.yml in order not not be considered as real
  * extensions.
+ *
+ * @group Extension
  */
 class InfoParserUnitTest extends DrupalUnitTestBase {
 
@@ -26,17 +28,6 @@ class InfoParserUnitTest extends DrupalUnitTestBase {
    * @var \Drupal\Core\Extension\InfoParser
    */
   protected $infoParser;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'InfoParser',
-      'description' => 'Tests InfoParser class and exception.',
-      'group' => 'Extension',
-    );
-  }
 
   /**
    * {@inheritdoc}

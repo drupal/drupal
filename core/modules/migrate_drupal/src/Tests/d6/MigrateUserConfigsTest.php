@@ -12,22 +12,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the User module.
+ * Upgrade variables to user.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserConfigsTest extends MigrateDrupalTestBase {
 
   use SchemaCheckTestTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to user.*.yml',
-      'description'  => 'Upgrade variables to user.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

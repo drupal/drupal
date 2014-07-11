@@ -8,7 +8,9 @@
 namespace Drupal\Tests\Component\PhpStorage;
 
 /**
- * Tests the directory mtime based PHP loader implementation.
+ * Tests the MTimeProtectedFileStorage implementation.
+ *
+ * @group PhpStorage
  */
 class MTimeProtectedFileStorageTest extends MTimeProtectedFileStorageBase {
 
@@ -24,16 +26,5 @@ class MTimeProtectedFileStorageTest extends MTimeProtectedFileStorageBase {
    * The PHP storage class to test.
    */
   protected $storageClass = 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'MTime protected file storage',
-      'description' => 'Tests the MTimeProtectedFileStorage implementation.',
-      'group' => 'PHP Storage',
-    );
-  }
 
 }

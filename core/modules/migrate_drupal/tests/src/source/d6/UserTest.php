@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 user source.
+ * Tests D6 user source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class UserTest extends MigrateSqlSourceTestCase {
 
@@ -68,17 +67,6 @@ class UserTest extends MigrateSqlSourceTestCase {
       'data' => NULL,
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 user source functionality',
-      'description' => 'Tests D6 user source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

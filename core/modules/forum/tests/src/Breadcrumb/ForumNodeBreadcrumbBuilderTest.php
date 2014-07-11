@@ -11,26 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
- * Tests the listing class for forum breadcrumbs.
- *
- * @group Forum
- * @group Drupal
- *
- * @see \Drupal\forum\ForumNodeBreadcrumbBuilder
  * @coversDefaultClass \Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder
+ * @group forum
  */
 class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum Breadcrumb Node Test',
-      'description' => 'Tests the node class for forum breadcrumbs.',
-      'group' => 'Forum',
-    );
-  }
 
   /**
    * Tests ForumNodeBreadcrumbBuilder::applies().

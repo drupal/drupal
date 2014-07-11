@@ -10,8 +10,9 @@ namespace Drupal\image\Tests;
 use Drupal\system\Tests\Image\ToolkitTestBase;
 
 /**
- * Use the image_test.module's mock toolkit to ensure that the effects are
- * properly passing parameters to the image toolkit.
+ * Tests that the image effects pass parameters to the toolkit correctly.
+ *
+ * @group image
  */
 class ImageEffectsTest extends ToolkitTestBase {
 
@@ -28,14 +29,6 @@ class ImageEffectsTest extends ToolkitTestBase {
    * @var \Drupal\image\ImageEffectManager
    */
   protected $manager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image effects',
-      'description' => 'Test that the image effects pass parameters to the toolkit correctly.',
-      'group' => 'Image',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

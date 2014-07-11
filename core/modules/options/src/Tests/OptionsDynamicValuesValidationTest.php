@@ -9,16 +9,10 @@ namespace Drupal\options\Tests;
 
 /**
  * Tests the Options field allowed values function.
+ *
+ * @group options
  */
 class OptionsDynamicValuesValidationTest extends OptionsDynamicValuesTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Options field dynamic values',
-      'description' => 'Test the Options field allowed values function.',
-      'group' => 'Field types',
-    );
-  }
-
   /**
    * Test that allowed values function gets the entity.
    */

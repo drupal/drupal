@@ -11,8 +11,9 @@ use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests the text area handler.
+ * Tests the core views_handler_area_text handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\area\Text
  */
 class AreaTextTest extends ViewUnitTestBase {
@@ -25,14 +26,6 @@ class AreaTextTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Area: Text',
-      'description' => 'Test the core views_handler_area_text handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

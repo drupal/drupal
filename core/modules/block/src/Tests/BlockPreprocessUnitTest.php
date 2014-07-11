@@ -10,7 +10,9 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Web tests for template_preprocess_block().
+ * Tests the template_preprocess_block() function.
+ *
+ * @group block
  */
 class BlockPreprocessUnitTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class BlockPreprocessUnitTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block preprocess',
-      'description' => 'Test the template_preprocess_block() function.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Tests block classes with template_preprocess_block().

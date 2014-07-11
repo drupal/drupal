@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 user picture to Drupal 8 picture field instance migration.
+ * User picture field instance migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserPictureInstanceTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateUserPictureInstanceTest extends MigrateDrupalTestBase {
    * @var array
    */
   static $modules = array('image');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate user picture field instance.',
-      'description'  => 'User picture field instance migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

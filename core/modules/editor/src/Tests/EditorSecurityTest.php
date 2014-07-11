@@ -13,6 +13,8 @@ use Drupal\Component\Utility\String;
 
 /**
  * Tests XSS protection for content creators when using text editors.
+ *
+ * @group editor
  */
 class EditorSecurityTest extends WebTestBase {
 
@@ -43,14 +45,6 @@ class EditorSecurityTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('filter', 'editor', 'editor_test', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Text editor security',
-      'description' => 'Tests XSS protection for content creators when using text editors.',
-      'group' => 'Text Editor',
-    );
-  }
 
   function setUp() {
     parent::setUp();

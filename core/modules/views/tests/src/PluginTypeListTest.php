@@ -10,17 +10,11 @@ use Drupal\views\ViewExecutable;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Class for plugin list testing.
+ * Tests that list of plugin is correct.
+ *
+ * @group views
  */
 class PluginTypeListTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Plugin list',
-      'description' => 'Tests that list of plugin is correct.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * Tests the plugins list is correct.

@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test the vertical_tabs form element for expected behavior.
+ * Tests the vertical_tabs form element for expected behavior.
+ *
+ * @group Form
  */
 class ElementsVerticalTabsTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ElementsVerticalTabsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Vertical tabs form element type test',
-      'description' => 'Test the vertical_tabs element for expected behavior',
-      'group' => 'Form API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

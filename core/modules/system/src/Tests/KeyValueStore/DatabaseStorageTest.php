@@ -11,16 +11,10 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests the key-value database storage.
+ *
+ * @group KeyValueStore
  */
 class DatabaseStorageTest extends StorageTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Database storage',
-      'description' => 'Tests the key-value database storage.',
-      'group' => 'Key-value store',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

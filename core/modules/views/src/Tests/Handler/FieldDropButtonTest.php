@@ -12,6 +12,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests the dropbutton field handler.
  *
+ * @group views
  * @see \Drupal\system\Plugin\views\field\Dropbutton
  */
 class FieldDropButtonTest extends HandlerTestBase {
@@ -29,14 +30,6 @@ class FieldDropButtonTest extends HandlerTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Dropbutton',
-      'description' => 'Tests the dropbutton field handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests dropbutton field.

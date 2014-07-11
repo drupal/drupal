@@ -8,11 +8,13 @@
 namespace Drupal\search\Tests;
 
 /**
- * Tests the searching without keywords.
+ * Verify the search without keywords set and extra conditions.
  *
  * Verifies that a plugin can override the isSearchExecutable() method to allow
  * searching without keywords set and that GET query parameters are made
  * available to plugins during search execution.
+ *
+ * @group search
  */
 class SearchKeywordsConditionsTest extends SearchTestBase {
 
@@ -22,14 +24,6 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
    * @var array
    */
   public static $modules = array('comment', 'search_extra_type');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Keywords and conditions',
-      'description' => 'Verify the search without keywords set and extra conditions.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

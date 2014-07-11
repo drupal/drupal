@@ -10,7 +10,10 @@ namespace Drupal\rdf\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for RDF namespaces XML serialization.
+ * Confirm that the serialization of RDF namespaces in present in the HTML
+ * markup.
+ *
+ * @group rdf
  */
 class GetNamespacesTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class GetNamespacesTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('rdf', 'rdf_test_namespaces');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDF namespaces serialization test',
-      'description' => 'Confirm that the serialization of RDF namespaces in present in the HTML markup.',
-      'group' => 'RDF',
-    );
-  }
 
   /**
    * Tests RDF namespaces.

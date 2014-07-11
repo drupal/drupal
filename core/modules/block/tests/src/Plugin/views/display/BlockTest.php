@@ -10,9 +10,8 @@ namespace Drupal\block\Tests\Plugin\views\display;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the block display plugin.
- *
- * @see \Drupal\block\Plugin\views\display\Block
+ * @coversDefaultClass \Drupal\block\Plugin\views\display\Block
+ * @group block
  */
 class BlockTest extends UnitTestCase {
 
@@ -36,14 +35,6 @@ class BlockTest extends UnitTestCase {
    * @var \Drupal\block\Plugin\views\display\Block|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $blockDisplay;
-
-  public static function getInfo() {
-    return array(
-      'name' => ' Views: Display Block',
-      'description' => 'Tests the block display plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

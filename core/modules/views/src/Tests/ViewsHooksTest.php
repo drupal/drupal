@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests that views hooks are registered when defined in $module.views.inc.
  *
+ * @group views
  * @see views_hook_info().
  * @see field_hook_info().
  */
@@ -52,14 +53,6 @@ class ViewsHooksTest extends ViewUnitTestBase {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views hooks',
-      'description' => 'Tests that views hooks are registered when defined in $module.views.inc.',
-      'group' => 'Views',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

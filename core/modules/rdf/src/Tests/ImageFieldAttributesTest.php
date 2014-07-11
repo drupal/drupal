@@ -10,7 +10,9 @@ namespace Drupal\rdf\Tests;
 use Drupal\image\Tests\ImageFieldTestBase;
 
 /**
- * Tests RDFa markup generation for image fields.
+ * Tests the RDFa markup of imagefields.
+ *
+ * @group rdf
  */
 class ImageFieldAttributesTest extends ImageFieldTestBase {
 
@@ -41,14 +43,6 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    * @var \Drupal\node\NodeInterface
    */
   protected $node;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDFa markup for imagefield',
-      'description' => 'Tests the RDFa markup of imagefields.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

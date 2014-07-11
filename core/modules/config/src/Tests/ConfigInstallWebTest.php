@@ -12,17 +12,12 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Config\FileStorage;
 
 /**
- * Tests installation of configuration objects in installation functionality.
+ * Tests installation and removal of configuration objects in install, disable
+ * and uninstall functionality.
+ *
+ * @group config
  */
 class ConfigInstallWebTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Install, disable and uninstall functionality',
-      'description' => 'Tests installation and removal of configuration objects in install, disable and uninstall functionality.',
-      'group' => 'Configuration',
-    );
-  }
-
   function setUp() {
     parent::setUp();
 

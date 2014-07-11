@@ -10,7 +10,10 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test user search.
+ * Tests the user search page and verifies that sensitive information is hidden
+ * from unauthorized users.
+ *
+ * @group user
  */
 class UserSearchTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class UserSearchTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('search');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User search',
-      'description' => 'Tests the user search page and verifies that sensitive information is hidden from unauthorized users.',
-      'group' => 'User',
-    );
-  }
 
   function testUserSearch() {
     // Verify that a user without 'administer users' permission cannot search

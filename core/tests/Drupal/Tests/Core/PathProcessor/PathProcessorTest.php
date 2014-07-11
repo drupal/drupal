@@ -20,22 +20,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests path processor functionality.
+ * Tests processing of the inbound path.
  *
- * @group PathApi
+ * @group PathProcessor
  */
 class PathProcessorTest extends UnitTestCase {
 
   protected $languages;
   protected $languageManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path Processor Unit Tests',
-      'description' => 'Tests processing of the inbound path.',
-      'group' => 'Path API',
-    );
-  }
 
   public function setUp() {
 

@@ -15,16 +15,10 @@ use Drupal\Core\Path\AliasWhitelist;
 
 /**
  * Tests path alias CRUD and lookup functionality.
+ *
+ * @group Path
  */
 class AliasTest extends PathUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path Alias Unit Tests',
-      'description' => 'Tests path alias CRUD and lookup functionality.',
-      'group' => 'Path API',
-    );
-  }
 
   function testCRUD() {
     //Prepare database table.

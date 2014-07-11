@@ -12,7 +12,9 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\link\LinkItemInterface;
 
 /**
- * Tests migration of field instances.
+ * Migrate field instances.
+ *
+ * @group migrate_drupal
  */
 class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
 
@@ -30,17 +32,6 @@ class MigrateFieldInstanceTest extends MigrateDrupalTestBase {
     'node',
     'field',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Migrate field instances to field.instance.*.*.*.yml',
-      'description' => 'Migrate field instances.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

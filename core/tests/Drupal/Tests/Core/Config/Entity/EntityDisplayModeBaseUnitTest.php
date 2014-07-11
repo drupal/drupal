@@ -12,8 +12,6 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\entity\EntityDisplayModeBase
- *
- * @group Drupal
  * @group Config
  */
 class EntityDisplayModeBaseUnitTest extends UnitTestCase {
@@ -52,17 +50,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
    * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $uuid;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\entity\EntityDisplayModeBase unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

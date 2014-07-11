@@ -11,12 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\user\UserAuth;
 
 /**
- * Tests the UserAuth class.
- *
- * @group Drupal
- * @group User
- *
  * @coversDefaultClass \Drupal\user\UserAuth
+ * @group user
  */
 class UserAuthTest extends UnitTestCase {
 
@@ -61,17 +57,6 @@ class UserAuthTest extends UnitTestCase {
    * @var string
    */
   protected $password = 'password';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'User auth service',
-      'description' => 'Tests the user auth service',
-      'group' => 'User',
-    );
-  }
 
   /**
    * {@inheritdoc}

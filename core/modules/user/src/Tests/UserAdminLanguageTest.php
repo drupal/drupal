@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests users' ability to change their own administration language.
+ *
+ * @group user
  */
 class UserAdminLanguageTest extends WebTestBase {
 
@@ -35,14 +37,6 @@ class UserAdminLanguageTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('user', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User administration pages language settings',
-      'description' => "Tests user's ability to change their administration pages language.",
-      'group' => 'User',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

@@ -12,7 +12,9 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
- * Tests the field_field handler.
+ * Tests the field itself of the Field integration.
+ *
+ * @group field
  * @TODO
  *   Check a entity-type with bundles
  *   Check a entity-type without bundles
@@ -29,14 +31,6 @@ class HandlerFieldFieldTest extends FieldTestBase {
   public static $testViews = array('test_view_fieldapi');
 
   public $nodes;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Field handler',
-      'description' => 'Tests the field itself of the Field integration.',
-      'group' => 'Views module integration'
-    );
-  }
 
   /**
    * @todo.

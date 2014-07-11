@@ -16,12 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
- * Tests the \Drupal\Core\Url class.
- *
- * @group Drupal
- * @group Url
- *
  * @coversDefaultClass \Drupal\Core\Url
+ * @group UrlTest
  */
 class UrlTest extends UnitTestCase {
 
@@ -45,17 +41,6 @@ class UrlTest extends UnitTestCase {
    * @var array
    */
   protected $map;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Url object (internal)',
-      'description' => 'Tests the \Drupal\Core\Url class.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

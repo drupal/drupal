@@ -16,8 +16,9 @@ use Drupal\views\Plugin\views\display\Feed;
 use Drupal\views\Views;
 
 /**
- * Tests the functionality of View and ConfigEntityStorage.
+ * Tests the CRUD functionality for a view.
  *
+ * @group views
  * @see \Drupal\views\Entity\View
  * @see \Drupal\Core\Config\Entity\ConfigEntityStorage
  */
@@ -60,14 +61,6 @@ class ViewStorageTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view_storage');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View storage tests',
-      'description' => 'Tests the CRUD functionality for a view.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * Tests CRUD operations.

@@ -11,19 +11,10 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests core shell scripts.
+ *
+ * @group system
  */
 class ScriptTest extends DrupalUnitTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Shell scripts',
-      'description' => 'Tests Core utility shell scripts.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Tests password-hash.sh.

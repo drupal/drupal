@@ -14,6 +14,7 @@ use Drupal\views\Views;
 /**
  * Tests the permissions filter handler.
  *
+ * @group user
  * @see \Drupal\user\Plugin\views\filter\Permissions
  */
 class HandlerFilterPermissionTest extends UserUnitTestBase {
@@ -26,14 +27,6 @@ class HandlerFilterPermissionTest extends UserUnitTestBase {
   public static $testViews = array('test_filter_permission');
 
   protected $columnMap;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Permissions Filter',
-      'description' => 'Tests the permission filter handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the permission filter handler.

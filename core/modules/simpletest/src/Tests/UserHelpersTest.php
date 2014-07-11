@@ -11,16 +11,10 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests User related helper methods of WebTestBase.
+ *
+ * @group simpletest
  */
 class UserHelpersTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User helper methods',
-      'description' => 'Tests User related helper methods of WebTestBase.',
-      'group' => 'SimpleTest',
-    );
-  }
 
   /**
    * Tests WebTestBase::drupalUserIsLoggedIn().

@@ -5,21 +5,11 @@ namespace Drupal\simpletest\Tests;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Test PHPUnit errors are getting converted to Simpletest errors.
+ * Tests PHPUnit errors are getting converted to Simpletest errors.
  *
- * @group Drupal
  * @group simpletest
  */
 class PhpUnitErrorTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'PHPUnit errors',
-      'description' => 'Test PHPUnit errors getting converted to Simpletest errors.',
-      'group' => 'Simpletest',
-
-    );
-  }
 
   /**
    * Test errors reported.

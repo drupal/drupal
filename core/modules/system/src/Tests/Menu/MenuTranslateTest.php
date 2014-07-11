@@ -10,8 +10,9 @@ namespace Drupal\system\Tests\Menu;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Defines a test class which tests the _menu_translate method.
+ * Tests the _menu_translate() method.
  *
+ * @group Menu
  * @see _menu_translate().
  */
 class MenuTranslateTest extends WebTestBase {
@@ -22,14 +23,6 @@ class MenuTranslateTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('menu_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'menu_translate',
-      'description' => 'Tests the _menu_translate() method.',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * Tests _menu_translate().

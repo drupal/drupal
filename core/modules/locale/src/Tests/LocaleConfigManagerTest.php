@@ -13,7 +13,9 @@ use Drupal\Core\Config\StorageException;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Provides tests for \Drupal\locale\LocaleConfigManager
+ * Tests that the locale config manager operates correctly.
+ *
+ * @group locale
  */
 class LocaleConfigManagerTest extends DrupalUnitTestBase {
 
@@ -23,17 +25,6 @@ class LocaleConfigManagerTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('language', 'locale', 'locale_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Locale config manager',
-      'description' => 'Tests that the locale config manager operates correctly.',
-      'group' => 'Locale',
-    );
-  }
 
   /**
    * Tests hasTranslation().

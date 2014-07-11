@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests that uninstalling menu does not remove custom menus.
+ *
+ * @group menu_ui
  */
 class MenuUninstallTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class MenuUninstallTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('menu_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Uninstall menu test',
-      'description' => 'Tests that uninstalling menu does not remove custom menus.',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * Tests Menu uninstall.

@@ -10,7 +10,9 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test the create user administration page.
+ * Tests the create user administration page.
+ *
+ * @group user
  */
 class UserCreateTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class UserCreateTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('image', 'contact');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User create',
-      'description' => 'Test the create user administration page.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Create a user through the administration interface and ensure that it

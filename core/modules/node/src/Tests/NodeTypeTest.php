@@ -9,7 +9,9 @@ namespace Drupal\node\Tests;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
- * Tests related to node types.
+ * Ensures that node type functions work correctly.
+ *
+ * @group node
  */
 class NodeTypeTest extends NodeTestBase {
 
@@ -19,14 +21,6 @@ class NodeTypeTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node types',
-      'description' => 'Ensures that node type functions work correctly.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * Ensures that node type functions (node_type_get_*) work correctly.

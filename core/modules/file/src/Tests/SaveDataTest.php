@@ -9,16 +9,10 @@ namespace Drupal\file\Tests;
 
 /**
  * Tests the file_save_data() function.
+ *
+ * @group file
  */
 class SaveDataTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File save data',
-      'description' => 'Tests the file save data function.',
-      'group' => 'File Managed API',
-    );
-  }
-
   /**
    * Test the file_save_data() function when no filename is provided.
    */

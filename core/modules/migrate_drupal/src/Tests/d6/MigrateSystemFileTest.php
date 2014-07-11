@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of filesystem variables to configuration.
+ * Upgrade variables to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemFileTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to system.*.yml',
-      'description'  => 'Upgrade variables to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

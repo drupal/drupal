@@ -11,9 +11,8 @@ use Drupal\serialization\Normalizer\EntityNormalizer;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the EntityNormalizer class.
- *
  * @coversDefaultClass \Drupal\serialization\Normalizer\EntityNormalizer
+ * @group serialization
  */
 class EntityNormalizerTest extends UnitTestCase {
 
@@ -37,17 +36,6 @@ class EntityNormalizerTest extends UnitTestCase {
    * @var \Drupal\serialization\Normalizer\EntityNormalizer
    */
   protected $entityNormalizer;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'ListNormalizer',
-      'description' => 'Tests the ListNormalizer class.',
-      'group' => 'Serialization',
-    );
-  }
 
   /**
    * {@inheritdoc}

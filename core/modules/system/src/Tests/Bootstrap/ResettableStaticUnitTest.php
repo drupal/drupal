@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Bootstrap;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests that resetting static variables works.
+ * Tests that drupal_static() and drupal_static_reset() work.
+ *
+ * @group Bootstrap
  */
 class ResettableStaticUnitTest extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Resettable static variables test',
-      'description' => 'Test that drupal_static() and drupal_static_reset() work.',
-      'group' => 'Bootstrap',
-    );
-  }
 
   /**
    * Tests drupal_static() function.

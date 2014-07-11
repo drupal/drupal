@@ -10,7 +10,6 @@ namespace Drupal\migrate\Tests;
 /**
  * Tests the \Drupal\migrate\MigrateExecutable::memoryExceeded() method.
  *
- * @group Drupal
  * @group migrate
  */
 class MigrateExecuteableMemoryExceededTest extends MigrateTestCase {
@@ -49,17 +48,6 @@ class MigrateExecuteableMemoryExceededTest extends MigrateTestCase {
    * php.init memory_limit value.
    */
   protected $memoryLimit = 10000000;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Migrate executable memory exceeded',
-      'description' => 'Tests the migrate executable memoryExceeded method.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * {@inheritdoc}

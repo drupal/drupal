@@ -11,18 +11,12 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests local tasks derived from router and added/altered via hooks.
+ *
+ * @group Menu
  */
 class LocalTasksTest extends WebTestBase {
 
   public static $modules = array('menu_test', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Local tasks',
-      'description' => 'Tests local tasks derived from router and added/altered via hooks.',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * Asserts local tasks in the page output.

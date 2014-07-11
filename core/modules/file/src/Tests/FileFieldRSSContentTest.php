@@ -8,7 +8,9 @@
 namespace Drupal\file\Tests;
 
 /**
- * Tests that formatters are working properly.
+ * Ensure that files added to nodes appear correctly in RSS feeds.
+ *
+ * @group file
  */
 class FileFieldRSSContentTest extends FileFieldTestBase {
 
@@ -18,14 +20,6 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
    * @var array
    */
   public static $modules = array('node', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File field RSS content',
-      'description' => 'Ensure that files added to nodes appear correctly in RSS feeds.',
-      'group' => 'File',
-    );
-  }
 
   /**
    * Tests RSS enclosure formatter display for RSS feeds.

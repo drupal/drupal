@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the creation of text fields.
+ *
+ * @group text
  */
 class TextFieldTest extends WebTestBase {
 
@@ -24,14 +26,6 @@ class TextFieldTest extends WebTestBase {
 
   protected $admin_user;
   protected $web_user;
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Text field',
-      'description'  => "Test the creation of text fields.",
-      'group' => 'Field types'
-    );
-  }
 
   function setUp() {
     parent::setUp();

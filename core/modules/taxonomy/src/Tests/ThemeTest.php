@@ -8,17 +8,11 @@
 namespace Drupal\taxonomy\Tests;
 
 /**
- * Tests for verifying that taxonomy pages use the correct theme.
+ * Verifies that various taxonomy pages use the expected theme.
+ *
+ * @group taxonomy
  */
 class ThemeTest extends TaxonomyTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy theme switching',
-      'description' => 'Verifies that various taxonomy pages use the expected theme.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

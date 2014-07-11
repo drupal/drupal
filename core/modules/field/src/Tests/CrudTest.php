@@ -13,7 +13,9 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldException;
 
 /**
- * Tests field CRUD operations.
+ * Tests field create, read, update, and delete.
+ *
+ * @group field
  */
 class CrudTest extends FieldUnitTestBase {
 
@@ -23,14 +25,6 @@ class CrudTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field CRUD tests',
-      'description' => 'Test field create, read, update, and delete.',
-      'group' => 'Field API',
-    );
-  }
 
   // TODO : test creation with
   // - a full fledged $field structure, check that all the values are there

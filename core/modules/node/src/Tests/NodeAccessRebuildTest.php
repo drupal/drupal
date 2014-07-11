@@ -8,17 +8,11 @@
 namespace Drupal\node\Tests;
 
 /**
- * Verifies the rebuild functionality for the node_access table.
+ * Ensures that node access rebuild functions work correctly.
+ *
+ * @group node
  */
 class NodeAccessRebuildTest extends NodeTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access rebuild',
-      'description' => 'Ensures that node access rebuild functions work correctly.',
-      'group' => 'Node',
-    );
-  }
-
   function setUp() {
     parent::setUp();
 

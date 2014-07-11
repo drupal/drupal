@@ -12,17 +12,10 @@ namespace Drupal\node\Tests;
  *
  * Note that hook_node_access_records() is covered in another test class.
  *
+ * @group node
  * @todo Cover hook_node_access in a separate test class.
  */
 class NodeAccessTest extends NodeTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access',
-      'description' => 'Test node_access function',
-      'group' => 'Node',
-    );
-  }
-
   function setUp() {
     parent::setUp();
     // Clear permissions for authenticated users.

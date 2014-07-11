@@ -12,17 +12,10 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 /**
  * Tests that a custom annotation class is used.
  *
+ * @group Plugin
  * @see \Drupal\plugin_test\Plugin\Annotation\PluginExample
  */
 class CustomAnnotationClassDiscoveryTest extends DiscoveryTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom annotation class discovery',
-      'description' => 'Tests that a custom annotation class is used.',
-      'group' => 'Plugin API',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

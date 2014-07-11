@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests for more complex update statements.
+ * Tests the Update query builder, complex queries.
+ *
+ * @group Database
  */
 class UpdateComplexTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update tests, Complex',
-      'description' => 'Test the Update query builder, complex queries.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests updates with OR conditionals.

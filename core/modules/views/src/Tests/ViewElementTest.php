@@ -10,7 +10,9 @@ namespace Drupal\views\Tests;
 use Drupal\views\Views;
 
 /**
- * Tests the 'view' element type.
+ * Tests the view render element.
+ *
+ * @group views
  */
 class ViewElementTest extends ViewTestBase {
 
@@ -27,14 +29,6 @@ class ViewElementTest extends ViewTestBase {
    * @var array
    */
   protected $render;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View element',
-      'description' => 'Tests the view render element.',
-      'group' => 'Views'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

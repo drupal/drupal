@@ -11,12 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\user\TempStore;
 
 /**
- * Tests the TempStore namespace.
- *
- * @group Drupal
- * @group User
- *
  * @coversDefaultClass \Drupal\user\TempStore
+ * @group user
  */
 class TempStoreTest extends UnitTestCase {
 
@@ -61,17 +57,6 @@ class TempStoreTest extends UnitTestCase {
    * @var \stdClass
    */
   protected $otherObject;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'TempStore',
-      'description' => 'Unit tests the Drupal\user\TempStore class.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * {@inheritdoc}

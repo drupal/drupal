@@ -15,9 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the title resolver.
- *
- * @see \Drupal\Core\Controller\TitleResolver
+ * @coversDefaultClass \Drupal\Core\Controller\TitleResolver
+ * @group Controller
  */
 class TitleResolverTest extends UnitTestCase {
 
@@ -41,14 +40,6 @@ class TitleResolverTest extends UnitTestCase {
    * @var \Drupal\Core\Controller\TitleResolver
    */
   protected $titleResolver;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Title resolver',
-      'description' => 'Tests the title resolver.',
-      'group' => 'Routing',
-    );
-  }
 
   protected function setUp() {
     $this->controllerResolver = $this->getMock('\Drupal\Core\Controller\ControllerResolverInterface');

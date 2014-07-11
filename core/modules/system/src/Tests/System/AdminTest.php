@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests administrative overview pages.
+ * Tests output on administrative pages and compact mode functionality.
+ *
+ * @group system
  */
 class AdminTest extends WebTestBase {
 
@@ -34,14 +36,6 @@ class AdminTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Administrative pages',
-      'description' => 'Tests output on administrative pages and compact mode functionality.',
-      'group' => 'System',
-    );
-  }
 
   function setUp() {
     // testAdminPages() requires Locale module.

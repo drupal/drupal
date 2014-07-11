@@ -15,9 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the access arguments resolver.
- *
  * @coversDefaultClass \Drupal\Core\Access\AccessArgumentsResolver
+ * @group Access
  */
 class AccessArgumentsResolverTest extends UnitTestCase {
 
@@ -34,17 +33,6 @@ class AccessArgumentsResolverTest extends UnitTestCase {
    * @var \Symfony\Component\Routing\Route
    */
   protected $route;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Access arguments resolver tests',
-      'description' => 'Test for the AccessArgumentsResolver object.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

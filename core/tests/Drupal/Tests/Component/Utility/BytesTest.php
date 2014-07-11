@@ -11,24 +11,10 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests bytes size parsing helper methods.
- *
- * @group Drupal
- * @group Utility
  * @coversDefaultClass \Drupal\Component\Utility\Bytes
+ * @group Utility
  */
 class BytesTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Bytes utility helpers',
-      'description' => '',
-      'group' => 'Utility',
-    );
-  }
 
   /**
    * Tests \Drupal\Component\Utility\Bytes::toInt().

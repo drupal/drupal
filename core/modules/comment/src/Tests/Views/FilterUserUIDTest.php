@@ -10,9 +10,11 @@ namespace Drupal\comment\Tests\Views;
 use Drupal\views\Views;
 
 /**
- * Tests the filter_comment_user_uid handler.
+ * Tests the user posted or commented filter handler.
  *
  * The actual stuff is done in the parent class.
+ *
+ * @group comment
  */
 class FilterUserUIDTest extends CommentTestBase {
 
@@ -22,14 +24,6 @@ class FilterUserUIDTest extends CommentTestBase {
    * @var array
    */
   public static $testViews = array('test_comment_user_uid');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment: User UID Filter',
-      'description' => 'Tests the user posted or commented filter handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   function testCommentUserUIDTest() {
     $view = Views::getView('test_comment_user_uid');

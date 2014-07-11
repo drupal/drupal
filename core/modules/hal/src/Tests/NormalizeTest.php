@@ -8,17 +8,11 @@
 namespace Drupal\hal\Tests;
 
 /**
- * Test the HAL normalizer.
+ * Tests that entities can be normalized in HAL.
+ *
+ * @group hal
  */
 class NormalizeTest extends NormalizerTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Normalize Test',
-      'description' => 'Test that entities can be normalized in HAL.',
-      'group' => 'HAL',
-    );
-  }
 
   /**
    * {@inheritdoc}

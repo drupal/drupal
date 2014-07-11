@@ -12,16 +12,10 @@ use Drupal\Core\Database\Query\InvalidMergeQueryException;
 
 /**
  * Tests the MERGE query builder.
+ *
+ * @group Database
  */
 class MergeTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Merge tests',
-      'description' => 'Test the Merge query builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that we can merge-insert a record successfully.

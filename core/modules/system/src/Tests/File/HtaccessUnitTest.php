@@ -11,17 +11,11 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * .htaccess file saving tests.
+ * Tests .htaccess file saving.
+ *
+ * @group File
  */
 class HtaccessUnitTest extends DrupalUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => '.htaccess file saving',
-      'description' => 'Tests .htaccess file saving.',
-      'group' => 'File API',
-    );
-  }
 
   /**
    * Tests file_save_htaccess().

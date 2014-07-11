@@ -8,7 +8,9 @@
 namespace Drupal\search\Tests;
 
 /**
- * Test config page.
+ * Verify the search config settings form.
+ *
+ * @group search
  */
 class SearchConfigSettingsFormTest extends SearchTestBase {
 
@@ -32,14 +34,6 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    * @var \Drupal\node\NodeInterface
    */
   public $search_node;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Config settings form',
-      'description' => 'Verify the search config settings form.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

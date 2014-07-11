@@ -10,8 +10,9 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\views\Views;
 
 /**
- * Tests the Tag class.
+ * Tests tag cache plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\cache\Tag
  */
 class CacheTagTest extends PluginTestBase {
@@ -71,14 +72,6 @@ class CacheTagTest extends PluginTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cache tag',
-      'description' => 'Tests tag cache plugin.',
-      'group' => 'Views Plugins'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

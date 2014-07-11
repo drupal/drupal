@@ -13,6 +13,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Tests Datetime field functionality.
+ *
+ * @group datetime
  */
 class DateTimeFieldTest extends WebTestBase {
 
@@ -36,14 +38,6 @@ class DateTimeFieldTest extends WebTestBase {
    * @var \Drupal\field\Entity\FieldInstanceConfig
    */
   protected $instance;
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Datetime Field',
-      'description'  => 'Tests datetime field functionality.',
-      'group' => 'Datetime',
-    );
-  }
 
   function setUp() {
     parent::setUp();

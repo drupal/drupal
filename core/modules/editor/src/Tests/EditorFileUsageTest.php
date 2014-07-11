@@ -10,7 +10,9 @@ namespace Drupal\editor\Tests;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
- * Unit tests for editor.module's entity hooks to track file usage.
+ * Tests tracking of file usage by the Text Editor module.
+ *
+ * @group editor
  */
 class EditorFileUsageTest extends EntityUnitTestBase {
 
@@ -20,14 +22,6 @@ class EditorFileUsageTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('editor', 'editor_test', 'node', 'file');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Text Editor file usage',
-      'description' => 'Tests tracking of file usage by the Text Editor module.',
-      'group' => 'Text Editor',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

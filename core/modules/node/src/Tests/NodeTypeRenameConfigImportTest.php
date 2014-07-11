@@ -14,6 +14,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests importing renamed node type via configuration synchronisation.
+ *
+ * @group node
  */
 class NodeTypeRenameConfigImportTest extends WebTestBase {
 
@@ -23,17 +25,6 @@ class NodeTypeRenameConfigImportTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'text', 'config');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Import renamed node type',
-      'description' => 'Tests importing renamed node type via configuration synchronisation.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * {@inheritdoc}

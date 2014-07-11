@@ -13,9 +13,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\editor\Entity\Editor
- *
- * @group Drupal
- * @group Config
+ * @group editor
  */
 class EditorConfigEntityUnitTest extends UnitTestCase {
 
@@ -67,17 +65,6 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
    * @var string
    */
   protected $editorId;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\editor\Entity\Editor unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

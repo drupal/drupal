@@ -9,6 +9,8 @@ namespace Drupal\path\Tests;
 
 /**
  * Tests URL aliases for taxonomy terms.
+ *
+ * @group path
  */
 class PathTaxonomyTermTest extends PathTestBase {
 
@@ -18,14 +20,6 @@ class PathTaxonomyTermTest extends PathTestBase {
    * @var array
    */
   public static $modules = array('taxonomy');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term URL aliases',
-      'description' => 'Tests URL aliases for taxonomy terms.',
-      'group' => 'Path',
-    );
-  }
 
   function setUp() {
     parent::setUp();

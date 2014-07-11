@@ -13,6 +13,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests installing/enabling, disabling, and uninstalling of themes.
+ *
+ * @group Extension
  */
 class ThemeHandlerTest extends DrupalUnitTestBase {
 
@@ -22,14 +24,6 @@ class ThemeHandlerTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'menu_link');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme handler',
-      'description' => 'Tests installing/enabling, disabling, and uninstalling of themes.',
-      'group' => 'Extension',
-    );
-  }
 
   public function containerBuild(ContainerBuilder $container) {
     parent::containerBuild($container);

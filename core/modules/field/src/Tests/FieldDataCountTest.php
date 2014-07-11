@@ -10,8 +10,10 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 
 /**
- * Tests counting field data records.
+ * Tests counting field data records and the hasData() method on FieldConfig
+ * entity.
  *
+ * @group field
  * @see \Drupal\Core\Entity\FieldableEntityStorageInterface::countFieldData()
  * @see \Drupal\field\Entity\FieldConfig::hasData()
  */
@@ -21,17 +23,6 @@ class FieldDataCountTest extends FieldUnitTestBase {
    * @var \Drupal\Core\Entity\FieldableEntityStorageInterface
    */
   protected $storage;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Field config hasData() tests.',
-      'description' => 'Tests counting field data records and the hasData() method on FieldConfig entity.',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * {@inheritdoc}

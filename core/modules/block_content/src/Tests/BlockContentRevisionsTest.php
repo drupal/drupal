@@ -8,7 +8,9 @@
 namespace Drupal\block_content\Tests;
 
 /**
- * Tests the block revision functionality.
+ * Create a block with revisions.
+ *
+ * @group block_content
  */
 class BlockContentRevisionsTest extends BlockContentTestBase {
 
@@ -23,17 +25,6 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
    * @var array
    */
   protected $revisionLogs;
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block revisions',
-      'description' => 'Create a block with revisions.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Sets the test up.

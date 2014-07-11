@@ -10,7 +10,10 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
- * Tests the rendering of term reference fields in RSS feeds.
+ * Ensure that data added as terms appears in RSS feeds if "RSS Category" format
+ * is selected.
+ *
+ * @group taxonomy
  */
 class RssTest extends TaxonomyTestBase {
 
@@ -20,14 +23,6 @@ class RssTest extends TaxonomyTestBase {
    * @var array
    */
   public static $modules = array('node', 'field_ui', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy RSS Content.',
-      'description' => 'Ensure that data added as terms appears in RSS feeds if "RSS Category" format is selected.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

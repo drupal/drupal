@@ -10,16 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the pager query select extender.
+ *
+ * @group Database
  */
 class SelectPagerDefaultTest extends DatabaseWebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Pager query tests',
-      'description' => 'Test the pager query extender.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that a pager query returns the correct results.

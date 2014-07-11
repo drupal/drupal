@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of system RSS/feed variables to configuration.
+ * Upgrade rss variable to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemRssTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate rss variable to system.*.yml',
-      'description'  => 'Upgrade rss variable to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

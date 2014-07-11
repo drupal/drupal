@@ -11,7 +11,9 @@ use Drupal\content_translation\Tests\ContentTranslationUITest;
 use Drupal\block_content\Entity\BlockContent;
 
 /**
- * Tests the Custom Block Translation UI.
+ * Tests the node translation UI.
+ *
+ * @group block_content
  */
 class BlockContentTranslationUITest extends ContentTranslationUITest {
 
@@ -32,17 +34,6 @@ class BlockContentTranslationUITest extends ContentTranslationUITest {
     'field_ui',
     'block_content'
   );
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block translation UI',
-      'description' => 'Tests the node translation UI.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Overrides \Drupal\simpletest\WebTestBase::setUp().

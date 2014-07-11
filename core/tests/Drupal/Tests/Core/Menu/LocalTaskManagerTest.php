@@ -15,9 +15,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Zend\Stdlib\ArrayObject;
 
 /**
- * Tests local tasks manager.
- *
- * @see \Drupal\Core\Menu\LocalTaskManager
+ * @coversDefaultClass \Drupal\Core\Menu\LocalTaskManager
+ * @group Menu
  */
 class LocalTaskManagerTest extends UnitTestCase {
 
@@ -83,14 +82,6 @@ class LocalTaskManagerTest extends UnitTestCase {
    * @var \Drupal\Core\Access\AccessManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $accessManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Local tasks manager.',
-      'description' => 'Tests local tasks manager.',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * {@inheritdoc}

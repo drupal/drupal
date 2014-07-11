@@ -9,7 +9,9 @@ namespace Drupal\comment\Tests;
 use Drupal\Component\Utility\String;
 
 /**
- * Tests the Comment module blocks.
+ * Tests comment block functionality.
+ *
+ * @group comment
  */
 class CommentBlockTest extends CommentTestBase {
 
@@ -32,14 +34,6 @@ class CommentBlockTest extends CommentTestBase {
       'access content',
       'administer blocks',
      ));
-  }
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment blocks',
-      'description' => 'Test comment block functionality.',
-      'group' => 'Comment',
-    );
   }
 
   /**

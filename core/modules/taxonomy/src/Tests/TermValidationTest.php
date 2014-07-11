@@ -11,6 +11,8 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests term validation constraints.
+ *
+ * @group taxonomy
  */
 class TermValidationTest extends EntityUnitTestBase {
 
@@ -20,14 +22,6 @@ class TermValidationTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('taxonomy');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Term Validation',
-      'description' => 'Tests the term validation constraints.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   /**
    * {@inheritdoc}

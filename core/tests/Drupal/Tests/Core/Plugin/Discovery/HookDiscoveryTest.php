@@ -11,12 +11,8 @@ use Drupal\Core\Plugin\Discovery\HookDiscovery;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the hook plugin discovery class.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Plugin\Discovery\HookDiscovery
  * @group Plugin
- *
- * @see \Drupal\Core\Plugin\Discovery\HookDiscovery
  */
 class HookDiscoveryTest extends UnitTestCase {
 
@@ -33,14 +29,6 @@ class HookDiscoveryTest extends UnitTestCase {
    * @var \Drupal\Core\Plugin\Discovery\HookDiscovery
    */
   protected $hookDiscovery;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Hook Discovery',
-      'description' => 'Tests the hook plugin discovery class.',
-      'group' => 'Plugin',
-    );
-  }
 
   /**
    * {@inheritdoc}

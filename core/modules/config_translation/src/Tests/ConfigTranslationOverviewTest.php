@@ -12,7 +12,9 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for the Configuration Translation pages.
+ * Translate settings and entities to various languages.
+ *
+ * @group config_translation
  */
 class ConfigTranslationOverviewTest extends WebTestBase {
 
@@ -36,14 +38,6 @@ class ConfigTranslationOverviewTest extends WebTestBase {
    * @var \Drupal\locale\StringStorageInterface
    */
   protected $localeStorage;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration Translation Overview',
-      'description' => 'Translate settings and entities to various languages',
-      'group' => 'Configuration Translation',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

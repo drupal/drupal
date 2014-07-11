@@ -12,18 +12,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 /**
  * Tests existence of shortcut local tasks.
  *
- * @group Drupal
- * @group Shortcut
+ * @group shortcut
  */
 class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Shortcut local tasks test',
-      'description' => 'Test shortcut local tasks.',
-      'group' => 'Shortcut',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array(

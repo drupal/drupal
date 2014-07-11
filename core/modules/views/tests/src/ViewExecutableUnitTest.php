@@ -12,19 +12,10 @@ use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 
 /**
- * Tests methods on the ViewExecutable class.
- *
- * @see \Drupal\views\ViewExecutable
+ * @coversDefaultClass \Drupal\views\ViewExecutable
+ * @group views
  */
 class ViewExecutableUnitTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View executable test',
-      'description' => 'Tests methods on the \Drupal\views\ViewExecutable class',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * Tests the buildThemeFunctions() method.

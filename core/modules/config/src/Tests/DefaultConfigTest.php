@@ -13,7 +13,9 @@ use Drupal\Core\Config\TypedConfigManager;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Tests default configuration availability and type with configuration schema.
+ * Tests that default configuration provided by all modules matches schema.
+ *
+ * @group config
  */
 class DefaultConfigTest extends KernelTestBase {
 
@@ -25,17 +27,6 @@ class DefaultConfigTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array('config_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Default configuration',
-      'description' => 'Tests that default configuration provided by all modules matches schema.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests default configuration data type.

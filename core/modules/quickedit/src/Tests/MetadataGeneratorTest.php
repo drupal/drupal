@@ -14,7 +14,9 @@ use Drupal\quickedit\Plugin\InPlaceEditorManager;
 use Drupal\quickedit_test\MockEditEntityFieldAccessCheck;
 
 /**
- * Test in-place field editing metadata.
+ * Tests in-place field editing metadata.
+ *
+ * @group quickedit
  */
 class MetadataGeneratorTest extends QuickEditTestBase {
 
@@ -45,14 +47,6 @@ class MetadataGeneratorTest extends QuickEditTestBase {
    * @var \Drupal\quickedit\Access\EditEntityFieldAccessCheckInterface
    */
   protected $accessChecker;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'In-place field editing metadata',
-      'description' => 'Tests in-place field editing metadata generation.',
-      'group' => 'Quick Edit',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

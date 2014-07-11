@@ -11,20 +11,10 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Unit tests for the graph handling features.
- *
- * @see \Drupal\Component\Graph\Graph
+ * @coversDefaultClass \Drupal\Component\Graph\Graph
  * @group Graph
  */
 class GraphTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Directed acyclic graph manipulation',
-      'description' => 'Depth first search and sort unit tests.',
-      'group' => 'Graph',
-    );
-  }
 
   /**
    * Test depth-first-search features.

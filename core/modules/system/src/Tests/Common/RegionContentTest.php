@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Common;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests drupal_add_region_content() and drupal_get_region_content().
+ * Tests setting and retrieving content from theme regions.
+ *
+ * @group Common
  */
 class RegionContentTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Region content',
-      'description' => 'Tests setting and retrieving content from theme regions.',
-      'group' => 'Common',
-    );
-  }
-
   /**
    * Tests setting and retrieving content for theme regions.
    */

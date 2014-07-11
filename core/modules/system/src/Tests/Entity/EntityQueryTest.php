@@ -12,7 +12,9 @@ use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the basic Entity API.
+ * Tests Entity Query functionality.
+ *
+ * @group Entity
  */
 class EntityQueryTest extends EntityUnitTestBase {
 
@@ -46,14 +48,6 @@ class EntityQueryTest extends EntityUnitTestBase {
    * @var string
    */
   public $figures;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Query',
-      'description' => 'Tests Entity Query functionality.',
-      'group' => 'Entity API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

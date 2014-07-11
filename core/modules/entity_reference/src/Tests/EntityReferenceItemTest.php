@@ -14,6 +14,8 @@ use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the entity reference field type.
+ *
+ * @group entity_reference
  */
 class EntityReferenceItemTest extends FieldUnitTestBase {
 
@@ -37,14 +39,6 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
    * @var \Drupal\taxonomy\TermInterface
    */
   protected $term;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference field item',
-      'description' => 'Tests using entity fields of the entity reference field type.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   /**
    * Sets up the test.

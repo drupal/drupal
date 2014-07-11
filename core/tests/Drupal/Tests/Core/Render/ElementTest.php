@@ -11,25 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Render\Element;
 
 /**
- * Tests the Element class
- *
- * @see \Drupal\Core\Render\Element
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Render\Element
  * @group Render
  */
 class ElementTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Element test',
-      'description' => 'Tests \Drupal\Core\Render\Element helper class.',
-      'group' => 'Render',
-    );
-  }
 
   /**
    * Tests the property() method.

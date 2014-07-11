@@ -13,8 +13,9 @@ use Drupal\views\Views;
 
 
 /**
- * Tests a generic join plugin and the join plugin base.
+ * Tests the join plugin.
  *
+ * @group views
  * @see \Drupal\views_test_data\Plugin\views\join\JoinTest
  * @see \Drupal\views\Plugin\views\join\JoinPluginBase
  */
@@ -33,14 +34,6 @@ class JoinTest extends RelationshipJoinTestBase {
    * @var \Drupal\views\Plugin\ViewsPluginManager
    */
   protected $manager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Join',
-      'description' => 'Tests the join plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

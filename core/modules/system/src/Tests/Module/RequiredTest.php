@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Module;
 
 /**
- * Test required modules functionality.
+ * Attempt disabling of required modules.
+ *
+ * @group Module
  */
 class RequiredTest extends ModuleTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Required modules',
-      'description' => 'Attempt disabling of required modules.',
-      'group' => 'Module',
-    );
-  }
-
   /**
    * Assert that core required modules cannot be disabled.
    */

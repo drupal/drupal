@@ -13,6 +13,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the RDFa output of the taxonomy term reference field formatter.
+ *
+ * @group rdf
  */
 class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
 
@@ -39,14 +41,6 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('taxonomy', 'options', 'text', 'filter');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field formatter: taxonomy term reference',
-      'description' => 'Tests RDFa output by taxonomy term reference field formatters.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

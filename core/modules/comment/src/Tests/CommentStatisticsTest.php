@@ -11,17 +11,11 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
 
 /**
- * Tests the comment module administrative and end-user-facing interfaces.
+ * Tests comment statistics on nodes.
+ *
+ * @group comment
  */
 class CommentStatisticsTest extends CommentTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment statistics',
-      'description' => 'Test comment statistics on nodes.',
-      'group' => 'Comment',
-    );
-  }
 
   function setUp() {
     parent::setUp();

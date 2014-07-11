@@ -11,12 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\filter\Plugin\FilterInterface;
 
 /**
- * Tests the standard text editor XSS filter.
- *
- * @group Drupal
- * @group Editor
- *
- * @see \Drupal\editor\EditorXssFilter\Standard
+ * @coversDefaultClass \Drupal\editor\EditorXssFilter\Standard
+ * @group editor
  */
 class StandardTest extends UnitTestCase {
 
@@ -33,14 +29,6 @@ class StandardTest extends UnitTestCase {
    * @var \Drupal\filter\Entity\FilterFormat|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $format;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Standard text editor XSS filter test',
-      'description' => 'Unit test of standard text editor XSS filter.',
-      'group' => 'Text Editor'
-    );
-  }
 
   protected function setUp() {
     $this->editorXssFilterClass = '\Drupal\editor\EditorXssFilter\Standard';

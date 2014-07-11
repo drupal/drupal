@@ -14,6 +14,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests the content translation overview link field handler.
  *
+ * @group content_translation
  * @see \Drupal\content_translation\Plugin\views\field\TranslationLink
  */
 class TranslationLinkTest extends ContentTranslationTestBase {
@@ -31,14 +32,6 @@ class TranslationLinkTest extends ContentTranslationTestBase {
    * @var array
    */
   public static $modules = array('content_translation_test_views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Content Translation: Link field',
-      'description' => 'Tests the content translation overview link field handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   function setUp() {
     // @todo Use entity_type once it is has multilingual Views integration.

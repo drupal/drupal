@@ -8,20 +8,14 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests SELECT query tagging.
+ * Tests the tagging capabilities of the Select builder.
  *
  * Tags are a way to flag queries for alter hooks so they know
  * what type of query it is, such as "node_access".
+ *
+ * @group Database
  */
 class TaggingTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Query tagging tests',
-      'description' => 'Test the tagging capabilities of the Select builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that a query has a tag added to it.

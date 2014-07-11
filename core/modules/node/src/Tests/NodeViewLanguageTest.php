@@ -11,6 +11,8 @@ use Drupal\Core\Language\Language;
 
 /**
  * Tests the node language extra field display.
+ *
+ * @group node
  */
 class NodeViewLanguageTest extends NodeTestBase {
 
@@ -20,14 +22,6 @@ class NodeViewLanguageTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('node', 'datetime', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node view language field',
-      'description' => 'Tests the language extra field display.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * Tests the language extra field display.

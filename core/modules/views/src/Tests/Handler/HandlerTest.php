@@ -13,7 +13,9 @@ use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Views;
 
 /**
- * Tests abstract handlers of views.
+ * Tests abstract handler definitions.
+ *
+ * @group views
  */
 class HandlerTest extends ViewTestBase {
 
@@ -30,14 +32,6 @@ class HandlerTest extends ViewTestBase {
    * @var array
    */
   public static $modules = array('views_ui', 'comment', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Handler: Base',
-      'description' => 'Tests abstract handler definitions.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

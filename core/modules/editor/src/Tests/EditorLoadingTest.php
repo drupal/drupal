@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests loading of text editors.
+ *
+ * @group editor
  */
 class EditorLoadingTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class EditorLoadingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('filter', 'editor', 'editor_test', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Text editor loading',
-      'description' => 'Tests loading of text editors.',
-      'group' => 'Text Editor',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

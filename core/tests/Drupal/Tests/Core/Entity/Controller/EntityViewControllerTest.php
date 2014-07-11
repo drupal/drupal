@@ -11,22 +11,10 @@ use Drupal\Core\Entity\Controller\EntityViewController;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the entity view controller.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Entity\Controller\EntityViewController
  * @group Entity
- *
- * @see \Drupal\Core\Entity\Controller\EntityViewController
  */
 class EntityViewControllerTest extends UnitTestCase{
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity view controller test',
-      'description' => 'Tests the entity view controller.',
-      'group' => 'Entity'
-    );
-  }
 
   /**
    * Tests the enhancer method.

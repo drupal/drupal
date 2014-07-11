@@ -11,16 +11,10 @@ use Drupal\Core\Config\DatabaseStorage;
 
 /**
  * Tests DatabaseStorage operations.
+ *
+ * @group config
  */
 class DatabaseStorageTest extends ConfigStorageTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'DatabaseStorage operations',
-      'description' => 'Tests DatabaseStorage operations.',
-      'group' => 'Configuration',
-    );
-  }
-
   function setUp() {
     parent::setUp();
 

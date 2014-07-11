@@ -9,6 +9,8 @@ namespace Drupal\node\Tests;
 
 /**
  * Tests user permissions for node revisions.
+ *
+ * @group node
  */
 class NodeRevisionPermissionsTest extends NodeTestBase {
   protected $node_revisions = array();
@@ -27,14 +29,6 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     'update' => 'revert page revisions',
     'delete' => 'delete page revisions',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node revision permissions',
-      'description' => 'Tests user permissions for node revision operations.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

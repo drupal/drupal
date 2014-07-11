@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the UI of the field field handler.
  *
+ * @group field
  * @see \Drupal\field\Plugin\views\field\Field
  */
 class FieldUITest extends FieldTestBase {
@@ -36,17 +37,6 @@ class FieldUITest extends FieldTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $account;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Field handler UI',
-      'description' => 'Tests the UI of the field field handler.',
-      'group' => 'Views UI'
-    );
-  }
 
   /**
    * {@inheritdoc}

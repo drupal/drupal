@@ -9,24 +9,10 @@ namespace Drupal\tour\Tests\Entity;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Tour entity.
- *
- * @group Tour
- *
  * @coversDefaultClass \Drupal\tour\Entity\Tour
+ * @group tour
  */
 class TourTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tour entity tests',
-      'description' => 'Test \Drupal\tour\Entity\Tour.',
-      'group' => 'Tour',
-    );
-  }
 
   /**
    * Tests \Drupal\tour\Entity\Tour::hasMatchingRoute().

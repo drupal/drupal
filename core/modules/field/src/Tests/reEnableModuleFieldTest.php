@@ -10,7 +10,9 @@ namespace Drupal\field\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests a field is still present after it's module is disabled then re-enabled.
+ * Tests the behavior of a field module after being disabled and re-enabled.
+ *
+ * @group field
  */
 class reEnableModuleFieldTest extends WebTestBase {
 
@@ -26,14 +28,6 @@ class reEnableModuleFieldTest extends WebTestBase {
     // hidden and does not display on the admin/modules page.
     'telephone'
   );
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Test field module re-enable',
-      'description'  => "Test the behavior of a field module after being disabled and re-enabled.",
-      'group' => 'Field types'
-    );
-  }
 
   function setUp() {
     parent::setUp();

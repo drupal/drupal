@@ -14,19 +14,11 @@ use Drupal\Core\Entity\EntityAccessCheck;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the entity access controller.
+ * Unit test of entity access checking system.
  *
  * @group Entity
  */
 class EntityAccessCheckTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity access check test',
-      'description' => 'Unit test of entity access checking system.',
-      'group' => 'Entity'
-    );
-  }
 
   /**
    * Tests the method for checking access to routes.

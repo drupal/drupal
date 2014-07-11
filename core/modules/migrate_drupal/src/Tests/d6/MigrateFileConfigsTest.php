@@ -13,7 +13,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the File module.
+ * Upgrade variables to file.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateFileConfigsTest extends MigrateDrupalTestBase {
 
@@ -25,17 +27,6 @@ class MigrateFileConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('file');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to file.settings.yml',
-      'description'  => 'Upgrade variables to file.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

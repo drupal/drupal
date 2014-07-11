@@ -9,16 +9,10 @@ namespace Drupal\views_ui\Tests;
 
 /**
  * Tests that displays can be correctly overridden via the user interface.
+ *
+ * @group views_ui
  */
 class OverrideDisplaysTest extends UITestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Overridden displays functionality',
-      'description' => 'Test that displays can be correctly overridden via the user interface.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests that displays can be overridden via the UI.

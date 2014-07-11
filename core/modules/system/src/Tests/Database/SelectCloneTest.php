@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Test cloning Select queries.
+ * Tests cloning Select queries.
+ *
+ * @group Database
  */
 class SelectCloneTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Select tests, cloning',
-      'description' => 'Test cloning Select queries.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Test that subqueries as value within conditions are cloned properly.

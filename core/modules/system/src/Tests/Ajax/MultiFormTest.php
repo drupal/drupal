@@ -10,7 +10,10 @@ namespace Drupal\system\Tests\Ajax;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
- * Tests Ajax-enabled forms functionality with multiple instances of the form.
+ * Tests that AJAX-enabled forms work when multiple instances of the same form
+ * are on a page.
+ *
+ * @group Ajax
  */
 class MultiFormTest extends AjaxTestBase {
 
@@ -20,14 +23,6 @@ class MultiFormTest extends AjaxTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'AJAX multi form',
-      'description' => 'Tests that AJAX-enabled forms work when multiple instances of the same form are on a page.',
-      'group' => 'AJAX',
-    );
-  }
 
   function setUp() {
     parent::setUp();

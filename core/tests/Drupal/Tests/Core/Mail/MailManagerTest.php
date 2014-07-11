@@ -11,12 +11,8 @@ use Drupal\Core\Mail\MailManager;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 
 /**
- * Tests the mail plugin manager.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Mail\MailManager
  * @group Mail
- *
- * @see \Drupal\Core\Mail\MailManager
  */
 class MailManagerTest extends UnitTestCase {
 
@@ -63,17 +59,6 @@ class MailManagerTest extends UnitTestCase {
       'class' => 'Drupal\Core\Mail\Plugin\Mail\TestMailCollector',
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Mail manager test',
-      'description' => 'Tests the mail plugin manager.',
-      'group' => 'Mail',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -15,22 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Unit tests for RouteMatch.
- *
  * @coversDefaultClass \Drupal\Core\Routing\RouteMatch
+ * @group Routing
  */
 class RouteMatchTest extends RouteMatchBaseTest {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'RouteMatch',
-      'description' => 'Unit tests for RouteMatch.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

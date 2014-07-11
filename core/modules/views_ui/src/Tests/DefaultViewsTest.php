@@ -9,6 +9,8 @@ namespace Drupal\views_ui\Tests;
 
 /**
  * Tests enabling, disabling, and reverting default views via the listing page.
+ *
+ * @group views_ui
  */
 class DefaultViewsTest extends UITestBase {
 
@@ -18,14 +20,6 @@ class DefaultViewsTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view_status', 'test_page_display_menu', 'test_page_display_arguments');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Default views functionality',
-      'description' => 'Test enabling, disabling, and reverting default views via the listing page.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests default views.

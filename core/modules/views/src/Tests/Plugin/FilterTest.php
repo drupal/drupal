@@ -13,6 +13,7 @@ use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 /**
  * Tests general filter plugin functionality.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\filter\FilterPluginBase
  */
 class FilterTest extends PluginTestBase {
@@ -30,14 +31,6 @@ class FilterTest extends PluginTestBase {
    * @var array
    */
   public static $modules = array('views_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: General',
-      'description' => 'Tests general filter plugin functionality.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

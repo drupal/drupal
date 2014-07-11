@@ -11,22 +11,9 @@ use Drupal\hal\Normalizer\FieldItemNormalizer;
 
 /**
  * @coversDefaultClass \Drupal\hal\Normalizer\FieldItemNormalizer
- *
- * @group Drupal
- * @group HAL
+ * @group hal
  */
 class FieldItemNormalizerDenormalizeExceptionsUnitTest extends NormalizerDenormalizeExceptionsUnitTestBase {
-
-  /**
-   * @inheritdoc
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'FieldItemNormalizer::denormalize() Unit Test',
-      'description' => 'Test that FieldItemNormalizer::denormalize() throws proper exceptions.',
-      'group' => 'HAL',
-    );
-  }
 
   /**
    * Tests that the FieldItemNormalizer::denormalize() throws proper exceptions.

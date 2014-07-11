@@ -12,10 +12,8 @@ use Drupal\Core\Path\PathMatcher;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests that path matching is working properly.
- *
- * @group Drupal
- * @see \Drupal\Core\Path\PathMatcher
+ * @coversDefaultClass \Drupal\Core\Path\PathMatcher
+ * @group Path
  */
 class PathMatcherTest extends UnitTestCase {
 
@@ -25,17 +23,6 @@ class PathMatcherTest extends UnitTestCase {
    * @var \Drupal\Core\Path\PathMatcher
    */
   protected $pathMatcher;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Path Matcher tests',
-      'description' => 'Tests that path matching is working properly.',
-      'group' => 'Path',
-    );
-  }
 
   /**
    * {@inheritdoc}

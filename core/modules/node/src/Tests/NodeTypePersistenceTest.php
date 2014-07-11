@@ -8,19 +8,13 @@
 namespace Drupal\node\Tests;
 
 /**
- * Test node type customizations persistence.
+ * Ensures that node type customization survives module enabling and disabling.
+ *
+ * @group node
  */
 class NodeTypePersistenceTest extends NodeTestBase {
   // Enable the prerequisite modules for forum
   public static $modules = array('history', 'taxonomy', 'options', 'comment');
-  public static function getInfo() {
-    return array(
-      'name' => 'Node type persist',
-      'description' => 'Ensures that node type customization survives module enabling and disabling.',
-      'group' => 'Node',
-    );
-  }
-
   /**
    * Tests that node type customizations persist through disable and uninstall.
    */

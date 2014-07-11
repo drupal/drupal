@@ -14,7 +14,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Defines tests for the collectRoutes() method.
+ * Tests the REST export view plugin.
+ *
+ * @group rest
  */
 class CollectRoutesTest extends UnitTestCase {
 
@@ -29,14 +31,6 @@ class CollectRoutesTest extends UnitTestCase {
    * The RouteCollection.
    */
   protected $routes;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'routes: REST export plugin',
-      'description' => 'Tests the REST export view plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -12,19 +12,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewsDataHelper;
 
 /**
- * Tests the views data helper class.
- *
- * @see \Drupal\views\ViewsDataHelper
+ * @coversDefaultClass \Drupal\views\ViewsDataHelper
+ * @group views
  */
 class ViewsDataHelperTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views data helper',
-      'description' => 'Tests the views data helper class.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * Returns the views data definition.

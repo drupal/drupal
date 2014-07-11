@@ -14,22 +14,10 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests the dependency serialization trait.
- *
  * @coversDefaultClass \Drupal\Core\DependencyInjection\DependencySerializationTrait
+ * @group DependencyInjection
  */
 class DependencySerializationTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => '\Drupal\Core\DependencyInjection\DependencySerializationTrait unit test',
-      'description' => '',
-      'group' => 'System'
-    );
-  }
 
   /**
    * @covers ::__sleep

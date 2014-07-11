@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the SystemConfigFormTestBase class.
+ *
+ * @group Form
  */
 class SystemConfigFormTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class SystemConfigFormTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'SystemConfigmForm tests',
-      'description' => 'Tests the SystemConfigFormTestBase class.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests the SystemConfigFormTestBase class.

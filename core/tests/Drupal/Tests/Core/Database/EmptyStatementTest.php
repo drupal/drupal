@@ -13,16 +13,10 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the empty pseudo-statement class.
+ *
+ * @group Database
  */
 class EmptyStatementTest extends UnitTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Empty statement',
-      'description' => 'Test the empty pseudo-statement class.',
-      'group' => 'Database',
-    );
-  }
-
   /**
    * Tests that the empty result set behaves as empty.
    */

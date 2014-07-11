@@ -10,7 +10,9 @@ namespace Drupal\path\Tests;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Tests URL aliases for translated nodes.
+ * Confirm that paths work with translated nodes.
+ *
+ * @group path
  */
 class PathLanguageTest extends PathTestBase {
 
@@ -20,14 +22,6 @@ class PathLanguageTest extends PathTestBase {
    * @var array
    */
   public static $modules = array('path', 'locale', 'content_translation');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path aliases with translated nodes',
-      'description' => 'Confirm that paths work with translated nodes',
-      'group' => 'Path',
-    );
-  }
 
   function setUp() {
     parent::setUp();

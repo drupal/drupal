@@ -13,6 +13,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests the contact link field.
  *
+ * @group contact
  * @see \Drupal\contact\Plugin\views\field\ContactLink.
  */
 class ContactLinkTest extends ViewTestBase {
@@ -37,14 +38,6 @@ class ContactLinkTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_contact_link');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contact: Link Field',
-      'description' => 'Tests the contact link field.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

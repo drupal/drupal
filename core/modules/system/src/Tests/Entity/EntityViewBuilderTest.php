@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\Entity;
 
 /**
  * Tests the entity view builder.
+ *
+ * @group Entity
  */
 class EntityViewBuilderTest extends EntityUnitTestBase {
 
@@ -18,14 +20,6 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('entity_reference');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity rendering',
-      'description' => 'Tests the entity view builder.',
-      'group' => 'Entity API',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests that the AlterDecorator fires and respects the alter hook.
+ *
+ * @group Plugin
  */
 class AlterDecoratorTest extends WebTestBase {
 
@@ -28,14 +30,6 @@ class AlterDecoratorTest extends WebTestBase {
    * @var \Drupal\plugin_test\Plugin\AlterDecoratorTestPluginManager;
    */
   protected $alterTestPluginManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'AlterDecorator',
-      'description' => 'Tests that the AlterDecorator fires and respects the alter hook.',
-      'group' => 'Plugin API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

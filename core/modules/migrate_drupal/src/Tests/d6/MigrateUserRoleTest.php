@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 user roles to Drupal 8 migration.
+ * Upgrade user roles to user.role.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserRoleTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateUserRoleTest extends MigrateDrupalTestBase {
    * @var array
    */
   static $modules = array('filter');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate user roles to user.role.*.yml',
-      'description'  => 'Upgrade user roles to user.role.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

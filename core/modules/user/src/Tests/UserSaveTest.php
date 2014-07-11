@@ -10,17 +10,11 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests \Drupal\user\UserStorage::save() behavior.
+ * Tests account saving for arbitrary new uid.
+ *
+ * @group user
  */
 class UserSaveTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User save test',
-      'description' => 'Test account saving for arbitrary new uid.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Test creating a user with arbitrary uid.

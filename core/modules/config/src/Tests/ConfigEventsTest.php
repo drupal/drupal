@@ -12,7 +12,9 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests CRUD operations on configuration objects.
+ * Tests events fired on configuration objects.
+ *
+ * @group config
  */
 class ConfigEventsTest extends DrupalUnitTestBase {
 
@@ -22,14 +24,6 @@ class ConfigEventsTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('config_events_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Config events',
-      'description' => 'Tests events fired on configuration objects.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests configuration events.

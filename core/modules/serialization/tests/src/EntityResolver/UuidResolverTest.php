@@ -11,12 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\EntityResolver\UuidResolver;
 
 /**
- * Tests the UuidResolver class.
- *
- * @see \Drupal\serialization\EntityResolver\UuidResolver
- *
- * @group Drupal
- * @group Serialization
+ * @coversDefaultClass \Drupal\serialization\EntityResolver\UuidResolver
+ * @group serialization
  */
 class UuidResolverTest extends UnitTestCase {
 
@@ -33,17 +29,6 @@ class UuidResolverTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'UuidResolver',
-      'description' => 'Tests the UuidResolver class.',
-      'group' => 'Serialization',
-    );
-  }
 
   /**
    * {@inheritdoc}

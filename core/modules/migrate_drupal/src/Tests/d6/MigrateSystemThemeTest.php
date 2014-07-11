@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of system theme variables to configuration.
+ * Upgrade theme variables to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemThemeTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate theme variables to system.*.yml',
-      'description'  => 'Upgrade theme variables to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

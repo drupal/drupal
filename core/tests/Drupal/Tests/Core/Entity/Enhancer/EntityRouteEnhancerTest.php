@@ -13,22 +13,10 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the entity route enhancer.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
  * @group Entity
- *
- * @see \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
  */
 class EntityRouteEnhancerTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity route enhancer test',
-      'description' => 'Tests the entity route enhancer.',
-      'group' => 'Entity'
-    );
-  }
 
   /**
    * Tests the enhancer method.

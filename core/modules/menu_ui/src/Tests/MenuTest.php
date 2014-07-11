@@ -11,7 +11,10 @@ use Drupal\Component\Serialization\Json;
 use Drupal\system\Entity\Menu;
 
 /**
- * Defines a test class for testing menu and menu link functionality.
+ * Add a custom menu, add menu links to the custom menu and Tools menu, check
+ * their data, and delete them using the UI.
+ *
+ * @group menu_ui
  */
 class MenuTest extends MenuWebTestBase {
 
@@ -49,14 +52,6 @@ class MenuTest extends MenuWebTestBase {
    * @var array
    */
   protected $items;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Menu link creation/deletion',
-      'description' => 'Add a custom menu, add menu links to the custom menu and Tools menu, check their data, and delete them using the UI.',
-      'group' => 'Menu'
-    );
-  }
 
   function setUp() {
     parent::setUp();

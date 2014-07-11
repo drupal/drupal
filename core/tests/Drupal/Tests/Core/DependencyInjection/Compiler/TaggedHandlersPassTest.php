@@ -13,25 +13,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Tests the tagged handler compiler pass.
- *
- * @group Drupal
- * @group DependencyInjection
- *
  * @coversDefaultClass \Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass
+ * @group DependencyInjection
  */
 class TaggedHandlersPassTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass',
-      'description' => '',
-      'group' => 'Dependency injection',
-    );
-  }
 
   protected function buildContainer($environment = 'dev') {
     $container = new ContainerBuilder();

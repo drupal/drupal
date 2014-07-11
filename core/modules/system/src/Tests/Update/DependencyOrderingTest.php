@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Update;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the update dependency ordering system.
+ * Tests that update functions are run in the proper order.
+ *
+ * @group Update
  */
 class DependencyOrderingTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class DependencyOrderingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('update_test_0', 'update_test_1', 'update_test_2', 'update_test_3');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update dependency ordering',
-      'description' => 'Test that update functions are run in the proper order.',
-      'group' => 'Update API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

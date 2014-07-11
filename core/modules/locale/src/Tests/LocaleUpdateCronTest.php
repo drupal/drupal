@@ -8,7 +8,9 @@
 namespace Drupal\locale\Tests;
 
 /**
- * Tests for translation update using cron.
+ * Tests for using cron to update project interface translations.
+ *
+ * @group locale
  */
 class LocaleUpdateCronTest extends LocaleUpdateBase {
 
@@ -20,14 +22,6 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
    * @var array
    */
   public static $modules = array('update', 'locale', 'locale_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update translations using cron',
-      'description' => 'Tests for using cron to update project interface translations.',
-      'group' => 'Locale',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Random handler.
+ *
+ * @group views
  */
 class SortRandomTest extends ViewUnitTestBase {
 
@@ -21,14 +23,6 @@ class SortRandomTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Sort: Random',
-      'description' => 'Test the core Drupal\views\Plugin\views\sort\Random handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Add more items to the test set, to make the order tests more robust.

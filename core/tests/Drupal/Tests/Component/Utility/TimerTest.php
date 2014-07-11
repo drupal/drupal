@@ -11,19 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Timer;
 
 /**
- * Tests the Timer system.
- *
- * @see \Drupal\Component\Utility\Timer
+ * @coversDefaultClass \Drupal\Component\Utility\Timer
+ * @group Utility
  */
 class TimerTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Timer test',
-      'description' => 'Test that Timer::read() works both when a timer is running and when a timer is stopped.',
-      'group' => 'Bootstrap',
-    );
-  }
 
   /**
    * Tests Timer::read() time accumulation accuracy across multiple restarts.

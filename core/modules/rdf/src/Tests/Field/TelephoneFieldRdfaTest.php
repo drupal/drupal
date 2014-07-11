@@ -7,7 +7,9 @@
 namespace Drupal\rdf\Tests\Field;
 
 /**
- * Tests the placement of RDFa in telephone field formatters.
+ * Tests RDFa output by telephone field formatters.
+ *
+ * @group rdf
  */
 class TelephoneFieldRdfaTest extends FieldRdfaTestBase {
 
@@ -27,14 +29,6 @@ class TelephoneFieldRdfaTest extends FieldRdfaTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('telephone', 'text');
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Field formatter: telephone',
-      'description'  => 'Tests RDFa output by telephone field formatters.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

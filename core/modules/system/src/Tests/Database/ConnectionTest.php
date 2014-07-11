@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests connection management.
+ * Tests of the core database system.
+ *
+ * @group Database
  */
 class ConnectionTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Connection tests',
-      'description' => 'Tests of the core database system.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests that connections return appropriate connection objects.

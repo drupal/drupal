@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 upload settings to Drupal 8 field instance migration.
+ * Upload field instance migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateUploadInstanceTest extends MigrateDrupalTestBase {
    * @var array
    */
   static $modules = array('file', 'node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate upload field instance.',
-      'description'  => 'Upload field instance migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

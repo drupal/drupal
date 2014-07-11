@@ -10,6 +10,7 @@ namespace Drupal\views_ui\Tests;
 /**
  * Tests the UI of generic display path plugin.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
 class DisplayPathTest extends UITestBase {
@@ -20,14 +21,6 @@ class DisplayPathTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display Path: UI',
-      'description' => 'Tests the UI of generic display path plugin.',
-      'group' => 'Views UI',
-    );
-  }
 
   public function testPathUI() {
     $this->doBasicPathUITest();

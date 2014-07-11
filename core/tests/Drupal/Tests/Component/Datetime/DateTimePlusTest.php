@@ -11,22 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Datetime\DateTimePlus;
 
 /**
- * Tests the DateTimePlus component.
- *
- * @see \Drupal\Component\Datetime\DateTimePlus
+ * @coversDefaultClass \Drupal\Component\Datetime\DateTimePlus
+ * @group Datetime
  */
 class DateTimePlusTest extends UnitTestCase {
-
-  /**
-   * Test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'DateTimePlus',
-      'description' => 'Test DateTimePlus functionality.',
-      'group' => 'Datetime',
-    );
-  }
 
   /**
    * Test creating dates from string and array input.

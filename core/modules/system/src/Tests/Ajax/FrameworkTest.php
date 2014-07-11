@@ -15,17 +15,11 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\SettingsCommand;
 
 /**
- * Tests primary Ajax framework functions.
+ * Performs tests on AJAX framework functions.
+ *
+ * @group Ajax
  */
 class FrameworkTest extends AjaxTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'AJAX framework',
-      'description' => 'Performs tests on AJAX framework functions.',
-      'group' => 'AJAX',
-    );
-  }
-
   /**
    * Ensures \Drupal\Core\Ajax\AjaxResponse::ajaxRender() returns JavaScript settings from the page request.
    */

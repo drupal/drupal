@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the views bulk form test.
  *
+ * @group action
  * @see \Drupal\action\Plugin\views\field\BulkForm
  */
 class BulkFormTest extends WebTestBase {
@@ -23,14 +24,6 @@ class BulkFormTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'action_bulk_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Bulk form',
-      'description' => 'Tests the views bulk form test.',
-      'group' => 'Action',
-    );
-  }
 
   /**
    * Tests the bulk form.

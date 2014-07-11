@@ -11,6 +11,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests user_install().
+ *
+ * @group user
  */
 class UserInstallTest extends DrupalUnitTestBase {
 
@@ -20,17 +22,6 @@ class UserInstallTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('user');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'User install tests',
-      'description' => 'Tests user_install().',
-      'group' => 'User'
-    );
-  }
 
   /**
    * {@inheritdoc}

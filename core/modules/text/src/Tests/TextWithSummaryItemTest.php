@@ -12,7 +12,9 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
- * Tests for \Drupal\text\Plugin\Field\FieldType\TextWithSummaryItem.
+ * Tests using entity fields of the text summary field type.
+ *
+ * @group text
  */
 class TextWithSummaryItemTest extends FieldUnitTestBase {
 
@@ -37,14 +39,6 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
    */
   protected $instance;
 
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Text summary field item',
-      'description' => 'Tests using entity fields of the text summary field type.',
-      'group' => 'Field types',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

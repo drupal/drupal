@@ -12,6 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Verifies that tests in other installation profiles are found.
  *
+ * @group simpletest
  * @see SimpleTestInstallationProfileModuleTestsTestCase
  */
 class OtherInstallationProfileTestsTest extends WebTestBase {
@@ -37,14 +38,6 @@ class OtherInstallationProfileTestsTest extends WebTestBase {
    */
   protected $profile = 'minimal';
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Other Installation profiles',
-      'description' => 'Verifies that tests in modules contained in other installation profiles are found.',
-      'group' => 'SimpleTest',
-    );
-  }
-
   function setUp() {
     parent::setUp();
 
@@ -63,8 +56,7 @@ class OtherInstallationProfileTestsTest extends WebTestBase {
 
     // Assert the existence of a test for a module in a different installation
     // profile than the current.
-    $this->drupalGet('admin/config/development/testing');
-    $this->assertText('Installation profile module tests helper');
+    $this->assertText('Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest');
   }
 
 }

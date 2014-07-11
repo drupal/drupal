@@ -14,6 +14,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests the handler of the user: name filter.
  *
+ * @group user
  * @see Views\user\Plugin\views\filter\Name
  */
 class HandlerFilterUserNameTest extends ViewTestBase {
@@ -54,14 +55,6 @@ class HandlerFilterUserNameTest extends ViewTestBase {
   public $columnMap = array(
     'uid' => 'uid',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Name Filter',
-      'description' => 'Tests the handler of the user: name filter',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

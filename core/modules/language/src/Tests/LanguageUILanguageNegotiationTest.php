@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\language\LanguageNegotiatorInterface;
 
 /**
- * Test UI language negotiation
+ * Tests UI language switching.
  *
  * 1. URL (PATH) > DEFAULT
  *    UI Language base on URL prefix, browser language preference has no
@@ -43,6 +43,8 @@ use Drupal\language\LanguageNegotiatorInterface;
  *          UI language in site default
  *        http://example.cn/admin/config
  *          UI language in Chinese
+ *
+ * @group language
  */
 class LanguageUILanguageNegotiationTest extends WebTestBase {
 
@@ -56,14 +58,6 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale', 'language_test', 'block', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'UI language negotiation',
-      'description' => 'Test UI language switching.',
-      'group' => 'Language',
-    );
-  }
 
   function setUp() {
     parent::setUp();

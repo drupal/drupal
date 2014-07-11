@@ -11,6 +11,8 @@ use Drupal\comment\Entity\Comment;
 
 /**
  * Tests actions provided by the Comment module.
+ *
+ * @group comment
  */
 class CommentActionsTest extends CommentTestBase {
 
@@ -20,14 +22,6 @@ class CommentActionsTest extends CommentTestBase {
    * @var array
    */
   public static $modules = array('dblog', 'action');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment actions',
-      'description' => 'Test actions provided by the comment module.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Tests comment publish and unpublish actions.

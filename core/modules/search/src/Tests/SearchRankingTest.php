@@ -11,6 +11,8 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**
  * Indexes content and tests ranking factors.
+ *
+ * @group search
  */
 class SearchRankingTest extends SearchTestBase {
 
@@ -27,14 +29,6 @@ class SearchRankingTest extends SearchTestBase {
    * @var array
    */
   public static $modules = array('statistics', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Search engine ranking',
-      'description' => 'Indexes content and tests ranking factors.',
-      'group' => 'Search',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

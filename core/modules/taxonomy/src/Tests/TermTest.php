@@ -14,17 +14,11 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Tests for taxonomy term functions.
+ * Tests load, save and delete for taxonomy terms.
+ *
+ * @group taxonomy
  */
 class TermTest extends TaxonomyTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term functions and forms',
-      'description' => 'Test load, save and delete for taxonomy terms.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

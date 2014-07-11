@@ -12,6 +12,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the Term Translation UI.
+ *
+ * @group taxonomy
  */
 class TermTranslationUITest extends ContentTranslationUITest {
 
@@ -33,14 +35,6 @@ class TermTranslationUITest extends ContentTranslationUITest {
    * @var array
    */
   public static $modules = array('language', 'content_translation', 'taxonomy');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term translation UI',
-      'description' => 'Tests the basic term translation UI.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     $this->entityTypeId = 'taxonomy_term';

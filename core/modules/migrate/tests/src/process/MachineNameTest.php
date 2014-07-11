@@ -12,7 +12,6 @@ use Drupal\migrate\Plugin\migrate\process\TestMachineName;
  * Tests the machine name process plugin.
  *
  * @group migrate
- * @group Drupal
  */
 class MachineNameTest extends MigrateProcessTestCase {
 
@@ -22,17 +21,6 @@ class MachineNameTest extends MigrateProcessTestCase {
    * @var \Drupal\Component\Transliteration\TransliterationInterface
    */
   protected $transliteration;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Machine mame process plugin',
-      'description' => 'Tests the machine name process plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * {@inheritdoc}

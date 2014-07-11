@@ -12,6 +12,8 @@ use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests that comment fields cannot be added to entities with non-integer IDs.
+ *
+ * @group comment
  */
 class CommentStringIdEntitiesTest extends KernelTestBase {
 
@@ -29,14 +31,6 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
     'entity_test',
     'text',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comments on Entity Types with string IDs',
-      'description' => 'Test that comment fields cannot be added to entities with non-integer IDs',
-      'group' => 'Comment',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

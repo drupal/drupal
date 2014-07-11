@@ -8,17 +8,11 @@
 namespace Drupal\file\Tests;
 
 /**
- * Tests file handling with node revisions.
+ * Tests creating and deleting revisions with files attached.
+ *
+ * @group file
  */
 class FileFieldRevisionTest extends FileFieldTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File field revision test',
-      'description' => 'Test creating and deleting revisions with files attached.',
-      'group' => 'File',
-    );
-  }
-
   /**
    * Tests creating multiple revisions of a node and managing attached files.
    *

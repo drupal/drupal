@@ -12,17 +12,11 @@ use Drupal\Core\Database\Database;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests DatabaseExceptionWrapper thrown.
+ * Tests exceptions thrown by queries.
+ *
+ * @group Database
  */
 class DatabaseExceptionWrapperTest extends UnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Database exceptiontests',
-      'description' => 'Tests exceptions thrown by queries.',
-      'group' => 'Database',
-    );
-  }
-
   function testDatabaseExceptionWrapper() {
     $connection = Database::getConnection();
     $query = $connection->prepare('bananas');

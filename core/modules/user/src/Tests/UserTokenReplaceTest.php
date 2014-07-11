@@ -12,7 +12,10 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
 /**
- * Test user token replacement in strings.
+ * Generates text using placeholders for dummy content to check user token
+ * replacement.
+ *
+ * @group user
  */
 class UserTokenReplaceTest extends WebTestBase {
 
@@ -22,14 +25,6 @@ class UserTokenReplaceTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User token replacement',
-      'description' => 'Generates text using placeholders for dummy content to check user token replacement.',
-      'group' => 'User',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

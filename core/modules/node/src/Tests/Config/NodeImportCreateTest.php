@@ -11,7 +11,9 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests content types as part of config import.
+ * Create content types during config create method invocation.
+ *
+ * @group node
  */
 class NodeImportCreateTest extends DrupalUnitTestBase {
 
@@ -31,14 +33,6 @@ class NodeImportCreateTest extends DrupalUnitTestBase {
 
     // Set default storage backend.
     $this->installConfig(array('field'));
-  }
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node config create tests',
-      'description' => 'Create content types during config create method invocation.',
-      'group' => 'Node',
-    );
   }
 
   /**

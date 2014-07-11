@@ -8,17 +8,11 @@
 namespace Drupal\file\Tests;
 
 /**
- *  This will run tests against the file validation functions (file_validate_*).
+ * Tests the functions used to validate uploaded files.
+ *
+ * @group file
  */
 class ValidatorTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File validator tests',
-      'description' => 'Tests the functions used to validate uploaded files.',
-      'group' => 'File Managed API',
-    );
-  }
-
   function setUp() {
     parent::setUp();
 

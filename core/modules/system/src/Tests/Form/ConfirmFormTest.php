@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests confirmation forms.
+ *
+ * @group Form
  */
 class ConfirmFormTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ConfirmFormTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Confirmation forms',
-      'description' => 'Tests confirmation forms.',
-      'group' => 'Form API',
-    );
-  }
 
   function testConfirmForm() {
     // Test the building of the form.

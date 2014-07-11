@@ -13,7 +13,9 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewUnitTestBase;
 
 /**
- * Tests the block views plugin.
+ * Tests native behaviors of the block views plugin.
+ *
+ * @group views
  */
 class ViewsBlockTest extends ViewUnitTestBase {
 
@@ -30,14 +32,6 @@ class ViewsBlockTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view_block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views block',
-      'description' => 'Tests native behaviors of the block views plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

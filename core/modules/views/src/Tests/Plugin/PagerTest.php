@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the pluggable pager system.
+ *
+ * @group views
  */
 class PagerTest extends PluginTestBase {
 
@@ -27,14 +29,6 @@ class PagerTest extends PluginTestBase {
    * @var array
    */
   public static $modules = array('node', 'views_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Pager',
-      'description' => 'Test the pluggable pager system.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * Pagers was sometimes not stored.

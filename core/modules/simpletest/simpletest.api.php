@@ -14,9 +14,9 @@
  * Alter the list of tests.
  *
  * @param $groups
- *   A two dimension array, the first key is the test group (as defined in
- *   getInfo) the second is the name of the class and the value is the return
- *   value of the getInfo method.
+ *   A two dimensional array, the first key is the test group, the second is the
+ *   name of the test class, and the value is in associative array containing
+ *   'name', 'description', 'group', and 'requires' keys.
  */
 function hook_simpletest_alter(&$groups) {
   // An alternative session handler module would not want to run the original

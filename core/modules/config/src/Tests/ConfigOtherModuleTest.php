@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests default configuration provided by a module that does not own it.
+ *
+ * @group config
  */
 class ConfigOtherModuleTest extends WebTestBase {
 
@@ -18,14 +20,6 @@ class ConfigOtherModuleTest extends WebTestBase {
    * @var \Drupal\Core\Extension\ModuleHandler
    */
   protected $moduleHandler;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Default configuration owner',
-      'description' => 'Tests default configuration provided by a module that does not own it.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Sets up the module handler for enabling and disabling modules.

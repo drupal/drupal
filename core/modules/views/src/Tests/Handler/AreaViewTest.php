@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the view area handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\area\View
  */
 class AreaViewTest extends ViewUnitTestBase {
@@ -30,17 +31,6 @@ class AreaViewTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_area_view', 'test_simple_argument');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Area: View',
-      'description' => 'Tests the view area handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests the view area handler.

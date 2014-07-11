@@ -14,6 +14,7 @@ use Drupal\views\Tests\ViewTestBase;
 /**
  * Tests the views taxonomy complete menu callback.
  *
+ * @group views
  * @see views_ajax_autocomplete_taxonomy()
  */
 class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
@@ -45,14 +46,6 @@ class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
    * @var array
    */
   public static $modules = array('node', 'taxonomy');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View taxonomy autocomplete',
-      'description' => 'Tests the view taxonomy autocomplete AJAX callback.',
-      'group' => 'Views'
-    );
-  }
 
   public function setUp() {
     parent::setUp();

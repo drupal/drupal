@@ -13,25 +13,10 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the confirm form helper class.
- *
  * @coversDefaultClass \Drupal\Core\Form\ConfirmFormHelper
- *
- * @group Drupal
  * @group Form
  */
 class ConfirmFormHelperTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Confirm form helper test',
-      'description' => 'Tests the confirm form helper class.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * @covers ::buildCancelLink

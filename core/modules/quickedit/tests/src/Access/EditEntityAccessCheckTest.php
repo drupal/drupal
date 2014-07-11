@@ -14,12 +14,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Tests the edit entity access controller.
- *
- * @group Drupal
- * @group QuickEdit
- *
- * @see \Drupal\quickedit\Access\EditEntityAccessCheck
+ * @coversDefaultClass \Drupal\quickedit\Access\EditEntityAccessCheck
+ * @group quickedit
  */
 class EditEntityAccessCheckTest extends UnitTestCase {
 
@@ -43,14 +39,6 @@ class EditEntityAccessCheckTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityStorage;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Edit entity access check test',
-      'description' => 'Unit test of edit entity access check.',
-      'group' => 'Quick Edit'
-    );
-  }
 
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

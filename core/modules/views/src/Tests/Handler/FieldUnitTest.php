@@ -14,6 +14,7 @@ use Drupal\views\Views;
 /**
  * Tests the generic field handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
 class FieldUnitTest extends ViewUnitTestBase {
@@ -30,14 +31,6 @@ class FieldUnitTest extends ViewUnitTestBase {
   protected $column_map = array(
     'views_test_data_name' => 'name',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Unit Test',
-      'description' => 'Tests the generic field handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Overrides Drupal\views\Tests\ViewTestBase::viewsData().

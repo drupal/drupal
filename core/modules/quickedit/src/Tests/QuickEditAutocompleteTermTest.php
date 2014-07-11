@@ -13,7 +13,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests using in-place editing for an autocomplete entity reference widget.
+ * Tests in-place editing of autocomplete tags.
+ *
+ * @group quickedit
  */
 class QuickEditAutocompleteTermTest extends WebTestBase {
 
@@ -58,14 +60,6 @@ class QuickEditAutocompleteTermTest extends WebTestBase {
    * @var string
    */
   protected $field_name;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'In-place editing of autocomplete tags',
-      'description' => 'Tests in-place editing of autocomplete tags.',
-      'group' => 'Quick Edit',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

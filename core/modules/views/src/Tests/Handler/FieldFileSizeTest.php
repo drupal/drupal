@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the core Drupal\views\Plugin\views\field\FileSize handler.
  *
+ * @group views
  * @see CommonXssUnitTest
  */
 class FieldFileSizeTest extends ViewUnitTestBase {
@@ -23,14 +24,6 @@ class FieldFileSizeTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: File size',
-      'description' => 'Test the core Drupal\views\Plugin\views\field\FileSize handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   function dataSet() {
     $data = parent::dataSet();

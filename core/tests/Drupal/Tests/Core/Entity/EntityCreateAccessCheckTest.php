@@ -14,11 +14,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the entity-create access controller.
- *
+ * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
  * @group Entity
- *
- * @see \Drupal\Core\Entity\EntityCreateAccessCheck
  */
 class EntityCreateAccessCheckTest extends UnitTestCase {
 
@@ -28,14 +25,6 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * @var \PHPUnit_Framework_MockObject_MockObject
    */
   public $entityManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity create access check test',
-      'description' => 'Unit test of entity create access checking system.',
-      'group' => 'Entity'
-    );
-  }
 
   /**
    * {@inheritdoc}

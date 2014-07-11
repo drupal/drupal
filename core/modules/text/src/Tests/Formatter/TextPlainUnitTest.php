@@ -14,8 +14,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the text_plain field formatter.
+ * Tests the creation of text fields.
  *
+ * @group text
  * @todo Move assertion helper methods into KernelTestBase.
  * @todo Move field helper methods, $modules, and setUp() into a new
  *   FieldPluginUnitTestBase.
@@ -28,14 +29,6 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('entity', 'field', 'text', 'entity_test', 'system', 'filter', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Text field text_plain formatter',
-      'description'  => "Test the creation of text fields.",
-      'group' => 'Field types',
-    );
-  }
 
   function setUp() {
     parent::setUp();

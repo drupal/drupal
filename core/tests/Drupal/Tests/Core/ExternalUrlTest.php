@@ -14,12 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
- * Tests the \Drupal\Core\Url class for external paths.
- *
- * @group Drupal
- * @group Url
- *
  * @coversDefaultClass \Drupal\Core\Url
+ * @group ExternalUrlTest
  */
 class ExternalUrlTest extends UnitTestCase {
 
@@ -43,17 +39,6 @@ class ExternalUrlTest extends UnitTestCase {
    * @var string
    */
   protected $path = 'http://drupal.org';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Url object (external)',
-      'description' => 'Tests the \Drupal\Core\Url class with external paths.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

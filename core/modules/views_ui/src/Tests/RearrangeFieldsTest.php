@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the reordering of fields via AJAX.
  *
+ * @group views_ui
  * @see \Drupal\views_ui\Form\Ajax\Rearrange
  */
 class RearrangeFieldsTest extends UITestBase {
@@ -22,14 +23,6 @@ class RearrangeFieldsTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Rearrange fields',
-      'description' => 'Tests the reordering of fields',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Gets the fields from the View.

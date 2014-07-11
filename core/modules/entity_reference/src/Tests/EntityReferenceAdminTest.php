@@ -10,7 +10,9 @@ namespace Drupal\entity_reference\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Entity Reference Admin UI.
+ * Tests for the administrative UI.
+ *
+ * @group entity_reference
  */
 class EntityReferenceAdminTest extends WebTestBase {
 
@@ -23,17 +25,6 @@ class EntityReferenceAdminTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'field_ui', 'entity_reference', 'path');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference admin UI',
-      'description' => 'Tests for the administrative UI.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests range queries.
+ * Tests the Range query functionality.
+ *
+ * @group Database
  */
 class RangeQueryTest extends DatabaseTestBase {
 
@@ -18,14 +20,6 @@ class RangeQueryTest extends DatabaseTestBase {
    * @var array
    */
   public static $modules = array('database_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Range query test',
-      'description' => 'Test the Range query functionality.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that range queries work and return the correct result.

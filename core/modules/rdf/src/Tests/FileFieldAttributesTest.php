@@ -10,7 +10,9 @@ namespace Drupal\rdf\Tests;
 use Drupal\file\Tests\FileFieldTestBase;
 
 /**
- * Tests RDFa markup generation for File fields.
+ * Tests the RDFa markup of filefields.
+ *
+ * @group rdf
  */
 class FileFieldAttributesTest extends FileFieldTestBase {
 
@@ -41,14 +43,6 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    * @var \Drupal\node\NodeInterface
    */
   protected $node;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDFa markup for files',
-      'description' => 'Tests the RDFa markup of filefields.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

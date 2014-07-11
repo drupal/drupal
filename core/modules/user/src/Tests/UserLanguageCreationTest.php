@@ -11,7 +11,10 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional test for language handling during user creation.
+ * Tests whether proper language is stored for new users and access to language
+ * selector.
+ *
+ * @group user
  */
 class UserLanguageCreationTest extends WebTestBase {
 
@@ -21,14 +24,6 @@ class UserLanguageCreationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('user', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User language creation',
-      'description' => 'Tests whether proper language is stored for new users and access to language selector.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Functional test for language handling during user creation.

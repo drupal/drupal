@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test HTTP file downloading capability.
+ * Tests HTTP file fetching and error handling.
+ *
+ * @group system
  */
 class RetrieveFileTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'HTTP file retrieval',
-      'description' => 'Checks HTTP file fetching and error handling.',
-      'group' => 'System',
-    );
-  }
-
   /**
    * Invokes system_retrieve_file() in several scenarios.
    */

@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests views perm access plugin.
  *
+ * @group user
  * @see \Drupal\user\Plugin\views\access\Permission
  */
 class AccessPermissionTest extends AccessTestBase {
@@ -23,14 +24,6 @@ class AccessPermissionTest extends AccessTestBase {
    * @var array
    */
   public static $testViews = array('test_access_perm');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Access permission',
-      'description' => 'Tests views permission access plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests perm access plugin.

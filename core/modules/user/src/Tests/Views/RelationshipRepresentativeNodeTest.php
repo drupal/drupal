@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the representative node relationship for users.
+ *
+ * @group user
  */
 class RelationshipRepresentativeNodeTest extends UserTestBase {
 
@@ -20,14 +22,6 @@ class RelationshipRepresentativeNodeTest extends UserTestBase {
    * @var array
    */
   public static $testViews = array('test_groupwise_user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Representative Node Relationship',
-      'description' => 'Tests the representative node relationship for users.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the relationship.

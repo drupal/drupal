@@ -11,17 +11,11 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 
 /**
- * Tests installer language detection.
+ * Tests for installer language support.
+ *
+ * @group Installer
  */
 class InstallerLanguageTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer language tests',
-      'description' => 'Tests for installer language support.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * Tests that the installer can find translation files.

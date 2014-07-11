@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests SELECT with ORDER BY clauses.
+ * Tests the Select query builder.
+ *
+ * @group Database
  */
 class SelectOrderedTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Select tests, ordered',
-      'description' => 'Test the Select query builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests basic ORDER BY.

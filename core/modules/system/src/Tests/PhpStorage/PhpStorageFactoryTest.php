@@ -17,20 +17,10 @@ use Drupal\system\PhpStorage\MockPhpStorage;
 /**
  * Tests the PHP storage factory.
  *
+ * @group PhpStorage
  * @see \Drupal\Core\PhpStorage\PhpStorageFactory
  */
 class PhpStorageFactoryTest extends DrupalUnitTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'PHP storage factory tests',
-      'description' => 'Tests the PHP storage factory..',
-      'group' => 'PhpStorage',
-    );
-  }
 
   /**
    * Tests the get() method with no settings.

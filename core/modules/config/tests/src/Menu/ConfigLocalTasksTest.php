@@ -12,18 +12,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 /**
  * Tests existence of config local tasks.
  *
- * @group Drupal
  * @group config
  */
 class ConfigLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Config local tasks test',
-      'description' => 'Test existence of config local tasks.',
-      'group' => 'config',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array('config' => 'core/modules/config');

@@ -11,7 +11,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Provides automated tests for the Forum module.
+ * Create, view, edit, delete, and change forum entries and verify its
+ * consistency in the database.
+ *
+ * @group forum
  */
 class ForumTest extends WebTestBase {
 
@@ -61,14 +64,6 @@ class ForumTest extends WebTestBase {
    * An array of forum topic node IDs.
    */
   protected $nids;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum functionality',
-      'description' => 'Create, view, edit, delete, and change forum entries and verify its consistency in the database.',
-      'group' => 'Forum',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -10,17 +10,11 @@ namespace Drupal\field\Tests;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
- * Unit test class for field validation.
+ * Tests field validation.
+ *
+ * @group field
  */
 class FieldValidationTest extends FieldUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field validation',
-      'description' => 'Tests field validation.',
-      'group' => 'Field API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

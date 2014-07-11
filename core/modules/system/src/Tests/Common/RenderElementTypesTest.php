@@ -12,6 +12,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the markup of core render element types passed to drupal_render().
+ *
+ * @group Common
  */
 class RenderElementTypesTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Render element types',
-      'description' => 'Tests the markup of core render element types passed to drupal_render().',
-      'group' => 'Common',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

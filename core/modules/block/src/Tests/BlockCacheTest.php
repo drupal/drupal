@@ -11,7 +11,9 @@ use Drupal\Core\Cache\Cache;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test block caching.
+ * Tests block caching.
+ *
+ * @group block
  */
 class BlockCacheTest extends WebTestBase {
 
@@ -32,14 +34,6 @@ class BlockCacheTest extends WebTestBase {
    * @var \Drupal\block\BlockInterface
    */
   protected $block;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block caching',
-      'description' => 'Test block caching.',
-      'group' => 'Block',
-    );
-  }
 
   function setUp() {
     parent::setUp();

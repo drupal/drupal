@@ -10,7 +10,10 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Tests node access with multiple languages and access control modules.
+ * Tests node access functionality with multiple languages and two node access
+ * modules.
+ *
+ * @group node
  */
 class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
 
@@ -41,14 +44,6 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
    * @var \Drupal\user\Entity\UserInterface.
    */
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access language-aware combination',
-      'description' => 'Tests node access functionality with multiple languages and two node access modules.',
-      'group' => 'Node',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

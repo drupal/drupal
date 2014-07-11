@@ -11,12 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\area\Messages;
 
 /**
- * Tests the messages area handler
- *
- * @group Views
- * @group Handlers
- *
  * @coversDefaultClass \Drupal\views\Plugin\views\area\Messages
+ * @group views
  */
 class MessagesTest extends UnitTestCase {
 
@@ -33,17 +29,6 @@ class MessagesTest extends UnitTestCase {
    * @var \Drupal\views\Plugin\views\area\Messages
    */
   protected $messagesHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Area: Messages',
-      'description' => 'Tests the Drupal\views\Plugin\views\area\Messages handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * {@inheritdoc}

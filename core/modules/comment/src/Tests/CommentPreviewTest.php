@@ -12,7 +12,9 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\comment\Entity\Comment;
 
 /**
- * Tests previewing comments.
+ * Tests comment preview.
+ *
+ * @group comment
  */
 class CommentPreviewTest extends CommentTestBase {
 
@@ -24,14 +26,6 @@ class CommentPreviewTest extends CommentTestBase {
    * @var string
    */
   protected $profile = 'standard';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment preview',
-      'description' => 'Test comment preview.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Tests comment preview.

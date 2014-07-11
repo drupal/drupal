@@ -11,7 +11,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for configuring a different path alias per language.
+ * Tests you can configure a language for individual URL aliases.
+ *
+ * @group locale
  */
 class LocalePathTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LocalePathTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'locale', 'path', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path language settings',
-      'description' => 'Checks you can configure a language for individual URL aliases.',
-      'group' => 'Locale',
-    );
-  }
 
   function setUp() {
     parent::setUp();

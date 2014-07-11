@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests block XSS in title.
+ *
+ * @group block
  */
 class BlockTitleXSSTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class BlockTitleXSSTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'block_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block XSS Title',
-      'description' => 'Test block XSS in title.',
-      'group' => 'Block',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

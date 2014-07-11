@@ -11,7 +11,9 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
- * Test for legacy node bug.
+ * Posts an article with a taxonomy term and a date prior to 1970.
+ *
+ * @group taxonomy
  */
 class LegacyTest extends TaxonomyTestBase {
 
@@ -21,14 +23,6 @@ class LegacyTest extends TaxonomyTestBase {
    * @var array
    */
   public static $modules = array('node', 'datetime');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Test for legacy node bug.',
-      'description' => 'Posts an article with a taxonomy term and a date prior to 1970.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

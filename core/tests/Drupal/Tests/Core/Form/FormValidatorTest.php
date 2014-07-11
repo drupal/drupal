@@ -13,25 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests the form validator.
- *
  * @coversDefaultClass \Drupal\Core\Form\FormValidator
- *
- * @group Drupal
  * @group Form
  */
 class FormValidatorTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Form validator test',
-      'description' => 'Tests the form validator.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests that form errors during submission throw an exception.

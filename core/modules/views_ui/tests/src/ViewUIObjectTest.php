@@ -15,19 +15,10 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests the ViewUI class.
- *
- * @see \Drupal\views_ui\ViewUI
+ * @coversDefaultClass \Drupal\views_ui\ViewUI
+ * @group views_ui
  */
 class ViewUIObjectTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View UI Object',
-      'description' => 'Test the ViewUI class.',
-      'group' => 'Views UI'
-    );
-  }
 
   /**
    * Tests entity method decoration.

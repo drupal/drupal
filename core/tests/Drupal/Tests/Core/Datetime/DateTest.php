@@ -11,11 +11,8 @@ use Drupal\Core\Datetime\Date;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the date service.
- *
- * @group Drupal
- *
- * @see \Drupal\Core\Datetime\Date
+ * @coversDefaultClass \Drupal\Core\Datetime\Date
+ * @group Datetime
  */
 class DateTest extends UnitTestCase {
 
@@ -46,17 +43,6 @@ class DateTest extends UnitTestCase {
    * @var \Drupal\Core\Datetime\Date
    */
   protected $date;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Date service test.',
-      'description' => 'Tests the date service.',
-      'group' => 'System'
-    );
-  }
 
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

@@ -12,6 +12,8 @@ use Drupal\views\Tests\ViewTestBase;
 
 /**
  * Tests which checks that no fieldapi fields are added on contact.
+ *
+ * @group contact
  */
 class ContactFieldsTest extends ViewTestBase {
 
@@ -28,14 +30,6 @@ class ContactFieldsTest extends ViewTestBase {
    * @var \Drupal\field\Entity\FieldConfig
    */
   protected $field;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contact: Field views data',
-      'description' => 'Tests which checks that no fieldapi fields are added on contact.',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

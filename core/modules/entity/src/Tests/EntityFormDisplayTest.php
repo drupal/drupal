@@ -11,18 +11,12 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the entity display configuration entities.
+ *
+ * @group entity
  */
 class EntityFormDisplayTest extends DrupalUnitTestBase {
 
   public static $modules = array('entity', 'field', 'entity_test', 'user', 'text');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity form display configuration entities',
-      'description' => 'Tests the entity form display configuration entities.',
-      'group' => 'Entity API',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

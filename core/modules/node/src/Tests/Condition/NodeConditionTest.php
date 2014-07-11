@@ -10,19 +10,13 @@ namespace Drupal\node\Tests\Condition;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
- * Tests the node conditions.
+ * Tests that conditions, provided by the node module, are working properly.
+ *
+ * @group node
  */
 class NodeConditionTest extends EntityUnitTestBase {
 
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node Condition Plugins',
-      'description' => 'Tests that conditions, provided by the node module, are working properly.',
-      'group' => 'Condition API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

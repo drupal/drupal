@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Session;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests session handling.
+ * Drupal session handling tests.
+ *
+ * @group Session
  */
 class SessionTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class SessionTest extends WebTestBase {
   public static $modules = array('session_test');
 
   protected $dumpHeaders = TRUE;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Session tests',
-      'description' => 'Drupal session handling tests.',
-      'group' => 'Session'
-    );
-  }
 
   /**
    * Tests for \Drupal\Core\Session\SessionManager::isEnabled() and ::regenerate().

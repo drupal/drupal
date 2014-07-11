@@ -16,6 +16,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests configuration entities.
+ *
+ * @group config
  */
 class ConfigEntityTest extends WebTestBase {
 
@@ -30,14 +32,6 @@ class ConfigEntityTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('config_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration entities',
-      'description' => 'Tests configuration entities.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests CRUD operations.

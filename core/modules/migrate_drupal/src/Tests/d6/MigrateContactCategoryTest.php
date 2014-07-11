@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateMessage;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * The Drupal 6 contact categories to Drupal 8 migration.
+ * Migrate contact categories to contact.category.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateContactCategoryTest extends MigrateDrupalTestBase {
 
@@ -22,17 +24,6 @@ class MigrateContactCategoryTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('contact');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate contact categories.',
-      'description'  => 'Migrate contact categories to contact.category.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

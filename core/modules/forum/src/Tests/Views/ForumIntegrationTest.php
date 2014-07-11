@@ -13,6 +13,8 @@ use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests the forum integration into views.
+ *
+ * @group forum
  */
 class ForumIntegrationTest extends ViewTestBase {
 
@@ -29,14 +31,6 @@ class ForumIntegrationTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_forum_index');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum: Views data',
-      'description' => 'Tests the forum integration into views.',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

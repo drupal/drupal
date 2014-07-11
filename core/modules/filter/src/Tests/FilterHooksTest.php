@@ -10,7 +10,9 @@ namespace Drupal\filter\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for Filter's hook invocations.
+ * Tests hooks for text formats insert/update/disable.
+ *
+ * @group filter
  */
 class FilterHooksTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class FilterHooksTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'filter_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter format hooks',
-      'description' => 'Test hooks for text formats insert/update/disable.',
-      'group' => 'Filter',
-    );
-  }
 
   /**
    * Tests hooks on format management.

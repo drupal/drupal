@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Module;
 
 /**
- * Tests failure of hook_requirements('install').
+ * Attempts enabling a module that fails hook_requirements('install').
+ *
+ * @group Module
  */
 class HookRequirementsTest extends ModuleTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Requirements hook failure',
-      'description' => "Attempts enabling a module that fails hook_requirements('install').",
-      'group' => 'Module',
-    );
-  }
-
   /**
    * Assert that a module cannot be installed if it fails hook_requirements().
    */

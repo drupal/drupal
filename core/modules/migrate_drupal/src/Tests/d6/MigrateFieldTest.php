@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 field to Drupal 8 migration.
+ * Migrate fields.
+ *
+ * @group migrate_drupal
  */
 class MigrateFieldTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('field', 'telephone', 'link', 'file', 'image', 'datetime', 'node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate fields to field.*.*.yml',
-      'description'  => 'Migrate fields',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

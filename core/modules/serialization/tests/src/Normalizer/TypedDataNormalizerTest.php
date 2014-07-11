@@ -11,11 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\Normalizer\TypedDataNormalizer;
 
 /**
- * Tests the TypedDataNormalizer class.
- *
- * @see \Drupal\serialization\Normalizer\TypedDataNormalizer
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\serialization\Normalizer\TypedDataNormalizer
+ * @group serialization
  */
 class TypedDataNormalizerTest extends UnitTestCase {
 
@@ -32,14 +29,6 @@ class TypedDataNormalizerTest extends UnitTestCase {
    * @var \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $typedData;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'TypedDataNormalizer',
-      'description' => 'Tests the TypedDataNormalizer class.',
-      'group' => 'Serialization',
-    );
-  }
 
   public function setUp() {
     $this->normalizer = new TypedDataNormalizer();

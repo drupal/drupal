@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests Drupal 6 view modes to Drupal 8 migration.
+ * Migrate view modes.
+ *
+ * @group migrate_drupal
  */
 class MigrateViewModesTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateViewModesTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate view modes to entity.view_mode.*.*.yml',
-      'description'  => 'Migrate view modes',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

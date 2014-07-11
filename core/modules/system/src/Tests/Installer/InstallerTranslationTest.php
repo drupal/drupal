@@ -10,7 +10,10 @@ namespace Drupal\system\Tests\Installer;
 use Drupal\simpletest\InstallerTestBase;
 
 /**
- * Tests the installer translation detection.
+ * Selects German as the installation language and verifies the following page
+ * is not in English.
+ *
+ * @group Installer
  */
 class InstallerTranslationTest extends InstallerTestBase {
 
@@ -20,14 +23,6 @@ class InstallerTranslationTest extends InstallerTestBase {
    * @var string
    */
   protected $langcode = 'de';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer translation test',
-      'description' => 'Selects German as the installation language and verifies the following page is not in English.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * Overrides InstallerTest::setUpLanguage().

@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 files to Drupal 8 migration.
+ * file migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateFileTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateFileTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('file');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Migrate files',
-      'description' => 'file migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

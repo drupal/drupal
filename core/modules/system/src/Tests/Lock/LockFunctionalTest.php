@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Lock;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the lock system.
+ * Confirm locking works between two separate requests.
+ *
+ * @group Lock
  */
 class LockFunctionalTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class LockFunctionalTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('system_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Locking framework tests',
-      'description' => 'Confirm locking works between two separate requests.',
-      'group' => 'Lock',
-    );
-  }
 
   /**
    * Confirms that we can acquire and release locks in two parallel requests.

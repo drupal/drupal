@@ -10,7 +10,9 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 
 /**
- * Defines shortcut links test cases.
+ * Create, view, edit, delete, and change shortcut links.
+ *
+ * @group shortcut
  */
 class ShortcutLinksTest extends ShortcutTestBase {
 
@@ -20,14 +22,6 @@ class ShortcutLinksTest extends ShortcutTestBase {
    * @var array
    */
   public static $modules = array('router_test', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Shortcut link functionality',
-      'description' => 'Create, view, edit, delete, and change shortcut links.',
-      'group' => 'Shortcut',
-    );
-  }
 
   /**
    * Tests that creating a shortcut works properly.

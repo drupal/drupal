@@ -10,7 +10,9 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\migrate\MigrateExecutable;
 
 /**
- * Test cck field revision migration from Drupal 6 to 8.
+ * CCK field revision migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateCckFieldRevisionTest extends MigrateNodeTestBase {
 
@@ -20,17 +22,6 @@ class MigrateCckFieldRevisionTest extends MigrateNodeTestBase {
    * @var array
    */
   public static $modules = array('field', 'filter', 'node', 'text');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate CCK field revisions',
-      'description'  => 'CCK field revision migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -9,6 +9,8 @@ namespace Drupal\views_ui\Tests;
 
 /**
  * Tests the user tempstore cache in the UI.
+ *
+ * @group views_ui
  */
 class CachedDataUITest extends UITestBase {
 
@@ -18,14 +20,6 @@ class CachedDataUITest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cached data',
-      'description' => 'Tests the user tempstore object caching in the UI.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the user tempstore views data in the UI.

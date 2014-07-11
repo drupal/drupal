@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables for the Forum module.
+ * Upgrade variables to forum.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateForumConfigsTest extends MigrateDrupalTestBase {
 
@@ -24,17 +26,6 @@ class MigrateForumConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('forum');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to forum.settings.yml',
-      'description'  => 'Upgrade variables to forum.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

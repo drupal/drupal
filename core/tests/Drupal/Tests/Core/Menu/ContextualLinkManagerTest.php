@@ -12,12 +12,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests the contextual links manager.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Menu\ContextualLinkManager
  * @group Menu
- *
- * @see \Drupal\Core\Menu\ContextualLinkManager
  */
 class ContextualLinkManagerTest extends UnitTestCase {
 
@@ -69,14 +65,6 @@ class ContextualLinkManagerTest extends UnitTestCase {
    * @var \Drupal\Core\Access\AccessManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $accessManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contextual links manager.',
-      'description' => 'Tests the contextual links manager.',
-      'group' => 'Menu',
-    );
-  }
 
   protected function setUp() {
     $this->contextualLinkManager = $this

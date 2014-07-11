@@ -11,8 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\views\ViewExecutable;
 
 /**
- * Tests some generic handler UI functionality.
+ * Tests handler UI for views.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\HandlerBase
  */
 class HandlerTest extends UITestBase {
@@ -23,14 +24,6 @@ class HandlerTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view_empty', 'test_view_broken', 'test_view_optional');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Handler test',
-      'description' => 'Tests handler UI for views.',
-      'group' => 'Views UI'
-    );
-  }
 
   /**
    * Overrides \Drupal\views\Tests\ViewTestBase::schemaDefinition().

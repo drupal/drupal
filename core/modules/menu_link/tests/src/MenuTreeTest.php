@@ -21,12 +21,8 @@ if (!defined('MENU_MAX_DEPTH')) {
 }
 
 /**
- * Tests the menu tree.
- *
- * @group Drupal
- * @group menu_link
- *
  * @coversDefaultClass \Drupal\menu_link\MenuTree
+ * @group menu_link
  */
 class MenuTreeTest extends UnitTestCase {
 
@@ -104,17 +100,6 @@ class MenuTreeTest extends UnitTestCase {
     'localized_options' => array('attributes' => array('title' => '')),
     'weight' => 0,
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\menu_link\MenuTree',
-      'description' => '',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,10 @@ use Drupal\system\Tests\System\TokenReplaceUnitTestBase;
 use Drupal\Component\Utility\String;
 
 /**
- * Test node token replacement in strings.
+ * Generates text using placeholders for dummy content to check node token
+ * replacement.
+ *
+ * @group node
  */
 class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
 
@@ -21,17 +24,6 @@ class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
    * @var array
    */
   public static $modules = array('node', 'filter');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Node token replacement',
-      'description' => 'Generates text using placeholders for dummy content to check node token replacement.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -12,18 +12,12 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Standard installation profile expectations.
+ *
+ * @group standard
  */
 class StandardTest extends WebTestBase {
 
   protected $profile = 'standard';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Standard installation profile',
-      'description' => 'Tests Standard installation profile expectations.',
-      'group' => 'Standard',
-    );
-  }
 
   /**
    * Tests Standard installation profile.

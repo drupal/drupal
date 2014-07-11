@@ -13,7 +13,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables for the Search module.
+ * Upgrade variables to search.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSearchConfigsTest extends MigrateDrupalTestBase {
 
@@ -25,17 +27,6 @@ class MigrateSearchConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('search');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to search.settings.yml',
-      'description'  => 'Upgrade variables to search.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

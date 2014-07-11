@@ -14,6 +14,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests forum module uninstallation.
+ *
+ * @group forum
  */
 class ForumUninstallTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class ForumUninstallTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('forum');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum uninstallation',
-      'description' => 'Tests forum module uninstallation.',
-      'group' => 'Forum',
-    );
-  }
 
   /**
    * Tests if forum module uninstallation properly deletes the field.

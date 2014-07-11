@@ -14,12 +14,8 @@ use Drupal\Core\Access\AccessInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the CSRF access checker.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Access\CsrfAccessCheck
  * @group Access
- *
- * @see \Drupal\Core\Access\CsrfAccessCheck
  */
 class CsrfAccessCheckTest extends UnitTestCase {
 
@@ -43,14 +39,6 @@ class CsrfAccessCheckTest extends UnitTestCase {
    * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $account;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CSRF access checker',
-      'description' => 'Tests CSRF access control for routes.',
-      'group' => 'Routing',
-    );
-  }
 
   public function setUp() {
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')

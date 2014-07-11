@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests 'raw' Twig filter.
+ * Tests Twig 'raw' filter.
+ *
+ * @group Theme
  */
 class TwigRawTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class TwigRawTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('twig_theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig raw filter',
-      'description' => "Tests Twig 'raw' filter.",
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Tests the raw filter inside an autoescape tag.

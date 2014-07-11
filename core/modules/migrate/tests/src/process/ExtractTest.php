@@ -9,24 +9,10 @@ namespace Drupal\migrate\Tests\process;
 use Drupal\migrate\Plugin\migrate\process\Extract;
 
 /**
- * Tests the extract plugin.
- *
- * @see \Drupal\migrate\Plugin\migrate\process\Extract
- * @group Drupal
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\Extract
  * @group migrate
  */
 class ExtractTest extends MigrateProcessTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Extract process plugin',
-      'description' => 'Tests the extract process plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * {@inheritdoc}

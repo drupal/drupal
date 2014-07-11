@@ -10,7 +10,9 @@ namespace Drupal\locale\Tests;
 use Drupal\tour\Tests\TourTestBase;
 
 /**
- * Tests tour functionality.
+ * Tests the Translate Interface tour.
+ *
+ * @group locale
  */
 class LocaleTranslateStringTourTest extends TourTestBase {
 
@@ -27,14 +29,6 @@ class LocaleTranslateStringTourTest extends TourTestBase {
    * @var array
    */
   public static $modules = array('locale', 'tour');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Translate Interface tour tests',
-      'description' => 'Tests the Translate Interface tour.',
-      'group' => 'Tour',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

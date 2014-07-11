@@ -11,7 +11,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\breakpoint\Entity\Breakpoint;
 
 /**
- * Tests for breakpoint sets admin interface.
+ * Thoroughly test the administrative interface of the Responsive Image module.
+ *
+ * @group responsive_image
  */
 class ResponsiveImageAdminUITest extends WebTestBase {
 
@@ -28,17 +30,6 @@ class ResponsiveImageAdminUITest extends WebTestBase {
    * @var array
    */
   public static $modules = array('responsive_image');
-
-  /**
-   * Drupal\simpletest\WebTestBase\getInfo().
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Responsive Image administration functionality',
-      'description' => 'Thoroughly test the administrative interface of the Responsive Image module.',
-      'group' => 'Responsive Image',
-    );
-  }
 
   /**
    * Drupal\simpletest\WebTestBase\setUp().

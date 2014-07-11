@@ -11,19 +11,14 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests file size parsing and formatting functions.
+ * Parse a predefined amount of bytes and compare the output with the expected
+ * value.
+ *
+ * @group Common
  */
 class SizeUnitTest extends UnitTestBase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Size parsing test',
-      'description' => 'Parse a predefined amount of bytes and compare the output with the expected value.',
-      'group' => 'Common',
-    );
-  }
 
   function setUp() {
     $kb = Bytes::KILOBYTE;

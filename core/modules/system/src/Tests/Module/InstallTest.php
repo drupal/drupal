@@ -11,7 +11,9 @@ use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Unit tests for module installation.
+ * Tests the installation of modules.
+ *
+ * @group Module
  */
 class InstallTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class InstallTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('module_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module installation',
-      'description' => 'Tests the installation of modules.',
-      'group' => 'Module',
-    );
-  }
 
   /**
    * Verify that drupal_get_schema() can be used during module installation.

@@ -14,17 +14,11 @@ use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Entity Reference Selection plugin.
+ * Tests for the base handlers provided by Entity Reference.
+ *
+ * @group entity_reference
  */
 class EntityReferenceSelectionAccessTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference handlers',
-      'description' => 'Tests for the base handlers provided by Entity Reference.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   public static $modules = array('node', 'comment', 'entity_reference', 'entity_test');
 

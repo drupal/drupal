@@ -11,21 +11,9 @@ use Drupal\migrate\Plugin\migrate\process\Flatten;
 /**
  * Tests the flatten plugin.
  *
- * @group Drupal
  * @group migrate
  */
 class FlattenTest extends MigrateProcessTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Flatten process plugin',
-      'description' => 'Tests the flatten process plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * Test that various array flatten operations work properly.

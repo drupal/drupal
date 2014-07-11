@@ -11,8 +11,10 @@ use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests the BooleanOperator filter handler.
+ * Tests the core Drupal\views\Plugin\views\filter\BooleanOperatorString
+ * handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\filter\BooleanOperatorString
  */
 class FilterBooleanOperatorStringTest extends ViewUnitTestBase {
@@ -34,14 +36,6 @@ class FilterBooleanOperatorStringTest extends ViewUnitTestBase {
   protected $column_map = array(
     'views_test_data_id' => 'id',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Boolean string operator',
-      'description' => 'Test the core Drupal\views\Plugin\views\filter\BooleanOperatorString handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * {@inheritdoc}

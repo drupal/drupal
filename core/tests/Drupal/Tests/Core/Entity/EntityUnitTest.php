@@ -16,8 +16,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\Entity
- *
- * @group Drupal
+ * @group Entity
  */
 class EntityUnitTest extends UnitTestCase {
 
@@ -83,17 +82,6 @@ class EntityUnitTest extends UnitTestCase {
    * @var array
    */
   protected $values;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Core\Entity\Entity unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

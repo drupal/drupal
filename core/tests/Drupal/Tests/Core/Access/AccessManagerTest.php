@@ -21,9 +21,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the access manager.
- *
- * @see \Drupal\Core\Access\AccessManager
+ * @coversDefaultClass \Drupal\Core\Access\AccessManager
+ * @group Access
  */
 class AccessManagerTest extends UnitTestCase {
 
@@ -82,14 +81,6 @@ class AccessManagerTest extends UnitTestCase {
    * @var \Drupal\Core\Access\AccessArgumentsResolverInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $argumentsResolver;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Access manager tests',
-      'description' => 'Test for the AccessManager object.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

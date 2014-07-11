@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\String handler.
+ *
+ * @group views
  */
 class FilterStringTest extends ViewUnitTestBase {
 
@@ -27,14 +29,6 @@ class FilterStringTest extends ViewUnitTestBase {
   protected $column_map = array(
     'views_test_data_name' => 'name',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: String',
-      'description' => 'Tests the core Drupal\views\Plugin\views\filter\String handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

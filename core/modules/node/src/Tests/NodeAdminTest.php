@@ -9,6 +9,8 @@ namespace Drupal\node\Tests;
 
 /**
  * Tests node administration page functionality.
+ *
+ * @group node
  */
 class NodeAdminTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class NodeAdminTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node administration',
-      'description' => 'Test node administration page functionality.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

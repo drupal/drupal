@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for 'html' and 'body' element attributes.
+ * Tests attributes inserted in the 'html' and 'body' elements on the page.
+ *
+ * @group Theme
  */
 class HtmlAttributesTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class HtmlAttributesTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => "'html' and 'body' element attributes",
-      'description' => "Test attributes inserted in the 'html' and 'body' elements on the page.",
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Tests that attributes in the 'html' and 'body' elements can be altered.

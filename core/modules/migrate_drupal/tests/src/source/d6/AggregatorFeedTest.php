@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 aggregator feed source.
+ * Tests D6 aggregator feed source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class AggregatorFeedTest extends MigrateSqlSourceTestCase {
 
@@ -55,17 +54,6 @@ class AggregatorFeedTest extends MigrateSqlSourceTestCase {
       'block' => 5,
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 aggregator feed source functionality',
-      'description' => 'Tests D6 aggregator feed source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
   * {@inheritdoc}

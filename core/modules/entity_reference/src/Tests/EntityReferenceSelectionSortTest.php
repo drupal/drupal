@@ -11,17 +11,11 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Entity Reference Selection plugin.
+ * Tests sorting referenced items.
+ *
+ * @group entity_reference
  */
 class EntityReferenceSelectionSortTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference handlers sort',
-      'description' => 'Test sorting referenced items.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   public static $modules = array('node', 'entity_reference', 'entity_test');
 

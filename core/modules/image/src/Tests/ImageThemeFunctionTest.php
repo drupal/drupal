@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests image theme functions.
+ *
+ * @group image
  */
 class ImageThemeFunctionTest extends WebTestBase {
 
@@ -33,14 +35,6 @@ class ImageThemeFunctionTest extends WebTestBase {
    * @var \Drupal\Core\Image\ImageFactory
    */
   protected $imageFactory;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image theme functions',
-      'description' => 'Tests the image theme functions.',
-      'group' => 'Image',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

@@ -11,8 +11,9 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
- * Basic test for pluggable access.
+ * Tests pluggable access for views.
  *
+ * @group views
  * @todo It probably make sense to split the test up by one for role/perm/none
  *   and the two generic ones.
  */
@@ -31,14 +32,6 @@ class AccessTest extends PluginTestBase {
    * @return array
    */
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Access',
-      'description' => 'Tests pluggable access for views.',
-      'group' => 'Views Plugins'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

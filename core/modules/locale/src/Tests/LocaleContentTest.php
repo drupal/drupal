@@ -11,7 +11,10 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Functional tests for multilingual support on nodes.
+ * Tests you can enable multilingual support on content types and configure a
+ * language for a node.
+ *
+ * @group locale
  */
 class LocaleContentTest extends WebTestBase {
 
@@ -21,14 +24,6 @@ class LocaleContentTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Content language settings',
-      'description' => 'Checks you can enable multilingual support on content types and configure a language for a node.',
-      'group' => 'Locale',
-    );
-  }
 
   /**
    * Verifies that machine name fields are always LTR.

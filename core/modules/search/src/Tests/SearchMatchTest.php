@@ -17,16 +17,10 @@ const SEARCH_TYPE_JPN = '_test3_';
 
 /**
  * Indexes content and queries it.
+ *
+ * @group search
  */
 class SearchMatchTest extends SearchTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Search engine queries',
-      'description' => 'Indexes content and queries it.',
-      'group' => 'Search',
-    );
-  }
-
   /**
    * Test search indexing.
    */

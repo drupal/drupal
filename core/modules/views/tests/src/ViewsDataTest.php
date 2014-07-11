@@ -12,11 +12,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewsData;
 
 /**
- * Tests the fetching of views data.
- *
- * @see hook_views_data
- *
  * @coversDefaultClass \Drupal\views\ViewsData
+ * @group views
  */
 class ViewsDataTest extends UnitTestCase {
 
@@ -54,17 +51,6 @@ class ViewsDataTest extends UnitTestCase {
    * @var \Drupal\views\ViewsData
    */
   protected $viewsData;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Views data',
-      'description' => 'Tests the fetching of views data.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * {@inheritdoc}

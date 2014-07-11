@@ -17,25 +17,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Tests response redirection using destination get argument.
- *
- * @group Drupal
- * @group Routing
- *
  * @coversDefaultClass \Drupal\Core\EventSubscriber\RedirectResponseSubscriber
+ * @group EventSubscriber
  */
 class RedirectResponseSubscriberTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests response redirection using destination get argument.',
-      'description' => '',
-      'group' => 'Routing'
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -10,17 +10,11 @@ namespace Drupal\file\Tests;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
- * Tests that formatters are working properly.
+ * Tests the display of file fields in node and views.
+ *
+ * @group file
  */
 class FileFieldDisplayTest extends FileFieldTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File field display tests',
-      'description' => 'Test the display of file fields in node and views.',
-      'group' => 'File',
-    );
-  }
 
   /**
    * Tests normal formatter display on node display.

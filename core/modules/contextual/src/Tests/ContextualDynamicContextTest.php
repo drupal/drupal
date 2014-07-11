@@ -12,7 +12,10 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Template\Attribute;
 
 /**
- * Tests accessible links after inaccessible links on dynamic context.
+ * Tests if contextual links are showing on the front page depending on
+ * permissions.
+ *
+ * @group contextual
  */
 class ContextualDynamicContextTest extends WebTestBase {
 
@@ -22,14 +25,6 @@ class ContextualDynamicContextTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('contextual', 'node', 'views', 'views_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contextual links on node lists',
-      'description' => 'Tests if contextual links are showing on the front page depending on permissions.',
-      'group' => 'Contextual',
-    );
-  }
 
   function setUp() {
     parent::setUp();

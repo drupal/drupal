@@ -9,17 +9,11 @@ namespace Drupal\search\Tests;
 
 /**
  * Tests the bike shed text on no results page, and text on the search page.
+ *
+ * @group search
  */
 class SearchPageTextTest extends SearchTestBase {
   protected $searching_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Search page text',
-      'description' => 'Tests the bike shed text on the no results page, and various other text on search pages.',
-      'group' => 'Search'
-    );
-  }
 
   function setUp() {
     parent::setUp();

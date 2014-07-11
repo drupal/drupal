@@ -11,16 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests for download/file transfer functions.
+ *
+ * @group file
  */
 class DownloadTest extends FileManagedTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File download',
-      'description' => 'Tests for file download/transfer functions.',
-      'group' => 'File Managed API',
-    );
-  }
-
   function setUp() {
     parent::setUp();
     // Clear out any hook calls.

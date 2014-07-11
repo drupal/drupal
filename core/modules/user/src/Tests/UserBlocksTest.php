@@ -10,7 +10,9 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test user blocks.
+ * Tests user blocks.
+ *
+ * @group user
  */
 class UserBlocksTest extends WebTestBase {
 
@@ -27,14 +29,6 @@ class UserBlocksTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User blocks',
-      'description' => 'Test user blocks.',
-      'group' => 'User',
-    );
-  }
 
   function setUp() {
     parent::setUp();

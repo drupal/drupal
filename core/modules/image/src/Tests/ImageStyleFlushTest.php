@@ -9,16 +9,10 @@ namespace Drupal\image\Tests;
 
 /**
  * Tests flushing of image styles.
+ *
+ * @group image
  */
 class ImageStyleFlushTest extends ImageFieldTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image style flushing',
-      'description' => 'Tests flushing of image styles.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * Given an image style and a wrapper, generate an image.

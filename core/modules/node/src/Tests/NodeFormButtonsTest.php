@@ -8,21 +8,15 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests the node form buttons.
+ * Tests all the different buttons on the node form.
+ *
+ * @group node
  */
 class NodeFormButtonsTest extends NodeTestBase {
 
   protected $web_user;
 
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node form buttons',
-      'description' => 'Test all the different buttons on the node form.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

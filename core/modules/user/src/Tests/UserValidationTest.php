@@ -12,7 +12,9 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Performs validation tests on user fields.
+ * Verify that user validity checks behave as designed.
+ *
+ * @group user
  */
 class UserValidationTest extends DrupalUnitTestBase {
 
@@ -22,14 +24,6 @@ class UserValidationTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('entity', 'field', 'user', 'system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User validation',
-      'description' => 'Verify that user validity checks behave as designed.',
-      'group' => 'User'
-    );
-  }
 
   /**
    * {@inheritdoc}

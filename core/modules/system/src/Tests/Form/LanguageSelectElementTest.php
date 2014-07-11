@@ -13,7 +13,10 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
 /**
- * Functional tests for the language select form element.
+ * Tests that the language select form element prints and submits the right
+ * options.
+ *
+ * @group Form
  */
 class LanguageSelectElementTest extends WebTestBase {
 
@@ -23,14 +26,6 @@ class LanguageSelectElementTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language select form element',
-      'description' => 'Checks that the language select form element prints and submits the right options.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests that the options printed by the language select element are correct.

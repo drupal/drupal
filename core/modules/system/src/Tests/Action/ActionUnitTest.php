@@ -12,6 +12,8 @@ use Drupal\Core\Action\ActionInterface;
 
 /**
  * Tests action plugins.
+ *
+ * @group Action
  */
 class ActionUnitTest extends DrupalUnitTestBase {
 
@@ -26,17 +28,6 @@ class ActionUnitTest extends DrupalUnitTestBase {
    * @var \Drupal\Core\Action\ActionManager
    */
   protected $actionManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Action Plugins',
-      'description' => 'Tests Action plugins.',
-      'group' => 'Action',
-    );
-  }
 
   /**
    * {@inheritdoc}

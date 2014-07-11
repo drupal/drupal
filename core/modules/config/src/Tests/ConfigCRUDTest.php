@@ -17,6 +17,8 @@ use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 
 /**
  * Tests CRUD operations on configuration objects.
+ *
+ * @group config
  */
 class ConfigCRUDTest extends DrupalUnitTestBase {
 
@@ -26,14 +28,6 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CRUD operations',
-      'description' => 'Tests CRUD operations on configuration objects.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests CRUD operations.

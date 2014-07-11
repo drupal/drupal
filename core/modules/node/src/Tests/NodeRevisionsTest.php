@@ -8,19 +8,14 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests the node revision functionality.
+ * Create a node with revisions and test viewing, saving, reverting, and
+ * deleting revisions for users with access for this content type.
+ *
+ * @group node
  */
 class NodeRevisionsTest extends NodeTestBase {
   protected $nodes;
   protected $revisionLogs;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node revisions by type',
-      'description' => 'Create a node with revisions and test viewing, saving, reverting, and deleting revisions for users with access for this content type.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

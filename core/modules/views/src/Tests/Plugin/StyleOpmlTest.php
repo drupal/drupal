@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Plugin;
 /**
  * Tests the OPML feed style plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\style\Opml
  */
 class StyleOpmlTest extends PluginTestBase {
@@ -27,17 +28,6 @@ class StyleOpmlTest extends PluginTestBase {
    * @var array
    */
   public static $modules = array('aggregator');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: OPML',
-      'description' => 'Tests the OPML feed style plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

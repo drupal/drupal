@@ -13,20 +13,11 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Test the url alias migration.
+ * Url alias migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateUrlAliasTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Url alias migration.',
-      'description'  => 'Url alias migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

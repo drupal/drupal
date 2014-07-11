@@ -11,24 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\Normalizer\NormalizerBase;
 
 /**
- * Tests the NormalizerBase class.
- *
- * @see \Drupal\serialization\Normalizer\NormalizerBase
- *
- * @group Serialization
+ * @coversDefaultClass \Drupal\serialization\Normalizer\NormalizerBase
+ * @group serialization
  */
 class NormalizerBaseTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'NormalizerBase',
-      'description' => 'Tests the abstract NormalizerBase class.',
-      'group' => 'Serialization',
-    );
-  }
 
   /**
    * Tests the supportsNormalization method.

@@ -10,17 +10,12 @@ namespace Drupal\system\Tests\Installer;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests translation release version fallback.
+ * Tests the translation version fallback used during site installation to
+ * determine available translation files.
+ *
+ * @group Installer
  */
 class InstallerTranslationVersionUnitTest extends DrupalUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer translation version fallback',
-      'description' => 'Tests the translation version fallback used during site installation to determine available translation files.',
-      'group' => 'Installer',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

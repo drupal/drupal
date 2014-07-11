@@ -14,12 +14,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests Drupal\Core\EventSubscriber\PathRootsSubscriber.
- *
- * @group Drupal
- * @group Routing
- *
  * @coversDefaultClass \Drupal\Core\EventSubscriber\PathRootsSubscriber
+ * @group EventSubscriber
  */
 class PathRootsSubscriberTest extends UnitTestCase {
 
@@ -36,17 +32,6 @@ class PathRootsSubscriberTest extends UnitTestCase {
    * @var \Drupal\Core\EventSubscriber\PathRootsSubscriber
    */
   protected $pathRootsSubscriber;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Drupal\Core\EventSubscriber\PathRootsSubscriber',
-      'description' => '',
-      'group' => 'Routing'
-    );
-  }
 
   /**
    * {@inheritdoc}

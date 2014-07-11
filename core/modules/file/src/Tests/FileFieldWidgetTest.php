@@ -11,7 +11,10 @@ use Drupal\comment\Entity\Comment;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
- * Tests file field widget.
+ * Tests the file field widget, single and multi-valued, with and without AJAX,
+ * with public and private files.
+ *
+ * @group file
  */
 class FileFieldWidgetTest extends FileFieldTestBase {
 
@@ -21,14 +24,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * @var array
    */
   public static $modules = array('comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File field widget test',
-      'description' => 'Tests the file field widget, single and multi-valued, with and without AJAX, with public and private files.',
-      'group' => 'File',
-    );
-  }
 
   /**
    * Tests upload and remove buttons for a single-valued File field.

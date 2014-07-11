@@ -8,7 +8,9 @@
 namespace Drupal\block_content\Tests;
 
 /**
- * Tests the block edit functionality.
+ * Create a block and test block access by attempting to view the block.
+ *
+ * @group block_content
  */
 class BlockContentPageViewTest extends BlockContentTestBase {
 
@@ -18,17 +20,6 @@ class BlockContentPageViewTest extends BlockContentTestBase {
    * @var array
    */
   public static $modules = array('block', 'block_content', 'block_content_test');
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block page view',
-      'description' => 'Create a block and test block access by attempting to view the block.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Checks block edit functionality.

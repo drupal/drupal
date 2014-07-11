@@ -13,6 +13,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
  * Tests the listing of configuration entities.
+ *
+ * @group config
  */
 class ConfigEntityListTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class ConfigEntityListTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('config_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration entity list',
-      'description' => 'Tests the listing of configuration entities.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests entity list builder methods.

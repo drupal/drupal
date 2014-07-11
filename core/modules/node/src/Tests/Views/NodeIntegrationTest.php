@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests\Views;
 
 /**
- * Tests Node module's Views integration.
+ * Tests the node integration into views.
+ *
+ * @group node
  */
 class NodeIntegrationTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class NodeIntegrationTest extends NodeTestBase {
    * @var array
    */
   public static $testViews = array('test_node_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Views data',
-      'description' => 'Tests the node integration into views.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests basic node view with a node type argument.

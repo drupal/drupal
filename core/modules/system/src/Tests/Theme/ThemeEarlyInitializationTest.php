@@ -10,7 +10,10 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional test for initialization of the theme system early in the request.
+ * Tests that the theme system can be correctly initialized early in the page
+ * request.
+ *
+ * @group Theme
  */
 class ThemeEarlyInitializationTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class ThemeEarlyInitializationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Early theme initialization',
-      'description' => 'Tests that the theme system can be correctly initialized early in the page request.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Test that the theme system can generate output in a request listener.

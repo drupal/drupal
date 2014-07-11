@@ -11,20 +11,11 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for date format machine names.
+ * Tests validity of date format machine names.
+ *
+ * @group system
  */
 class DateFormatsMachineNameTest extends WebTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Date format ids',
-      'description' => 'Tests validity of date format machine names.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

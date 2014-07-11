@@ -8,17 +8,11 @@
 namespace Drupal\file\Tests;
 
 /**
- * Move related tests
+ * Tests the file move function.
+ *
+ * @group file
  */
 class MoveTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File moving',
-      'description' => 'Tests the file move function.',
-      'group' => 'File Managed API',
-    );
-  }
-
   /**
    * Move a normal file.
    */

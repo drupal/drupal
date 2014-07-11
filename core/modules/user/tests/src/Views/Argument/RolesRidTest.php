@@ -14,19 +14,10 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Plugin\views\argument\RolesRid;
 
 /**
- * Tests the roles argument handler.
- *
- * @see \Drupal\user\Plugin\views\argument\RolesRid
+ * @coversDefaultClass \Drupal\user\Plugin\views\argument\RolesRid
+ * @group user
  */
 class RolesRidTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Roles Rid Argument',
-      'description' => 'Tests the role argument handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the title_query method.

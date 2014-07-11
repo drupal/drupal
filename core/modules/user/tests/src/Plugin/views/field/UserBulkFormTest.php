@@ -12,19 +12,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\views\field\UserBulkForm;
 
 /**
- * Tests the user bulk form plugin.
- *
- * @see \Drupal\user\Plugin\views\field\UserBulkForm
+ * @coversDefaultClass \Drupal\user\Plugin\views\field\UserBulkForm
+ * @group user
  */
 class UserBulkFormTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Bulk form',
-      'description' => 'Tests the user bulk form plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

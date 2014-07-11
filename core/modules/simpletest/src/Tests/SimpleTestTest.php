@@ -10,7 +10,11 @@ namespace Drupal\simpletest\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Simpletest UI test runner and internal browser.
+ * Tests SimpleTest's web interface: check that the intended tests were run and
+ * ensure that test reports display the intended results. Also test SimpleTest's
+ * internal browser and APIs both explicitly and implicitly.
+ *
+ * @group simpletest
  */
 class SimpleTestTest extends WebTestBase {
 
@@ -32,17 +36,6 @@ class SimpleTestTest extends WebTestBase {
    * Used to ensure they are incrementing.
    */
   protected $test_ids = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'SimpleTest functionality',
-      'description' => "Test SimpleTest's web interface: check that the intended tests were run and ensure that test reports display the intended results. Also test SimpleTest's internal browser and APIs both explicitly and implicitly.",
-      'group' => 'SimpleTest'
-    );
-  }
 
   function setUp() {
     if (!$this->isInChildSite()) {
@@ -369,9 +362,8 @@ EOD;
    */
   function getResultFieldSet() {
     $all_details = $this->xpath('//details');
-    $info = $this->getInfo();
     foreach ($all_details as $details) {
-      if ($this->asText($details->summary) == $info['name']) {
+      if ($this->asText($details->summary) == __CLASS__) {
         return $details;
       }
     }

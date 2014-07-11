@@ -10,7 +10,9 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests user links in the secondary menu.
+ * Tests user-account links.
+ *
+ * @group user
  */
 class UserAccountLinksTests extends WebTestBase {
 
@@ -20,14 +22,6 @@ class UserAccountLinksTests extends WebTestBase {
    * @var array
    */
   public static $modules = array('menu_ui', 'block', 'test_page_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User account links',
-      'description' => 'Test user-account links.',
-      'group' => 'User'
-    );
-  }
 
   public function setUp() {
     parent::setUp();

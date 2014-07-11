@@ -11,19 +11,14 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
- * Tests various validations.
+ * Tests validation functions such as file type, max file size, max size per
+ * node, and required.
+ *
+ * @group file
  */
 class FileFieldValidateTest extends FileFieldTestBase {
   protected $field;
   protected $node_type;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File field validation tests',
-      'description' => 'Tests validation functions such as file type, max file size, max size per node, and required.',
-      'group' => 'File',
-    );
-  }
 
   /**
    * Tests the required property on file fields.

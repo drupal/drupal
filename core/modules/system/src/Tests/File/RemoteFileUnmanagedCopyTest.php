@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Unmanaged copy related tests on remote filesystems.
+ * Tests the unmanaged file copy function.
+ *
+ * @group File
  */
 class RemoteFileUnmanagedCopyTest extends UnmanagedCopyTest {
 
@@ -32,12 +34,6 @@ class RemoteFileUnmanagedCopyTest extends UnmanagedCopyTest {
    * @var string
    */
   protected $classname = 'Drupal\file_test\DummyRemoteStreamWrapper';
-
-  public static function getInfo() {
-    $info = parent::getInfo();
-    $info['group'] = 'File API (remote)';
-    return $info;
-  }
 
   function setUp() {
     parent::setUp();

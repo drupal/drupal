@@ -11,22 +11,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Test the user_picture field migration.
+ * User picture field migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserPictureFieldTest extends MigrateDrupalTestBase {
 
   static $modules = array('image');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate user picture field',
-      'description'  => 'User picture field migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

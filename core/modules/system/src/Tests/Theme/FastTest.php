@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests autocompletion not loading registry.
+ *
+ * @group Theme
  */
 class FastTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class FastTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme fast initialization',
-      'description' => 'Test that autocompletion does not load the registry.',
-      'group' => 'Theme'
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -7,9 +7,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the library discovery parser.
- *
  * @coversDefaultClass \Drupal\Core\Asset\LibraryDiscoveryCollector
+ * @group Asset
  */
 class LibraryDiscoveryCollectorTest extends UnitTestCase {
 
@@ -56,17 +55,6 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
       'css' => array(),
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\Core\Asset\LibraryDiscoveryCollector',
-      'description' => '',
-      'group' => 'Asset handling',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Test the block settings migration.
+ * Upgrade block settings to block.block.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateBlockTest extends MigrateDrupalTestBase {
 
@@ -28,17 +30,6 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     'block_content',
     'node',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate block settings to block.block.*.yml',
-      'description'  => 'Upgrade block settings to block.block.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

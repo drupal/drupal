@@ -11,20 +11,12 @@ use Drupal\simpletest\InstallerTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests the installer to make sure existing values in settings.php appear.
+ * Tests the installer with an existing settings file with database connection
+ * info.
+ *
+ * @group Installer
  */
 class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer existing database settings',
-      'description' => 'Tests the installer with an existing settings file with database connection info.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * {@inheritdoc}

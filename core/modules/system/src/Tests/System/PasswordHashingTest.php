@@ -11,7 +11,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Password\PhpassHashedPassword;
 
 /**
- * Unit tests for password hashing API.
+ * Password hashing unit tests.
+ *
+ * @group system
  */
 class PasswordHashingTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class PasswordHashingTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('field', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Password hashing',
-      'description' => 'Password hashing unit tests.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Test password hashing.

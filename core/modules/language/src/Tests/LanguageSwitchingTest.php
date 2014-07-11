@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Functional tests for the language switching feature.
+ *
+ * @group language
  */
 class LanguageSwitchingTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LanguageSwitchingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language', 'block', 'language_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language switching',
-      'description' => 'Tests for the language switching feature.',
-      'group' => 'Language',
-    );
-  }
 
   function setUp() {
     parent::setUp();

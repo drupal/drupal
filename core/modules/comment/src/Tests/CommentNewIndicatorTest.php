@@ -12,7 +12,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 
 /**
- * Tests the 'new' marker on comments.
+ * Tests the 'new' indicator posted on comments.
+ *
+ * @group comment
  */
 class CommentNewIndicatorTest extends CommentTestBase {
 
@@ -24,14 +26,6 @@ class CommentNewIndicatorTest extends CommentTestBase {
    * @todo Remove this dependency.
    */
   public static $modules = array('views');
-
-  public static function getInfo() {
-    return array(
-      'name' => "Comment 'new' indicator",
-      'description' => "Tests the 'new' indicator posted on comments.",
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Get node "x new comments" metadata from the server for the current user.

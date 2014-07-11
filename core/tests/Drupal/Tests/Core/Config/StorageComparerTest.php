@@ -13,8 +13,6 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\StorageComparer
- *
- * @group Drupal
  * @group Config
  */
 class StorageComparerTest extends UnitTestCase {
@@ -47,14 +45,6 @@ class StorageComparerTest extends UnitTestCase {
    * @var array
    */
   protected $configData;
-
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Core\Config\StorageComparer unit test',
-      'group' => 'Configuration',
-    );
-  }
 
   public function setUp() {
     $this->sourceStorage = $this->getMock('Drupal\Core\Config\StorageInterface');

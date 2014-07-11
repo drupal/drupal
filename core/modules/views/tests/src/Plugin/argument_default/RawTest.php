@@ -12,19 +12,10 @@ use Drupal\views\Plugin\views\argument_default\Raw;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the raw argument default plugin.
- *
- * @see \Drupal\views\Plugin\views\argument_default\Raw
+ * @coversDefaultClass \Drupal\views\Plugin\views\argument_default\Raw
+ * @group views
  */
 class RawTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument default: Raw',
-      'description' => 'Tests the raw argument default plugin.',
-      'group' => 'Views Plugin',
-    );
-  }
 
   /**
    * Test the getArgument() method.

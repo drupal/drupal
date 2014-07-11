@@ -13,12 +13,8 @@ use Drupal\serialization\Normalizer\ListNormalizer;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 
 /**
- * Tests the ListNormalizer class.
- *
- * @see \Drupal\serialization\Normalizer\ListNormalizer
- *
- * @group Drupal
- * @group Serialization
+ * @coversDefaultClass \Drupal\serialization\Normalizer\ListNormalizer
+ * @group serialization
  */
 class ListNormalizerTest extends UnitTestCase {
 
@@ -42,14 +38,6 @@ class ListNormalizerTest extends UnitTestCase {
    * @var array
    */
   protected $expectedListValues = array('test', 'test', 'test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'ListNormalizer',
-      'description' => 'Tests the ListNormalizer class.',
-      'group' => 'Serialization',
-    );
-  }
 
   public function setUp() {
     // Mock the TypedDataManager to return a TypedDataInterface mock.

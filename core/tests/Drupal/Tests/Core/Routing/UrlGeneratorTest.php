@@ -18,7 +18,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * Basic tests for the Route.
+ * Confirm that the UrlGenerator is functioning properly.
  *
  * @group Routing
  */
@@ -51,14 +51,6 @@ class UrlGeneratorTest extends UnitTestCase {
    * @var \Drupal\Core\RouteProcessor\RouteProcessorManager|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $routeProcessorManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'UrlGenerator',
-      'description' => 'Confirm that the UrlGenerator is functioning properly.',
-      'group' => 'Routing',
-    );
-  }
 
   function setUp() {
 

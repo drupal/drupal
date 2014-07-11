@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Update;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the update system functionality.
+ * Tests the update script access and functionality.
+ *
+ * @group Update
  */
 class UpdateScriptTest extends WebTestBase {
 
@@ -25,14 +27,6 @@ class UpdateScriptTest extends WebTestBase {
 
   private $update_url;
   private $update_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update functionality',
-      'description' => 'Tests the update script access and functionality.',
-      'group' => 'Update',
-    );
-  }
 
   function setUp() {
     parent::setUp();

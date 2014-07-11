@@ -10,7 +10,9 @@ namespace Drupal\tour\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests tour plugin functionality.
+ * Tests the functionality of tour plugins.
+ *
+ * @group tour
  */
 class TourPluginTest extends DrupalUnitTestBase {
 
@@ -27,14 +29,6 @@ class TourPluginTest extends DrupalUnitTestBase {
    * @var \Drupal\tour\TipPluginManager
    */
   protected $pluginManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tour plugin tests',
-      'description' => 'Test the functionality of tour plugins.',
-      'group' => 'Tour',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

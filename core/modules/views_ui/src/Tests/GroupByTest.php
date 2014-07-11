@@ -9,6 +9,8 @@ namespace Drupal\views_ui\Tests;
 
 /**
  * Tests UI of aggregate functionality..
+ *
+ * @group views_ui
  */
 class GroupByTest extends UITestBase {
 
@@ -18,14 +20,6 @@ class GroupByTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_views_groupby_save');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Group By functionality',
-      'description' => 'Tests UI of aggregate functionality.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests whether basic saving works.

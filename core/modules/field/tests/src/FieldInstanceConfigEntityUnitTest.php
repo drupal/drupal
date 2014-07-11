@@ -14,9 +14,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\field\Entity\FieldInstanceConfig
- *
- * @group Drupal
- * @group Config
+ * @group field
  */
 class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
 
@@ -47,17 +45,6 @@ class FieldInstanceConfigEntityUnitTest extends UnitTestCase {
    * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $uuid;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\field\Entity\FieldInstanceConfig unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

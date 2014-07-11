@@ -11,9 +11,8 @@ use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the dependency injection container overrides of Drupal.
- *
- * @see \Drupal\Core\DependencyInjection\Container
+ * @coversDefaultClass \Drupal\Core\DependencyInjection\Container
+ * @group DependencyInjection
  */
 class ContainerTest extends UnitTestCase {
 
@@ -23,17 +22,6 @@ class ContainerTest extends UnitTestCase {
    * @var \Drupal\Core\DependencyInjection\Container
    */
   public $container;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Dependency injection container',
-      'description' => 'Tests the dependency injection container overrides of Drupal.',
-      'group' => 'System'
-    );
-  }
 
   /**
    * {@inheritdoc}

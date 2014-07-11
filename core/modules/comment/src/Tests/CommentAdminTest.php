@@ -9,16 +9,10 @@ namespace Drupal\comment\Tests;
 
 /**
  * Tests comment approval functionality.
+ *
+ * @group comment
  */
 class CommentAdminTest extends CommentTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment admin',
-      'description' => 'Test comment admin functionality.',
-      'group' => 'Comment',
-    );
-  }
-
   /**
    * Test comment approval functionality through admin/content/comment.
    */

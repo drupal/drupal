@@ -11,17 +11,11 @@ use Drupal\Core\Cache\BackendChain;
 use Drupal\Core\Cache\MemoryBackend;
 
 /**
- * Tests BackendChain using GenericCacheBackendUnitTestBase.
+ * Unit test of the backend chain using the generic cache unit test base.
+ *
+ * @group Cache
  */
 class BackendChainUnitTest extends GenericCacheBackendUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Backend chain',
-      'description' => 'Unit test of the backend chain using the generic cache unit test base.',
-      'group' => 'Cache',
-    );
-  }
 
   protected function createCacheBackend($bin) {
     $chain = new BackendChain($bin);

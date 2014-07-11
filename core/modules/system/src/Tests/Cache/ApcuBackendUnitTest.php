@@ -11,16 +11,10 @@ use Drupal\Core\Cache\ApcuBackend;
 
 /**
  * Tests the APCu cache backend.
+ *
+ * @group Cache
  */
 class ApcuBackendUnitTest extends GenericCacheBackendUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'APCu cache backend',
-      'description' => 'Tests the APCu cache backend.',
-      'group' => 'Cache',
-    );
-  }
 
   protected function checkRequirements() {
     $requirements = parent::checkRequirements();

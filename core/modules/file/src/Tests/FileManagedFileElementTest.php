@@ -10,18 +10,11 @@ namespace Drupal\file\Tests;
 /**
  * Tests the 'managed_file' element type.
  *
+ * @group file
  * @todo Create a FileTestBase class and move FileFieldTestBase methods
  *   that aren't related to fields into it.
  */
 class FileManagedFileElementTest extends FileFieldTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Managed file element test',
-      'description' => 'Tests the managed_file element type.',
-      'group' => 'File',
-    );
-  }
-
   /**
    * Tests the managed_file element type.
    */

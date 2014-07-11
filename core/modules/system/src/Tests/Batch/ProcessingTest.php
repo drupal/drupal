@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Batch;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Batch API.
+ * Tests batch processing in form and non-form workflow.
+ *
+ * @group Batch
  */
 class ProcessingTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ProcessingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('batch_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Batch processing',
-      'description' => 'Test batch processing in form and non-form workflow.',
-      'group' => 'Batch API',
-    );
-  }
 
   /**
    * Tests batches triggered outside of form submission.

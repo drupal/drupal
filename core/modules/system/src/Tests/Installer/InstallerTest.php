@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Installer;
 use Drupal\simpletest\InstallerTestBase;
 
 /**
- * Allows testing of the interactive installer.
+ * Tests the interactive installer.
+ *
+ * @group Installer
  */
 class InstallerTest extends InstallerTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer test',
-      'description' => 'Tests the interactive installer.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * Ensures that the user page is available after installation.

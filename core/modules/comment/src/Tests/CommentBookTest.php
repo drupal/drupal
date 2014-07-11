@@ -11,7 +11,9 @@ use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the comment module integration for book module.
+ * Tests visibility of comments on book pages.
+ *
+ * @group comment
  */
 class CommentBookTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class CommentBookTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('book', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Book commenting',
-      'description' => 'Test visibility of comments on book pages.',
-      'group' => 'Book',
-    );
-  }
 
   function setUp() {
     parent::setUp();

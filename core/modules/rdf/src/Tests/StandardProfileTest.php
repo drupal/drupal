@@ -11,7 +11,9 @@ use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that the standard profile mappings are set and exposed as expected.
+ * Tests the RDF mappings and RDFa markup of the standard profile.
+ *
+ * @group rdf
  */
 class StandardProfileTest extends WebTestBase {
 
@@ -98,14 +100,6 @@ class StandardProfileTest extends WebTestBase {
    * @var string
    */
   protected $commenterUri;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Standard profile RDF',
-      'description' => 'Tests the RDF mappings and RDFa markup of the standard profile.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

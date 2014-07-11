@@ -10,7 +10,10 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that hidden regions do not inherit blocks when a theme is enabled.
+ * Tests that a newly enabled theme does not inherit blocks to its hidden
+ * regions.
+ *
+ * @group block
  */
 class BlockHiddenRegionTest extends WebTestBase {
 
@@ -25,14 +28,6 @@ class BlockHiddenRegionTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'block_test', 'search');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Blocks not in hidden region',
-      'description' => 'Checks that a newly enabled theme does not inherit blocks to its hidden regions.',
-      'group' => 'Block',
-    );
-  }
 
   function setUp() {
     parent::setUp();

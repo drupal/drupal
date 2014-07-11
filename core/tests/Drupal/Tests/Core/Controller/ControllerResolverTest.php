@@ -19,12 +19,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests that the Drupal-extended ControllerResolver is functioning properly.
- *
- * @see \Drupal\Core\Controller\ControllerResolver
- *
- * @group Drupal
- * @group Routing
+ * @coversDefaultClass \Drupal\Core\Controller\ControllerResolver
+ * @group Controller
  */
 class ControllerResolverTest extends UnitTestCase {
 
@@ -41,17 +37,6 @@ class ControllerResolverTest extends UnitTestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerBuilder
    */
   protected $container;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Controller Resolver tests',
-      'description' => 'Tests that the Drupal-extended ControllerResolver is functioning properly.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the search_excerpt() function.
+ *
+ * @group search
  */
 class SearchExcerptTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class SearchExcerptTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('search', 'search_langcode_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Search excerpt extraction',
-      'description' => 'Tests that the search_excerpt() function works.',
-      'group' => 'Search',
-    );
-  }
 
   /**
    * Tests search_excerpt() with several simulated search keywords.

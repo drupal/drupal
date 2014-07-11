@@ -12,7 +12,9 @@ use Drupal\Component\Utility\String;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
- * Test integration searching comments.
+ * Tests integration searching comments.
+ *
+ * @group search
  */
 class SearchCommentTest extends SearchTestBase {
 
@@ -24,14 +26,6 @@ class SearchCommentTest extends SearchTestBase {
   public static $modules = array('filter', 'node', 'comment');
 
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment Search tests',
-      'description' => 'Test integration searching comments.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -13,6 +13,8 @@ use Drupal\ckeditor\Plugin\Editor\CKEditor;
 
 /**
  * Tests for the 'CKEditor' text editor plugin.
+ *
+ * @group ckeditor
  */
 class CKEditorTest extends DrupalUnitTestBase {
 
@@ -36,14 +38,6 @@ class CKEditorTest extends DrupalUnitTestBase {
    * @var \Drupal\editor\Plugin\EditorManager;
    */
   protected $manager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CKEditor text editor plugin',
-      'description' => 'Tests all aspects of the CKEditor text editor plugin.',
-      'group' => 'CKEditor',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -13,8 +13,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 /**
  * Tests existence of system local tasks.
  *
- * @group Drupal
- * @group System
+ * @group system
  */
 class SystemLocalTasksTest extends LocalTaskIntegrationTest {
 
@@ -24,17 +23,6 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTest {
    * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $themeHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'System local tasks',
-      'description' => '',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

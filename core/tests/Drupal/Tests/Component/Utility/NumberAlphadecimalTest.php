@@ -11,24 +11,10 @@ use Drupal\Component\Utility\Number;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Unit tests for the number alphadecimal functions.
- *
- * @see \Drupal\Component\Utility\Number
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Component\Utility\Number
+ * @group Utility
  */
 class NumberAlphadecimalTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Number alphadecimal functions',
-      'description' => 'Tests alphadecimal number conversion functions.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests the alphadecimal conversion functions.

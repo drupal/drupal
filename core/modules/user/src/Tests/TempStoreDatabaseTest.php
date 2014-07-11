@@ -14,8 +14,9 @@ use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests the TempStore namespace.
+ * Tests the temporary object storage system.
  *
+ * @group user
  * @see \Drupal\Core\TempStore\TempStore.
  */
 class TempStoreDatabaseTest extends UnitTestBase {
@@ -47,14 +48,6 @@ class TempStoreDatabaseTest extends UnitTestBase {
    * @var array
    */
   protected $objects = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'TempStore',
-      'description' => 'Tests the temporary object storage system.',
-      'group' => 'TempStore',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

@@ -12,9 +12,8 @@ use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests random data generation.
- *
- * @see \Drupal\Component\Utility\Random
+ * @coversDefaultClass \Drupal\Component\Utility\Random
+ * @group Utility
  */
 class RandomTest extends UnitTestCase {
 
@@ -26,14 +25,6 @@ class RandomTest extends UnitTestCase {
    * @var string
    */
   protected $firstStringGenerated = '';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Random data generation tests',
-      'description' => 'Confirm that Random::name() and Random::string() work correctly.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests unique random string generation.

@@ -10,7 +10,9 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\migrate_drupal\Tests\MigrateFullDrupalTestBase;
 
 /**
- * Test the complete Drupal 6 migration.
+ * Tests the complete Drupal 6 migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
 
@@ -135,17 +137,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_vocabulary_field_instance',
     'd6_vocabulary_field',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate Drupal 6',
-      'description'  => 'Test every Drupal 6 migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

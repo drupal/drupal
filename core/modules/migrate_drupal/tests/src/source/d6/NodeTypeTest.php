@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 node type source.
+ * Tests D6 node type source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class NodeTypeTest extends MigrateSqlSourceTestCase {
 
@@ -73,17 +72,6 @@ class NodeTypeTest extends MigrateSqlSourceTestCase {
   protected function setUp() {
     $this->databaseContents['node_type'] = $this->expectedResults;
     parent::setUp();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 node type source functionality',
-      'description' => 'Tests D6 node type source plugin.',
-      'group' => 'Migrate Drupal',
-    );
   }
 
 }

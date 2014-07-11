@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests IP address banning.
+ *
+ * @group ban
  */
 class IpAddressBlockingTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class IpAddressBlockingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('ban');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'IP address banning',
-      'description' => 'Test IP address banning.',
-      'group' => 'Ban',
-    );
-  }
 
   /**
    * Tests various user input to confirm correct validation and saving of data.

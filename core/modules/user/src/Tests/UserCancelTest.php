@@ -12,7 +12,9 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 
 /**
- * Test cancelling a user.
+ * Ensure that account cancellation methods work as expected.
+ *
+ * @group user
  */
 class UserCancelTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class UserCancelTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cancel account',
-      'description' => 'Ensure that account cancellation methods work as expected.',
-      'group' => 'User',
-    );
-  }
 
   function setUp() {
     parent::setUp();

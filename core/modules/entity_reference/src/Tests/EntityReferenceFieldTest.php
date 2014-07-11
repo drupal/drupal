@@ -14,6 +14,8 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests for the entity reference field.
+ *
+ * @group entity_reference
  */
 class EntityReferenceFieldTest extends EntityUnitTestBase {
 
@@ -65,14 +67,6 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('entity_reference');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference field',
-      'description' => 'Tests the entity reference field.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

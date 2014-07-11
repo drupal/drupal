@@ -9,16 +9,10 @@ namespace Drupal\search\Tests;
 
 /**
  * Tests that searching for a phrase gets the correct page count.
+ *
+ * @group search
  */
 class SearchExactTest extends SearchTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Search engine phrase queries',
-      'description' => 'Tests that searching for a phrase gets the correct page count.',
-      'group' => 'Search',
-    );
-  }
-
   /**
    * Tests that the correct number of pager links are found for both keywords and phrases.
    */

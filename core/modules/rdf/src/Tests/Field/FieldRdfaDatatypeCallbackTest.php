@@ -8,6 +8,8 @@ namespace Drupal\rdf\Tests\Field;
 
 /**
  * Tests the RDFa output of a text field formatter with a datatype callback.
+ *
+ * @group rdf
  */
 class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
 
@@ -20,14 +22,6 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('text', 'filter');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field formatter: datatype callback',
-      'description' => 'Tests RDFa output for field formatters with a datatype callback.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

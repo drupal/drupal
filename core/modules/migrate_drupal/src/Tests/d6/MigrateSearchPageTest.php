@@ -12,7 +12,9 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests Drupal 6 search settings to Drupal 8 search page entity migration.
+ * Upgrade search rank settings to search.page.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSearchPageTest extends MigrateDrupalTestBase {
 
@@ -22,17 +24,6 @@ class MigrateSearchPageTest extends MigrateDrupalTestBase {
    * @var array
    */
   static $modules = array('node', 'search');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate search settings to search.page.*.yml',
-      'description'  => 'Upgrade search rank settings to search.page.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

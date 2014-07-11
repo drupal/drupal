@@ -10,20 +10,11 @@ namespace Drupal\locale\Tests\Menu;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 
 /**
- * Tests existence of locale local tasks.
+ * Tests locale local tasks.
  *
- * @group Drupal
- * @group Locale
+ * @group locale
  */
 class LocaleLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Locale local tasks test',
-      'description' => 'Test locale local tasks.',
-      'group' => 'Locale',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array(

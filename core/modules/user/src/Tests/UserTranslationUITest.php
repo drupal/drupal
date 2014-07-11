@@ -11,6 +11,8 @@ use Drupal\content_translation\Tests\ContentTranslationUITest;
 
 /**
  * Tests the User Translation UI.
+ *
+ * @group user
  */
 class UserTranslationUITest extends ContentTranslationUITest {
 
@@ -25,14 +27,6 @@ class UserTranslationUITest extends ContentTranslationUITest {
    * @var array
    */
   public static $modules = array('language', 'content_translation', 'user', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User translation UI',
-      'description' => 'Tests the user translation UI.',
-      'group' => 'User',
-    );
-  }
 
   function setUp() {
     $this->entityTypeId = 'user';

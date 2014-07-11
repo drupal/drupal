@@ -14,6 +14,8 @@ use Drupal\user\Entity\User;
 
 /**
  * Tests the user role condition.
+ *
+ * @group user
  */
 class UserRoleConditionTest extends KernelTestBase {
 
@@ -51,17 +53,6 @@ class UserRoleConditionTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array('system', 'user', 'field');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'User role condition plugin',
-      'description' => 'Tests the user role condition',
-      'group' => 'Condition API',
-    );
-  }
 
   /**
    * {@inheritdoc}

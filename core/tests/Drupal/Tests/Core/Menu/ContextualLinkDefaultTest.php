@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests the contextual link default class.
  *
- * @group Drupal
  * @group Menu
  */
 class ContextualLinkDefaultTest extends UnitTestCase {
@@ -56,14 +55,6 @@ class ContextualLinkDefaultTest extends UnitTestCase {
    * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $stringTranslation;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contextual links default.',
-      'description' => 'Tests the contextual link default class.',
-      'group' => 'Menu',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

@@ -10,7 +10,10 @@ namespace Drupal\simpletest\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test Folder creation
+ * This test will check SimpleTest's treatment of hook_install during setUp. 
+ * Image module is used for test.
+ *
+ * @group simpletest
  */
 class FolderTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class FolderTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('image');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Testing SimpleTest setUp',
-      'description' => "This test will check SimpleTest's treatment of hook_install during setUp.  Image module is used for test.",
-      'group' => 'SimpleTest',
-    );
-  }
 
   function testFolderSetup() {
     $directory = file_default_scheme() . '://styles';

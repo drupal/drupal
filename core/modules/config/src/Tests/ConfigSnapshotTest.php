@@ -12,6 +12,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests config snapshot creation and updating.
+ *
+ * @group config
  */
 class ConfigSnapshotTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('config_test', 'system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Snapshot functionality',
-      'description' => 'Config snapshot creation and updating.',
-      'group' => 'Configuration',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

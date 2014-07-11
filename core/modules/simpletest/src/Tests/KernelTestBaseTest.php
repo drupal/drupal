@@ -11,6 +11,8 @@ use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests KernelTestBase functionality.
+ *
+ * @group simpletest
  */
 class KernelTestBaseTest extends KernelTestBase {
 
@@ -20,14 +22,6 @@ class KernelTestBaseTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array('entity', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'KernelTestBase',
-      'description' => 'Tests KernelTestBase functionality.',
-      'group' => 'SimpleTest',
-    );
-  }
 
   /**
    * {@inheritdoc}

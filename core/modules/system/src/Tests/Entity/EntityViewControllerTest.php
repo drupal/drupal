@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests \Drupal\Core\Entity\Controller\EntityViewController.
+ * Tests EntityViewController functionality.
+ *
+ * @group Entity
  */
 class EntityViewControllerTest extends WebTestBase {
 
@@ -27,14 +29,6 @@ class EntityViewControllerTest extends WebTestBase {
    * @var array
    */
   protected $entities = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity View Controller',
-      'description' => 'Tests EntityViewController functionality.',
-      'group' => 'Entity API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

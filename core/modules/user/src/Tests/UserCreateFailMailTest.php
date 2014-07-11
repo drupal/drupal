@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the create user administration page.
+ *
+ * @group user
  */
 class UserCreateFailMailTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class UserCreateFailMailTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('system_mail_failure_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User create with failed mail function',
-      'description' => 'Test the create user administration page.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Tests the create user administration page.

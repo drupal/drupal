@@ -12,6 +12,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests exposing field definitions for configurable fields.
+ *
+ * @group field
  */
 class ConfigFieldDefinitionTest extends FieldUnitTestBase {
 
@@ -21,17 +23,6 @@ class ConfigFieldDefinitionTest extends FieldUnitTestBase {
    * @var \Drupal\Core\Entity\EntityManagerInterface;
    */
   protected $entityManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Config field definitions',
-      'description' => 'Tests exposing field definitions for configurable fields.',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * {@inheritdoc}

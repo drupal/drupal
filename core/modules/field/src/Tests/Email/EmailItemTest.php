@@ -13,6 +13,8 @@ use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the email field type.
+ *
+ * @group field
  */
 class EmailItemTest extends FieldUnitTestBase {
 
@@ -22,14 +24,6 @@ class EmailItemTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array('email');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Email field item',
-      'description' => 'Tests the new entity API for the email field type.',
-      'group' => 'Field types',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

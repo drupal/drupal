@@ -13,7 +13,9 @@ use Drupal\Component\Plugin\Discovery\StaticDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 
 /**
- * Tests \Drupal\Core\Plugin\Discovery\CacheDecorator behavior.
+ * Tests the CacheDecorator.
+ *
+ * @group Plugin
  */
 class CacheDecoratorTest extends DiscoveryTestBase {
 
@@ -30,14 +32,6 @@ class CacheDecoratorTest extends DiscoveryTestBase {
    * @var string
    */
   protected $cacheKey = 'test_cacheDecorator';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CacheDecorator',
-      'description' => 'Tests the CacheDecorator.',
-      'group' => 'Plugin API',
-    );
-  }
 
   public function setUp() {
 

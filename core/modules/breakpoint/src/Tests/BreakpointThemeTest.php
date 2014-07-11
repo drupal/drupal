@@ -11,17 +11,11 @@ use Drupal\breakpoint\Entity\BreakpointGroup;
 use Drupal\breakpoint\Entity\Breakpoint;
 
 /**
- * Test breakpoints provided by themes.
+ * Thoroughly test the breakpoints provided by a theme.
+ *
+ * @group breakpoint
  */
 class BreakpointThemeTest extends BreakpointGroupTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Breakpoint theme functionality',
-      'description' => 'Thoroughly test the breakpoints provided by a theme.',
-      'group' => 'Breakpoint',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

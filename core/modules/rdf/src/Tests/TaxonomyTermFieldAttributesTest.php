@@ -12,6 +12,8 @@ use Drupal\taxonomy\Tests\TaxonomyTestBase;
 
 /**
  * Tests RDFa markup generation for taxonomy term fields.
+ *
+ * @group rdf
  */
 class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
 
@@ -35,14 +37,6 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
    * @var \Drupal\taxonomy\VocabularyInterface
    */
   protected $vocabulary;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDFa markup for taxonomy term fields',
-      'description' => 'Tests the RDFa markup of taxonomy term fields.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

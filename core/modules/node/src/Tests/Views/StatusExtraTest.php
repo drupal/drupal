@@ -10,6 +10,7 @@ namespace Drupal\node\Tests\Views;
 /**
  * Tests the node.status_extra field handler.
  *
+ * @group node
  * @see \Drupal\node\Plugin\views\filter\Status
  */
 class StatusExtraTest extends NodeTestBase {
@@ -20,14 +21,6 @@ class StatusExtraTest extends NodeTestBase {
    * @var array
    */
   public static $testViews = array('test_status_extra');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Status extra filter',
-      'description' => 'Tests the node.status_extra filter handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the status extra filter.

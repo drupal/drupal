@@ -11,7 +11,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for update translations.
+ * Tests for updating the interface translations of projects.
+ *
+ * @group locale
  */
 class LocaleUpdateTest extends LocaleUpdateBase {
 
@@ -21,14 +23,6 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    * @var array
    */
   public static $modules = array('update', 'locale', 'locale_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update translations',
-      'description' => 'Tests for updating the interface translations of projects.',
-      'group' => 'Locale',
-    );
-  }
 
   function setUp() {
     parent::setUp();

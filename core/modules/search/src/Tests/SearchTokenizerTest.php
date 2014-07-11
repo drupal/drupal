@@ -8,17 +8,11 @@
 namespace Drupal\search\Tests;
 
 /**
- * Test the CJK tokenizer.
+ * Tests that CJK tokenizer works as intended.
+ *
+ * @group search
  */
 class SearchTokenizerTest extends SearchTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'CJK tokenizer',
-      'description' => 'Check that CJK tokenizer works as intended.',
-      'group' => 'Search',
-    );
-  }
-
   /**
    * Verifies that strings of CJK characters are tokenized.
    *

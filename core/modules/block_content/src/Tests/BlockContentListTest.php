@@ -12,6 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests the listing of custom blocks.
  *
+ * @group block_content
  * @see \Drupal\block\BlockContentListBuilder
  */
 class BlockContentListTest extends WebTestBase {
@@ -22,14 +23,6 @@ class BlockContentListTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'block_content', 'config_translation');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block listing',
-      'description' => 'Tests the listing of custom blocks.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Tests the custom block listing page.

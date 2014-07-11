@@ -11,7 +11,10 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\system\Tests\Module\ModuleTestBase;
 
 /**
- * Tests importing all configuration from Standard profile and all core modules.
+ * Tests the largest configuration import possible with the modules and profiles
+ * provided by core.
+ *
+ * @group config
  */
 class ConfigImportAllTest extends ModuleTestBase {
 
@@ -23,14 +26,6 @@ class ConfigImportAllTest extends ModuleTestBase {
    * @var string
    */
   protected $profile = 'standard';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Import configuration from all modules and the standard profile',
-      'description' => 'Tests the largest configuration import possible with the modules and profiles provided by core.',
-      'group' => 'Configuration',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

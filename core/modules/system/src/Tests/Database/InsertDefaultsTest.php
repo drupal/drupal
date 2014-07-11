@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Query\NoFieldsException;
 
 /**
- * Tests insertion for database default values.
+ * Tests the Insert query builder with default values.
+ *
+ * @group Database
  */
 class InsertDefaultsTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Insert tests, default fields',
-      'description' => 'Test the Insert query builder with default values.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests that we can run a query that uses default values for everything.

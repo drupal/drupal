@@ -9,16 +9,10 @@ namespace Drupal\taxonomy\Tests;
 
 /**
  * Tests the taxonomy vocabulary permissions.
+ *
+ * @group taxonomy
  */
 class VocabularyPermissionsTest extends TaxonomyTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy vocabulary permissions',
-      'description' => 'Test the taxonomy vocabulary permissions.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   /**
    * Create, edit and delete a taxonomy term via the user interface.

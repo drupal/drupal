@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Locale module.
+ * Upgrade variables to locale.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateLocaleConfigsTest extends MigrateDrupalTestBase {
 
@@ -24,17 +26,6 @@ class MigrateLocaleConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('locale');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to locale.settings.yml',
-      'description'  => 'Upgrade variables to locale.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

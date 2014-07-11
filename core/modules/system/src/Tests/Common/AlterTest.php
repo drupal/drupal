@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests alteration of arguments passed to \Drupal::moduleHandler->alter().
+ *
+ * @group Common
  */
 class AlterTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class AlterTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'common_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Alter hook functionality',
-      'description' => 'Tests alteration of arguments passed to \Drupal::moduleHandler->alter().',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests if the theme has been altered.

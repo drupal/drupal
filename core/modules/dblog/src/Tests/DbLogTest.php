@@ -12,7 +12,10 @@ use Drupal\dblog\Controller\DbLogController;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests logging messages to the database.
+ * Generate events and verify dblog entries; verify user access to log reports
+ * based on persmissions.
+ *
+ * @group dblog
  */
 class DbLogTest extends WebTestBase {
 
@@ -36,14 +39,6 @@ class DbLogTest extends WebTestBase {
    * @var object
    */
   protected $any_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'DbLog functionality',
-      'description' => 'Generate events and verify dblog entries; verify user access to log reports based on persmissions.',
-      'group' => 'DbLog',
-    );
-  }
 
   function setUp() {
     parent::setUp();

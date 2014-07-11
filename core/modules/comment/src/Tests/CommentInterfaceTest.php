@@ -12,17 +12,11 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Entity\Comment;
 
 /**
- * Tests the comment module administrative and end-user-facing interfaces.
+ * Tests comment user interfaces.
+ *
+ * @group comment
  */
 class CommentInterfaceTest extends CommentTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment interface',
-      'description' => 'Test comment user interfaces.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Tests the comment interface.

@@ -11,7 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the administrative functionality of the Filter module.
+ * Thoroughly test the administrative interface of the filter module.
+ *
+ * @group filter
  */
 class FilterAdminTest extends WebTestBase {
 
@@ -19,17 +21,6 @@ class FilterAdminTest extends WebTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('filter', 'node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter administration functionality',
-      'description' => 'Thoroughly test the administrative interface of the filter module.',
-      'group' => 'Filter',
-    );
-  }
 
   /**
    * {@inheritdoc}

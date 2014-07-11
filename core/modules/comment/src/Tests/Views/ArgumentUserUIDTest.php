@@ -10,7 +10,9 @@ namespace Drupal\comment\Tests\Views;
 use Drupal\views\Views;
 
 /**
- * Tests the argument_comment_user_uid handler.
+ * Tests the user posted or commented argument handler.
+ *
+ * @group comment
  */
 class ArgumentUserUIDTest extends CommentTestBase {
 
@@ -20,14 +22,6 @@ class ArgumentUserUIDTest extends CommentTestBase {
    * @var array
    */
   public static $testViews = array('test_comment_user_uid');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment: User UID Argument',
-      'description' => 'Tests the user posted or commented argument handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   function testCommentUserUIDTest() {
     $view = Views::getView('test_comment_user_uid');

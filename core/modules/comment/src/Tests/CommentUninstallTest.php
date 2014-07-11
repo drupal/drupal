@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests comment module uninstallation.
+ *
+ * @group comment
  */
 class CommentUninstallTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class CommentUninstallTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('comment', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment uninstallation',
-      'description' => 'Tests comment module uninstallation.',
-      'group' => 'Comment',
-    );
-  }
 
   protected function setUp() {
     parent::setup();

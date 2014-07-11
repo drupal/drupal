@@ -10,12 +10,8 @@ use Drupal\migrate\Plugin\migrate\process\DedupeEntity;
 use Drupal\Component\Utility\Unicode;
 
 /**
- * Test the deduplication entity process plugin.
- *
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\DedupeEntity
  * @group migrate
- * @group Drupal
- *
- * @see \Drupal\migrate\Plugin\migrate\process\DedupeEntity
  */
 class DedupeEntityTest extends MigrateProcessTestCase {
 
@@ -42,17 +38,6 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   protected $migrationConfiguration = array(
     'id' => 'test',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Dedupe entity process plugin',
-      'description' => 'Tests the entity deduplication process plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * {@inheritdoc}

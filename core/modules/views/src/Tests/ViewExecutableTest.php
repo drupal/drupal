@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Tests the ViewExecutable class.
  *
+ * @group views
  * @see \Drupal\views\ViewExecutable
  */
 class ViewExecutableTest extends ViewUnitTestBase {
@@ -74,14 +75,6 @@ class ViewExecutableTest extends ViewUnitTestBase {
     'old_view',
     'parent_views',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View executable tests',
-      'description' => 'Tests the ViewExecutable class.',
-      'group' => 'Views'
-    );
-  }
 
   protected function setUpFixtures() {
     $this->installEntitySchema('user');

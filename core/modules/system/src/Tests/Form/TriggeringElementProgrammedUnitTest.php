@@ -13,18 +13,12 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests detection of triggering_element for programmed form submissions.
+ *
+ * @group Form
  */
 class TriggeringElementProgrammedUnitTest extends DrupalUnitTestBase implements FormInterface {
 
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form triggering element programmed determination',
-      'description' => 'Tests detection of triggering_element for programmed form submissions.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * {@inheritdoc}

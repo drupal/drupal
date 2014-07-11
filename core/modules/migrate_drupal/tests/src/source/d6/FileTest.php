@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 file source.
+ * Tests D6 file source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class FileTest extends MigrateSqlSourceTestCase {
 
@@ -52,17 +51,6 @@ class FileTest extends MigrateSqlSourceTestCase {
       'timestamp' => 1382255662,
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 file source functionality',
-      'description' => 'Tests D6 file source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

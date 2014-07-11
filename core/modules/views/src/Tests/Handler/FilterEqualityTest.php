@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\Equality handler.
+ *
+ * @group views
  */
 class FilterEqualityTest extends ViewUnitTestBase {
 
@@ -27,14 +29,6 @@ class FilterEqualityTest extends ViewUnitTestBase {
   protected $column_map = array(
     'views_test_data_name' => 'name',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Equality',
-      'description' => 'Test the core Drupal\views\Plugin\views\filter\Equality handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

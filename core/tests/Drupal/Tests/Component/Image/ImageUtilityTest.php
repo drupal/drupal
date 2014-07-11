@@ -11,19 +11,10 @@ use Drupal\Component\Utility\Image;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Image utility component.
- *
- * @see \Drupal\Component\Utility\Image
+ * @coversDefaultClass \Drupal\Component\Utility\Image
+ * @group Image
  */
 class ImageUtilityTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests for the Image component',
-      'description' => 'Tests all control flow branches in \Drupal\Component\Utility\Image.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * Tests all control flow branches in image_dimensions_scale().

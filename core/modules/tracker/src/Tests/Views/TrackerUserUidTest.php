@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the tracker user uid handlers.
+ *
+ * @group tracker
  */
 class TrackerUserUidTest extends TrackerTestBase {
 
@@ -20,14 +22,6 @@ class TrackerUserUidTest extends TrackerTestBase {
    * @var array
    */
   public static $testViews = array('test_tracker_user_uid');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tracker: User UID tests',
-      'description' => 'Tests the tracker comment user uid handlers.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the user uid filter and argument.

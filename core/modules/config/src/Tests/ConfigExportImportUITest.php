@@ -11,11 +11,13 @@ use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Performs various configuration import/export scenarios through the UI.
+ * Tests the user interface for importing/exporting configuration.
  *
  * Each testX method does a complete rebuild of a Drupal site, so values being
  * tested need to be stored in protected properties in order to survive until
  * the next rebuild.
+ *
+ * @group config
  */
 class ConfigExportImportUITest extends WebTestBase {
 
@@ -32,17 +34,6 @@ class ConfigExportImportUITest extends WebTestBase {
    * @var array
    */
   public static $modules = array('config', 'node', 'field');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Export/import UI',
-      'description' => 'Tests the user interface for importing/exporting configuration.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * {@inheritdoc}

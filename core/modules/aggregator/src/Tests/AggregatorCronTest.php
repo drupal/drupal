@@ -8,17 +8,11 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests functionality of the cron process in the Aggregator module.
+ * Update feeds on cron.
+ *
+ * @group aggregator
  */
 class AggregatorCronTest extends AggregatorTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Update on cron functionality',
-      'description' => 'Update feeds on cron.',
-      'group' => 'Aggregator'
-    );
-  }
-
   /**
    * Adds feeds and updates them via cron process.
    */

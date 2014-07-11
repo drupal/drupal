@@ -11,21 +11,10 @@ use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the plugin base.
- *
- * @group Drupal
- *
- * @see \Drupal\Component\Plugin\PluginBase
+ * @coversDefaultClass \Drupal\Component\Plugin\PluginBase
+ * @group Plugin
  */
 class PluginBaseTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Plugin base test',
-      'description' => 'Tests the plugin base',
-      'group' => 'Plugin',
-    );
-  }
 
   /**
    * Tests the getPluginId method.

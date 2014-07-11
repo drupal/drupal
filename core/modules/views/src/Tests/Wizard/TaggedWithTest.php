@@ -11,6 +11,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
+ *
+ * @group views
  */
 class TaggedWithTest extends WizardTestBase {
 
@@ -30,14 +32,6 @@ class TaggedWithTest extends WizardTestBase {
   protected $tag_field;
 
   protected $tag_instance;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy functionality',
-      'description' => 'Test the ability of the views wizard to create views filtered by taxonomy.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   function setUp() {
     parent::setUp();

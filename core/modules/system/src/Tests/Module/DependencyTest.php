@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Module;
 
 /**
- * Tests module dependency functionality.
+ * Enable module without dependency enabled.
+ *
+ * @group Module
  */
 class DependencyTest extends ModuleTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Module dependencies',
-      'description' => 'Enable module without dependency enabled.',
-      'group' => 'Module',
-    );
-  }
-
   /**
    * Attempts to enable the Content Translation module without Language enabled.
    */

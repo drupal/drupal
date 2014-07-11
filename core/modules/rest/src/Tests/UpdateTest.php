@@ -11,7 +11,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
- * Tests resource updates on test entities.
+ * Tests the update of resources.
+ *
+ * @group rest
  */
 class UpdateTest extends RESTTestBase {
 
@@ -21,14 +23,6 @@ class UpdateTest extends RESTTestBase {
    * @var array
    */
   public static $modules = array('hal', 'rest', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update resource',
-      'description' => 'Tests the update of resources.',
-      'group' => 'REST',
-    );
-  }
 
   /**
    * Tests several valid and invalid partial update requests on test entities.

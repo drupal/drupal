@@ -11,7 +11,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the functionality of the Book module.
+ * Create a book, add pages, and test book interface.
+ *
+ * @group book
  */
 class BookTest extends WebTestBase {
 
@@ -49,14 +51,6 @@ class BookTest extends WebTestBase {
    * @var object
    */
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Book functionality',
-      'description' => 'Create a book, add pages, and test book interface.',
-      'group' => 'Book',
-    );
-  }
 
   function setUp() {
     parent::setUp();

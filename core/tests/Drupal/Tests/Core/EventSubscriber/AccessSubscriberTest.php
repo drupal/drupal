@@ -20,12 +20,8 @@ use Symfony\Component\Routing\Route;
 
 
 /**
- * Tests the AccessSubscriber class.
- *
- * @see \Drupal\Core\EventSubscriber\AccessSubscriber
- *
- * @group System
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\AccessSubscriber
+ * @group EventSubscriber
  */
 class AccessSubscriberTest extends UnitTestCase {
 
@@ -58,17 +54,6 @@ class AccessSubscriberTest extends UnitTestCase {
    * @var Drupal\Core\Session\AccountInterface|PHPUnit_Framework_MockObject_MockObject
    */
   protected $currentUser;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Access subscriber',
-      'description' => 'Tests the access subscriber',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

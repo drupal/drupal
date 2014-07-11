@@ -11,7 +11,9 @@ use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
 /**
- * Tests basic node_revision table integration into views.
+ * Tests the integration of node_revision table of node module.
+ *
+ * @group node
  */
 class RevisionRelationshipsTest extends ViewTestBase {
 
@@ -34,14 +36,6 @@ class RevisionRelationshipsTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_node_revision_nid', 'test_node_revision_vid');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Revision integration',
-      'description' => 'Tests the integration of node_revision table of node module',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Create a node with revision and rest result count for both views.

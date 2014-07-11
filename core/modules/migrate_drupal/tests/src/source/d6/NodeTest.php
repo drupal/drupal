@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 node source
+ * Tests D6 node source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class NodeTest extends MigrateSqlSourceTestCase {
 
@@ -99,17 +98,6 @@ class NodeTest extends MigrateSqlSourceTestCase {
       'format' => 1,
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 node source functionality',
-      'description' => 'Tests D6 node source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -12,9 +12,8 @@ use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the user session object.
- *
  * @coversDefaultClass \Drupal\Core\Session\UserSession
+ * @group Session
  */
 class UserSessionTest extends UnitTestCase {
 
@@ -24,14 +23,6 @@ class UserSessionTest extends UnitTestCase {
    * @var \Drupal\Core\Session\AccountInterface[]
    */
   protected $users = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User session object',
-      'description' => 'Tests the user session object.',
-      'group' => 'Session',
-    );
-  }
 
   /**
    * Provides test data for getHasPermission().

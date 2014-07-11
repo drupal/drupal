@@ -12,12 +12,8 @@ use Drupal\locale\LocaleLookup;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests locale translation language fallback.
- *
- * @group Drupal
- * @group Locale
- *
  * @coversDefaultClass \Drupal\locale\LocaleLookup
+ * @group locale
  */
 class LocaleLookupTest extends UnitTestCase {
 
@@ -62,17 +58,6 @@ class LocaleLookupTest extends UnitTestCase {
    * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $languageManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Locale language fallback tests',
-      'description' => 'Test locale module language fallback implementation.',
-      'group' => 'locale',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,17 +11,12 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 
 /**
- * Test token replacement in strings.
+ * Generates text using placeholders for dummy content to check token
+ * replacement.
+ *
+ * @group system
  */
 class TokenReplaceUnitTest extends TokenReplaceUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Token replacement unit test',
-      'description' => 'Generates text using placeholders for dummy content to check token replacement.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Test whether token-replacement works in various contexts.

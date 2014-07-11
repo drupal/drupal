@@ -12,19 +12,10 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the base block plugin.
- *
- * @see \Drupal\block\BlockBase
+ * @coversDefaultClass \Drupal\block\BlockBase
+ * @group block
  */
 class BlockBaseTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Base plugin',
-      'description' => 'Tests the base block plugin.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Tests the machine name suggestion.

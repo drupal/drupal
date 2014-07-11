@@ -13,6 +13,8 @@ use Drupal\views_test_data\Plugin\views\query\QueryTest as QueryTestPlugin;
 
 /**
  * Tests query plugins.
+ *
+ * @group views_ui
  */
 class QueryTest extends UITestBase {
 
@@ -22,14 +24,6 @@ class QueryTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Query: UI',
-      'description' => 'Tests query plugins UI.',
-      'group' => 'Views UI'
-    );
-  }
 
   /**
    * Overrides \Drupal\views\Tests\ViewTestBase::viewsData().

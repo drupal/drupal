@@ -11,7 +11,9 @@ use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests pagination with a node access module enabled.
+ * Tests access controlled node views have the right amount of comment pages.
+ *
+ * @group node
  */
 class NodeAccessPagerTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class NodeAccessPagerTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node_access_test', 'comment', 'forum');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access pagination',
-      'description' => 'Test access controlled node views have the right amount of comment pages.',
-      'group' => 'Node',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

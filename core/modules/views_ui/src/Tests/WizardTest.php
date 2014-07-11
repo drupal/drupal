@@ -12,22 +12,12 @@ use Drupal\views\Tests\Wizard\WizardTestBase;
 /**
  * Tests the wizard.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\display\DisplayPluginBase
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
  */
 class WizardTest extends WizardTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Views UI: Wizard',
-      'description' => 'Tests the wizard.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   /**
    * Tests filling in the wizard with really long strings.

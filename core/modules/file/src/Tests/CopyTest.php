@@ -8,17 +8,11 @@
 namespace Drupal\file\Tests;
 
 /**
- * Copy related tests.
+ * Tests the file copy function.
+ *
+ * @group file
  */
 class CopyTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File copying',
-      'description' => 'Tests the file copy function.',
-      'group' => 'File Managed API',
-    );
-  }
-
   /**
    * Test file copying in the normal, base case.
    */

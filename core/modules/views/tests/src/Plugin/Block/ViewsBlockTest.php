@@ -18,9 +18,8 @@ if (!defined('BLOCK_LABEL_VISIBLE')) {
 }
 
 /**
- * Tests the views block plugin.
- *
- * @see \Drupal\views\Plugin\block\ViewsBlock
+ * @coversDefaultClass \Drupal\views\Plugin\block\ViewsBlock
+ * @group views
  */
 class ViewsBlockTest extends UnitTestCase {
 
@@ -58,14 +57,6 @@ class ViewsBlockTest extends UnitTestCase {
    * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $account;
-
-  public static function getInfo() {
-    return array(
-      'name' => ' Block: Views block',
-      'description' => 'Tests the views block plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

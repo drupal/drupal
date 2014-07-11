@@ -10,7 +10,9 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Web test class for the multilanguage fields logic.
+ * Tests multilanguage fields logic that require a full environment.
+ *
+ * @group field
  */
 class TranslationWebTest extends FieldTestBase {
 
@@ -48,14 +50,6 @@ class TranslationWebTest extends FieldTestBase {
    * @var \Drupal\field\Entity\FieldInstanceConfig
    */
   protected $instance;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field translations web tests',
-      'description' => 'Test multilanguage fields logic that require a full environment.',
-      'group' => 'Field API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -19,6 +19,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests deriving metadata of core data types.
+ *
+ * @group TypedData
  */
 class TypedDataDefinitionTest extends DrupalUnitTestBase {
 
@@ -28,14 +30,6 @@ class TypedDataDefinitionTest extends DrupalUnitTestBase {
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
   protected $typedDataManager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Typed data definitions',
-      'description' => 'Tests reading and deriving metadata of core data types.',
-      'group' => 'Typed Data API',
-    );
-  }
 
   public function setUp() {
     parent::setup();

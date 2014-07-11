@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests for common theme functions.
+ *
+ * @group Theme
  */
 class FunctionsTest extends WebTestBase {
 
@@ -24,14 +26,6 @@ class FunctionsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('router_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme functions',
-      'description' => 'Tests common theme functions.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Tests theme_item_list().

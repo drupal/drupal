@@ -11,6 +11,8 @@ use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
  * Tests the User entity's cache tags.
+ *
+ * @group user
  */
 class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
@@ -18,13 +20,6 @@ class UserCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('user');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('User', 'User');
-  }
 
   /**
    * {@inheritdoc}

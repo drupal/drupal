@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Deletion related tests on remote filesystems.
+ * Tests the unmanaged file delete recursive function.
+ *
+ * @group File
  */
 class RemoteFileUnmanagedDeleteRecursiveTest extends UnmanagedDeleteRecursiveTest {
 
@@ -32,12 +34,6 @@ class RemoteFileUnmanagedDeleteRecursiveTest extends UnmanagedDeleteRecursiveTes
    * @var string
    */
   protected $classname = 'Drupal\file_test\DummyRemoteStreamWrapper';
-
-  public static function getInfo() {
-    $info = parent::getInfo();
-    $info['group'] = 'File API (remote)';
-    return $info;
-  }
 
   function setUp() {
     parent::setUp();

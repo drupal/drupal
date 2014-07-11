@@ -12,7 +12,9 @@ use Drupal\Core\Archiver\Tar;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests exporting configuration from active store in files.
+ * Tests the user interface for exporting configuration.
+ *
+ * @group config
  */
 class ConfigExportUITest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class ConfigExportUITest extends WebTestBase {
    * @var array
    */
   public static $modules = array('config', 'config_test', 'config_export_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Export UI',
-      'description' => 'Tests the user interface for exporting configuration.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * {@inheritdoc}

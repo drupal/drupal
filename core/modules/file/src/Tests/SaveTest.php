@@ -10,17 +10,11 @@ namespace Drupal\file\Tests;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Tests saving files.
+ * File saving tests.
+ *
+ * @group file
  */
 class SaveTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File saving',
-      'description' => 'File saving tests',
-      'group' => 'File Managed API',
-    );
-  }
-
   function testFileSave() {
     // Create a new file entity.
     $file = entity_create('file', array(

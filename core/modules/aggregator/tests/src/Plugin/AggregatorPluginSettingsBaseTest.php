@@ -11,10 +11,9 @@ use Drupal\aggregator\Form\SettingsForm;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests plugins settings on aggregator plugins.
+ * Tests settings configuration of individual aggregator plugins.
  *
- * @group Drupal
- * @group Aggregator
+ * @group aggregator
  */
 class AggregatorPluginSettingsBaseTest extends UnitTestCase {
 
@@ -38,14 +37,6 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
    * @var array
    */
   protected $managers;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Aggregator plugin settings tests',
-      'description' => 'Test settings configuration of individual aggregator plugins.',
-      'group' => 'Aggregator',
-    );
-  }
 
   public function setUp() {
     $this->configFactory = $this->getConfigFactoryStub(

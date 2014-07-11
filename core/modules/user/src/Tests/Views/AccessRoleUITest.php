@@ -13,6 +13,7 @@ use Drupal\views_ui\Tests\UITestBase;
 /**
  * Tests views role access plugin UI.
  *
+ * @group user
  * @see Drupal\user\Plugin\views\access\Role
  */
 class AccessRoleUITest extends UITestBase {
@@ -30,17 +31,6 @@ class AccessRoleUITest extends UITestBase {
    * @var array
    */
   public static $modules = array('user', 'user_test_views');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Access role (UI)',
-      'description' => 'Tests views role access plugin UI.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

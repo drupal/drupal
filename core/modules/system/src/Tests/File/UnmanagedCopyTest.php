@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\File;
 use Drupal\Core\Site\Settings;
 
 /**
- * Unmanaged copy related tests.
+ * Tests the unmanaged file copy function.
+ *
+ * @group File
  */
 class UnmanagedCopyTest extends FileTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Unmanaged file copying',
-      'description' => 'Tests the unmanaged file copy function.',
-      'group' => 'File API',
-    );
-  }
-
   /**
    * Copy a normal file.
    */

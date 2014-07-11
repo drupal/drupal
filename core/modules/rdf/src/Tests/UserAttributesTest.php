@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the RDFa markup of Users.
+ *
+ * @group rdf
  */
 class UserAttributesTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class UserAttributesTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('rdf', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDFa markup for users',
-      'description' => 'Tests the RDFa markup of users.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

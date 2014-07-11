@@ -11,6 +11,8 @@ use Drupal\views_ui\Tests\UITestBase;
 
 /**
  * Tests the views UI when content_translation is enabled.
+ *
+ * @group content_translation
  */
 class ContentTranslationViewsUITest extends UITestBase {
 
@@ -27,14 +29,6 @@ class ContentTranslationViewsUITest extends UITestBase {
    * @var array
    */
   public static $modules = array('content_translation');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Content Translation: Views UI',
-      'description' => 'Tests the views UI when content translation is enabled.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the views UI.

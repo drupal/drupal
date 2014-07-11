@@ -11,7 +11,9 @@ use Drupal\Core\Lock\DatabaseLockBackend;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the lock system.
+ * Tests the Database lock backend.
+ *
+ * @group Lock
  */
 class LockUnitTest extends DrupalUnitTestBase {
 
@@ -28,14 +30,6 @@ class LockUnitTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Locking framework unit tests',
-      'description' => 'Test the Database lock backend.',
-      'group' => 'Lock',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

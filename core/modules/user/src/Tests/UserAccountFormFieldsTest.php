@@ -10,7 +10,10 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests field order and element attributes in user account forms.
+ * Verifies that the field order in user account forms is compatible with
+ * password managers of web browsers.
+ *
+ * @group user
  */
 class UserAccountFormFieldsTest extends DrupalUnitTestBase {
 
@@ -20,14 +23,6 @@ class UserAccountFormFieldsTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'user', 'entity', 'field');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User account form fields',
-      'description' => 'Verifies that the field order in user account forms is compatible with password managers of web browsers.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Tests the root user account form section in the "Configure site" form.

@@ -12,7 +12,9 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests content entity CRUD with key value entity storage.
+ * Tests KeyValueEntityStorage for content entities.
+ *
+ * @group KeyValueStore
  */
 class KeyValueContentEntityStorageTest extends DrupalUnitTestBase {
 
@@ -22,17 +24,6 @@ class KeyValueContentEntityStorageTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('entity', 'user', 'entity_test', 'keyvalue_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'KeyValueEntityStorage content entity test',
-      'description' => 'Tests KeyValueEntityStorage for content entities.',
-      'group' => 'Entity API',
-    );
-  }
 
   /**
    * Tests CRUD operations.

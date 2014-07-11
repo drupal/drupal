@@ -13,6 +13,8 @@ use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests the Comment Translation UI.
+ *
+ * @group comment
  */
 class CommentTranslationUITest extends ContentTranslationUITest {
 
@@ -27,14 +29,6 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    * @var array
    */
   public static $modules = array('language', 'content_translation', 'node', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment translation UI',
-      'description' => 'Tests the basic comment translation UI.',
-      'group' => 'Comment',
-    );
-  }
 
   function setUp() {
     $this->entityTypeId = 'comment';

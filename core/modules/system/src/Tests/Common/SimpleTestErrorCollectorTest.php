@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests SimpleTest error and exception collector.
+ *
+ * @group Common
  */
 class SimpleTestErrorCollectorTest extends WebTestBase {
 
@@ -30,14 +32,6 @@ class SimpleTestErrorCollectorTest extends WebTestBase {
    * @var Array
    */
   protected $collectedErrors = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'SimpleTest error collector',
-      'description' => 'Performs tests on the Simpletest error and exception collector.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests that simpletest collects errors from the tested site.

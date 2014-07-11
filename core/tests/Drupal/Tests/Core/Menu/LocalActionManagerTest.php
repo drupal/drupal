@@ -22,12 +22,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 /**
- * Tests the local action manager.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Menu\LocalActionManager
  * @group Menu
- *
- * @covers \Drupal\Core\Menu\LocalActionManager
  */
 class LocalActionManagerTest extends UnitTestCase {
 
@@ -100,17 +96,6 @@ class LocalActionManagerTest extends UnitTestCase {
    * @var \Drupal\Tests\Core\Menu\TestLocalActionManager
    */
   protected $localActionManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Local actions manager',
-      'description' => 'Tests the local action manager.',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * {@inheritdoc}

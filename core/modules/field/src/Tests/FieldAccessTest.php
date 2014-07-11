@@ -8,7 +8,9 @@
 namespace Drupal\field\Tests;
 
 /**
- * Tests the functionality of field access.
+ * Tests Field access.
+ *
+ * @group field
  */
 class FieldAccessTest extends FieldTestBase {
 
@@ -32,14 +34,6 @@ class FieldAccessTest extends FieldTestBase {
    * @var string
    */
   protected $test_view_field_value;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field access tests',
-      'description' => 'Test Field access.',
-      'group' => 'Field API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

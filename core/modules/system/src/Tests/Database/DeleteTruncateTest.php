@@ -17,16 +17,10 @@ namespace Drupal\system\Tests\Database;
  * The TRUNCATE tests are not extensive either, because the behavior of
  * TRUNCATE queries is not consistent across database engines. We only test
  * that a TRUNCATE query actually deletes all rows from the target table.
+ *
+ * @group Database
  */
 class DeleteTruncateTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Delete/Truncate tests',
-      'description' => 'Test the Delete and Truncate query builders.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that we can use a subselect in a delete successfully.

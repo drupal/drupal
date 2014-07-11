@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests for private node access on /tracker.
+ *
+ * @group tracker
  */
 class TrackerNodeAccessTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class TrackerNodeAccessTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'comment', 'tracker', 'node_access_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tracker Node Access Tests',
-      'description' => 'Tests for private node access on /tracker.',
-      'group' => 'Tracker',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

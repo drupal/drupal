@@ -11,9 +11,8 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the AJAX response object.
- *
- * @see \Drupal\Core\Ajax\AjaxResponse
+ * @coversDefaultClass \Drupal\Core\Ajax\AjaxResponse
+ * @group Ajax
  */
 class AjaxResponseTest extends UnitTestCase {
 
@@ -23,14 +22,6 @@ class AjaxResponseTest extends UnitTestCase {
    * @var \Drupal\Core\Ajax\AjaxResponse
    */
   protected $ajaxResponse;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Ajax Response Object',
-      'description' => 'Tests the AJAX response object.',
-      'group' => 'Ajax',
-    );
-  }
 
   protected function setUp() {
     $this->ajaxResponse = new AjaxResponse();

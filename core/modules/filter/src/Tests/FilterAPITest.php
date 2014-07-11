@@ -16,19 +16,13 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
- * Tests the behavior of Filter's API.
+ * Tests the behavior of the API of the Filter module.
+ *
+ * @group filter
  */
 class FilterAPITest extends EntityUnitTestBase {
 
   public static $modules = array('system', 'filter', 'filter_test', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter API',
-      'description' => 'Test the behavior of the API of the Filter module.',
-      'group' => 'Filter',
-    );
-  }
 
   function setUp() {
     parent::setUp();

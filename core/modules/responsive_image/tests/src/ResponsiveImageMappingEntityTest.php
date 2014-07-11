@@ -13,9 +13,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\responsive_image\Entity\ResponsiveImageMapping
- *
- * @group Drupal
- * @group Responsive_image
+ * @group responsive_image
  */
 class ResponsiveImageMappingEntityTest extends UnitTestCase {
 
@@ -67,17 +65,6 @@ class ResponsiveImageMappingEntityTest extends UnitTestCase {
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $breakpointGroupStorage;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\responsive_image\Entity\ResponsiveImageMapping unit test',
-      'group' => 'Responsive Image',
-    );
-  }
 
   /**
    * {@inheritdoc}

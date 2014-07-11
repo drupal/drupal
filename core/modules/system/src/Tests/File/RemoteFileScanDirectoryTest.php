@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Tests the file_scan_directory() function on remote filesystems.
+ * Tests the file_scan_directory() function.
+ *
+ * @group File
  */
 class RemoteFileScanDirectoryTest extends ScanDirectoryTest {
 
@@ -32,12 +34,6 @@ class RemoteFileScanDirectoryTest extends ScanDirectoryTest {
    * @var string
    */
   protected $classname = 'Drupal\file_test\DummyRemoteStreamWrapper';
-
-  public static function getInfo() {
-    $info = parent::getInfo();
-    $info['group'] = 'File API (remote)';
-    return $info;
-  }
 
   function setUp() {
     parent::setUp();

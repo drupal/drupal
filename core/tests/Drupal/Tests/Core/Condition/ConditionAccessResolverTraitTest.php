@@ -12,25 +12,10 @@ use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests resolving a set of conditions.
- *
  * @coversDefaultClass \Drupal\Core\Condition\ConditionAccessResolverTrait
- *
- * @group Drupal
  * @group Condition
  */
 class ConditionAccessResolverTraitTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests resolving a set of conditions',
-      'description' => '',
-      'group' => 'Condition',
-    );
-  }
 
   /**
    * Tests the resolveConditions() method.

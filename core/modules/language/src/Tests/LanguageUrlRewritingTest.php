@@ -12,7 +12,9 @@ use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Test that URL rewriting works as expected.
+ * Tests that URL rewriting works as expected.
+ *
+ * @group language
  */
 class LanguageUrlRewritingTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class LanguageUrlRewritingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language', 'language_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'URL rewriting',
-      'description' => 'Test that URL rewriting works as expected.',
-      'group' => 'Language',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -11,7 +11,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
 /**
- * Functional tests for language configuration's effect on negotiation setup.
+ * Tests the features of the language configuration element field.
+ *
+ * @group language
  */
 class LanguageConfigurationElementTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LanguageConfigurationElementTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'language', 'language_elements_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language configuration form element tests',
-      'description' => 'Tests the features of the language configuration element field.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * Tests the language settings have been saved.

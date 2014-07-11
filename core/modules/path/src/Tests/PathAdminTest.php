@@ -9,6 +9,8 @@ namespace Drupal\path\Tests;
 
 /**
  * Tests the Path admin UI.
+ *
+ * @group path
  */
 class PathAdminTest extends PathTestBase {
 
@@ -18,14 +20,6 @@ class PathAdminTest extends PathTestBase {
    * @var array
    */
   public static $modules = array('path');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path admin UI',
-      'description' => 'Tests the Path admin UI.',
-      'group' => 'Path',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -12,16 +12,10 @@ use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the drupal_rewrite_settings() function.
+ *
+ * @group system
  */
 class SettingsRewriteTest extends KernelTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'drupal_rewrite_settings()',
-      'description' => 'Tests the drupal_rewrite_settings() function.',
-      'group' => 'System',
-    );
-  }
-
   /**
    * Tests the drupal_rewrite_settings() function.
    */

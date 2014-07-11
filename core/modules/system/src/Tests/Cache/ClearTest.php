@@ -8,19 +8,13 @@
 namespace Drupal\system\Tests\Cache;
 
 /**
- * Tests cache clearing methods.
+ * Tests our clearing is done the proper way.
+ *
+ * @group Cache
  */
 use Drupal\Core\Cache\Cache;
 
 class ClearTest extends CacheTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cache clear test',
-      'description' => 'Check our clearing is done the proper way.',
-      'group' => 'Cache'
-    );
-  }
 
   function setUp() {
     $this->default_bin = 'render';

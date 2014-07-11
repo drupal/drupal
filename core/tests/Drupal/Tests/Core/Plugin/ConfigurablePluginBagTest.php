@@ -10,13 +10,8 @@ namespace Drupal\Tests\Core\Plugin;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 
 /**
- * Tests the default plugin bag with configurable plugins.
- *
- * @see \Drupal\Component\Plugin\ConfigurablePluginInterface
- * @see \Drupal\Core\Plugin\DefaultPluginBag
- *
- * @group Drupal
- * @group Drupal_Plugin
+ * @coversDefaultClass \Drupal\Component\Plugin\ConfigurablePluginInterface
+ * @group Plugin
  */
 class ConfigurablePluginBagTest extends PluginBagTestBase {
 
@@ -26,17 +21,6 @@ class ConfigurablePluginBagTest extends PluginBagTestBase {
    * @var \Drupal\Component\Plugin\ConfigurablePluginInterface[]
    */
   protected $pluginInstances;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Configurable plugin bag',
-      'description' => 'Tests the plugin bag with configurable plugins.',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * {@inheritdoc}

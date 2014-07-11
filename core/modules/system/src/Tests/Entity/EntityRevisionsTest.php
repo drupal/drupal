@@ -10,7 +10,10 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the basic revisioning functionality of entities.
+ * Create a entity with revisions and test viewing, saving, reverting, and
+ * deleting revisions.
+ *
+ * @group Entity
  */
 class EntityRevisionsTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class EntityRevisionsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity revisions',
-      'description' => 'Create a entity with revisions and test viewing, saving, reverting, and deleting revisions.',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

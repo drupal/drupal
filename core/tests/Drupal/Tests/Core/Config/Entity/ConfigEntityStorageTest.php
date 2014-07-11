@@ -15,8 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityStorage
- *
- * @group Drupal
+ * @group Config
  */
 class ConfigEntityStorageTest extends UnitTestCase {
 
@@ -103,17 +102,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $typedConfigManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'ConfigEntityStorage unit test',
-      'description' => 'Tests \Drupal\Core\Config\Entity\ConfigEntityStorage',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * {@inheritdoc}

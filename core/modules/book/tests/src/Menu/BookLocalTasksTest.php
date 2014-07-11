@@ -12,18 +12,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 /**
  * Tests existence of book local tasks.
  *
- * @group Drupal
- * @group Book
+ * @group book
  */
 class BookLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Book local tasks test',
-      'description' => 'Test existence of book local tasks.',
-      'group' => 'Book',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array(

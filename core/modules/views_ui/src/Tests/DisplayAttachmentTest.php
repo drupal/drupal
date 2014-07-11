@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the UI for the attachment display plugin.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\display\Attachment
  */
 class DisplayAttachmentTest extends UITestBase {
@@ -22,14 +23,6 @@ class DisplayAttachmentTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_attachment_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display: Attachment',
-      'description' => 'Tests the UI for the attachment display plugin.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the attachment UI.

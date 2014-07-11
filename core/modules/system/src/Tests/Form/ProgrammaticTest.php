@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test the programmatic form submission behavior.
+ * Tests the programmatic form submission behavior.
+ *
+ * @group Form
  */
 class ProgrammaticTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ProgrammaticTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Programmatic form submissions',
-      'description' => 'Test the programmatic form submission behavior.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Test the programmatic form submission workflow.

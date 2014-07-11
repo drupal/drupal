@@ -11,7 +11,10 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the theme interface functionality.
+ * Tests the theme interface functionality by enabling and switching themes, and
+ * using an administration theme.
+ *
+ * @group system
  */
 class ThemeTest extends WebTestBase {
 
@@ -21,14 +24,6 @@ class ThemeTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'block', 'file');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme interface functionality',
-      'description' => 'Tests the theme interface functionality by enabling and switching themes, and using an administration theme.',
-      'group' => 'System',
-    );
-  }
 
   function setUp() {
     parent::setUp();

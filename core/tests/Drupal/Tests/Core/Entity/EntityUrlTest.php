@@ -12,11 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the \Drupal\Core\Entity\EntityInterface URL methods.
- *
  * @coversDefaultClass \Drupal\Core\Entity\Entity
- *
- * @group Drupal
  * @group Entity
  */
 class EntityUrlTest extends UnitTestCase {
@@ -32,17 +28,6 @@ class EntityUrlTest extends UnitTestCase {
    * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $urlGenerator;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'EntityInterface URL test',
-      'description' => 'Unit test the EntityInterface URL methods.',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

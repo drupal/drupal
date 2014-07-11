@@ -13,24 +13,13 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the URL and domain language negotiation.
- *
- * @group Language
- *
- * @see \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl
+ * @coversDefaultClass \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl
+ * @group language
  */
 class LanguageNegotiationUrlTest extends UnitTestCase {
 
   protected $languageManager;
   protected $user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language negotiation URL',
-      'description' => 'Tests the URL/domain Language negotiation plugin',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * {@inheritdoc}

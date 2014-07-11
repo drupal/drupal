@@ -11,6 +11,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests configuration overrides via $config in settings.php.
+ *
+ * @group config
  */
 class ConfigOverrideTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'config_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration overrides',
-      'description' => 'Tests configuration overrides via $config in settings.php.',
-      'group' => 'Configuration',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

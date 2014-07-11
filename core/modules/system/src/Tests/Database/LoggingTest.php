@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests query logging.
+ * Tests the query logging facility.
+ *
+ * @group Database
  */
 class LoggingTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Query logging',
-      'description' => 'Test the query logging facility.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests that we can log the existence of a query.

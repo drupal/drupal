@@ -17,6 +17,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests validating renamed configuration in a configuration import.
+ *
+ * @group config
  */
 class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
 
@@ -33,17 +35,6 @@ class ConfigImportRenameValidationTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'user', 'node', 'field', 'text', 'entity', 'config_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration import rename validation',
-      'description' => 'Tests validating renamed configuration in a configuration import.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * {@inheritdoc}

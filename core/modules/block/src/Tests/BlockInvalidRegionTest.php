@@ -10,7 +10,10 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that a block assigned to an invalid region triggers the warning.
+ * Tests that an active block assigned to a non-existing region triggers the
+ * warning message and is disabled.
+ *
+ * @group block
  */
 class BlockInvalidRegionTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class BlockInvalidRegionTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'block_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Blocks in invalid regions',
-      'description' => 'Checks that an active block assigned to a non-existing region triggers the warning message and is disabled.',
-      'group' => 'Block',
-    );
-  }
 
   function setUp() {
     parent::setUp();

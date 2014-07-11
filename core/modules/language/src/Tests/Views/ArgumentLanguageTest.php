@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the argument language handler.
  *
+ * @group language
  * @see \Drupal\language\Plugin\views\argument\Language.php
  */
 class ArgumentLanguageTest extends LanguageTestBase {
@@ -22,14 +23,6 @@ class ArgumentLanguageTest extends LanguageTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument: Language',
-      'description' => 'Tests the argument language handler.',
-      'group' => 'Views Handlers'
-    );
-  }
 
   /**
    * Tests the language argument.

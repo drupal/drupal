@@ -10,7 +10,9 @@ namespace Drupal\user\Tests\Views;
 use Drupal\views\Views;
 
 /**
- * Tests views user argument validator plugin.
+ * Tests user argument validators for ID and name.
+ *
+ * @group user
  */
 class ArgumentValidateTest extends UserTestBase {
 
@@ -20,14 +22,6 @@ class ArgumentValidateTest extends UserTestBase {
    * @var array
    */
   public static $testViews = array('test_view_argument_validate_user', 'test_view_argument_validate_username');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Argument validators',
-      'description' => 'Tests user argument validators for ID and name.',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

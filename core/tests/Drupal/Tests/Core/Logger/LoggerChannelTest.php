@@ -31,23 +31,10 @@ if (!defined('WATCHDOG_ERROR')) {
 }
 
 /**
- * Tests the logger channel.
- *
- * @see \Drupal\Core\Logger\LoggerChannel
  * @coversDefaultClass \Drupal\Core\Logger\LoggerChannel
- *
- * @group Drupal
  * @group Logger
  */
 class LoggerChannelTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Logger channel',
-      'description' => 'Unit tests for the logger channel object.',
-      'group' => 'Logger',
-    );
-  }
 
   /**
    * Tests LoggerChannel::log().

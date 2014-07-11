@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Entity Form Controller.
+ * Tests the entity form.
+ *
+ * @group Entity
  */
 class EntityFormTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class EntityFormTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('entity_test', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity form',
-      'description' => 'Tests the entity form.',
-      'group' => 'Entity API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -12,7 +12,7 @@ use Drupal\Core\Database\TransactionOutOfOrderException;
 use Drupal\Core\Database\TransactionNoActiveException;
 
 /**
- * Tests transaction support, particularly nesting.
+ * Tests the transaction abstraction system.
  *
  * We test nesting by having two transaction layers, an outer and inner. The
  * outer layer encapsulates the inner layer. Our transaction nesting abstraction
@@ -30,16 +30,9 @@ use Drupal\Core\Database\TransactionNoActiveException;
  *     Do more stuff
  *     Should still be in transaction A
  *
+ * @group Database
  */
 class TransactionTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Transaction tests',
-      'description' => 'Test the transaction abstraction system.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Encapsulates a transaction's "inner layer" with an "outer layer".

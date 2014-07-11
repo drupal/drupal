@@ -8,7 +8,9 @@
 namespace Drupal\taxonomy\Tests;
 
 /**
- * Testing term indentation functionality in term list page.
+ * Ensure that the term indentation works properly.
+ *
+ * @group taxonomy
  */
 class TaxonomyTermIndentationTest extends TaxonomyTestBase {
 
@@ -18,14 +20,6 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    * @var array
    */
   public static $modules = array('taxonomy');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term indentation',
-      'description' => 'Ensure that the term indentation works properly.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

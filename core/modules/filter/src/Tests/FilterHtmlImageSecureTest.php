@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests restriction of IMG tags in HTML input.
+ *
+ * @group filter
  */
 class FilterHtmlImageSecureTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class FilterHtmlImageSecureTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('filter', 'node', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Local image input filter',
-      'description' => 'Tests restriction of IMG tags in HTML input.',
-      'group' => 'Filter',
-    );
-  }
 
   function setUp() {
     parent::setUp();

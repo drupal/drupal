@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 system filter variables to Drupal 8 system.filter config migration.
+ * Upgrade filter variables to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemFilterTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate filter variables to system.*.yml',
-      'description'  => 'Upgrade filter variables to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

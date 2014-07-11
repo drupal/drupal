@@ -10,7 +10,9 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Tests language config override installation.
+ * Ensures the language config overrides can be installed.
+ *
+ * @group language
  */
 class LanguageConfigOverrideInstallTest extends KernelTestBase {
 
@@ -20,14 +22,6 @@ class LanguageConfigOverrideInstallTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array('language', 'config_events_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language config override installation',
-      'description' => 'Ensures the language config overrides can be installed.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * Tests the configuration events are not fired during install of overrides.

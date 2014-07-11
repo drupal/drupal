@@ -10,7 +10,10 @@ namespace Drupal\contextual\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests _contextual_links_to_id() & _contextual_id_to_links().
+ * Tests all edge cases of converting from #contextual_links to ids and vice
+ * versa.
+ *
+ * @group contextual
  */
 class ContextualUnitTest extends DrupalUnitTestBase {
 
@@ -20,14 +23,6 @@ class ContextualUnitTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('contextual');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Conversion to and from "contextual id"s (for placeholders)',
-      'description' => 'Tests all edge cases of converting from #contextual_links to ids and vice versa.',
-      'group' => 'Contextual',
-    );
-  }
 
   /**
    * Provides testcases for testContextualLinksToId() and

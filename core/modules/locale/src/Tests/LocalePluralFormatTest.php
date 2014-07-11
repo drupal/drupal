@@ -10,7 +10,9 @@ namespace Drupal\locale\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests plural format handling functionality.
+ * Tests plural handling for various languages.
+ *
+ * @group locale
  */
 class LocalePluralFormatTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class LocalePluralFormatTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Plural handling',
-      'description' => 'Tests plural handling for various languages.',
-      'group' => 'Locale',
-    );
-  }
 
   function setUp() {
     parent::setUp();

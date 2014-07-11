@@ -13,6 +13,8 @@ use Drupal\comment\Tests\CommentTestBase;
 
 /**
  * Tests the RDFa markup of comments.
+ *
+ * @group rdf
  */
 class CommentAttributesTest extends CommentTestBase {
 
@@ -22,14 +24,6 @@ class CommentAttributesTest extends CommentTestBase {
    * @var array
    */
   public static $modules = array('views', 'node', 'comment', 'rdf');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDFa markup for comments',
-      'description' => 'Tests the RDFa markup of comments.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

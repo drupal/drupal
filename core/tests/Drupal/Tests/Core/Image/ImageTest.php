@@ -12,6 +12,8 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the image class.
+ *
+ * @group Image
  */
 class ImageTest extends UnitTestCase {
 
@@ -35,14 +37,6 @@ class ImageTest extends UnitTestCase {
    * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
   protected $toolkit;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image class functionality',
-      'description' => 'Tests the Image class.',
-      'group' => 'Image',
-    );
-  }
 
   protected function setUp() {
     // Use the Druplicon image.

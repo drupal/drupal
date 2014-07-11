@@ -33,17 +33,6 @@ class DefaultPluginManagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public static function getInfo() {
-    return array(
-      'name' => 'Default Plugin Manager',
-      'description' => 'Tests the DefaultPluginManager class.',
-      'group' => 'Plugin',
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     $this->expectedDefinitions = array(
       'apple' => array(

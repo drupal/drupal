@@ -11,19 +11,10 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests site-specific service overrides.
+ *
+ * @group DrupalKernel
  */
 class DrupalKernelSiteTest extends DrupalUnitTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'DrupalKernel site service overrides',
-      'description' => 'Tests site-specific service overrides.',
-      'group' => 'DrupalKernel',
-    );
-  }
 
   /**
    * Tests services.yml in site directory.

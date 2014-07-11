@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the UI of storage properties of views.
+ *
+ * @group views_ui
  */
 class StorageTest extends UITestBase {
 
@@ -28,14 +30,6 @@ class StorageTest extends UITestBase {
    * @var array
    */
   public static $modules = array('views_ui', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Storage properties',
-      'description' => 'Tests the UI of storage properties of views.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests changing label, description and tag.

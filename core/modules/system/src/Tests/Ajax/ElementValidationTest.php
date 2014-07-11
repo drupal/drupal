@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Ajax;
 
 /**
- * Tests using ajax_test module.
+ * Various tests of AJAX behavior.
+ *
+ * @group Ajax
  */
 class ElementValidationTest extends AjaxTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Miscellaneous AJAX tests',
-      'description' => 'Various tests of AJAX behavior',
-      'group' => 'AJAX',
-    );
-  }
-
   /**
    * Tries to post an Ajax change to a form that has a validated element.
    *

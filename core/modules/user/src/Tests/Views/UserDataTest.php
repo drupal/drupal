@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the user data service field handler.
  *
+ * @group user
  * @see \Drupal\user\Plugin\views\field\UserData
  */
 class UserDataTest extends UserTestBase {
@@ -29,14 +30,6 @@ class UserDataTest extends UserTestBase {
    * @var array
    */
   public static $testViews = array('test_user_data');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User data: Field',
-      'description' => 'Tests the user data service field handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests field handler.

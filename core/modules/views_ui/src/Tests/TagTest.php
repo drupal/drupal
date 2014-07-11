@@ -12,6 +12,8 @@ use Drupal\views_ui\Controller\ViewsUIController;
 
 /**
  * Tests the views ui tagging functionality.
+ *
+ * @group views_ui
  */
 class TagTest extends ViewUnitTestBase {
 
@@ -21,14 +23,6 @@ class TagTest extends ViewUnitTestBase {
    * @var array
    */
   public static $modules = array('views', 'views_ui', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tag',
-      'description' => 'Tests the views ui tagging functionality.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the views_ui_autocomplete_tag function.

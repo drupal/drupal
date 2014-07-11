@@ -12,22 +12,10 @@ use Drupal\views\Plugin\views\argument_default\QueryParameter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the query parameter argument_default plugin.
- *
  * @coversDefaultClass \Drupal\views\Plugin\views\argument_default\QueryParameter
+ * @group views
  */
 class QueryParameterTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\views\Plugin\views\argument_default\QueryParameter',
-      'description' => '',
-      'group' => 'Views Plugin',
-    );
-  }
 
   /**
    * Test the getArgument() method.

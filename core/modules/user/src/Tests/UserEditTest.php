@@ -10,17 +10,11 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the user edit form.
+ * Tests user edit page.
+ *
+ * @group user
  */
 class UserEditTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User edit',
-      'description' => 'Test user edit page.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Test user edit page.

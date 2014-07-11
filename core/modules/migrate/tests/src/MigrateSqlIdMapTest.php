@@ -13,9 +13,8 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 
 /**
- * Tests the SQL based ID map implementation.
+ * Tests the SQL ID map plugin.
  *
- * @group Drupal
  * @group migrate
  */
 class MigrateSqlIdMapTest extends MigrateTestCase {
@@ -43,17 +42,6 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'SQL ID map plugin',
-      'description' => 'Tests the SQL ID map plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * Creates a test SQL ID map plugin.

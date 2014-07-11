@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Directory related tests.
+ * Tests operations dealing with directories.
+ *
+ * @group File
  */
 class DirectoryTest extends FileTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File paths and directories',
-      'description' => 'Tests operations dealing with directories.',
-      'group' => 'File API',
-    );
-  }
-
   /**
    * Test local directory handling functions.
    */

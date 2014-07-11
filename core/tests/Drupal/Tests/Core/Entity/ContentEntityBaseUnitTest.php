@@ -15,8 +15,7 @@ use Drupal\Core\Language\Language;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\ContentEntityBase
- *
- * @group Drupal
+ * @group Entity
  */
 class ContentEntityBaseUnitTest extends UnitTestCase {
 
@@ -96,17 +95,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Field\FieldDefinition[]
    */
   protected $fieldDefinitions;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Core\Entity\ContentEntityBase unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

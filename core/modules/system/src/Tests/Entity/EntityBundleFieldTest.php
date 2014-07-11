@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\Entity;
 
 /**
  * Tests adding a custom bundle field.
+ *
+ * @group Entity
  */
 class EntityBundleFieldTest extends EntityUnitTestBase  {
 
@@ -32,17 +34,6 @@ class EntityBundleFieldTest extends EntityUnitTestBase  {
    * @var array
    */
   public static $modules = array('menu_link');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity bundle fields',
-      'description' => 'Tests providing a custom bundle field.',
-      'group' => 'Entity API',
-    );
-  }
 
   /**
    * {@inheritdoc}

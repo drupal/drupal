@@ -10,18 +10,12 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test role assignment.
+ * Tests that users can be assigned and unassigned roles.
+ *
+ * @group user
  */
 class UserRolesAssignmentTest extends WebTestBase {
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Role assignment',
-      'description' => 'Tests that users can be assigned and unassigned roles.',
-      'group' => 'User'
-    );
-  }
 
   function setUp() {
     parent::setUp();

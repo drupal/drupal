@@ -13,19 +13,10 @@ use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the http query methods.
- *
- * @see \Drupal\Component\Utility\Url
+ * @coversDefaultClass \Drupal\Component\Utility\Url
+ * @group Utility
  */
 class UrlHelperTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'UrlHelper Tests',
-      'description' => 'Tests the UrlHelper utility class.',
-      'group' => 'Path API',
-    );
-  }
 
   /**
    * Provides test data for testBuildQuery().

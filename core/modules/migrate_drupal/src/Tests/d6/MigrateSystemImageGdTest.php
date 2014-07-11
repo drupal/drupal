@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of image GD toolkit variables to configuration.
+ * Upgrade image gd variables to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemImageGdTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate image gd variables to system.*.yml',
-      'description'  => 'Upgrade image gd variables to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,18 +11,12 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests module overrides of configuration using event subscribers.
+ *
+ * @group config
  */
 class ConfigModuleOverridesTest extends DrupalUnitTestBase {
 
   public static $modules = array('system', 'config', 'config_override_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module overrides',
-      'description' => 'Tests that modules can override configuration with event subscribers.',
-      'group' => 'Configuration',
-    );
-  }
 
   public function testSimpleModuleOverrides() {
     $GLOBALS['config_test_run_module_overrides'] = TRUE;

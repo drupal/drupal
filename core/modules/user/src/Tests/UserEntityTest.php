@@ -14,6 +14,7 @@ use Drupal\user\Entity\User;
 /**
  * Tests the user entity class.
  *
+ * @group user
  * @see \Drupal\user\Entity\User
  */
 class UserEntityTest extends DrupalUnitTestBase {
@@ -24,14 +25,6 @@ class UserEntityTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'user', 'field', 'entity');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User entity tests',
-      'description' => 'Tests the user entity class.',
-      'group' => 'User'
-    );
-  }
 
   /**
    * Tests some of the methods.

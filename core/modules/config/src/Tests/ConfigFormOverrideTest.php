@@ -12,20 +12,10 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests config overrides do not appear on forms that extend ConfigFormBase.
  *
+ * @group config
  * @see \Drupal\Core\Form\ConfigFormBase
  */
 class ConfigFormOverrideTest extends WebTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Config form overrides',
-      'description' => 'Tests config overrides do not appear on forms that extend ConfigFormBase.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests that overrides do not affect forms.

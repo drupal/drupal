@@ -12,9 +12,8 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\area\Result;
 
 /**
- * Tests the result area handler.
- *
- * @see \Drupal\views\Plugin\views\area\Result
+ * @coversDefaultClass \Drupal\views\Plugin\views\area\Result
+ * @group views
  */
 class ResultTest extends UnitTestCase {
 
@@ -31,14 +30,6 @@ class ResultTest extends UnitTestCase {
    * @var \Drupal\views\Plugin\views\area\Result
    */
   protected $resultHandler;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Area: Result',
-      'description' => 'Tests the Drupal\views\Plugin\views\area\Result handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

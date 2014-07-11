@@ -12,18 +12,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 /**
  * Tests existence of taxonomy local tasks.
  *
- * @group Drupal
- * @group Taxonomy
+ * @group taxonomy
  */
 class TaxonomyLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy local tasks test',
-      'description' => 'Test existence of taxonomy local tasks.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array('taxonomy' => 'core/modules/taxonomy');

@@ -15,9 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the parameter conversion enhancer.
- *
  * @coversDefaultClass \Drupal\Core\Routing\Enhancer\ParamConversionEnhancer
+ * @group Enhancer
  */
 class ParamConversionEnhancerTest extends UnitTestCase {
 
@@ -30,17 +29,6 @@ class ParamConversionEnhancerTest extends UnitTestCase {
    * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $paramConverterManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Parameter conversion enhancer',
-      'description' => 'Tests the parameter conversion enhancer.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

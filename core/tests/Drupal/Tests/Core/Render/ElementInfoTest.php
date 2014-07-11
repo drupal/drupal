@@ -12,9 +12,8 @@ use Drupal\Core\Render\ElementInfoInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the element info.
- *
  * @coversDefaultClass \Drupal\Core\Render\ElementInfo
+ * @group Render
  */
 class ElementInfoTest extends UnitTestCase {
 
@@ -31,17 +30,6 @@ class ElementInfoTest extends UnitTestCase {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $moduleHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\Core\Render\ElementInfo',
-      'description' => '',
-      'group' => 'Render',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -12,6 +12,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
 /**
  * Tests the message entity class.
  *
+ * @group contact
  * @see \Drupal\contact\Entity\Message
  */
 class MessageEntityTest extends DrupalUnitTestBase {
@@ -22,14 +23,6 @@ class MessageEntityTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'contact', 'field', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Message entity tests',
-      'description' => 'Tests the message entity class.',
-      'group' => 'Contact'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

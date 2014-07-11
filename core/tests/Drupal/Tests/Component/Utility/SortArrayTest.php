@@ -11,19 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\SortArray;
 
 /**
- * Tests the SortArray component.
- *
- * @see \Drupal\Component\Utility\SortArray
+ * @coversDefaultClass \Drupal\Component\Utility\SortArray
+ * @group Utility
  */
 class SortArrayTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'SortArray test',
-      'description' => 'Test that the SortArray functions work properly.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests SortArray::sortByWeightElement() input against expected output.

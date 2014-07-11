@@ -10,26 +10,10 @@ namespace Drupal\path\Tests\Field;
 use Drupal\Tests\Core\Field\FieldDefinitionTestBase;
 
 /**
- * Tests a field definition for a 'path' field.
- *
- * @see \Drupal\Core\Field\FieldDefinition
- * @see \Drupal\path\Plugin\Field\FieldType\PathItem
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Field\FieldDefinition
  * @group path
  */
 class PathFieldDefinitionTest extends FieldDefinitionTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Path field definitions',
-      'description' => 'Tests that field definitions for path fields work correctly.',
-      'group' => 'Path',
-    );
-  }
 
   /**
    * {@inheritdoc}

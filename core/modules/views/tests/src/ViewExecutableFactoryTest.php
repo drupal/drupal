@@ -13,9 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests the ViewExecutableFactory class.
- *
  * @coversDefaultClass \Drupal\views\ViewExecutableFactory
+ * @group views
  */
 class ViewExecutableFactoryTest extends UnitTestCase {
 
@@ -46,17 +45,6 @@ class ViewExecutableFactoryTest extends UnitTestCase {
    * @var \Drupal\views\ViewExecutableFactory
    */
   protected $viewExecutableFactory;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'View executable factory test',
-      'description' => 'Tests methods on the \Drupal\views\ViewExecutableFactory class',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * {@inheritdoc}

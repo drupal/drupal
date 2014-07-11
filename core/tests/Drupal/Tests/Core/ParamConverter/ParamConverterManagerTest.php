@@ -15,9 +15,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the typed data resolver manager.
- *
  * @coversDefaultClass \Drupal\Core\ParamConverter\ParamConverterManager
+ * @group ParamConverter
  */
 class ParamConverterManagerTest extends UnitTestCase {
 
@@ -25,17 +24,6 @@ class ParamConverterManagerTest extends UnitTestCase {
    * @var \Drupal\Core\ParamConverter\ParamConverterManager
    */
   protected $manager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Parameter converter manager',
-      'description' => 'Tests the parameter converter manager.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

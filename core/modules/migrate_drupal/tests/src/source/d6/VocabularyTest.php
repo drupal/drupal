@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 vocabulary source.
+ * Tests D6 vocabulary source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class VocabularyTest extends MigrateSqlSourceTestCase {
 
@@ -60,17 +59,6 @@ class VocabularyTest extends MigrateSqlSourceTestCase {
       'node_types' => array('article'),
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 vocabulary source functionality',
-      'description' => 'Tests D6 vocabulary source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

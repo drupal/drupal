@@ -11,6 +11,8 @@ use Drupal\Core\Language\Language;
 
 /**
  * Tests aggregator feeds in multiple languages.
+ *
+ * @group aggregator
  */
 class FeedLanguageTest extends AggregatorTestBase {
 
@@ -27,14 +29,6 @@ class FeedLanguageTest extends AggregatorTestBase {
    * @var array
    */
   protected $langcodes = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Multilingual feeds',
-      'description' => 'Checks creating of feeds in multiple languages',
-      'group' => 'Aggregator',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

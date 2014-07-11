@@ -11,23 +11,10 @@ use Drupal\Core\Logger\LogMessageParser;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the log message parser.
- *
- * @see \Drupal\Core\Logger\LogMessageParser
  * @coversDefaultClass \Drupal\Core\Logger\LogMessageParser
- *
- * @group Drupal
  * @group Logger
  */
 class LogMessageParserTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Log message parser',
-      'description' => 'Unit tests for the log message parser.',
-      'group' => 'Logger',
-    );
-  }
 
   /**
    * {@inheritdoc}

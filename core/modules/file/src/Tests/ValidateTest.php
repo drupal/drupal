@@ -9,16 +9,10 @@ namespace Drupal\file\Tests;
 
 /**
  * Tests the file_validate() function.
+ *
+ * @group file
  */
 class ValidateTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File validate',
-      'description' => 'Tests the file_validate() function.',
-      'group' => 'File Managed API',
-    );
-  }
-
   /**
    * Test that the validators passed into are checked.
    */

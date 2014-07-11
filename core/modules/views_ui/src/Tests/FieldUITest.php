@@ -10,6 +10,7 @@ namespace Drupal\views_ui\Tests;
 /**
  * Tests the UI of field handlers.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
 class FieldUITest extends UITestBase {
@@ -20,14 +21,6 @@ class FieldUITest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: UI',
-      'description' => 'Tests the UI of field handlers.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the UI of field handlers.

@@ -16,7 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * Tests the autocomplete functionality of Entity Reference.
+ * Tests the autocomplete functionality.
+ *
+ * @group entity_reference
  */
 class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
 
@@ -47,14 +49,6 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('entity_reference', 'entity_reference_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Autocomplete',
-      'description' => 'Tests the autocomplete functionality.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   function setUp() {
     parent::setUp();

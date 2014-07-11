@@ -11,7 +11,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
- * Tests generic registration of module provided normalizers and encoders.
+ * Funtional tests for serialization system.
+ *
+ * @group serialization
  */
 class SerializationTest extends DrupalUnitTestBase {
 
@@ -28,14 +30,6 @@ class SerializationTest extends DrupalUnitTestBase {
    * @var \Symfony\Component\Serializer\SerializerInterface
    */
   protected $serializer;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Serialization tests',
-      'description' => 'Funtional tests for serialization system.',
-      'group' => 'Serialization',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

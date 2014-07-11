@@ -8,20 +8,11 @@
 namespace Drupal\node\Tests;
 
 /**
- * Checks node template suggestions.
+ * Tests node template suggestions.
+ *
+ * @group node
  */
 class NodeTemplateSuggestionsTest extends NodeTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Node template suggestions',
-      'description' => 'Tests the node template suggestions.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * Tests if template_preprocess_node() generates the correct suggestions.

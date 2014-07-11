@@ -16,12 +16,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
 /**
- * Provides a test for the entity resolver.
- *
- * @group Drupal
- * @group Entity
- *
  * @coversDefaultClass \Drupal\Core\Entity\EntityResolverManager
+ * @group Entity
  */
 class EntityResolverManagerTest extends UnitTestCase {
 
@@ -59,17 +55,6 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $container;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => '\Drupal\Core\Entity\EntityResolverManager unit test',
-      'description' => '',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

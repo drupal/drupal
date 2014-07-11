@@ -11,7 +11,9 @@ use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests the EntityType generic filter handler.
+ * Tests the generic entity bundle filter.
+ *
+ * @group views
  */
 class FilterEntityBundleTest extends ViewTestBase {
 
@@ -42,14 +44,6 @@ class FilterEntityBundleTest extends ViewTestBase {
    * @var array
    */
   protected $entities = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Entity bundle',
-      'description' => 'Tests the generic entity bundle filter.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

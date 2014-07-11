@@ -13,19 +13,13 @@ use Drupal\plugin_test\Plugin\MockBlockManager;
 use Drupal\simpletest\KernelTestBase;
 
 /**
- * Tests that context aware plugins function correctly.
+ * Tests that contexts are properly set and working within plugins.
+ *
+ * @group Plugin
  */
 class ContextPluginTest extends KernelTestBase {
 
   public static $modules = array('system', 'user', 'node', 'field', 'filter', 'text');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contextual Plugins',
-      'description' => 'Tests that contexts are properly set and working within plugins.',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * Tests basic context definition and value getters and setters.

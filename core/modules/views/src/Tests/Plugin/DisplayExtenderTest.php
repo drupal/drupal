@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the display extender plugins.
  *
+ * @group views
  * @see \Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest
  */
 class DisplayExtenderTest extends PluginTestBase {
@@ -23,14 +24,6 @@ class DisplayExtenderTest extends PluginTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display extender',
-      'description' => 'Tests the display extender plugins.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

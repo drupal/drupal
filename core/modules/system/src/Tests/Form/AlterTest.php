@@ -11,7 +11,9 @@ use Drupal\Component\Utility\Xss;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test form alter hooks.
+ * Tests hook_form_alter() and hook_form_FORM_ID_alter().
+ *
+ * @group Form
  */
 class AlterTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class AlterTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form alter hooks',
-      'description' => 'Tests hook_form_alter() and hook_form_FORM_ID_alter().',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests execution order of hook_form_alter() and hook_form_FORM_ID_alter().

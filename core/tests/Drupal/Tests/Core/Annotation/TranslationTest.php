@@ -11,9 +11,8 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Translation annotation.
- *
- * @covers \Drupal\Core\Annotation\Translation
+ * @coversDefaultClass \Drupal\Core\Annotation\Translation
+ * @group Annotation
  */
 class TranslationTest extends UnitTestCase {
 
@@ -23,17 +22,6 @@ class TranslationTest extends UnitTestCase {
    * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $translationManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Core\Annotation\Translation unit test',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

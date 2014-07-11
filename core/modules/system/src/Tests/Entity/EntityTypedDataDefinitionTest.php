@@ -19,6 +19,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests deriving metadata of entity and field data types.
+ *
+ * @group Entity
  */
 class EntityTypedDataDefinitionTest extends DrupalUnitTestBase {
 
@@ -35,14 +37,6 @@ class EntityTypedDataDefinitionTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('filter', 'text', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity typed data definitions',
-      'description' => 'Tests reading and deriving metadata of entity and field data types.',
-      'group' => 'Typed Data API',
-    );
-  }
 
   public function setUp() {
     parent::setup();

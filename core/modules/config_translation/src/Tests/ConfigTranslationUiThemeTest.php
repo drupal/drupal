@@ -11,7 +11,9 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for the Language list configuration forms.
+ * Verifies theme configuration translation settings.
+ *
+ * @group config_translation
  */
 class ConfigTranslationUiThemeTest extends WebTestBase {
 
@@ -35,14 +37,6 @@ class ConfigTranslationUiThemeTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme Configuration Translation',
-      'description' => 'Verifies theme configuration translation settings.',
-      'group' => 'Configuration Translation',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

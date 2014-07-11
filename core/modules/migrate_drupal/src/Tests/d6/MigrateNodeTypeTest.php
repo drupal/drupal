@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests Drupal 6 node type to Drupal 8 migration.
+ * Upgrade node types to node.type.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateNodeTypeTest extends MigrateDrupalTestBase {
 
@@ -22,17 +24,6 @@ class MigrateNodeTypeTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Migrate node type to node.type.*.yml',
-      'description' => 'Upgrade node types to node.type.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

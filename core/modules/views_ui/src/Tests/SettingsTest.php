@@ -8,7 +8,9 @@
 namespace Drupal\views_ui\Tests;
 
 /**
- * Tests the various settings in the views UI.
+ * Tests all ui related settings under admin/structure/views/settings.
+ *
+ * @group views_ui
  */
 class SettingsTest extends UITestBase {
 
@@ -18,14 +20,6 @@ class SettingsTest extends UITestBase {
    * @var \Drupal\user\User
    */
   protected $adminUser;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Settings functionality',
-      'description' => 'Tests all ui related settings under admin/structure/views/settings.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the settings for the edit ui.

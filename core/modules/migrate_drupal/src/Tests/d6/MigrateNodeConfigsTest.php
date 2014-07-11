@@ -13,7 +13,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests Drupal 6 node settings to Drupal 8 migration.
+ * Upgrade variables to node.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateNodeConfigsTest extends MigrateDrupalTestBase {
 
@@ -25,17 +27,6 @@ class MigrateNodeConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to node.settings.yml',
-      'description'  => 'Upgrade variables to node.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

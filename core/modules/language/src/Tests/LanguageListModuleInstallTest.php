@@ -10,7 +10,10 @@ namespace Drupal\language\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for the language list configuration forms.
+ * Tests enabling Language if a module exists that calls language_list during
+ * installation.
+ *
+ * @group language
  */
 class LanguageListModuleInstallTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class LanguageListModuleInstallTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language list during module install',
-      'description' => 'Tests enabling Language if a module exists that calls language_list during installation.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * Tests enabling Language.

@@ -12,6 +12,8 @@ use Drupal\content_translation\Tests\ContentTranslationUITest;
 
 /**
  * Tests the Node Translation UI.
+ *
+ * @group node
  */
 class NodeTranslationUITest extends ContentTranslationUITest {
 
@@ -28,14 +30,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * @var string
    */
   protected $profile = 'standard';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node translation UI',
-      'description' => 'Tests the node translation UI.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     $this->entityTypeId = 'node';

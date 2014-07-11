@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests email field functionality.
+ *
+ * @group field
  */
 class EmailFieldTest extends WebTestBase {
 
@@ -34,14 +36,6 @@ class EmailFieldTest extends WebTestBase {
    * @var \Drupal\field\Entity\FieldInstanceConfig
    */
   protected $instance;
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Email field',
-      'description'  => 'Tests email field functionality.',
-      'group' => 'Field types',
-    );
-  }
 
   function setUp() {
     parent::setUp();

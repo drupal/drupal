@@ -10,7 +10,10 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test user entity callbacks.
+ * Tests specific parts of the user entity like the URI callback and the label
+ * callback.
+ *
+ * @group user
  */
 class UserEntityCallbacksTest extends WebTestBase {
 
@@ -25,14 +28,6 @@ class UserEntityCallbacksTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $account;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User entity callback tests',
-      'description' => 'Tests specific parts of the user entity like the URI callback and the label callback.',
-      'group' => 'User'
-    );
-  }
 
   function setUp() {
     parent::setUp();

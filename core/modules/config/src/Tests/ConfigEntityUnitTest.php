@@ -11,7 +11,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Unit tests for configuration controllers and objects.
+ * Unit tests for configuration entity base methods.
+ *
+ * @group config
  */
 class ConfigEntityUnitTest extends DrupalUnitTestBase {
 
@@ -28,14 +30,6 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
   protected $storage;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration entity methods',
-      'description' => 'Unit tests for configuration entity base methods.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * {@inheritdoc}

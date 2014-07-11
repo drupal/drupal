@@ -11,17 +11,11 @@ use Drupal\Core\Utility\Color;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests color conversion functions.
+ * Tests Color utility class conversions.
+ *
+ * @group Utility
  */
 class ColorTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Color conversion',
-      'description' => 'Tests Color utility class conversions.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests Color::hexToRgb().

@@ -7,8 +7,9 @@
 namespace Drupal\system\Tests\Entity;
 
 /**
- * Defines a test for testing aggregation support for entity query.
+ * Tests the Entity Query Aggregation API.
  *
+ * @group Entity
  * @see \Drupal\entity_test\Entity\EntityTest
  */
 class EntityQueryAggregateTest extends EntityUnitTestBase {
@@ -40,14 +41,6 @@ class EntityQueryAggregateTest extends EntityUnitTestBase {
    * @var \Drupal\Core\Entity\Query\QueryFactory
    */
   public $factory;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Query aggregation',
-      'description' => 'Tests the Entity Query Aggregation API',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

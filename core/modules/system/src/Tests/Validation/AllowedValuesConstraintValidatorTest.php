@@ -11,7 +11,9 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the AllowedValues validation constraint validator.
+ * Tests AllowedValues validation constraint with both valid and invalid values.
+ *
+ * @group Validation
  */
 class AllowedValuesConstraintValidatorTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class AllowedValuesConstraintValidatorTest extends DrupalUnitTestBase {
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
   protected $typedData;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Allowed values constraint',
-      'description' => 'Tests AllowedValues validation constraint with both valid and invalid values.',
-      'group' => 'Validation',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

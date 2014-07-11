@@ -12,17 +12,11 @@ use Drupal\simpletest\UnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests table sorting features implemented in tablesort.inc.
+ * Tests table sorting.
+ *
+ * @group Common
  */
 class TableSortExtenderUnitTest extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tablesort',
-      'description' => 'Tests table sorting.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Tests tablesort_init().

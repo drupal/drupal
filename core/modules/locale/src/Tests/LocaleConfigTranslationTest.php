@@ -12,7 +12,9 @@ use Drupal\locale\LocaleTypedConfig;
 use Drupal\core\language\languageInterface;
 
 /**
- * Tests Metadata for configuration objects.
+ * Tests translation of configuration strings.
+ *
+ * @group locale
  */
 class LocaleConfigTranslationTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class LocaleConfigTranslationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale', 'contact');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration translation',
-      'description' => 'Tests translation of configuration strings.',
-      'group' => 'Locale',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

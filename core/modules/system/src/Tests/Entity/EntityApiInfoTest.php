@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests Entity API base functionality.
+ * Makes sure entity info is accurately cached.
+ *
+ * @group Entity
  */
 class EntityApiInfoTest extends WebTestBase  {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity info',
-      'description' => 'Makes sure entity info is accurately cached.',
-      'group' => 'Entity API',
-    );
-  }
 
   /**
    * Ensures entity info cache is updated after changes.

@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Tests for file_munge_filename() and file_unmunge_filename().
+ * Tests filename munging and unmunging.
+ *
+ * @group File
  */
 class NameMungingTest extends FileTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File naming',
-      'description' => 'Test filename munging and unmunging.',
-      'group' => 'File API',
-    );
-  }
-
   function setUp() {
     parent::setUp();
     $this->bad_extension = 'php';

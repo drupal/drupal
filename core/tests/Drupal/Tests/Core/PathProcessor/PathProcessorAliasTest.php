@@ -12,11 +12,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the path alias path processor.
- *
- * @group Drupal
- *
- * @see \Drupal\Core\PathProcessor\PathProcessorAlias
+ * @coversDefaultClass \Drupal\Core\PathProcessor\PathProcessorAlias
+ * @group PathProcessor
  */
 class PathProcessorAliasTest extends UnitTestCase {
 
@@ -33,14 +30,6 @@ class PathProcessorAliasTest extends UnitTestCase {
    * @var \Drupal\Core\PathProcessor\PathProcessorAlias
    */
   protected $pathProcessor;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path Processor alias',
-      'description' => 'Tests the path alias path processor.',
-      'group' => 'Path API',
-    );
-  }
 
   protected function setUp() {
     $this->aliasManager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');

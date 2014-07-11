@@ -11,19 +11,14 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests module overrides of configuration using event subscribers.
+ * Tests that language, module and settings.php are applied in the correct
+ * order.
+ *
+ * @group config
  */
 class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
 
   public static $modules = array('system', 'config', 'config_override_test', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Override priority',
-      'description' => 'Tests that language, module and settings.php are applied in the correct order.',
-      'group' => 'Configuration',
-    );
-  }
 
   public function testOverridePriorities() {
     $GLOBALS['config_test_run_module_overrides'] = FALSE;

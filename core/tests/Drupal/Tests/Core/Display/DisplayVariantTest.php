@@ -10,25 +10,10 @@ namespace Drupal\Tests\Core\Display;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the base variant plugin.
- *
  * @coversDefaultClass \Drupal\Core\Display\VariantBase
- *
- * @group Drupal
  * @group Display
  */
 class DisplayVariantTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Display variant',
-      'description' => '',
-      'group' => 'Display variant',
-    );
-  }
 
   /**
    * Sets up a display variant plugin for testing.

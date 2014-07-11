@@ -9,16 +9,10 @@ namespace Drupal\system\Tests\Database;
 
 /**
  * Tests the insert builder.
+ *
+ * @group Database
  */
 class InsertTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Insert tests',
-      'description' => 'Test the Insert query builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests very basic insert functionality.

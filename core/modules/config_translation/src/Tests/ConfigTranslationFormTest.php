@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests for altering configuration translation forms.
+ *
+ * @group config_translation
  */
 class ConfigTranslationFormTest extends WebTestBase {
 
@@ -35,14 +37,6 @@ class ConfigTranslationFormTest extends WebTestBase {
    * @var string
    */
   protected $langcode;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration Translation forms',
-      'description' => 'Test form altering of configuration translation forms',
-      'group' => 'Configuration Translation',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

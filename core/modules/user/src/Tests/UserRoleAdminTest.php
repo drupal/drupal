@@ -10,17 +10,11 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test case to test adding, editing and deleting roles.
+ * Tests adding, editing and deleting user roles and changing role weights.
+ *
+ * @group user
  */
 class UserRoleAdminTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User role administration',
-      'description' => 'Test adding, editing and deleting user roles and changing role weights.',
-      'group' => 'User',
-    );
-  }
 
   function setUp() {
     parent::setUp();

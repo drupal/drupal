@@ -13,6 +13,8 @@ use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
  * Tests fields on comments.
+ *
+ * @group comment
  */
 class CommentFieldsTest extends CommentTestBase {
 
@@ -22,14 +24,6 @@ class CommentFieldsTest extends CommentTestBase {
    * @var array
    */
   public static $modules = array('field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment fields',
-      'description' => 'Tests fields on comments.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Tests that the default 'comment_body' field is correctly added.

@@ -11,7 +11,9 @@ use Drupal\Core\Session\UserSession;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests form caching.
+ * Tests form_set_cache() and form_get_cache().
+ *
+ * @group Form
  */
 class FormCacheTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class FormCacheTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form cache tests',
-      'description' => 'Tests form_set_cache() and form_get_cache()',
-      'group' => 'Form API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

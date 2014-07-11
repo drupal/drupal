@@ -8,7 +8,9 @@
 namespace Drupal\field\Tests;
 
 /**
- * Tests updating fields and instances as part of config import.
+ * Update field and instances during config change method invocation.
+ *
+ * @group field
  */
 class FieldImportChangeTest extends FieldUnitTestBase {
 
@@ -18,14 +20,6 @@ class FieldImportChangeTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array('field_test_config');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field config change tests',
-      'description' => 'Update field and instances during config change method invocation.',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * Tests importing an updated field instance.

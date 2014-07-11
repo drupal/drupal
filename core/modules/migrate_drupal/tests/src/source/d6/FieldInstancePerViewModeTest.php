@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 field instance per view mode source.
+ * Tests D6 fields per view mode source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class FieldInstancePerViewModeTest extends MigrateSqlSourceTestCase {
 
@@ -79,17 +78,6 @@ class FieldInstancePerViewModeTest extends MigrateSqlSourceTestCase {
     ),
   );
 
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 per view mode source functionality',
-      'description' => 'Tests D6 fields per view mode source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

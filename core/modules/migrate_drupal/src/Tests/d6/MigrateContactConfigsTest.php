@@ -13,7 +13,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Contact module.
+ * Upgrade variables to contact.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateContactConfigsTest extends MigrateDrupalTestBase {
 
@@ -25,17 +27,6 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('contact');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to contact.settings',
-      'description'  => 'Upgrade variables to contact.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

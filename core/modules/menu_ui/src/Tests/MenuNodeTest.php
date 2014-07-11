@@ -10,7 +10,9 @@ namespace Drupal\menu_ui\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test menu settings for nodes.
+ * Add, edit, and delete a node with menu link.
+ *
+ * @group menu_ui
  */
 class MenuNodeTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class MenuNodeTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('menu_ui', 'test_page_test', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Menu settings for nodes',
-      'description' => 'Add, edit, and delete a node with menu link.',
-      'group' => 'Menu',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -13,6 +13,8 @@ namespace Drupal\node\Tests;
  * Create a node, enable the node_test module to ensure that extra data is
  * added to the node's renderable array, then verify that the data appears on
  * the site-wide RSS feed at rss.xml.
+ *
+ * @group node
  */
 class NodeRSSContentTest extends NodeTestBase {
 
@@ -22,14 +24,6 @@ class NodeRSSContentTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('node_test', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node RSS Content',
-      'description' => 'Ensure that data added to nodes by other modules appears in RSS feeds.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

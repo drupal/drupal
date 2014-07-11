@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\Ajax;
 
 /**
- * Tests use of dialogs as wrappers for Ajax responses.
+ * Performs tests on opening and manipulating dialogs via AJAX commands.
+ *
+ * @group Ajax
  */
 class DialogTest extends AjaxTestBase {
 
@@ -18,17 +20,6 @@ class DialogTest extends AjaxTestBase {
    * @var array
    */
   public static $modules = array('ajax_test', 'ajax_forms_test', 'contact');
-
-  /**
-   * Declares test info.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'AJAX dialogs commands',
-      'description' => 'Performs tests on opening and manipulating dialogs via AJAX commands.',
-      'group' => 'AJAX',
-    );
-  }
 
   /**
    * Test sending non-JS and AJAX requests to open and manipulate modals.

@@ -13,19 +13,11 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the ReverseProxySubscriber.
+ * Unit test the reverse proxy event subscriber.
  *
- * @group System
+ * @group EventSubscriber
  */
 class ReverseProxySubscriberUnitTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Reverse proxy implementation',
-      'description' => 'Unit test the reverse proxy event subscriber.',
-      'group' => 'System'
-    );
-  }
 
   /**
    * Tests that subscriber does not act when reverse proxy is not set.

@@ -10,7 +10,9 @@ namespace Drupal\locale\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the export of translation files.
+ * Tests the exportation of locale files.
+ *
+ * @group locale
  */
 class LocaleExportTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class LocaleExportTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Translation export',
-      'description' => 'Tests the exportation of locale files.',
-      'group' => 'Locale',
-    );
-  }
 
   /**
    * A user able to create languages and export translations.

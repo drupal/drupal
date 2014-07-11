@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\KeyValueStore;
 
 /**
  * Tests the key-value memory storage.
+ *
+ * @group KeyValueStore
  */
 class MemoryStorageTest extends StorageTestBase {
 
@@ -18,14 +20,6 @@ class MemoryStorageTest extends StorageTestBase {
    * @var String
    */
   protected $originalKeyValue = NULL;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Memory storage',
-      'description' => 'Tests the key-value memory storage.',
-      'group' => 'Key-value store',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

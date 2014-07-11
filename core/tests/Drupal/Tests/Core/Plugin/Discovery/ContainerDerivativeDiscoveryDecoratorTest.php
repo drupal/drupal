@@ -12,19 +12,10 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the container aware derivative discovery decorator.
+ *
+ * @group Plugin
  */
 class ContainerDerivativeDiscoveryDecoratorTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Container aware derivative discovery decorator.',
-      'description' => 'Tests the container aware derivative discovery decorator.',
-      'group' => 'Plugin',
-    );
-  }
 
   /**
    * Tests the getDerivativeFetcher method.

@@ -11,7 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Unit tests for module uninstallation and related hooks.
+ * Tests the uninstallation of modules.
+ *
+ * @group Module
  */
 class UninstallTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class UninstallTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('module_test', 'user', 'views', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module uninstallation',
-      'description' => 'Tests the uninstallation of modules.',
-      'group' => 'Module',
-    );
-  }
 
   /**
    * Tests the hook_modules_uninstalled() of the user module.

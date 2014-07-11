@@ -13,24 +13,10 @@ use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the cache CacheFactory.
- *
- * @group Cache
- *
  * @coversDefaultClass \Drupal\Core\Cache\CacheFactory
+ * @group Cache
  */
 class CacheFactoryTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Cache factory test',
-      'description' => 'Tests the cache CacheFactory.',
-      'group' => 'Cache',
-    );
-  }
 
   /**
    * Test that the cache factory falls back to the built-in default service.

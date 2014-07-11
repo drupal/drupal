@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the numeric filter handler.
+ *
+ * @group views
  */
 class FilterNumericTest extends ViewUnitTestBase {
 
@@ -28,14 +30,6 @@ class FilterNumericTest extends ViewUnitTestBase {
     'views_test_data_name' => 'name',
     'views_test_data_age' => 'age',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Numeric',
-      'description' => 'Tests the numeric filter handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

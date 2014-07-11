@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests comment migration from D6 to D8.
+ * Tests D6 filter_formats table source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class FilterFormatTest extends MigrateSqlSourceTestCase {
 
@@ -93,17 +92,6 @@ class FilterFormatTest extends MigrateSqlSourceTestCase {
       ),
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 Filter Formats source functionality',
-      'description' => 'Tests D6 filter_formats table source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -8,7 +8,9 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 /**
- * Tests comment variables migrated into an entity display.
+ * Upgrade comment variables to entity.display.node.*.default.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateCommentVariableEntityDisplayTest extends MigrateCommentVariableDisplayBase {
 
@@ -21,17 +23,6 @@ class MigrateCommentVariableEntityDisplayTest extends MigrateCommentVariableDisp
    * The node types being used.
    */
   protected $types = array('page', 'story');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate comment variables to entity displays,',
-      'description'  => 'Upgrade comment variables to entity.display.node.*.default.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * Tests comment variables migrated into an entity display.

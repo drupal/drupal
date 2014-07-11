@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests theme functions with the Twig engine.
+ * Tests Twig-specific theme functionality.
+ *
+ * @group Theme
  */
 class EngineTwigTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class EngineTwigTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test', 'twig_theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig Engine',
-      'description' => 'Test Twig-specific theme functionality.',
-      'group' => 'Theme',
-    );
-  }
 
   function setUp() {
     parent::setUp();

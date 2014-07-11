@@ -11,11 +11,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests read-only settings.
- *
- * @group Drupal
- *
  * @coversDefaultClass \Drupal\Core\Site\Settings
+ * @group Site
  */
 class SettingsTest extends UnitTestCase {
 
@@ -32,17 +29,6 @@ class SettingsTest extends UnitTestCase {
    * @var \Drupal\Core\Site\Settings
    */
   protected $settings;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => '\Drupal\Core\Site\Settings unit test',
-      'description' => '',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * @covers ::__construct

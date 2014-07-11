@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests for Node Access with a non-node base table.
+ * Tests behavior of the node access subsystem if the base table is not node.
+ *
+ * @group node
  */
 class NodeAccessBaseTableTest extends NodeTestBase {
 
@@ -27,14 +29,6 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    * @var string
    */
   protected $profile = 'standard';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access on any table',
-      'description' => 'Checks behavior of the node access subsystem if the base table is not node.',
-      'group' => 'Node',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

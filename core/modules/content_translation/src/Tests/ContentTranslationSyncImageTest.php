@@ -10,7 +10,9 @@ namespace Drupal\content_translation\Tests;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Tests the Content Translation image field synchronization capability.
+ * Tests the field synchronization behavior for the image field.
+ *
+ * @group content_translation
  */
 class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
 
@@ -34,14 +36,6 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
    * @var array
    */
   public static $modules = array('language', 'content_translation', 'entity_test', 'image', 'field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image field synchronization',
-      'description' => 'Tests the field synchronization behavior for the image field.',
-      'group' => 'Content Translation UI',
-    );
-  }
 
   function setUp() {
     parent::setUp();

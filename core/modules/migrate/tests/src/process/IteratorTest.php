@@ -17,7 +17,6 @@ use Drupal\migrate\Tests\MigrateTestCase;
  * Tests the iterator process plugin.
  *
  * @group migrate
- * @group Drupal
  */
 class IteratorTest extends MigrateTestCase {
 
@@ -34,17 +33,6 @@ class IteratorTest extends MigrateTestCase {
   protected $migrationConfiguration = array(
     'id' => 'test',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Iterator process plugin',
-      'description' => 'Tests the iterator process plugin.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * Tests the iterator process plugin.

@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test token replacement in strings.
+ * Scan token-like patterns in a dummy text to check token scanning.
+ *
+ * @group system
  */
 class TokenScanTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Token scanning',
-      'description' => 'Scan token-like patterns in a dummy text to check token scanning.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Scans dummy text, then tests the output.

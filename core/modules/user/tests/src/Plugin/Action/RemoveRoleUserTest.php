@@ -10,22 +10,10 @@ namespace Drupal\user\Tests\Plugin\Action;
 use Drupal\user\Plugin\Action\RemoveRoleUser;
 
 /**
- * Tests the role remove plugin.
- *
- * @see \Drupal\user\Plugin\Action\RemoveRoleUser
+ * @coversDefaultClass \Drupal\user\Plugin\Action\RemoveRoleUser
+ * @group user
  */
 class RemoveRoleUserTest extends RoleUserTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Remove user plugin',
-      'description' => 'Tests the role remove plugin',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Tests the execute method on a user with a role.

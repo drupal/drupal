@@ -13,18 +13,9 @@ use Drupal\Core\Config\Entity\ConfigDependencyManager;
 /**
  * Tests the ConfigDependencyManager class.
  *
- * @group Drupal
  * @group Config
  */
 class ConfigDependencyManagerTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'ConfigDependencyManager test',
-      'description' => 'Tests the ConfigDependencyManager class.',
-      'group' => 'Configuration'
-    );
-  }
 
   public function testNoConfiguration() {
     $dep_manger = new ConfigDependencyManager();

@@ -15,12 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
- * Tests the exception listener.
- *
- * @group Drupal
- * @group Routing
- *
- * @see \Drupal\Core\EventSubscriber\ExceptionListener
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\ExceptionListener
+ * @group EventSubscriber
  */
 class ExceptionListenerTest extends UnitTestCase {
 
@@ -44,17 +40,6 @@ class ExceptionListenerTest extends UnitTestCase {
    * @var string
    */
   protected $errorLog;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Exception listener',
-      'description' => 'Tests the exception listener',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

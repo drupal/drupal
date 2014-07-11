@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Functional tests for a user's ability to change their default language.
+ *
+ * @group user
  */
 class UserLanguageTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class UserLanguageTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('user', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User language settings',
-      'description' => "Tests user's ability to change their default language.",
-      'group' => 'User',
-    );
-  }
 
   /**
    * Test if user can change their default language.

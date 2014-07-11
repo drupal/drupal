@@ -12,16 +12,10 @@ use Drupal\views\Views;
 
 /**
  * Tests creating views with the wizard and viewing them on the listing page.
+ *
+ * @group views
  */
 class BasicTest extends WizardTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Basic functionality',
-      'description' => 'Test creating basic views with the wizard and viewing them on the listing page.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   function testViewsWizardAndListing() {
     $this->drupalCreateContentType(array('type' => 'article'));

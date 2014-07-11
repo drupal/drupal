@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the block administration page for a non-default theme.
+ *
+ * @group block
  */
 class NonDefaultBlockAdminTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class NonDefaultBlockAdminTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Non default theme admin',
-      'description' => 'Check the administer page for non default theme.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Test non-default theme admin.

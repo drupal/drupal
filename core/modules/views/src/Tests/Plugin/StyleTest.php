@@ -15,8 +15,9 @@ use Drupal\views\ResultRow;
 use Drupal\views_test_data\Plugin\views\style\StyleTest as StyleTestPlugin;
 
 /**
- * Tests some general style plugin related functionality.
+ * Tests general style functionality.
  *
+ * @group views
  * @see \Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
 class StyleTest extends ViewTestBase {
@@ -34,14 +35,6 @@ class StyleTest extends ViewTestBase {
    * @var \SimpleXMLElement
    */
   protected $elements;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: General',
-      'description' => 'Test general style functionality.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

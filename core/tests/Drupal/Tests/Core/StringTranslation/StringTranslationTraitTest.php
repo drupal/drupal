@@ -10,12 +10,7 @@ namespace Drupal\Tests\Core\StringTranslation;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests \Drupal\Core\StringTranslation\StringTranslationTrait.
- *
- * @see \Drupal\Core\StringTranslation\StringTranslationTrait
  * @coversDefaultClass \Drupal\Core\StringTranslation\StringTranslationTrait
- *
- * @group Drupal
  * @group StringTranslation
  */
 class StringTranslationTraitTest extends UnitTestCase {
@@ -34,17 +29,6 @@ class StringTranslationTraitTest extends UnitTestCase {
    * @see PHPUnit_Framework_MockObject_Generator::getObjectForTrait()
    */
   protected $translation;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'String translation trait',
-      'description' => 'Tests the string translation trait.',
-      'group' => 'StringTranslation',
-    );
-  }
 
   /**
    * {@inheritdoc}

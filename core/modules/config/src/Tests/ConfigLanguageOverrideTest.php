@@ -11,7 +11,9 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests language config override.
+ * Confirm that language overrides work.
+ *
+ * @group config
  */
 class ConfigLanguageOverrideTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class ConfigLanguageOverrideTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('user', 'language', 'config_test',  'system', 'field');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language override',
-      'description' => 'Confirm that language overrides work',
-      'group' => 'Configuration',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

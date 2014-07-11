@@ -12,8 +12,9 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for listings that should have translate operation, except views.
+ * Visit all lists.
  *
+ * @group config_translation
  * @see \Drupal\config_translation\Tests\ConfigTranslationViewListUiTest
  */
 class ConfigTranslationListUiTest extends WebTestBase {
@@ -38,14 +39,6 @@ class ConfigTranslationListUiTest extends WebTestBase {
     'responsive_image',
     'toolbar',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration Translation lists',
-      'description' => 'Visit all lists.',
-      'group' => 'Configuration Translation',
-    );
-  }
 
   /**
    * Admin user with all needed permissions.

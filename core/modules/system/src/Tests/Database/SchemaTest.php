@@ -13,7 +13,9 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests the Schema API.
+ * Tests table creation and modification via the schema API.
+ *
+ * @group Database
  */
 class SchemaTest extends UnitTestBase {
 
@@ -21,14 +23,6 @@ class SchemaTest extends UnitTestBase {
    * A global counter for table and field creation.
    */
   var $counter;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Schema API',
-      'description' => 'Tests table creation and modification via the schema API.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests database interactions.

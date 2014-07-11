@@ -15,8 +15,9 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\Core\Template\Attribute;
 
 /**
- * Defines a test for block display.
+ * Tests the block display plugin.
  *
+ * @group block
  * @see \Drupal\block\Plugin\views\display\Block
  */
 class DisplayBlockTest extends ViewTestBase {
@@ -34,14 +35,6 @@ class DisplayBlockTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_view_block', 'test_view_block2');
-
-  public static function getInfo() {
-    return array(
-      'name' => ' Display: Block',
-      'description' => 'Tests the block display plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

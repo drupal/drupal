@@ -9,17 +9,11 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\InvalidQueryException;
 
 /**
- * Tests the SELECT builder.
+ * Tests the Select query builder.
+ *
+ * @group Database
  */
 class SelectTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Select tests',
-      'description' => 'Test the Select query builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests rudimentary SELECT statements.

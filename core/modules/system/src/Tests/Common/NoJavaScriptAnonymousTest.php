@@ -10,19 +10,14 @@ namespace Drupal\system\Tests\Common;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that anonymous users are not served any JavaScript.
+ * Tests that anonymous users are not served any JavaScript in the Standard
+ * installation profile.
+ *
+ * @group Common
  */
 class NoJavaScriptAnonymousTest extends WebTestBase {
 
   protected $profile = 'standard';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'No JavaScript for anonymous users in Standard profile',
-      'description' => 'Tests that anonymous users are not served any JavaScript in the Standard installation profile.',
-      'group' => 'Common',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

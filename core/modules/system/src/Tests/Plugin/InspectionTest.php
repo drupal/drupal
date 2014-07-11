@@ -9,16 +9,10 @@ namespace Drupal\system\Tests\Plugin;
 
 /**
  * Tests that plugins implementing PluginInspectionInterface are inspectable.
+ *
+ * @group Plugin
  */
 class InspectionTest extends PluginTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Inspection',
-      'description' => 'Tests that plugins implementing PluginInspectionInterface are inspectable.',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * Ensure the test plugins correctly implement getPluginId() and getPluginDefinition().

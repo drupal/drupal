@@ -10,20 +10,11 @@ namespace Drupal\migrate_drupal\Tests\d6;
 use Drupal\migrate\MigrateExecutable;
 
 /**
- * Tests the Drupal 6 term-node association to Drupal 8 migration.
+ * Upgrade taxonomy term node associations.
+ *
+ * @group migrate_drupal
  */
 class MigrateTermNodeTest extends MigrateTermNodeTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate taxonomy term node',
-      'description'  => 'Upgrade taxonomy term node associations',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,9 @@ namespace Drupal\views\Tests;
 use Drupal\views\Views;
 
 /**
- * Basic test class for Views query builder tests.
+ * A basic query test for Views.
+ *
+ * @group views
  */
 class BasicTest extends ViewUnitTestBase {
 
@@ -20,14 +22,6 @@ class BasicTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view', 'test_simple_argument');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Basic query tests',
-      'description' => 'A basic query test for Views.',
-      'group' => 'Views'
-    );
-  }
 
   /**
    * Tests a trivial result set.

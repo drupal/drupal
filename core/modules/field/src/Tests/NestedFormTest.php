@@ -10,6 +10,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests field elements in nested forms.
+ *
+ * @group field
  */
 class NestedFormTest extends FieldTestBase {
 
@@ -19,14 +21,6 @@ class NestedFormTest extends FieldTestBase {
    * @var array
    */
   public static $modules = array('field_test', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Nested form',
-      'description' => 'Test the support for field elements in nested forms.',
-      'group' => 'Field API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

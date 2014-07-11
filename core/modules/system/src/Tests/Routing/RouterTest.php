@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Functional class for the full integrated routing system.
+ *
+ * @group Routing
  */
 class RouterTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class RouterTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'router_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Integrated Router tests',
-      'description' => 'Function Tests for the fully integrated routing system.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * Confirms that the router can get to a controller.

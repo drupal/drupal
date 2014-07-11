@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal6 user to Drupal 8 migration.
+ * Users migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserTest extends MigrateDrupalTestBase {
 
@@ -29,17 +31,6 @@ class MigrateUserTest extends MigrateDrupalTestBase {
     'file',
     'image',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate users',
-      'description'  => 'Users migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

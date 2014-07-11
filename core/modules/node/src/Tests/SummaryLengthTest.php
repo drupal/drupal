@@ -8,17 +8,11 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests the summary length functionality.
+ * Tests summary length.
+ *
+ * @group node
  */
 class SummaryLengthTest extends NodeTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Summary length',
-      'description' => 'Test summary length.',
-      'group' => 'Node',
-    );
-  }
-
   /**
    * Tests the node summary length functionality.
    */

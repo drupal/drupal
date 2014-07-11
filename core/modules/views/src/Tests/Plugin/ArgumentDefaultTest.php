@@ -12,7 +12,9 @@ use Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest as 
 
 
 /**
- * Basic test for pluggable argument default.
+ * Tests pluggable argument_default for views.
+ *
+ * @group views
  */
 class ArgumentDefaultTest extends PluginTestBase {
 
@@ -29,14 +31,6 @@ class ArgumentDefaultTest extends PluginTestBase {
    * @var array
    */
   public static $modules = array('node', 'views_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument default',
-      'description' => 'Tests pluggable argument_default for views.',
-      'group' => 'Views Plugins'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

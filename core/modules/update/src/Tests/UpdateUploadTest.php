@@ -8,7 +8,9 @@
 namespace Drupal\update\Tests;
 
 /**
- * Tests project upload and extract functionality.
+ * Tests the Update Manager module's upload and extraction functionality.
+ *
+ * @group update
  */
 class UpdateUploadTest extends UpdateTestBase {
 
@@ -18,14 +20,6 @@ class UpdateUploadTest extends UpdateTestBase {
    * @var array
    */
   public static $modules = array('update', 'update_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Upload and extract module functionality',
-      'description' => 'Tests the Update Manager module\'s upload and extraction functionality.',
-      'group' => 'Update',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

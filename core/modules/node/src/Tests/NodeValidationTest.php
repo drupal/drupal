@@ -11,6 +11,8 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests node validation constraints.
+ *
+ * @group node
  */
 class NodeValidationTest extends EntityUnitTestBase {
 
@@ -20,14 +22,6 @@ class NodeValidationTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node Validation',
-      'description' => 'Tests the node validation constraints.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * Set the default field storage backend for fields created during tests.

@@ -10,7 +10,9 @@ namespace Drupal\toolbar\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the toolbar tab and tray registration.
+ * Tests the implementation of hook_toolbar() by a module.
+ *
+ * @group toolbar
  */
 class ToolbarHookToolbarTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ToolbarHookToolbarTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('toolbar', 'toolbar_test', 'test_page_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Toolbar hook_toolbar',
-      'description' => 'Tests the implementation of hook_toolbar() by a module.',
-      'group' => 'Toolbar',
-    );
-  }
 
   function setUp() {
     parent::setUp();

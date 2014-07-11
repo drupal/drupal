@@ -13,12 +13,8 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
 
 /**
- * Tests the migrate executable.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\migrate\Tests\MigrateExecutableTest
  * @group migrate
- *
- * @covers \Drupal\migrate\Tests\MigrateExecutableTest
  */
 class MigrateExecutableTest extends MigrateTestCase {
 
@@ -46,17 +42,6 @@ class MigrateExecutableTest extends MigrateTestCase {
   protected $migrationConfiguration = array(
     'id' => 'test',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Migrate executable',
-      'description' => 'Tests the migrate executable.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * {@inheritdoc}

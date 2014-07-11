@@ -12,6 +12,8 @@ use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
  * Tests the Comment entity's cache tags.
+ *
+ * @group comment
  */
 class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
@@ -19,13 +21,6 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('comment');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('Comment', 'Comment');
-  }
 
   /**
    * {@inheritdoc}

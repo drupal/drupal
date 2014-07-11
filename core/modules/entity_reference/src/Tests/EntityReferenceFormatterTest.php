@@ -10,7 +10,9 @@ namespace Drupal\entity_reference\Tests;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
- * Tests Entity Reference formatters.
+ * Tests the formatters functionality.
+ *
+ * @group entity_reference
  */
 class EntityReferenceFormatterTest extends EntityUnitTestBase {
 
@@ -48,14 +50,6 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('entity_reference');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity reference formatters',
-      'description' => 'Tests the formatters functionality.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

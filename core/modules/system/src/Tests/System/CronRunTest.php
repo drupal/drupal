@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests cron runs.
+ *
+ * @group system
  */
 class CronRunTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class CronRunTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('common_test', 'common_test_cron_helper');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cron run',
-      'description' => 'Test cron run.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Test cron runs.

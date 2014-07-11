@@ -10,8 +10,9 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Unit test class for non-storage related entity field functions.
+ * Tests other Field API functions.
  *
+ * @group field
  * @todo move this to the Entity module
  */
 class FieldAttachOtherTest extends FieldUnitTestBase {
@@ -29,14 +30,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    * @var string
    */
   protected $field_name_2;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field attach tests (other)',
-      'description' => 'Test other Field API functions.',
-      'group' => 'Field API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

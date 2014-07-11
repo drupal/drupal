@@ -11,6 +11,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests filter settings.
+ *
+ * @group filter
  */
 class FilterSettingsTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class FilterSettingsTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('filter');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter settings',
-      'description' => 'Tests filter settings.',
-      'group' => 'Filter',
-    );
-  }
 
   /**
    * Tests explicit and implicit default settings for filters.

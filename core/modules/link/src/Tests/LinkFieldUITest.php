@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests link field UI functionality.
+ *
+ * @group link
  */
 class LinkFieldUITest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class LinkFieldUITest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'link', 'field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Link field UI',
-      'description' => 'Tests link field UI functionality.',
-      'group' => 'Field types',
-    );
-  }
 
   function setUp() {
     parent::setUp();

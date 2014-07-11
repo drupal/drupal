@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the node row plugin.
  *
+ * @group node
  * @see \Drupal\node\Plugin\views\row\NodeRow
  */
 class RowPluginTest extends NodeTestBase {
@@ -43,14 +44,6 @@ class RowPluginTest extends NodeTestBase {
    * @var array
    */
   protected $nodes;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Row plugin',
-      'description' => 'Tests the node row plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

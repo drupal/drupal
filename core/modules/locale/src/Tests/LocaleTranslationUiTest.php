@@ -13,7 +13,10 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\String;
 
 /**
- * Functional test for string translation and validation.
+ * Adds a new locale and translates its name. Checks the validation of
+ * translation strings and search results.
+ *
+ * @group locale
  */
 class LocaleTranslationUiTest extends WebTestBase {
 
@@ -23,14 +26,6 @@ class LocaleTranslationUiTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'String translate, search and validate',
-      'description' => 'Adds a new locale and translates its name. Checks the validation of translation strings and search results.',
-      'group' => 'Locale',
-    );
-  }
 
   /**
    *  Enable interface translation to English

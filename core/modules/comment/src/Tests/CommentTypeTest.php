@@ -14,7 +14,9 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\Entity\Node;
 
 /**
- * Tests related to custom comment types.
+ * Ensures that comment type functions work correctly.
+ *
+ * @group comment
  */
 class CommentTypeTest extends CommentTestBase {
 
@@ -42,17 +44,6 @@ class CommentTypeTest extends CommentTestBase {
   public function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser($this->permissions);
-  }
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment types',
-      'description' => 'Ensures that comment type functions work correctly.',
-      'group' => 'Comment',
-    );
   }
 
   /**

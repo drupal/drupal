@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests for Twig debug markup.
+ *
+ * @group Theme
  */
 class TwigDebugMarkupTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class TwigDebugMarkupTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig debug markup',
-      'description' => 'Tests Twig debug markup.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Tests debug markup added to Twig template output.

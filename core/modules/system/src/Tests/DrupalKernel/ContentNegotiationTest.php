@@ -11,16 +11,10 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests content negotiation.
+ *
+ * @group DrupalKernel
  */
 class ContentNegotiationTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Content negotiation',
-      'description' => 'Tests content negotiation.',
-      'group' => 'DrupalKernel',
-    );
-  }
 
   /**
    * Verifies HTML responses for bogus Accept headers.

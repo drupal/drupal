@@ -8,25 +8,10 @@
 namespace Drupal\Tests\Core\Plugin;
 
 /**
- * Tests the default plugin bag.
- *
- * @see \Drupal\Core\Plugin\DefaultPluginBag
- *
- * @group Drupal
- * @group Drupal_Plugin
+ * @coversDefaultClass \Drupal\Core\Plugin\DefaultPluginBag
+ * @group Plugin
  */
 class DefaultPluginBagTest extends PluginBagTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Default plugin bag',
-      'description' => 'Tests the default plugin bag.',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * Tests the has method.

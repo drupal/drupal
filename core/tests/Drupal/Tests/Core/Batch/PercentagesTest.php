@@ -11,23 +11,14 @@ use Drupal\Core\Batch\Percentage;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Unit tests of progress percentage rounding.
+ * @coversDefaultClass \Drupal\Component\Batch\Batch
+ * @group Batch
  *
  * Tests the Batch helper object to make sure that the rounding works properly
  * in all cases.
- *
- * @see \Drupal\Component\Batch\Batch
  */
 class PercentagesTest extends UnitTestCase {
   protected $testCases = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Batch percentages',
-      'description' => 'Unit tests of progress percentage rounding.',
-      'group' => 'Batch API',
-    );
-  }
 
   /**
    * Tests the format() function.

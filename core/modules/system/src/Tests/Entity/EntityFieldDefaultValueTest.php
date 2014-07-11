@@ -12,7 +12,9 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Tests Entity API default field value functionality.
+ * Tests default values for entity fields.
+ *
+ * @group Entity
  */
 class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
 
@@ -22,14 +24,6 @@ class EntityFieldDefaultValueTest extends EntityUnitTestBase  {
    * @var \Drupal\Component\Uuid\UuidInterface
    */
   protected $uuid;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Field Default Value',
-      'description' => 'Tests default values for entity fields.',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

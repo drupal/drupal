@@ -8,17 +8,11 @@
 namespace Drupal\image\Tests;
 
 /**
- * Test class to check for various validations.
+ * Tests validation functions such as min/max resolution.
+ *
+ * @group image
  */
 class ImageFieldValidateTest extends ImageFieldTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Image field validation tests',
-      'description' => 'Tests validation functions such as min/max resolution.',
-      'group' => 'Image',
-    );
-  }
-
   /**
    * Test min/max resolution settings.
    */

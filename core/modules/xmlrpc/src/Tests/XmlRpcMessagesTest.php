@@ -10,7 +10,9 @@ namespace Drupal\xmlrpc\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * XML-RPC message and alteration tests.
+ * Tests large messages and method alterations.
+ *
+ * @group xmlrpc
  */
 class XmlRpcMessagesTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class XmlRpcMessagesTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('xmlrpc', 'xmlrpc_test');
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'XML-RPC message and alteration',
-      'description' => 'Test large messages and method alterations.',
-      'group' => 'XML-RPC',
-    );
-  }
 
   /**
    * Make sure that XML-RPC can transfer large messages.

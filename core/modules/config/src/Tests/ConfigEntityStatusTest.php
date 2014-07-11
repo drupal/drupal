@@ -11,6 +11,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests configuration entity status functionality.
+ *
+ * @group config
  */
 class ConfigEntityStatusTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class ConfigEntityStatusTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('config_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration entity status',
-      'description' => 'Tests configuration entity status functionality.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests the enabling/disabling of entities.

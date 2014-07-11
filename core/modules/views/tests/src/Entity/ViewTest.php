@@ -13,22 +13,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
 
 /**
- * Tests the view entity.
- *
  * @coversDefaultClass \Drupal\views\Entity\View
+ * @group views
  */
 class ViewTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'View entity test',
-      'description' => 'Tests the \Drupal\views\Entity\View class.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Mail;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests the functionality of drupal_wrap_mail().
+ * Tests drupal_wrap_mail().
+ *
+ * @group Mail
  */
 class WrapMailUnitTest extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Mail wrapping',
-      'description' => 'Tests drupal_wrap_mail().',
-      'group' => 'Mail',
-    );
-  }
 
   /**
    * Makes sure that drupal_wrap_mail() wraps the correct types of lines.

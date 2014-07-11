@@ -8,7 +8,9 @@
 namespace Drupal\content_translation\Tests;
 
 /**
- * Tests the Entity Test Translation UI.
+ * Tests the test content translation UI with the test entity.
+ *
+ * @group content_translation
  */
 class ContentTestTranslationUITest extends ContentTranslationUITest {
 
@@ -18,14 +20,6 @@ class ContentTestTranslationUITest extends ContentTranslationUITest {
    * @var array
    */
   public static $modules = array('language', 'content_translation', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Test translation UI',
-      'description' => 'Tests the test content translation UI with the test entity.',
-      'group' => 'Content Translation UI',
-    );
-  }
 
   /**
    * Overrides \Drupal\simpletest\WebTestBase::setUp().

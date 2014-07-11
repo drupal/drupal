@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the UI and functionality for the Custom boolean field handler options.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\field\Boolean
  */
 class CustomBooleanTest extends UITestBase {
@@ -22,14 +23,6 @@ class CustomBooleanTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Boolean custom options: UI',
-      'description' => 'Tests the UI and functionality for the Custom boolean field handler options',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * \Drupal\views\Tests\ViewTestBase::viewsData().

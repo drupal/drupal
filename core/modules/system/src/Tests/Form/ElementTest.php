@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests building and processing of core form elements.
+ *
+ * @group Form
  */
 class ElementTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ElementTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Element processing',
-      'description' => 'Tests building and processing of core form elements.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests placeholder text for elements that support placeholders.

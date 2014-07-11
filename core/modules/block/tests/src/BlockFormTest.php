@@ -11,19 +11,10 @@ use Drupal\block\BlockForm;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the block form.
- *
- * @see \Drupal\block\BlockForm
+ * @coversDefaultClass \Drupal\block\BlockForm
+ * @group block
  */
 class BlockFormTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block form',
-      'description' => 'Tests the block form.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Tests the unique machine name generator.

@@ -13,7 +13,10 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests filtering for XSS in rendered entity templates in all themes.
+ * Tests themed output for each entity type in all available themes to ensure
+ * entity labels are filtered for XSS.
+ *
+ * @group Theme
  */
 class EntityFilteringThemeTest extends WebTestBase {
 
@@ -71,14 +74,6 @@ class EntityFilteringThemeTest extends WebTestBase {
    * @string
    */
   protected $xss_label = "string with <em>HTML</em> and <script>alert('JS');</script>";
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity filtering theme test',
-      'description' => 'Tests themed output for each entity type in all available themes to ensure entity labels are filtered for XSS.',
-      'group' => 'Theme',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -9,16 +9,10 @@ namespace Drupal\taxonomy\Tests;
 
 /**
  * Unit tests for taxonomy term functions.
+ *
+ * @group taxonomy
  */
 class TermUnitTest extends TaxonomyTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term unit tests',
-      'description' => 'Unit tests for taxonomy term functions.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function testTermDelete() {
     $vocabulary = $this->createVocabulary();

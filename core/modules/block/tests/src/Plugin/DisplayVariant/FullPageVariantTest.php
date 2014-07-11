@@ -10,13 +10,8 @@ namespace Drupal\block\Tests\Plugin\DisplayVariant;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the full page display variant.
- *
  * @coversDefaultClass \Drupal\block\Plugin\DisplayVariant\FullPageVariant
- *
- * @group Drupal
- * @group Block
- * @group Display
+ * @group block
  */
 class FullPageVariantTest extends UnitTestCase {
 
@@ -47,17 +42,6 @@ class FullPageVariantTest extends UnitTestCase {
    * @var \Drupal\Core\Theme\ThemeNegotiatorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $themeNegotiator;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Full page variant test',
-      'description' => '',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Sets up a display variant plugin for testing.

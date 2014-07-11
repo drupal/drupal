@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of system performance variables to configuration.
+ * Upgrade performance variables to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemPerformanceTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate performance variables to system.*.yml',
-      'description'  => 'Upgrade performance variables to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

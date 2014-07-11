@@ -11,21 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Component\Utility\Crypt;
 
 /**
- * Tests random bytes generation.
- *
- * @see \Drupal\Component\Utility\Crypt
- *
- * @group Drupal
- * @group Crypt
+ * @coversDefaultClass \Drupal\Component\Utility\Crypt
+ * @group Utility
  */
 class CryptTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Crypt generator tests',
-      'description' => 'Test functionality of Crypt component.',
-    );
-  }
 
   /**
    * Tests \Drupal\Component\Utility\Crypt::randomBytes().

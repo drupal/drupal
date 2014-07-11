@@ -11,7 +11,10 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Extension\ExtensionSchemaVersionException;
 
 /**
- * Tests for missing update dependencies.
+ * Tests that a module implementing hook_update_8000() causes an error to be
+ * displayed on update.
+ *
+ * @group Update
  */
 class InvalidUpdateHookTest extends WebTestBase {
 
@@ -35,14 +38,6 @@ class InvalidUpdateHookTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   private $update_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Invalid update hook',
-      'description' => 'Tests that a module implementing hook_update_8000() causes an error to be displayed on update.',
-      'group' => 'Update API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

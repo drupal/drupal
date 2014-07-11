@@ -9,19 +9,10 @@ namespace Drupal\field\Tests;
 
 /**
  * Tests the field type manager.
+ *
+ * @group field
  */
 class FieldTypePluginManagerTest extends FieldUnitTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Field type manager',
-      'description' => 'Tests the field type manager',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * Tests the default settings convenience methods.

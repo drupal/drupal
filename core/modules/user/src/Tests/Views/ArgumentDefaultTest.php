@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests views user argument default plugin.
+ *
+ * @group user
  */
 class ArgumentDefaultTest extends UserTestBase {
 
@@ -20,14 +22,6 @@ class ArgumentDefaultTest extends UserTestBase {
    * @var array
    */
   public static $testViews = array('test_plugin_argument_default_current_user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Argument default',
-      'description' => 'Tests user argument default plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   public function test_plugin_argument_default_current_user() {
     // Create a user to test.

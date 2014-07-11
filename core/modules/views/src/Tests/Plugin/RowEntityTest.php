@@ -13,6 +13,7 @@ use Drupal\views\Tests\ViewUnitTestBase;
 /**
  * Tests the generic entity row plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\row\EntityRow
  */
 class RowEntityTest extends ViewUnitTestBase {
@@ -30,14 +31,6 @@ class RowEntityTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_entity_row');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Row: Entity',
-      'description' => 'Tests the generic entity row plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,17 +11,11 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test user autocompletion.
+ * Tests user autocompletion functionality.
+ *
+ * @group user
  */
 class UserAutocompleteTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'User autocompletion',
-      'description' => 'Test user autocompletion functionality.',
-      'group' => 'User'
-    );
-  }
-
   function setUp() {
     parent::setUp();
 

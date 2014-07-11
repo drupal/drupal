@@ -13,20 +13,10 @@ use Drupal\views\Views;
 /**
  * Tests the wizard with node_revision as base table.
  *
+ * @group node
  * @see \Drupal\node\Plugin\views\wizard\NodeRevision
  */
 class NodeRevisionWizardTest extends WizardTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Node revision wizard',
-      'description' => 'Tests the wizard with node_revision as base table.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   /**
    * Tests creating a node revision view.

@@ -13,7 +13,9 @@ use Drupal\Core\Render\Element;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests drupal_render().
+ * Performs functional tests on drupal_render().
+ *
+ * @group Common
  */
 class RenderTest extends DrupalUnitTestBase {
 
@@ -23,14 +25,6 @@ class RenderTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'common_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'drupal_render()',
-      'description' => 'Performs functional tests on drupal_render().',
-      'group' => 'Common',
-    );
-  }
 
   function setUp() {
     parent::setUp();

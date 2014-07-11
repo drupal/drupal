@@ -10,7 +10,10 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests generic date and time handling capabilities of Drupal.
+ * Configure date and time settings. Test date formatting and time zone
+ * handling, including daylight saving time.
+ *
+ * @group system
  */
 class DateTimeTest extends WebTestBase {
 
@@ -20,14 +23,6 @@ class DateTimeTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Date and time',
-      'description' => 'Configure date and time settings. Test date formatting and time zone handling, including daylight saving time.',
-      'group' => 'System',
-    );
-  }
 
   function setUp() {
     parent::setUp();

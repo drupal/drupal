@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the combine filter handler.
+ *
+ * @group views
  */
 class FilterCombineTest extends ViewUnitTestBase {
 
@@ -26,14 +28,6 @@ class FilterCombineTest extends ViewUnitTestBase {
     'views_test_data_name' => 'name',
     'views_test_data_job' => 'job',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Combine',
-      'description' => 'Tests the combine filter handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   public function testFilterCombineContains() {
     $view = Views::getView('test_view');

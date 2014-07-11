@@ -10,17 +10,11 @@ namespace Drupal\simpletest\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test internal testing framework browser.
+ * Tests the internal browser of the testing framework.
+ *
+ * @group simpletest
  */
 class BrowserTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'SimpleTest browser',
-      'description' => 'Test the internal browser of the testing framework.',
-      'group' => 'SimpleTest',
-    );
-  }
-
   /**
    * Test \Drupal\simpletest\WebTestBase::getAbsoluteUrl().
    */

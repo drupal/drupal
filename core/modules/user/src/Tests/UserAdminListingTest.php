@@ -10,19 +10,12 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Defines a test for the fallback user admin listing.
+ * Tests the user admin listing if views is not enabled.
  *
+ * @group user
  * @see user_admin_account()
  */
 class UserAdminListingTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User people listing',
-      'description' => 'Test the user admin listing if views is not enabled.',
-      'group' => 'User'
-    );
-  }
 
   /**
    * Tests the listing.

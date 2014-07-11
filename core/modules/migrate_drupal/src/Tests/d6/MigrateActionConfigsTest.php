@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Action module.
+ * Upgrade variables to action.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateActionConfigsTest extends MigrateDrupalTestBase {
 
@@ -24,17 +26,6 @@ class MigrateActionConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('action');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to action.settings.yml',
-      'description'  => 'Upgrade variables to action.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\content_translation\FieldTranslationSynchronizer;
 
 /**
- * Tests the Content Translation field synchronization algorithm.
+ * Tests the field synchronization logic.
+ *
+ * @group content_translation
  */
 class ContentTranslationSyncUnitTest extends DrupalUnitTestBase {
 
@@ -58,14 +60,6 @@ class ContentTranslationSyncUnitTest extends DrupalUnitTestBase {
   protected $unchangedFieldValues;
 
   public static $modules = array('language', 'content_translation');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field synchronization',
-      'description' => 'Tests the field synchronization logic.',
-      'group' => 'Content Translation UI',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

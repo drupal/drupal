@@ -12,7 +12,10 @@ use Drupal\Core\Language\Language;
 use Drupal\system\Entity\Menu;
 
 /**
- * Defines a test class for testing menu language functionality.
+ * Create menu and menu links in non-English language, and edit language
+ * settings.
+ *
+ * @group menu_ui
  */
 class MenuLanguageTest extends MenuWebTestBase {
 
@@ -25,14 +28,6 @@ class MenuLanguageTest extends MenuWebTestBase {
 
   protected $admin_user;
   protected $menu;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Menu language',
-      'description' => 'Create menu and menu links in non-English language, and edit language settings.',
-      'group' => 'Menu',
-    );
-  }
 
   function setUp() {
     parent::setUp();

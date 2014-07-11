@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Functional tests shutdown functions.
+ *
+ * @group system
  */
 class ShutdownFunctionsTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ShutdownFunctionsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('system_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Shutdown functions',
-      'description' => 'Functional tests for shutdown functions',
-      'group' => 'System',
-    );
-  }
 
   protected function tearDown() {
     // This test intentionally throws an exception in a PHP shutdown function.

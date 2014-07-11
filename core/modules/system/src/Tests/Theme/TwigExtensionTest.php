@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Twig extensions.
+ *
+ * @group Theme
  */
 class TwigExtensionTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class TwigExtensionTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test', 'twig_extension_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig Extension',
-      'description' => 'Tests Twig extensions.',
-      'group' => 'Theme',
-    );
-  }
 
   function setUp() {
     parent::setUp();

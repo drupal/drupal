@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests menu router and default menu link functionality.
+ *
+ * @group Menu
  */
 class MenuRouterTest extends WebTestBase {
 
@@ -34,14 +36,6 @@ class MenuRouterTest extends WebTestBase {
    * @var string
    */
   protected $default_theme;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Menu router',
-      'description' => 'Tests menu router and default menu links functionality.',
-      'group' => 'Menu',
-    );
-  }
 
   function setUp() {
     // Enable dummy module that implements hook_menu.

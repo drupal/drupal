@@ -8,17 +8,11 @@
 namespace Drupal\statistics\Tests;
 
 /**
- * Tests that report pages render properly, and that access logging works.
+ * Tests display of statistics report blocks.
+ *
+ * @group statistics
  */
 class StatisticsReportsTest extends StatisticsTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Statistics reports tests',
-      'description' => 'Tests display of statistics report blocks.',
-      'group' => 'Statistics'
-    );
-  }
 
   /**
    * Tests the "popular content" block.

@@ -11,19 +11,10 @@ use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the JsonEncoder class.
- *
- * @see \Drupal\serialization\Encoder\JsonEncoder
+ * @coversDefaultClass \Drupal\serialization\Encoder\JsonEncoder
+ * @group serialization
  */
 class JsonEncoderTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'JsonEncoderTest',
-      'description' => 'Tests the JsonEncoder class.',
-      'group' => 'Serialization',
-    );
-  }
 
   /**
    * Tests the supportsEncoding() method.

@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Plugin;
 /**
  * Tests the feed display plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\display\Feed
  */
 class DisplayFeedTest extends PluginTestBase {
@@ -27,14 +28,6 @@ class DisplayFeedTest extends PluginTestBase {
    * @var array
    */
   public static $modules = array('block', 'node', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display: Feed plugin',
-      'description' => 'Tests the feed display plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

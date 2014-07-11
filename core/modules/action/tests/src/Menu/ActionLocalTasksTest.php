@@ -10,20 +10,11 @@ namespace Drupal\action\Tests\Menu;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 
 /**
- * Tests existence of action local tasks.
+ * Tests action local tasks.
  *
- * @group Drupal
- * @group Action
+ * @group action
  */
 class ActionLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Action local tasks test',
-      'description' => 'Test action local tasks.',
-      'group' => 'Action',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array('action' => 'core/modules/action');

@@ -10,7 +10,9 @@ namespace Drupal\entity\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the entity display mode configuration entities.
+ * Tests the entity display modes UI.
+ *
+ * @group entity
  */
 class EntityDisplayModeTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class EntityDisplayModeTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity display modes UI',
-      'description' => 'Tests the entity display modes UI.',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * Tests the EntityViewMode user interface.

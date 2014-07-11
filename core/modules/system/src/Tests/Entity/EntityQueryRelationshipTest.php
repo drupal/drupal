@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\Entity;
 
 /**
- * Tests Entity Query API relationship functionality.
+ * Tests the Entity Query relationship API.
+ *
+ * @group Entity
  */
 class EntityQueryRelationshipTest extends EntityUnitTestBase  {
 
@@ -58,14 +60,6 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
    * @var array
    */
   protected $queryResults;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Query relationship',
-      'description' => 'Tests the Entity Query relationship API',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

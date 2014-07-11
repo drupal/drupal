@@ -11,12 +11,8 @@ use Drupal\search\Plugin\SearchPluginBag;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the search plugin bag.
- *
- * @see \Drupal\search\Plugin\SearchPluginBag
- *
- * @group Drupal
- * @group Search
+ * @coversDefaultClass \Drupal\search\Plugin\SearchPluginBag
+ * @group search
  */
 class SearchPluginBagTest extends UnitTestCase {
 
@@ -41,16 +37,6 @@ class SearchPluginBagTest extends UnitTestCase {
    */
   protected $pluginInstances;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Search plugin bag test',
-      'description' => 'Tests the \Drupal\search\Plugin\SearchPluginBag class',
-      'group' => 'Search',
-    );
-  }
   /**
    * {@inheritdoc}
    */

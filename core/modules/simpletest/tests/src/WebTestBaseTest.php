@@ -10,24 +10,10 @@ namespace Drupal\simpletest\Tests;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests helper methods provided by the abstract WebTestBase class.
- *
- * @group Drupal
- * @group simpletest
  * @coversDefaultClass \Drupal\simpletest\WebTestBase
+ * @group simpletest
  */
 class WebTestBaseTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'WebTestBase helper functions test',
-      'description' => 'Test helper functions provided by the WebTestBase abstract class.',
-      'group' => 'Simpletest',
-    );
-  }
 
   /**
    * Provides data for testing the assertFieldByName() helper.

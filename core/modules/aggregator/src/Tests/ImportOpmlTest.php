@@ -8,7 +8,9 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests importing feeds from OPML functionality for the Aggregator module.
+ * Tests OPML import.
+ *
+ * @group aggregator
  */
 class ImportOpmlTest extends AggregatorTestBase {
 
@@ -18,14 +20,6 @@ class ImportOpmlTest extends AggregatorTestBase {
    * @var array
    */
   public static $modules = array('block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Import feeds from OPML functionality',
-      'description' => 'Test OPML import.',
-      'group' => 'Aggregator',
-    );
-  }
 
   function setUp() {
     parent::setUp();

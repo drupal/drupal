@@ -10,7 +10,9 @@ namespace Drupal\views_ui\Tests;
 use Drupal\tour\Tests\TourTestBase;
 
 /**
- * Tests tour functionality.
+ * Tests the Views UI tour.
+ *
+ * @group views_ui
  */
 class ViewsUITourTest extends TourTestBase {
 
@@ -27,14 +29,6 @@ class ViewsUITourTest extends TourTestBase {
    * @var array
    */
   public static $modules = array('views_ui', 'tour');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views UI tour tests',
-      'description' => 'Tests the Views UI tour.',
-      'group' => 'Tour',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

@@ -8,17 +8,11 @@
 namespace Drupal\taxonomy\Tests;
 
 /**
- * Test the entity_load_multiple() function.
+ * Tests the loading of multiple taxonomy terms at once.
+ *
+ * @group taxonomy
  */
 class LoadMultipleTest extends TaxonomyTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term multiple loading',
-      'description' => 'Test the loading of multiple taxonomy terms at once',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -10,7 +10,10 @@ namespace Drupal\system\Tests\Update;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for missing update dependencies.
+ * Tests that the minimum schema version is correct even if only 7.x update
+ * hooks are retained .
+ *
+ * @group Update
  */
 class UpdatesWith7xTest extends WebTestBase {
 
@@ -30,14 +33,6 @@ class UpdatesWith7xTest extends WebTestBase {
    * An administrative user.
    */
   private $update_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => '7.x update hooks',
-      'description' => 'Tests that the minimum schema version is correct even if only 7.x update hooks are retained .',
-      'group' => 'Update API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

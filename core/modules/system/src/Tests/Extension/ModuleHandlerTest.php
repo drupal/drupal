@@ -13,16 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests ModuleHandler functionality.
+ *
+ * @group Extension
  */
 class ModuleHandlerTest extends KernelTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module handler',
-      'description' => 'Tests ModuleHandler functionality.',
-      'group' => 'Extension',
-    );
-  }
 
   /**
    * {@inheritdoc}

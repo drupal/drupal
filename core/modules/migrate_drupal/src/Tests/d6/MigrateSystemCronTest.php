@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 cron variables to Drupal 8 system.cron config migration.
+ * Upgrade cron variable to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemCronTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate cron variable to system.*.yml',
-      'description'  => 'Upgrade cron variable to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

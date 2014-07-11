@@ -11,24 +11,10 @@ use Drupal\serialization\Normalizer\ConfigEntityNormalizer;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the ConfigEntityNormalizer class.
- *
- * @group Serialization
- *
  * @coversDefaultClass \Drupal\serialization\Normalizer\ConfigEntityNormalizer
+ * @group serialization
  */
 class ConfigEntityNormalizerTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'ConfigEntityNormalizer',
-      'description' => 'Tests the ConfigEntityNormalizer class.',
-      'group' => 'Serialization',
-    );
-  }
 
   /**
    * Tests the normalize() method.

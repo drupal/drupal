@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the block system with admin themes.
+ *
+ * @group block
  */
 class BlockAdminThemeTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class BlockAdminThemeTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Administration theme',
-      'description' => 'Tests the block system with admin themes.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Check for the accessibility of the admin theme on the  block admin page.

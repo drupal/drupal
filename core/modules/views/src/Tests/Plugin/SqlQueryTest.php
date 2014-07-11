@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the sql query plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\query\Sql
  */
 class SqlQueryTest extends ViewUnitTestBase {
@@ -23,17 +24,6 @@ class SqlQueryTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Sql query',
-      'description' => 'Tests the sql query plugin',
-      'group' => 'Views Plugins'
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -10,17 +10,11 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests user login after editing own user account.
+ * Tests user edited own account can still log in.
+ *
+ * @group user
  */
 class UserEditedOwnAccountTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User edited own account',
-      'description' => 'Test user edited own account can still log in.',
-      'group' => 'User',
-    );
-  }
 
   function testUserEditedOwnAccount() {
     // Change account setting 'Who can register accounts?' to Administrators

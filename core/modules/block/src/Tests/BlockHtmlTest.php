@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests block HTML ID validity.
+ *
+ * @group block
  */
 class BlockHtmlTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class BlockHtmlTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block', 'block_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block HTML',
-      'description' => 'Tests block HTML validity.',
-      'group' => 'Block',
-    );
-  }
 
   function setUp() {
     parent::setUp();

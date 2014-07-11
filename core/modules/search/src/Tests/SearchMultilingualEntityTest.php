@@ -12,6 +12,8 @@ use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests entities with multilingual fields.
+ *
+ * @group search
  */
 class SearchMultilingualEntityTest extends SearchTestBase {
 
@@ -30,14 +32,6 @@ class SearchMultilingualEntityTest extends SearchTestBase {
   protected $plugin;
 
   public static $modules = array('language', 'locale', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Multilingual entities',
-      'description' => 'Tests entities with multilingual fields.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

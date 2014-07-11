@@ -8,17 +8,11 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests functionality of removing a feed item in the Aggregator module.
+ * Delete feed items from a feed.
+ *
+ * @group aggregator
  */
 class DeleteFeedItemTest extends AggregatorTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Delete feed item functionality',
-      'description' => 'Delete feed items from a feed.',
-      'group' => 'Aggregator'
-    );
-  }
-
   /**
    * Tests running "delete items" from 'admin/config/services/aggregator' page.
    */

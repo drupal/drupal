@@ -9,6 +9,8 @@ namespace Drupal\views\Tests;
 
 /**
  * Tests search integration filters.
+ *
+ * @group views
  */
 class SearchIntegrationTest extends ViewTestBase {
 
@@ -25,17 +27,6 @@ class SearchIntegrationTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_search');
-
-  /**
-   * {inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Search integration tests',
-      'description' => 'Tests search integration filters of views.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * Tests search integration.

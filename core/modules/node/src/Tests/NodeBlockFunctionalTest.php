@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Functional tests for the node module blocks.
+ * Tests node block functionality.
+ *
+ * @group node
  */
 class NodeBlockFunctionalTest extends NodeTestBase {
 
@@ -32,14 +34,6 @@ class NodeBlockFunctionalTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('block', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node blocks',
-      'description' => 'Test node block functionality.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

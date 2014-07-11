@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\SortPluginBase handler.
+ *
+ * @group views
  */
 class SortTest extends ViewUnitTestBase {
 
@@ -21,14 +23,6 @@ class SortTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Sort: Generic',
-      'description' => 'Test the core Drupal\views\Plugin\views\sort\SortPluginBase handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests numeric ordering of the result set.

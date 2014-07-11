@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\InOperator handler.
+ *
+ * @group views
  */
 class FilterInOperatorTest extends ViewUnitTestBase {
 
@@ -28,14 +30,6 @@ class FilterInOperatorTest extends ViewUnitTestBase {
     'views_test_data_name' => 'name',
     'views_test_data_age' => 'age',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: In-operator',
-      'description' => 'Test the core Drupal\views\Plugin\views\filter\InOperator handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

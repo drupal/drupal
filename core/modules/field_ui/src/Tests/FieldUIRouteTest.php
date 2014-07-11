@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the functionality of the Field UI route subscriber.
+ *
+ * @group field_ui
  */
 class FieldUIRouteTest extends WebTestBase {
 
@@ -18,17 +20,6 @@ class FieldUIRouteTest extends WebTestBase {
    * Modules to enable.
    */
   public static $modules = array('field_ui_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Field UI routes',
-      'description' => 'Tests the functionality of the Field UI route subscriber.',
-      'group' => 'Field UI',
-    );
-  }
 
   /**
    * {@inheritdoc}

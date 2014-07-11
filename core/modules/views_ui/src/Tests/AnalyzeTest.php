@@ -11,6 +11,8 @@ use Drupal\views\Tests\ViewTestBase;
 
 /**
  * Tests the views analyze system.
+ *
+ * @group views_ui
  */
 class AnalyzeTest extends ViewTestBase {
 
@@ -27,14 +29,6 @@ class AnalyzeTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views Analyze',
-      'description' => 'Tests the views analyze system.',
-      'group' => 'Views',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

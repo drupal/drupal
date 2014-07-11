@@ -29,9 +29,8 @@ if (!defined('CSS_AGGREGATE_DEFAULT')) {
 }
 
 /**
- * Tests the library discovery parser.
- *
  * @coversDefaultClass \Drupal\Core\Asset\LibraryDiscoveryParser
+ * @group Asset
  */
 class LibraryDiscoveryParserTest extends UnitTestCase {
 
@@ -62,17 +61,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $lock;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\Core\Asset\LibraryDiscoveryParser',
-      'description' => '',
-      'group' => 'Asset handling',
-    );
-  }
 
   /**
    * {@inheritdoc}

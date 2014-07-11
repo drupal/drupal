@@ -14,16 +14,10 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests number step validation by Number::validStep().
+ *
+ * @group Utility
  */
 class NumberTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Number step validation',
-      'description' => 'Tests number step validation by Number::validStep()',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests Number::validStep() without offset.

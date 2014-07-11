@@ -11,7 +11,9 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Test class to check that formatters and display settings are working.
+ * Tests the display of image fields.
+ *
+ * @group image
  */
 class ImageFieldDisplayTest extends ImageFieldTestBase {
 
@@ -23,14 +25,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    * @var array
    */
   public static $modules = array('field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image field display tests',
-      'description' => 'Test the display of image fields.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * Test image formatters on node display for public files.

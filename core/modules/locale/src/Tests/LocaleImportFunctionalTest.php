@@ -11,7 +11,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Functional tests for the import of translation files.
+ * Tests the import of locale files.
+ *
+ * @group locale
  */
 class LocaleImportFunctionalTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LocaleImportFunctionalTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale', 'dblog');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Translation import',
-      'description' => 'Tests the import of locale files.',
-      'group' => 'Locale',
-    );
-  }
 
   /**
    * A user able to create languages and import translations.

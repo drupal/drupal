@@ -8,17 +8,12 @@
 namespace Drupal\node\Tests;
 
 /**
- * Checks that the post information displays when enabled for a content type.
+ * Tests that the post information (submitted by Username on date) text displays
+ * appropriately.
+ *
+ * @group node
  */
 class NodePostSettingsTest extends NodeTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node post information display',
-      'description' => 'Check that the post information (submitted by Username on date) text displays appropriately.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -12,16 +12,10 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the Drupal\Core\Template\Attribute functionality.
+ *
+ * @group Common
  */
 class AttributesTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'HTML Attributes',
-      'description' => 'Tests the Drupal\Core\Template\Attribute functionality.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Provides data for the Attribute test.

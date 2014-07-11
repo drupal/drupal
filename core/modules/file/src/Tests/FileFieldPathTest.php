@@ -9,16 +9,10 @@ namespace Drupal\file\Tests;
 
 /**
  * Tests that files are uploaded to proper locations.
+ *
+ * @group file
  */
 class FileFieldPathTest extends FileFieldTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File field file path tests',
-      'description' => 'Test that files are uploaded to the proper location with token support.',
-      'group' => 'File',
-    );
-  }
-
   /**
    * Tests the normal formatter display on node display.
    */

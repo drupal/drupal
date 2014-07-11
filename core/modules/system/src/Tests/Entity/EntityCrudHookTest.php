@@ -13,7 +13,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Tests invocation of hooks when performing an action.
+ * Tests the invocation of hooks when creating, inserting, loading, updating or
+ * deleting an entity.
  *
  * Tested hooks are:
  * - hook_entity_insert()
@@ -23,6 +24,8 @@ use Drupal\Core\Language\LanguageInterface;
  * - hook_entity_delete()
  * As well as all type-specific hooks, like hook_node_insert(),
  * hook_comment_update(), etc.
+ *
+ * @group Entity
  */
 class EntityCrudHookTest extends EntityUnitTestBase {
 
@@ -34,14 +37,6 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   public static $modules = array('block', 'block_test', 'entity_crud_hook_test', 'file', 'taxonomy', 'node', 'comment');
 
   protected $ids = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity CRUD hooks',
-      'description' => 'Tests the invocation of hooks when creating, inserting, loading, updating or deleting an entity.',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

@@ -9,16 +9,10 @@ namespace Drupal\comment\Tests;
 
 /**
  * Tests anonymous commenting.
+ *
+ * @group comment
  */
 class CommentAnonymousTest extends CommentTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Anonymous comments',
-      'description' => 'Test anonymous comments.',
-      'group' => 'Comment',
-    );
-  }
 
   function setUp() {
     parent::setUp();

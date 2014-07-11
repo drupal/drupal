@@ -42,7 +42,7 @@ use Drupal\Core\Asset\CssOptimizer;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the CssOptimizer class.
+ * Tests the CSS asset optimizer.
  *
  * @group Asset
  */
@@ -68,14 +68,6 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * @var array
    */
   protected $inline_css_group;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CSS asset optimizer functionality',
-      'description' => 'Tests the CSS asset optimizer.',
-      'group' => 'Asset handling',
-    );
-  }
 
   function setUp() {
     parent::setUp();

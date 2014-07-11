@@ -10,8 +10,9 @@ namespace Drupal\action\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests action uninstallation.
+ * Tests that uninstalling actions does not remove other module's actions.
  *
+ * @group action
  * @see \Drupal\action\Plugin\views\field\BulkForm
  */
 class ActionUninstallTest extends WebTestBase {
@@ -22,14 +23,6 @@ class ActionUninstallTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('views', 'action');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Uninstall action test',
-      'description' => 'Tests that uninstalling actions does not remove other module\'s actions.',
-      'group' => 'Action',
-    );
-  }
 
   /**
    * Tests Action uninstall.

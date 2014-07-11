@@ -11,7 +11,9 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for the locale string data API.
+ * Tests the locale string storage, string objects and data API.
+ *
+ * @group locale
  */
 class LocaleStringTest extends WebTestBase {
 
@@ -28,17 +30,6 @@ class LocaleStringTest extends WebTestBase {
    * @var \Drupal\locale\StringStorageInterface
    */
   protected $storage;
-
-  /**
-   * @return multitype:string
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'String storage and objects',
-      'description' => 'Tests the locale string storage, string objects and data API.',
-      'group' => 'Locale',
-    );
-  }
 
   function setUp() {
     parent::setUp();

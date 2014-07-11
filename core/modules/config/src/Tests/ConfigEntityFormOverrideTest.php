@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests that config overrides do not bleed through in entity forms.
+ *
+ * @group config
  */
 class ConfigEntityFormOverrideTest extends WebTestBase {
 
@@ -18,17 +20,6 @@ class ConfigEntityFormOverrideTest extends WebTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('config_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Config entity form overrides',
-      'description' => 'Tests that config overrides do not affect entity forms.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests that overrides do not affect forms.

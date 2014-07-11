@@ -13,6 +13,8 @@ use Drupal\views\Views;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\Date handler.
+ *
+ * @group views
  */
 class SortDateTest extends ViewUnitTestBase {
 
@@ -22,14 +24,6 @@ class SortDateTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Sort: Date',
-      'description' => 'Test the core Drupal\views\Plugin\views\sort\Date handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function expectedResultSet($granularity, $reverse = TRUE) {
     $expected = array();

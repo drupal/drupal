@@ -11,19 +11,10 @@ use Drupal\Tests\Core\Session\UserSessionTest;
 use Drupal\user\Entity\User;
 
 /**
- * Tests the user object.
- *
  * @coversDefaultClass \Drupal\user\Entity\User
+ * @group user
  */
 class UserTest extends UserSessionTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User object',
-      'description' => 'Tests the user object.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * {@inheritdoc}

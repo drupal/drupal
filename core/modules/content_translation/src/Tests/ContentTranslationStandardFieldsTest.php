@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the Content translation settings using the standard profile.
+ *
+ * @group content_translation
  */
 class ContentTranslationStandardFieldsTest extends WebTestBase {
 
@@ -32,17 +34,6 @@ class ContentTranslationStandardFieldsTest extends WebTestBase {
    * {@inheritdoc}
    */
   protected $profile = 'standard';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Content Translation Settings with default profile',
-      'description' => 'Test the Content Translation Settings using default profile',
-      'group' => 'Content Translation UI',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests Views argument validators.
+ *
+ * @group views
  */
 class ArgumentValidatorTest extends ViewUnitTestBase {
 
@@ -21,14 +23,6 @@ class ArgumentValidatorTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view_argument_validate_numeric');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument validator',
-      'group' => 'Views Plugins',
-      'description' => 'Test argument validator tests.',
-    );
-  }
 
   function testArgumentValidateNumeric() {
     $view = Views::getView('test_view_argument_validate_numeric');

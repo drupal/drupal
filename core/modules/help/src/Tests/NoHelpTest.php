@@ -10,7 +10,9 @@ namespace Drupal\help\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests a module without help to verify it is not listed in the help page.
+ * Verify no help is displayed for modules not providing any help.
+ *
+ * @group help
  */
 class NoHelpTest extends WebTestBase {
 
@@ -27,14 +29,6 @@ class NoHelpTest extends WebTestBase {
    * The user who will be created.
    */
   protected $adminUser;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'No help',
-      'description' => 'Verify no help is displayed for modules not providing any help.',
-      'group' => 'Help',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

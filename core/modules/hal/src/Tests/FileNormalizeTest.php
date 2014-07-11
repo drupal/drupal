@@ -18,17 +18,11 @@ use Symfony\Component\Serializer\Serializer;
 
 
 /**
- * Test the HAL normalizer.
+ * Tests that file entities can be normalized in HAL.
+ *
+ * @group hal
  */
 class FileNormalizeTest extends NormalizerTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File Normalize Test',
-      'description' => 'Test that file entities can be normalized in HAL.',
-      'group' => 'HAL',
-    );
-  }
 
   /**
    * Modules to enable.

@@ -8,7 +8,9 @@
 namespace Drupal\block\Tests;
 
 /**
- * Provides testing for the branding block functionality.
+ * Tests branding block display.
+ *
+ * @group block
  */
 class BlockSystemBrandingTest extends BlockTestBase {
 
@@ -18,17 +20,6 @@ class BlockSystemBrandingTest extends BlockTestBase {
    * @var array
    */
   public static $modules = array('block', 'system');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'System Branding Block',
-      'description' => 'Tests branding block display.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * {@inheritdoc}

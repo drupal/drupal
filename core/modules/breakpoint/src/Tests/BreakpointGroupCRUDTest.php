@@ -11,17 +11,11 @@ use Drupal\breakpoint\Entity\BreakpointGroup;
 use Drupal\breakpoint\Entity\Breakpoint;
 
 /**
- * Tests for breakpoint group CRUD operations.
+ * Tests creation, loading, updating, deleting of breakpoint groups.
+ *
+ * @group breakpoint
  */
 class BreakpointGroupCRUDTest extends BreakpointGroupTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Breakpoint group CRUD operations',
-      'description' => 'Test creation, loading, updating, deleting of breakpoint groups.',
-      'group' => 'Breakpoint',
-    );
-  }
 
   /**
    * Test CRUD operations for breakpoint groups.

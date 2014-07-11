@@ -11,7 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests form elements provided by Filter module.
+ * Tests form elements with associated text formats.
+ *
+ * @group filter
  */
 class FilterFormTest extends WebTestBase {
 
@@ -35,17 +37,6 @@ class FilterFormTest extends WebTestBase {
    * @var \Drupal\user\Entity\User
    */
   protected $webUser;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Text format form element',
-      'description' => 'Tests form elements with associated text formats.',
-      'group' => 'Filter',
-    );
-  }
 
   /**
    * {@inheritdoc}

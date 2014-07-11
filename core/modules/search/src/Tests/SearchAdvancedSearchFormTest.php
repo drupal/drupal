@@ -9,17 +9,11 @@ namespace Drupal\search\Tests;
 
 /**
  * Indexes content and tests the advanced search form.
+ *
+ * @group search
  */
 class SearchAdvancedSearchFormTest extends SearchTestBase {
   protected $node;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Advanced search form',
-      'description' => 'Indexes content and tests the advanced search form.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

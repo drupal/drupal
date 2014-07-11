@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Mail;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests related to the mail system.
+ * Performs tests on the pluggable mailing framework.
+ *
+ * @group Mail
  */
 class MailTest extends WebTestBase {
 
@@ -28,14 +30,6 @@ class MailTest extends WebTestBase {
    * all instance of the same class.
    */
   private static $sent_message;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Mail system',
-      'description' => 'Performs tests on the pluggable mailing framework.',
-      'group' => 'Mail',
-    );
-  }
 
   /**
    * Assert that the pluggable mail system is functional.

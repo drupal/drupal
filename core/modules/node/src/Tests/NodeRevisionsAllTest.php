@@ -8,20 +8,15 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests actions against revisions for user with access to all revisions.
+ * Create a node with revisions and test viewing, saving, reverting, and
+ * deleting revisions for user with access to all.
+ *
+ * @group node
  */
 class NodeRevisionsAllTest extends NodeTestBase {
   protected $nodes;
   protected $revisionLogs;
   protected $profile = "standard";
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node revisions all',
-      'description' => 'Create a node with revisions and test viewing, saving, reverting, and deleting revisions for user with access to all.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -11,7 +11,9 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 
 /**
- * Tests the YamlDiscoveryDecorator class.
+ * YamlDiscoveryDecorator unit tests.
+ *
+ * @group Plugin
  */
 class YamlDiscoveryDecoratorTest extends UnitTestCase {
 
@@ -35,14 +37,6 @@ class YamlDiscoveryDecoratorTest extends UnitTestCase {
     'decorated_1' => 'decorated_test_1',
     'decorated_2' => 'decorated_test_2',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'YamlDiscoveryDecorator',
-      'description' => 'YamlDiscoveryDecorator unit tests.',
-      'group' => 'Plugin',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

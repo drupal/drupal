@@ -11,7 +11,11 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\filter\Plugin\FilterInterface;
 
 /**
- * Security tests for missing/vanished text formats or filters.
+ * Tests the behavior of check_markup() when a filter or text format vanishes,
+ * or when check_markup() is called in such a way that it is instructed to skip
+ * all filters of the "FilterInterface::TYPE_HTML_RESTRICTOR" type.
+ *
+ * @group filter
  */
 class FilterSecurityTest extends WebTestBase {
 
@@ -28,14 +32,6 @@ class FilterSecurityTest extends WebTestBase {
    * @var object
    */
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter security',
-      'description' => 'Test the behavior of check_markup() when a filter or text format vanishes, or when check_markup() is called in such a way that it is instructed to skip all filters of the "FilterInterface::TYPE_HTML_RESTRICTOR" type.',
-      'group' => 'Filter',
-    );
-  }
 
   function setUp() {
     parent::setUp();

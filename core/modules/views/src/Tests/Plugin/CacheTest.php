@@ -11,8 +11,9 @@ use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 
 /**
- * Basic test for pluggable caching.
+ * Tests pluggable caching for views.
  *
+ * @group views
  * @see views_plugin_cache
  */
 class CacheTest extends PluginTestBase {
@@ -23,14 +24,6 @@ class CacheTest extends PluginTestBase {
    * @var array
    */
   public static $testViews = array('test_view', 'test_cache');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cache',
-      'description' => 'Tests pluggable caching for views.',
-      'group' => 'Views Plugins'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

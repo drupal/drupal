@@ -12,16 +12,10 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the language fallback behavior.
+ *
+ * @group language
  */
 class LanguageFallbackTest extends LanguageTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language fallback',
-      'description' => 'Tests the language fallback behavior.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * {@inheritdoc}

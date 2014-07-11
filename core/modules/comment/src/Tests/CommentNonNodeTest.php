@@ -15,7 +15,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Tests basic comment functionality against the entity_test entity type.
+ * Tests commenting on a test entity.
+ *
+ * @group comment
  */
 class CommentNonNodeTest extends WebTestBase {
 
@@ -27,14 +29,6 @@ class CommentNonNodeTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment non-node tests',
-      'description' => 'Test commenting on a test entity.',
-      'group' => 'Comment',
-    );
-  }
 
   function setUp() {
     parent::setUp();

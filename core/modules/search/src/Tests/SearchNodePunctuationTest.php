@@ -8,19 +8,13 @@
 namespace Drupal\search\Tests;
 
 /**
- * Tests node search with punctuation.
+ * Tests search functionality with punctuation.
+ *
+ * @group search
  */
 class SearchNodePunctuationTest extends SearchTestBase {
 
   public $test_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Search with punctuation',
-      'description' => 'Tests search functionality with punctuation.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

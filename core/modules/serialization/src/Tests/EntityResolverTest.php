@@ -7,7 +7,9 @@
 namespace Drupal\serialization\Tests;
 
 /**
- * Tests the entity reference resolver.
+ * Tests that entities references can be resolved.
+ *
+ * @group serialization
  */
 class EntityResolverTest extends NormalizerTestBase {
 
@@ -24,14 +26,6 @@ class EntityResolverTest extends NormalizerTestBase {
    * @var string
    */
   protected $format = 'hal_json';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity resolver tests',
-      'description' => 'Tests that entities references can be resolved.',
-      'group' => 'Serialization',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

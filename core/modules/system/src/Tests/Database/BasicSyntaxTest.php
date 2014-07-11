@@ -8,21 +8,15 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests how the current database driver interprets the SQL syntax.
+ * Tests SQL syntax interpretation.
  *
  * In order to ensure consistent SQL handling throughout Drupal
  * across multiple kinds of database systems, we test that the
  * database system interprets SQL syntax in an expected fashion.
+ *
+ * @group Database
  */
 class BasicSyntaxTest extends DatabaseTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Basic SQL syntax tests',
-      'description' => 'Test SQL syntax interpretation.',
-      'group' => 'Database',
-    );
-  }
-
   /**
    * Tests string concatenation.
    */

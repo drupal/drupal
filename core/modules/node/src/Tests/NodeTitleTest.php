@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests node title functionality.
+ * Tests node title.
+ *
+ * @group node
  */
 class NodeTitleTest extends NodeTestBase {
 
@@ -20,14 +22,6 @@ class NodeTitleTest extends NodeTestBase {
   public static $modules = array('comment', 'views');
 
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node title',
-      'description' => 'Test node title.',
-      'group' => 'Node'
-    );
-  }
 
   function setUp() {
     parent::setUp();

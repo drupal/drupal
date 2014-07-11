@@ -10,7 +10,9 @@ namespace Drupal\syslog\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Syslog module functionality.
+ * Tests syslog settings.
+ *
+ * @group syslog
  */
 class SyslogTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class SyslogTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('syslog');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Syslog functionality',
-      'description' => 'Test syslog settings.',
-      'group' => 'Syslog'
-    );
-  }
 
   /**
    * Tests the syslog settings page.

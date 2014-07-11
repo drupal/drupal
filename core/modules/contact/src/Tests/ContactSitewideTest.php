@@ -12,7 +12,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
- * Tests the site-wide contact form.
+ * Tests site-wide contact form functionality.
+ *
+ * @group contact
  */
 class ContactSitewideTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class ContactSitewideTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('text', 'contact', 'field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Site-wide contact form',
-      'description' => 'Tests site-wide contact form functionality.',
-      'group' => 'Contact',
-    );
-  }
 
   /**
    * Tests configuration options and the site-wide contact form.

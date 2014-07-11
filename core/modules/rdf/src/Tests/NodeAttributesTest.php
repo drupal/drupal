@@ -11,6 +11,8 @@ use Drupal\node\Tests\NodeTestBase;
 
 /**
  * Tests the RDFa markup of Nodes.
+ *
+ * @group rdf
  */
 class NodeAttributesTest extends NodeTestBase {
 
@@ -20,14 +22,6 @@ class NodeAttributesTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('rdf');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDFa markup for nodes',
-      'description' => 'Tests the RDFa markup of nodes.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

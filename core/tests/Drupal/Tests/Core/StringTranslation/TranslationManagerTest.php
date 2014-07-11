@@ -11,9 +11,8 @@ use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the translation manager.
- *
- * @see \Drupal\Core\StringTranslation\TranslationManager
+ * @coversDefaultClass \Drupal\Core\StringTranslation\TranslationManager
+ * @group StringTranslation
  */
 class TranslationManagerTest extends UnitTestCase {
 
@@ -23,17 +22,6 @@ class TranslationManagerTest extends UnitTestCase {
    * @var \Drupal\Core\StringTranslation\TranslationManager
    */
   protected $translationManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Translation manager',
-      'description' => 'Tests the translation manager.',
-      'group' => 'Translation',
-    );
-  }
 
   protected function setUp() {
     $this->translationManager = new TestTranslationManager();

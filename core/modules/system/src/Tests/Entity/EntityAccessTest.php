@@ -13,17 +13,11 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Entity\EntityAccessController;
 
 /**
- * Tests the entity access controller.
+ * Tests entity access.
+ *
+ * @group Entity
  */
 class EntityAccessTest extends EntityLanguageTestBase  {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity access',
-      'description' => 'Tests entity access.',
-      'group' => 'Entity API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

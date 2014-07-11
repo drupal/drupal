@@ -11,7 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the personal contact form.
+ * Tests personal contact form functionality.
+ *
+ * @group contact
  */
 class ContactPersonalTest extends WebTestBase {
 
@@ -42,14 +44,6 @@ class ContactPersonalTest extends WebTestBase {
    * @var object
    */
   private $contact_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Personal contact form',
-      'description' => 'Tests personal contact form functionality.',
-      'group' => 'Contact',
-    );
-  }
 
   function setUp() {
     parent::setUp();

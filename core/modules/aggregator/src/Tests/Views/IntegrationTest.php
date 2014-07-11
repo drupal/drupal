@@ -12,7 +12,9 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewUnitTestBase;
 
 /**
- * Tests basic views integration of aggregator module.
+ * Tests basic integration of views data from the aggregator module.
+ *
+ * @group aggregator
  */
 class IntegrationTest extends ViewUnitTestBase {
 
@@ -43,14 +45,6 @@ class IntegrationTest extends ViewUnitTestBase {
    * @var \Drupal\aggregator\FeedStorage
    */
   protected $feedStorage;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Aggregator: Integration tests',
-      'description' => 'Tests basic integration of views data from the aggregator module.',
-      'group' => 'Views module integration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

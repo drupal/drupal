@@ -11,8 +11,9 @@ use Drupal\file\Entity\File;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests denormalization of the FileEntityNormalizer class.
+ * Tests that file entities can be denormalized in HAL.
  *
+ * @group hal
  * @see \Drupal\hal\Normalizer\FileEntityNormalizer
  */
 class FileDenormalizeTest extends WebTestBase {
@@ -23,14 +24,6 @@ class FileDenormalizeTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('hal', 'file', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File denormalize Test',
-      'description' => 'Test that file entities can be denormalized in HAL.',
-      'group' => 'HAL',
-    );
-  }
 
   /**
    * Tests file entity denormalization.

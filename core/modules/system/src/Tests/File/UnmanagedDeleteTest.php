@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Deletion related tests.
+ * Tests the unmanaged file delete function.
+ *
+ * @group File
  */
 class UnmanagedDeleteTest extends FileTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Unmanaged file delete',
-      'description' => 'Tests the unmanaged file delete function.',
-      'group' => 'File API',
-    );
-  }
-
   /**
    * Delete a normal file.
    */

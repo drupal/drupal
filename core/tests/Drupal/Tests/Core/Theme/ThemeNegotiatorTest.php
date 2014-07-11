@@ -15,11 +15,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the theme negotiator.
- *
- * @group Drupal
- *
- * @see \Drupal\Core\Theme\ThemeNegotiator
+ * @coversDefaultClass \Drupal\Core\Theme\ThemeNegotiator
+ * @group Theme
  */
 class ThemeNegotiatorTest extends UnitTestCase {
 
@@ -43,14 +40,6 @@ class ThemeNegotiatorTest extends UnitTestCase {
    * @var \Drupal\Core\Theme\ThemeNegotiator
    */
   protected $themeNegotiator;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme negotiator',
-      'description' => 'Tests the theme negotiator.',
-      'group' => 'Theme',
-    );
-  }
 
   protected function setUp() {
     $this->themeAccessCheck = $this->getMockBuilder('\Drupal\Core\Theme\ThemeAccessCheck')

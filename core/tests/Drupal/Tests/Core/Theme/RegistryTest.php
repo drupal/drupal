@@ -12,12 +12,8 @@ use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the theme registry service.
- *
- * @group Drupal
- * @group ${group}
- *
- * @see \Drupal\Core\Theme\Registry
+ * @coversDefaultClass \Drupal\Core\Theme\Registry
+ * @group Theme
  */
 class RegistryTest extends UnitTestCase {
 
@@ -48,17 +44,6 @@ class RegistryTest extends UnitTestCase {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $moduleHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme Registry',
-      'description' => 'Tests the theme registry.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * {@inheritdoc}

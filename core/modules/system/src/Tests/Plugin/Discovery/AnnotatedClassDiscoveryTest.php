@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Plugin\Discovery;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 /**
- * Tests that plugins with annotated classes are correctly discovered.
+ * Tests that plugins are correctly discovered using annotated classes.
+ *
+ * @group Plugin
  */
 class AnnotatedClassDiscoveryTest extends DiscoveryTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Annotated class discovery',
-      'description' => 'Tests that plugins are correctly discovered using annotated classes.',
-      'group' => 'Plugin API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

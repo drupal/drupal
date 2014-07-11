@@ -12,21 +12,15 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests importing configuration from files into active store.
+ * Tests the user interface for importing/exporting configuration.
+ *
+ * @group config
  */
 class ConfigImportUITest extends WebTestBase {
 
   // Enable the Options and Text modules to ensure dependencies are handled
   // correctly.
   public static $modules = array('config', 'config_test', 'config_import_test', 'text', 'options');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Import UI',
-      'description' => 'Tests the user interface for importing/exporting configuration.',
-      'group' => 'Configuration',
-    );
-  }
 
   function setUp() {
     parent::setUp();

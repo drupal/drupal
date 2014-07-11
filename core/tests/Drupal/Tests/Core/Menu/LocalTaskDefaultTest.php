@@ -15,9 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the local task default class.
- *
- * @see \Drupal\Core\Menu\LocalTaskDefaultTest
+ * @coversDefaultClass \Drupal\Core\Menu\LocalTaskDefaultTest
+ * @group Menu
  */
 class LocalTaskDefaultTest extends UnitTestCase {
 
@@ -64,14 +63,6 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $routeProvider;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Local tasks default plugin.',
-      'description' => 'Tests the local task default class.',
-      'group' => 'Menu',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

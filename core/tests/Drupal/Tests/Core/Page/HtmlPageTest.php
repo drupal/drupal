@@ -12,22 +12,10 @@ use Drupal\Core\Page\MetaElement;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the HTML page object.
- *
  * @coversDefaultClass \Drupal\Core\Page\HtmlPage
+ * @group Page
  */
 class HtmlPageTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\Core\Page\HtmlPage',
-      'description' => '',
-      'group' => 'Page',
-    );
-  }
 
   /**
    * Ensures that a single metatags can be changed.

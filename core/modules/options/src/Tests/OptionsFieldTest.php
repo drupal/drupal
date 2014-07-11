@@ -11,6 +11,8 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 
 /**
  * Tests for the 'Options' field types.
+ *
+ * @group options
  */
 class OptionsFieldTest extends OptionsFieldUnitTestBase {
 
@@ -20,14 +22,6 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
    * @var array
    */
   public static $modules = array('options');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Options field',
-      'description' => 'Test the Options field type.',
-      'group' => 'Field types',
-    );
-  }
 
   /**
    * Test that allowed values can be updated.

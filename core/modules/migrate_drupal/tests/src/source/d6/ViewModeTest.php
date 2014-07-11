@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 per view mode source.
+ * Tests D6 view mode source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class ViewModeTest extends MigrateSqlSourceTestCase {
 
@@ -47,17 +46,6 @@ class ViewModeTest extends MigrateSqlSourceTestCase {
     ),
   );
 
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 view mode source functionality',
-      'description' => 'Tests D6 view mode source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

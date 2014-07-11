@@ -12,6 +12,8 @@ use Drupal\simpletest\UnitTestBase;
 
 /**
  * Tests management of database connections.
+ *
+ * @group Database
  */
 class ConnectionUnitTest extends UnitTestBase {
 
@@ -20,14 +22,6 @@ class ConnectionUnitTest extends UnitTestBase {
 
   protected $monitor;
   protected $originalCount;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Connection unit tests',
-      'description' => 'Tests management of database connections.',
-      'group' => 'Database',
-    );
-  }
 
   function setUp() {
     parent::setUp();

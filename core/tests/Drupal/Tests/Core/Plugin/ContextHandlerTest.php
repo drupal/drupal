@@ -16,13 +16,8 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the ContextHandler class.
- *
  * @coversDefaultClass \Drupal\Core\Plugin\Context\ContextHandler
- *
- * @group Drupal
  * @group Plugin
- * @group Context
  */
 class ContextHandlerTest extends UnitTestCase {
 
@@ -39,17 +34,6 @@ class ContextHandlerTest extends UnitTestCase {
    * @var \Drupal\Core\Plugin\Context\ContextHandler
    */
   protected $contextHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'ContextHandler',
-      'description' => 'Tests the ContextHandler',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -13,6 +13,8 @@ use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the telephone field type.
+ *
+ * @group telephone
  */
 class TelephoneItemTest extends FieldUnitTestBase {
 
@@ -22,14 +24,6 @@ class TelephoneItemTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array('telephone');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Telephone field item',
-      'description' => 'Tests the new entity API for the telephone field type.',
-      'group' => 'Field types',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

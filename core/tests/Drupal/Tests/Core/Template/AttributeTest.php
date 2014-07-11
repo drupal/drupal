@@ -13,19 +13,10 @@ use Drupal\Core\Template\AttributeString;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the template attribute class.
- *
- * @see \Drupal\Core\Template\Attribute
+ * @coversDefaultClass \Drupal\Core\Template\Attribute
+ * @group Template
  */
 class AttributeTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Attribute class',
-      'description' => 'Tests the template attribute class.',
-      'group' => 'Template',
-    );
-  }
 
   /**
    * Tests the constructor of the attribute class.

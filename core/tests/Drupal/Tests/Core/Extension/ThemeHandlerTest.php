@@ -16,12 +16,8 @@ use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the theme handler.
- *
- * @group Drupal
- * @group Theme
- *
- * @see \Drupal\Core\Extension\ThemeHandler
+ * @coversDefaultClass \Drupal\Core\Extension\ThemeHandler
+ * @group Extension
  */
 class ThemeHandlerTest extends UnitTestCase {
 
@@ -80,17 +76,6 @@ class ThemeHandlerTest extends UnitTestCase {
    * @var \Drupal\Core\Extension\ThemeHandler|\Drupal\Tests\Core\Extension\TestThemeHandler
    */
   protected $themeHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme handler',
-      'description' => 'Tests the theme handler.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,9 @@ namespace Drupal\views\Tests;
 use Drupal\views\Views;
 
 /**
- * Checks general plugin data and instances for all plugin types.
+ * Tests that an instance of all views plugins can be created.
+ *
+ * @group views
  */
 class PluginInstanceTest extends ViewUnitTestBase {
 
@@ -47,14 +49,6 @@ class PluginInstanceTest extends ViewUnitTestBase {
    * @var array
    */
   protected $definitions;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Plugin instantiation',
-      'description' => 'Tests that an instance of all views plugins can be created.',
-      'group' => 'Views',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

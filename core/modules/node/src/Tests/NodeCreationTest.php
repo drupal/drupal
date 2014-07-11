@@ -11,7 +11,9 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Tests creating and saving a node.
+ * Create a node and test saving it.
+ *
+ * @group node
  */
 class NodeCreationTest extends NodeTestBase {
 
@@ -23,14 +25,6 @@ class NodeCreationTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('node_test_exception', 'dblog', 'test_page_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node creation',
-      'description' => 'Create a node and test saving it.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

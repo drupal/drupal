@@ -13,7 +13,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests \Drupal\Core\Field\FieldDefinition.
+ * Unit test for FieldDefinition.
  *
  * @group Entity
  */
@@ -33,14 +33,6 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   protected $fieldTypeDefinition;
 
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field definition test',
-      'description' => 'Unit test for FieldDefinition.',
-      'group' => 'Entity'
-    );
-  }
 
   /**
    * {@inheritdoc}

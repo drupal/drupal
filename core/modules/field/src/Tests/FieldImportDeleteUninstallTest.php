@@ -8,8 +8,10 @@
 namespace Drupal\field\Tests;
 
 /**
- * Tests config sync of deleting fields and instances and uninstalling modules.
+ * Delete field and instances during config synchronization and uninstall module
+ * that provides the field type.
  *
+ * @group field
  * @see \Drupal\field\ConfigImporterFieldPurger
  * @see field_config_import_steps_alter()
  */
@@ -21,14 +23,6 @@ class FieldImportDeleteUninstallTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array('telephone', 'menu_link');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field config delete and uninstall tests',
-      'description' => 'Delete field and instances during config synchronization and uninstall module that provides the field type.',
-      'group' => 'Field API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

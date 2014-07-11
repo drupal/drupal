@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests authorize.php and related hooks.
+ * Tests the authorize.php script and related API.
+ *
+ * @group system
  */
 class SystemAuthorizeTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class SystemAuthorizeTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('system_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Authorize API',
-      'description' => 'Tests the authorize.php script and related API.',
-      'group' => 'System',
-    );
-  }
 
   function setUp() {
     parent::setUp();

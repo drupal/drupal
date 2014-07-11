@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the behavior of check_markup() when it is called without text format.
+ *
+ * @group filter
  */
 class FilterNoFormatTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class FilterNoFormatTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('filter');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Unassigned text format functionality',
-      'description' => 'Test the behavior of check_markup() when it is called without a text format.',
-      'group' => 'Filter',
-    );
-  }
 
   /**
    * Tests text without format.

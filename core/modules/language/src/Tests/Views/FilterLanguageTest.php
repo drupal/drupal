@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the filter language handler.
  *
+ * @group language
  * @see \Drupal\language\Plugin\views\filter\Language
  */
 class FilterLanguageTest extends LanguageTestBase {
@@ -22,14 +23,6 @@ class FilterLanguageTest extends LanguageTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Language',
-      'description' => 'Tests the filter language handler.',
-      'group' => 'Views Handlers'
-    );
-  }
 
   /**
    * Tests the language filter.

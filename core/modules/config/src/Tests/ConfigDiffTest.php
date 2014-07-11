@@ -10,7 +10,9 @@ namespace Drupal\config\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests config snapshot creation and updating.
+ * Calculating the difference between two sets of configuration.
+ *
+ * @group config
  */
 class ConfigDiffTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class ConfigDiffTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('config_test', 'system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Diff functionality',
-      'description' => 'Calculating the difference between two sets of configuration.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests calculating the difference between two sets of configuration.

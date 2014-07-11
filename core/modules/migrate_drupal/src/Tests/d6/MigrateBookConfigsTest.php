@@ -13,7 +13,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Book module.
+ * Upgrade variables to book.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateBookConfigsTest extends MigrateDrupalTestBase {
 
@@ -25,17 +27,6 @@ class MigrateBookConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('book');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to book.settings.yml',
-      'description'  => 'Upgrade variables to book.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

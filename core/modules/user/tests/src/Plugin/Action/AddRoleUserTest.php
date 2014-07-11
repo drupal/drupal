@@ -10,22 +10,10 @@ namespace Drupal\user\Tests\Plugin\Action;
 use Drupal\user\Plugin\Action\AddRoleUser;
 
 /**
- * Tests the role add plugin.
- *
- * @see \Drupal\user\Plugin\Action\AddRoleUser
+ * @coversDefaultClass \Drupal\user\Plugin\Action\AddRoleUser
+ * @group user
  */
 class AddRoleUserTest extends RoleUserTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Add user plugin',
-      'description' => 'Tests the role add plugin',
-      'group' => 'User',
-    );
-  }
 
   /**
    * Tests the execute method on a user with a role.

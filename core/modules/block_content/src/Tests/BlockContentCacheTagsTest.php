@@ -12,6 +12,8 @@ use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 
 /**
  * Tests the Custom Block entity's cache tags.
+ *
+ * @group block_content
  */
 class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
 
@@ -19,13 +21,6 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('block_content');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('Custom Block', 'Custom Block');
-  }
 
   /**
    * {@inheritdoc}

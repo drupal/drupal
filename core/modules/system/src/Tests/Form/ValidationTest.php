@@ -11,7 +11,9 @@ use Drupal\Core\Render\Element;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test form validation handlers.
+ * Tests form processing and alteration via form validation handlers.
+ *
+ * @group Form
  */
 class ValidationTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class ValidationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form validation handlers',
-      'description' => 'Tests form processing and alteration via form validation handlers.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests form alterations by #element_validate, #validate, and form_set_value().

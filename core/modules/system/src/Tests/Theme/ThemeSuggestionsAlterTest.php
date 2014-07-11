@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests theme suggestion alter hooks.
+ *
+ * @group Theme
  */
 class ThemeSuggestionsAlterTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme suggestions alter',
-      'description' => 'Test theme suggestion alter hooks.',
-      'group' => 'Theme',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -12,19 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Functional tests for the flood control mechanism.
+ *
+ * @group system
  */
 class FloodTest extends WebTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Flood control mechanism',
-      'description' => 'Functional tests for the flood control mechanism.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

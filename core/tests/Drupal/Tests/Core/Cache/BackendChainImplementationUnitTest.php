@@ -13,19 +13,11 @@ use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests implementation-specific functionality of the BackendChain backend.
+ * Unit test of backend chain implementation specifics.
  *
  * @group Cache
  */
 class BackendChainImplementationUnitTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Backend chain implementation',
-      'description' => 'Unit test of backend chain implementation specifics.',
-      'group' => 'Cache'
-    );
-  }
 
   /**
    * Chain that will be heavily tested.

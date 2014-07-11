@@ -11,22 +11,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests comment variables migrated into a field instance.
+ * Upgrade comment variables to field.instance.node.*.comment.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateCommentVariableInstanceTest extends MigrateDrupalTestBase {
 
   static $modules = array('comment', 'node');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate comment variables to a field instance,',
-      'description'  => 'Upgrade comment variables to field.instance.node.*.comment.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

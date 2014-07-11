@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the title area handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\area\Title
  */
 class AreaTitleTest extends ViewUnitTestBase {
@@ -23,14 +24,6 @@ class AreaTitleTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_area_title');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Area: Title',
-      'description' => 'Tests the title area handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests the title area handler.

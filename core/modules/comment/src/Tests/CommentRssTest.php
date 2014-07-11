@@ -10,7 +10,9 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**
- * Tests for Comment module integration with RSS feeds.
+ * Tests comments as part of an RSS feed.
+ *
+ * @group comment
  */
 class CommentRssTest extends CommentTestBase {
 
@@ -20,14 +22,6 @@ class CommentRssTest extends CommentTestBase {
    * @var array
    */
   public static $modules = array('views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment RSS',
-      'description' => 'Test comments as part of an RSS feed.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Tests comments as part of an RSS feed.

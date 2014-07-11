@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests inserts using LOB fields, which are weird on some databases.
+ * Tests the Insert query builder with LOB fields.
+ *
+ * @group Database
  */
 class InsertLobTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Insert tests, LOB fields',
-      'description' => 'Test the Insert query builder with LOB fields.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests that we can insert a single blob field successfully.

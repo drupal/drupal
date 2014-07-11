@@ -11,19 +11,13 @@ use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;
 
 /**
- * Tests fetch actions.
+ * Tests the Database system's various fetch capabilities.
  *
  * We get timeout errors if we try to run too many tests at once.
+ *
+ * @group Database
  */
 class FetchTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Fetch tests',
-      'description' => 'Test the Database system\'s various fetch capabilities.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that we can fetch a record properly in default object mode.

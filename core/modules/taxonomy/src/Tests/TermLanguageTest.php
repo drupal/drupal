@@ -10,19 +10,13 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Tests for the language feature on taxonomy terms.
+ * Tests the language functionality for the taxonomy terms.
+ *
+ * @group taxonomy
  */
 class TermLanguageTest extends TaxonomyTestBase {
 
   public static $modules = array('language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term language',
-      'description' => 'Tests the language functionality for the taxonomy terms.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests query serialization.
+ * Tests serializing and unserializing a query.
+ *
+ * @group Database
  */
 class SerializeQueryTest extends DatabaseTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Serialize query',
-      'description' => 'Test serializing and unserializing a query.',
-      'group' => 'Database',
-    );
-  }
-
   /**
    * Confirms that a query can be serialized and unserialized.
    */

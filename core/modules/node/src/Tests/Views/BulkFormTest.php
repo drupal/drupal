@@ -8,8 +8,9 @@
 namespace Drupal\node\Tests\Views;
 
 /**
- * Tests the views bulk form test.
+ * Tests a node bulk form.
  *
+ * @group node
  * @see \Drupal\node\Plugin\views\field\BulkForm
  */
 class BulkFormTest extends NodeTestBase {
@@ -20,14 +21,6 @@ class BulkFormTest extends NodeTestBase {
    * @var array
    */
   public static $testViews = array('test_node_bulk_form');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Bulk form',
-      'description' => 'Tests a node bulk form.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the node bulk form.

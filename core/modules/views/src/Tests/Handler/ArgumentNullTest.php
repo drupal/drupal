@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\argument\Null handler.
+ *
+ * @group views
  */
 class ArgumentNullTest extends ViewUnitTestBase {
 
@@ -21,14 +23,6 @@ class ArgumentNullTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument: Null',
-      'description' => 'Test the core Drupal\views\Plugin\views\argument\Null handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   function viewsData() {
     $data = parent::viewsData();

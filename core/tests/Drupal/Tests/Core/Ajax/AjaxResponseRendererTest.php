@@ -14,9 +14,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Tests \Drupal\Core\Ajax\AjaxResponseRenderer.
- *
- * @coversClass \Drupal\Core\Ajax\AjaxResponseRenderer
+ * @coversDefaultClass \Drupal\Core\Ajax\AjaxResponseRenderer
+ * @group Ajax
  */
 class AjaxResponseRendererTest extends UnitTestCase {
 
@@ -26,17 +25,6 @@ class AjaxResponseRendererTest extends UnitTestCase {
    * @var \Drupal\Tests\Core\Ajax\TestAjaxResponseRenderer
    */
   protected $ajaxResponseRenderer;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Tests \Drupal\Core\Ajax\AjaxResponseRenderer.',
-      'description' => '',
-      'group' => 'Ajax',
-    );
-  }
 
   /**
    * {@inheritdoc}

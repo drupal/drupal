@@ -10,7 +10,9 @@ namespace Drupal\rdf\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests RDFa attribute generation.
+ * Tests RDFa attribute generation from RDF mapping.
+ *
+ * @group rdf
  */
 class RdfaAttributesTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class RdfaAttributesTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('rdf');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDFa attributes',
-      'description' => 'Test RDFa attribute generation from RDF mapping.',
-      'group' => 'RDF',
-    );
-  }
 
   /**
    * Test attribute creation for mappings which use 'property'.

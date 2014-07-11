@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of image toolkit variables to configuration.
+ * Upgrade image variables to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemImageTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate image variables to system.*.yml',
-      'description'  => 'Upgrade image variables to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 taxonomy vocabularies to Drupal 8 migration.
+ * Migrate taxonomy vocabularies to taxonomy.vocabulary.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateTaxonomyVocabularyTest extends MigrateDrupalTestBase {
 
@@ -21,18 +23,6 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('taxonomy');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate taxonomy vocabularies.',
-      'description'  => 'Migrate taxonomy vocabularies to taxonomy.vocabulary.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
-
 
   /**
    * {@inheritdoc}

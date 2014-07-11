@@ -8,7 +8,9 @@
 namespace Drupal\image\Tests;
 
 /**
- * Tests default image settings.
+ * Tests setting up default images both to the field and field instance.
+ *
+ * @group image
  */
 class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
@@ -18,14 +20,6 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    * @var array
    */
   public static $modules = array('field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image field default images tests',
-      'description' => 'Tests setting up default images both to the field and field instance.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * Tests CRUD for fields and fields instances with default images.

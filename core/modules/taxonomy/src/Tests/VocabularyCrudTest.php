@@ -10,7 +10,9 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
- * Tests for taxonomy vocabulary functions.
+ * Tests loading, saving and deleting vocabularies.
+ *
+ * @group taxonomy
  */
 class VocabularyCrudTest extends TaxonomyTestBase {
 
@@ -20,14 +22,6 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    * @var array
    */
   public static $modules = array('field_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy vocabularies',
-      'description' => 'Test loading, saving and deleting vocabularies.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

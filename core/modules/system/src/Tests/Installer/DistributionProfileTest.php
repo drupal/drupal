@@ -11,7 +11,9 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\simpletest\InstallerTestBase;
 
 /**
- * Tests the installer translation detection.
+ * Tests distribution profile support.
+ *
+ * @group Installer
  */
 class DistributionProfileTest extends InstallerTestBase {
 
@@ -21,14 +23,6 @@ class DistributionProfileTest extends InstallerTestBase {
    * @var array
    */
   protected $info;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Distribution installation profile test',
-      'description' => 'Tests distribution profile support.',
-      'group' => 'Installer',
-    );
-  }
 
   protected function setUp() {
     $this->info = array(

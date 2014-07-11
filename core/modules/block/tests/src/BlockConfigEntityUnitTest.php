@@ -13,9 +13,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\block\Entity\Block
- *
- * @group Drupal
- * @group Config
+ * @group block
  */
 class BlockConfigEntityUnitTest extends UnitTestCase {
 
@@ -46,17 +44,6 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
    * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $uuid;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\block\Entity\Block unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

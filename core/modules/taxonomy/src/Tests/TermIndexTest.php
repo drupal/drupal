@@ -12,16 +12,10 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Tests the hook implementations that maintain the taxonomy index.
+ *
+ * @group taxonomy
  */
 class TermIndexTest extends TaxonomyTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term index',
-      'description' => 'Tests the hook implementations that maintain the taxonomy index.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

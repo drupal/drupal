@@ -12,18 +12,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 /**
  * Tests existence of language local tasks.
  *
- * @group Drupal
  * @group language
  */
 class LanguageLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language local tasks test',
-      'description' => 'Test existence of language local tasks.',
-      'group' => 'Language',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array(

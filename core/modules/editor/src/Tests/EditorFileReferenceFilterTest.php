@@ -11,7 +11,9 @@ use Drupal\simpletest\KernelTestBase;
 use Drupal\filter\FilterBag;
 
 /**
- * Tests for the EditorFileReference filter.
+ * Tests Editor module's file reference filter.
+ *
+ * @group editor
  */
 class EditorFileReferenceFilterTest extends KernelTestBase {
 
@@ -26,17 +28,6 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
    * @var \Drupal\filter\Plugin\FilterInterface[]
    */
   protected $filters;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Editor File Reference filter',
-      'description' => "Tests Editor module's file reference filter.",
-      'group' => 'Text Editor',
-    );
-  }
 
   /**
    * {@inheritdoc}

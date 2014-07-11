@@ -27,6 +27,20 @@ class SimpletestTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Run tests'),
+      '#tableselect' => TRUE,
+      '#button_type' => 'primary',
+    );
+
+    // Do not needlessly re-execute a full test discovery if the user input
+    // already contains an explicit list of test classes to run.
+    if (!empty($form_state['input']['tests'])) {
+      return $form;
+    }
+
     // JavaScript-only table filters.
     $form['filters'] = array(
       '#type' => 'container',
@@ -96,9 +110,6 @@ class SimpletestTestForm extends FormBase {
 
     // Generate the list of tests arranged by group.
     $groups = simpletest_test_get_all();
-    $groups['PHPUnit'] = simpletest_phpunit_get_available_tests();
-    $form_state['storage']['PHPUnit'] = $groups['PHPUnit'];
-
     foreach ($groups as $group => $tests) {
       $form['tests'][$group] = array(
         '#attributes' => array('class' => array('simpletest-group')),
@@ -131,11 +142,6 @@ class SimpletestTestForm extends FormBase {
         ),
       );
 
-      // Sort test classes within group alphabetically by name/label.
-      uasort($tests, function ($a, $b) {
-        return SortArray::sortByKeyString($a, $b, 'name');
-      });
-
       // Cycle through each test within the current group.
       foreach ($tests as $class => $info) {
         $form['tests'][$class] = array(
@@ -150,10 +156,7 @@ class SimpletestTestForm extends FormBase {
         );
         $form['tests'][$class]['description'] = array(
           '#prefix' => '<div class="description">',
-          '#markup' => String::format('@description (@class)', array(
-            '@description' => $info['description'],
-            '@class' => $class,
-          )),
+          '#markup' => String::checkPlain($info['description']),
           '#suffix' => '</div>',
           '#wrapper_attributes' => array(
             'class' => array('simpletest-test-description', 'table-filter-text-source'),
@@ -161,15 +164,6 @@ class SimpletestTestForm extends FormBase {
         );
       }
     }
-
-    // Action buttons.
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Run tests'),
-      '#tableselect' => TRUE,
-      '#button_type' => 'primary',
-    );
 
     $form['clean'] = array(
       '#type' => 'fieldset',
@@ -190,16 +184,31 @@ class SimpletestTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
+    // Test discovery does not run upon form submission.
     simpletest_classloader_register();
 
-    $phpunit_all = array_keys($form_state['storage']['PHPUnit']);
+    // This form accepts arbitrary user input for 'tests'.
+    // An invalid value will cause the $class_name lookup below to die with a
+    // fatal error. Regular user access mechanisms to this form are intact.
+    // The only validation effectively being skipped is the validation of
+    // available checkboxes vs. submitted checkboxes.
+    // @todo Refactor Form API to allow to POST values without constructing the
+    //   entire form more easily, BUT retaining routing access security and
+    //   retaining Form API CSRF #token security validation, and without having
+    //   to rely on form caching.
+    if (empty($form_state['values']['tests']) && !empty($form_state['input']['tests'])) {
+      $form_state['values']['tests'] = $form_state['input']['tests'];
+    }
 
     $tests_list = array();
     foreach ($form_state['values']['tests'] as $class_name => $value) {
-      // Since class_exists() will likely trigger an autoload lookup,
-      // we do the fast check first.
-      if ($value === $class_name && class_exists($class_name)) {
-        $test_type = in_array($class_name, $phpunit_all) ? 'UnitTest' : 'WebTest';
+      if ($value === $class_name) {
+        if (is_subclass_of($class_name, 'PHPUnit_Framework_TestCase')) {
+          $test_type = 'phpunit';
+        }
+        else {
+          $test_type = 'simpletest';
+        }
         $tests_list[$test_type][] = $class_name;
       }
     }

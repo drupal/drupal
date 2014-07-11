@@ -14,6 +14,8 @@ use Drupal\comment\CommentManagerInterface;
  *
  * Verifies there is no PostgreSQL error when viewing a node with threaded
  * comments (a comment and a reply), if a node access module is in use.
+ *
+ * @group comment
  */
 class CommentNodeAccessTest extends CommentTestBase {
 
@@ -23,14 +25,6 @@ class CommentNodeAccessTest extends CommentTestBase {
    * @var array
    */
   public static $modules = array('node_access_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment node access',
-      'description' => 'Test comment viewing with node access.',
-      'group' => 'Comment',
-    );
-  }
 
   function setUp() {
     parent::setUp();

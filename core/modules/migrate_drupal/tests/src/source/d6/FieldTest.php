@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 field source.
+ * Tests D6 field source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class FieldTest extends MigrateSqlSourceTestCase {
 
@@ -76,17 +75,6 @@ class FieldTest extends MigrateSqlSourceTestCase {
     $this->databaseContents['content_node_field_instance'][0]['widget_type'] = 'text_textarea';
     $this->databaseContents['content_node_field_instance'][0]['field_name'] = 'field_body';
     parent::setUp();
-  }
-
-  /**
-   * Provide meta information about this battery of tests.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 field source functionality',
-      'description' => 'Tests D6 field source plugin.',
-      'group' => 'Migrate',
-    );
   }
 
 }

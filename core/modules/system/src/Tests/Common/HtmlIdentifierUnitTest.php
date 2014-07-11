@@ -11,17 +11,12 @@ use Drupal\simpletest\UnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests cleaning HTML identifiers.
+ * Tests the functions drupal_html_class(), drupal_html_id() and
+ * drupal_clean_css_identifier() for expected behavior.
+ *
+ * @group Common
  */
 class HtmlIdentifierUnitTest extends UnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'HTML identifiers',
-      'description' => 'Test the functions drupal_html_class(), drupal_html_id() and drupal_clean_css_identifier() for expected behavior',
-      'group' => 'Common',
-    );
-  }
-
   /**
    * {@inheritdoc}
    */

@@ -11,18 +11,12 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the effectiveness of hook_system_info_alter().
+ *
+ * @group system
  */
 class InfoAlterTest extends DrupalUnitTestBase {
 
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'System info alter',
-      'description' => 'Tests the effectiveness of hook_system_info_alter().',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Tests that theme .info.yml data is rebuild after enabling a module.

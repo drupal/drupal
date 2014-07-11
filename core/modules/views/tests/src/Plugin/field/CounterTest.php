@@ -15,9 +15,8 @@ use Drupal\views\ResultRow;
 use Drupal\views\Tests\ViewTestData;
 
 /**
- * Tests the counter field plugin.
- *
- * @see \Drupal\views\Plugin\views\field\Counter
+ * @coversDefaultClass \Drupal\views\Plugin\views\field\Counter
+ * @group views
  */
 class CounterTest extends UnitTestCase {
 
@@ -56,14 +55,6 @@ class CounterTest extends UnitTestCase {
    * @return array
    */
   protected $definition;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Counter (Unit)',
-      'description' => 'Tests the \Drupal\views\Plugin\views\field\Counter handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * {@inheritdoc}

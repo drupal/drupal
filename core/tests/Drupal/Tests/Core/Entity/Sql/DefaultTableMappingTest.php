@@ -10,25 +10,10 @@ use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the default table mapping class.
- *
  * @coversDefaultClass \Drupal\Core\Entity\Sql\DefaultTableMapping
- *
- * @group Drupal
  * @group Entity
  */
 class DefaultTableMappingTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return [
-      'name' => 'Default table mapping',
-      'description' => 'Check that the default table mapping works.',
-      'group' => 'Entity',
-    ];
-  }
 
   /**
    * Tests DefaultTableMapping::getTableNames().

@@ -13,6 +13,8 @@ use Drupal\comment\CommentInterface;
 
 /**
  * Tests comment links based on environment configurations.
+ *
+ * @group comment
  */
 class CommentLinksTest extends CommentTestBase {
 
@@ -24,14 +26,6 @@ class CommentLinksTest extends CommentTestBase {
    * @todo Remove this dependency.
    */
   public static $modules = array('views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment links',
-      'description' => 'Tests comment links based on environment configurations.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Tests comment links.

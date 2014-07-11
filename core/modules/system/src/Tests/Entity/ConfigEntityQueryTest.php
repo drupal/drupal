@@ -10,8 +10,9 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the config entity query.
+ * Tests Config Entity Query functionality.
  *
+ * @group Entity
  * @see \Drupal\Core\Config\Entity\Query
  */
 class ConfigEntityQueryTest extends DrupalUnitTestBase {
@@ -43,14 +44,6 @@ class ConfigEntityQueryTest extends DrupalUnitTestBase {
    * @var array
    */
   protected $entities;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Config Entity Query',
-      'description' => 'Tests Config Entity Query functionality.',
-      'group' => 'Configuration',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

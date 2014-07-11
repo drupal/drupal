@@ -10,7 +10,9 @@ namespace Drupal\contact\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the contact form for authenticated users.
+ * Tests contact form textfields are present if authenticated.
+ *
+ * @group contact
  */
 class ContactAuthenticatedUserTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ContactAuthenticatedUserTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('contact');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Contact form textfields',
-      'description' => 'Tests contact form textfields are present if authenticated.',
-      'group' => 'Contact',
-    );
-  }
 
   /**
    * Tests that name and email fields are not present for authenticated users.

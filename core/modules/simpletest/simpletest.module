@@ -6,6 +6,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\simpletest\TestBase;
+use Drupal\simpletest\TestDiscovery;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
@@ -129,40 +130,34 @@ function _simpletest_format_summary_line($summary) {
  *
  * @param $test_list
  *   List of tests to run.
- * @param $reporter
- *   Which reporter to use. Allowed values are: text, xml, html and drupal,
- *   drupal being the default.
  *
  * @return string
  *   The test ID.
  */
-function simpletest_run_tests($test_list, $reporter = 'drupal') {
+function simpletest_run_tests($test_list) {
   $test_id = db_insert('simpletest_test_id')
     ->useDefaults(array('test_id'))
     ->execute();
 
-  $phpunit_tests = isset($test_list['UnitTest']) ? $test_list['UnitTest'] : array();
-  if ($phpunit_tests) {
+  if (!empty($test_list['phpunit'])) {
     $phpunit_results = simpletest_run_phpunit_tests($test_id, $phpunit_tests);
     simpletest_process_phpunit_results($phpunit_results);
   }
 
-  if (!array_key_exists('WebTest', $test_list) || empty($test_list['WebTest'])) {
-    // Early return if there are no WebTests to run.
+  // Early return if there are no further tests to run.
+  if (empty($test_list['simpletest'])) {
     return $test_id;
   }
 
-  // Contine with SimpleTests only.
-  $test_list = $test_list['WebTest'];
+  // Continue with SimpleTests only.
+  $test_list = $test_list['simpletest'];
 
   // Clear out the previous verbose files.
   file_unmanaged_delete_recursive('public://simpletest/verbose');
 
   // Get the info for the first test being run.
-  $first_test = array_shift($test_list);
-  $first_instance = new $first_test();
-  array_unshift($test_list, $first_test);
-  $info = $first_instance->getInfo();
+  $first_test = reset($test_list);
+  $info = TestDiscovery::getTestInfo(new \ReflectionClass($first_test));
 
   $batch = array(
     'title' => t('Running tests'),
@@ -336,7 +331,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $test = new $test_class($test_id);
   $test->run();
   $size = count($test_list);
-  $info = $test->getInfo();
+  $info = TestDiscovery::getTestInfo(new \ReflectionClass($test));
 
   \Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
 
@@ -472,8 +467,8 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *   returned.
  *
  * @return array[]
- *   An array of tests keyed with the groups specified in each of the tests'
- *   getInfo() methods and then keyed by the test classes. For example:
+ *   An array of tests keyed with the groups, and then keyed by test classes.
+ *   For example:
  *   @code
  *     $groups['Block'] => array(
  *       'BlockTestCase' => array(
@@ -485,159 +480,14 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *   @endcode
  */
 function simpletest_test_get_all($module = NULL) {
-  static $all_groups = array();
-  $cid = "simpletest:$module";
-
-  if (!isset($all_groups[$cid])) {
-    $all_groups[$cid] = array();
-    $groups = &$all_groups[$cid];
-    // Register namespaces (extensions are not necessarily enabled).
-    simpletest_classloader_register();
-
-    // Load test information from cache if available, otherwise retrieve the
-    // information from each tests getInfo() method.
-    if ($cache = \Drupal::cache()->get($cid)) {
-      $groups = $cache->data;
-    }
-    else {
-      // Select all PSR-0 classes in the Tests namespace of all modules.
-      $listing = new ExtensionDiscovery();
-      // Ensure that tests in all profiles are discovered.
-      $listing->setProfileDirectories(array());
-      $all_data = $listing->scan('module', TRUE);
-      // If module is set then we keep only that one module.
-      if (isset($module)) {
-        $all_data = array(
-          $module => $all_data[$module],
-        );
-      }
-      else {
-        $all_data += $listing->scan('profile', TRUE);
-        $all_data += $listing->scan('theme', TRUE);
-      }
-
-      // Scan all extension folders for class files.
-      $classes = array();
-      foreach ($all_data as $name => $data) {
-
-        // Build the directory in which simpletest test classes would reside.
-        $tests_dir = DRUPAL_ROOT . '/' . $data->getPath() . '/src/Tests';
-
-        // Check if the directory exists.
-        if (!is_dir($tests_dir)) {
-          // This extension has no directory for simpletest cases.
-          continue;
-        }
-
-        // Scan the directory for class files.
-        $files = file_scan_directory($tests_dir, '/\.php$/');
-        if (empty($files)) {
-          // No class files found.
-          continue;
-        }
-
-        // Convert the file names into the namespaced class names.
-        $strlen = strlen($tests_dir) + 1;
-        $namespace = 'Drupal\\' . $name . '\Tests\\';
-        foreach ($files as $file) {
-          $classes[] = $namespace . str_replace('/', '\\', substr($file->uri, $strlen, -4));
-        }
-      }
-
-      // Check that each class has a getInfo() method and store the information
-      // in an array keyed with the group specified in the test information.
-      $groups = array();
-      foreach ($classes as $class) {
-        // Test classes need to implement getInfo() to be valid.
-        if (class_exists($class) && method_exists($class, 'getInfo')) {
-          $reflectionClass = new ReflectionClass($class);
-          // Skip abstract classes and interfaces.
-          if ($reflectionClass->isInstantiable()) {
-            $reflectionMethod = new ReflectionMethod($class, 'getInfo');
-            $declaringClass = $reflectionMethod->getDeclaringClass()->getName();
-            // Avoid testing intermediate classes which do not implement the
-            // method.
-            if ($class == $declaringClass) {
-              $info = call_user_func(array($class, 'getInfo'));
-            }
-            else {
-              continue;
-            }
-          }
-          else {
-            continue;
-          }
-          // If this test class requires a non-existing module, skip it.
-          if (!empty($info['dependencies'])) {
-            foreach ($info['dependencies'] as $dependency) {
-              if (!isset($dependency_data[$dependency])) {
-                continue 2;
-              }
-            }
-          }
-
-          $groups[$info['group']][$class] = $info;
-        }
-      }
-
-      // Sort the groups and tests within the groups by name.
-      uksort($groups, 'strnatcasecmp');
-      foreach ($groups as &$tests) {
-        uksort($tests, 'strnatcasecmp');
-      }
-
-      // Allow modules extending core tests to disable originals.
-      \Drupal::moduleHandler()->alter('simpletest', $groups);
-      \Drupal::cache()->set($cid, $groups);
-    }
-  }
-  return $all_groups[$cid];
+  return \Drupal::service('test_discovery')->getTestClasses($module);
 }
 
 /**
  * Registers namespaces for disabled modules.
  */
 function simpletest_classloader_register() {
-  // Use the same cache prefix as simpletest_test_get_all().
-  $cid = "simpletest::all";
-  $types = array(
-    'theme_engine',
-    'module',
-    'theme',
-    'profile',
-  );
-
-  if ($cache = \Drupal::cache()->get($cid)) {
-    $extensions = $cache->data;
-  }
-  else {
-    $listing = new ExtensionDiscovery();
-    // Ensure that tests in all profiles are discovered.
-    $listing->setProfileDirectories(array());
-    $extensions = array();
-    foreach ($types as $type) {
-      foreach ($listing->scan($type, TRUE) as $name => $file) {
-        $extensions[$type][$name] = $file->getPathname();
-      }
-    }
-    \Drupal::cache()->set($cid, $extensions);
-  }
-
-  $classloader = drupal_classloader();
-  foreach ($types as $type) {
-    foreach ($extensions[$type] as $name => $uri) {
-      drupal_classloader_register($name, dirname($uri));
-      $classloader->addPsr4('Drupal\\' . $name . '\\Tests\\', array(
-        DRUPAL_ROOT . '/' . dirname($uri) . '/tests/Drupal/' . $name . '/Tests',
-        DRUPAL_ROOT . '/' . dirname($uri) . '/tests/src',
-      ));
-      // While being there, prime drupal_get_filename().
-      drupal_get_filename($type, $name, $uri);
-    }
-  }
-
-  // Register the core test directory so we can find \Drupal\UnitTestCase.
-  $classloader->add('Drupal\\Tests', DRUPAL_ROOT . '/core/tests');
+  \Drupal::service('test_discovery')->registerTestNamespaces();
 }
 
 /**
@@ -795,60 +645,6 @@ function simpletest_mail_alter(&$message) {
   if ($message['id'] == 'simpletest_cancel_test') {
     $message['send'] = FALSE;
   }
-}
-
-/**
- * Gets PHPUnit classes.
- *
- * @param string $module
- *   Name of a module. If set then only tests belonging to this module is
- *   returned.
- *
- * @return array
- *   Returns an array of test classes.
- *
- * @throws \RuntimeException
- *   This is thrown when anything is wrong with a test.
- */
-function simpletest_phpunit_get_available_tests($module = NULL) {
-  // Try to load the class names array from cache.
-  $cid = 'simpletest_phpunit:' . $module;
-  if ($cache = \Drupal::cache()->get($cid)) {
-    $test_classes = $cache->data;
-  }
-  else {
-    if ($module) {
-      $prefix = 'Drupal\\' . $module . '\\';
-      $n = strlen($prefix);
-    }
-    // If there was no cached data available we have to find the tests.
-    // Load the PHPUnit configuration file, which tells us where to find the
-    // tests.
-    $phpunit_config = simpletest_phpunit_configuration_filepath();
-    $configuration = PHPUnit_Util_Configuration::getInstance($phpunit_config);
-    // Find all the tests and get a list of unique class names.
-    $test_suite = $configuration->getTestSuiteConfiguration(NULL);
-    $test_classes = array();
-    /** @var $test_suite \PHPUnit_Framework_TestSuite[] */
-    foreach ($test_suite as $test) {
-      // PHPUnit returns a warning message if something is wrong with a test,
-      // throw an exception to avoid an error when trying to call getInfo() on
-      // this.
-      if ($test instanceof PHPUnit_Framework_Warning) {
-        throw new RuntimeException($test->getMessage());
-      }
-
-      $name = $test->getName();
-      if (!array_key_exists($name, $test_classes) && (!$module || substr($name, 0, $n) == $prefix)) {
-        $test_classes[$name] = $name::getInfo();
-      }
-    }
-
-    // Since we have recalculated, we now need to store the new data into cache.
-    \Drupal::cache()->set($cid, $test_classes);
-  }
-
-  return $test_classes;
 }
 
 /**

@@ -12,8 +12,9 @@ use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views_ui\ViewUI;
 
 /**
- * Tests the wizard code.
+ * Tests the wizard base plugin class.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
  */
 class WizardPluginBaseUnitTest extends ViewUnitTestBase {
@@ -31,14 +32,6 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
    * @var \Drupal\views\Plugin\views\wizard\WizardPluginBase
    */
   protected $wizard;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Wizard Plugin Base',
-      'description' => 'Test the wizard base plugin class',
-      'group' => 'Views Wizard',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

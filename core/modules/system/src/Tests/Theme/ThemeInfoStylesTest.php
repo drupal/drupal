@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests processing of theme .info.yml stylesheets.
+ *
+ * @group Theme
  */
 class ThemeInfoStylesTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ThemeInfoStylesTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme .info.yml styles',
-      'description' => 'Tests processing of theme .info.yml stylesheets.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Tests stylesheets-override and stylesheets-remove.

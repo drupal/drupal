@@ -12,12 +12,8 @@ use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the module handler.
- *
- * @group Drupal
- * @group Module
- *
  * @coversDefaultClass \Drupal\Core\Extension\ModuleHandler
+ * @group Extension
  */
 class ModuleHandlerTest extends UnitTestCase {
 
@@ -35,17 +31,6 @@ class ModuleHandlerTest extends UnitTestCase {
    * @var \Drupal\Core\Extension\ModuleHandler
    */
   protected $moduleHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Module handler',
-      'description' => 'Tests the module handler.',
-      'group' => 'Module',
-    );
-  }
 
   /**
    * {@inheritdoc}

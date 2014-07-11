@@ -11,11 +11,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the cache CacheCollector.
- *
+ * @coversDefaultClass \Drupal\Core\Cache\CacheCollector
  * @group Cache
- *
- * @see \Drupal\Core\Cache\CacheCollector
  */
 class CacheCollectorTest extends UnitTestCase {
 
@@ -46,14 +43,6 @@ class CacheCollectorTest extends UnitTestCase {
    * @var \Drupal\Tests\Core\Cache\CacheCollectorHelper
    */
   protected $collector;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CacheCollector test',
-      'description' => 'Tests the cache collector base implementaion',
-      'group' => 'Cache',
-    );
-  }
 
   /**
    * {@inheritdoc}

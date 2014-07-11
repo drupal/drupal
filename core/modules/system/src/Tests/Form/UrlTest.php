@@ -11,7 +11,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests URL element.
+ * Tests the form API URL element.
+ *
+ * @group Form
  */
 class UrlTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class UrlTest extends WebTestBase {
   public static $modules = array('form_test');
 
   protected $profile = 'testing';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form API URL',
-      'description' => 'Tests the form API URL element.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests that #type 'url' fields are properly validated and trimmed.

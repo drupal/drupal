@@ -11,18 +11,12 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Minimal installation profile expectations.
+ *
+ * @group minimal
  */
 class MinimalTest extends WebTestBase {
 
   protected $profile = 'minimal';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Minimal installation profile',
-      'description' => 'Tests Minimal installation profile expectations.',
-      'group' => 'Minimal',
-    );
-  }
 
   /**
    * Tests Minimal installation profile.

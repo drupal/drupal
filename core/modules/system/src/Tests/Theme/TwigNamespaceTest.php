@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Twig namespaces.
+ *
+ * @group Theme
  */
 class TwigNamespaceTest extends WebTestBase {
 
@@ -25,14 +27,6 @@ class TwigNamespaceTest extends WebTestBase {
    * @var \Drupal\Core\Template\TwigEnvironment
    */
   protected $twig;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig Namespaces',
-      'description' => 'Tests Twig namespaces.',
-      'group' => 'Theme',
-    );
-  }
 
   function setUp() {
     parent::setUp();

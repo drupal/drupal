@@ -11,7 +11,10 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Actions configuration.
+ * Tests complex actions configuration by adding, editing, and deleting a
+ * complex action.
+ *
+ * @group action
  */
 class ConfigurationTest extends WebTestBase {
 
@@ -21,14 +24,6 @@ class ConfigurationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('action');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Actions configuration',
-      'description' => 'Tests complex actions configuration by adding, editing, and deleting a complex action.',
-      'group' => 'Action',
-    );
-  }
 
   /**
    * Tests configuration of advanced actions through administration interface.

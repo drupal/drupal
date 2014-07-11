@@ -10,7 +10,9 @@ namespace Drupal\user\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the user administration UI.
+ * Tests user administration page functionality.
+ *
+ * @group user
  */
 class UserAdminTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class UserAdminTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('taxonomy', 'views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User administration',
-      'description' => 'Test user administration page functionality.',
-      'group' => 'User'
-    );
-  }
 
   /**
    * Registers a user and deletes it.

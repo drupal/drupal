@@ -12,6 +12,8 @@ use Drupal\Core\Template\Attribute;
 
 /**
  * Tests Drupal's Twig filters.
+ *
+ * @group Theme
  */
 class TwigFilterTest extends WebTestBase {
 
@@ -21,17 +23,6 @@ class TwigFilterTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('twig_theme_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig Filters',
-      'description' => 'Test Drupal\'s Twig filters.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Test Twig "without" filter.

@@ -10,9 +10,11 @@ namespace Drupal\field\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Unit test class for the multilanguage fields logic.
+ * Tests multilanguage fields logic.
  *
  * The following tests will check the multilanguage logic in field handling.
+ *
+ * @group field
  */
 class TranslationTest extends FieldUnitTestBase {
 
@@ -67,14 +69,6 @@ class TranslationTest extends FieldUnitTestBase {
    * @var \Drupal\field\Entity\FieldInstanceConfig
    */
   protected $instance;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field translations tests',
-      'description' => 'Test multilanguage fields logic.',
-      'group' => 'Field API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

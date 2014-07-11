@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests fields from within a UI.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
 class FieldWebTest extends HandlerTestBase {
@@ -27,14 +28,6 @@ class FieldWebTest extends HandlerTestBase {
   protected $column_map = array(
     'views_test_data_name' => 'name',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Web Test',
-      'description' => 'Tests fields from within a UI.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

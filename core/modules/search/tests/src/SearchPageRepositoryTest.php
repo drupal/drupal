@@ -12,12 +12,8 @@ use Drupal\search\SearchPageRepository;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the search page repository.
- *
- * @see \Drupal\search\SearchPageRepository
- *
- * @group Drupal
- * @group Search
+ * @coversDefaultClass \Drupal\search\SearchPageRepository
+ * @group search
  */
 class SearchPageRepositoryTest extends UnitTestCase {
 
@@ -48,17 +44,6 @@ class SearchPageRepositoryTest extends UnitTestCase {
    * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $configFactory;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Search page repository test',
-      'description' => 'Tests methods on the \Drupal\search\SearchPageRepository class',
-      'group' => 'Search',
-    );
-  }
 
   /**
    * {@inheritdoc}

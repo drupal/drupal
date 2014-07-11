@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Database;
 use \Drupal\Core\Database\RowCountException;
 
 /**
- * Tests more complex select statements.
+ * Tests the Select query builder with more complex queries.
+ *
+ * @group Database
  */
 class SelectComplexTest extends DatabaseTestBase {
 
@@ -20,14 +22,6 @@ class SelectComplexTest extends DatabaseTestBase {
    * @var array
    */
   public static $modules = array('node_access_test', 'field');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Select tests, complex',
-      'description' => 'Test the Select query builder with more complex queries.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests simple JOIN statements.

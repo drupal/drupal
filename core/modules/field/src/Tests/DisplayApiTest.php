@@ -11,6 +11,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests the field display API.
+ *
+ * @group field
  */
 class DisplayApiTest extends FieldUnitTestBase {
 
@@ -55,14 +57,6 @@ class DisplayApiTest extends FieldUnitTestBase {
    * @var array
    */
   protected $values;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field Display API tests',
-      'description' => 'Test the display API.',
-      'group' => 'Field API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

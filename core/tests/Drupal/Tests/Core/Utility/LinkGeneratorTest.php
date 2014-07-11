@@ -13,14 +13,8 @@ use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the link generator.
- *
- * @see \Drupal\Core\Utility\LinkGenerator
- *
- * @group Drupal
- * @group Utility
- *
  * @coversDefaultClass \Drupal\Core\Utility\LinkGenerator
+ * @group Utility
  */
 class LinkGeneratorTest extends UnitTestCase {
 
@@ -55,18 +49,6 @@ class LinkGeneratorTest extends UnitTestCase {
     'set_active_class' => FALSE,
     'absolute' => FALSE,
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Link generator',
-      'description' => 'Tests the link generator.',
-      'group' => 'Common',
-    );
-  }
-
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests theme functions and templates with the PHPTemplate engine.
+ * Tests theme functions with PHPTemplate.
+ *
+ * @group Theme
  */
 class EnginePhpTemplateTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class EnginePhpTemplateTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'PHPTemplate Engine',
-      'description' => 'Test theme functions with PHPTemplate.',
-      'group' => 'Theme',
-    );
-  }
 
   function setUp() {
     parent::setUp();

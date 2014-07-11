@@ -10,7 +10,9 @@ namespace Drupal\taxonomy\Tests\Views;
 use Drupal\views\Views;
 
 /**
- * Tests the node_term_data relationship handler.
+ * Tests the taxonomy term on node relationship handler.
+ *
+ * @group taxonomy
  */
 class RelationshipNodeTermDataTest extends TaxonomyTestBase {
 
@@ -20,14 +22,6 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
    * @var array
    */
   public static $testViews = array('test_taxonomy_node_term_data');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy: Node term data Relationship',
-      'description' => 'Tests the taxonomy term on node relationship handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   function testViewsHandlerRelationshipNodeTermData() {
     $view = Views::getView('test_taxonomy_node_term_data');

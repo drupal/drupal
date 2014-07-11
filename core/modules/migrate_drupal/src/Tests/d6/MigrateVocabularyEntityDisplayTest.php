@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 vocabulary-node type association to Drupal 8 migration.
+ * Vocabulary entity display migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateVocabularyEntityDisplayTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupalTestBase {
    * @var array
    */
   static $modules = array('field', 'node', 'taxonomy');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Vocabulary entity display migration',
-      'description'  => 'Vocabulary entity display migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

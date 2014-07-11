@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\argument\String handler.
+ *
+ * @group views
  */
 class ArgumentStringTest extends HandlerTestBase {
 
@@ -27,14 +29,6 @@ class ArgumentStringTest extends HandlerTestBase {
    * @var array
    */
   public static $modules = array('node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument: String',
-      'description' => 'Test the core Drupal\views\Plugin\views\argument\String handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests the glossary feature.

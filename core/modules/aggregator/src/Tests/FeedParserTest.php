@@ -10,17 +10,11 @@ namespace Drupal\aggregator\Tests;
 use Zend\Feed\Reader\Reader;
 
 /**
- * Tests feed parsing in the Aggregator module.
+ * Tests the built-in feed parser with valid feed samples.
+ *
+ * @group aggregator
  */
 class FeedParserTest extends AggregatorTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Feed parser functionality',
-      'description' => 'Test the built-in feed parser with valid feed samples.',
-      'group' => 'Aggregator',
-    );
-  }
-
   function setUp() {
     parent::setUp();
     // Do not delete old aggregator items during these tests, since our sample

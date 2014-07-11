@@ -13,20 +13,11 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests the Drupal 6 menu to Drupal 8 migration.
+ * Upgrade menus to system.menu.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateMenuTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate menus',
-      'description'  => 'Upgrade menus to system.menu.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

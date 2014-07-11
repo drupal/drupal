@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Module;
 
 /**
- * Test module dependency on specific versions.
+ * Tests module version dependencies.
+ *
+ * @group Module
  */
 class VersionTest extends ModuleTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module versions',
-      'description' => 'Check module version dependencies.',
-      'group' => 'Module',
-    );
-  }
 
   /**
    * Test version dependencies.

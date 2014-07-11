@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 field instance source.
+ * Tests D6 field instance source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class FieldInstanceTest extends MigrateSqlSourceTestCase {
 
@@ -93,17 +92,6 @@ class FieldInstanceTest extends MigrateSqlSourceTestCase {
       'global_settings' => serialize(array()),
     );
     parent::setUp();
-  }
-
-  /**
-   * Provide meta information about this battery of tests.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 field instance source functionality',
-      'description' => 'Tests D6 field instance source plugin.',
-      'group' => 'Migrate Drupal',
-    );
   }
 
   /**

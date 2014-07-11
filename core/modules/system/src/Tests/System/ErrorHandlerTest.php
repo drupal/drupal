@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests error and exception handlers.
+ * Performs tests on the Drupal error and exception handler.
+ *
+ * @group system
  */
 class ErrorHandlerTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ErrorHandlerTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('error_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Error handlers',
-      'description' => 'Performs tests on the Drupal error and exception handler.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Test the error handler.

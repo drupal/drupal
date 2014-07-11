@@ -8,17 +8,12 @@
 namespace Drupal\comment\Tests;
 
 /**
- * Tests comment titles.
+ * Tests to ensure that appropriate and accessible markup is created for comment
+ * titles.
+ *
+ * @group comment
  */
 class CommentTitleTest extends CommentTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment titles',
-      'description' => 'Test to ensure that appropriate and accessible markup is created for comment titles.',
-      'group' => 'Comment',
-    );
-  }
-
   /**
    * Tests markup for comments with empty titles.
    */

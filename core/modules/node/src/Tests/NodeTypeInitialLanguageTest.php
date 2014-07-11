@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests related to node type initial language.
+ * Tests node type initial language settings.
+ *
+ * @group node
  */
 class NodeTypeInitialLanguageTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('language', 'field_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node type initial language',
-      'description' => 'Tests node type initial language settings.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

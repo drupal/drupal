@@ -14,11 +14,8 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the ModuleRouteSubscriber class.
- *
- * @group Drupal
- *
- * @see \Drupal\Core\EventSubscriber\ModuleRouteSubscriber
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\ModuleRouteSubscriber
+ * @group EventSubscriber
  */
 class ModuleRouteSubscriberTest extends UnitTestCase {
 
@@ -28,14 +25,6 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    * @var Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $moduleHandler;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module route subscriber',
-      'description' => 'Unit test the \Drupal\Core\EventSubscriber\ModuleRouteSubscriber class.',
-      'group' => 'System'
-    );
-  }
 
   public function setUp() {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');

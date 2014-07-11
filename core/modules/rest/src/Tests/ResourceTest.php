@@ -10,7 +10,9 @@ namespace Drupal\rest\Tests;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
- * Tests the REST resource structure.
+ * Tests the structure of a REST resource.
+ *
+ * @group rest
  */
 class ResourceTest extends RESTTestBase {
 
@@ -20,17 +22,6 @@ class ResourceTest extends RESTTestBase {
    * @var array
    */
   public static $modules = array('hal', 'rest', 'entity_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Resource structure',
-      'description' => 'Tests the structure of a REST resource',
-      'group' => 'REST',
-    );
-  }
 
   /**
    * {@inheritdoc}

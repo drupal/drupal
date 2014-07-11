@@ -12,7 +12,9 @@ use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;
 
 /**
- * Tests the Recent Comments default view.
+ * Tests results for the Recent Comments view shipped with the module.
+ *
+ * @group comment
  */
 class DefaultViewRecentCommentsTest extends ViewTestBase {
 
@@ -57,14 +59,6 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
    * @var \Drupal\node\Node
    */
   public $node;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Default View - Recent Comments',
-      'description' => 'Test results for the Recent Comments view shipped with the module',
-      'group' => 'Views Config',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

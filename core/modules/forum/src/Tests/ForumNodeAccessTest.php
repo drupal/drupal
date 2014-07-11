@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests forum block view for private node access.
+ *
+ * @group forum
  */
 class ForumNodeAccessTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ForumNodeAccessTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum private node access test',
-      'description' => 'Tests forum block view for private node access',
-      'group' => 'Forum',
-    );
-  }
 
   function setUp() {
     parent::setUp();

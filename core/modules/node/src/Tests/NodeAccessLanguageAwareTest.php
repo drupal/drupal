@@ -10,7 +10,10 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Tests node access functionality for multiple languages.
+ * Tests node_access and db_select() with node_access tag functionality with
+ * multiple languages with node_access_test_language which is language-aware.
+ *
+ * @group node
  */
 class NodeAccessLanguageAwareTest extends NodeTestBase {
 
@@ -34,14 +37,6 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $web_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access language-aware',
-      'description' => 'Test node_access and db_select() with node_access tag functionality with multiple languages with node_access_test_language which is language-aware.',
-      'group' => 'Node',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

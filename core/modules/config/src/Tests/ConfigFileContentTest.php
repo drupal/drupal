@@ -11,17 +11,11 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests reading and writing file contents.
+ * Tests reading and writing of configuration files.
+ *
+ * @group config
  */
 class ConfigFileContentTest extends DrupalUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File content',
-      'description' => 'Tests reading and writing of configuration files.',
-      'group' => 'Configuration',
-    );
-  }
-
   /**
    * Tests setting, writing, and reading of a configuration setting.
    */

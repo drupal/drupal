@@ -8,17 +8,11 @@
 namespace Drupal\search\Tests;
 
 /**
- * Test search_simplify() on every Unicode character, and some other cases.
+ * Tests that the search_simply() function works as intended.
+ *
+ * @group search
  */
 class SearchSimplifyTest extends SearchTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Search simplify',
-      'description' => 'Check that the search_simply() function works as intended.',
-      'group' => 'Search',
-    );
-  }
-
   /**
    * Tests that all Unicode characters simplify correctly.
    */

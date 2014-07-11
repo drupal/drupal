@@ -10,7 +10,9 @@ namespace Drupal\language\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that paths are not prefixed on a monolingual site.
+ * Confirm that paths are not changed on monolingual non-English sites.
+ *
+ * @group language
  */
 class LanguagePathMonolingualTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class LanguagePathMonolingualTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language', 'path');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Paths on non-English monolingual sites',
-      'description' => 'Confirm that paths are not changed on monolingual non-English sites',
-      'group' => 'Language',
-    );
-  }
 
   function setUp() {
     parent::setUp();

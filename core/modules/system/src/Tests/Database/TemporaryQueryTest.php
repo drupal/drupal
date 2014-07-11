@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests temporary queries.
+ * Tests the temporary query functionality.
+ *
+ * @group Database
  */
 class TemporaryQueryTest extends DatabaseWebTestBase {
 
@@ -18,14 +20,6 @@ class TemporaryQueryTest extends DatabaseWebTestBase {
    * @var array
    */
   public static $modules = array('database_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Temporary query test',
-      'description' => 'Test the temporary query functionality.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Returns the number of rows of a table.

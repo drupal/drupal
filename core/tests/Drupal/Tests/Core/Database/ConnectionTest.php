@@ -12,23 +12,11 @@ use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests Drupal\Core\Database\Connection.
+ * Tests the Connection class.
  *
- * @group Drupal
  * @group Database
  */
 class ConnectionTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Connection Test',
-      'description' => 'Test the Connection class.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Dataprovider for testPrefixRoundTrip().

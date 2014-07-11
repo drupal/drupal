@@ -9,18 +9,12 @@ namespace Drupal\comment\Tests;
 
 /**
  * Tests comment links altering.
+ *
+ * @group comment
  */
 class CommentLinksAlterTest extends CommentTestBase {
 
   public static $modules = array('comment_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'hook_comment_links_alter()',
-      'description' => 'Tests comment links altering.',
-      'group' => 'Comment',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

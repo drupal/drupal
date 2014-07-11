@@ -9,6 +9,8 @@ namespace Drupal\node\Tests;
 
 /**
  * Tests changing view modes for nodes.
+ *
+ * @group node
  */
 class NodeEntityViewModeAlterTest extends NodeTestBase {
 
@@ -16,14 +18,6 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
    * Enable dummy module that implements hook_node_view().
    */
   public static $modules = array('node_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node entity view mode',
-      'description' => 'Test changing view mode.',
-      'group' => 'Node'
-    );
-  }
 
   /**
    * Create a "Basic page" node and verify its consistency in the database.

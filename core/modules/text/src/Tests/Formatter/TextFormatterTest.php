@@ -10,7 +10,9 @@ namespace Drupal\text\Tests\Formatter;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
- * Tests Text formatters.
+ * Tests the text formatters functionality.
+ *
+ * @group text
  */
 class TextFormatterTest extends EntityUnitTestBase {
 
@@ -34,17 +36,6 @@ class TextFormatterTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('text');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Text formatters',
-      'description' => 'Tests the text formatters functionality.',
-      'group' => 'Text ',
-    );
-  }
 
   /**
    * {@inheritdoc}

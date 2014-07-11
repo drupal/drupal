@@ -13,6 +13,7 @@ use Drupal\views_ui\Tests\UITestBase;
 /**
  * Tests the taxonomy index filter handler UI.
  *
+ * @group taxonomy
  * @see \Drupal\taxonomy\Plugin\views\field\TaxonomyIndexTid
  */
 class TaxonomyIndexTidUiTest extends UITestBase {
@@ -30,14 +31,6 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    * @var array
    */
   public static $modules = array('node', 'taxonomy', 'taxonomy_test_views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy: node index Filter (UI)',
-      'description' => 'Tests the taxonomy index filter handler UI.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

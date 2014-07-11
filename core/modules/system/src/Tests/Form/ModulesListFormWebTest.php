@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests \Drupal\system\Form\ModulesListForm.
+ *
+ * @group Form
  */
 class ModulesListFormWebTest extends WebTestBase {
 
@@ -18,17 +20,6 @@ class ModulesListFormWebTest extends WebTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('system_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => 'Tests \Drupal\system\Form\ModulesListForm.',
-      'name' => '\Drupal\system\Form\ModulesListForm web test',
-      'group' => 'Module',
-    );
-  }
 
   /**
    * {@inheritdoc}

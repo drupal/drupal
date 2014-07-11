@@ -10,7 +10,9 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test blocks correctly initialized when picking a new default theme.
+ * Tests that the new default theme gets blocks.
+ *
+ * @group block
  */
 class NewDefaultThemeBlocksTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'New default theme blocks',
-      'description' => 'Checks that the new default theme gets blocks.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Check the enabled Bartik blocks are correctly copied over.

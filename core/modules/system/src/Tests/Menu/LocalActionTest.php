@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Menu;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests local actions.
+ * Tests local actions derived from router and added/altered via hooks.
+ *
+ * @group Menu
  */
 class LocalActionTest extends WebTestBase {
 
@@ -18,17 +20,6 @@ class LocalActionTest extends WebTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('menu_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Local actions',
-      'description' => 'Tests local actions derived from router and added/altered via hooks.',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * Tests appearance of local actions.

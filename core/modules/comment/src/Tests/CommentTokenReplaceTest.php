@@ -12,17 +12,12 @@ use Drupal\Component\Utility\Xss;
 use Drupal\comment\Entity\Comment;
 
 /**
- * Tests comment token replacement in strings.
+ * Generates text using placeholders for dummy content to check comment token
+ * replacement.
+ *
+ * @group comment
  */
 class CommentTokenReplaceTest extends CommentTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment token replacement',
-      'description' => 'Generates text using placeholders for dummy content to check comment token replacement.',
-      'group' => 'Comment',
-    );
-  }
-
   /**
    * Creates a comment, then tests the tokens generated from it.
    */

@@ -12,19 +12,10 @@ use Drupal\node\Plugin\views\field\NodeBulkForm;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the node bulk form plugin.
- *
- * @see \Drupal\node\Plugin\views\field\NodeBulkForm
+ * @coversDefaultClass \Drupal\node\Plugin\views\field\NodeBulkForm
+ * @group node
  */
 class NodeBulkFormTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Bulk form',
-      'description' => 'Tests the node bulk form plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

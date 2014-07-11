@@ -10,10 +10,7 @@ namespace Drupal\simpletest\Tests;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests helper methods provided by the abstract TestBase class.
- *
  * @coversDefaultClass \Drupal\simpletest\TestBase
- * @group Drupal
  * @group simpletest
  */
 class TestBaseTest extends UnitTestCase {
@@ -24,15 +21,6 @@ class TestBaseTest extends UnitTestCase {
    * @var \PHPUnit_Framework_MockObject_MockObject
    */
   protected $stub;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'TestBase helper functions test',
-      'description' => 'Test helper functions provided by the TestBase abstract class.',
-      'group' => 'Simpletest',
-
-    );
-  }
 
   protected function setUp() {
     $this->stub = $this->getMockForAbstractClass('Drupal\simpletest\TestBase');

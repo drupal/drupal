@@ -13,7 +13,9 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\FieldException;
 
 /**
- * Tests field instance CRUD (attaching fields to entities).
+ * Create field entities by attaching fields to entities.
+ *
+ * @group field
  */
 class FieldInstanceCrudTest extends FieldUnitTestBase {
 
@@ -37,14 +39,6 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    * @var array
    */
   protected $instance_definition;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field instance CRUD tests',
-      'description' => 'Create field entities by attaching fields to entities.',
-      'group' => 'Field API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

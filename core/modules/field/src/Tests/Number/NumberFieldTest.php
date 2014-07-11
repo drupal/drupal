@@ -10,7 +10,9 @@ namespace Drupal\field\Tests\Number;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for numeric field types.
+ * Tests the creation of numeric fields.
+ *
+ * @group field
  */
 class NumberFieldTest extends WebTestBase {
 
@@ -41,14 +43,6 @@ class NumberFieldTest extends WebTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $web_user;
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Numeric fields',
-      'description'  => 'Test the creation of numeric fields.',
-      'group' => 'Field types'
-    );
-  }
 
   function setUp() {
     parent::setUp();

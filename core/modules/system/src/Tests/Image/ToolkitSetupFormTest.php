@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Image;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for the Image toolkit setup form.
+ * Tests image toolkit setup form.
+ *
+ * @group Image
  */
 class ToolkitSetupFormTest extends WebTestBase {
 
@@ -27,17 +29,6 @@ class ToolkitSetupFormTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('system', 'image_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Image toolkit setup form tests',
-      'description' => 'Check image toolkit setup form.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * {@inheritdoc}

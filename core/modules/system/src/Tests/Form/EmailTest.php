@@ -11,7 +11,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests email element.
+ * Tests the form API email element.
+ *
+ * @group Form
  */
 class EmailTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class EmailTest extends WebTestBase {
   public static $modules = array('form_test');
 
   protected $profile = 'testing';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form API email',
-      'description' => 'Tests the form API email element.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests that #type 'email' fields are properly validated.

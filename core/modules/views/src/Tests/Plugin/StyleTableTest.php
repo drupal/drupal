@@ -9,6 +9,8 @@ namespace Drupal\views\Tests\Plugin;
 
 /**
  * Tests the table style views plugin.
+ *
+ * @group views
  */
 class StyleTableTest extends PluginTestBase {
 
@@ -18,14 +20,6 @@ class StyleTableTest extends PluginTestBase {
    * @var array
    */
   public static $testViews = array('test_table');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: Table',
-      'description' => 'Tests the table style plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

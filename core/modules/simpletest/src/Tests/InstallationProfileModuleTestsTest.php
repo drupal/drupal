@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Verifies that tests bundled with installation profile modules are found.
+ *
+ * @group simpletest
  */
 class InstallationProfileModuleTestsTest extends WebTestBase {
 
@@ -35,14 +37,6 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
    */
   protected $profile = 'testing';
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Installation profile module tests',
-      'description' => 'Verifies that tests bundled with installation profile modules are found.',
-      'group' => 'SimpleTest',
-    );
-  }
-
   function setUp() {
     parent::setUp();
 
@@ -55,7 +49,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
    */
   function testInstallationProfileTests() {
     $this->drupalGet('admin/config/development/testing');
-    $this->assertText('Installation profile module tests helper');
+    $this->assertText('Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest');
     $edit = array(
       'tests[Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest]' => TRUE,
     );

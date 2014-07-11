@@ -9,7 +9,9 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Tests for taxonomy term field and formatter.
+ * Tests the creation of term fields.
+ *
+ * @group taxonomy
  */
 class TermFieldTest extends TaxonomyTestBase {
 
@@ -22,14 +24,6 @@ class TermFieldTest extends TaxonomyTestBase {
 
   protected $instance;
   protected $vocabulary;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy term reference field',
-      'description' => 'Test the creation of term fields.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

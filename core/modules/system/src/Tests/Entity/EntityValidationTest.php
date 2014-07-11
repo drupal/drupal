@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\Entity;
 
 /**
- * Tests Entity API base functionality.
+ * Tests the Entity Validation API.
+ *
+ * @group Entity
  */
 class EntityValidationTest extends EntityUnitTestBase {
 
@@ -18,14 +20,6 @@ class EntityValidationTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('filter', 'text');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Validation API',
-      'description' => 'Tests the Entity Validation API',
-      'group' => 'Entity API',
-    );
-  }
 
   /**
    * {@inheritdoc}

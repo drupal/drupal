@@ -12,21 +12,10 @@ use Drupal\Core\Cache\CacheContextInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the CacheContexts service.
- *
+ * @coversDefaultClass \Drupal\Core\Cache\CacheContexts
  * @group Cache
- *
- * @see \Drupal\Core\Cache\CacheContexts
  */
 class CacheContextsTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CacheContext test',
-      'description' => 'Tests cache contexts.',
-      'group' => 'Cache',
-    );
-  }
 
   public function testContextPlaceholdersAreReplaced() {
     $container = $this->getMockContainer();

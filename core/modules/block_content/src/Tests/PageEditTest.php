@@ -8,20 +8,11 @@
 namespace Drupal\block_content\Tests;
 
 /**
- * Tests the block edit functionality.
+ * Create a block and test block edit functionality.
+ *
+ * @group block_content
  */
 class PageEditTest extends BlockContentTestBase {
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block edit',
-      'description' => 'Create a block and test block edit functionality.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Checks block edit functionality.

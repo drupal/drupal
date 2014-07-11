@@ -13,7 +13,9 @@ use Drupal\Core\Queue\Memory;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the basic queue functionality.
+ * Queues and dequeues a set of items to check the basic queue functionality.
+ *
+ * @group Queue
  */
 class QueueTest extends DrupalUnitTestBase {
 
@@ -23,14 +25,6 @@ class QueueTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Queue functionality',
-      'description' => 'Queues and dequeues a set of items to check the basic queue functionality.',
-      'group' => 'Queue',
-    );
-  }
 
   /**
    * Tests the System queue.

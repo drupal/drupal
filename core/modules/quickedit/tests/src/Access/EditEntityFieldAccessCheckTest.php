@@ -16,12 +16,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Tests the edit entity field access controller.
- *
- * @group Drupal
- * @group QuickEdit
- *
- * @see \Drupal\quickedit\Access\EditEntityFieldAccessCheck
+ * @coversDefaultClass \Drupal\quickedit\Access\EditEntityFieldAccessCheck
+ * @group quickedit
  */
 class EditEntityFieldAccessCheckTest extends UnitTestCase {
 
@@ -45,14 +41,6 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityStorage;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Edit entity field access check test',
-      'description' => 'Unit test of edit entity field access check.',
-      'group' => 'Quick Edit'
-    );
-  }
 
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

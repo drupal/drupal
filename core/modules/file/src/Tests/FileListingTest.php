@@ -9,6 +9,8 @@ namespace Drupal\file\Tests;
 
 /**
  * Tests file listing page functionality.
+ *
+ * @group file
  */
 class FileListingTest extends FileFieldTestBase {
 
@@ -18,14 +20,6 @@ class FileListingTest extends FileFieldTestBase {
    * @var array
    */
   public static $modules = array('views', 'file', 'image');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File listing',
-      'description' => 'Tests file listing page functionality.',
-      'group' => 'File',
-    );
-  }
 
   function setUp() {
     parent::setUp();

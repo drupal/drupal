@@ -10,7 +10,9 @@ namespace Drupal\field\Tests;
 use Drupal\Component\Utility\String;
 
 /**
- * Tests deleting fields and instances as part of config import.
+ * Delete field and instances during config delete method invocation.
+ *
+ * @group field
  */
 class FieldImportDeleteTest extends FieldUnitTestBase {
 
@@ -20,14 +22,6 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array('field_test_config');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field config delete tests',
-      'description' => 'Delete field and instances during config delete method invocation.',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * Tests deleting fields and instances as part of config import.

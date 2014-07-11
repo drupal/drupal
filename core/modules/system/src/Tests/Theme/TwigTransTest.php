@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Twig "trans" tags.
+ *
+ * @group Theme
  */
 class TwigTransTest extends WebTestBase {
 
@@ -43,20 +45,6 @@ class TwigTransTest extends WebTestBase {
     'xx' => 'Lolspeak',
     'zz' => 'Lolspeak2',
   );
-
-  /**
-   * Defines information about this test.
-   *
-   * @return array
-   *   An associative array of information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig Translation',
-      'description' => 'Test Twig "trans" tags.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * {@inheritdoc}

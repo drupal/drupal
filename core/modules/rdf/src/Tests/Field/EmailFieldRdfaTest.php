@@ -9,7 +9,9 @@ namespace Drupal\rdf\Tests\Field;
 use Drupal\rdf\Tests\Field\FieldRdfaTestBase;
 
 /**
- * Tests the placement of RDFa in email field formatters.
+ * Tests RDFa output by email field formatters.
+ *
+ * @group rdf
  */
 class EmailFieldRdfaTest extends FieldRdfaTestBase {
 
@@ -22,14 +24,6 @@ class EmailFieldRdfaTest extends FieldRdfaTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('email', 'text');
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Field formatter: email',
-      'description'  => 'Tests RDFa output by email field formatters.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

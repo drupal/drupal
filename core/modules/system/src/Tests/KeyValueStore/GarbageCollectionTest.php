@@ -13,17 +13,11 @@ use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests garbage collection for DatabaseStorageExpirable.
+ * Tests garbage collection for the the expirable key-value database storage.
+ *
+ * @group KeyValueStore
  */
 class GarbageCollectionTest extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Garbage collection',
-      'description' => 'Tests garbage collection for the the expirable key-value database storage.',
-      'group' => 'Key-value store',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

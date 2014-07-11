@@ -11,19 +11,10 @@ use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests the installer with empty settings file.
+ *
+ * @group Installer
  */
 class InstallerEmptySettingsTest extends InstallerTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer Empty Settings Test',
-      'description' => 'Tests the installer with empty settings file.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * {@inheritdoc}

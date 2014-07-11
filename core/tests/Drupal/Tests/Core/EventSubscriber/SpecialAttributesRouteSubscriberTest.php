@@ -15,9 +15,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the special attributes route subscriber.
- *
- * @see \Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
+ * @coversDefaultClass \Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
+ * @group EventSubscriber
  */
 class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
 
@@ -27,14 +26,6 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @var \Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
    */
   protected  $specialAttributesRouteSubscriber;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Special attributes route subscriber',
-      'description' => 'Tests the special attributes route subscriber.',
-      'group' => 'System'
-    );
-  }
 
   /**
    * {@inheritdoc}

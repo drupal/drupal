@@ -10,7 +10,9 @@ namespace Drupal\filter\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests for text format and filter CRUD operations.
+ * Tests creation, loading, updating, deleting of text formats and filters.
+ *
+ * @group filter
  */
 class FilterCrudTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class FilterCrudTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('filter', 'filter_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter CRUD operations',
-      'description' => 'Test creation, loading, updating, deleting of text formats and filters.',
-      'group' => 'Filter',
-    );
-  }
 
   /**
    * Tests CRUD operations for text formats and filters.

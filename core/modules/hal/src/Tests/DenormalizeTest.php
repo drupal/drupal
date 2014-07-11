@@ -10,17 +10,11 @@ namespace Drupal\hal\Tests;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
- * Test the HAL normalizer's denormalize function.
+ * Tests that entities can be denormalized from HAL.
+ *
+ * @group hal
  */
 class DenormalizeTest extends NormalizerTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Denormalize Test',
-      'description' => 'Test that entities can be denormalized from HAL.',
-      'group' => 'HAL',
-    );
-  }
 
   /**
    * Tests that the type link relation in incoming data is handled correctly.

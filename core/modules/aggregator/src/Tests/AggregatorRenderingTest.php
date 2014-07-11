@@ -10,7 +10,9 @@ namespace Drupal\aggregator\Tests;
 use Drupal\Component\Utility\String;
 
 /**
- * Tests rendering functionality in the Aggregator module.
+ * Tests display of aggregator items on the page.
+ *
+ * @group aggregator
  */
 class AggregatorRenderingTest extends AggregatorTestBase {
 
@@ -20,14 +22,6 @@ class AggregatorRenderingTest extends AggregatorTestBase {
    * @var array
    */
   public static $modules = array('block', 'test_page_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Checks display of aggregator items',
-      'description' => 'Checks display of aggregator items on the page.',
-      'group' => 'Aggregator'
-    );
-  }
 
   /**
    * Adds a feed block to the page and checks its links.

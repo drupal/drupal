@@ -14,7 +14,9 @@ use Drupal\field\FieldConfigInterface;
 
 
 /**
- * Unit test class for field bulk delete and batch purge functionality.
+ * Bulk delete fields and instances, and clean up afterwards.
+ *
+ * @group field
  */
 class BulkDeleteTest extends FieldUnitTestBase {
 
@@ -52,14 +54,6 @@ class BulkDeleteTest extends FieldUnitTestBase {
    * @var array
    */
   protected $entity_type = 'entity_test';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field bulk delete tests',
-      'description' => 'Bulk delete fields and instances, and clean up afterwards.',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * Tests that the expected hooks have been invoked on the expected entities.

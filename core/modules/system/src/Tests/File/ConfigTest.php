@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\File;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * File system configuration related tests.
+ * Tests file system configuration operations.
+ *
+ * @group File
  */
 class ConfigTest extends WebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File system configuration test',
-      'description' => 'Tests file system configuration operations',
-      'group' => 'File API',
-    );
-  }
 
   function setUp(){
     parent::setUp();

@@ -14,6 +14,8 @@ use Drupal\Core\Cache\Cache;
 
 /**
  * Enables the page cache and tests it with various HTTP requests.
+ *
+ * @group Bootstrap
  */
 class PageCacheTest extends WebTestBase {
 
@@ -25,14 +27,6 @@ class PageCacheTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('test_page_test', 'system_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Page cache test',
-      'description' => 'Enable the page cache and test it with various HTTP requests.',
-      'group' => 'Bootstrap'
-    );
-  }
 
   function setUp() {
     parent::setUp();

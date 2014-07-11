@@ -9,20 +9,11 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests the Drupal 6 date formats to Drupal 8 migration.
+ * Upgrade date formats to system.date_format.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateDateFormatTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate date formats to system.date_format.*.yml',
-      'description'  => 'Upgrade date formats to system.date_format.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

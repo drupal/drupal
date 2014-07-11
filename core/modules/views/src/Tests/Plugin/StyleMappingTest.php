@@ -10,7 +10,9 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\views\Views;
 
 /**
- * Tests the default/mapping row style.
+ * Tests mapping style functionality.
+ *
+ * @group views
  */
 class StyleMappingTest extends StyleTestBase {
 
@@ -22,14 +24,6 @@ class StyleMappingTest extends StyleTestBase {
    * @var array
    */
   public static $testViews = array('test_style_mapping');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: Mapping',
-      'description' => 'Test mapping style functionality.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * Verifies that the fields were mapped correctly.

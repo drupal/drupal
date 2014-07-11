@@ -14,7 +14,9 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Functional test for multilingual fields.
+ * Tests multilingual support for fields.
+ *
+ * @group node
  */
 class NodeFieldMultilingualTest extends WebTestBase {
 
@@ -24,14 +26,6 @@ class NodeFieldMultilingualTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Multilingual fields',
-      'description' => 'Test multilingual support for fields.',
-      'group' => 'Field API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

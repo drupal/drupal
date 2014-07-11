@@ -10,8 +10,9 @@ namespace Drupal\views\Tests\Plugin;
 use Drupal\views\Views;
 
 /**
- * Tests the mini pager plugin
+ * Tests the mini pager plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\pager\Mini
  */
 class MiniPagerTest extends PluginTestBase {
@@ -36,14 +37,6 @@ class MiniPagerTest extends PluginTestBase {
    * @var array
    */
   protected $nodes;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Pager: Mini',
-      'description' => 'Test the mini pager plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Batch;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Batch API Progress page.
+ * Tests the content of the progress page.
+ *
+ * @group Batch
  */
 class PageTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class PageTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('batch_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Batch progress page',
-      'description' => 'Test the content of the progress page.',
-      'group' => 'Batch API',
-    );
-  }
 
   /**
    * Tests that the batch API progress page uses the correct theme.

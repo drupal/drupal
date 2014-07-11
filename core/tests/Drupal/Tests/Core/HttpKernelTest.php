@@ -19,19 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Tests the custom http kernel of drupal.
- *
- * @see \Drupal\Core\HttpKernel
+ * @coversDefaultClass \Drupal\Core\HttpKernel
+ * @group HttpKernelTest
  */
 class HttpKernelTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'HttpKernel (Unit)',
-      'description' => 'Tests the HttpKernel.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * Tests the forward method.

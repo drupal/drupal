@@ -11,7 +11,9 @@ use Drupal\Core\Entity\EntityWithPluginBagsInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests importing config entities.
+ * Tests ConfigEntity importing.
+ *
+ * @group Entity
  */
 class ConfigEntityImportTest extends WebTestBase {
 
@@ -21,17 +23,6 @@ class ConfigEntityImportTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('action', 'block', 'filter', 'image', 'search', 'search_extra_type');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration entity import',
-      'description' => 'Tests ConfigEntity importing.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * {@inheritdoc}

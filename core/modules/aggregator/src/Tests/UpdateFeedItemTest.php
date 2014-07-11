@@ -9,17 +9,11 @@ namespace Drupal\aggregator\Tests;
 use Drupal\aggregator\Entity\Feed;
 
 /**
- * Tests functionality of updating a feed item in the Aggregator module.
+ * Update feed items from a feed.
+ *
+ * @group aggregator
  */
 class UpdateFeedItemTest extends AggregatorTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Update feed item functionality',
-      'description' => 'Update feed items from a feed.',
-      'group' => 'Aggregator'
-    );
-  }
-
   /**
    * Tests running "update items" from 'admin/config/services/aggregator' page.
    */

@@ -10,7 +10,9 @@ namespace Drupal\options\Tests;
 use Drupal\field\Tests\FieldTestBase;
 
 /**
- * Test the Options widgets.
+ * Tests the Options widgets.
+ *
+ * @group options
  */
 class OptionsWidgetsTest extends FieldTestBase {
 
@@ -49,14 +51,6 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   protected $web_user;
 
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Options widgets',
-      'description'  => "Test the Options widgets.",
-      'group' => 'Field types'
-    );
-  }
 
   function setUp() {
     parent::setUp();

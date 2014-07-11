@@ -11,7 +11,9 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 
 /**
- * Menu breadcrumbs related tests.
+ * Tests breadcrumbs functionality.
+ *
+ * @group Menu
  */
 class BreadcrumbTest extends MenuTestBase {
 
@@ -26,14 +28,6 @@ class BreadcrumbTest extends MenuTestBase {
    * Test paths in the Standard profile.
    */
   protected $profile = 'standard';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Breadcrumbs',
-      'description' => 'Tests breadcrumbs functionality.',
-      'group' => 'Menu',
-    );
-  }
 
   function setUp() {
     parent::setUp();

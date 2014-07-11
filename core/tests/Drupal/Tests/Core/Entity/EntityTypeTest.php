@@ -12,22 +12,9 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityType
- *
- * @group Drupal
  * @group Entity
  */
 class EntityTypeTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity type test',
-      'description' => 'Unit test entity type info.',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * Sets up an EntityType object for a given set of values.

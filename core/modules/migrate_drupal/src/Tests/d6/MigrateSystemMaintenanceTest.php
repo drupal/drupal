@@ -12,20 +12,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of system maintenance mode variables to configuration.
+ * Upgrade maintenance variables to system.*.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSystemMaintenanceTest extends MigrateDrupalTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate maintenance variables to system.*.yml',
-      'description'  => 'Upgrade maintenance variables to system.*.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

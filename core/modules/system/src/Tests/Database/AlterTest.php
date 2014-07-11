@@ -8,19 +8,12 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests alter queries.
+ * Tests the hook_query_alter capabilities of the Select builder.
  *
+ * @group Database
  * @see database_test_query_alter()
  */
 class AlterTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Query altering tests',
-      'description' => 'Test the hook_query_alter capabilities of the Select builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests that we can do basic alters.

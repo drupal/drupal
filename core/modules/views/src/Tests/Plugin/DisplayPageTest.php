@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Tests the page display plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\display\Page
  */
 class DisplayPageTest extends ViewUnitTestBase {
@@ -39,14 +40,6 @@ class DisplayPageTest extends ViewUnitTestBase {
    * @var \Drupal\Core\Routing\MatcherDumper
    */
   protected $routerDumper;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display: Page plugin',
-      'description' => 'Tests the page display plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

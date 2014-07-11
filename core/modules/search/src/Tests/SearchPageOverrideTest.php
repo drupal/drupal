@@ -12,6 +12,8 @@ namespace Drupal\search\Tests;
  *
  * Verifies that a plugin can override the buildResults() method to
  * control what the search results page looks like.
+ *
+ * @group search
  */
 class SearchPageOverrideTest extends SearchTestBase {
 
@@ -23,14 +25,6 @@ class SearchPageOverrideTest extends SearchTestBase {
   public static $modules = array('search_extra_type');
 
   public $search_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Search page override',
-      'description' => 'Verifies that the result page can be overridden.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

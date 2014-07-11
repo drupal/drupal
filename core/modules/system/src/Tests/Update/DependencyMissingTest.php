@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Update;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for missing update dependencies.
+ * Tests that missing update dependencies are correctly flagged.
+ *
+ * @group Update
  */
 class DependencyMissingTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class DependencyMissingTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('update_test_0', 'update_test_2');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Missing update dependencies',
-      'description' => 'Test that missing update dependencies are correctly flagged.',
-      'group' => 'Update API',
-    );
-  }
 
   function setUp() {
     // Only install update_test_2.module, even though its updates have a

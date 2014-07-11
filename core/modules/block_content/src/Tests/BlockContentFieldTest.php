@@ -8,8 +8,9 @@
 namespace Drupal\block_content\Tests;
 
 /**
- * Tests the block edit functionality.
+ * Tests block fieldability.
  *
+ * @group block_content
  * @todo Consider removing this test when https://drupal.org/node/1822000 is
  * fixed.
  */
@@ -43,17 +44,6 @@ class BlockContentFieldTest extends BlockContentTestBase {
    */
   protected $blockType;
 
-
-  /**
-   * Declares test information.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block field test',
-      'description' => 'Test block fieldability.',
-      'group' => 'Custom Block',
-    );
-  }
 
   /**
    * Checks block edit functionality.

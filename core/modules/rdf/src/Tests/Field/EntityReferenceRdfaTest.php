@@ -12,6 +12,8 @@ use Drupal\Core\Language\Language;
 
 /**
  * Tests the RDFa output of the entity reference field formatter.
+ *
+ * @group rdf
  */
 class EntityReferenceRdfaTest extends FieldRdfaTestBase {
 
@@ -45,14 +47,6 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('entity', 'entity_reference', 'options', 'text', 'filter');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field formatter: entity reference',
-      'description' => 'Tests RDFa output by entity reference field formatters.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

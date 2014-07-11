@@ -10,17 +10,10 @@ namespace Drupal\node\Tests;
 /**
  * Tests the node/{node} page.
  *
+ * @group node
  * @see \Drupal\node\Controller\NodeController
  */
 class NodeViewTest extends NodeTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node view page',
-      'description' => 'Tests the node/{node} page.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * Tests the html head links.

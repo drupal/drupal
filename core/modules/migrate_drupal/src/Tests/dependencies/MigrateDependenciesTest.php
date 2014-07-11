@@ -12,25 +12,15 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Test the migrate dependencies
+ * Ensure the consistency among the dependencies for migrate.
  *
+ * @group migrate_drupal
  * @group Drupal
  * @group migrate_drupal
  */
 class MigrateDependenciesTest extends MigrateDrupalTestBase {
 
   static $modules = array('aggregator');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate dependency tests',
-      'description'  => 'Ensure the consistency among the dependencies for migrate',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * Tests that the order is correct when loading several migrations.

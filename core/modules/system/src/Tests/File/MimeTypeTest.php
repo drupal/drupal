@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Tests for file_get_mimetype().
+ * Tests filename mimetype detection.
+ *
+ * @group File
  */
 class MimeTypeTest extends FileTestBase {
 
@@ -18,14 +20,6 @@ class MimeTypeTest extends FileTestBase {
    * @var array
    */
   public static $modules = array('file_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File mimetypes',
-      'description' => 'Test filename mimetype detection.',
-      'group' => 'File API',
-    );
-  }
 
   /**
    * Test mapping of mimetypes from filenames.

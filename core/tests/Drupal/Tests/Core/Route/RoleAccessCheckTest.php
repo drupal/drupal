@@ -15,19 +15,10 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Defines tests for role based access in routes.
- *
- * @see \Drupal\user\Access\RoleAccessCheck
+ * @coversDefaultClass \Drupal\user\Access\RoleAccessCheck
+ * @group Route
  */
 class RoleAccessCheckTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Router Role tests',
-      'description' => 'Test for the role based access checker in the routing system.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * Generates the test route collection.

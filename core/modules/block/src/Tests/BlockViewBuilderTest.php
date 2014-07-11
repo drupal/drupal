@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the block view builder.
+ *
+ * @group block
  */
 class BlockViewBuilderTest extends DrupalUnitTestBase {
 
@@ -38,17 +40,6 @@ class BlockViewBuilderTest extends DrupalUnitTestBase {
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
   protected $controller;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Block rendering',
-      'description' => 'Tests the block view builder.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * {@inheritdoc}

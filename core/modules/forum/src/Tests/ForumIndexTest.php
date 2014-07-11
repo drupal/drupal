@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the forum index listing.
+ *
+ * @group forum
  */
 class ForumIndexTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ForumIndexTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('taxonomy', 'comment', 'forum');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum index',
-      'description' => 'Tests the forum index listing.',
-      'group' => 'Forum',
-    );
-  }
 
   function setUp() {
     parent::setUp();

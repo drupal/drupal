@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests Drupal-specific SQL syntax tests.
+ * Tests Drupal's extended prepared statement syntax..
+ *
+ * @group Database
  */
 class QueryTest extends DatabaseTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom query syntax tests',
-      'description' => 'Test Drupal\'s extended prepared statement syntax..',
-      'group' => 'Database',
-    );
-  }
-
   /**
    * Tests that we can pass an array of values directly in the query.
    */

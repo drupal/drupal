@@ -12,6 +12,8 @@ use Drupal\system\Tests\Entity\EntityCacheTagsTestBase;
 
 /**
  * Tests the Shortcut entity's cache tags.
+ *
+ * @group shortcut
  */
 class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
@@ -19,13 +21,6 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('shortcut');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('Shortcut link', 'Shortcut');
-  }
 
   /**
    * {@inheritdoc}

@@ -10,22 +10,10 @@ namespace Drupal\forum\Tests;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the ForumManager.
- *
- * @group Forum
- * @group Drupal
- *
- * @see \Drupal\forum\ForumManager
+ * @coversDefaultClass \Drupal\forum\ForumManager
+ * @group forum
  */
 class ForumManagerTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum Manager',
-      'description' => 'Tests the forum manager functionality.',
-      'group' => 'Forum',
-    );
-  }
 
   /**
    * Tests ForumManager::getIndex().

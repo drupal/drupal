@@ -13,6 +13,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests link field widgets and formatters.
+ *
+ * @group link
  */
 class LinkFieldTest extends WebTestBase {
 
@@ -43,14 +45,6 @@ class LinkFieldTest extends WebTestBase {
    * @var object
    */
   protected $web_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Link field',
-      'description' => 'Tests link field widgets and formatters.',
-      'group' => 'Field types',
-    );
-  }
 
   function setUp() {
     parent::setUp();

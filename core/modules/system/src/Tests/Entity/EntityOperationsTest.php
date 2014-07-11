@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for entity operations, that they can be altered.
+ * Tests that operations can be injected from the hook.
+ *
+ * @group Entity
  */
 class EntityOperationsTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class EntityOperationsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Operations',
-      'description' => 'Check that operations can be injected from the hook.',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

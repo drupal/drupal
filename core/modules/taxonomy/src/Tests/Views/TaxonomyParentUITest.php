@@ -11,8 +11,9 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\views_ui\Tests\UITestBase;
 
 /**
- * Tests views role access plugin UI.
+ * Tests views taxonomy parent plugin UI.
  *
+ * @group taxonomy
  * @see Drupal\taxonomy\Plugin\views\access\Role
  */
 class TaxonomyParentUITest extends UITestBase {
@@ -30,17 +31,6 @@ class TaxonomyParentUITest extends UITestBase {
    * @var array
    */
   public static $modules = array('taxonomy', 'taxonomy_test_views');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy: Term parent (UI)',
-      'description' => 'Tests views taxonomy parent plugin UI.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

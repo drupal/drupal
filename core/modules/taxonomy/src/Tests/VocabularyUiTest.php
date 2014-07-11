@@ -9,16 +9,10 @@ namespace Drupal\taxonomy\Tests;
 
 /**
  * Tests the taxonomy vocabulary interface.
+ *
+ * @group taxonomy
  */
 class VocabularyUiTest extends TaxonomyTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy vocabulary interface',
-      'description' => 'Test the taxonomy vocabulary interface.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

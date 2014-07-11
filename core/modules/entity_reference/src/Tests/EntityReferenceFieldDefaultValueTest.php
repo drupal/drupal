@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests entity reference field default values storage in CMI.
+ *
+ * @group entity_reference
  */
 class EntityReferenceFieldDefaultValueTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('entity_reference', 'field_ui', 'node', 'options');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference field default value',
-      'description' => 'Tests the entity reference field default values storage in CMI.',
-      'group' => 'Entity Reference',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -11,7 +11,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
- * Tests the Watchdog REST resource to retrieve log messages.
+ * Tests the watchdog database log resource.
+ *
+ * @group dblog
  */
 class DbLogResourceTest extends RESTTestBase {
 
@@ -21,14 +23,6 @@ class DbLogResourceTest extends RESTTestBase {
    * @var array
    */
   public static $modules = array('hal', 'dblog');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'DB Log resource',
-      'description' => 'Tests the watchdog database log resource.',
-      'group' => 'REST',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

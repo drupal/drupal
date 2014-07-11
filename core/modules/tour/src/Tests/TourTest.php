@@ -10,7 +10,9 @@ namespace Drupal\tour\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Tests tour functionality.
+ * Tests the functionality of tour tips.
+ *
+ * @group tour
  */
 class TourTest extends TourTestBasic {
 
@@ -38,14 +40,6 @@ class TourTest extends TourTestBasic {
   protected $tips = array(
     'tour-test-1' => array(),
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tour tests',
-      'description' => 'Test the functionality of tour tips.',
-      'group' => 'Tour',
-    );
-  }
 
   /**
    * Test tour functionality.

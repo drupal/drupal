@@ -16,6 +16,8 @@ use Drupal\block\BlockInterface;
 
 /**
  * Tests the storage of blocks.
+ *
+ * @group block
  */
 class BlockStorageUnitTest extends DrupalUnitTestBase {
 
@@ -32,14 +34,6 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface.
    */
   protected $controller;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block storage',
-      'description' => 'Tests the storage of blocks.',
-      'group' => 'Block'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

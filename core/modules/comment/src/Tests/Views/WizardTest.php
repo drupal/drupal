@@ -13,6 +13,7 @@ use Drupal\views\Tests\Wizard\WizardTestBase;
 /**
  * Tests the comment module integration into the wizard.
  *
+ * @group comment
  * @see \Drupal\comment\Plugin\views\wizard\Comment
  */
 class WizardTest extends WizardTestBase {
@@ -24,14 +25,6 @@ class WizardTest extends WizardTestBase {
    */
   public static $modules = array('node', 'comment');
 
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment: Wizard',
-      'description' => 'Tests the comment module integration into the wizard.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   /**
    * {@inheritdoc}

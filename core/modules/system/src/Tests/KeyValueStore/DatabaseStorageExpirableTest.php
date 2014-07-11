@@ -11,16 +11,10 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests the key-value database storage.
+ *
+ * @group KeyValueStore
  */
 class DatabaseStorageExpirableTest extends StorageTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Expirable database storage',
-      'description' => 'Tests the expirable key-value database storage.',
-      'group' => 'Key-value store',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

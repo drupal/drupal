@@ -11,19 +11,11 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views_ui\Form\Ajax\RearrangeFilter;
 
 /**
- * Tests RearrangeFilter's methods.
+ * Unit tests for Views UI module functions.
  *
- * @group Views UI
+ * @group views_ui
  */
 class RearrangeFilterTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Module tests',
-      'description' => 'Unit tests for Views UI module functions.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests static methods.

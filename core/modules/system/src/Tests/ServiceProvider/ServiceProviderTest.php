@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests service provider registration to the DIC.
+ *
+ * @group ServiceProvider
  */
 class ServiceProviderTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ServiceProviderTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('file', 'service_provider_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Service Provider Registration',
-      'description' => 'Tests service provider registration to the DIC.',
-      'group' => 'Service Provider',
-    );
-  }
 
   /**
    * Tests that services provided by module service providers get registered to the DIC.

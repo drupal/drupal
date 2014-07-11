@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests DatabaseBackend cache tag implementation.
+ *
+ * @group Cache
  */
 class DatabaseBackendTagTest extends DrupalUnitTestBase {
 
@@ -23,14 +25,6 @@ class DatabaseBackendTagTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Database backend tag test',
-      'description' => 'Tests database backend cache tag implementation.',
-      'group' => 'Cache',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,6 +11,8 @@ use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
  * Tests stream wrapper functions.
+ *
+ * @group File
  */
 class StreamWrapperTest extends FileTestBase {
 
@@ -34,14 +36,6 @@ class StreamWrapperTest extends FileTestBase {
    * @var string
    */
   protected $classname = 'Drupal\file_test\DummyStreamWrapper';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Stream wrappers',
-      'description' => 'Tests stream wrapper functions.',
-      'group' => 'File API',
-    );
-  }
 
   /**
    * Test the getClassName() function.

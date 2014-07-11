@@ -9,6 +9,8 @@ namespace Drupal\node\Tests;
 
 /**
  * Tests the interaction of the node access system with fields.
+ *
+ * @group node
  */
 class NodeAccessFieldTest extends NodeTestBase {
 
@@ -39,14 +41,6 @@ class NodeAccessFieldTest extends NodeTestBase {
    * @var string
    */
   protected $field_name;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access and fields',
-      'description' => 'Tests the interaction of the node access system with fields.',
-      'group' => 'Node',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

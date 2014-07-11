@@ -8,19 +8,13 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests the node edit functionality.
+ * Create a node and test node edit functionality.
+ *
+ * @group node
  */
 class PageEditTest extends NodeTestBase {
   protected $web_user;
   protected $admin_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node edit',
-      'description' => 'Create a node and test node edit functionality.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

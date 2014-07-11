@@ -10,8 +10,9 @@ namespace Drupal\views\Tests\Handler;
 use Drupal\views\Views;
 
 /**
- * Tests the abstract area handler.
+ * Tests the plugin base of the area handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\area\AreaPluginBase
  * @see \Drupal\views_test\Plugin\views\area\TestExample
  */
@@ -30,14 +31,6 @@ class AreaTest extends HandlerTestBase {
    * @var array
    */
   public static $modules = array('node', 'views_ui');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Area: Base',
-      'description' => 'Test the plugin base of the area handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

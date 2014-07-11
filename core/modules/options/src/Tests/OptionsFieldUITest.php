@@ -11,7 +11,9 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Tests\FieldTestBase;
 
 /**
- * Options module UI tests.
+ * Tests the Options field UI functionality.
+ *
+ * @group options
  */
 class OptionsFieldUITest extends FieldTestBase {
 
@@ -28,14 +30,6 @@ class OptionsFieldUITest extends FieldTestBase {
    * @var string
    */
   protected $type_name;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Options field UI',
-      'description' => 'Test the Options field UI functionality.',
-      'group' => 'Field types',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -17,16 +17,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @coversDefaultClass \Drupal\views\Views
+ * @group views
  */
 class ViewsTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views test',
-      'description' => 'Tests the Drupal\views\Views class.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * {@inheritdoc}

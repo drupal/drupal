@@ -9,16 +9,10 @@ namespace Drupal\views\Tests\Wizard;
 
 /**
  * Tests the ability of the views wizard to create views with sorts.
+ *
+ * @group views
  */
 class SortingTest extends WizardTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Sorting functionality',
-      'description' => 'Test the ability of the views wizard to create views with sorts.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   /**
    * Tests the sorting functionality.

@@ -12,18 +12,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 /**
  * Tests existence of aggregator local tasks.
  *
- * @group Drupal
- * @group Aggregator
+ * @group aggregator
  */
 class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Aggregator local tasks test',
-      'description' => 'Test existence of aggregator local tasks.',
-      'group' => 'Aggregator',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array('aggregator' => 'core/modules/aggregator');

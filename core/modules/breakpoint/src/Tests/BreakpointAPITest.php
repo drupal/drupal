@@ -14,17 +14,11 @@ use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
 use Drupal\Component\Utility\Unicode;
 
 /**
- * Tests for general breakpoint API functions.
+ * Tests general API functions of the breakpoint module.
+ *
+ * @group breakpoint
  */
 class BreakpointAPITest extends BreakpointTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Breakpoint general API functions',
-      'description' => 'Test general API functions of the breakpoint module.',
-      'group' => 'Breakpoint',
-    );
-  }
 
   /**
    * Test Breakpoint::buildConfigName().

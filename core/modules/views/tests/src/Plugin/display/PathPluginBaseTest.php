@@ -13,9 +13,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the abstract base class for path based display plugins.
- *
- * @see \Drupal\views\Plugin\views\display\PathPluginBase
+ * @coversDefaultClass \Drupal\views\Plugin\views\display\PathPluginBase
+ * @group views
  */
 class PathPluginBaseTest extends UnitTestCase {
 
@@ -53,14 +52,6 @@ class PathPluginBaseTest extends UnitTestCase {
    * @var \Drupal\Core\Form\FormErrorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $formError;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display: Path plugin base.',
-      'description' => 'Tests the abstract base class for path based display plugins.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

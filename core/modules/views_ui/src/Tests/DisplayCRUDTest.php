@@ -10,7 +10,9 @@ namespace Drupal\views_ui\Tests;
 use Drupal\views\Views;
 
 /**
- * Tests the handling of displays in the UI, adding removing etc.
+ * Tests creation, retrieval, updating, and deletion of displays in the Web UI.
+ *
+ * @group views_ui
  */
 class DisplayCRUDTest extends UITestBase {
 
@@ -27,14 +29,6 @@ class DisplayCRUDTest extends UITestBase {
    * @var array
    */
   public static $modules = array('contextual');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display CRUD UI tests',
-      'description' => 'Tests creation, retrieval, updating, and deletion of displays in the Web UI.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests adding a display.

@@ -8,17 +8,12 @@
 namespace Drupal\views\Tests\Wizard;
 
 /**
- * Tests the ability of the views wizard to specify the number of items per page.
+ * Tests the ability of the views wizard to specify the number of items per
+ * page.
+ *
+ * @group views
  */
 class ItemsPerPageTest extends WizardTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Items per page functionality',
-      'description' => 'Test the ability of the views wizard to specify the number of items per page.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   /**
    * Tests the number of items per page.

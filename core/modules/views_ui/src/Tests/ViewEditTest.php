@@ -13,6 +13,8 @@ use Drupal\views\Views;
 
 /**
  * Tests some general functionality of editing views, like deleting a view.
+ *
+ * @group views_ui
  */
 class ViewEditTest extends UITestBase {
 
@@ -22,14 +24,6 @@ class ViewEditTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view', 'test_display');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'General views edit test',
-      'description' => 'Tests some general functionality of editing views, like deleting a view.',
-      'group' => 'Views UI'
-    );
-  }
 
   /**
    * Tests the delete link on a views UI.

@@ -11,7 +11,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
 
 /**
- * Tests Twig engine configuration via settings.php.
+ * Tests overriding Twig engine settings via settings.php.
+ *
+ * @group Theme
  */
 class TwigSettingsTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class TwigSettingsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('theme_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Twig Settings',
-      'description' => 'Tests overriding Twig engine settings via settings.php.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Ensures Twig template auto reload setting can be overridden.

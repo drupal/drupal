@@ -11,7 +11,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
 /**
- * Functional tests for JavaScript parsing for translatable strings.
+ * Tests parsing js files for translatable strings.
+ *
+ * @group locale
  */
 class LocaleJavascriptTranslationTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Javascript translation',
-      'description' => 'Tests parsing js files for translatable strings',
-      'group' => 'Locale',
-    );
-  }
 
   function testFileParsing() {
     $filename = drupal_get_path('module', 'locale') . '/tests/locale_test.js';

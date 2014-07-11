@@ -12,7 +12,9 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
- * Tests exposed forms.
+ * Tests exposed forms functionality.
+ *
+ * @group views
  */
 class ExposedFormTest extends ViewTestBase {
 
@@ -29,14 +31,6 @@ class ExposedFormTest extends ViewTestBase {
    * @var array
    */
   public static $modules = array('node', 'views_ui', 'block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Exposed forms',
-      'description' => 'Test exposed forms functionality.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

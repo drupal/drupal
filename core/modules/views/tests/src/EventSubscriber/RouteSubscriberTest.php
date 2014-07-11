@@ -14,9 +14,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the views route subscriber.
- *
  * @coversDefaultClass \Drupal\views\EventSubscriber\RouteSubscriber
+ * @group views
  */
 class RouteSubscriberTest extends UnitTestCase {
 
@@ -47,17 +46,6 @@ class RouteSubscriberTest extends UnitTestCase {
    * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Views route subscriber',
-      'description' => 'Tests the views route subscriber.',
-      'group' => 'Views plugins',
-    );
-  }
 
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

@@ -10,6 +10,7 @@ namespace Drupal\views\Tests\Plugin;
 /**
  * Tests the attachment display plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\display\Attachment
  */
 class DisplayAttachmentTest extends PluginTestBase {
@@ -20,14 +21,6 @@ class DisplayAttachmentTest extends PluginTestBase {
    * @var array
    */
   public static $testViews = array('test_display_attachment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display: Attachment plugin',
-      'description' => 'Tests the attachment display plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

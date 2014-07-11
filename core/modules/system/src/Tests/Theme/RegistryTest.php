@@ -11,7 +11,9 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Utility\ThemeRegistry;
 
 /**
- * Tests the ThemeRegistry class.
+ * Tests the behavior of the ThemeRegistry class.
+ *
+ * @group Theme
  */
 class RegistryTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class RegistryTest extends WebTestBase {
   public static $modules = array('theme_test');
 
   protected $profile = 'testing';
-  public static function getInfo() {
-    return array(
-      'name' => 'ThemeRegistry',
-      'description' => 'Tests the behavior of the ThemeRegistry class',
-      'group' => 'Theme',
-    );
-  }
-
   /**
    * Tests the behavior of the theme registry class.
    */

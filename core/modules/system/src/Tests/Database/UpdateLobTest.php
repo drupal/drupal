@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests UPDATE queries involving LOB values.
+ * Tests the Update query builder with LOB fields.
+ *
+ * @group Database
  */
 class UpdateLobTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update tests, LOB',
-      'description' => 'Test the Update query builder with LOB fields.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that we can update a blob column.

@@ -13,6 +13,8 @@ use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the number field type.
+ *
+ * @group field
  */
 class NumberItemTest extends FieldUnitTestBase {
 
@@ -22,14 +24,6 @@ class NumberItemTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array();
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Number field items',
-      'description' => 'Tests the new entity API for the number field types.',
-      'group' => 'Field types',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

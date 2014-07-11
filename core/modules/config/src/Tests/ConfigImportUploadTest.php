@@ -11,18 +11,12 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests importing configuration from an uploaded file.
+ *
+ * @group config
  */
 class ConfigImportUploadTest extends WebTestBase {
 
   public static $modules = array('config');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Import uploaded config',
-      'description' => 'Tests importing configuration from an uploaded file.',
-      'group' => 'Configuration'
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -10,8 +10,9 @@ namespace Drupal\user\Tests\Views;
 use Drupal\views\Views;
 
 /**
- * Tests the role field handler.
+ * Tests the handler of the user: role field.
  *
+ * @group user
  * @see views_handler_field_user_name
  */
 class HandlerFieldRoleTest extends UserTestBase {
@@ -22,14 +23,6 @@ class HandlerFieldRoleTest extends UserTestBase {
    * @var array
    */
   public static $testViews = array('test_views_handler_field_role');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Role Field',
-      'description' => 'Tests the handler of the user: role field.',
-      'group' => 'Views module integration',
-    );
-  }
 
   public function testRole() {
     // Create a couple of roles for the view.

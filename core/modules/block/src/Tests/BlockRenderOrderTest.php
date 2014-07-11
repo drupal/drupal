@@ -10,7 +10,9 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests block HTML ID validity.
+ * Tests blocks are being rendered in order by weight.
+ *
+ * @group block
  */
 class BlockRenderOrderTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class BlockRenderOrderTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block Render Order',
-      'description' => 'Test blocks are being rendered in order by weight.',
-      'group' => 'Block',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -11,6 +11,8 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests that the base controller class.
+ *
+ * @group Controller
  */
 class ControllerBaseTest extends UnitTestCase {
 
@@ -20,14 +22,6 @@ class ControllerBaseTest extends UnitTestCase {
    * @var \Drupal\Core\Controller\ControllerBase|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $controllerBase;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Controller Base tests',
-      'description' => 'Tests that the base controller class.',
-      'group' => 'Routing',
-    );
-  }
 
   protected function setUp() {
     $this->controllerBase = $this->getMockForAbstractClass('Drupal\Core\Controller\ControllerBase');

@@ -13,21 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Exception\FlattenException;
 
 /**
- * Tests exception controller.
- *
- * @see \Drupal\Core\Controller\ExceptionController
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Controller\ExceptionController
+ * @group Controller
  */
 class ExceptionControllerTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Exception controller',
-      'description' => 'Performs tests on the exception handler controller class.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Ensure the execute() method returns a valid response on 405 exceptions.

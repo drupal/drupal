@@ -12,17 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
 /**
- * Tests the service destruction functionality.
+ * Tests that services are correctly destructed.
+ *
+ * @group DrupalKernel
  */
 class ServiceDestructionTest extends DrupalUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Service destruction',
-      'description' => 'Tests that services are correctly destructed.',
-      'group' => 'DrupalKernel',
-    );
-  }
 
   /**
    * Verifies that services are destructed when used.

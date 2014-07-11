@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests the grid style plugin.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\style\Grid
  */
 class StyleGridTest extends PluginTestBase {
@@ -29,17 +30,6 @@ class StyleGridTest extends PluginTestBase {
    * Keeps track of which alignments have been tested.
    */
   protected $alignmentsTested = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: Grid',
-      'description' => 'Tests the grid style plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   /**
    * {@inheritdoc}

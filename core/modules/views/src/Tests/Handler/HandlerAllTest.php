@@ -12,7 +12,9 @@ use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
- * Creates views with instances of all handlers...
+ * Tests instances of all handlers.
+ *
+ * @group views
  */
 class HandlerAllTest extends HandlerTestBase {
 
@@ -40,14 +42,6 @@ class HandlerAllTest extends HandlerTestBase {
     'taxonomy',
     'user',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Handlers: All',
-      'description' => 'Test instances of all handlers.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests most of the handlers.

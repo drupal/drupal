@@ -12,7 +12,9 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Functional tests for the language list configuration forms.
+ * Adds a new language and tests changing its status and the default language.
+ *
+ * @group language
  */
 class LanguageListTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class LanguageListTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language list configuration',
-      'description' => 'Adds a new language and tests changing its status and the default language.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * Functional tests for adding, editing and deleting languages.

@@ -12,7 +12,10 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Component\Utility\String;
 
 /**
- * Test the core GD image manipulation functions.
+ * Tests that core image manipulations work properly: scale, resize, rotate,
+ * crop, scale and crop, and desaturate.
+ *
+ * @group Image
  */
 class ToolkitGdTest extends DrupalUnitTestBase {
 
@@ -42,14 +45,6 @@ class ToolkitGdTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'simpletest');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image GD manipulation tests',
-      'description' => 'Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * {@inheritdoc}

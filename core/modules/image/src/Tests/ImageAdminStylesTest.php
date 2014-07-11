@@ -11,16 +11,10 @@ use Drupal\image\ImageStyleInterface;
 
 /**
  * Tests creation, deletion, and editing of image styles and effects.
+ *
+ * @group image
  */
 class ImageAdminStylesTest extends ImageFieldTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image styles and effects UI configuration',
-      'description' => 'Tests creation, deletion, and editing of image styles and effects at the UI level.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * Given an image style, generate an image.

@@ -17,22 +17,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
- * Unit tests for CurrentRouteMatch.
- *
  * @coversDefaultClass \Drupal\Core\Routing\CurrentRouteMatch
+ * @group Routing
  */
 class CurrentRouteMatchTest extends RouteMatchBaseTest {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'CurrentRouteMatch',
-      'description' => 'Unit tests for CurrentRouteMatch.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

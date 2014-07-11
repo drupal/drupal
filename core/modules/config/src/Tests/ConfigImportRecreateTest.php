@@ -14,6 +14,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests importing recreated configuration entities.
+ *
+ * @group config
  */
 class ConfigImportRecreateTest extends DrupalUnitTestBase {
 
@@ -30,14 +32,6 @@ class ConfigImportRecreateTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'entity', 'field', 'text', 'user', 'node');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Import renamed configuration',
-      'description' => 'Tests importing renamed configuration.',
-      'group' => 'Configuration',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

@@ -10,17 +10,11 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\CommentManagerInterface;
 
 /**
- * Verifies pagination of comments.
+ * Tests paging of comments and their settings.
+ *
+ * @group comment
  */
 class CommentPagerTest extends CommentTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment paging settings',
-      'description' => 'Test paging of comments and their settings.',
-      'group' => 'Comment',
-    );
-  }
-
   /**
    * Confirms comment paging works correctly with flat and threaded comments.
    */

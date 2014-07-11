@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 user picture to Drupal 8 entity form display migration.
+ * User picture entity form display.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupalTestBase {
    * @var array
    */
   static $modules = array('image');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate user picture entity form display.',
-      'description'  => 'User picture entity form display',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

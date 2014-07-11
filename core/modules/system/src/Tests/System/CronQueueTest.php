@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the handling of exceptions thrown by queue workers.
+ * Tests the Cron Queue runner.
+ *
+ * @group system
  */
 class CronQueueTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class CronQueueTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('cron_queue_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cron Queue functionality',
-      'description' => 'Tests the Cron Queue runner.',
-      'group' => 'Queue',
-    );
-  }
 
   /**
    * Tests that exceptions thrown by workers are handled properly.

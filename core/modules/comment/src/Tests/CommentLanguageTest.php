@@ -13,7 +13,9 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Functional tests for comment language.
+ * Tests for comment language.
+ *
+ * @group comment
  */
 class CommentLanguageTest extends WebTestBase {
 
@@ -27,14 +29,6 @@ class CommentLanguageTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'language', 'language_test', 'comment_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment language',
-      'description' => 'Tests for comment language.',
-      'group' => 'Comment',
-    );
-  }
 
   function setUp() {
     parent::setUp();

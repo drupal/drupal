@@ -14,7 +14,9 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * Tests Drupal 6 profile values to Drupal 8 migration.
+ * User profile values migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateProfileValuesTest extends MigrateDrupalTestBase {
 
@@ -31,17 +33,6 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     'file',
     'image',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate user profile values',
-      'description'  => 'User profile values migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

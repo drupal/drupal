@@ -10,20 +10,11 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests administrative status page.
+ * Tests output on the status overview page.
+ *
+ * @group system
  */
 class StatusTest extends WebTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Status page',
-      'description' => 'Tests output on the status overview page.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * {@inheritdoc}

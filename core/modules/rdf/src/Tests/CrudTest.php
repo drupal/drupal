@@ -11,6 +11,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the RDF mapping CRUD functions.
+ *
+ * @group rdf
  */
 class CrudTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class CrudTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('entity_test', 'rdf', 'system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDF mapping CRUD functions',
-      'description' => 'Test the RDF mapping CRUD functions.',
-      'group' => 'RDF',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

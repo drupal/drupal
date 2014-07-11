@@ -15,6 +15,8 @@ use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the taxonomy term reference field type.
+ *
+ * @group taxonomy
  */
 class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
 
@@ -31,14 +33,6 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
    * @var \Drupal\taxonomy\TermInterface
    */
   protected $term;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy reference field item',
-      'description' => 'Tests using entity fields of the taxonomy term reference field type.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

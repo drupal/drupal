@@ -12,23 +12,20 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for URL generation functions.
+ * Confirm that url(),
+ * \Drupal\Component\Utility\UrlHelper::filterQueryParameters(),
+ * \Drupal\Component\Utility\UrlHelper::buildQuery(), and l() work correctly
+ * with various input.
  *
  * url() calls \Drupal::moduleHandler()->getImplementations(),
  * which may issue a db query, which requires
  * inheriting from a web test case rather than a unit test case.
+ *
+ * @group Common
  */
 class UrlTest extends WebTestBase {
 
   public static $modules = array('common_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'URL generation tests',
-      'description' => 'Confirm that url(), \Drupal\Component\Utility\UrlHelper::filterQueryParameters(), \Drupal\Component\Utility\UrlHelper::buildQuery(), and l() work correctly with various input.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Confirms that invalid URLs are filtered in link generating functions.

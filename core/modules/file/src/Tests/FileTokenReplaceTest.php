@@ -10,17 +10,12 @@ namespace Drupal\file\Tests;
 use Drupal\Component\Utility\String;
 
 /**
- * Tests the file token replacement in strings.
+ * Generates text using placeholders for dummy content to check file token
+ * replacement.
+ *
+ * @group file
  */
 class FileTokenReplaceTest extends FileFieldTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File token replacement',
-      'description' => 'Generates text using placeholders for dummy content to check file token replacement.',
-      'group' => 'File',
-    );
-  }
-
   /**
    * Creates a file, then tests the tokens generated from it.
    */

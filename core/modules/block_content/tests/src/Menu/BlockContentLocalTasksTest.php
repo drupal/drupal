@@ -13,18 +13,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Tests existence of block_content local tasks.
  *
- * @group Drupal
- * @group Block
+ * @group block_content
  */
 class BlockContentLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom Block local tasks test',
-      'description' => 'Test block_content local tasks.',
-      'group' => 'Block',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array(

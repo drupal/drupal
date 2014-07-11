@@ -10,17 +10,11 @@ use Drupal\breakpoint\Tests\BreakpointTestBase;
 use Drupal\breakpoint\Entity\Breakpoint;
 
 /**
- * Tests for breakpoint CRUD operations.
+ * Tests creation, loading, updating, deleting of breakpoints.
+ *
+ * @group breakpoint
  */
 class BreakpointCRUDTest extends BreakpointTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Breakpoint CRUD operations',
-      'description' => 'Test creation, loading, updating, deleting of breakpoints.',
-      'group' => 'Breakpoint',
-    );
-  }
 
   /**
    * Test CRUD operations for breakpoints.

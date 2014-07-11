@@ -8,17 +8,11 @@
 namespace Drupal\field\Tests;
 
 /**
- * Tests creating fields and instances as part of config import.
+ * Create field and instances during config create method invocation.
+ *
+ * @group field
  */
 class FieldImportCreateTest extends FieldUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field config create tests',
-      'description' => 'Create field and instances during config create method invocation.',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * Tests creating fields and instances during default config import.

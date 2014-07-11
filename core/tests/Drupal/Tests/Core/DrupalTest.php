@@ -12,9 +12,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the Drupal class.
  *
- * @group Drupal
- *
- * @see \Drupal
+ * @group DrupalTest
  */
 class DrupalTest extends UnitTestCase {
 
@@ -24,14 +22,6 @@ class DrupalTest extends UnitTestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerBuilder|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $container;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Drupal test',
-      'description' => 'Tests the Drupal class.',
-      'group' => 'System'
-    );
-  }
 
   public function setUp() {
     $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')

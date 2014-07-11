@@ -15,17 +15,11 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Tests the event subscriber that disables the replica database.
+ * Tests that ReplicaDatabaseIgnoreSubscriber functions correctly.
+ *
+ * @group system
  */
 class IgnoreReplicaSubscriberTest extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Replica database ignoring event listener',
-      'description' => 'Tests that ReplicaDatabaseIgnoreSubscriber functions correctly.',
-      'group' => 'System',
-    );
-  }
 
   /**
    * Tests \Drupal\Core\EventSubscriber\ReplicaDatabaseIgnoreSubscriber::checkReplicaServer().

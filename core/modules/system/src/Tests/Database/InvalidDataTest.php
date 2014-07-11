@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Database;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
- * Tests invalid data handling.
+ * Tests handling of some invalid data.
+ *
+ * @group Database
  */
 class InvalidDataTest extends DatabaseTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Invalid data',
-      'description' => 'Test handling of some invalid data.',
-      'group' => 'Database',
-    );
-  }
-
   /**
    * Tests aborting of traditional SQL database systems with invalid data.
    */

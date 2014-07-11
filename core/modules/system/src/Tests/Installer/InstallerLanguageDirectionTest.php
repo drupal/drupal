@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Installer;
 use Drupal\simpletest\InstallerTestBase;
 
 /**
- * Tests the installer switches to RTL when installing in a RTL language.
+ * Verifies that the early installer uses the correct language direction.
+ *
+ * @group Installer
  */
 class InstallerLanguageDirectionTest extends InstallerTestBase {
 
@@ -20,17 +22,6 @@ class InstallerLanguageDirectionTest extends InstallerTestBase {
    * @var string
    */
   protected $langcode = 'ar';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer language direction test',
-      'description' => 'Verifies that the early installer uses the correct language direction.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -24,17 +24,11 @@ use Drupal\Core\Ajax\RestripeCommand;
 use Drupal\Core\Ajax\SettingsCommand;
 
 /**
- * Tests Ajax framework commands.
+ * Performs tests on AJAX framework commands.
+ *
+ * @group Ajax
  */
 class CommandsTest extends AjaxTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'AJAX commands',
-      'description' => 'Performs tests on AJAX framework commands.',
-      'group' => 'AJAX',
-    );
-  }
-
   /**
    * Tests the various Ajax Commands.
    */

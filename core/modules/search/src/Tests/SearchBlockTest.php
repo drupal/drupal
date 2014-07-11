@@ -8,7 +8,9 @@
 namespace Drupal\search\Tests;
 
 /**
- * Tests the rendering of the search block.
+ * Tests if the search form block is available.
+ *
+ * @group search
  */
 class SearchBlockTest extends SearchTestBase {
 
@@ -18,14 +20,6 @@ class SearchBlockTest extends SearchTestBase {
    * @var array
    */
   public static $modules = array('block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block availability',
-      'description' => 'Check if the search form block is available.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

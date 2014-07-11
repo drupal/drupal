@@ -10,7 +10,7 @@ namespace Drupal\search\Tests;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**
- * Tests that comment count display toggles properly on comment status of node
+ * Tests that comment count display toggles properly on comment status of node.
  *
  * Issue 537278
  *
@@ -18,6 +18,8 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
  * - Nodes with comment status set to Closed should show comment counts
  *     only when there are comments
  * - Nodes with comment status set to Hidden should never show comment counts
+ *
+ * @group search
  */
 class SearchCommentCountToggleTest extends SearchTestBase {
 
@@ -30,14 +32,6 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
   protected $searching_user;
   protected $searchable_nodes;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment count toggle',
-      'description' => 'Verify that comment count display toggles properly on comment status of node.',
-      'group' => 'Search',
-    );
-  }
 
   function setUp() {
     parent::setUp();

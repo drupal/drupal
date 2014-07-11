@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests views role access plugin.
  *
+ * @group user
  * @see \Drupal\user\Plugin\views\access\Role
  */
 class AccessRoleTest extends AccessTestBase {
@@ -25,14 +26,6 @@ class AccessRoleTest extends AccessTestBase {
    * @var array
    */
   public static $testViews = array('test_access_role');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User: Access role',
-      'description' => 'Tests views role access plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests role access plugin.

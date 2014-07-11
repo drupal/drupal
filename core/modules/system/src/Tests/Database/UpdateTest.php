@@ -9,16 +9,10 @@ namespace Drupal\system\Tests\Database;
 
 /**
  * Tests the update query builder.
+ *
+ * @group Database
  */
 class UpdateTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update tests',
-      'description' => 'Test the Update query builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that we can update a single record successfully.

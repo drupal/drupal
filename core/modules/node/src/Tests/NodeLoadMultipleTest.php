@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests the node_load_multiple() function.
+ * Tests the loading of multiple nodes.
+ *
+ * @group node
  */
 class NodeLoadMultipleTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class NodeLoadMultipleTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Load multiple nodes',
-      'description' => 'Test the loading of multiple nodes.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

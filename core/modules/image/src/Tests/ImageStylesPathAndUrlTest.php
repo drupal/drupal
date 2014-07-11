@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the functions for generating paths and URLs for image styles.
+ *
+ * @group image
  */
 class ImageStylesPathAndUrlTest extends WebTestBase {
 
@@ -26,14 +28,6 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
    * @var \Drupal\image\ImageStyleInterface
    */
   protected $style;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image styles path and URL functions',
-      'description' => 'Tests functions for generating paths and URLs to image styles.',
-      'group' => 'Image',
-    );
-  }
 
   function setUp() {
     parent::setUp();

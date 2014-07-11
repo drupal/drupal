@@ -36,7 +36,7 @@ use Drupal\Core\Asset\CssCollectionRenderer;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the CssCollectionRenderer class.
+ * Tests the CSS asset collection renderer.
  *
  * @group Asset
  */
@@ -69,14 +69,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CSS asset collection renderer functionality',
-      'description' => 'Tests the CSS asset collection renderer.',
-      'group' => 'Asset handling',
-    );
-  }
 
   function setUp() {
     parent::setUp();

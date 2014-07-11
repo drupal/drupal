@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Url handler.
+ *
+ * @group views
  */
 class FieldUrlTest extends ViewUnitTestBase {
 
@@ -23,14 +25,6 @@ class FieldUrlTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: URL',
-      'description' => 'Test the core Drupal\views\Plugin\views\field\Url handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

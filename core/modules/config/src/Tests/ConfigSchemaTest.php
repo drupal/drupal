@@ -15,6 +15,8 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests schema for configuration objects.
+ *
+ * @group config
  */
 class ConfigSchemaTest extends DrupalUnitTestBase {
 
@@ -24,14 +26,6 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'language', 'locale', 'field', 'image', 'config_schema_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration schema',
-      'description' => 'Tests Metadata for configuration objects.',
-      'group' => 'Configuration',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

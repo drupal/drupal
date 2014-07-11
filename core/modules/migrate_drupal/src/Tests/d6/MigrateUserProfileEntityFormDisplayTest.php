@@ -12,22 +12,13 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\migrate_drupal\Tests\Dump\Drupal6UserProfileFields;
 
 /**
- * Tests migration of user profile entity form display.
+ * Tests the user profile entity form display migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
 
   static $modules = array('link', 'options', 'datetime');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate user profile entity form display',
-      'description'  => 'Test the user profile entity form display migration.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

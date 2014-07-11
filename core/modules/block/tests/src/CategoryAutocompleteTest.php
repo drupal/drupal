@@ -13,11 +13,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the block category autocomplete.
- *
- * @group Drupal
- *
- * @see \Drupal\block\Controller\CategoryAutocompleteController
+ * @coversDefaultClass \Drupal\block\Controller\CategoryAutocompleteController
+ * @group block
  */
 class CategoryAutocompleteTest extends UnitTestCase {
 
@@ -27,14 +24,6 @@ class CategoryAutocompleteTest extends UnitTestCase {
    * @var \Drupal\block\Controller\CategoryAutocompleteController
    */
   protected $autocompleteController;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block category autocomplete',
-      'description' => 'Tests the block category autocomplete.',
-      'group' => 'Block',
-    );
-  }
 
   public function setUp() {
     $block_manager = $this->getMock('Drupal\block\BlockManagerInterface');

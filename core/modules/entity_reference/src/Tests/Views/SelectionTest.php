@@ -11,18 +11,12 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests entity reference selection handler.
+ *
+ * @group entity_reference
  */
 class SelectionTest extends WebTestBase {
 
   public static $modules = array('node', 'views', 'entity_reference', 'entity_reference_test', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference: Selection handler',
-      'description' => 'Tests entity reference selection handler provided by Views.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the selection handler.

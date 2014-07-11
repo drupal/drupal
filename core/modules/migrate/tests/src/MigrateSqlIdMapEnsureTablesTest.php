@@ -10,9 +10,8 @@ namespace Drupal\migrate\Tests;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 
 /**
- * Tests the \Drupal\migrate\Plugin\migrate\id_map\Sql::ensureTables() method.
+ * Tests the SQL ID map plugin ensureTables() method.
  *
- * @group Drupal
  * @group migrate
  */
 class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
@@ -25,17 +24,6 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
   protected $migrationConfiguration = array(
     'id' => 'sql_idmap_test',
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Sql::ensureTables()',
-      'description' => 'Tests the SQL ID map plugin ensureTables() method.',
-      'group' => 'Migrate',
-    );
-  }
 
   /**
    * Tests the ensureTables method when the tables do not exist.

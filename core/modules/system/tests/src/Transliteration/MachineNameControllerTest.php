@@ -13,9 +13,9 @@ use Drupal\system\MachineNameController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests machine name controller's transliteration functionality.
+ * Tests that the machine name controller can transliterate strings as expected.
  *
- * @group System
+ * @group system
  */
 class MachineNameControllerTest extends UnitTestCase {
 
@@ -25,14 +25,6 @@ class MachineNameControllerTest extends UnitTestCase {
    * @var \Drupal\system\MachineNameController
    */
   protected $machineNameController;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Machine name controller tests',
-      'description' => 'Tests that the machine name controller can transliterate strings as expected.',
-      'group' => 'Transliteration',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

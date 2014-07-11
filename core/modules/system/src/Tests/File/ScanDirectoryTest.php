@@ -9,6 +9,8 @@ namespace Drupal\system\Tests\File;
 
 /**
  * Tests the file_scan_directory() function.
+ *
+ * @group File
  */
 class ScanDirectoryTest extends FileTestBase {
 
@@ -18,14 +20,6 @@ class ScanDirectoryTest extends FileTestBase {
    * @var array
    */
   public static $modules = array('file_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File scan directory',
-      'description' => 'Tests the file_scan_directory() function.',
-      'group' => 'File API',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -11,16 +11,10 @@ use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the merging of attachments.
+ *
+ * @group Common
  */
 class MergeAttachmentsTest extends DrupalUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Attachment merging',
-      'description' => 'Tests the merging of attachments.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests justs library asset merging.

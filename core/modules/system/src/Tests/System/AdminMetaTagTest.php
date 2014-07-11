@@ -10,20 +10,11 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the fingerprinting "Generator" HTML meta tag.
+ * Confirm that the fingerprinting meta tag appears as expected.
+ *
+ * @group system
  */
 class AdminMetaTagTest extends WebTestBase {
-  /**
-   * Implement getInfo().
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Fingerprinting meta tag',
-      'description' => 'Confirm that the fingerprinting meta tag appears as expected.',
-      'group' => 'System'
-    );
-  }
-
   /**
    * Verify that the meta tag HTML is generated correctly.
    */

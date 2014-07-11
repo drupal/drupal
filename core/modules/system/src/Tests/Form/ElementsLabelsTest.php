@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test form element labels, required markers and associated output.
+ * Tests form element labels, required markers and associated output.
+ *
+ * @group Form
  */
 class ElementsLabelsTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class ElementsLabelsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form element and label output test',
-      'description' => 'Test form element labels, required markers and associated output.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Test form elements, labels, title attibutes and required marks output

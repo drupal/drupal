@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Boolean handler.
+ *
+ * @group views
  */
 class FieldBooleanTest extends ViewUnitTestBase {
 
@@ -21,14 +23,6 @@ class FieldBooleanTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Boolean',
-      'description' => 'Test the core Drupal\views\Plugin\views\field\Boolean handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   function dataSet() {
     // Use default dataset but remove the age from john and paul

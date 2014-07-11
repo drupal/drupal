@@ -10,7 +10,9 @@ namespace Drupal\views_ui\Tests;
 use Drupal\Component\Serialization\Json;
 
 /**
- * Tests the preview form in the UI.
+ * Tests the UI preview functionality.
+ *
+ * @group views_ui
  */
 class PreviewTest extends UITestBase {
 
@@ -20,14 +22,6 @@ class PreviewTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_preview', 'test_pager_full', 'test_mini_pager');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Preview functionality',
-      'description' => 'Tests the UI preview functionality.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests contextual links in the preview form.

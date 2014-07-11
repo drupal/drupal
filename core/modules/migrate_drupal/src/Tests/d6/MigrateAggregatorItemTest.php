@@ -13,22 +13,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Test Drupal 6 aggregator item migration to Drupal 8.
+ * Upgrade aggregator items.
+ *
+ * @group migrate_drupal
  */
 class MigrateAggregatorItemTest extends MigrateDrupalTestBase {
 
   static $modules = array('aggregator');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate aggregator items',
-      'description'  => 'Upgrade aggregator items',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

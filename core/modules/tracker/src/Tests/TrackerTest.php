@@ -11,7 +11,9 @@ use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Defines a base class for testing tracker.module.
+ * Create and delete nodes and check for their display in the tracker listings.
+ *
+ * @group tracker
  */
 class TrackerTest extends WebTestBase {
 
@@ -35,14 +37,6 @@ class TrackerTest extends WebTestBase {
    * @var object
    */
   protected $other_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tracker',
-      'description' => 'Create and delete nodes and check for their display in the tracker listings.',
-      'group' => 'Tracker'
-    );
-  }
 
   function setUp() {
     parent::setUp();

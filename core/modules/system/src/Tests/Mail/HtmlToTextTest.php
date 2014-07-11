@@ -13,16 +13,10 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests for drupal_html_to_text().
+ *
+ * @group Mail
  */
 class HtmlToTextTest extends WebTestBase {
-  public static function getInfo() {
-    return array(
-      'name'  => 'HTML to text conversion',
-      'description' => 'Tests drupal_html_to_text().',
-      'group' => 'Mail',
-    );
-  }
-
   /**
    * Converts a string to its PHP source equivalent for display in test messages.
    *

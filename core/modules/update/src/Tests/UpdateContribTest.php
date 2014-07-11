@@ -10,7 +10,10 @@ namespace Drupal\update\Tests;
 use Drupal\Core\Utility\ProjectInfo;
 
 /**
- * Tests behavior related to handling updates to contributed modules and themes.
+ * Tests how the Update Manager module handles contributed modules and themes in
+ * a series of functional tests using mock XML data.
+ *
+ * @group update
  */
 class UpdateContribTest extends UpdateTestBase {
 
@@ -20,14 +23,6 @@ class UpdateContribTest extends UpdateTestBase {
    * @var array
    */
   public static $modules = array('update_test', 'update', 'aaa_update_test', 'bbb_update_test', 'ccc_update_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Update contrib functionality',
-      'description' => 'Tests how the Update Manager module handles contributed modules and themes in a series of functional tests using mock XML data.',
-      'group' => 'Update',
-    );
-  }
 
   function setUp() {
     parent::setUp();

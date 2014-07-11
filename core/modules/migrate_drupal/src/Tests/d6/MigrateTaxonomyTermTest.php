@@ -12,22 +12,13 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 use Drupal\taxonomy\Entity\Term;
 
 /**
- * Tests the Drupal 6 taxonomy term to Drupal 8 migration.
+ * Upgrade taxonomy terms.
+ *
+ * @group migrate_drupal
  */
 class MigrateTaxonomyTermTest extends MigrateDrupalTestBase {
 
   static $modules = array('taxonomy');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate taxonomy terms',
-      'description'  => 'Upgrade taxonomy terms',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

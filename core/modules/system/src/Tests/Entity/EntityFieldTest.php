@@ -21,7 +21,9 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\Entity\NodeType;
 
 /**
- * Tests Entity API base functionality.
+ * Tests the Entity Field API.
+ *
+ * @group Entity
  */
 class EntityFieldTest extends EntityUnitTestBase  {
 
@@ -31,14 +33,6 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @var array
    */
   public static $modules = array('filter', 'text', 'node', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Field API',
-      'description' => 'Tests the Entity Field API',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

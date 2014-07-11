@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests form redirection.
+ * Tests form redirection functionality.
+ *
+ * @group Form
  */
 class RedirectTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class RedirectTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test', 'block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form redirecting',
-      'description' => 'Tests form redirection functionality.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests form redirection.

@@ -10,7 +10,9 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Unit tests for block_theme_suggestions_block().
+ * Tests the block_theme_suggestions_block() function.
+ *
+ * @group block
  */
 class BlockTemplateSuggestionsUnitTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Block template suggestions',
-      'description' => 'Test the block_theme_suggestions_block() function.',
-      'group' => 'Block',
-    );
-  }
 
   /**
    * Tests template suggestions from block_theme_suggestions_block().

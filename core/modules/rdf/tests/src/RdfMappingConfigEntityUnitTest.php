@@ -13,9 +13,7 @@ use Drupal\rdf\Entity\RdfMapping;
 
 /**
  * @coversDefaultClass \Drupal\rdf\Entity\RdfMapping
- *
- * @group Drupal
- * @group Config
+ * @group rdf
  */
 class RdfMappingConfigEntityUnitTest extends UnitTestCase {
 
@@ -46,17 +44,6 @@ class RdfMappingConfigEntityUnitTest extends UnitTestCase {
    * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $uuid;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\field\Entity\RdfMapping unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

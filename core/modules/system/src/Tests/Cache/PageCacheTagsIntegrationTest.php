@@ -13,6 +13,7 @@ use Drupal\Core\Cache\Cache;
 /**
  * Enables the page cache and tests its cache tags in various scenarios.
  *
+ * @group Cache
  * @see \Drupal\system\Tests\Bootstrap\PageCacheTest
  * @see \Drupal\node\Tests\NodePageCacheTest
  * @see \Drupal\menu_ui\Tests\MenuTest::testMenuBlockPageCacheTags()
@@ -22,14 +23,6 @@ class PageCacheTagsIntegrationTest extends WebTestBase {
   protected $profile = 'standard';
 
   protected $dumpHeaders = TRUE;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Page cache tags integration test',
-      'description' => 'Enable the page cache and test its cache tags in various scenarios.',
-      'group' => 'Cache',
-    );
-  }
 
   function setUp() {
     parent::setUp();

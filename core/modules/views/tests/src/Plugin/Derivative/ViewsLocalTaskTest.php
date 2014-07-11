@@ -13,9 +13,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the views local task derivative.
- *
- * @see \Drupal\views\Plugin\Derivative\ViewsLocalTask
+ * @coversDefaultClass \Drupal\views\Plugin\Derivative\ViewsLocalTask
+ * @group views
  */
 class ViewsLocalTaskTest extends UnitTestCase {
 
@@ -44,14 +43,6 @@ class ViewsLocalTaskTest extends UnitTestCase {
    * @var \Drupal\views\Plugin\Derivative\ViewsLocalTask
    */
   protected $localTaskDerivative;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views local task derivative',
-      'description' => 'Tests the views local task derivative.',
-      'group' => 'Views plugin',
-    );
-  }
 
   protected function setUp() {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');

@@ -12,6 +12,8 @@ use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Tests the new entity API for the shape field type.
+ *
+ * @group field
  */
 class ShapeItemTest extends FieldUnitTestBase {
 
@@ -28,14 +30,6 @@ class ShapeItemTest extends FieldUnitTestBase {
    * @var string
    */
   protected $field_name = 'field_shape';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Shape field item',
-      'description' => 'Tests the new entity API for the shape field type.',
-      'group' => 'Field types',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

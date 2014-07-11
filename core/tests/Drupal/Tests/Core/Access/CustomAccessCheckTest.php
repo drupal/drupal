@@ -14,9 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the custom access checker.
- *
- * @see \Drupal\Core\Access\CustomAccessCheck
+ * @coversDefaultClass \Drupal\Core\Access\CustomAccessCheck
+ * @group Access
  */
 class CustomAccessCheckTest extends UnitTestCase {
 
@@ -40,14 +39,6 @@ class CustomAccessCheckTest extends UnitTestCase {
    * @var \Drupal\Core\Access\AccessArgumentsResolverInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $argumentsResolver;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Custom access check',
-      'description' => 'Tests the custom access checker.',
-      'group' => 'Access'
-    );
-  }
 
   /**
    * {@inheritdoc}

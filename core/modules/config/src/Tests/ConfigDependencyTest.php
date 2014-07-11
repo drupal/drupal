@@ -10,7 +10,9 @@ namespace Drupal\config\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Unit tests for configuration controllers and objects.
+ * Tests for configuration dependencies.
+ *
+ * @group config
  */
 class ConfigDependencyTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class ConfigDependencyTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'config_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration dependency tests',
-      'description' => 'Tests for configuration dependencies.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests that calculating dependencies for system module.

@@ -11,22 +11,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of user profile fields.
+ * Tests the user profile field migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
 
   static $modules = array('link', 'options', 'datetime');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate user profile fields',
-      'description'  => 'Test the user profile field migration.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

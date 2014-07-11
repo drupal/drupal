@@ -10,19 +10,13 @@ namespace Drupal\taxonomy\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Tests for the language feature on vocabularies.
+ * Tests the language functionality for vocabularies.
+ *
+ * @group taxonomy
  */
 class VocabularyLanguageTest extends TaxonomyTestBase {
 
   public static $modules = array('language');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Vocabulary language',
-      'description' => 'Tests the language functionality for vocabularies.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -17,12 +17,8 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the route builder.
- *
- * @group Drupal
+ * @coversDefaultClass \Drupal\Core\Routing\RouteBuilder
  * @group Routing
- *
- * @see \Drupal\Core\Routing\RouteBuilder
  */
 class RouteBuilderTest extends UnitTestCase {
 
@@ -81,14 +77,6 @@ class RouteBuilderTest extends UnitTestCase {
    * @var \Drupal\Core\State\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Route Builder',
-      'description' => 'Tests the route builder.',
-      'group' => 'Routing',
-    );
-  }
 
   protected function setUp() {
     $this->dumper = $this->getMock('Drupal\Core\Routing\MatcherDumperInterface');

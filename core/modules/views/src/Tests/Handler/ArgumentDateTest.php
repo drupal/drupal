@@ -13,6 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the core date argument handlers.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\argument\Date
  */
 class ArgumentDateTest extends ViewUnitTestBase {
@@ -32,14 +33,6 @@ class ArgumentDateTest extends ViewUnitTestBase {
   protected $columnMap = array(
     'id' => 'id',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument: Date',
-      'description' => 'Tests the core date argument handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Overrides \Drupal\views\Tests\ViewUnitTestBase::viewsData().

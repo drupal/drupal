@@ -8,9 +8,11 @@
 namespace Drupal\views\Tests;
 
 /**
- * As views uses a lot of theme related functionality we need to test these too.
+ * Tests the Views theme integration.
  *
  * We test against test_basetheme and test_subtheme provided by theme_test
+ *
+ * @group views
  */
 class ViewsThemeIntegrationTest extends ViewTestBase {
 
@@ -32,17 +34,6 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
    * @see \Drupal\simpletest\WebTestBase::setup()
    */
   public static $modules = array('views', 'theme_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Views theme integration test',
-      'description' => 'Tests the Views theme integration.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * {@inheritdoc}

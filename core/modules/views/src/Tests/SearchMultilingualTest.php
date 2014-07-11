@@ -11,6 +11,8 @@ use Drupal\Core\Language\Language;
 
 /**
  * Tests search integration filters with multilingual nodes.
+ *
+ * @group views
  */
 class SearchMultilingualTest extends ViewTestBase {
 
@@ -27,17 +29,6 @@ class SearchMultilingualTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_search');
-
-  /**
-   * {inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Search multilingual tests',
-      'description' => 'Tests search filters of views with multilingual nodes.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * Tests search with multilingual nodes.

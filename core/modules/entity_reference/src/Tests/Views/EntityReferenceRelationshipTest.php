@@ -15,8 +15,9 @@ use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Views;
 
 /**
- * Defines a test for the entity_reference views relationship.
+ * Tests entity reference relationship data.
  *
+ * @group entity_reference
  * @see entity_reference_field_views_data()
  */
 class EntityReferenceRelationshipTest extends ViewUnitTestBase {
@@ -41,17 +42,6 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
    * @var array
    */
   protected $entities = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Reference: Relationship data',
-      'description' => 'Tests entity reference relationship data.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,16 +11,10 @@ use Drupal\Component\Plugin\Exception\ExceptionInterface;
 
 /**
  * Tests that plugins are correctly instantiated.
+ *
+ * @group Plugin
  */
 class FactoryTest extends PluginTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Factory',
-      'description' => 'Tests that plugins are correctly instantiated.',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * Test that DefaultFactory can create a plugin instance.

@@ -8,7 +8,9 @@
 namespace Drupal\update\Tests;
 
 /**
- * Provides tests for update_delete_file_if_stale().
+ * Tests the update_delete_file_if_stale() function.
+ *
+ * @group update
  */
 class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
 
@@ -18,17 +20,6 @@ class UpdateDeleteFileIfStaleTest extends UpdateTestBase {
    * @var array
    */
   public static $modules = array('update');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Deleting obsolete files tests.',
-      'description' => 'Tests the update_delete_file_if_stale() function.',
-      'group' => 'Update',
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,12 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\EntityResolver\ChainEntityResolver;
 
 /**
- * Tests the ChainEntityResolver class.
- *
- * @see \Drupal\serialization\EntityResolver\ChainEntityResolver
- *
- * @group Drupal
- * @group Serialization
+ * @coversDefaultClass \Drupal\serialization\EntityResolver\ChainEntityResolver
+ * @group serialization
  */
 class ChainEntityResolverTest extends UnitTestCase {
 
@@ -40,17 +36,6 @@ class ChainEntityResolverTest extends UnitTestCase {
    * @var string
    */
   protected $testEntityType = 'test_type';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'ChainEntityResolver',
-      'description' => 'Tests the Drupal\serialization\EntityResolver\ChainEntityResolver class.',
-      'group' => 'Serialization',
-    );
-  }
 
   /**
    * {@inheritdoc}

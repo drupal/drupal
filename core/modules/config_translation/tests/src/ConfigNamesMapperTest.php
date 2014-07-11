@@ -15,10 +15,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests ConfigNamesMapper.
+ * Tests the functionality provided by the configuration names mapper.
  *
- * @group Drupal
- * @group Config_translation
+ * @group config_translation
  */
 class ConfigNamesMapperTest extends UnitTestCase {
 
@@ -65,17 +64,6 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $routeProvider;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration names mapper',
-      'description' => 'Tests the functionality provided by the configuration names mapper.',
-      'group' => 'Configuration Translation',
-    );
-  }
 
   public function setUp() {
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');

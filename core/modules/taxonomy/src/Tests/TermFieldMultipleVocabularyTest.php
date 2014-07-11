@@ -12,6 +12,8 @@ use Drupal\field\Entity\FieldConfig;
 
 /**
  * Tests a taxonomy term reference field that allows multiple vocabularies.
+ *
+ * @group taxonomy
  */
 class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
@@ -24,14 +26,6 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
   protected $vocabulary1;
   protected $vocabulary2;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Multiple vocabulary term reference field',
-      'description' => 'Tests term reference fields that allow multiple vocabularies.',
-      'group' => 'Taxonomy',
-    );
-  }
 
   function setUp() {
     parent::setUp();

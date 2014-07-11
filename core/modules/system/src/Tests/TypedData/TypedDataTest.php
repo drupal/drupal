@@ -15,7 +15,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
- * Tests primitive data types.
+ * Tests the functionality of all core data types.
+ *
+ * @group TypedData
  */
 class TypedDataTest extends DrupalUnitTestBase {
 
@@ -32,14 +34,6 @@ class TypedDataTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system', 'entity', 'field', 'file', 'user');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Test typed data objects',
-      'description' => 'Tests the functionality of all core data types.',
-      'group' => 'Typed Data API',
-    );
-  }
 
   public function setUp() {
     parent::setup();

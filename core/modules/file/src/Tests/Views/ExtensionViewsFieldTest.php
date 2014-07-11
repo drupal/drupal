@@ -13,6 +13,8 @@ use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests the core Drupal\file\Plugin\views\field\Extension handler.
+ *
+ * @group file
  */
 class ExtensionViewsFieldTest extends ViewUnitTestBase {
 
@@ -27,14 +29,6 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('file_extension_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: File extension',
-      'description' => 'Test the core Drupal\file\Plugin\views\field\Extension handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * {@inheritdoc}

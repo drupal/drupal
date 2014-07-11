@@ -15,6 +15,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Tests the serializer style plugin.
  *
+ * @group rest
  * @see \Drupal\rest\Plugin\views\display\RestExport
  * @see \Drupal\rest\Plugin\views\style\Serializer
  * @see \Drupal\rest\Plugin\views\row\DataEntityRow
@@ -40,14 +41,6 @@ class StyleSerializerTest extends PluginTestBase {
    * A user with administrative privileges to look at test entity and configure views.
    */
   protected $adminUser;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Style: Serializer plugin',
-      'description' => 'Tests the serializer style plugin.',
-      'group' => 'Views Plugins',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 url alias source.
+ * Tests the D6 url alias migrations.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class UrlAliasTest extends MigrateSqlSourceTestCase {
 
@@ -51,17 +50,6 @@ class UrlAliasTest extends MigrateSqlSourceTestCase {
       $this->databaseContents['url_alias'][] = $row;
     }
     parent::setUp();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 url alias source functionality',
-      'description' => 'Tests the D6 url alias migrations.',
-      'group' => 'Migrate Drupal',
-    );
   }
 
 }

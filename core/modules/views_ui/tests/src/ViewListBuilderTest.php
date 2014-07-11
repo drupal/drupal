@@ -18,16 +18,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @coversDefaultClass \Drupal\views_ui\ViewListBuilder
+ * @group views_ui
  */
 class ViewListBuilderTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views List Builder Unit Test',
-      'description' => 'Unit tests the views list builder',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the listing of displays on a views list builder.

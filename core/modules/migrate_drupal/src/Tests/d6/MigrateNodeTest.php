@@ -11,20 +11,11 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\Core\Database\Database;
 
 /**
- * Test node migration from Drupal 6 to 8.
+ * Node content migration.
+ *
+ * @group migrate_drupal
  */
 class MigrateNodeTest extends MigrateNodeTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate nodes',
-      'description'  => 'Node content migration',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

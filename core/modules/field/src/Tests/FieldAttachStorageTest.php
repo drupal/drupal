@@ -9,8 +9,9 @@ namespace Drupal\field\Tests;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
- * Unit test class for storage-related field behavior.
+ * Tests storage-related Field Attach API functions.
  *
+ * @group field
  * @todo move this to the Entity module
  */
 class FieldAttachStorageTest extends FieldUnitTestBase {
@@ -28,14 +29,6 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    * @var string
    */
   protected $field_name;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field attach tests (storage-related)',
-      'description' => 'Test storage-related Field Attach API functions.',
-      'group' => 'Field API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

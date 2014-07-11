@@ -13,7 +13,9 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
- * Tests the new entity API for the file field type.
+ * Tests using entity fields of the file field type.
+ *
+ * @group file
  */
 class FileItemTest extends FieldUnitTestBase {
 
@@ -30,14 +32,6 @@ class FileItemTest extends FieldUnitTestBase {
    * @var \Drupal\file\Entity\File
    */
   protected $file;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'File field item API',
-      'description' => 'Tests using entity fields of the file field type.',
-      'group' => 'File',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

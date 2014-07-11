@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the Drupal\views\Plugin\views\field\Counter handler.
+ *
+ * @group views
  */
 class FieldCounterTest extends ViewUnitTestBase {
 
@@ -28,14 +30,6 @@ class FieldCounterTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Counter',
-      'description' => 'Tests the Drupal\views\Plugin\views\field\Counter handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   function testSimple() {
     $view = Views::getView('test_view');

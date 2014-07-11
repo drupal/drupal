@@ -14,11 +14,8 @@ use Drupal\entity_test\EntityTestListBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the entity list builder.
- *
+ * @coversDefaultClass \Drupal\entity_test\EntityTestListBuilder
  * @group Entity
- *
- * @see \Drupal\entity_test\EntityTestListBuilder
  */
 class EntityListBuilderTest extends UnitTestCase {
 
@@ -70,14 +67,6 @@ class EntityListBuilderTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityListBuilder
    */
   protected $entityListBuilder;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity list builder test',
-      'description' => 'Unit test of entity list builder system.',
-      'group' => 'Entity'
-    );
-  }
 
   /**
    * {@inheritdoc}

@@ -11,7 +11,9 @@ use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\image\Tests\ImageFieldTestBase;
 
 /**
- * Test class to check that formatters and display settings are working.
+ * Tests responsive image display formatter.
+ *
+ * @group responsive_image
  */
 class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
@@ -23,17 +25,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    * @var array
    */
   public static $modules = array('field_ui', 'responsive_image');
-
-  /**
-   * Drupal\simpletest\WebTestBase\getInfo().
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Responsive Image field display tests',
-      'description' => 'Test responsive image display formatter.',
-      'group' => 'Responsive Image',
-    );
-  }
 
   /**
    * Drupal\simpletest\WebTestBase\setUp().

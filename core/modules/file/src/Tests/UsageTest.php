@@ -9,16 +9,10 @@ namespace Drupal\file\Tests;
 
 /**
  * Tests file usage functions.
+ *
+ * @group file
  */
 class UsageTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File usage',
-      'description' => 'Tests the file usage functions.',
-      'group' => 'File Managed API',
-    );
-  }
-
   /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::listUsage().
    */

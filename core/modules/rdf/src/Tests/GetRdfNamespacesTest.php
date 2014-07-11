@@ -10,7 +10,9 @@ namespace Drupal\rdf\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for RDF namespaces declaration with hook_rdf_namespaces().
+ * Tests hook_rdf_namespaces().
+ *
+ * @group rdf
  */
 class GetRdfNamespacesTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class GetRdfNamespacesTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('rdf', 'rdf_test_namespaces');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'RDF namespaces',
-      'description' => 'Test hook_rdf_namespaces().',
-      'group' => 'RDF',
-    );
-  }
 
   /**
    * Tests getting RDF namespaces.

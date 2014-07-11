@@ -8,20 +8,13 @@
 namespace Drupal\options\Tests;
 
 /**
- * Tests the formatters provided by the options module.
+ * Tests the Options field type formatters.
  *
+ * @group options
  * @see \Drupal\options\Plugin\field\formatter\OptionsDefaultFormatter
  * @see \Drupal\options\Plugin\field\formatter\OptionsKeyFormatter
  */
 class OptionsFormattersTest extends OptionsFieldUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Options field formatters',
-      'description' => 'Test the Options field type formatters.',
-      'group' => 'Field types',
-    );
-  }
 
   /**
    * {@inheritdoc}

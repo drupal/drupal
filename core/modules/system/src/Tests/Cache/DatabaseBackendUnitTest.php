@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Cache;
 use Drupal\Core\Cache\DatabaseBackend;
 
 /**
- * Tests DatabaseBackend using GenericCacheBackendUnitTestBase.
+ * Unit test of the database backend using the generic cache unit test base.
+ *
+ * @group Cache
  */
 class DatabaseBackendUnitTest extends GenericCacheBackendUnitTestBase {
 
@@ -20,14 +22,6 @@ class DatabaseBackendUnitTest extends GenericCacheBackendUnitTestBase {
    * @var array
    */
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Database backend',
-      'description' => 'Unit test of the database backend using the generic cache unit test base.',
-      'group' => 'Cache',
-    );
-  }
 
   /**
    * Creates a new instance of DatabaseBackend.

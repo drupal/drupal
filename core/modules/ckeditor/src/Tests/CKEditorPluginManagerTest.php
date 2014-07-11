@@ -11,7 +11,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\ckeditor\CKEditorPluginManager;
 
 /**
- * Tests for the "CKEditor plugins" plugin manager.
+ * Tests different ways of enabling CKEditor plugins.
+ *
+ * @group ckeditor
  */
 class CKEditorPluginManagerTest extends DrupalUnitTestBase {
 
@@ -28,14 +30,6 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
    * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $manager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CKEditor plugin manager',
-      'description' => 'Tests different ways of enabling CKEditor plugins.',
-      'group' => 'CKEditor',
-    );
-  }
 
   function setUp() {
     parent::setUp();

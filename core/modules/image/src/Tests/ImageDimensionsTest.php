@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests that images have correct dimensions when styled.
+ *
+ * @group image
  */
 class ImageDimensionsTest extends WebTestBase {
 
@@ -22,14 +24,6 @@ class ImageDimensionsTest extends WebTestBase {
   public static $modules = array('image', 'image_module_test');
 
   protected $profile = 'testing';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Image dimensions',
-      'description' => 'Tests that images have correct dimensions when styled.',
-      'group' => 'Image',
-    );
-  }
 
   /**
    * Test styled image dimensions cumulatively.

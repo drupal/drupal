@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the field plugin base integration with the entity system.
+ *
+ * @group views
  */
 class FieldEntityTest extends ViewTestBase {
 
@@ -28,14 +30,6 @@ class FieldEntityTest extends ViewTestBase {
    * @var array
    */
   public static $modules = array('node', 'comment');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Field: Entity Api Integration',
-      'description' => 'Tests the field plugin base integration with the entity system.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Tests the getEntity method.

@@ -14,12 +14,8 @@ use Drupal\user\PermissionsHash;
 
 
 /**
- * Tests the user permissions hash generator service.
- *
- * @group Drupal
- * @group User
- *
- * @see \Drupal\user\PermissionsHash
+ * @coversDefaultClass \Drupal\user\PermissionsHash
+ * @group user
  */
 class PermissionsHashTest extends UnitTestCase {
 
@@ -64,17 +60,6 @@ class PermissionsHashTest extends UnitTestCase {
    * @var \Drupal\user\PermissionsHashInterface
    */
   protected $permissionsHash;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Permission hash generator service',
-      'description' => 'Tests the user permission hash generator service',
-      'group' => 'User',
-    );
-  }
 
   /**
    * {@inheritdoc}

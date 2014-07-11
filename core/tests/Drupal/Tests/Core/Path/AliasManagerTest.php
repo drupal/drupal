@@ -17,10 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
- * @group Drupal
- * @group Path
- *
  * @coversDefaultClass \Drupal\Core\Path\AliasManager
+ * @group Path
  */
 class AliasManagerTest extends UnitTestCase {
 
@@ -72,17 +70,6 @@ class AliasManagerTest extends UnitTestCase {
    * @var string
    */
   protected $path = 'key';
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Url object (external)',
-      'description' => 'Tests the \Drupal\Core\Url class with external paths.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

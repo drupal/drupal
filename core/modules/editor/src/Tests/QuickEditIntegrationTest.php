@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests Edit module integration (Editor module's inline editing support).
+ *
+ * @group editor
  */
 class QuickEditIntegrationTest extends QuickEditTestBase {
 
@@ -56,14 +58,6 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
    * @var string
    */
   protected $field_name;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'In-place text editors (Quick Edit module integration)',
-      'description' => 'Tests Edit module integration (Editor module\'s inline editing support).',
-      'group' => 'Text Editor',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

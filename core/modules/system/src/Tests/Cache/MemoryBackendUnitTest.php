@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Cache;
 use Drupal\Core\Cache\MemoryBackend;
 
 /**
- * Tests MemoryBackend using GenericCacheBackendUnitTestBase.
+ * Unit test of the memory cache backend using the generic cache unit test base.
+ *
+ * @group Cache
  */
 class MemoryBackendUnitTest extends GenericCacheBackendUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Memory cache backend',
-      'description' => 'Unit test of the memory cache backend using the generic cache unit test base.',
-      'group' => 'Cache',
-    );
-  }
 
   /**
    * Creates a new instance of MemoryBackend.

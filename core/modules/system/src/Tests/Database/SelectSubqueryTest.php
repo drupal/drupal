@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests for subselects in a dynamic SELECT query.
+ * Tests the Select query builder.
+ *
+ * @group Database
  */
 class SelectSubqueryTest extends DatabaseTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Select tests, subqueries',
-      'description' => 'Test the Select query builder.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Tests that we can use a subquery in a FROM clause.

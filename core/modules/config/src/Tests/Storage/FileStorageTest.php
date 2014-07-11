@@ -12,16 +12,10 @@ use Drupal\Core\Config\FileStorage;
 
 /**
  * Tests FileStorage operations.
+ *
+ * @group config
  */
 class FileStorageTest extends ConfigStorageTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'FileStorage operations',
-      'description' => 'Tests FileStorage operations.',
-      'group' => 'Configuration',
-    );
-  }
-
   function setUp() {
     parent::setUp();
     $this->storage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);

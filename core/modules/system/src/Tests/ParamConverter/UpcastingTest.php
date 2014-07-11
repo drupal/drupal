@@ -10,20 +10,11 @@ namespace Drupal\system\Tests\ParamConverter;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Web tests for the upcasting.
+ * Tests upcasting of url arguments to entities.
+ *
+ * @group ParamConverter
  */
 class UpcastingTest extends WebTestBase {
-
-  /**
-   * Implement getInfo().
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Upcasting tests',
-      'description' => 'Tests upcasting of url arguments to entities.',
-      'group' => 'ParamConverter',
-    );
-  }
 
   public static $modules = array('paramconverter_test', 'node');
 

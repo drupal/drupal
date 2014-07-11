@@ -9,6 +9,8 @@ namespace Drupal\search\Tests;
 
 /**
  * Tests that the node search query can be altered via the query alter hook.
+ *
+ * @group search
  */
 class SearchQueryAlterTest extends SearchTestBase {
   /**
@@ -17,14 +19,6 @@ class SearchQueryAlterTest extends SearchTestBase {
    * @var array
    */
   public static $modules = array('search_query_alter');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Search query alter',
-      'description' => 'Tests that the node search query can be altered via the query alter hook.',
-      'group' => 'Search'
-    );
-  }
 
   /**
    * Tests that the query alter works.

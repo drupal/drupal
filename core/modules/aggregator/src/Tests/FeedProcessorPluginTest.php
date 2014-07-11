@@ -8,19 +8,12 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests feed processing in the Aggregator module.
+ * Tests the processor plugins functionality and discoverability.
  *
+ * @group aggregator
  * @see \Drupal\aggregator_test\Plugin\aggregator\processor\TestProcessor.
  */
 class FeedProcessorPluginTest extends AggregatorTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Feed processor plugins',
-      'description' => 'Test the processor plugins functionality and discoverability.',
-      'group' => 'Aggregator',
-    );
-  }
 
   /**
    * Overrides \Drupal\simpletest\WebTestBase::setUp().

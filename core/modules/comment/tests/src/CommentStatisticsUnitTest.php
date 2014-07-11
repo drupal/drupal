@@ -11,9 +11,8 @@ use Drupal\comment\CommentStatistics;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the CommentStatistics service.
- *
- * @see \Drupal\comment\CommentStatistics
+ * @coversDefaultClass \Drupal\comment\CommentStatistics
+ * @group comment
  */
 class CommentStatisticsUnitTest extends UnitTestCase {
 
@@ -51,14 +50,6 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    * @var int
    */
   protected $calls_to_fetch;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment statistics test',
-      'description' => 'Tests the comment statistics service.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Sets up required mocks and the CommentStatistics service under test.

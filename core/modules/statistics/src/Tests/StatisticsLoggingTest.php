@@ -10,10 +10,12 @@ namespace Drupal\statistics\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests that logging via statistics_exit() works for all pages.
+ * Tests request logging for cached and uncached pages.
  *
  * We subclass WebTestBase rather than StatisticsTestBase, because we
  * want to test requests from an anonymous user.
+ *
+ * @group statistics
  */
 class StatisticsLoggingTest extends WebTestBase {
 
@@ -30,14 +32,6 @@ class StatisticsLoggingTest extends WebTestBase {
    * @var \GuzzleHttp\ClientInterface;
    */
   protected $client;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Statistics logging tests',
-      'description' => 'Tests request logging for cached and uncached pages.',
-      'group' => 'Statistics'
-    );
-  }
 
   function setUp() {
     parent::setUp();

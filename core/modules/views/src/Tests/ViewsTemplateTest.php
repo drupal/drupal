@@ -11,8 +11,9 @@ use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests the views custom templates.
+ * Tests the template retrieval of views.
  *
+ * @group views
  * @see \Drupal\views_test_data\Plugin\views\style\StyleTemplateTest
  */
 class ViewsTemplateTest extends ViewTestBase {
@@ -23,14 +24,6 @@ class ViewsTemplateTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_view_display_template');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View template tests',
-      'description' => 'Tests the template retrieval of views.',
-      'group' => 'Views'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

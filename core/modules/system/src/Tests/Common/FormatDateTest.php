@@ -13,6 +13,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the format_date() function.
+ *
+ * @group Common
  */
 class FormatDateTest extends WebTestBase {
 
@@ -27,14 +29,6 @@ class FormatDateTest extends WebTestBase {
    * Arbitrary langcode for a custom language.
    */
   const LANGCODE = 'xx';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Format date',
-      'description' => 'Test the format_date() function.',
-      'group' => 'Common',
-    );
-  }
 
   function setUp() {
     parent::setUp('language');

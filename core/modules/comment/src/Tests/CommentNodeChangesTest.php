@@ -11,16 +11,10 @@ use Drupal\comment\Entity\Comment;
 
 /**
  * Tests that comments behave correctly when the node is changed.
+ *
+ * @group comment
  */
 class CommentNodeChangesTest extends CommentTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment deletion on node changes',
-      'description' => 'Tests that comments behave correctly when the node is changed.',
-      'group' => 'Comment',
-    );
-  }
 
   /**
    * Tests that comments are deleted with the node.

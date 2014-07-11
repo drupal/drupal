@@ -14,9 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Defines a test to check the default access checker.
- *
- * @see \Drupal\Core\Access\DefaultAccessCheck
+ * @coversDefaultClass \Drupal\Core\Access\DefaultAccessCheck
+ * @group Access
  */
 class DefaultAccessCheckTest extends UnitTestCase {
 
@@ -33,14 +32,6 @@ class DefaultAccessCheckTest extends UnitTestCase {
    * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $account;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'DefaultAccessCheck access checker',
-      'description' => 'Tests the DefaultAccessCheck class.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * {@inheritdoc}

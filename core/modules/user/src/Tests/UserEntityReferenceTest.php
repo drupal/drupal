@@ -10,7 +10,9 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
- * User entity reference test cases.
+ * Tests the user reference field functionality.
+ *
+ * @group user
  */
 class UserEntityReferenceTest extends EntityUnitTestBase {
 
@@ -30,17 +32,6 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
    * @var array
    */
   public static $modules = array('entity_reference', 'user');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'User entity reference',
-      'description' => 'Tests the user reference field functionality.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * {@inheritdoc}

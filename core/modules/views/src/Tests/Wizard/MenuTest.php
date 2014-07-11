@@ -9,16 +9,10 @@ namespace Drupal\views\Tests\Wizard;
 
 /**
  * Tests the ability of the views wizard to put views in a menu.
+ *
+ * @group views
  */
 class MenuTest extends WizardTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Menu functionality',
-      'description' => 'Test the ability of the views wizard to put views in a menu.',
-      'group' => 'Views Wizard',
-    );
-  }
 
   /**
    * Tests the menu functionality.

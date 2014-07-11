@@ -12,6 +12,8 @@ use Drupal\Core\Language\Language;
 
 /**
  * Tests menu_router_rebuild().
+ *
+ * @group Menu
  */
 class MenuRouterRebuildTest extends WebTestBase {
 
@@ -21,17 +23,6 @@ class MenuRouterRebuildTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language', 'menu_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Menu router rebuild',
-      'description' => 'Tests menu_router_rebuild().',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * {@inheritdoc}

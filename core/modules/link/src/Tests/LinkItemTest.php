@@ -14,6 +14,8 @@ use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
  * Tests the new entity API for the link field type.
+ *
+ * @group link
  */
 class LinkItemTest extends FieldUnitTestBase {
 
@@ -23,14 +25,6 @@ class LinkItemTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array('link');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Link field item',
-      'description' => 'Tests the new entity API for the link field type.',
-      'group' => 'Field types',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

@@ -8,7 +8,9 @@
 namespace Drupal\taxonomy\Tests;
 
 /**
- * Provides helper methods for taxonomy terms with image fields.
+ * Tests access checks of private image fields.
+ *
+ * @group taxonomy
  */
 class TaxonomyImageTest extends TaxonomyTestBase {
 
@@ -25,14 +27,6 @@ class TaxonomyImageTest extends TaxonomyTestBase {
    * @var array
    */
   public static $modules = array('image');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Taxonomy Image Test',
-      'description' => 'Tests access checks of private image fields',
-      'group' => 'Taxonomy',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

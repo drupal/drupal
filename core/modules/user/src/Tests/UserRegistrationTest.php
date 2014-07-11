@@ -11,7 +11,9 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests user registration.
+ * Tests registration of user under different configurations.
+ *
+ * @group user
  */
 class UserRegistrationTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class UserRegistrationTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('field_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User registration',
-      'description' => 'Test registration of user under different configurations.',
-      'group' => 'User'
-    );
-  }
 
   function testRegistrationWithEmailVerification() {
     $config = \Drupal::config('user.settings');

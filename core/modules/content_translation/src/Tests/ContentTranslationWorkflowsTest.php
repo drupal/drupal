@@ -11,7 +11,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Tests content translation workflows.
+ * Tests the content translation workflows for the test entity.
+ *
+ * @group content_translation
  */
 class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
@@ -28,14 +30,6 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    * @var array
    */
   public static $modules = array('language', 'content_translation', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity Test translation workflows',
-      'description' => 'Tests the content translation workflows for the test entity.',
-      'group' => 'Content Translation UI',
-    );
-  }
 
   function setUp() {
     parent::setUp();

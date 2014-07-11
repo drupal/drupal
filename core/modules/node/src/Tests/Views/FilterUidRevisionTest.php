@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the node_uid_revision handler.
+ *
+ * @group node
  */
 class FilterUidRevisionTest extends NodeTestBase {
 
@@ -20,15 +22,6 @@ class FilterUidRevisionTest extends NodeTestBase {
    * @var array
    */
   public static $testViews = array('test_filter_node_uid_revision');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: User has revision Filter',
-      'description' => 'Tests the node_uid_revision handler.',
-      'group' => 'Views module integration',
-    );
-  }
-
 
   /**
    * Tests the node_uid_revision filter.

@@ -11,24 +11,10 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests PHP environment helper class.
- *
- * @group Drupal
- * @group Utility
  * @coversDefaultClass \Drupal\Component\Utility\Environment
+ * @group Utility
  */
 class EnvironmentTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'PHP environment utility helpers',
-      'description' => '',
-      'group' => 'Utility',
-    );
-  }
 
   /**
    * Tests \Drupal\Component\Utility\Environment::checkMemoryLimit().

@@ -8,7 +8,9 @@
 namespace Drupal\hal\Tests;
 
 /**
- * Test the HAL normalizer on various entities
+ * Tests that nodes and terms are correctly normalized and denormalized.
+ *
+ * @group hal
  */
 class EntityTest extends NormalizerTestBase {
 
@@ -18,17 +20,6 @@ class EntityTest extends NormalizerTestBase {
    * @var array
    */
   public static $modules = array('node', 'taxonomy', 'comment');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity normalizer Test',
-      'description' => 'Test that nodes and terms are correctly normalized and denormalized.',
-      'group' => 'HAL',
-    );
-  }
 
   /**
    * {@inheritdoc}

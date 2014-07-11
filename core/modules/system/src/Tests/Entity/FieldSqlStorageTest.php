@@ -13,10 +13,12 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * Tests field storage.
+ * Tests Field SQL Storage .
  *
  * Field_sql_storage.module implements the default back-end storage plugin
  * for the Field Storage API.
+ *
+ * @group Entity
  */
 class FieldSqlStorageTest extends EntityUnitTestBase {
 
@@ -54,14 +56,6 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    * @var string
    */
   protected $revision_table;
-
-  public static function getInfo() {
-    return array(
-      'name'  => 'Field SQL storage tests',
-      'description'  => "Test Field SQL Storage .",
-      'group' => 'Entity API'
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -17,14 +17,6 @@ use Drupal\Tests\UnitTestCase;
  */
 class NullBackendTest extends UnitTestCase {
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Cache NullBackend test',
-      'description' => 'Tests the cache NullBackend.',
-      'group' => 'Cache',
-    );
-  }
-
   /**
    * Tests that the NullBackend does not actually store variables.
    */

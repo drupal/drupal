@@ -11,19 +11,11 @@ use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\breakpoint\InvalidBreakpointMediaQueryException;
 
 /**
- * Tests for media queries in a breakpoint.
+ * Tests validation of media queries.
  *
- * @group Breakpoint
+ * @group breakpoint
  */
 class BreakpointMediaQueryTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Breakpoint media query tests',
-      'description' => 'Test validation of media queries.',
-      'group' => 'Breakpoint',
-    );
-  }
 
   /**
    * Test valid media queries.

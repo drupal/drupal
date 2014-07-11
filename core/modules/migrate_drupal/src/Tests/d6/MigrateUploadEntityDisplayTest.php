@@ -11,7 +11,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 upload settings to Drupal 8 entity display migration.
+ * Upload entity display.
+ *
+ * @group migrate_drupal
  */
 class MigrateUploadEntityDisplayTest extends MigrateDrupalTestBase {
 
@@ -21,17 +23,6 @@ class MigrateUploadEntityDisplayTest extends MigrateDrupalTestBase {
    * @var array
    */
   static $modules = array('node', 'file');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate upload entity display.',
-      'description'  => 'Upload entity display',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

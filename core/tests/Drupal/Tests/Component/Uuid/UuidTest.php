@@ -16,20 +16,11 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Drupal\Component\Uuid\Uuid class.
+ * Tests the handling of Universally Unique Identifiers (UUIDs).
  *
- * @group Drupal
- * @group UUID
+ * @group Uuid
  */
 class UuidTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'UUID handling',
-      'description' => "Test the handling of Universally Unique Identifiers (UUIDs).",
-      'group' => 'UUID',
-    );
-  }
 
   /**
    * Tests generating valid UUIDs.

@@ -13,25 +13,16 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Xss utility.
+ * @coversDefaultClass \Drupal\Component\Utility\Xss
+ * @group Utility
  *
  * Script injection vectors mostly adopted from http://ha.ckers.org/xss.html.
  *
  * Relevant CVEs:
  * - CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
  *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
- *
- * @see \Drupal\Component\Utility\Xss
  */
 class XssTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Xss filter tests',
-      'description' => 'Confirm that Xss::filter() works as expected.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * {@inheritdoc}

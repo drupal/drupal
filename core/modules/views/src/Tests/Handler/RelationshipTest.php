@@ -14,6 +14,7 @@ use Drupal\views\Tests\Plugin\RelationshipJoinTestBase;
 /**
  * Tests the base relationship handler.
  *
+ * @group views
  * @see \Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
 class RelationshipTest extends RelationshipJoinTestBase {
@@ -34,14 +35,6 @@ class RelationshipTest extends RelationshipJoinTestBase {
     'views_test_data_name' => 'name',
     'users_views_test_data_uid' => 'uid',
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Relationship: Standard',
-      'description' => 'Tests the base relationship handler.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   /**
    * Tests the query result of a view with a relationship.

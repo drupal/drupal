@@ -8,7 +8,9 @@
 namespace Drupal\system\Tests\File;
 
 /**
- * Tests that files can not be written using ReadOnlyStreamWrapper functions.
+ * Tests the read-only stream wrapper write functions.
+ *
+ * @group File
  */
 class ReadOnlyStreamWrapperTest extends FileTestBase {
 
@@ -25,14 +27,6 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
    * @var string
    */
   protected $classname = 'Drupal\file_test\DummyReadOnlyStreamWrapper';
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Read only stream wrapper',
-      'description' => 'Tests the read-only stream wrapper write functions.',
-      'group' => 'File API',
-    );
-  }
 
   /**
    * Test write functionality of the read-only stream wrapper.

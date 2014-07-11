@@ -11,25 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Form\OptGroup;
 
 /**
- * Tests the OptGroup class.
- *
  * @coversDefaultClass \Drupal\Core\Form\OptGroup
- *
- * @group Drupal
  * @group Form
  */
 class OptGroupTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'OptGroup test',
-      'description' => 'Tests the OptGroup class.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests the flattenOptions() method.

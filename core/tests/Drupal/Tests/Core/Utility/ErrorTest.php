@@ -11,21 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Utility\Error;
 
 /**
- * Tests the Error class.
- *
- * @group Drupal
- *
- * @see \Drupal\Core\Utility\Error
+ * @coversDefaultClass \Drupal\Core\Utility\Error
+ * @group Utility
  */
 class ErrorTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Error',
-      'description' => 'Tests the Error utility class.',
-      'group' => 'Common',
-    );
-  }
 
   /**
    * Tests the getLastCaller() method.

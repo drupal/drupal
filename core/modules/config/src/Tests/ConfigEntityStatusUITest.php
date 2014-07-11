@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests configuration entity status UI functionality.
+ *
+ * @group config
  */
 class ConfigEntityStatusUITest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class ConfigEntityStatusUITest extends WebTestBase {
    * @var array
    */
   public static $modules = array('config_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration entity status UI',
-      'description' => 'Tests configuration entity status UI functionality.',
-      'group' => 'Configuration',
-    );
-  }
 
   /**
    * Tests status operations.

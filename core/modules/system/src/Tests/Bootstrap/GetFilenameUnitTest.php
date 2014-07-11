@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\Bootstrap;
 use Drupal\simpletest\UnitTestBase;
 
 /**
- * Tests drupal_get_filename()'s availability.
+ * Tests that drupal_get_filename() works correctly.
+ *
+ * @group Bootstrap
  */
 class GetFilenameUnitTest extends UnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Get filename test',
-      'description' => 'Test that drupal_get_filename() works correctly.',
-      'group' => 'Bootstrap',
-    );
-  }
 
   /**
    * Tests that drupal_get_filename() works when the file is not in database.

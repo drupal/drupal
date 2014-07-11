@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test that FAPI correctly determines $form_state['triggering_element'].
+ * Tests that FAPI correctly determines $form_state['triggering_element'].
+ *
+ * @group Form
  */
 class TriggeringElementTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class TriggeringElementTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Form triggering element determination',
-      'description' => 'Test the determination of $form_state[\'triggering_element\'].',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Test the determination of $form_state['triggering_element'] when no button

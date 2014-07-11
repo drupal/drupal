@@ -11,6 +11,8 @@ use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 
 /**
  * Tests the Taxonomy term entity's cache tags.
+ *
+ * @group taxonomy
  */
 class TermCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
@@ -18,13 +20,6 @@ class TermCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('taxonomy');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return parent::generateStandardizedInfo('Taxonomy term', 'Taxonomy');
-  }
 
   /**
    * {@inheritdoc}

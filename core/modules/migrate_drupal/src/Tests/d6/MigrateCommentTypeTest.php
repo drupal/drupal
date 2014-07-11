@@ -11,23 +11,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests the Drupal 6 to Drupal 8 comment type migration.
+ * Upgrade comment type.
+ *
+ * @group migrate_drupal
  */
 class MigrateCommentTypeTest extends MigrateDrupalTestBase {
 
   static $modules = array('node', 'comment');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate comment type.',
-      'description'  => 'Upgrade comment type.',
-      'group' => 'Migrate Drupal',
-    );
-  }
-
 
   /**
    * {@inheritdoc}

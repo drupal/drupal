@@ -11,11 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Database\StatementInterface;
 
 /**
- * Tests the PagerPluginBase class
- *
- * @group Views
- *
- * @see \Drupal\views\Plugin\views\pager\PagerPluginBase
+ * @coversDefaultClass \Drupal\views\Plugin\views\pager\PagerPluginBase
+ * @group views
  */
 class PagerPluginBaseTest extends UnitTestCase {
 
@@ -25,14 +22,6 @@ class PagerPluginBaseTest extends UnitTestCase {
    * @var \Drupal\views\Plugin\views\pager\PagerPluginBase|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $pager;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'PagerPluginBase test',
-      'description' => 'Tests the \Drupal\views\Plugin\views\pager\PagerPluginBase class.',
-      'group' => 'Views Handlers',
-    );
-  }
 
   public function setUp() {
     $this->pager = $this->getMockBuilder('Drupal\views\Plugin\views\pager\PagerPluginBase')

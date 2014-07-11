@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests node save related functionality, including import-save.
+ * Tests $node->save() for saving content.
+ *
+ * @group node
  */
 class NodeSaveTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class NodeSaveTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('node_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node save',
-      'description' => 'Test $node->save() for saving content.',
-      'group' => 'Node',
-    );
-  }
 
   function setUp() {
     parent::setUp();

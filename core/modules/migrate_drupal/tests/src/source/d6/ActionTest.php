@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests Drupal action migration source.
+ * Tests D6 actions source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class ActionTest extends MigrateSqlSourceTestCase {
 
@@ -64,17 +63,6 @@ class ActionTest extends MigrateSqlSourceTestCase {
       'description' => null,
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 action source functionality',
-      'description' => 'Tests D6 actions source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

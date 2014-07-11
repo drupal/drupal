@@ -10,25 +10,10 @@ namespace Drupal\Tests\Core\Plugin;
 use Drupal\Core\Plugin\DefaultSinglePluginBag;
 
 /**
- * Tests the default single plugin bag.
- *
- * @see \Drupal\Core\Plugin\DefaultSinglePluginBag
- *
- * @group Drupal
- * @group Drupal_Plugin
+ * @coversDefaultClass \Drupal\Core\Plugin\DefaultSinglePluginBag
+ * @group Plugin
  */
 class DefaultSinglePluginBagTest extends PluginBagTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Default single plugin bag',
-      'description' => 'Tests the default single plugin bag.',
-      'group' => 'Plugin API',
-    );
-  }
 
   /**
    * {@inheritdoc}

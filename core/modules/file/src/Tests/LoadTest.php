@@ -9,16 +9,10 @@ namespace Drupal\file\Tests;
 
 /**
  * Tests the file_load() function.
+ *
+ * @group file
  */
 class LoadTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File loading',
-      'description' => 'Tests the file_load() function.',
-      'group' => 'File Managed API',
-    );
-  }
-
   /**
    * Try to load a non-existent file by fid.
    */

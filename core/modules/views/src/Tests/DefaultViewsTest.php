@@ -14,7 +14,9 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
- * Tests for views default views.
+ * Tests the default views provided by views.
+ *
+ * @group views
  */
 class DefaultViewsTest extends ViewTestBase {
 
@@ -35,14 +37,6 @@ class DefaultViewsTest extends ViewTestBase {
     'taxonomy_term' => array(1),
     'glossary' => array('all'),
   );
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Default views',
-      'description' => 'Tests the default views provided by views',
-      'group' => 'Views',
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

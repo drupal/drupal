@@ -10,6 +10,7 @@ namespace Drupal\comment\Tests\Views;
 /**
  * Tests the comment rss row plugin.
  *
+ * @group comment
  * @see \Drupal\comment\Plugin\views\row\Rss
  */
 class RowRssTest extends CommentTestBase {
@@ -20,14 +21,6 @@ class RowRssTest extends CommentTestBase {
    * @var array
    */
   public static $testViews = array('test_comment_rss');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment: Rss Row',
-      'description' => 'Tests the comment rss row plugin.',
-      'group' => 'Views module integration',
-    );
-  }
 
   /**
    * Test comment rss output.

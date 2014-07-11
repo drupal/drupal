@@ -13,7 +13,9 @@ use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the Entity Test Translation UI.
+ * Tests the content translation settings UI.
+ *
+ * @group content_translation
  */
 class ContentTranslationSettingsTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class ContentTranslationSettingsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language', 'content_translation', 'node', 'comment', 'field_ui', 'entity_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Content Translation settings',
-      'description' => 'Tests the content translation settings UI.',
-      'group' => 'Content Translation UI',
-    );
-  }
 
   function setUp() {
     parent::setUp();

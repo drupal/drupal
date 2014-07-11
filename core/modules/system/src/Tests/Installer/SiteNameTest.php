@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests that the site name can be set during a non-interactive installation.
+ *
+ * @group Installer
  */
 class SiteNameTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class SiteNameTest extends WebTestBase {
    * @var string
    */
   protected $siteName;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Site name (non-interactive)',
-      'description' => 'Tests that the site name can be set during a non-interactive installation.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * Overrides \Drupal\simpletest\WebTestBase::installParameters().

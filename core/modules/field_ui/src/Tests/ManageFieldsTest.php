@@ -14,17 +14,11 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 
 /**
- * Tests the functionality of the 'Manage fields' screen.
+ * Tests the Field UI "Manage fields" screen.
+ *
+ * @group field_ui
  */
 class ManageFieldsTest extends FieldUiTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Manage fields',
-      'description' => 'Test the Field UI "Manage fields" screen.',
-      'group' => 'Field UI',
-    );
-  }
 
   function setUp() {
     parent::setUp();

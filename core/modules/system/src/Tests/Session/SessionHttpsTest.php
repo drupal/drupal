@@ -14,6 +14,8 @@ use Drupal\Component\Utility\String;
 
 /**
  * Ensure that when running under HTTPS two session cookies are generated.
+ *
+ * @group Session
  */
 class SessionHttpsTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class SessionHttpsTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('session_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Session HTTPS handling',
-      'description' => 'Ensure that when running under HTTPS two session cookies are generated.',
-      'group' => 'Session'
-    );
-  }
 
   public function setUp() {
     parent::setUp();

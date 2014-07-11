@@ -25,6 +25,8 @@ use Drupal\simpletest\WebTestBase;
  *
  * Each hook invocation is simulated and then the previous hash of the admin
  * menu subtrees is compared to the new hash.
+ *
+ * @group toolbar
  */
 class ToolbarAdminMenuTest extends WebTestBase {
 
@@ -55,14 +57,6 @@ class ToolbarAdminMenuTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('node', 'block', 'menu_ui', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Toolbar admin menu',
-      'description' => 'Tests the caching of secondary admin menu items.',
-      'group' => 'Toolbar',
-    );
-  }
 
   function setUp() {
     parent::setUp();

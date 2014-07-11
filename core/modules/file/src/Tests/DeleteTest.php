@@ -8,17 +8,11 @@
 namespace Drupal\file\Tests;
 
 /**
- * Deletion related tests.
+ * Tests the file delete function.
+ *
+ * @group file
  */
 class DeleteTest extends FileManagedUnitTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'File delete',
-      'description' => 'Tests the file delete function.',
-      'group' => 'File Managed API',
-    );
-  }
-
   /**
    * Tries deleting a normal file (as opposed to a directory, symlink, etc).
    */

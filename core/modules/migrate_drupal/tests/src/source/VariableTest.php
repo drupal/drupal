@@ -13,7 +13,6 @@ use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
  * Tests the variable source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class VariableTest extends MigrateSqlSourceTestCase {
 
@@ -45,17 +44,6 @@ class VariableTest extends MigrateSqlSourceTestCase {
       array('name' => 'bar', 'value' => 'b:0;'),
     ),
   );
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Variable source functionality',
-      'description' => 'Tests variable source plugin.',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
 }
 

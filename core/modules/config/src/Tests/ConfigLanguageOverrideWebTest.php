@@ -11,19 +11,13 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests language overrides in configuration through the request.
+ * Tests language overrides applied through the website.
+ *
+ * @group config
  */
 class ConfigLanguageOverrideWebTest extends WebTestBase {
 
   public static $modules = array('language', 'system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language overrides through the request',
-      'description' => 'Tests language overrides applied through the website.',
-      'group' => 'Configuration',
-    );
-  }
 
   function setUp() {
     parent::setUp();

@@ -16,10 +16,9 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
- * Tests ConfigMapperManager.
+ * Tests the functionality provided by configuration translation mapper manager.
  *
- * @group Drupal
- * @group Config_translation
+ * @group config_translation
  */
 class ConfigMapperManagerTest extends UnitTestCase {
 
@@ -36,17 +35,6 @@ class ConfigMapperManagerTest extends UnitTestCase {
    * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $typedConfigManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration translation mapper manager',
-      'description' => 'Tests the functionality provided by configuration translation mapper manager.',
-      'group' => 'Configuration Translation',
-    );
-  }
 
   public function setUp() {
     $language = new Language(array('id' => 'en'));

@@ -13,6 +13,8 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Unit tests for the derivative discovery decorator.
+ *
+ * @group Plugin
  */
 class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
@@ -22,17 +24,6 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
    * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $discoveryMain;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Derivative discovery decorator.',
-      'description' => 'Tests the derivative discovery decorator.',
-      'group' => 'Plugin',
-    );
-  }
 
   /**
    * {@inheritdoc}

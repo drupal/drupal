@@ -9,19 +9,10 @@ namespace Drupal\field\Tests;
 
 /**
  * Tests the field widget manager.
+ *
+ * @group field
  */
 class WidgetPluginManagerTest extends FieldUnitTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Widget manager tests',
-      'description' => 'Tests the widget manager',
-      'group' => 'Field API',
-    );
-  }
 
   /**
    * Tests that the widget definitions alter hook works.

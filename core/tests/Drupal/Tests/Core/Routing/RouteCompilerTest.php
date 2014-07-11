@@ -13,22 +13,10 @@ use Symfony\Component\Routing\Route;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Basic tests for the Route.
- *
- * @see \Drupal\Core\Routing\RouteCompiler
+ * @coversDefaultClass \Drupal\Core\Routing\RouteCompiler
+ * @group Routing
  */
 class RouteCompilerTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Routes',
-      'description' => 'Confirm that route object is functioning properly.',
-      'group' => 'Routing',
-    );
-  }
 
   /**
    * Tests RouteCompiler::getFit().

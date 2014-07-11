@@ -11,17 +11,11 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 
 /**
- * Tests comment CSS classes.
+ * Tests CSS classes on comments.
+ *
+ * @group comment
  */
 class CommentCSSTest extends CommentTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Comment CSS',
-      'description' => 'Tests CSS classes on comments.',
-      'group' => 'Comment',
-    );
-  }
 
   function setUp() {
     parent::setUp();

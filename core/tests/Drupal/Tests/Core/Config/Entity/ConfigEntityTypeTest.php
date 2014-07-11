@@ -13,22 +13,9 @@ use Drupal\Component\Utility\String;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityType
- *
- * @group Drupal
  * @group Config
  */
 class ConfigEntityTypeTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Core\Config\Entity\ConfigEntityType unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * Sets up a ConfigEntityType object for a given set of values.

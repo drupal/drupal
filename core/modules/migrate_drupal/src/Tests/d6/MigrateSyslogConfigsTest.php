@@ -12,7 +12,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Syslog module.
+ * Upgrade variables to syslog.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateSyslogConfigsTest extends MigrateDrupalTestBase {
 
@@ -24,17 +26,6 @@ class MigrateSyslogConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('syslog');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to syslog.settings.yml',
-      'description'  => 'Upgrade variables to syslog.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

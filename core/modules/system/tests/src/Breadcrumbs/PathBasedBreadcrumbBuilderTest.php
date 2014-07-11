@@ -19,12 +19,8 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the path based breadcrumb builder.
- *
- * @group Drupal
- * @group System
- *
  * @coversDefaultClass \Drupal\system\PathBasedBreadcrumbBuilder
+ * @group system
  */
 class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
@@ -83,17 +79,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $pathProcessor;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Path based breadcrumbs',
-      'description' => 'Tests that path based breadcrumbs work as expected.',
-      'group' => 'Breadcrumbs',
-    );
-  }
 
   /**
    * {@inheritdoc}

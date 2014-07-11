@@ -9,16 +9,10 @@ namespace Drupal\system\Tests\Database;
 
 /**
  * Tests the tablesort query extender.
+ *
+ * @group Database
  */
 class SelectTableSortDefaultTest extends DatabaseWebTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Tablesort query tests',
-      'description' => 'Test the tablesort query extender.',
-      'group' => 'Database',
-    );
-  }
 
   /**
    * Confirms that a tablesort query returns the correct results.

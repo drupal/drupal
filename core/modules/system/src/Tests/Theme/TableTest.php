@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\Theme;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Unit tests for theme_table().
+ * Tests built-in table theme functions.
+ *
+ * @group Theme
  */
 class TableTest extends DrupalUnitTestBase {
 
@@ -20,14 +22,6 @@ class TableTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('system');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Theme Table',
-      'description' => 'Tests built-in table theme functions.',
-      'group' => 'Theme',
-    );
-  }
 
   /**
    * Tableheader.js provides 'sticky' table headers, and is included by default.

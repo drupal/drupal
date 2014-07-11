@@ -14,7 +14,9 @@ use Drupal\Component\Utility\Crypt;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the CSRF token generator.
+ * Tests the CsrfTokenGenerator class.
+ *
+ * @group Access
  */
 class CsrfTokenGeneratorTest extends UnitTestCase {
 
@@ -31,14 +33,6 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    * @var \Drupal\Core\PrivateKey|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $privateKey;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'CsrfTokenGenerator test',
-      'description' => 'Tests the CsrfTokenGenerator class.',
-      'group' => 'Access'
-    );
-  }
 
   /**
    * {@inheritdoc}

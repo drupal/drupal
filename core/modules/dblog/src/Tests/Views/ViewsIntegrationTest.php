@@ -15,6 +15,8 @@ use Drupal\views\Tests\ViewUnitTestBase;
 
 /**
  * Tests the views integration of dblog module.
+ *
+ * @group dblog
  */
 class ViewsIntegrationTest extends ViewUnitTestBase {
 
@@ -31,14 +33,6 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
    * @var array
    */
   public static $modules = array('dblog_test_views');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Dblog Integration',
-      'description' => 'Tests the views integration of dblog module.',
-      'group' => 'Views module integration'
-    );
-  }
 
   /**
    * {@inheritdoc}

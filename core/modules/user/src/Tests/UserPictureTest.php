@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests user picture functionality.
+ *
+ * @group user
  */
 class UserPictureTest extends WebTestBase {
 
@@ -26,14 +28,6 @@ class UserPictureTest extends WebTestBase {
 
   protected $user;
   protected $_directory_test;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User pictures',
-      'description' => 'Tests user picture functionality.',
-      'group' => 'User',
-    );
-  }
 
   function setUp() {
     parent::setUp();

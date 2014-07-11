@@ -11,7 +11,9 @@ use Drupal\locale\TranslationString;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for menu links.
+ * Tests handling of menu links hierarchies.
+ *
+ * @group Menu
  */
 class LinksTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LinksTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('router_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Menu links',
-      'description' => 'Test handling of menu links hierarchies.',
-      'group' => 'Menu',
-    );
-  }
 
   /**
    * {@inheritdoc}

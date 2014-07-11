@@ -12,6 +12,8 @@ use Drupal\views\Views;
 
 /**
  * Tests general rendering of a view.
+ *
+ * @group views
  */
 class ViewRenderTest extends ViewTestBase {
 
@@ -21,14 +23,6 @@ class ViewRenderTest extends ViewTestBase {
    * @var array
    */
   public static $testViews = array('test_view_render');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View render tests',
-      'description' => 'Tests the general rendering of a view.',
-      'group' => 'Views'
-    );
-  }
 
   protected function setUp() {
     parent::setUp();

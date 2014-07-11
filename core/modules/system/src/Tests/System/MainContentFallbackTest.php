@@ -10,7 +10,9 @@ namespace Drupal\system\Tests\System;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test main content rendering fallback provided by system module.
+ *  Test system module main content rendering fallback.
+ *
+ * @group system
  */
 class MainContentFallbackTest extends WebTestBase {
 
@@ -23,14 +25,6 @@ class MainContentFallbackTest extends WebTestBase {
 
   protected $admin_user;
   protected $web_user;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Main content rendering fallback',
-      'description' => ' Test system module main content rendering fallback.',
-      'group' => 'System',
-    );
-  }
 
   function setUp() {
     parent::setUp();

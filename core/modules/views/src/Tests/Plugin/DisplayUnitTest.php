@@ -18,6 +18,8 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
  * Drupal unit tests for the DisplayPluginBase class.
+ *
+ * @group views
  */
 class DisplayUnitTest extends ViewUnitTestBase {
 
@@ -59,14 +61,6 @@ class DisplayUnitTest extends ViewUnitTestBase {
    * @var array
    */
   public static $testViews = array('test_display_defaults');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Display unit tests',
-      'description' => 'Unit tests for the DisplayPluginBase class.',
-      'group' => 'Views Plugins'
-    );
-  }
 
   /**
    * Tests the default display options.

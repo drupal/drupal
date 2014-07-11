@@ -13,7 +13,9 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of variables from the Statistics module.
+ * Upgrade variables to statistics.settings.yml.
+ *
+ * @group migrate_drupal
  */
 class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
 
@@ -25,17 +27,6 @@ class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
    * @var array
    */
   public static $modules = array('statistics');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to statistics.settings.yml',
-      'description'  => 'Upgrade variables to statistics.settings.yml',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

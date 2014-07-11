@@ -10,20 +10,11 @@ namespace Drupal\user\Tests\Menu;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 
 /**
- * Tests existence of user local tasks.
+ * Tests user local tasks.
  *
- * @group Drupal
- * @group User
+ * @group user
  */
 class UserLocalTasksTest extends LocalTaskIntegrationTest {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User local tasks test',
-      'description' => 'Test user local tasks.',
-      'group' => 'User',
-    );
-  }
 
   public function setUp() {
     $this->directoryList = array('user' => 'core/modules/user');

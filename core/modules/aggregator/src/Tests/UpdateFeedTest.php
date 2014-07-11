@@ -8,17 +8,11 @@
 namespace Drupal\aggregator\Tests;
 
 /**
- * Tests functionality of updating the feed in the Aggregator module.
+ * Update feed test.
+ *
+ * @group aggregator
  */
 class UpdateFeedTest extends AggregatorTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Update feed functionality',
-      'description' => 'Update feed test.',
-      'group' => 'Aggregator'
-    );
-  }
-
   /**
    * Creates a feed and attempts to update it.
    */

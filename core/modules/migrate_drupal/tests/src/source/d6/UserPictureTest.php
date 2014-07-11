@@ -10,10 +10,9 @@ namespace Drupal\migrate_drupal\Tests\source\d6;
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
 /**
- * Tests the Drupal 6 user picture source.
+ * Tests D6 user picture source plugin.
  *
  * @group migrate_drupal
- * @group Drupal
  */
 class UserPictureTest extends MigrateSqlSourceTestCase {
 
@@ -46,17 +45,6 @@ class UserPictureTest extends MigrateSqlSourceTestCase {
   protected function setUp() {
     $this->databaseContents['users'] = $this->expectedResults;
     parent::setUp();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'D6 user picture source functionality',
-      'description' => 'Tests D6 user picture source plugin.',
-      'group' => 'Migrate Drupal',
-    );
   }
 
 }

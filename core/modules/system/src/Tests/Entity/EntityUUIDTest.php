@@ -9,16 +9,10 @@ namespace Drupal\system\Tests\Entity;
 
 /**
  * Tests creation, saving, and loading of entity UUIDs.
+ *
+ * @group Entity
  */
 class EntityUUIDTest extends EntityUnitTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Entity UUIDs',
-      'description' => 'Tests creation, saving, and loading of entity UUIDs.',
-      'group' => 'Entity API',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

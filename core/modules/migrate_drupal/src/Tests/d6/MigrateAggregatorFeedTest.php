@@ -13,22 +13,13 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Tests migration of aggregator feed entities.
+ * Upgrade variables to aggregator_feed entities.
+ *
+ * @group migrate_drupal
  */
 class MigrateAggregatorFeedTest extends MigrateDrupalTestBase {
 
   static $modules = array('aggregator');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name'  => 'Migrate variables to aggregator_feed entities.',
-      'description'  => 'Upgrade variables to aggregator_feed entities',
-      'group' => 'Migrate Drupal',
-    );
-  }
 
   /**
    * {@inheritdoc}

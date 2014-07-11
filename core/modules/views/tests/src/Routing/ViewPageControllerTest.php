@@ -16,12 +16,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the page controller but not the actual execution/rendering of a view.
- *
- * @group Drupal
- * @group Views
- *
- * @see \Drupal\views\Routing\ViewPageController
+ * @coversDefaultClass \Drupal\views\Routing\ViewPageController
+ * @group views
  */
 class ViewPageControllerTest extends UnitTestCase {
 
@@ -45,14 +41,6 @@ class ViewPageControllerTest extends UnitTestCase {
    * @var \Drupal\views\ViewExecutableFactory|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $executableFactory;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'View page controller test',
-      'description' => 'Tests views page controller.',
-      'group' => 'Views'
-    );
-  }
 
   protected function setUp() {
     $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')

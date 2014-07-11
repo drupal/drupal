@@ -10,17 +10,11 @@ namespace Drupal\system\Tests\File;
 use Drupal\Core\Site\Settings;
 
 /**
- * Unmanaged move related tests.
+ * Tests the unmanaged file move function.
+ *
+ * @group File
  */
 class UnmanagedMoveTest extends FileTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Unmanaged file moving',
-      'description' => 'Tests the unmanaged file move function.',
-      'group' => 'File API',
-    );
-  }
-
   /**
    * Move a normal file.
    */

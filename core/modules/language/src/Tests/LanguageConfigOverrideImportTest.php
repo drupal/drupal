@@ -11,7 +11,9 @@ use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests synchronization of language configuration overrides.
+ * Ensures the language config overrides can be synchronized.
+ *
+ * @group language
  */
 class LanguageConfigOverrideImportTest extends WebTestBase {
 
@@ -21,14 +23,6 @@ class LanguageConfigOverrideImportTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('language', 'config', 'locale', 'config_translation');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Language config override synchronize',
-      'description' => 'Ensures the language config overrides can be synchronized.',
-      'group' => 'Language',
-    );
-  }
 
   /**
    * Tests that language can be enabled and overrides are created during a sync.

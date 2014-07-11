@@ -12,6 +12,7 @@ use Drupal\views\Views;
 /**
  * Tests the UI of row plugins.
  *
+ * @group views_ui
  * @see \Drupal\views_test_data\Plugin\views\row\RowTest.
  */
 class RowUITest extends UITestBase {
@@ -22,14 +23,6 @@ class RowUITest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Row: UI',
-      'description' => 'Tests the UI of row plugins.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests changing the row plugin and changing some options of a row.

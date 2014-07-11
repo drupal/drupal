@@ -11,12 +11,8 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\argument_validator\Entity;
 
 /**
- * Tests the generic entity argument validator.
- *
- * @group Drupal
- * @group Views
- *
- * @see \Drupal\views\Plugin\views\argument_validator\Entity
+ * @coversDefaultClass \Drupal\views\Plugin\views\argument_validator\Entity
+ * @group views
  */
 class EntityTest extends UnitTestCase {
 
@@ -47,14 +43,6 @@ class EntityTest extends UnitTestCase {
    * @var \Drupal\views\Plugin\views\argument_validator\Entity
    */
   protected $argumentValidator;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Argument validator: Entity',
-      'description' => 'Tests the generic entity argument validator.',
-      'group' => 'Views Plugin',
-    );
-  }
 
   /**
    * {@inheritdoc}

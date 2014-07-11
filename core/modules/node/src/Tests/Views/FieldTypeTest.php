@@ -11,6 +11,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the Drupal\node\Plugin\views\field\Type handler.
+ *
+ * @group node
  */
 class FieldTypeTest extends NodeTestBase {
 
@@ -20,14 +22,6 @@ class FieldTypeTest extends NodeTestBase {
    * @var array
    */
   public static $testViews = array('test_field_type');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node: Node Type field',
-      'description' => 'Tests the Drupal\node\Plugin\views\field\Type handler.',
-      'group' => 'Views module integration',
-    );
-  }
 
   public function testFieldType() {
     $node = $this->drupalCreateNode();

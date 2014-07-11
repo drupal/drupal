@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests hook_node_access_records() functionality.
+ * Tests hook_node_access_records when acquiring grants.
+ *
+ * @group node
  */
 class NodeAccessRecordsTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class NodeAccessRecordsTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('node_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node access records',
-      'description' => 'Test hook_node_access_records when acquiring grants.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * Creates a node and tests the creation of node access rules.

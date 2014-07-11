@@ -8,17 +8,11 @@
 namespace Drupal\system\Tests\Database;
 
 /**
- * Tests case sensitivity handling.
+ * Tests handling case sensitive collation.
+ *
+ * @group Database
  */
 class CaseSensitivityTest extends DatabaseTestBase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Case sensitivity',
-      'description' => 'Test handling case sensitive collation.',
-      'group' => 'Database',
-    );
-  }
-
   /**
    * Tests BINARY collation in MySQL.
    */

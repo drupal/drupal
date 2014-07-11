@@ -12,11 +12,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests the lazy loaded route collection.
- *
- * @group \Drupal
- *
- * @see \Drupal\Core\Routing\LazyLoadingRouteCollection
+ * @coversDefaultClass \Drupal\Core\Routing\LazyLoadingRouteCollection
+ * @group Routing
  */
 class LazyLoadingRouteCollectionTest extends UnitTestCase {
 
@@ -33,14 +30,6 @@ class LazyLoadingRouteCollectionTest extends UnitTestCase {
    * @var \Drupal\Core\Routing\LazyLoadingRouteCollection
    */
   protected $routeCollection;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Lazy loaded route collection',
-      'description' => 'Tests the lazy loaded route collection.',
-      'group' => 'Routing',
-    );
-  }
 
   protected function setUp() {
     for ($i = 0; $i < 20; $i++) {

@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests user_validate_current_pass on a custom form.
+ *
+ * @group user
  */
 class UserValidateCurrentPassCustomFormTest extends WebTestBase {
 
@@ -20,14 +22,6 @@ class UserValidateCurrentPassCustomFormTest extends WebTestBase {
    * @var array
    */
   public static $modules = array('user_form_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'User validate current pass custom form',
-      'description' => 'Test that user_validate_current_pass is usable on a custom form.',
-      'group' => 'User',
-    );
-  }
 
   /**
    * User with permission to view content.

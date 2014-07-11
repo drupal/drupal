@@ -10,6 +10,7 @@ namespace Drupal\views_ui\Tests;
 /**
  * Tests the boolean filter UI.
  *
+ * @group views_ui
  * @see \Drupal\views\Plugin\views\filter\BooleanOperator
  */
 class FilterBooleanWebTest extends UITestBase {
@@ -20,14 +21,6 @@ class FilterBooleanWebTest extends UITestBase {
    * @var array
    */
   public static $testViews = array('test_view');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Filter: Boolean',
-      'description' => 'Tests the boolean filter UI.',
-      'group' => 'Views UI',
-    );
-  }
 
   /**
    * Tests the filter boolean UI.

@@ -12,10 +12,9 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
 /**
- * Tests ConfigEntityMapper.
+ * Tests the functionality provided by the configuration entity mapper.
  *
- * @group Drupal
- * @group Config_translation
+ * @group config_translation
  */
 class ConfigEntityMapperTest extends UnitTestCase {
 
@@ -46,17 +45,6 @@ class ConfigEntityMapperTest extends UnitTestCase {
    * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $routeProvider;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Configuration entity mapper',
-      'description' => 'Tests the functionality provided by the configuration entity mapper.',
-      'group' => 'Configuration Translation',
-    );
-  }
 
   public function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

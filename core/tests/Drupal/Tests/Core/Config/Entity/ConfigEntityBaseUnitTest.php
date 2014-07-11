@@ -16,8 +16,6 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityBase
- *
- * @group Drupal
  * @group Config
  */
 class ConfigEntityBaseUnitTest extends UnitTestCase {
@@ -91,17 +89,6 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $typedConfigManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'description' => '',
-      'name' => '\Drupal\Core\Config\Entity\ConfigEntityBase unit test',
-      'group' => 'Entity',
-    );
-  }
 
   /**
    * {@inheritdoc}

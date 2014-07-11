@@ -13,7 +13,9 @@ use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests compilation of the DIC.
+ * Tests DIC compilation to disk.
+ *
+ * @group DrupalKernel
  */
 class DrupalKernelTest extends DrupalUnitTestBase {
 
@@ -21,14 +23,6 @@ class DrupalKernelTest extends DrupalUnitTestBase {
    * @var \Composer\Autoload\ClassLoader
    */
   protected $classloader;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'DrupalKernel tests',
-      'description' => 'Tests DIC compilation to disk.',
-      'group' => 'DrupalKernel',
-    );
-  }
 
   function setUp() {
     // DrupalKernel relies on global $config_directories and requires those

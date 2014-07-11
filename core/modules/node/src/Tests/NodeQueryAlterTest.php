@@ -8,7 +8,9 @@
 namespace Drupal\node\Tests;
 
 /**
- * Tests node_query_node_access_alter().
+ * Tests that node access queries are properly altered by the node module.
+ *
+ * @group node
  */
 class NodeQueryAlterTest extends NodeTestBase {
 
@@ -18,14 +20,6 @@ class NodeQueryAlterTest extends NodeTestBase {
    * @var array
    */
   public static $modules = array('node_access_test');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Node query alter',
-      'description' => 'Test that node access queries are properly altered by the node module.',
-      'group' => 'Node',
-    );
-  }
 
   /**
    * User with permission to view content.

@@ -10,26 +10,10 @@ namespace Drupal\forum\Tests\Breadcrumb;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the ForumManager.
- *
  * @coversDefaultClass \Drupal\forum\Breadcrumb\ForumBreadcrumbBuilderBase
- * @group Forum
- * @group Drupal
- *
- * @see \Drupal\forum\ForumManager
+ * @group forum
  */
 class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Forum Breadcrumb Base Test',
-      'description' => 'Tests the abstract base class for forum breadcrumbs.',
-      'group' => 'Forum',
-    );
-  }
 
   /**
    * Tests ForumBreadcrumbBuilderBase::__construct().

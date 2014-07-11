@@ -8,7 +8,10 @@
 namespace Drupal\path\Tests;
 
 /**
- * Tests path alias functionality.
+ * Add, edit, delete, and change alias and verify its consistency in the
+ * database.
+ *
+ * @group path
  */
 class PathAliasTest extends PathTestBase {
 
@@ -18,14 +21,6 @@ class PathAliasTest extends PathTestBase {
    * @var array
    */
   public static $modules = array('path');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Path alias functionality',
-      'description' => 'Add, edit, delete, and change alias and verify its consistency in the database.',
-      'group' => 'Path',
-    );
-  }
 
   function setUp() {
     parent::setUp();

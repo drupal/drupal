@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests Quick Edit module integration endpoints.
+ *
+ * @group editor
  */
 class QuickEditIntegrationLoadingTest extends WebTestBase {
 
@@ -28,14 +30,6 @@ class QuickEditIntegrationLoadingTest extends WebTestBase {
    * @var array
    */
   protected static $basic_permissions = array('access content', 'create article content', 'use text format filtered_html', 'access contextual links');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'In-place text editor loading',
-      'description' => 'Tests Quick Edit module integration endpoints.',
-      'group' => 'Text Editor',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

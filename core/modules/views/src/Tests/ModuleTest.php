@@ -9,6 +9,8 @@ namespace Drupal\views\Tests;
 
 /**
  * Tests basic functions from the Views module.
+ *
+ * @group views
  */
 use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Views;
@@ -38,14 +40,6 @@ class ModuleTest extends ViewUnitTestBase {
    * @see \Drupal\views\Tests\ModuleTest::errorHandler()
    */
   protected $lastErrorMessage;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Views Module tests',
-      'description' => 'Tests some basic functions of views.module.',
-      'group' => 'Views',
-    );
-  }
 
   /**
    * Tests the views_get_handler method.

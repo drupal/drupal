@@ -12,25 +12,10 @@ use Drupal\Core\Form\FormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Tests the form builder.
- *
  * @coversDefaultClass \Drupal\Core\Form\FormBuilder
- *
- * @group Drupal
  * @group Form
  */
 class FormBuilderTest extends FormTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Form builder test',
-      'description' => 'Tests the form builder.',
-      'group' => 'Form API',
-    );
-  }
 
   /**
    * Tests the getFormId() method with a string based form ID.

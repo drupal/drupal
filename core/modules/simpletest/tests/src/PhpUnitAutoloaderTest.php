@@ -10,20 +10,11 @@ namespace Drupal\simpletest\Tests;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Test PHPUnit autoloader works correctly.
+ * Tests that classes are correctly loaded during PHPUnit initialization.
  *
- * @group Drupal
  * @group simpletest
  */
 class PhpUnitAutoloaderTest extends UnitTestCase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'PHPUnit autoloader',
-      'description' => 'Test that classes are correctly loaded during PHPUnit initialization.',
-      'group' => 'Simpletest',
-    );
-  }
 
   /**
    * Test loading of classes provided by test sub modules.
