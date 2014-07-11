@@ -131,18 +131,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 
 /**
- * Returns a renderable form array for a given form ID.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->getForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::getForm().
- */
-function drupal_get_form($form_arg) {
-  return call_user_func_array(array(\Drupal::formBuilder(), 'getForm'), func_get_args());
-}
-
-/**
  * Builds and processes a form for a given form ID.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
