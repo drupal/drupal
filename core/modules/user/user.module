@@ -494,7 +494,7 @@ function user_permission() {
 }
 
 /**
- * Implements hook_user_view().
+ * Implements hook_ENTITY_TYPE_view() for user entities.
  */
 function user_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
   if ($display->getComponent('member_for')) {
@@ -736,8 +736,9 @@ function user_login_finalize(UserInterface $account) {
     ->updateLastLoginTimestamp($account);
 
   // Regenerate the session ID to prevent against session fixation attacks.
-  // This is called before hook_user in case one of those functions fails
-  // or incorrectly does a redirect which would leave the old session in place.
+  // This is called before hook_user_login() in case one of those functions
+  // fails or incorrectly does a redirect which would leave the old session
+  // in place.
   \Drupal::service('session_manager')->regenerate();
 
   \Drupal::moduleHandler()->invokeAll('user_login', array($account));
@@ -871,8 +872,9 @@ function user_cancel($edit, $uid, $method) {
   batch_set($batch);
 
   // When the 'user_cancel_delete' method is used, user_delete() is called,
-  // which invokes hook_user_predelete() and hook_user_delete(). Modules
-  // should use those hooks to respond to the account deletion.
+  // which invokes hook_ENTITY_TYPE_predelete() and hook_ENTITY_TYPE_delete()
+  // for the user entity. Modules should use those hooks to respond to the
+  // account deletion.
   if ($method != 'user_cancel_delete') {
     // Allow modules to add further sets to this batch.
     \Drupal::moduleHandler()->invokeAll('user_cancel', array($edit, $account, $method));
@@ -1029,8 +1031,8 @@ function user_delete($uid) {
  * @param $uids
  *   An array of user IDs.
  *
- * @see hook_user_predelete()
- * @see hook_user_delete()
+ * @see hook_ENTITY_TYPE_predelete()
+ * @see hook_ENTITY_TYPE_delete()
  */
 function user_delete_multiple(array $uids) {
   entity_delete_multiple('user', $uids);
@@ -1154,7 +1156,7 @@ function user_role_names($membersonly = FALSE, $permission = NULL) {
 }
 
 /**
- * Implements hook_user_role_insert().
+ * Implements hook_ENTITY_TYPE_insert() for user_role entities.
  */
 function user_user_role_insert(RoleInterface $role) {
   // Ignore the authenticated and anonymous roles or the role is being synced.
@@ -1191,7 +1193,7 @@ function user_user_role_insert(RoleInterface $role) {
 }
 
 /**
- * Implements hook_user_role_delete().
+ * Implements hook_ENTITY_TYPE_delete() for user_role entities.
  */
 function user_user_role_delete(RoleInterface $role) {
   // Ignore the authenticated and anonymous roles or the role is being synced.

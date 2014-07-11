@@ -347,7 +347,7 @@ function language_get_default_configuration_settings_key($entity_type, $bundle) 
 }
 
 /**
- * Implements hook_node_type_update().
+ * Implements hook_ENTITY_TYPE_update() for node_type entities.
  */
 function language_node_type_update(NodeTypeInterface $type) {
   if ($type->original->id() != $type->id()) {

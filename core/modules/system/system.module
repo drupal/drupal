@@ -1007,7 +1007,7 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_user_presave().
+ * Implements hook_ENTITY_TYPE_presave() for user entities.
  */
 function system_user_presave(UserInterface $account) {
   $config = \Drupal::config('system.date');

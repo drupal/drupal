@@ -785,7 +785,7 @@ function node_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
  */
 function node_user_predelete($account) {
   // Delete nodes (current revisions).
@@ -1134,10 +1134,12 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * default home page at path 'node', an RSS feed, a recent content block, etc.),
  * the process above is followed except that hook_node_access() is not called on
  * each node for performance reasons and for proper functioning of the pager
- * system. When adding a node listing to your module, be sure to use a dynamic
- * entity query and add a tag of "node_access". This will allow modules dealing
+ * system. When adding a node listing to your module, be sure to use an entity
+ * query, which will add a tag of "node_access". This will allow modules dealing
  * with node access to ensure only nodes to which the user has access are
- * retrieved, through the use of hook_query_TAG_alter().
+ * retrieved, through the use of hook_query_TAG_alter(). See the
+ * @link entity_api Entity API topic @endlink for more information on entity
+ * queries.
  *
  * Note: Even a single module returning NODE_ACCESS_DENY from hook_node_access()
  * will block access to the node. Therefore, implementers should take care to
@@ -1628,7 +1630,7 @@ function node_reindex_node_search($nid) {
 }
 
 /**
- * Implements hook_comment_insert().
+ * Implements hook_ENTITY_TYPE_insert() for comment entities.
  */
 function node_comment_insert($comment) {
   // Reindex the node when comments are added.
@@ -1638,7 +1640,7 @@ function node_comment_insert($comment) {
 }
 
 /**
- * Implements hook_comment_update().
+ * Implements hook_ENTITY_TYPE_update() for comment entities.
  */
 function node_comment_update($comment) {
   // Reindex the node when comments are changed.
@@ -1648,7 +1650,7 @@ function node_comment_update($comment) {
 }
 
 /**
- * Implements hook_comment_delete().
+ * Implements hook_ENTITY_TYPE_delete() for comment entities.
  */
 function node_comment_delete($comment) {
   // Reindex the node when comments are deleted.

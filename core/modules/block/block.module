@@ -298,7 +298,7 @@ function template_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_user_role_delete().
+ * Implements hook_ENTITY_TYPE_delete() for user_role entities.
  *
  * Removes deleted role from blocks that use it.
  */
@@ -315,7 +315,7 @@ function block_user_role_delete($role) {
 }
 
 /**
- * Implements hook_menu_delete().
+ * Implements hook_ENTITY_TYPE_delete() for menu entities.
  */
 function block_menu_delete(Menu $menu) {
   if (!$menu->isSyncing()) {

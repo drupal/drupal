@@ -130,7 +130,7 @@ function history_cron() {
 }
 
 /**
- * Implements hook_node_view_alter().
+ * Implements hook_ENTITY_TYPE_view_alter() for node entities.
  */
 function history_node_view_alter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
   // Update the history table, stating that this user viewed this node.
@@ -148,7 +148,7 @@ function history_node_view_alter(array &$build, EntityInterface $node, EntityVie
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_ENTITY_TYPE_delete() for node entities.
  */
 function history_node_delete(EntityInterface $node) {
   db_delete('history')
@@ -170,7 +170,7 @@ function history_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_ENTITY_TYPE_delete() for user entities.
  */
 function history_user_delete($account) {
   db_delete('history')

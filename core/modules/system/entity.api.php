@@ -11,6 +11,231 @@ use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Render\Element;
 
 /**
+ * @defgroup entity_crud Entity CRUD, editing, and view hooks
+ * @{
+ * Hooks used in various entity operations.
+ *
+ * Entity create, read, update, and delete (CRUD) operations are performed by
+ * entity storage classes; see the
+ * @link entity_api Entity API topic @endlink for more information. Most
+ * entities use or extend the default classes:
+ * \Drupal\Core\Entity\ContentEntityDatabaseStorage for content entities, and
+ * \Drupal\Core\Config\Entity\ConfigEntityStorage for configuration entities.
+ * For these entities, there is a set of hooks that is invoked for each
+ * CRUD operation, which module developers can implement to affect these
+ * operations; these hooks are actually invoked from methods on
+ * \Drupal\Core\Entity\EntityStorageBase.
+ *
+ * For content entities, viewing and rendering are handled by a view builder
+ * class; see the @link entity_api Entity API topic @endlink for more
+ * information. Most view builders extend or use the default class
+ * \Drupal\Core\Entity\EntityViewBuilder.
+ *
+ * Entity editing (including adding new entities) is handled by entity form
+ * classes; see the @link entity_api Entity API topic @endlink for more
+ * information. Most entity editing forms extend base classes
+ * \Drupal\Core\Entity\EntityForm or \Drupal\Core\Entity\ContentEntityForm.
+ * Note that many other operations, such as confirming deletion of entities,
+ * also use entity form classes.
+ *
+ * This topic lists all of the entity CRUD and view operations, and the hooks
+ * and other operations that are invoked (in order) for each operation. Some
+ * notes:
+ * - Whenever an entity hook is invoked, there is both a type-specific entity
+ *   hook, and a generic entity hook. For instance, during a create operation on
+ *   a node, first hook_node_create() and then hook_entity_create() would be
+ *   invoked.
+ * - The entity-type-specific hooks are represented in the list below as
+ *   hook_ENTITY_TYPE_... (hook_ENTITY_TYPE_create() in this example). To
+ *   implement one of these hooks for an entity whose machine name is "foo",
+ *   define a function called mymodule_foo_create(), for instance. Also note
+ *   that the entity or array of entities that are passed into a specific-type
+ *   hook are of the specific entity class, not the generic Entity class, so in
+ *   your implementation, you can make the $entity argument something like $node
+ *   and give it a specific type hint (which should normally be to the specific
+ *   interface, such as \Drupal\Node\NodeInterface for nodes).
+ * - $storage in the code examples is assumed to be an entity storage
+ *   class. See the @link entity_api Entity API topic @endlink for
+ *   information on how to instantiate the correct storage class for an
+ *   entity type.
+ * - $view_builder in the code examples is assumed to be an entity view builder
+ *   class. See the @link entity_api Entity API topic @endlink for
+ *   information on how to instantiate the correct view builder class for
+ *   an entity type.
+ * - During many operations, static methods are called on the entity class,
+ *   which implements \Drupal\Entity\EntityInterface.
+ *
+ * @section create Create operations
+ * To create an entity:
+ * @code
+ * $entity = $storage->create();
+ *
+ * // Add code here to set properties on the entity.
+ *
+ * // Until you call save(), the entity is just in memory.
+ * $entity->save();
+ * @endcode
+ * There is also a shortcut method on entity classes, which creates an entity
+ * with an array of provided property values: \Drupal\Core\Entity::create().
+ *
+ * Hooks invoked during the create operation:
+ * - hook_ENTITY_TYPE_create()
+ * - hook_entity_create()
+ *
+ * See @ref save below for the save portion of the operation.
+ *
+ * @section load Read/Load operations
+ * To load (read) a single entity:
+ * @code
+ * $entity = $storage->load($id);
+ * @endcode
+ * To load multiple entities:
+ * @code
+ * $entities = $storage->loadMultiple($ids);
+ * @endcode
+ * Since load() calls loadMultiple(), these are really the same operation.
+ * Here is the order of hooks and other operations that take place during
+ * entity loading:
+ * - Entity is loaded from storage.
+ * - postLoad() is called on the entity class, passing in all of the loaded
+ *   entities.
+ * - hook_entity_load()
+ * - hook_ENTITY_TYPE_load()
+ *
+ * When an entity is loaded, normally the default entity revision is loaded.
+ * It is also possible to load a different revision, for entities that support
+ * revisions, with this code:
+ * @code
+ * $entity = $storage->loadRevision($revision_id);
+ * @endcode
+ * This involves the same hooks and operations as regular entity loading.
+ *
+ * @section save Save operations
+ * To update an existing entity, you will need to load it, change properties,
+ * and then save; as described above, when creating a new entity, you will also
+ * need to save it. Here is the order of hooks and other events that happen
+ * during an entity save:
+ * - preSave() is called on the entity object, and field objects.
+ * - hook_ENTITY_TYPE_presave()
+ * - hook_entity_presave()
+ * - Entity is saved to storage.
+ * - For updates on content entities, if there is a translation added that
+ *   was not previously present:
+ *   - hook_ENTITY_TYPE_translation_insert()
+ *   - hook_entity_translation_insert()
+ * - For updates on content entities, if there was a translation removed:
+ *   - hook_ENTITY_TYPE_translation_delete()
+ *   - hook_entity_translation_delete()
+ * - postSave() is called on the entity object.
+ * - hook_ENTITY_TYPE_insert() (new) or hook_ENTITY_TYPE_update() (update)
+ * - hook_entity_insert() (new) or hook_entity_update() (update)
+ *
+ * Some specific entity types invoke hooks during preSave() or postSave()
+ * operations. Examples:
+ * - Field configuration preSave(): hook_field_config_update_forbid()
+ * - Node postSave(): hook_node_access_records() and
+ *   hook_node_access_records_alter()
+ * - Config entities that are acting as entity bundles, in postSave():
+ *   hook_entity_bundle_create() or hook_entity_bundle_rename() as appropriate
+ * - Comment: hook_comment_publish() and hook_comment_unpublish() as
+ *   appropriate.
+ *
+ * @section edit Editing operations
+ * When an entity's add/edit form is used to add or edit an entity, there
+ * are several hooks that are invoked:
+ * - hook_entity_prepare_form()
+ * - hook_ENTITY_TYPE_prepare_form()
+ * - hook_entity_form_display_alter() (for content entities only)
+ *
+ * Some specific entity types have additional hooks that are run during
+ * various steps in the process:
+ * - Node entities: hook_node_validate() and hook_submit().
+ *
+ * @section delete Delete operations
+ * To delete one or more entities, load them and then delete them:
+ * @code
+ * $entities = $storage->loadMultiple($ids);
+ * $storage->delete($entities);
+ * @endcode
+ *
+ * During the delete operation, the following hooks and other events happen:
+ * - preDelete() is called on the entity class.
+ * - hook_ENTITY_TYPE_predelete()
+ * - hook_entity_predelete()
+ * - Entity and field information is removed from storage.
+ * - postDelete() is called on the entity class.
+ * - hook_ENTITY_TYPE_delete()
+ * - hook_entity_delete()
+ *
+ * Some specific entity types invoke hooks during the delete process. Examples:
+ * - Entity bundle postDelete(): hook_entity_bundle_delete()
+ *
+ * Individual revisions of an entity can also be deleted:
+ * @code
+ * $storage->deleteRevision($revision_id);
+ * @endcode
+ * This operation invokes the following operations and hooks:
+ * - Revision is loaded (see @ref load above).
+ * - Revision and field information is removed from the database.
+ * - hook_ENTITY_TYPE_revision_delete()
+ * - hook_entity_revision_delete()
+ *
+ * @section view View/render operations
+ * To make a render array for a loaded entity:
+ * @code
+ * // You can omit the language ID if the default language is being used.
+ * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
+ * @endcode
+ * You can also use the viewMultiple() method to view multiple entities.
+ *
+ * Hooks invoked during the operation of building a render array:
+ * - hook_entity_view_mode_alter()
+ * - hook_ENTITY_TYPE_build_defaults_alter()
+ * - hook_entity_build_defaults_alter()
+ *
+ * View builders for some types override these hooks, notably:
+ * - The Tour view builder does not invoke any hooks.
+ * - The Block view builder invokes hook_block_view_alter() and
+ *   hook_block_view_BASE_BLOCK_ID_alter(). Note that in other view builders,
+ *   the view alter hooks are run later in the process.
+ *
+ * During the rendering operation, the default entity viewer runs the following
+ * hooks and operations in the pre-render step:
+ * - hook_entity_view_display_alter()
+ * - hook_entity_prepare_view()
+ * - Entity fields are loaded, and render arrays are built for them using
+ *   their formatters.
+ * - hook_entity_display_build_alter()
+ * - hook_ENTITY_TYPE_view()
+ * - hook_entity_view()
+ * - hook_ENTITY_TYPE_view_alter()
+ * - hook_entity_view_alter()
+ *
+ * Some specific builders have specific hooks:
+ * - The Node view builder invokes hook_node_links_alter().
+ * - The Comment view builder invokes hook_comment_links_alter().
+ *
+ * After this point in rendering, the theme system takes over. See the
+ * @link theme_render Theme system and render API topic @endlink for more
+ * information.
+ *
+ * @section misc Other entity hooks
+ * Some types of entities invoke hooks for specific operations:
+ * - Searching nodes:
+ *   - hook_ranking()
+ *   - Query is executed to find matching nodes
+ *   - Resulting node is loaded
+ *   - Node render array is built
+ *   - comment_node_update_index() is called (this adds "N comments" text)
+ *   - hook_node_search_result()
+ * - Search indexing nodes:
+ *   - Node is loaded
+ *   - Node render array is built
+ *   - hook_node_update_index()
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
@@ -32,6 +257,10 @@ use Drupal\Core\Render\Element;
  *   deny access.
  *
  * @see \Drupal\Core\Entity\EntityAccessController
+ * @see hook_entity_create_access()
+ * @see hook_ENTITY_TYPE_access()
+ *
+ * @ingroup entity_api
  */
 function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   return NULL;
@@ -54,6 +283,10 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *   deny access.
  *
  * @see \Drupal\Core\Entity\EntityAccessController
+ * @see hook_ENTITY_TYPE_create_access()
+ * @see hook_entity_access()
+ *
+ * @ingroup entity_api
  */
 function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   return NULL;
@@ -72,6 +305,10 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *   deny access.
  *
  * @see \Drupal\Core\Entity\EntityAccessController
+ * @see hook_entity_access()
+ * @see hook_ENTITY_TYPE_create_access()
+ *
+ * @ingroup entity_api
  */
 function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
   return NULL;
@@ -90,6 +327,10 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  *   deny access.
  *
  * @see \Drupal\Core\Entity\EntityAccessController
+ * @see hook_ENTITY_TYPE_access()
+ * @see hook_entity_create_access()
+ *
+ * @ingroup entity_api
  */
 function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
   return NULL;
@@ -198,6 +439,8 @@ function hook_entity_bundle_info_alter(&$bundles) {
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param string $bundle
  *   The name of the bundle.
+ *
+ * @see entity_crud
  */
 function hook_entity_bundle_create($entity_type_id, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add the
@@ -216,6 +459,8 @@ function hook_entity_bundle_create($entity_type_id, $bundle) {
  *   The previous name of the bundle.
  * @param string $bundle_new
  *   The new name of the bundle.
+ *
+ * @see entity_crud
  */
 function hook_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) {
   // Update the settings associated with the bundle in my_module.settings.
@@ -237,6 +482,8 @@ function hook_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) {
  *   The type of entity; for example, 'node' or 'user'.
  * @param string $bundle
  *   The bundle that was just deleted.
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_bundle_delete($entity_type_id, $bundle) {
   // Remove the settings associated with the bundle in my_module.settings.
@@ -256,9 +503,30 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_create()
  */
 function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity instanceof ContentEntityInterface && !$entity->foo->value) {
+    $entity->foo->value = 'some_initial_value';
+  }
+}
+
+/**
+ * Act on a newly created entity of a specific type.
+ *
+ * This hook runs after a new entity object has just been instantiated. It can
+ * be used to set initial values, e.g. to provide defaults.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_create()
+ */
+function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
+  if (!$entity->foo->value) {
     $entity->foo->value = 'some_initial_value';
   }
 }
@@ -273,6 +541,9 @@ function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
  *   The entities keyed by entity ID.
  * @param string $entity_type_id
  *   The type of entities being loaded (i.e. node, user, comment).
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_load()
  */
 function hook_entity_load($entities, $entity_type_id) {
   foreach ($entities as $entity) {
@@ -281,13 +552,50 @@ function hook_entity_load($entities, $entity_type_id) {
 }
 
 /**
- * Act on an entity before it is about to be created or updated.
+ * Act on entities of a specific type when loaded.
+ *
+ * @param array $entities
+ *   The entities keyed by entity ID.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_load()
+ */
+function hook_ENTITY_TYPE_load($entities) {
+  foreach ($entities as $entity) {
+    $entity->foo = mymodule_add_something($entity);
+  }
+}
+
+/**
+ * Act on an entity before it is created or updated.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_presave()
  */
 function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
-  $entity->changed = REQUEST_TIME;
+ if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
+   $attributes = \Drupal::request()->attributes;
+   \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+  }
+}
+
+/**
+ * Act on a specific type of entity before it is created or updated.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_presave()
+ */
+function hook_ENTITY_TYPE_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->isTranslatable()) {
+    $attributes = \Drupal::request()->attributes;
+    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+  }
 }
 
 /**
@@ -298,12 +606,38 @@ function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_insert()
  */
 function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
   // Insert the new entity into a fictional table of all entities.
   db_insert('example_entity')
     ->fields(array(
       'type' => $entity->getEntityTypeId(),
+      'id' => $entity->id(),
+      'created' => REQUEST_TIME,
+      'updated' => REQUEST_TIME,
+    ))
+    ->execute();
+}
+
+/**
+ * Respond to creation of a new entity of a particular type.
+ *
+ * This hook runs once the entity has been stored. Note that hook
+ * implementations may not alter the stored entity data.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_insert()
+ */
+function hook_ENTITY_TYPE_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  // Insert the new entity into a fictional table of this type of entity.
+  db_insert('example_entity')
+    ->fields(array(
       'id' => $entity->id(),
       'created' => REQUEST_TIME,
       'updated' => REQUEST_TIME,
@@ -319,6 +653,9 @@ function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_update()
  */
 function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
   // Update the entity's entry in a fictional table of all entities.
@@ -332,6 +669,28 @@ function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
+ * Respond to updates to an entity of a particular type.
+ *
+ * This hook runs once the entity storage has been updated. Note that hook
+ * implementations may not alter the stored entity data.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_update()
+ */
+function hook_ENTITY_TYPE_update(Drupal\Core\Entity\EntityInterface $entity) {
+  // Update the entity's entry in a fictional table of this type of entity.
+  db_update('example_entity')
+    ->fields(array(
+      'updated' => REQUEST_TIME,
+    ))
+    ->condition('id', $entity->id())
+    ->execute();
+}
+
+/**
  * Respond to creation of a new entity translation.
  *
  * This hook runs once the entity translation has been stored. Note that hook
@@ -339,8 +698,31 @@ function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $translation
  *   The entity object of the translation just stored.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_translation_insert()
  */
 function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
+  $variables = array(
+    '@language' => $translation->language()->name,
+    '@label' => $translation->getUntranslated()->label(),
+  );
+  \Drupal::logger('example')->notice('The @language translation of @label has just been stored.', $variables);
+}
+
+/**
+ * Respond to creation of a new entity translation of a particular type.
+ *
+ * This hook runs once the entity translation has been stored. Note that hook
+ * implementations may not alter the stored entity translation data.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $translation
+ *   The entity object of the translation just stored.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_translation_insert()
+ */
+function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
   $variables = array(
     '@language' => $translation->language()->name,
     '@label' => $translation->getUntranslated()->label(),
@@ -355,8 +737,31 @@ function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $tra
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The original entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_translation_delete()
  */
 function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
+  $languages = \Drupal::languageManager()->getLanguages();
+  $variables = array(
+    '@language' => $languages[$langcode]->name,
+    '@label' => $entity->label(),
+  );
+  \Drupal::logger('example')->notice('The @language translation of @label has just been deleted.', $variables);
+}
+
+/**
+ * Respond to entity translation deletion of a particular type.
+ *
+ * This hook runs once the entity translation has been deleted from storage.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The original entity object.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_translation_delete()
+ */
+function hook_ENTITY_TYPE_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
   $languages = \Drupal::languageManager()->getLanguages();
   $variables = array(
     '@language' => $languages[$langcode]->name,
@@ -370,8 +775,39 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that is about to be deleted.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_predelete()
  */
 function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
+  // Count references to this entity in a custom table before they are removed
+  // upon entity deletion.
+  $id = $entity->id();
+  $type = $entity->getEntityTypeId();
+  $count = db_select('example_entity_data')
+    ->condition('type', $type)
+    ->condition('id', $id)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  // Log the count in a table that records this statistic for deleted entities.
+  db_merge('example_deleted_entity_statistics')
+    ->key(array('type' => $type, 'id' => $id))
+    ->fields(array('count' => $count))
+    ->execute();
+}
+
+/**
+ * Act before entity deletion of a particular entity type.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object for the entity that is about to be deleted.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_predelete()
+ */
+function hook_ENTITY_TYPE_predelete(Drupal\Core\Entity\EntityInterface $entity) {
   // Count references to this entity in a custom table before they are removed
   // upon entity deletion.
   $id = $entity->id();
@@ -397,8 +833,30 @@ function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that has been deleted.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_delete()
  */
 function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  // Delete the entity's entry from a fictional table of all entities.
+  db_delete('example_entity')
+    ->condition('type', $entity->getEntityTypeId())
+    ->condition('id', $entity->id())
+    ->execute();
+}
+
+/**
+ * Respond to entity deletion of a particular type.
+ *
+ * This hook runs once the entity has been deleted from the storage.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object for the entity that has been deleted.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_delete()
+ */
+function hook_ENTITY_TYPE_delete(Drupal\Core\Entity\EntityInterface $entity) {
   // Delete the entity's entry from a fictional table of all entities.
   db_delete('example_entity')
     ->condition('type', $entity->getEntityTypeId())
@@ -413,9 +871,33 @@ function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity revision that has been deleted.
+ *
+ * @ingroup entity_crud
+ * @see hook_ENTITY_TYPE_revision_delete()
  */
 function hook_entity_revision_delete(Drupal\Core\Entity\EntityInterface $entity) {
-  // @todo: code example
+  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+  foreach ($referenced_files_by_field as $field => $uuids) {
+    _editor_delete_file_usage($uuids, $entity, 1);
+  }
+}
+
+/**
+ * Respond to entity revision deletion of a particular type.
+ *
+ * This hook runs once the entity revision has been deleted from the storage.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object for the entity revision that has been deleted.
+ *
+ * @ingroup entity_crud
+ * @see hook_entity_revision_delete()
+ */
+function hook_ENTITY_TYPE_revision_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+  foreach ($referenced_files_by_field as $field => $uuids) {
+    _editor_delete_file_usage($uuids, $entity, 1);
+  }
 }
 
 /**
@@ -453,9 +935,9 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
  * drupal_render().
  *
  * @see hook_entity_view_alter()
- * @see hook_comment_view()
- * @see hook_node_view()
- * @see hook_user_view()
+ * @see hook_ENTITY_TYPE_view()
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
@@ -470,7 +952,43 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
 }
 
 /**
- * Alter the results of ENTITY_view().
+ * Act on entities of a particular type being assembled before rendering.
+ *
+ * @param &$build
+ *   A renderable array representing the entity content.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
+ * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+ *   The entity view display holding the display options configured for the
+ *   entity components.
+ * @param $view_mode
+ *   The view mode the entity is rendered in.
+ * @param $langcode
+ *   The language code used for rendering.
+ *
+ * The module may add elements to $build prior to rendering. The
+ * structure of $build is a renderable array as expected by
+ * drupal_render().
+ *
+ * @see hook_ENTITY_TYPE_view_alter()
+ * @see hook_entity_view()
+ *
+ * @ingroup entity_crud
+ */
+function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+  // Only do the extra work if the component is configured to be displayed.
+  // This assumes a 'mymodule_addition' extra field has been defined for the
+  // entity bundle in hook_entity_extra_field_info().
+  if ($display->getComponent('mymodule_addition')) {
+    $build['mymodule_addition'] = array(
+      '#markup' => mymodule_addition($entity),
+      '#theme' => 'mymodule_my_additional_field',
+    );
+  }
+}
+
+/**
+ * Alter the results of the entity build array.
  *
  * This hook is called after the content has been assembled in a structured
  * array and may be used for doing processing which requires that the complete
@@ -491,12 +1009,47 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
  *   entity components.
  *
  * @see hook_entity_view()
- * @see hook_comment_view_alter()
- * @see hook_node_view_alter()
- * @see hook_taxonomy_term_view_alter()
- * @see hook_user_view_alter()
+ * @see hook_ENTITY_TYPE_view_alter()
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+  if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
+    // Change its weight.
+    $build['an_additional_field']['#weight'] = -10;
+
+    // Add a #post_render callback to act on the rendered HTML of the entity.
+    $build['#post_render'][] = 'my_module_node_post_render';
+  }
+}
+
+/**
+ * Alter the results of the entity build array for a particular entity type.
+ *
+ * This hook is called after the content has been assembled in a structured
+ * array and may be used for doing processing which requires that the complete
+ * entity content structure has been built.
+ *
+ * If a module wishes to act on the rendered HTML of the entity rather than the
+ * structured content array, it may use this hook to add a #post_render
+ * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
+ * the particular entity type template, if there is one (e.g., node.html.twig).
+ * See drupal_render() and _theme() for details.
+ *
+ * @param array &$build
+ *   A renderable array representing the entity content.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object being rendered.
+ * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+ *   The entity view display holding the display options configured for the
+ *   entity components.
+ *
+ * @see hook_ENTITY_TYPE_view()
+ * @see hook_entity_view_alter()
+ *
+ * @ingroup entity_crud
+ */
+function hook_ENTITY_TYPE_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -522,6 +1075,8 @@ function hook_entity_view_alter(array &$build, Drupal\Core\Entity\EntityInterfac
  *   for the entity components, keyed by bundle name.
  * @param string $view_mode
  *   The view mode.
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_prepare_view($entity_type_id, array $entities, array $displays, $view_mode) {
   // Load a specific node into the user object for later theming.
@@ -554,6 +1109,8 @@ function hook_entity_prepare_view($entity_type_id, array $entities, array $displ
  * @param array $context
  *   Array with additional context information, currently only contains the
  *   langcode the entity is viewed in.
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInterface $entity, $context) {
   // For nodes, change the view mode when it is teaser.
@@ -563,7 +1120,7 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
 }
 
 /**
- * Alters entity renderable values before cache checking in drupal_render().
+ * Alter entity renderable values before cache checking in drupal_render().
  *
  * Invoked for a specific entity type.
  *
@@ -582,13 +1139,16 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
  *
  * @see drupal_render()
  * @see \Drupal\Core\Entity\EntityViewBuilder
+ * @see hook_entity_build_defaults_alter()
+ *
+ * @ingroup entity_crud
  */
 function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode, $langcode) {
 
 }
 
 /**
- * Alters entity renderable values before cache checking in drupal_render().
+ * Alter entity renderable values before cache checking in drupal_render().
  *
  * The values in the #cache key of the renderable array are used to determine if
  * a cache entry exists for the entity's rendered output. Ideally only values
@@ -605,13 +1165,16 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
  *
  * @see drupal_render()
  * @see \Drupal\Core\Entity\EntityViewBuilder
+ * @see hook_ENTITY_TYPE_build_defaults_alter()
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode, $langcode) {
 
 }
 
 /**
- * Alters the settings used for displaying an entity.
+ * Alter the settings used for displaying an entity.
  *
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
  *   The entity view display that will be used to display the entity
@@ -621,6 +1184,8 @@ function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\Ent
  *   - entity_type: The entity type, e.g., 'node' or 'user'.
  *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, array $context) {
   // Leave field labels out of the search index.
@@ -644,6 +1209,8 @@ function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDi
  *   - entity: The entity being rendered.
  *   - view_mode: The view mode; for example, 'full' or 'teaser'.
  *   - display: The EntityDisplay holding the display options.
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_display_build_alter(&$build, $context) {
   // Append RDF term mappings on displayed taxonomy links.
@@ -678,6 +1245,9 @@ function hook_entity_display_build_alter(&$build, $context) {
  *   An associative array containing the current state of the form.
  *
  * @see \Drupal\Core\Entity\EntityForm::prepareEntity()
+ * @see hook_ENTITY_TYPE_prepare_form()
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
   if ($operation == 'edit') {
@@ -687,7 +1257,33 @@ function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $
 }
 
 /**
- * Alters the settings used for displaying an entity form.
+ * Acts on a particular type of entity object about to be in an entity form.
+ *
+ * This can be typically used to pre-fill entity values or change the form state
+ * before the entity form is built. It is invoked just once when first building
+ * the entity form. Rebuilds will not trigger a new invocation.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity that is about to be shown on the form.
+ * @param $operation
+ *   The current operation.
+ * @param array $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * @see \Drupal\Core\Entity\EntityForm::prepareEntity()
+ * @see hook_entity_prepare_form()
+ *
+ * @ingroup entity_crud
+ */
+function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, array &$form_state) {
+  if ($operation == 'edit') {
+    $entity->label->value = 'Altered label';
+    $form_state['mymodule']['label_altered'] = TRUE;
+  }
+}
+
+/**
+ * Alter the settings used for displaying an entity form.
  *
  * @param \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display
  *   The entity_form_display object that will be used to display the entity form
@@ -697,6 +1293,8 @@ function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $
  *   - entity_type: The entity type, e.g., 'node' or 'user'.
  *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - form_mode: The form mode, e.g. 'default', 'profile', 'register'...
+ *
+ * @ingroup entity_crud
  */
 function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display, array $context) {
   // Hide the 'user_picture' field from the register form.
@@ -736,7 +1334,7 @@ function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $en
 }
 
 /**
- * Alters base field definitions for a content entity type.
+ * Alter base field definitions for a content entity type.
  *
  * @param \Drupal\Core\Field\FieldDefinitionInterface[] $fields
  *   The array of base field definitions for the entity type.
@@ -792,7 +1390,7 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
 }
 
 /**
- * Alters bundle field definitions.
+ * Alter bundle field definitions.
  *
  * @param \Drupal\Core\Field\FieldDefinitionInterface[] $fields
  *   The array of bundle field definitions.
@@ -845,7 +1443,7 @@ function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface 
 }
 
 /**
- * Alters field storage definitions for a content entity type.
+ * Alter field storage definitions for a content entity type.
  *
  * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $fields
  *   The array of field storage definitions for the entity type.
@@ -928,7 +1526,7 @@ function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinition
 }
 
 /**
- * Alters the default access behavior for a given field.
+ * Alter the default access behavior for a given field.
  *
  * Use this hook to override access grants from another module. Note that the
  * original default access flag is masked under the ':default' key.

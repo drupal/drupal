@@ -20,7 +20,8 @@ class NodeCreationTest extends NodeTestBase {
   /**
    * Modules to enable.
    *
-   * Enable dummy module that implements hook_node_insert() for exceptions.
+   * Enable dummy module that implements hook_ENTITY_TYPE_insert() for
+   * exceptions (function node_test_exception_node_insert() ).
    *
    * @var array
    */

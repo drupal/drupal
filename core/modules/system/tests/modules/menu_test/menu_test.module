@@ -167,21 +167,21 @@ function menu_test_menu_name($new_name = '') {
 }
 
 /**
- * Implements hook_menu_link_insert().
+ * Implements hook_ENTITY_TYPE_insert() for menu_link entities.
  */
 function menu_test_menu_link_insert(MenuLink $item) {
   menu_test_static_variable('insert');
 }
 
 /**
- * Implements hook_menu_link_update().
+ * Implements hook_ENTITY_TYPE_update() for menu_link entities.
  */
 function menu_test_menu_link_update(MenuLink $item) {
   menu_test_static_variable('update');
 }
 
 /**
- * Implements hook_menu_link_delete().
+ * Implements hook_ENTITY_TYPE_delete() for menu_link entities.
  */
 function menu_test_menu_link_delete(MenuLink $item) {
   menu_test_static_variable('delete');

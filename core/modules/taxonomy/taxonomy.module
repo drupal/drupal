@@ -746,7 +746,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
  */
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
  */
 function taxonomy_node_insert(EntityInterface $node) {
   // Add taxonomy index entries for the node.
@@ -800,7 +800,7 @@ function taxonomy_build_node_index($node) {
 }
 
 /**
- * Implements hook_node_update().
+ * Implements hook_ENTITY_TYPE_update() for node entities.
  */
 function taxonomy_node_update(EntityInterface $node) {
   // Always rebuild the node's taxonomy index entries on node save.
@@ -809,7 +809,7 @@ function taxonomy_node_update(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
  */
 function taxonomy_node_predelete(EntityInterface $node) {
   // Clean up the {taxonomy_index} table when nodes are deleted.
@@ -829,7 +829,7 @@ function taxonomy_delete_node_index(EntityInterface $node) {
 }
 
 /**
- * Implements hook_taxonomy_term_delete().
+ * Implements hook_ENTITY_TYPE_delete() for taxonomy_term entities.
  */
 function taxonomy_taxonomy_term_delete(Term $term) {
   if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {

@@ -35,6 +35,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   'article'. Entity IDs may contain dots/periods. The entire remaining string
  *   after the config_prefix in a config name forms the entity ID. Additional or
  *   custom suffixes are not possible.
+ *
+ * @ingroup entity_api
  */
 class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStorageInterface, ImportableEntityStorageInterface {
 

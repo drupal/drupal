@@ -85,6 +85,8 @@
  *   The block plugin instance.
  *
  * @see hook_block_view_BASE_BLOCK_ID_alter()
+ * @see entity_crud
+ *
  * @ingroup block_api
  */
 function hook_block_view_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {
@@ -113,6 +115,8 @@ function hook_block_view_alter(array &$build, \Drupal\block\BlockPluginInterface
  *   The block plugin instance.
  *
  * @see hook_block_view_alter()
+ * @see entity_crud
+ *
  * @ingroup block_api
  */
 function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockPluginInterface $block) {

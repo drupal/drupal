@@ -434,7 +434,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
 }
 
 /**
- * Implements hook_node_view_alter().
+ * Implements hook_ENTITY_TYPE_view_alter() for node entities.
  */
 function comment_node_view_alter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
   if (\Drupal::moduleHandler()->moduleExists('history')) {
@@ -639,7 +639,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for field_ui_field_overview_form.
  */
 function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
   $request = \Drupal::request();
@@ -886,7 +886,7 @@ function comment_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
  */
 function comment_user_predelete($account) {
   $entity_query = \Drupal::entityQuery('comment');

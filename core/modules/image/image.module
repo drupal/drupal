@@ -228,7 +228,7 @@ function image_file_move(File $file, File $source) {
 }
 
 /**
- * Implements hook_file_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for file entities.
  */
 function image_file_predelete(File $file) {
   // Delete any image derivatives of this image.

@@ -224,7 +224,7 @@ function rdf_entity_prepare_view($entity_type, array $entities, array $displays)
 }
 
 /**
- * Implements hook_comment_load().
+ * Implements hook_ENTITY_TYPE_load() for comment entities.
  */
 function rdf_comment_load($comments) {
   foreach ($comments as $comment) {

@@ -8,7 +8,7 @@
 use Drupal\node\NodeInterface;
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
  */
 function node_test_exception_node_insert(NodeInterface $node) {
   if ($node->getTitle() == 'testing_transaction_exception') {

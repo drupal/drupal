@@ -150,7 +150,7 @@ function file_test_set_return($op, $value) {
 }
 
 /**
- * Implements hook_file_load().
+ * Implements hook_ENTITY_TYPE_load() for file entities.
  */
 function file_test_file_load($files) {
   foreach ($files as $file) {
@@ -178,14 +178,14 @@ function file_test_file_download($uri) {
 }
 
 /**
- * Implements hook_file_insert().
+ * Implements hook_ENTITY_TYPE_insert() for file entities.
  */
 function file_test_file_insert(File $file) {
   _file_test_log_call('insert', array($file->id()));
 }
 
 /**
- * Implements hook_file_update().
+ * Implements hook_ENTITY_TYPE_update() for file entities.
  */
 function file_test_file_update(File $file) {
   _file_test_log_call('update', array($file->id()));
@@ -206,7 +206,7 @@ function file_test_file_move(File $file, File $source) {
 }
 
 /**
- * Implements hook_file_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for file entities.
  */
 function file_test_file_predelete(File $file) {
   _file_test_log_call('delete', array($file->id()));

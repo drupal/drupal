@@ -234,7 +234,7 @@ function book_form_update($form, $form_state) {
 }
 
 /**
- * Implements hook_node_load().
+ * Implements hook_ENTITY_TYPE_load() for node entities.
  */
 function book_node_load($nodes) {
   /** @var \Drupal\book\BookManagerInterface $book_manager */
@@ -248,7 +248,7 @@ function book_node_load($nodes) {
 }
 
 /**
- * Implements hook_node_view().
+ * Implements hook_ENTITY_TYPE_view() for node entities.
  */
 function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode == 'full') {
@@ -268,7 +268,7 @@ function book_node_view(array &$build, EntityInterface $node, EntityViewDisplayI
 }
 
 /**
- * Implements hook_node_presave().
+ * Implements hook_ENTITY_TYPE_presave() for node entities.
  */
 function book_node_presave(EntityInterface $node) {
   // Make sure a new node gets a new menu link.
@@ -278,7 +278,7 @@ function book_node_presave(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
  */
 function book_node_insert(EntityInterface $node) {
   /** @var \Drupal\book\BookManagerInterface $book_manager */
@@ -287,7 +287,7 @@ function book_node_insert(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_update().
+ * Implements hook_ENTITY_TYPE_update() for node entities.
  */
 function book_node_update(EntityInterface $node) {
   /** @var \Drupal\book\BookManagerInterface $book_manager */
@@ -296,7 +296,7 @@ function book_node_update(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
  */
 function book_node_predelete(EntityInterface $node) {
   if (!empty($node->book['bid'])) {
@@ -555,7 +555,7 @@ function book_type_is_allowed($type) {
 }
 
 /**
- * Implements hook_node_type_update().
+ * Implements hook_ENTITY_TYPE_update() for node_type entities.
  *
  * Updates book.settings configuration object if the machine-readable name of a
  * node type is changed.

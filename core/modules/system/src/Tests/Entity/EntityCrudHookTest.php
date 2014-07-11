@@ -17,13 +17,13 @@ use Drupal\Core\Language\LanguageInterface;
  * deleting an entity.
  *
  * Tested hooks are:
- * - hook_entity_insert()
- * - hook_entity_load()
- * - hook_entity_update()
- * - hook_entity_predelete()
- * - hook_entity_delete()
- * As well as all type-specific hooks, like hook_node_insert(),
- * hook_comment_update(), etc.
+ * - hook_entity_insert() and hook_ENTITY_TYPE_insert()
+ * - hook_entity_load() and hook_ENTITY_TYPE_load()
+ * - hook_entity_update() and hook_ENTITY_TYPE_update()
+ * - hook_entity_predelete() and hook_ENTITY_TYPE_predelete()
+ * - hook_entity_delete() and hook_ENTITY_TYPE_delete()
+ *
+ * These hooks are each tested for several entity types.
  *
  * @group Entity
  */

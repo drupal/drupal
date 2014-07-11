@@ -233,7 +233,7 @@ function forum_node_validate(EntityInterface $node, $form, &$form_state) {
 }
 
 /**
- * Implements hook_node_presave().
+ * Implements hook_ENTITY_TYPE_presave() for node entities.
  *
  * Assigns the forum taxonomy when adding a topic from within a forum.
  */
@@ -256,7 +256,7 @@ function forum_node_presave(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_update().
+ * Implements hook_ENTITY_TYPE_update() for node entities.
  */
 function forum_node_update(EntityInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
@@ -298,7 +298,7 @@ function forum_node_update(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
  */
 function forum_node_insert(EntityInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
@@ -316,7 +316,7 @@ function forum_node_insert(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
  */
 function forum_node_predelete(EntityInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
@@ -328,7 +328,7 @@ function forum_node_predelete(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_load().
+ * Implements hook_ENTITY_TYPE_load() for node entities.
  */
 function forum_node_load($nodes) {
   $node_vids = array();
@@ -358,7 +358,7 @@ function forum_permission() {
 }
 
 /**
- * Implements hook_comment_update().
+ * Implements hook_ENTITY_TYPE_update() for comment entities.
  */
 function forum_comment_update(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
@@ -367,7 +367,7 @@ function forum_comment_update(CommentInterface $comment) {
 }
 
 /**
- * Implements hook_comment_insert().
+ * Implements hook_ENTITY_TYPE_insert() for comment entities.
  */
 function forum_comment_insert(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
@@ -376,7 +376,7 @@ function forum_comment_insert(CommentInterface $comment) {
 }
 
 /**
- * Implements hook_comment_delete().
+ * Implements hook_ENTITY_TYPE_delete() for comment entities.
  */
 function forum_comment_delete(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {

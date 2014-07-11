@@ -541,7 +541,7 @@ function toolbar_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update().
+ * Implements hook_ENTITY_TYPE_update() for menu_link entities.
  */
 function toolbar_menu_link_update(MenuLinkInterface $menu_link) {
   if ($menu_link->menu_name === 'admin') {
@@ -550,14 +550,14 @@ function toolbar_menu_link_update(MenuLinkInterface $menu_link) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update().
+ * Implements hook_ENTITY_TYPE_update() for user entities.
  */
 function toolbar_user_update(UserInterface $user) {
   _toolbar_clear_user_cache($user->id());
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update().
+ * Implements hook_ENTITY_TYPE_update() for user_role entities.
  */
 function toolbar_user_role_update(RoleInterface $role) {
   _toolbar_clear_user_cache();

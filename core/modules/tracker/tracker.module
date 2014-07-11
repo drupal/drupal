@@ -154,7 +154,7 @@ function _tracker_user_access($account) {
 }
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
  *
  * Adds new tracking information for this node since it's new.
  */
@@ -163,7 +163,7 @@ function tracker_node_insert(NodeInterface $node, $arg = 0) {
 }
 
 /**
- * Implements hook_node_update().
+ * Implements hook_ENTITY_TYPE_update() for node entities.
  *
  * Adds tracking information for this node since it's been updated.
  */
@@ -172,7 +172,7 @@ function tracker_node_update(NodeInterface $node, $arg = 0) {
 }
 
 /**
- * Implements hook_node_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
  *
  * Deletes tracking information for a node.
  */
@@ -186,7 +186,7 @@ function tracker_node_predelete(EntityInterface $node, $arg = 0) {
 }
 
 /**
- * Implements hook_comment_update().
+ * Implements hook_ENTITY_TYPE_update() for comment entities.
  */
 function tracker_comment_update(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {
@@ -200,7 +200,7 @@ function tracker_comment_update(CommentInterface $comment) {
 }
 
 /**
- * Implements hook_comment_insert().
+ * Implements hook_ENTITY_TYPE_insert() for comment entities.
  */
 function tracker_comment_insert(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node' && $comment->isPublished()) {
@@ -209,7 +209,7 @@ function tracker_comment_insert(CommentInterface $comment) {
 }
 
 /**
- * Implements hook_comment_delete().
+ * Implements hook_ENTITY_TYPE_delete() for comment entities.
  */
 function tracker_comment_delete(CommentInterface $comment) {
   if ($comment->getCommentedEntityTypeId() == 'node') {

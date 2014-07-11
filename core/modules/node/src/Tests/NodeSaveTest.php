@@ -89,7 +89,7 @@ class NodeSaveTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
     $this->assertEqual($node->getCreatedTime(), $created, 'Updating a node preserves "created" timestamp.');
 
-    // Programmatically set the timestamps using hook_node_presave.
+    // Programmatically set the timestamps using hook_ENTITY_TYPE_presave().
     $node->title = 'testing_node_presave';
 
     $node->save();
@@ -124,8 +124,8 @@ class NodeSaveTest extends NodeTestBase {
   /**
    * Tests node presave and static node load cache.
    *
-   * This test determines changes in hook_node_presave() and verifies that the
-   * static node load cache is cleared upon save.
+   * This test determines changes in hook_ENTITY_TYPE_presave() and verifies
+   * that the static node load cache is cleared upon save.
    */
   function testDeterminingChanges() {
     // Initial creation.
@@ -156,9 +156,9 @@ class NodeSaveTest extends NodeTestBase {
   /**
    * Tests saving a node on node insert.
    *
-   * This test ensures that a node has been fully saved when hook_node_insert()
-   * is invoked, so that the node can be saved again in a hook implementation
-   * without errors.
+   * This test ensures that a node has been fully saved when
+   * hook_ENTITY_TYPE_insert() is invoked, so that the node can be saved again
+   * in a hook implementation without errors.
    *
    * @see node_test_node_insert()
    */

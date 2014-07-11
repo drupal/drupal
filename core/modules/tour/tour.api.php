@@ -6,6 +6,11 @@
  */
 
 /**
+ * @addtogroup hooks
+ * @{
+ */
+
+/**
  * Allow modules to alter tour items before render.
  *
  * @param array $tour_tips
@@ -37,52 +42,5 @@ function hook_tour_tips_info_alter(&$info) {
 }
 
 /**
- * Act on tour objects when loaded.
- *
- * @param array $entities
- *   An array of \Drupal\tour\Entity\Tour objects, indexed by id.
+ * @} End of "addtogroup hooks".
  */
-function hook_tour_load($entities) {
-  if (isset($entities['tour-entity-create-test-en'])) {
-    $entities['tour-entity-create-test-en']->loaded = 'Load hooks work';
-  }
-}
-
-/**
- * Act on a tour being inserted or updated.
- *
- * This hook is invoked before the tour object is saved to configuration.
- *
- * @param \Drupal\tour\Entity\Tour $entity
- *   The tour object.
- *
- * @see hook_tour_insert()
- * @see hook_tour_update()
- */
-function hook_tour_presave($entity) {
-  if ($entity->id() == 'tour-entity-create-test-en') {
-    $entity->set('label', $entity->label() . ' alter');
-  }
-}
-
-/**
- * Respond to creation of a new tour.
- *
- * @param \Drupal\tour\Entity\Tour $entity
- *   The tour object being inserted.
- */
-function hook_tour_insert($entity) {
-  \Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
-  \Drupal\Core\Cache\Cache::deleteTags(array('tour_items'));
-}
-
-/**
- * Respond to updates to a tour object.
- *
- * @param \Drupal\tour\Entity\Tour $entity
- *   The tour object being updated.
- */
-function hook_tour_update($entity) {
-  \Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
-  \Drupal\Core\Cache\Cache::deleteTags(array('tour_items'));
-}

@@ -12,6 +12,8 @@ use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Defines a common interface for entity view controller classes.
+ *
+ * @ingroup entity_api
  */
 interface EntityViewBuilderInterface {
 

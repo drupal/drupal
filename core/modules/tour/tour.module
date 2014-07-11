@@ -103,14 +103,14 @@ function tour_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_tour_insert().
+ * Implements hook_ENTITY_TYPE_insert() for tour entities.
  */
 function tour_tour_insert($entity) {
   \Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
 }
 
 /**
- * Implements hook_tour_update().
+ * Implements hook_ENTITY_TYPE_update() for tour entities.
  */
 function tour_tour_update($entity) {
   \Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();

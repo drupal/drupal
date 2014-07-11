@@ -48,7 +48,7 @@ function statistics_permission() {
 }
 
 /**
- * Implements hook_node_view().
+ * Implements hook_ENTITY_TYPE_view() for node entities.
  */
 function statistics_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if (!$node->isNew() && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
@@ -195,7 +195,7 @@ function _statistics_format_item($title, $path) {
 }
 
 /**
- * Implements hook_node_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
  */
 function statistics_node_predelete(EntityInterface $node) {
   // clean up statistics table when node is deleted

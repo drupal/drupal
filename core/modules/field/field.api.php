@@ -253,6 +253,8 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  *   The field as it will be post-update.
  * @param \Drupal\field\FieldConfigInterface $prior_field
  *   The field as it is pre-update.
+ *
+ * @see entity_crud
  */
 function hook_field_config_update_forbid(\Drupal\field\FieldConfigInterface $field, \Drupal\field\FieldConfigInterface $prior_field) {
   // A 'list' field stores integer keys mapped to display values. If

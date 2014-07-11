@@ -34,6 +34,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * the defined base fields. Entity types can override
  * ContentEntityDatabaseStorage::getSchema() to customize the generated
  * schema; e.g., to add additional indexes.
+ *
+ * @ingroup entity_api
  */
 class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface {
 
@@ -350,15 +352,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * Maps from storage records to entity objects.
-   *
-   * This will attach fields, if the entity is fieldable. It calls
-   * hook_entity_load() for modules which need to add data to all entities.
-   * It also calls hook_TYPE_load() on the loaded entities. For example
-   * hook_node_load() or hook_user_load(). If your hook_TYPE_load()
-   * expects special parameters apart from the queried entities, you can set
-   * $this->hookLoadArguments prior to calling the method.
-   * See Drupal\node\NodeStorage::attachLoad() for an example.
+   * Maps from storage records to entity objects, and attaches fields.
    *
    * @param array $records
    *   Associative array of query results, keyed on the entity ID.

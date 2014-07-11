@@ -157,7 +157,7 @@ function node_access_test_form_node_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_node_load().
+ * Implements hook_ENTITY_TYPE_load() for node entities.
  */
 function node_access_test_node_load($nodes) {
   $result = db_query('SELECT nid, private FROM {node_access_test} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
@@ -167,21 +167,21 @@ function node_access_test_node_load($nodes) {
 }
 
 /**
- * Implements hook_node_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for node entities.
  */
 function node_access_test_node_predelete(NodeInterface $node) {
   db_delete('node_access_test')->condition('nid', $node->id())->execute();
 }
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_ENTITY_TYPE_insert() for node entities.
  */
 function node_access_test_node_insert(NodeInterface $node) {
   _node_access_test_node_write($node);
 }
 
 /**
- * Implements hook_nodeapi_update().
+ * Implements hook_ENTITY_TYPE_update() for node entities.
  */
 function node_access_test_node_update(NodeInterface $node) {
   _node_access_test_node_write($node);

@@ -87,7 +87,7 @@ function file_element_info() {
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\file\Entity\File::loadMultiple().
  *
- * @see hook_file_load()
+ * @see hook_ENTITY_TYPE_load()
  * @see file_load()
  * @see entity_load()
  * @see \Drupal\Core\Entity\Query\EntityQueryInterface
@@ -113,7 +113,7 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
  * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
  *   Use \Drupal\file\Entity\File::load().
  *
- * @see hook_file_load()
+ * @see hook_ENTITY_TYPE_load()
  * @see file_load_multiple()
  */
 function file_load($fid, $reset = FALSE) {
@@ -1002,7 +1002,7 @@ function file_progress_implementation() {
 }
 
 /**
- * Implements hook_file_predelete().
+ * Implements hook_ENTITY_TYPE_predelete() for file entities.
  */
 function file_file_predelete(File $file) {
   // TODO: Remove references to a file that is in-use.

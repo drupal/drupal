@@ -15,7 +15,7 @@ namespace Drupal\node\Tests;
 class NodeEntityViewModeAlterTest extends NodeTestBase {
 
   /**
-   * Enable dummy module that implements hook_node_view().
+   * Enable dummy module that implements hook_ENTITY_TYPE_view() for nodes.
    */
   public static $modules = array('node_test');
 

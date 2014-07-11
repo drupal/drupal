@@ -32,16 +32,16 @@
  * @section store_retrieve Storing and retrieving data
  *
  * - @link entity_api Entities @endlink
+ * - @link field Fields @endlink
  * - @link config_api Configuration API @endlink
  * - @link state_api State API @endlink
- * - @link field Fields @endlink
- * - @link node_overview Node system @endlink
  * - @link views_overview Views @endlink
  * - @link database Database abstraction layer @endlink
  *
  * @section other_essentials Other essential APIs
  *
  * - @link plugin_api Plugins @endlink
+ * - @link container Services and the Dependency Injection Container @endlink
  * - @link i18n Internationalization @endlink
  * - @link cache Caching @endlink
  * - @link utility Utility classes and functions @endlink
@@ -53,7 +53,6 @@
  *
  * - @link batch Batch API @endlink
  * - @link queue Queue API @endlink
- * - @link container Services and the Dependency Injection Container @endlink
  * - @link typed_data Typed Data @endlink
  * - @link testing Automated tests @endlink
  * - @link third_party Integrating third-party applications @endlink
@@ -391,12 +390,15 @@
  *     entities), to provide an administrative overview for your entities.
  *   - add and edit forms, or default form: Define a class (or two) that
  *     extend(s) \Drupal\Core\Entity\EntityForm to provide add and edit forms
- *     for your entities.
+ *     for your entities. For content entities, base class
+ *     \Drupal\Core\Entity\ContentEntityForm is a better starting point.
  *   - delete form: Define a class that extends
  *     \Drupal\Core\Entity\EntityConfirmFormBase to provide a delete
  *     confirmation form for your entities.
- *   - view_buider: For content entities, define a class that extends
- *     \Drupal\Core\Entity\EntityViewBuilder, to display a single entity.
+ *   - view_builder: For content entities and config entities that need to be
+ *     viewed, define a class that implements
+ *     \Drupal\Core\Entity\EntityViewBuilderInterface (usually extending
+ *     \Drupal\Core\Entity\EntityViewBuilder), to display a single entity.
  *   - translation: For translatable content entities (if the 'translatable'
  *     annotation has value TRUE), define a class that extends
  *     \Drupal\content_translation\ContentTranslationHandler, to translate
@@ -405,7 +407,14 @@
  *   - access: If your configuration entity has complex permissions, you might
  *     need an access controller, implementing
  *     \Drupal\Core\Entity\EntityAccessControllerInterface, but most entities
- *     can just use the 'admin_permission' annotation instead.
+ *     can just use the 'admin_permission' annotation instead. Note that if you
+ *     are creating your own access controller, you should override the
+ *     checkAccess() and checkCreateAccess() methods, not access().
+ *   - storage: A class implementing
+ *     \Drupal\Core\Entity\EntityStorageInterface. If not specified, content
+ *     entities will use \Drupal\Core\Entity\ContentEntityDatabaseStorage, and
+ *     config entities will use \Drupal\Core\Config\Entity\ConfigEntityStorage.
+ *     You can extend one of these classes to provide custom behavior.
  * - For content entities, the annotation will refer to a number of database
  *   tables and their fields. These annotation properties, such as 'base_table',
  *   'data_table', 'entity_keys', etc., are documented on
@@ -436,7 +445,9 @@
  *   'bundle_entity_type' annotation on the entity type class. For example, for
  *   the Node entity, the bundle class is \Drupal\node\Entity\NodeType, whose
  *   machine name is 'node_type'. This is the annotation value for
- *  'bundle_entity_type' on the \Drupal\node\Entity\Node class.
+ *   'bundle_entity_type' on the \Drupal\node\Entity\Node class. Also, the
+ *   bundle config entity type annotation must have a 'bundle_of' entry,
+ *   giving the machine name of the entity type it is acting as a bundle for.
  * - Additional annotations can be seen on entity class examples such as
  *   \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
  *   (configuration). These annotations are documented on
@@ -473,7 +484,25 @@
  *       "default" = "Drupal\block\BlockForm",
  *   @endcode
  *
- * @section load_query Loading and querying entities
+ * @section bundle Defining a content entity bundle
+ * For entity types that use bundles, such as Node (bundles are content types)
+ * and Taxonomy (bundles are vocabularies), modules and install profiles can
+ * define bundles by supplying default configuration in their config/install
+ * directories. (See the @link config_api Configuration API topic @endlink for
+ * general information about configuration.)
+ *
+ * There are several good examples of this in Drupal Core:
+ * - The Forum module defines a content type in node.type.forum.yml and a
+ *   vocabulary in taxonomy.vocabulary.forums.yml
+ * - The Book module defines a content type in node.type.book.yml
+ * - The Standard install profile defines Page and Article content types in
+ *   node.type.page.yml and node.type.article.yml, a Tags vocabulary in
+ *   taxonomy.vocabulary.tags.yml, and a Node comment type in
+ *   comment.type.comment.yml. This profile's configuration is especially
+ *   instructive, because it also adds several fields to the Article type, and
+ *   it sets up view and form display modes for the node types.
+ *
+ * @section load_query Loading, querying, and rendering entities
  * To load entities, use the entity storage manager, which is an object
  * implementing \Drupal\Core\Entity\EntityStorageInterface that you can
  * retrieve with:
@@ -523,6 +552,24 @@
  * $files = $storage->loadMultiple($fids);
  * @endcode
  *
+ * The normal way of viewing entities is by using a route, as described in the
+ * sections above. If for some reason you need to render an entity in code in a
+ * particular view mode, you can use an entity view builder, which is an object
+ * implementing \Drupal\Core\Entity\EntityViewBuilderInterface that you can
+ * retrieve with:
+ * @code
+ * $view_builder = \Drupal::entityManager()->getViewBuilder('your_entity_type');
+ * // Or if you have a $container variable:
+ * $view_builder = $container->get('entity.manager')->getViewBuilder('your_entity_type');
+ * @endcode
+ * Then, to build and render the entity:
+ * @code
+ * // You can omit the language ID if the default language is being used.
+ * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
+ * // $build is a render array.
+ * $rendered = drupal_render($build);
+ * @endcode
+ *
  * @section sec_access Access checking on entities
  * Entity types define their access permission scheme in their annotation.
  * Access permissions can be quite complex, so you should not assume any
@@ -536,25 +583,21 @@
  * The interface related to access checking in entities and fields is
  * \Drupal\Core\Access\AccessibleInterface.
  *
+ * The default entity access controller invokes two hooks while checking
+ * access on a single entity: hook_entity_access() is invoked first, and
+ * then hook_ENTITY_TYPE_access() (where ENTITY_TYPE is the machine name
+ * of the entity type). If no module returns a TRUE or FALSE value from
+ * either of these hooks, then the entity's default access checking takes
+ * place. For create operations (creating a new entity), the hooks that
+ * are invoked are hook_entity_create_access() and
+ * hook_ENTITY_TYPE_create_access() instead.
+ *
+ * The Node entity type has a complex system for determining access, which
+ * developers can interact with. This is described in the
+ * @link node_access Node access topic. @endlink
+ *
  * @see i18n
- * @}
- */
-
-/**
- * @defgroup node_overview Nodes Overview
- * @{
- * Overview of how to interact with the Node system
- *
- * @todo write this
- *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic. This topic should
- * describe node access, the node classes/interfaces, and the node hooks that a
- * developer would need to know about, at a high level, and link to more
- * detailed information.
- *
- * @see node_access
- * @see node_api_hooks
+ * @see entity_crud
  * @}
  */
 
