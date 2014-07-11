@@ -16,9 +16,10 @@
   "rules": {
     "eqeqeq": [2, "smart"],
     "guard-for-in": 2,
+    "no-mixed-spaces-and-tabs": 2,
+    "no-trailing-spaces": 2,
     "no-undef": 2,
-    //"no-unused-vars": [2, {"vars": "local", "args": "none"}],
-    "no-unused-vars": 0,
+    "no-unused-vars": [2, {"vars": "local", "args": "none"}],
     "strict": 2,
     "new-cap": 0,
     "quotes": 0,
