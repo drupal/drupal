@@ -47,34 +47,49 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The human-readable label of this role.
    *
    * @var string
    */
-  public $label;
+  protected $label;
 
   /**
    * The weight of this role in administrative listings.
    *
    * @var int
    */
-  public $weight;
+  protected $weight;
 
   /**
    * The permissions belonging to this role.
    *
    * @var array
    */
-  public $permissions = array();
+  protected $permissions = array();
 
   /**
    * {@inheritdoc}
    */
   public function getPermissions() {
     return $this->permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->get('weight');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->set('weight', $weight);
+    return $this;
   }
 
   /**

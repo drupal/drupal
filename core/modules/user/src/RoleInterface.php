@@ -41,8 +41,7 @@ interface RoleInterface extends ConfigEntityInterface {
    * @param string $permission
    *   The permission to grant.
    *
-   * @return RoleInterface
-   *   The called object for chaining.
+   * @return $this
    */
   public function grantPermission($permission);
 
@@ -52,9 +51,26 @@ interface RoleInterface extends ConfigEntityInterface {
    * @param string $permission
    *   The permission to revoke.
    *
-   * @return RoleInterface
-   *   The called object for chaining.
+   * @return $this
    */
   public function revokePermission($permission);
+
+  /**
+   * Returns the weight.
+   *
+   * @return int
+   *   The weight of this role.
+   */
+  public function getWeight();
+
+  /**
+   * Sets the weight to the given value.
+   *
+   * @param int $weight
+   *   The desired weight.
+   *
+   * @return $this
+   */
+  public function setWeight($weight);
 
 }

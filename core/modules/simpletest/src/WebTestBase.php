@@ -621,7 +621,7 @@ abstract class WebTestBase extends TestBase {
       // Grant the specified permissions to the role, if any.
       if (!empty($permissions)) {
         user_role_grant_permissions($role->id(), $permissions);
-        $assigned_permissions = entity_load('user_role', $role->id())->permissions;
+        $assigned_permissions = entity_load('user_role', $role->id())->getPermissions();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
         if (!$missing_permissions) {
           $this->pass(String::format('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), 'Role');
