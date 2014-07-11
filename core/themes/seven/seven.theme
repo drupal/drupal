@@ -273,9 +273,7 @@ function seven_form_node_form_alter(&$form, &$form_state) {
   $node = $form_state['controller']->getEntity();
 
   $form['#theme'] = array('node_edit_form');
-  $form['#attached'] = array(
-    'css' => array(drupal_get_path('module', 'node') . '/css/node.module.css'),
-  );
+  $form['#attached']['css'][] = drupal_get_path('module', 'node') . '/css/node.module.css';
 
   $form['advanced']['#type'] = 'container';
   $is_new = !$node->isNew() ? format_date($node->getChangedTime(), 'short') : t('Not saved yet');
