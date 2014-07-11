@@ -2495,36 +2495,6 @@ function drupal_clear_js_cache() {
 }
 
 /**
- * Converts a PHP variable into its JavaScript equivalent.
- *
- * We use HTML-safe strings, with several characters escaped.
- *
- * @see drupal_json_decode()
- *
- * @ingroup php_wrappers
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Serialization\Json::encode().
- */
-function drupal_json_encode($var) {
-  return Json::encode($var);
-}
-
-/**
- * Converts an HTML-safe JSON string into its PHP equivalent.
- *
- * @see drupal_json_encode()
- *
- * @ingroup php_wrappers
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Serialization\Json::decode().
- */
-function drupal_json_decode($var) {
-  return Json::decode($var);
-}
-
-/**
  * Stores the current page in the cache.
  *
  * If page_compression is enabled, a gzipped version of the page is stored in
