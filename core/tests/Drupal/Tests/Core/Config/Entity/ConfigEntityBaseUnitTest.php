@@ -186,11 +186,11 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $method = new \ReflectionMethod('\Drupal\Core\Config\Entity\ConfigEntityBase', 'addDependency');
     $method->setAccessible(TRUE);
     $method->invoke($this->entity, 'module', $this->provider);
-    $method->invoke($this->entity, 'module', 'Core');
+    $method->invoke($this->entity, 'module', 'core');
     $method->invoke($this->entity, 'module', 'node');
     $dependencies = $this->entity->get('dependencies');
     $this->assertNotContains($this->provider, $dependencies['module']);
-    $this->assertNotContains('Core', $dependencies['module']);
+    $this->assertNotContains('core', $dependencies['module']);
     $this->assertContains('node', $dependencies['module']);
 
     // Test sorting of dependencies.

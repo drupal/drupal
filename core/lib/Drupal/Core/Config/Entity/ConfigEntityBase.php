@@ -358,7 +358,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     // explicitly declare the dependency. An explicit dependency on Core, which
     // provides some plugins, is also not needed.
     // @see \Drupal\Core\Config\Entity\ConfigEntityDependency::hasDependency()
-    if ($type == 'module' && ($name == $this->getEntityType()->getProvider() || $name == 'Core')) {
+    if ($type == 'module' && ($name == $this->getEntityType()->getProvider() || $name == 'core')) {
       return $this;
     }
 

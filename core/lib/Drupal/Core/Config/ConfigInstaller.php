@@ -107,6 +107,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $extension_config = $this->configFactory->get('core.extension');
     $enabled_extensions = array_keys((array) $extension_config->get('module'));
     $enabled_extensions += array_keys((array) $extension_config->get('theme'));
+    // Core can provide configuration.
+    $enabled_extensions[] = 'core';
 
     foreach ($collection_info->getCollectionNames(TRUE) as $collection) {
       $config_to_install = $this->listDefaultConfigCollection($collection, $type, $name, $enabled_extensions);

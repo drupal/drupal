@@ -9,6 +9,7 @@ namespace Drupal\Core\Plugin\Discovery;
 
 use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery as ComponentAnnotatedClassDiscovery;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Defines a discovery mechanism to find annotated plugins in PSR-0 namespaces.
@@ -105,7 +106,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
     preg_match('|^Drupal\\\\(?<provider>[\w]+)\\\\|', $namespace, $matches);
 
     if (isset($matches['provider'])) {
-      return $matches['provider'];
+      return Unicode::strtolower($matches['provider']);
     }
 
     return NULL;

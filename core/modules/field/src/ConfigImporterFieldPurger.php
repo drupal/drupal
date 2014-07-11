@@ -114,7 +114,7 @@ class ConfigImporterFieldPurger {
    */
   public static function getFieldsToPurge(array $extensions, array $deletes) {
     $providers = array_keys($extensions['module']);
-    $providers[] = 'Core';
+    $providers[] = 'core';
     $fields_to_delete = array();
 
     // Gather fields that will be deleted during configuration synchronization
