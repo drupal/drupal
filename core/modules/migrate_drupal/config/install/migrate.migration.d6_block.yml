@@ -3,6 +3,11 @@ label: Drupal 6 blocks
 source:
   plugin: d6_block
 process:
+  # Drupal 8 does not have a status but it doesn't matter; this is here to
+  # skip disabled blocks.
+  status:
+    plugin: skip_row_on_empty
+    source: status
   id:
     # We need something unique, so aggregator, aggregator_1 etc will do.
     plugin: dedupe_entity
@@ -43,8 +48,26 @@ process:
           3: views_block:who_s_online-who_s_online_block
     -
       plugin: d6_block_plugin_id
-  region: region
-  theme: theme
+  theme:
+    plugin: d6_block_theme
+    source:
+      - theme
+      - default_theme
+      - admin_theme
+  region:
+    plugin: d6_block_region
+    source:
+      - region
+      - theme
+      - @theme
+    region_map:
+      left: sidebar_first
+      right: sidebar_second
+      sidebar_first: sidebar_first
+      sidebar_second: sidebar_second
+      help: help
+      header: header
+      footer: footer
   label: title
   weight: weight
   settings:
@@ -59,7 +82,6 @@ process:
 destination:
   plugin: entity:block
 migration_dependencies:
-  required:
-    - d6_custom_block
   optional:
     - d6_menu
+    - d6_custom_block

@@ -105,7 +105,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_system_performance',
     'd6_system_rss',
     'd6_system_site',
-    'd6_system_theme',
     'd6_taxonomy_settings',
     'd6_taxonomy_term',
     'd6_taxonomy_vocabulary',
@@ -137,6 +136,17 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
     'd6_vocabulary_field_instance',
     'd6_vocabulary_field',
   );
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $config = \Drupal::config('system.theme');
+    $config->set('default', 'bartik');
+    $config->set('admin', 'seven');
+    $config->save();
+  }
 
   /**
    * {@inheritdoc}
@@ -186,7 +196,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
       $tests_path . '/Drupal6SystemPerformance.php',
       $tests_path . '/Drupal6SystemRss.php',
       $tests_path . '/Drupal6SystemSite.php',
-      $tests_path . '/Drupal6SystemTheme.php',
       $tests_path . '/Drupal6TaxonomySettings.php',
       $tests_path . '/Drupal6TaxonomyTerm.php',
       $tests_path . '/Drupal6TaxonomyVocabulary.php',
@@ -260,7 +269,6 @@ class MigrateDrupal6Test extends MigrateFullDrupalTestBase {
       __NAMESPACE__ . '\MigrateSystemPerformanceTest',
       __NAMESPACE__ . '\MigrateSystemRssTest',
       __NAMESPACE__ . '\MigrateSystemSiteTest',
-      __NAMESPACE__ . '\MigrateSystemThemeTest',
       __NAMESPACE__ . '\MigrateTaxonomyConfigsTest',
       __NAMESPACE__ . '\MigrateTaxonomyTermTest',
       __NAMESPACE__ . '\MigrateTaxonomyVocabularyTest',

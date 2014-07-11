@@ -17,3 +17,7 @@ stylesheets-remove:
   - system.module.css
 settings:
   theme_test_setting: 'default value'
+regions:
+  content: Content
+  left: Left
+  right: Right

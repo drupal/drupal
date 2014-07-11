@@ -170,7 +170,7 @@ class Drupal6Block extends Drupal6DumpBase {
       'pages' => '',
       'title' => '',
       'cache' => '-1'
-     ))
+    ))
     ->values(array(
       'bid' => '2',
       'module' => 'user',
@@ -319,6 +319,36 @@ class Drupal6Block extends Drupal6DumpBase {
       'visibility' => '1',
       'pages' => 'node',
       'title' => 'Another Static Block',
+      'cache' => '-1'
+    ))
+    ->values(array(
+      'bid' => '12',
+      'module' => 'block',
+      'delta' => '1',
+      'theme' => 'test_theme',
+      'status' => '1',
+      'weight' => '-7',
+      'region' => 'right',
+      'custom' => '0',
+      'throttle' => '0',
+      'visibility' => '0',
+      'pages' => '',
+      'title' => '',
+      'cache' => '-1'
+    ))
+    ->values(array(
+      'bid' => '13',
+      'module' => 'block',
+      'delta' => '2',
+      'theme' => 'test_theme',
+      'status' => '1',
+      'weight' => '-2',
+      'region' => 'left',
+      'custom' => '0',
+      'throttle' => '0',
+      'visibility' => '0',
+      'pages' => '',
+      'title' => '',
       'cache' => '-1'
     ))
     ->execute();

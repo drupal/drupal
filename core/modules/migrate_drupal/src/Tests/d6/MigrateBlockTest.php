@@ -50,8 +50,20 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
       'd6_custom_block'  => array(
         array(array(10), array(1)),
         array(array(11), array(2)),
+        array(array(12), array(1)),
+        array(array(13), array(2)),
       )
     ));
+
+    // Set Bartik and Seven as the default public and admin theme.
+    $config = \Drupal::config('system.theme');
+    $config->set('default', 'bartik');
+    $config->set('admin', 'seven');
+    $config->save();
+
+    // Enable one of D8's test themes.
+    \Drupal::service('theme_handler')->enable(array('test_theme'));
+
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_block');
     $dumps = array(
@@ -68,13 +80,13 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
   public function testBlockMigration() {
     /** @var $blocks \Drupal\block\BlockInterface[] */
     $blocks = entity_load_multiple('block');
-    $this->assertEqual(count($blocks), 11);
+    $this->assertEqual(count($blocks), 8);
 
     // User blocks
     $test_block_user = $blocks['user'];
     $this->assertNotNull($test_block_user);
-    $this->assertEqual('left', $test_block_user->get('region'));
-    $this->assertEqual('garland', $test_block_user->get('theme'));
+    $this->assertEqual('sidebar_first', $test_block_user->get('region'));
+    $this->assertEqual('bartik', $test_block_user->get('theme'));
     $visibility = $test_block_user->getVisibility();
     $this->assertEqual(TRUE, $visibility['request_path']['negate']);
     $this->assertEqual('', $visibility['request_path']['pages']);
@@ -82,85 +94,38 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
 
     $test_block_user_1 = $blocks['user_1'];
     $this->assertNotNull($test_block_user_1);
-    $this->assertEqual('left', $test_block_user_1->get('region'));
-    $this->assertEqual('garland', $test_block_user_1->get('theme'));
+    $this->assertEqual('sidebar_first', $test_block_user_1->get('region'));
+    $this->assertEqual('bartik', $test_block_user_1->get('theme'));
     $visibility = $test_block_user_1->getVisibility();
     $this->assertEqual(TRUE, $visibility['request_path']['negate']);
     $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(0, $test_block_user_1->weight);
 
-    $test_block_user_2 = $blocks['user_2'];
-    $this->assertNotNull($test_block_user_2);
-    $this->assertEqual('', $test_block_user_2->get('region'));
-    $this->assertEqual('garland', $test_block_user_2->get('theme'));
-    $visibility = $test_block_user_2->getVisibility();
-    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
-    $this->assertEqual('', $visibility['request_path']['pages']);
-    $this->assertEqual(-3, $test_block_user_2->weight);
-
-    $test_block_user_3 = $blocks['user_3'];
-    $this->assertNotNull($test_block_user_3);
-    $this->assertEqual('', $test_block_user_3->get('region'));
-    $this->assertEqual('garland', $test_block_user_3->get('theme'));
-    $visibility = $test_block_user_3->getVisibility();
-    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
-    $this->assertEqual('', $visibility['request_path']['pages']);
-    $this->assertEqual(-1, $test_block_user_3->weight);
-
     // Check system block
     $test_block_system = $blocks['system'];
     $this->assertNotNull($test_block_system);
     $this->assertEqual('footer', $test_block_system->get('region'));
-    $this->assertEqual('garland', $test_block_system->get('theme'));
+    $this->assertEqual('bartik', $test_block_system->get('theme'));
     $visibility = $test_block_system->getVisibility();
     $this->assertEqual(TRUE, $visibility['request_path']['negate']);
     $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-5, $test_block_system->weight);
 
-    // Check comment block
-    $test_block_comment = $blocks['comment'];
-    $this->assertNotNull($test_block_comment);
-    $this->assertEqual('', $test_block_comment->get('region'));
-    $this->assertEqual('garland', $test_block_comment->get('theme'));
-    $visibility = $test_block_comment->getVisibility();
-    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
-    $this->assertEqual('', $visibility['request_path']['pages']);
-    $this->assertEqual(-6, $test_block_comment->weight);
-
     // Check menu blocks
     $test_block_menu = $blocks['menu'];
     $this->assertNotNull($test_block_menu);
     $this->assertEqual('header', $test_block_menu->get('region'));
-    $this->assertEqual('garland', $test_block_menu->get('theme'));
+    $this->assertEqual('bartik', $test_block_menu->get('theme'));
     $visibility = $test_block_menu->getVisibility();
     $this->assertEqual(TRUE, $visibility['request_path']['negate']);
     $this->assertEqual('', $visibility['request_path']['pages']);
     $this->assertEqual(-5, $test_block_menu->weight);
 
-    $test_block_menu_1 = $blocks['menu_1'];
-    $this->assertNotNull($test_block_menu_1);
-    $this->assertEqual('', $test_block_menu_1->get('region'));
-    $this->assertEqual('garland', $test_block_menu_1->get('theme'));
-    $visibility = $test_block_menu_1->getVisibility();
-    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
-    $this->assertEqual('', $visibility['request_path']['pages']);
-    $this->assertEqual(-5, $test_block_menu_1->weight);
-
-    // Check node block
-    $test_block_node = $blocks['node'];
-    $this->assertNotNull($test_block_node);
-    $this->assertEqual('', $test_block_node->get('region'));
-    $this->assertEqual('garland', $test_block_node->get('theme'));
-    $visibility = $test_block_node->getVisibility();
-    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
-    $this->assertEqual('', $visibility['request_path']['pages']);
-    $this->assertEqual(-4, $test_block_node->weight);
-
     // Check custom blocks
     $test_block_block = $blocks['block'];
     $this->assertNotNull($test_block_block);
     $this->assertEqual('content', $test_block_block->get('region'));
-    $this->assertEqual('garland', $test_block_block->get('theme'));
+    $this->assertEqual('bartik', $test_block_block->get('theme'));
     $visibility = $test_block_block->getVisibility();
     $this->assertEqual(FALSE, $visibility['request_path']['negate']);
     $this->assertEqual('<front>', $visibility['request_path']['pages']);
@@ -174,5 +139,23 @@ class MigrateBlockTest extends MigrateDrupalTestBase {
     $this->assertEqual(FALSE, $visibility['request_path']['negate']);
     $this->assertEqual('node', $visibility['request_path']['pages']);
     $this->assertEqual(-4, $test_block_block_1->weight);
+
+    $test_block_block_2 = $blocks['block_2'];
+    $this->assertNotNull($test_block_block_2);
+    $this->assertEqual('right', $test_block_block_2->get('region'));
+    $this->assertEqual('test_theme', $test_block_block_2->get('theme'));
+    $visibility = $test_block_block_2->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
+    $this->assertEqual(-7, $test_block_block_2->weight);
+
+    $test_block_block_3 = $blocks['block_3'];
+    $this->assertNotNull($test_block_block_3);
+    $this->assertEqual('left', $test_block_block_3->get('region'));
+    $this->assertEqual('test_theme', $test_block_block_3->get('theme'));
+    $visibility = $test_block_block_3->getVisibility();
+    $this->assertEqual(TRUE, $visibility['request_path']['negate']);
+    $this->assertEqual('', $visibility['request_path']['pages']);
+    $this->assertEqual(-2, $test_block_block_3->weight);
   }
 }

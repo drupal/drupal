@@ -18,6 +18,19 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * )
  */
 class Block extends DrupalSqlBase {
+  /**
+   * The default theme name.
+   *
+   * @var string
+   */
+  protected $defaultTheme;
+
+  /**
+   * The admin theme name.
+   *
+   * @var string
+   */
+  protected $adminTheme;
 
   /**
    * {@inheritdoc}
@@ -27,6 +40,15 @@ class Block extends DrupalSqlBase {
       ->fields('b', array('bid', 'module', 'delta', 'theme', 'status', 'weight', 'region', 'visibility', 'pages', 'title', 'cache'))
       ->orderBy('bid');
     return $query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function runQuery() {
+    $this->defaultTheme = $this->variableGet('theme_default', 'Garland');
+    $this->adminTheme = $this->variableGet('admin_theme', null);
+    return parent::runQuery();
   }
 
   /**
@@ -53,6 +75,8 @@ class Block extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
+    $row->setSourceProperty('default_theme', $this->defaultTheme);
+    $row->setSourceProperty('admin_theme', $this->adminTheme);
     $module = $row->getSourceProperty('module');
     $delta = $row->getSourceProperty('delta');
     $roles = $this->select('blocks_roles', 'br')
@@ -63,8 +87,8 @@ class Block extends DrupalSqlBase {
       ->fetchCol();
     $row->setSourceProperty('permissions', $roles);
     $settings = array();
-    // Contrib can use hook_migration_d6_block_prepare_row() to add similar variables
-    // via $migration->getSource()->variableGet().
+    // Contrib can use hook_migration_d6_block_prepare_row() to add similar
+    // variables via $migration->getSource()->variableGet().
     switch ($module) {
       case 'aggregator':
         list($type, $id) = explode('-', $delta);
