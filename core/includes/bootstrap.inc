@@ -1706,14 +1706,3 @@ function _drupal_shutdown_function() {
   }
 }
 
-/**
- * Get locking layer instance.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::lock().
- *
- * @return \Drupal\Core\Lock\LockBackendInterface
- */
-function lock() {
-  return \Drupal::lock();
-}
