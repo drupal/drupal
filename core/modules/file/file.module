@@ -10,6 +10,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -139,7 +140,7 @@ function file_load($fid, $reset = FALSE) {
  *   temporary file, the resulting file will also be a temporary file. See
  *   file_save_upload() for details on temporary files.
  *
- * @param \Drupal\file\File $source
+ * @param \Drupal\file\FileInterface $source
  *   A file entity.
  * @param $destination
  *   A string containing the destination that $source should be copied to.
@@ -159,7 +160,7 @@ function file_load($fid, $reset = FALSE) {
  * @see file_unmanaged_copy()
  * @see hook_file_copy()
  */
-function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+function file_copy(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
     if (($realpath = drupal_realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be copied because the destination %destination is invalid. This is often caused by improper use of file_copy() or a missing stream wrapper.', array('%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination));
@@ -214,7 +215,7 @@ function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  *   replace the file or rename the file based on the $replace parameter.
  * - Adds the new file to the files database.
  *
- * @param \Drupal\file\File $source
+ * @param \Drupal\file\FileInterface $source
  *   A file entity.
  * @param $destination
  *   A string containing the destination that $source should be moved to.
@@ -230,13 +231,13 @@ function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
- * @return \Drupal\file\File
+ * @return \Drupal\file\FileInterface
  *   Resulting file entity for success, or FALSE in the event of an error.
  *
  * @see file_unmanaged_move()
  * @see hook_file_move()
  */
-function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
+function file_move(FileInterface $source, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
   if (!file_valid_uri($destination)) {
     if (($realpath = drupal_realpath($source->getFileUri())) !== FALSE) {
       \Drupal::logger('file')->notice('File %file (%realpath) could not be moved because the destination %destination is invalid. This may be caused by improper use of file_move() or a missing stream wrapper.', array('%file' => $source->getFileUri(), '%realpath' => $realpath, '%destination' => $destination));
@@ -290,7 +291,7 @@ function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  * After executing the validator callbacks specified hook_file_validate() will
  * also be called to allow other modules to report errors about the file.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
@@ -305,7 +306,7 @@ function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  *
  * @see hook_file_validate()
  */
-function file_validate(File $file, $validators = array()) {
+function file_validate(FileInterface $file, $validators = array()) {
   // Call the validation functions specified by this function's caller.
   $errors = array();
   foreach ($validators as $function => $args) {
@@ -322,13 +323,13 @@ function file_validate(File $file, $validators = array()) {
 /**
  * Checks for files with names longer than can be stored in the database.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  *
  * @return
  *   An array. If the file name is too long, it will contain an error message.
  */
-function file_validate_name_length(File $file) {
+function file_validate_name_length(FileInterface $file) {
   $errors = array();
 
   if (!$file->getFilename()) {
@@ -343,7 +344,7 @@ function file_validate_name_length(File $file) {
 /**
  * Checks that the filename ends with an allowed extension.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param $extensions
  *   A string with a space separated list of allowed extensions.
@@ -354,7 +355,7 @@ function file_validate_name_length(File $file) {
  *
  * @see hook_file_validate()
  */
-function file_validate_extensions(File $file, $extensions) {
+function file_validate_extensions(FileInterface $file, $extensions) {
   $errors = array();
 
   $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
@@ -367,7 +368,7 @@ function file_validate_extensions(File $file, $extensions) {
 /**
  * Checks that the file's size is below certain limits.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param $file_limit
  *   An integer specifying the maximum file size in bytes. Zero indicates that
@@ -382,7 +383,7 @@ function file_validate_extensions(File $file, $extensions) {
  *
  * @see hook_file_validate()
  */
-function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
+function file_validate_size(FileInterface $file, $file_limit = 0, $user_limit = 0) {
   $user = \Drupal::currentUser();
   $errors = array();
 
@@ -401,7 +402,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 /**
  * Checks that the file is recognized as a valid image.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  *
  * @return
@@ -409,7 +410,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
  *
  * @see hook_file_validate()
  */
-function file_validate_is_image(File $file) {
+function file_validate_is_image(FileInterface $file) {
   $errors = array();
 
   $image_factory = \Drupal::service('image.factory');
@@ -428,7 +429,7 @@ function file_validate_is_image(File $file) {
  * Non-image files will be ignored. If a image toolkit is available the image
  * will be scaled to fit within the desired maximum dimensions.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity. This function may resize the file affecting its size.
  * @param $maximum_dimensions
  *   An optional string in the form WIDTHxHEIGHT e.g. '640x480' or '85x85'. If
@@ -445,7 +446,7 @@ function file_validate_is_image(File $file) {
  *
  * @see hook_file_validate()
  */
-function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
+function file_validate_image_resolution(FileInterface $file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
   $errors = array();
 
   // Check first that the file is an image.
@@ -549,14 +550,14 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
 /**
  * Examines a file entity and returns appropriate content headers for download.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  *
  * @return
  *   An associative array of headers, as expected by
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
-function file_get_content_headers(File $file) {
+function file_get_content_headers(FileInterface $file) {
   $type = mime_header_encode($file->getMimeType());
 
   return array(
@@ -1630,7 +1631,7 @@ function template_preprocess_file_link(&$variables) {
 /**
  * Creates a URL to the icon for a file entity.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
@@ -1639,7 +1640,7 @@ function template_preprocess_file_link(&$variables) {
  * @return
  *   A URL string to the icon, or FALSE if an appropriate icon cannot be found.
  */
-function file_icon_url(File $file, $icon_directory = NULL) {
+function file_icon_url(FileInterface $file, $icon_directory = NULL) {
   if ($icon_path = file_icon_path($file, $icon_directory)) {
     return base_path() . $icon_path;
   }
@@ -1649,7 +1650,7 @@ function file_icon_url(File $file, $icon_directory = NULL) {
 /**
  * Creates a path to the icon for a file entity.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
@@ -1659,7 +1660,7 @@ function file_icon_url(File $file, $icon_directory = NULL) {
  *   A string to the icon as a local path, or FALSE if an appropriate icon could
  *   not be found.
  */
-function file_icon_path(File $file, $icon_directory = NULL) {
+function file_icon_path(FileInterface $file, $icon_directory = NULL) {
   // Use the default set of icons if none specified.
   if (!isset($icon_directory)) {
     $icon_directory = \Drupal::config('file.settings')->get('icon.directory');
@@ -1702,13 +1703,13 @@ function file_icon_path(File $file, $icon_directory = NULL) {
 /**
  * Determines the generic icon MIME package based on a file's MIME type.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  *
  * @return
  *   The generic icon MIME package expected for this file.
  */
-function file_icon_map(File $file) {
+function file_icon_map(FileInterface $file) {
   switch ($file->getMimeType()) {
     // Word document types.
     case 'application/msword':
@@ -1834,7 +1835,7 @@ function file_icon_map(File $file) {
 /**
  * Retrieves a list of references to a file.
  *
- * @param \Drupal\file\File $file
+ * @param \Drupal\file\FileInterface $file
  *   A file entity.
  * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   (optional) A field definition to be used for this check. If given, limits the
@@ -1855,7 +1856,7 @@ function file_icon_map(File $file) {
  *   A multidimensional array. The keys are field_name, entity_type,
  *   entity_id and the value is an entity referencing this file.
  */
-function file_get_file_references(File $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
+function file_get_file_references(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = &drupal_static(__FUNCTION__, array());
   $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', array());
 

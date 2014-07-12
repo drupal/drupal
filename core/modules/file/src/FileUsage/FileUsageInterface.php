@@ -7,7 +7,7 @@
 
 namespace Drupal\file\FileUsage;
 
-use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 /**
  * File usage backend interface.
@@ -24,7 +24,7 @@ interface FileUsageInterface {
    * - The User module associates an image with a user, so $type would be 'user'
    *   and the $id would be the user's uid.
    *
-   * @param \Drupal\file\File $file
+   * @param \Drupal\file\FileInterface $file
    *   A file entity.
    * @param string $module
    *   The name of the module using the file.
@@ -35,12 +35,12 @@ interface FileUsageInterface {
    * @param int $count
    *   (optional) The number of references to add to the object. Defaults to 1.
    */
-  public function add(File $file, $module, $type, $id, $count = 1);
+  public function add(FileInterface $file, $module, $type, $id, $count = 1);
 
   /**
    * Removes a record to indicate that a module is no longer using a file.
    *
-   * @param \Drupal\file\File $file
+   * @param \Drupal\file\FileInterface $file
    *   A file entity.
    * @param string $module
    *   The name of the module using the file.
@@ -57,12 +57,12 @@ interface FileUsageInterface {
    *   to 1. Zero may be specified to delete all references to the file within a
    *   specific object.
    */
-  public function delete(File $file, $module, $type = NULL, $id = NULL, $count = 1);
+  public function delete(FileInterface $file, $module, $type = NULL, $id = NULL, $count = 1);
 
   /**
    * Determines where a file is used.
    *
-   * @param \Drupal\file\File $file
+   * @param \Drupal\file\FileInterface $file
    *   A file entity.
    *
    * @return array
@@ -71,5 +71,5 @@ interface FileUsageInterface {
    *   the third level contains the usage count.
    *
    */
-  public function listUsage(File $file);
+  public function listUsage(FileInterface $file);
 }
