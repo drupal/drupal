@@ -1153,9 +1153,14 @@ div.messages {
 
 .views-ui-display-tab-bucket .dropbutton-wrapper {
   position: absolute;
-  right: 5px;
+  right: 5px; /* LTR */
   top: 4px;
 }
+[dir="rtl"] .views-ui-display-tab-bucket .dropbutton-wrapper {
+  left: 5px;
+  right: auto;
+}
+
 .views-ui-display-tab-bucket .dropbutton-wrapper .dropbutton-widget .dropbutton-action a {
   width: auto;
 }
