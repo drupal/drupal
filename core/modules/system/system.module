@@ -754,7 +754,7 @@ function system_stream_wrappers() {
  * Menu item access callback - only enabled themes can be accessed.
  */
 function _system_themes_access($theme) {
-  return \Drupal::currentUser()->hasPermission('administer themes') && drupal_theme_access($theme);
+  return user_access('administer themes') && drupal_theme_access($theme);
 }
 
 /**

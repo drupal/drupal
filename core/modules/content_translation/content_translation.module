@@ -249,9 +249,8 @@ function _content_translation_menu_strip_loaders($path) {
  *   The entity whose translation overview should be displayed.
  */
 function content_translation_translate_access(EntityInterface $entity) {
-  $account = \Drupal::currentUser();
   return $entity instanceof ContentEntityInterface && empty($entity->getUntranslated()->language()->locked) && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
-    ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations'));
+    (user_access('create content translations') || user_access('update content translations') || user_access('delete content translations'));
 }
 
 /**
@@ -495,12 +494,9 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
   $entity_type_id = $entity->getEntityTypeId();
   $entity_type = $entity->getEntityType();
   $permission = $entity_type->getPermissionGranularity() == 'bundle' ? $permission = "translate {$entity->bundle()} $entity_type_id" : "translate $entity_type_id";
-  $current_user = \Drupal::currentuser();
-  if (!$current_user->hasPermission('translate any entity') && !$current_user->hasPermission($permission)) {
-    foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-      if (empty($entity->translation[$langcode]['status'])) {
-        unset($candidates[$langcode]);
-      }
+  foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+    if (empty($entity->translation[$langcode]['status']) && !user_access('translate any entity') && !user_access($permission)) {
+      unset($candidates[$langcode]);
     }
   }
 }
@@ -746,7 +742,7 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
  *   Processed language configuration element.
  */
 function content_translation_language_configuration_element_process(array $element, array &$form_state, array &$form) {
-  if (empty($element['#content_translation_skip_alter']) && \Drupal::currentUser()->hasPermission('administer content translation')) {
+  if (empty($element['#content_translation_skip_alter']) && user_access('administer content translation')) {
     $form_state['content_translation']['key'] = $element['#name'];
     $context = $form_state['language'][$element['#name']];
 

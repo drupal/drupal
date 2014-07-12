@@ -169,20 +169,19 @@ function field_ui_entity_operation(EntityInterface $entity) {
   // Add manage fields and display links if this entity type is the bundle
   // of another.
   if ($bundle_of = $info->getBundleOf()) {
-    $account = \Drupal::currentUser();
-    if ($account->hasPermission('administer '. $bundle_of . ' fields')) {
+    if (user_access('administer '. $bundle_of . ' fields')) {
       $operations['manage-fields'] = array(
         'title' => t('Manage fields'),
         'weight' => 15,
       ) + $entity->urlInfo('field_ui-fields')->toArray();
     }
-    if ($account->hasPermission('administer '. $bundle_of . ' form display')) {
+    if (user_access('administer '. $bundle_of . ' form display')) {
       $operations['manage-form-display'] = array(
         'title' => t('Manage form display'),
         'weight' => 20,
       ) + $entity->urlInfo('field_ui-form-display')->toArray();
     }
-    if ($account->hasPermission('administer '. $bundle_of . ' display')) {
+    if (user_access('administer '. $bundle_of . ' display')) {
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
         'weight' => 25,

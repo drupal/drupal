@@ -248,7 +248,7 @@ class MessageForm extends ContentEntityForm {
 
     // To avoid false error messages caused by flood control, redirect away from
     // the contact form; either to the contacted user account or the front page.
-    if ($message->isPersonal() && $user->hasPermission('access user profiles')) {
+    if ($message->isPersonal() && user_access('access user profiles')) {
       $form_state['redirect_route'] = $message->getPersonalRecipient()->urlInfo();
     }
     else {

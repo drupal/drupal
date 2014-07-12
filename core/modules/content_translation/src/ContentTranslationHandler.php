@@ -65,11 +65,10 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface {
     $translate_permission = TRUE;
     // If no permission granularity is defined this entity type does not need an
     // explicit translate permission.
-    $current_user = \Drupal::currentUser();
-    if (!$current_user->hasPermission('translate any entity') && $permission_granularity = $entity_type->getPermissionGranularity()) {
-      $translate_permission = $current_user->hasPermission($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
+    if (!user_access('translate any entity') && $permission_granularity = $entity_type->getPermissionGranularity()) {
+      $translate_permission = user_access($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
     }
-    return $translate_permission && $current_user->hasPermission("$op content translations");
+    return $translate_permission && user_access("$op content translations");
   }
 
   /**

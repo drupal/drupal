@@ -93,7 +93,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
   // for rebuild. We don't need to issue the message on the confirm form, or
   // while the rebuild is being processed.
   if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.normal' && $route_name != 'help.page.node' && $route_name != 'help.main'
-    && \Drupal::currentUser()->hasPermission('access administration pages') && node_access_needs_rebuild()) {
+    && user_access('access administration pages') && node_access_needs_rebuild()) {
     if ($route_name == 'system.status') {
       $message = t('The content access permissions need to be rebuilt.');
     }
@@ -1159,18 +1159,18 @@ function node_node_access(NodeInterface $node, $op, $account) {
 
   $configured_types = node_permissions_get_configured_types();
   if (isset($configured_types[$type])) {
-    if ($op == 'create' && $account->hasPermission('create ' . $type . ' content', $account)) {
+    if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
       return NODE_ACCESS_ALLOW;
     }
 
     if ($op == 'update') {
-      if ($account->hasPermission('edit any ' . $type . ' content', $account) || ($account->hasPermission('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if ($account->hasPermission('delete any ' . $type . ' content', $account) || ($account->hasPermission('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
@@ -1349,7 +1349,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
   // If $account can bypass node access, or there are no node access modules,
   // or the operation is 'view' and the $account has a global view grant
   // (such as a view grant for node ID 0), we don't need to alter the query.
-  if ($account->hasPermission('bypass node access')) {
+  if (user_access('bypass node access', $account)) {
     return;
   }
   if (!count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {

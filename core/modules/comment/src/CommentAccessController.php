@@ -25,19 +25,19 @@ class CommentAccessController extends EntityAccessController {
     /** @var \Drupal\Core\Entity\EntityInterface|\Drupal\user\EntityOwnerInterface $entity */
     switch ($operation) {
       case 'view':
-        return $account->hasPermission('access comments');
+        return user_access('access comments', $account);
         break;
 
       case 'update':
-        return ($account->id() && $account->id() == $entity->getOwnerId() && $entity->status->value == CommentInterface::PUBLISHED && $account->hasPermission('edit own comments')) || $account->hasPermission('administer comments');
+        return ($account->id() && $account->id() == $entity->getOwnerId() && $entity->status->value == CommentInterface::PUBLISHED && user_access('edit own comments', $account)) || user_access('administer comments', $account);
         break;
 
       case 'delete':
-        return $account->hasPermission('administer comments');
+        return user_access('administer comments', $account);
         break;
 
       case 'approve':
-        return $account->hasPermission('administer comments');
+        return user_access('administer comments', $account);
         break;
     }
   }
@@ -46,7 +46,7 @@ class CommentAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('post comments');
+    return user_access('post comments', $account);
   }
 
 }

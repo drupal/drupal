@@ -258,7 +258,7 @@ class CommentLinksTest extends CommentTestBase {
         // authenticated users are allowed to post comments.
         // @see \Drupal\comment\CommentManagerInterface::forbiddenMessage()
         if (!$this->loggedInUser) {
-          if ($this->web_user->hasPermission('post comments')) {
+          if (user_access('post comments', $this->web_user)) {
             // The note depends on whether users are actually able to register.
             if ($info['user_register'] != USER_REGISTER_ADMINISTRATORS_ONLY) {
               $this->assertText('Log in or register to post comments');

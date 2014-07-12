@@ -33,7 +33,7 @@ class CommentSelection extends SelectionBase {
     // Adding the 'comment_access' tag is sadly insufficient for comments:
     // core requires us to also know about the concept of 'published' and
     // 'unpublished'.
-    if (!\Drupal::currentUser()->hasPermission('administer comments')) {
+    if (!user_access('administer comments')) {
       $query->condition('status', CommentInterface::PUBLISHED);
     }
     return $query;
@@ -61,7 +61,7 @@ class CommentSelection extends SelectionBase {
     // Passing the query to node_query_node_access_alter() is sadly
     // insufficient for nodes.
     // @see SelectionEntityTypeNode::entityQueryAlter()
-    if (!\Drupal::currentUser()->hasPermission('bypass node access') && !count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
+    if (!user_access('bypass node access') && !count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
       $query->condition($node_alias . '.status', 1);
     }
   }

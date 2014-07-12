@@ -63,7 +63,7 @@ function content_translation_field_sync_widget(FieldDefinitionInterface $field) 
 function _content_translation_form_language_content_settings_form_alter(array &$form, array &$form_state) {
   // Inject into the content language settings the translation settings if the
   // user has the required permission.
-  if (!\Drupal::currentUser()->hasPermission('administer content translation')) {
+  if (!user_access('administer content translation')) {
     return;
   }
 
@@ -139,7 +139,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
 function _content_translation_preprocess_language_content_settings_table(&$variables) {
   // Alter the 'build' variable injecting the translation settings if the user
   // has the required permission.
-  if (!\Drupal::currentUser()->hasPermission('administer content translation')) {
+  if (!user_access('administer content translation')) {
     return;
   }
 

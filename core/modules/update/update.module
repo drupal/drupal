@@ -164,7 +164,7 @@ function update_page_build() {
  * @see update_menu()
  */
 function update_manager_access() {
-  return Settings::get('allow_authorize_operations', TRUE) && \Drupal::currentUser()->hasPermission('administer software updates');
+  return Settings::get('allow_authorize_operations', TRUE) && user_access('administer software updates');
 }
 
 /**

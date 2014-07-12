@@ -151,7 +151,7 @@ function _toolbar_initialize_page_cache() {
 function toolbar_page_build(&$page) {
   $page['page_top']['toolbar'] = array(
     '#type' => 'toolbar',
-    '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
+    '#access' => user_access('access toolbar'),
   );
 }
 
