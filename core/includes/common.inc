@@ -296,12 +296,6 @@ function drupal_get_feeds() {
 }
 
 /**
- * @defgroup http_handling HTTP handling
- * @{
- * Functions to properly handle HTTP responses.
- */
-
-/**
  * Prepares a 'destination' URL query parameter for use with url().
  *
  * Used to direct the user back to the referring page after completing a form.
@@ -337,10 +331,6 @@ function drupal_get_destination() {
   }
   return $destination;
 }
-
-/**
- * @} End of "defgroup http_handling".
- */
 
 /**
  * @defgroup validation Input validation

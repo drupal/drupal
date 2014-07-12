@@ -1827,12 +1827,6 @@ function file_icon_map(FileInterface $file) {
 }
 
 /**
- * @defgroup file-module-api File module public API functions
- * @{
- * These functions may be used to determine if and where a file is in use.
- */
-
-/**
  * Retrieves a list of references to a file.
  *
  * @param \Drupal\file\FileInterface $file
@@ -1928,10 +1922,6 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
   }
   return $return;
 }
-
-/**
- * @} End of "defgroup file-module-api".
- */
 
 /**
  * Implements hook_permission().

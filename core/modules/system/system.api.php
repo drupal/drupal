@@ -1942,8 +1942,7 @@ function hook_install() {
  * this reason, caution is needed when using any API function within an update
  * function - particularly CRUD functions, functions that depend on the schema
  * (for example by using drupal_write_record()), and any functions that invoke
- * hooks. See @link update_api Update versions of API functions @endlink for
- * details.
+ * hooks.
  *
  * The $sandbox parameter should be used when a multipass update is needed, in
  * circumstances where running the whole update at once could cause PHP to
@@ -1977,7 +1976,6 @@ function hook_install() {
  *
  * @see batch
  * @see schemaapi
- * @see update_api
  * @see hook_update_last_removed()
  * @see update_get_update_list()
  */
@@ -2839,117 +2837,6 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
 
 /**
  * @} End of "addtogroup hooks".
- */
-
-/**
- * @defgroup update_api Update versions of API functions
- * @{
- * Functions that are similar to normal API functions, but do not invoke hooks.
- *
- * These simplified versions of core API functions are provided for use by
- * update functions (hook_update_N() implementations).
- *
- * During database updates the schema of any module could be out of date. For
- * this reason, caution is needed when using any API function within an update
- * function - particularly CRUD functions, functions that depend on the schema
- * (for example by using drupal_write_record()), and any functions that invoke
- * hooks.
- *
- * Instead, a simplified utility function should be used. If a utility version
- * of the API function you require does not already exist, then you should
- * create a new function. The new utility function should be named
- * _update_N_mymodule_my_function(). N is the schema version the function acts
- * on (the schema version is the number N from the hook_update_N()
- * implementation where this schema was introduced, or a number following the
- * same numbering scheme), and mymodule_my_function is the name of the original
- * API function including the module's name.
- *
- * Examples:
- * - _update_8001_mymodule_save(): This function performs a save operation
- *   without invoking any hooks using the original 8.x schema.
- * - _update_8002_mymodule_save(): This function performs the same save
- *   operation using an updated 8.x schema.
- *
- * The utility function should not invoke any hooks, and should perform database
- * operations using functions from the
- * @link database Database abstraction layer, @endlink
- * like db_insert(), db_update(), db_delete(), db_query(), and so on.
- *
- * If a change to the schema necessitates a change to the utility function, a
- * new function should be created with a name based on the version of the schema
- * it acts on. See _update_8002_bar_get_types() and _update_8003_bar_get_types()
- * in the code examples that follow.
- *
- * For example, foo.install could contain:
- * @code
- * function foo_update_dependencies() {
- *   // foo_update_8010() needs to run after bar_update_8002().
- *   $dependencies['foo'][8010] = array(
- *     'bar' => 8002,
- *   );
- *
- *   // foo_update_8036() needs to run after bar_update_8003().
- *   $dependencies['foo'][8036] = array(
- *     'bar' => 8003,
- *   );
- *
- *   return $dependencies;
- * }
- *
- * function foo_update_8002() {
- *   // No updates have been run on the {bar_types} table yet, so this needs
- *   // to work with the original 8.x schema.
- *   foreach (_update_8001_bar_get_types() as $type) {
- *     // Rename a variable.
- *   }
- * }
- *
- * function foo_update_8010() {
- *    // Since foo_update_8010() is going to run after bar_update_8002(), it
- *    // needs to operate on the new schema, not the old one.
- *    foreach (_update_8002_bar_get_types() as $type) {
- *      // Rename a different variable.
- *    }
- * }
- *
- * function foo_update_8036() {
- *   // This update will run after bar_update_8003().
- *   foreach (_update_8003_bar_get_types() as $type) {
- *   }
- * }
- * @endcode
- *
- * And bar.install could contain:
- * @code
- * function bar_update_8002() {
- *   // Type and bundle are confusing, so we renamed the table.
- *   db_rename_table('bar_types', 'bar_bundles');
- * }
- *
- * function bar_update_8003() {
- *   // Database table names should be singular when possible.
- *   db_rename_table('bar_bundles', 'bar_bundle');
- * }
- *
- * function _update_8001_bar_get_types() {
- *   db_query('SELECT * FROM {bar_types}')->fetchAll();
- * }
- *
- * function _update_8002_bar_get_types() {
- *   db_query('SELECT * FROM {bar_bundles'})->fetchAll();
- * }
- *
- * function _update_8003_bar_get_types() {
- *   db_query('SELECT * FROM {bar_bundle}')->fetchAll();
- * }
- * @endcode
- *
- * @see hook_update_N()
- * @see hook_update_dependencies()
- */
-
-/**
- * @} End of "defgroup update_api".
  */
 
 /**

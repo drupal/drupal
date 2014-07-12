@@ -42,14 +42,6 @@ use Drupal\Core\FileTransfer\Local;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * @defgroup update_manager_update Update Manager module: update
- * @{
- * Update Manager module functionality for updating existing code.
- *
- * Provides a user interface to update existing code.
- */
-
-/**
  * Form constructor for the update form of the Update Manager module.
  *
  * This presents a table with all projects that have available updates with
@@ -485,18 +477,6 @@ function update_manager_update_ready_form_submit($form, &$form_state) {
 }
 
 /**
- * @} End of "defgroup update_manager_update".
- */
-
-/**
- * @defgroup update_manager_install Update Manager module: install
- * @{
- * Update Manager module functionality for installing new code.
- *
- * Provides a user interface to install new code.
- */
-
-/**
  * Form constructor for the install form of the Update Manager module.
  *
  * This presents a place to enter a URL or upload an archive file to use to
@@ -761,19 +741,6 @@ function update_manager_install_form_submit($form, &$form_state) {
 }
 
 /**
- * @} End of "defgroup update_manager_install".
- */
-
-/**
- * @defgroup update_manager_file Update Manager module: file management
- * @{
- * Update Manager module file management functions.
- *
- * These functions are used by the update manager to copy, extract, and verify
- * archive files.
- */
-
-/**
  * Unpacks a downloaded archive file.
  *
  * @param string $file
@@ -953,7 +920,3 @@ function update_manager_local_transfers_allowed() {
 
   return $local_transfers_allowed;
 }
-
-/**
- * @} End of "defgroup update_manager_file".
- */

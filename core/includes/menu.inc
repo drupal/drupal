@@ -256,23 +256,12 @@ use Drupal\Core\Template\Attribute;
  */
 
 /**
- * @defgroup menu_tree_parameters Menu tree parameters
- * @{
- * Parameters for a menu tree.
- */
-
-/**
  * The maximum depth of a menu links tree - matches the number of p columns.
  *
  * @todo Move this constant to MenuLinkStorage along with all the tree
  * functionality.
  */
 const MENU_MAX_DEPTH = 9;
-
-
-/**
- * @} End of "defgroup menu_tree_parameters".
- */
 
 /**
  * Reserved key to identify the most specific menu link for a given path.
