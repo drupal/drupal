@@ -49,7 +49,7 @@ use Drupal\node\NodeInterface;
 function node_access_test_node_grants($account, $op) {
   $grants = array();
   $grants['node_access_test_author'] = array($account->id());
-  if ($op == 'view' && user_access('node test view', $account)) {
+  if ($op == 'view' && $account->hasPermission('node test view', $account)) {
     $grants['node_access_test'] = array(8888, 8889);
   }
 

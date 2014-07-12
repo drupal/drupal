@@ -297,6 +297,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
   }
 
   $fields = \Drupal::service('comment.manager')->getFields('node');
+  $current_user = \Drupal::currentUser();
   foreach ($fields as $field_name => $detail) {
     // Skip fields that the node does not have.
     if (!$node->hasField($field_name)) {
@@ -322,7 +323,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
         // Teaser view: display the number of comments that have been posted,
         // or a link to add new comments if the user has permission, the node
         // is open to new comments, and there currently are none.
-        if (user_access('access comments')) {
+        if ($current_user->hasPermission('access comments')) {
           if (!empty($node->get($field_name)->comment_count)) {
             $links['comment-comments'] = array(
               'title' => format_plural($node->get($field_name)->comment_count, '1 comment', '@count comments'),
@@ -348,7 +349,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
         // Provide a link to new comment form.
         if ($commenting_status == CommentItemInterface::OPEN) {
           $comment_form_location = $field_definition->getSetting('form_location');
-          if (user_access('post comments')) {
+          if ($current_user->hasPermission('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
               'language' => $node->language(),
@@ -380,10 +381,10 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
         // allowed to post comments and if this node is allowing new comments.
         if ($commenting_status == CommentItemInterface::OPEN) {
           $comment_form_location = $field_definition->getSetting('form_location');
-          if (user_access('post comments')) {
+          if ($current_user->hasPermission('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
-            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($node->get($field_name)->comment_count) && user_access('access comments'))) {
+            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($node->get($field_name)->comment_count) && $current_user->hasPermission('access comments'))) {
               $links['comment-add'] = array(
                 'title' => t('Add new comment'),
                 'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
@@ -546,7 +547,7 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
     ->addMetaData('entity', $entity)
     ->addMetaData('field_name', $field_name);
 
-  if (!user_access('administer comments')) {
+  if (!\Drupal::currentUser()->hasPermission('administer comments')) {
     $query->condition('c.status', CommentInterface::PUBLISHED);
     $count_query->condition('c.status', CommentInterface::PUBLISHED);
   }
@@ -1250,7 +1251,8 @@ function comment_ranking() {
  */
 function comment_file_download_access($field, EntityInterface $entity, FileInterface $file) {
   if ($entity instanceof CommentInterface) {
-    if (user_access('access comments') && $entity->isPublished() || user_access('administer comments')) {
+    $current_user = \Drupal::currentUser();
+    if ($current_user->hasPermission('access comments') && $entity->isPublished() || $current_user->hasPermission('administer comments')) {
       $commented_entity = $entity->getCommentedEntity();
       // Check access to parent entity.
       return $commented_entity->access('view');

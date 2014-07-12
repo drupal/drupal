@@ -11,10 +11,11 @@ use Drupal\views\ViewExecutable;
  * Implements hook_views_query_substitutions().
  */
 function node_views_query_substitutions(ViewExecutable $view) {
+  $account = \Drupal::currentUser();
   return array(
-    '***ADMINISTER_NODES***' => intval(user_access('administer nodes')),
-    '***VIEW_OWN_UNPUBLISHED_NODES***' => intval(user_access('view own unpublished content')),
-    '***BYPASS_NODE_ACCESS***' =>  intval(user_access('bypass node access')),
+    '***ADMINISTER_NODES***' => intval($account->hasPermission('administer nodes')),
+    '***VIEW_OWN_UNPUBLISHED_NODES***' => intval($account->hasPermission('view own unpublished content')),
+    '***BYPASS_NODE_ACCESS***' =>  intval($account->hasPermission('bypass node access')),
   );
 }
 

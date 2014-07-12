@@ -338,7 +338,7 @@ function views_page_alter(&$page) {
  */
 function views_preprocess_page(&$variables) {
   // Early-return to prevent adding unnecessary JavaScript.
-  if (!user_access('access contextual links')) {
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
 

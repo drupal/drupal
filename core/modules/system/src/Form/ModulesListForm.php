@@ -235,7 +235,7 @@ class ModulesListForm extends FormBase {
 
     // Generate link for module's permission, if the user has access to it.
     $row['links']['permissions'] = array();
-    if ($module->status && user_access('administer permissions') && in_array($module->getName(), $this->moduleHandler->getImplementations('permission'))) {
+    if ($module->status && \Drupal::currentUser()->hasPermission('administer permissions') && in_array($module->getName(), $this->moduleHandler->getImplementations('permission'))) {
       $row['links']['permissions'] = array(
         '#type' => 'link',
         '#title' => $this->t('Permissions'),

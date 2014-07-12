@@ -622,7 +622,7 @@ function filter_process_format($element) {
   $format_exists = isset($all_formats[$element['#format']]);
   $format_allowed = !isset($element['#allowed_formats']) || in_array($element['#format'], $element['#allowed_formats']);
   $user_has_access = isset($formats[$element['#format']]);
-  $user_is_admin = user_access('administer filters');
+  $user_is_admin = \Drupal::currentUser()->hasPermission('administer filters');
 
   // If the stored format does not exist or if it is not among the allowed
   // formats for this textarea, administrators have to assign a new format.

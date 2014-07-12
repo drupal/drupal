@@ -79,7 +79,7 @@ use Drupal\Component\Utility\Xss;
  * @ingroup node_access
  */
 function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $op) {
-  if (user_access('access private content', $account)) {
+  if ($account->hasPermission('access private content')) {
     $grants['example'] = array(1);
   }
   $grants['example_owner'] = array($account->id());
@@ -311,7 +311,7 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
  *   - "delete"
  *   - "update"
  *   - "view"
- * @param object $account
+ * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object to perform the access check operation on.
  * @param object $langcode
  *   The language code to perform the access check operation on.
@@ -323,23 +323,23 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
  *
  * @ingroup node_access
  */
-function hook_node_access(\Drupal\node\NodeInterface $node, $op, $account, $langcode) {
+function hook_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account, $langcode) {
   $type = is_string($node) ? $node : $node->getType();
 
   $configured_types = node_permissions_get_configured_types();
   if (isset($configured_types[$type])) {
-    if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
+    if ($op == 'create' && $account->hasPermission('create ' . $type . ' content')) {
       return NODE_ACCESS_ALLOW;
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
+      if ($account->hasPermission('edit any ' . $type . ' content', $account) || ($account->hasPermission('edit own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
+      if ($account->hasPermission('delete any ' . $type . ' content', $account) || ($account->hasPermission('delete own ' . $type . ' content') && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }

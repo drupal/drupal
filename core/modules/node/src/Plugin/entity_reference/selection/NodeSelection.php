@@ -32,7 +32,7 @@ class NodeSelection extends SelectionBase {
     // 'unpublished'. We need to do that as long as there are no access control
     // modules in use on the site. As long as one access control module is there,
     // it is supposed to handle this check.
-    if (!user_access('bypass node access') && !count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
+    if (!\Drupal::currentUser()->hasPermission('bypass node access') && !count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
       $query->condition('status', NODE_PUBLISHED);
     }
     return $query;
