@@ -159,7 +159,7 @@ function bartik_menu_tree__shortcut_default($variables) {
 function bartik_preprocess_field(&$variables) {
   $element = $variables['element'];
   if ($element['#field_type'] == 'taxonomy_term_reference') {
-    $variables['title_attributes']['class'][] = array('field-label');
+    $variables['title_attributes']['class'][] = 'field-label';
     if ($variables['element']['#label_display'] == 'inline') {
       $variables['title_attributes']['class'][] = 'inline';
     }
