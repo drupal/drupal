@@ -1162,18 +1162,6 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
 }
 
 /**
- * Determines whether a given module exists.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::moduleHandler()->moduleExists($module).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::moduleExists()
- */
-function module_exists($module) {
-  return \Drupal::moduleHandler()->moduleExists($module);
-}
-
-/**
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
  * @param string $new_prefix
