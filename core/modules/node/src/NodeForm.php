@@ -53,6 +53,7 @@ class NodeForm extends ContentEntityForm {
       $form['#title'] = $this->t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label()));
     }
 
+    $current_user = \Drupal::currentUser();
     $user_config = \Drupal::config('user.settings');
     // Some special stuff when previewing a node.
     if (isset($form_state['node_preview'])) {
@@ -112,7 +113,7 @@ class NodeForm extends ContentEntityForm {
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => !empty($this->settings['options']['revision']),
-      '#access' => $node->isNewRevision() || user_access('administer nodes'),
+      '#access' => $node->isNewRevision() || $current_user->hasPermission('administer nodes'),
       '#group' => 'revision_information',
     );
 
@@ -128,7 +129,7 @@ class NodeForm extends ContentEntityForm {
         ),
       ),
       '#group' => 'revision_information',
-      '#access' => $node->isNewRevision() || user_access('administer nodes'),
+      '#access' => $node->isNewRevision() || $current_user->hasPermission('administer nodes'),
     );
 
     // Node author information for administrators.
@@ -161,7 +162,7 @@ class NodeForm extends ContentEntityForm {
       '#weight' => -1,
       '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),
       '#group' => 'author',
-      '#access' => user_access('administer nodes'),
+      '#access' => $current_user->hasPermission('administer nodes'),
     );
     $form['created'] = array(
       '#type' => 'textfield',
@@ -170,7 +171,7 @@ class NodeForm extends ContentEntityForm {
       '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? date_format(date_create($node->date), 'Y-m-d H:i:s O') : format_date($node->getCreatedTime(), 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($node->date) ? date_format(date_create($node->date), 'O') : format_date($node->getCreatedTime(), 'custom', 'O'))),
       '#default_value' => !empty($node->date) ? $node->date : '',
       '#group' => 'author',
-      '#access' => user_access('administer nodes'),
+      '#access' => $current_user->hasPermission('administer nodes'),
     );
 
     // Node options for administrators.
@@ -193,7 +194,7 @@ class NodeForm extends ContentEntityForm {
       '#title' => t('Promoted to front page'),
       '#default_value' => $node->isPromoted(),
       '#group' => 'options',
-      '#access' => user_access('administer nodes'),
+      '#access' => $current_user->hasPermission('administer nodes'),
     );
 
     $form['sticky'] = array(
@@ -201,7 +202,7 @@ class NodeForm extends ContentEntityForm {
       '#title' => t('Sticky at top of lists'),
       '#default_value' => $node->isSticky(),
       '#group' => 'options',
-      '#access' => user_access('administer nodes'),
+      '#access' => $current_user->hasPermission('administer nodes'),
     );
 
     return parent::form($form, $form_state, $node);
@@ -223,7 +224,7 @@ class NodeForm extends ContentEntityForm {
     //   modules to integrate with "the Save operation" of this form. Modules
     //   need a way to plug themselves into 1) the ::submit() step, and
     //   2) the ::save() step, both decoupled from the pressed form button.
-    if ($element['submit']['#access'] && user_access('administer nodes')) {
+    if ($element['submit']['#access'] && \Drupal::currentUser()->hasPermission('administer nodes')) {
       // isNew | prev status » default   & publish label             & unpublish label
       // 1     | 1           » publish   & Save and publish          & Save as unpublished
       // 1     | 0           » unpublish & Save and publish          & Save as unpublished

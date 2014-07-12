@@ -946,7 +946,7 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  * can be selected on the user permissions page and used to grant or restrict
  * access to actions the module performs.
  *
- * Permissions are checked using user_access().
+ * Permissions are checked using \Drupal::currentUser()->hasPermission().
  *
  * For a detailed usage example, see page_example.module.
  *
@@ -1232,7 +1232,7 @@ function hook_theme_registry_alter(&$theme_registry) {
  * @see _template_preprocess_default_variables()
  */
 function hook_template_preprocess_default_variables_alter(&$variables) {
-  $variables['is_admin'] = user_access('access administration pages');
+  $variables['is_admin'] = \Drupal::currentUser()->hasPermission('access administration pages');
 }
 
 /**
@@ -1834,7 +1834,7 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
       $op = 'view';
     }
     // Skip the extra joins and conditions for node admins.
-    if (!user_access('bypass node access')) {
+    if (!\Drupal::currentUser()->hasPermission('bypass node access')) {
       // The node_access table has the access grants for any given node.
       $access_alias = $query->join('node_access', 'na', '%alias.nid = n.nid');
       $or = db_or();

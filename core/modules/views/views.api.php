@@ -480,7 +480,9 @@ function hook_views_form_substitutions() {
 function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
 
   // Modify contextual filters for my_special_view if user has 'my special permission'.
-  if ($view->name == 'my_special_view' && user_access('my special permission')) {
+  $account = \Drupal::currentUser();
+
+  if ($view->name == 'my_special_view' && $account->hasPermission('my special permission') && $display_id == 'public_display') {
     $args[0] = 'custom value';
   }
 }
@@ -547,7 +549,9 @@ function hook_views_pre_execute(ViewExecutable $view) {
   // view administrators that the query might be heavy.
   // (This action could be performed later in the execution process, but not
   // earlier.)
-  if (count($view->query->tables) > 2 && user_access('administer views')) {
+  $account = \Drupal::currentUser();
+
+  if (count($view->query->tables) > 2 && $account->hasPermission('administer views')) {
     drupal_set_message(t('The view %view may be heavy to execute.', array('%view' => $view->name)), 'warning');
   }
 }

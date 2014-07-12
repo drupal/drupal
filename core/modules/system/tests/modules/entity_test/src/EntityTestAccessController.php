@@ -23,12 +23,12 @@ class EntityTestAccessController extends EntityAccessController {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation === 'view') {
       if ($langcode != LanguageInterface::LANGCODE_DEFAULT) {
-        return user_access('view test entity translations', $account);
+        return $account->hasPermission('view test entity translations');
       }
-      return user_access('view test entity', $account);
+      return $account->hasPermission('view test entity');
     }
     elseif (in_array($operation, array('update', 'delete'))) {
-      return user_access('administer entity_test content', $account);
+      return $account->hasPermission('administer entity_test content');
     }
   }
 
@@ -36,7 +36,7 @@ class EntityTestAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer entity_test content', $account);
+    return $account->hasPermission('administer entity_test content');
   }
 
 }

@@ -132,8 +132,8 @@ class FilterFormatAccessTest extends WebTestBase {
 
     // Make sure that a regular user only has permission to use the format
     // they were granted access to.
-    $this->assertTrue(user_access($this->allowed_format->getPermissionName(), $this->web_user), 'A regular user has permission to use the allowed text format.');
-    $this->assertFalse(user_access($this->disallowed_format->getPermissionName(), $this->web_user), 'A regular user does not have permission to use the disallowed text format.');
+    $this->assertTrue($this->web_user->hasPermission($this->allowed_format->getPermissionName()), 'A regular user has permission to use the allowed text format.');
+    $this->assertFalse($this->web_user->hasPermission($this->disallowed_format->getPermissionName()), 'A regular user does not have permission to use the disallowed text format.');
 
     // Make sure that the allowed format appears on the node form and that
     // the disallowed format does not.
