@@ -533,6 +533,7 @@
  * $query \Drupal::entityQueryAggregate('your_entity_type');
  * // Or:
  * $query = $query_service->getAggregate('your_entity_type');
+ * @endcode
  * Also, you should use dependency injection to get this object if
  * possible; the service you need is entity.query, and its methods getQuery()
  * or getAggregateQuery() will get the query object.
