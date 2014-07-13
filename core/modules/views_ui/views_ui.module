@@ -343,10 +343,3 @@ function views_ui_truncate($string, $length) {
 
   return $string;
 }
-
-/**
- * Magic load function. Wrapper to load a view.
- */
-function views_ui_load($name) {
-  return Views::getView($name);
-}

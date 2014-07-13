@@ -1050,22 +1050,6 @@ function views_get_view_result($name, $display_id = NULL) {
 }
 
 /**
- * #process callback to see if we need to String::checkPlain() the options.
- *
- * Since FAPI is inconsistent, the #options are sanitized for you in all cases
- * _except_ checkboxes. We have form elements that are sometimes 'select' and
- * sometimes 'checkboxes', so we need decide late in the form rendering cycle
- * if the options need to be sanitized before they're rendered. This callback
- * inspects the type, and if it's still 'checkboxes', does the sanitation.
- */
-function views_process_check_options($element, &$form_state) {
-  if ($element['#type'] == 'checkboxes' || $element['#type'] == 'checkbox') {
-    $element['#options'] = array_map('\Drupal\Component\Utility\String::checkPlain', $element['#options']);
-  }
-  return $element;
-}
-
-/**
  * Validation callback for query tags.
  */
 function views_element_validate_tags($element, &$form_state) {
