@@ -1607,7 +1607,7 @@ function template_preprocess_file_link(&$variables) {
     '#theme' => 'image__file_icon',
     '#uri' => file_icon_url($file_entity, $icon_directory),
     '#alt' => '',
-    '#title' => check_plain($file_entity->getFilename()),
+    '#title' => String::checkPlain($file_entity->getFilename()),
     '#attributes' => array('class' => 'file-icon'),
   );
 
