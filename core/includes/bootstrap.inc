@@ -716,19 +716,6 @@ function format_string($string, array $args = array()) {
 }
 
 /**
- * Encodes special characters in a plain-text string for display as HTML.
- *
- * @see drupal_validate_utf8()
- * @ingroup sanitization
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\String::checkPlain().
- */
-function check_plain($text) {
-  return String::checkPlain($text);
-}
-
-/**
  * Checks whether a string is valid UTF-8.
  *
  * All functions designed to filter input should use drupal_validate_utf8
