@@ -1150,18 +1150,6 @@ function module_invoke($module, $hook) {
 }
 
 /**
- * Passes alterable variables to specific hook_TYPE_alter() implementations.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::moduleHandler()->alter($hook).
- *
- * @see \Drupal\Core\Extension\ModuleHandler::alter()
- */
-function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
-  return \Drupal::moduleHandler()->alter($type, $data, $context1, $context2);
-}
-
-/**
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
  * @param string $new_prefix
@@ -1678,4 +1666,3 @@ function _drupal_shutdown_function() {
     error_log($exception);
   }
 }
-
