@@ -91,10 +91,7 @@ class FormTestCheckboxForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $response = new JsonResponse($form_state['values']);
-    // @todo remove once converted to new routing system.
-    $response->send();
-    exit;
+    $form_state['response'] = new JsonResponse($form_state['values']);
   }
 
 }

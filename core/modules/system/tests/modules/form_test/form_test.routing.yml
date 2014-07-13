@@ -71,7 +71,7 @@ form_test.autocomplete_2:
 form_test.alter_form:
   path: '/form-test/alter'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::alterForm'
+    _form: '\Drupal\form_test\Form\FormTestAlterForm'
     _title: 'Form altering test'
   requirements:
     _access: 'TRUE'
@@ -79,7 +79,7 @@ form_test.alter_form:
 form_test.validate_form:
   path: '/form-test/validate'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::validateForm'
+    _form: '\Drupal\form_test\Form\FormTestValidateForm'
     _title: 'Form validation handlers test'
   requirements:
     _access: 'TRUE'
@@ -87,7 +87,7 @@ form_test.validate_form:
 form_test.validate_required:
   path: '/form-test/validate-required'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::validateRequiredForm'
+    _form: '\Drupal\form_test\Form\FormTestValidateRequiredForm'
     _title: 'Form #required validation'
   requirements:
     _access: 'TRUE'
@@ -95,7 +95,7 @@ form_test.validate_required:
 form_test.validate_required_no_title:
   path: '/form-test/validate-required-no-title'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::validateRequiredFormNoTitle'
+    _form: '\Drupal\form_test\Form\FormTestValidateRequiredNoTitleForm'
     _title: 'Form #required validation without #title'
   requirements:
     _access: 'TRUE'
@@ -103,7 +103,7 @@ form_test.validate_required_no_title:
 form_test.validate_with_error_suppresion:
   path: '/form-test/limit-validation-errors'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::validateFormWithErrorSuppression'
+    _form: '\Drupal\form_test\Form\FormTestLimitValidationErrorsForm'
     _title: 'Form validation with some error suppression'
   requirements:
     _access: 'TRUE'
@@ -111,7 +111,7 @@ form_test.validate_with_error_suppresion:
 form_test.pattern:
   path: '/form-test/pattern'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::validatePattern'
+    _form: '\Drupal\form_test\Form\FormTestPatternForm'
     _title: 'Pattern validation'
   requirements:
     _access: 'TRUE'
@@ -167,7 +167,7 @@ form_test.vertical_tabs:
 form_test.storage:
   path: '/form_test/form-storage'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testStorage'
+    _form: '\Drupal\form_test\Form\FormTestStorageForm'
     _title: 'Form storage test'
   requirements:
     _access: 'TRUE'
@@ -175,7 +175,7 @@ form_test.storage:
 form_test.state_clean:
   path: '/form_test/form-state-values-clean'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testFormStateClean'
+    _form: '\Drupal\form_test\Form\FormTestFormStateValuesCleanForm'
     _title: 'Form state values clearance test'
   requirements:
     _access: 'TRUE'
@@ -183,7 +183,7 @@ form_test.state_clean:
 form_test.state_clean_advanced:
   path: '/form_test/form-state-values-clean-advanced'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testFormStateCleanAdvanced'
+    _form: '\Drupal\form_test\Form\FormTestFormStateValuesCleanAdvancedForm'
     _title: 'Form state values clearance advanced test'
   requirements:
     _access: 'TRUE'
@@ -199,7 +199,7 @@ form_test.checkbox:
 form_test.select:
   path: '/form-test/select'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testSelect'
+    _form: '\Drupal\form_test\Form\FormTestSelectForm'
     _title: 'Select'
   requirements:
     _access: 'TRUE'
@@ -207,7 +207,7 @@ form_test.select:
 form_test.empty_select:
   path: '/form-test/empty-select'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testEmptySelect'
+    _form: '\Drupal\form_test\Form\FormTestEmptySelectForm'
     _title: 'Empty Select Element'
   requirements:
     _access: 'TRUE'
@@ -215,7 +215,7 @@ form_test.empty_select:
 form_test.language_select:
   path: '/form-test/language_select'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testLanguageSelect'
+    _form: '\Drupal\form_test\Form\FormTestLanguageSelectForm'
     _title: 'Language Select'
   requirements:
     _access: 'TRUE'
@@ -223,7 +223,7 @@ form_test.language_select:
 form_test.placeholder:
   path: '/form-test/placeholder-text'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testPlaceholder'
+    _form: '\Drupal\form_test\Form\FormTestPlaceholderForm'
     _title: 'Placeholder'
   requirements:
     _access: 'TRUE'
@@ -231,7 +231,7 @@ form_test.placeholder:
 form_test.number:
   path: '/form-test/number'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testNumber'
+    _form: '\Drupal\form_test\Form\FormTestNumberForm'
     _title: 'Number'
   requirements:
     _access: 'TRUE'
@@ -239,15 +239,16 @@ form_test.number:
 form_test.number_range:
   path: '/form-test/number/range'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testNumberRange'
+    _form: '\Drupal\form_test\Form\FormTestNumberForm'
     _title: 'Range'
+    element: 'range'
   requirements:
     _access: 'TRUE'
 
 form_test.range:
   path: '/form-test/range'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testRange'
+    _form: '\Drupal\form_test\Form\FormTestRangeForm'
     _title: 'Range'
   requirements:
     _access: 'TRUE'
@@ -255,7 +256,7 @@ form_test.range:
 form_test.range_invalid:
   path: '/form-test/range/invalid'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testRangeInvalid'
+    _form: '\Drupal\form_test\Form\FormTestRangeInvalidForm'
     _title: 'Invalid range'
   requirements:
     _access: 'TRUE'
@@ -263,7 +264,7 @@ form_test.range_invalid:
 form_test.color:
   path: '/form-test/color'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testColor'
+    _form: '\Drupal\form_test\Form\FormTestColorForm'
     _title: 'Color'
   requirements:
     _access: 'TRUE'
@@ -271,7 +272,7 @@ form_test.color:
 form_test.checkboxes_radios:
   path: '/form-test/checkboxes-radios/{customize}'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testCheckboxesRadios'
+    _form: '\Drupal\form_test\Form\FormTestCheckboxesRadiosForm'
     _title: 'Checkboxes, Radios'
     customize: FALSE
   requirements:
@@ -280,7 +281,7 @@ form_test.checkboxes_radios:
 form_test.email:
   path: '/form-test/email'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testEmail'
+    _form: '\Drupal\form_test\Form\FormTestEmailForm'
     _title: 'Email fields'
   requirements:
     _access: 'TRUE'
@@ -288,7 +289,7 @@ form_test.email:
 form_test.url:
   path: '/form-test/url'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testUrl'
+    _form: '\Drupal\form_test\Form\FormTestUrlForm'
     _title: 'URL'
   requirements:
     _access: 'TRUE'
@@ -296,7 +297,7 @@ form_test.url:
 form_test.disabled_elements:
   path: '/form-test/disabled-elements'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testDisabledElements'
+    _form: '\Drupal\form_test\Form\FormTestDisabledElementsForm'
     _title: 'Form test'
   requirements:
     _access: 'TRUE'
@@ -312,7 +313,7 @@ form_test.input_forgery:
 form_test.rebuild_preservation:
   path: '/form-test/form-rebuild-preserve-values'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testRebuildPreservation'
+    _form: '\Drupal\form_test\Form\FormTestRebuildPreserveValuesForm'
     _title: 'Form values preservation during rebuild test'
   requirements:
     _access: 'TRUE'
@@ -320,7 +321,7 @@ form_test.rebuild_preservation:
 form_test.redirect:
   path: '/form-test/redirect'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testRedirect'
+    _form: '\Drupal\form_test\Form\FormTestRedirectForm'
     _title: 'Redirect test'
   requirements:
     _access: 'TRUE'
@@ -328,7 +329,7 @@ form_test.redirect:
 form_test.label:
   path: '/form_test/form-labels'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testLabel'
+    _form: '\Drupal\form_test\Form\FormTestLabelForm'
     _title: 'Form label test'
   requirements:
     _access: 'TRUE'
@@ -336,7 +337,7 @@ form_test.label:
 form_test.state_persistence:
   path: '/form-test/state-persist'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testStatePersistence'
+    _form: '\Drupal\form_test\Form\FormTestStatePersistForm'
     _title: 'Form state persistence without storage'
   requirements:
     _access: 'TRUE'
@@ -344,7 +345,7 @@ form_test.state_persistence:
 form_test.clicked_button:
   path: '/form-test/clicked-button/{first}/{second}/{third}'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testClickedButton'
+    _form: '\Drupal\form_test\Form\FormTestClickedButtonForm'
     _title: 'Clicked button test'
     first: NULL
     second: NULL
@@ -355,7 +356,7 @@ form_test.clicked_button:
 form_test.checkboxes_zero:
   path: '/form-test/checkboxes-zero/{json}'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testCheckboxesZero'
+    _form: '\Drupal\form_test\Form\FormTestCheckboxesZeroForm'
     _title: 'FAPI test involving checkboxes and zero'
     json: TRUE
   requirements:
@@ -364,7 +365,7 @@ form_test.checkboxes_zero:
 form_test.required:
   path: '/form-test/required-attribute'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testRequired'
+    _form: '\Drupal\form_test\Form\FormTestRequiredAttributeForm'
     _title: 'Required'
   requirements:
     _access: 'TRUE'
@@ -372,7 +373,7 @@ form_test.required:
 form_test.button_class:
   path: '/form-test/button-class'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testButtonClass'
+    _form: '\Drupal\form_test\Form\FormTestButtonClassForm'
     _title: 'Button class testing'
   requirements:
     _access: 'TRUE'
@@ -380,7 +381,7 @@ form_test.button_class:
 form_test.group_details:
   path: '/form-test/group-details'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testGroupDetails'
+    _form: '\Drupal\form_test\Form\FormTestGroupDetailsForm'
     _title: 'Group details testing'
   requirements:
     _access: 'TRUE'
@@ -388,7 +389,7 @@ form_test.group_details:
 form_test.group_container:
   path: '/form-test/group-container'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testGroupContainer'
+    _form: '\Drupal\form_test\Form\FormTestGroupContainerForm'
     _title: 'Group container testing'
   requirements:
     _access: 'TRUE'
@@ -396,7 +397,7 @@ form_test.group_container:
 form_test.group_fieldset:
   path: '/form-test/group-fieldset'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testGroupFieldset'
+    _form: '\Drupal\form_test\Form\FormTestGroupFieldsetForm'
     _title: 'Group fieldset testing'
   requirements:
     _access: 'TRUE'
@@ -404,7 +405,7 @@ form_test.group_fieldset:
 form_test.group_vertical_tabs:
   path: '/form-test/group-vertical-tabs'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testGroupVerticalTabs'
+    _form: '\Drupal\form_test\Form\FormTestGroupVerticalTabsForm'
     _title: 'Group vertical tabs testing'
   requirements:
     _access: 'TRUE'
@@ -412,7 +413,7 @@ form_test.group_vertical_tabs:
 form_test.form_state_database:
   path: '/form-test/form_state-database'
   defaults:
-    _content: '\Drupal\form_test\Form\FormTestForm::testFormStateDatabase'
+    _form: '\Drupal\form_test\Form\FormTestFormStateDatabaseForm'
     _title: 'Form state with a database connection'
   requirements:
     _access: 'TRUE'

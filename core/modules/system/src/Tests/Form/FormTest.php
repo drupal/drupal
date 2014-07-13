@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Form;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
+use Drupal\form_test\Form\FormTestDisabledElementsForm;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -158,11 +159,10 @@ class FormTest extends WebTestBase {
    * is submitted twice, first without values for required fields and then
    * with values. Each submission is checked for relevant error messages.
    *
-   * @see form_test_validate_required_form()
+   * @see \Drupal\form_test\Form\FormTestValidateRequiredForm
    */
   function testRequiredCheckboxesRadio() {
-    $form = $form_state = array();
-    $form = form_test_validate_required_form($form, $form_state);
+    $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestValidateRequiredForm');
 
     // Attempt to submit the form with no required fields set.
     $edit = array();
@@ -235,7 +235,7 @@ class FormTest extends WebTestBase {
    * and then with value. Each submission is checked for relevant error
    * messages.
    *
-   * @see form_test_validate_required_form_no_title()
+   * @see \Drupal\form_test\Form\FormTestValidateRequiredNoTitleForm
    */
   function testRequiredTextfieldNoTitle() {
     // Attempt to submit the form with no required field set.
@@ -293,8 +293,7 @@ class FormTest extends WebTestBase {
    * Tests validation of #type 'select' elements.
    */
   function testSelect() {
-    $form = $form_state = array();
-    $form = form_test_select($form, $form_state);
+    $form = \Drupal::formBuilder()->getForm('Drupal\form_test\Form\FormTestSelectForm');
     $error = '!name field is required.';
     $this->drupalGet('form-test/select');
 
@@ -366,8 +365,7 @@ class FormTest extends WebTestBase {
    * Tests validation of #type 'number' and 'range' elements.
    */
   function testNumber() {
-    $form = $form_state = array();
-    $form = form_test_number($form, $form_state);
+    $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestNumberForm');
 
     // Array with all the error messages to be checked.
     $error_messages = array(
@@ -484,7 +482,7 @@ class FormTest extends WebTestBase {
   function testDisabledElements() {
     // Get the raw form in its original state.
     $form_state = array();
-    $form = _form_test_disabled_elements(array(), $form_state);
+    $form = (new FormTestDisabledElementsForm())->buildForm(array(), $form_state);
 
     // Build a submission that tries to hijack the form by submitting input for
     // elements that are disabled.
@@ -568,8 +566,7 @@ class FormTest extends WebTestBase {
    */
   function testDisabledMarkup() {
     $this->drupalGet('form-test/disabled-elements');
-    $form_state = array();
-    $form = _form_test_disabled_elements(array(), $form_state);
+    $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestDisabledElementsForm');
     $type_map = array(
       'textarea' => 'textarea',
       'select' => 'select',
