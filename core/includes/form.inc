@@ -264,18 +264,6 @@ function drupal_process_form($form_id, &$form, &$form_state) {
 }
 
 /**
- * Validates user-submitted form data in the $form_state array.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->validateForm().
- *
- * @see \Drupal\Core\Form\FormValidatorInterface::validateForm().
- */
-function drupal_validate_form($form_id, &$form, &$form_state) {
-  \Drupal::formBuilder()->validateForm($form_id, $form, $form_state);
-}
-
-/**
  * Redirects the user to a URL after a form has been processed.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.

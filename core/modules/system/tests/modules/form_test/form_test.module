@@ -81,7 +81,7 @@ function system_form_form_test_alter_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Form builder for testing drupal_validate_form().
+ * Form builder for testing \Drupal\Core\Form\FormValidatorInterface::validateForm().
  *
  * Serves for testing form processing and alterations by form validation
  * handlers, especially for the case of a validation error:
