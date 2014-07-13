@@ -240,7 +240,7 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
       // field name to avoid clashes when multiple fields of the same type are
       // added to an entity type.
       $entity_type_id = $this->entityType->id();
-      $real_key = "{$entity_type_id}_field__{$field_name}__{$key}";
+      $real_key = $this->getFieldSchemaIdentifierName($entity_type_id, $field_name, $key);
       foreach ($columns as $column) {
         // Allow for indexes and unique keys to specified as an array of column
         // name and length.
@@ -255,6 +255,34 @@ class ContentEntitySchemaHandler implements EntitySchemaHandlerInterface {
     }
 
     return $data;
+  }
+
+  /**
+   * Generates a safe schema identifier (name of an index, column name etc.).
+   *
+   * @param string $entity_type_id
+   *   The ID of the entity type.
+   * @param string $field_name
+   *   The name of the field.
+   * @param string $key
+   *   The key of the field.
+   *
+   * @return string
+   *   The field identifier name.
+   */
+  protected function getFieldSchemaIdentifierName($entity_type_id, $field_name, $key) {
+    $real_key = "{$entity_type_id}_field__{$field_name}__{$key}";
+    // Limit the string to 48 characters, keeping a 16 characters margin for db
+    // prefixes.
+    if (strlen($real_key) > 48) {
+      // Use a shorter separator, a truncated entity_type, and a hash of the
+      // field name.
+      // Truncate to the same length for the current and revision tables.
+      $entity_type = substr($entity_type_id, 0, 36);
+      $field_hash = substr(hash('sha256', $real_key), 0, 10);
+      $real_key = $entity_type . '__' . $field_hash;
+    }
+    return $real_key;
   }
 
   /**
