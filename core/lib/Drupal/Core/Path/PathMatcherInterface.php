@@ -25,4 +25,12 @@ interface PathMatcherInterface {
    */
   public function matchPath($path, $patterns);
 
+  /**
+   * Checks if the current page is the front page.
+   *
+   * @return bool
+   *   TRUE if the current page is the front page.
+   */
+  public function isFrontPage();
+
 }

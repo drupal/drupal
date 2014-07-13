@@ -15,20 +15,12 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *
  * @return
  *   Boolean value: TRUE if the current page is the front page; FALSE if otherwise.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal\Core\Path\PathMatcherInterface::isFrontPage() instead.
  */
 function drupal_is_front_page() {
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['is_front_page'] = &drupal_static(__FUNCTION__);
-  }
-  $is_front_page = &$drupal_static_fast['is_front_page'];
-
-  if (!isset($is_front_page)) {
-    $is_front_page = (current_path() == \Drupal::config('system.site')->get('page.front'));
-  }
-
-  return $is_front_page;
+  return \Drupal::service('path.matcher')->isFrontPage();
 }
 
 /**

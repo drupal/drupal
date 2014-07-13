@@ -15,6 +15,13 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 class PathMatcher implements PathMatcherInterface {
 
   /**
+   * Whether the current page is the front page.
+   *
+   * @var bool
+   */
+  protected $isCurrentFrontPage;
+
+  /**
    * The default front page.
    *
    * @var string
@@ -51,10 +58,6 @@ class PathMatcher implements PathMatcherInterface {
   public function matchPath($path, $patterns) {
 
     if (!isset($this->regexes[$patterns])) {
-      // Lazy-load front page config.
-      if (!isset($this->frontPage)) {
-        $this->frontPage = $this->configFactory->get('system.site')->get('page.front');
-      }
       // Convert path settings to a regular expression.
       $to_replace = array(
         // Replace newlines with a logical 'or'.
@@ -67,11 +70,37 @@ class PathMatcher implements PathMatcherInterface {
       $replacements = array(
         '|',
         '.*',
-        '\1' . preg_quote($this->frontPage, '/') . '\2',
+        '\1' . preg_quote($this->getFrontPagePath(), '/') . '\2',
       );
       $patterns_quoted = preg_quote($patterns, '/');
       $this->regexes[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
     }
     return (bool) preg_match($this->regexes[$patterns], $path);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFrontPage() {
+    // Cache the result as this is called often.
+    if (!isset($this->isCurrentFrontPage)) {
+      $this->isCurrentFrontPage = (current_path() == $this->getFrontPagePath());
+    }
+    return $this->isCurrentFrontPage;
+  }
+
+  /**
+   * Gets the current front page path.
+   *
+   * @return string
+   *   The front page path.
+   */
+  protected function getFrontPagePath() {
+    // Lazy-load front page config.
+    if (!isset($this->frontPage)) {
+      $this->frontPage = $this->configFactory->get('system.site')
+        ->get('page.front');
+    }
+    return $this->frontPage;
   }
 }
