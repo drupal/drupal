@@ -143,18 +143,6 @@ function drupal_build_form($form_id, &$form_state) {
 }
 
 /**
- * Retrieves default values for the $form_state array.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->getFormStateDefaults().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::getFormStateDefaults().
- */
-function form_state_defaults() {
-  return \Drupal::formBuilder()->getFormStateDefaults();
-}
-
-/**
  * Constructs a new $form from the information in $form_state.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.

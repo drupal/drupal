@@ -70,7 +70,7 @@ class FormAjaxController {
    * @throws Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
    */
   protected function getForm(Request $request) {
-    $form_state = form_state_defaults();
+    $form_state = \Drupal::formBuilder()->getFormStateDefaults();
     $form_build_id = $request->request->get('form_build_id');
 
     // Get the form from the cache.

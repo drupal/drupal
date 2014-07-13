@@ -101,7 +101,7 @@ class FormTest extends WebTestBase {
         foreach (array(TRUE, FALSE) as $required) {
           $form_id = $this->randomName();
           $form = array();
-          $form_state = form_state_defaults();
+          $form_state = \Drupal::formBuilder()->getFormStateDefaults();
           $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
           $element = $data['element']['#title'];
           $form[$element] = $data['element'];
