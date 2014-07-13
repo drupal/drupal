@@ -1603,10 +1603,29 @@ function template_preprocess_file_link(&$variables) {
 
   $url = file_create_url($file->getFileUri());
   $file_entity = ($file instanceof File) ? $file : file_load($file->fid);
+
+  // Human-readable names, for use as text-alternatives to icons.
+  $mime_name = array(
+    'application/msword' => t('Microsoft Office document icon'),
+    'application/vnd.ms-excel' => t('Office spreadsheet icon'),
+    'application/vnd.ms-powerpoint' => t('Office presentation icon'),
+    'application/pdf' => t('PDF icon'),
+    'video/quicktime' => t('Movie icon'),
+    'audio/mpeg' => t('Audio icon'),
+    'audio/wav' => t('Audio icon'),
+    'image/jpeg' => t('Image icon'),
+    'image/png' => t('Image icon'),
+    'image/gif' => t('Image icon'),
+    'application/zip' => t('Package icon'),
+    'text/html' => t('HTML icon'),
+    'text/plain' => t('Plain text icon'),
+    'application/octet-stream' => t('Binary Data'),
+  );
+
   $variables['icon'] = array(
     '#theme' => 'image__file_icon',
     '#uri' => file_icon_url($file_entity, $icon_directory),
-    '#alt' => '',
+    '#alt' => (!empty($mime_name[$file->getMimeType()])) ? $mime_name[$file->getMimeType()] : t('File'),
     '#title' => String::checkPlain($file_entity->getFilename()),
     '#attributes' => array('class' => 'file-icon'),
   );
