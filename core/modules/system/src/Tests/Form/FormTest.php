@@ -112,7 +112,7 @@ class FormTest extends WebTestBase {
           // The form token CSRF protection should not interfere with this test,
           // so we bypass it by setting the token to FALSE.
           $form['#token'] = FALSE;
-          drupal_prepare_form($form_id, $form, $form_state);
+          \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
           drupal_process_form($form_id, $form, $form_state);
           $errors = form_get_errors($form_state);
           // Form elements of type 'radios' throw all sorts of PHP notices

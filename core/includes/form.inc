@@ -276,18 +276,6 @@ function drupal_process_form($form_id, &$form, &$form_state) {
 }
 
 /**
- * Prepares a structured form array.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->prepareForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm().
- */
-function drupal_prepare_form($form_id, &$form, &$form_state) {
-  \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
-}
-
-/**
  * Validates user-submitted form data in the $form_state array.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.

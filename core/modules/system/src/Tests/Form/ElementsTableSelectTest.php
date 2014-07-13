@@ -217,7 +217,7 @@ class ElementsTableSelectTest extends WebTestBase {
     $form_state['input'] = $edit;
     $form_state['input']['form_id'] = $form_id;
 
-    drupal_prepare_form($form_id, $form, $form_state);
+    \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
 
     drupal_process_form($form_id, $form, $form_state);
 

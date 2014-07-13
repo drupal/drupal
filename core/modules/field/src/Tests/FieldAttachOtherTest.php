@@ -342,7 +342,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $values_2[1]['value'] = 0;
 
     // Pretend the form has been built.
-    drupal_prepare_form('field_test_entity_form', $form, $form_state);
+    \Drupal::formBuilder()->prepareForm('field_test_entity_form', $form, $form_state);
     drupal_process_form('field_test_entity_form', $form, $form_state);
     $form_state['values'][$this->field_name] = $values;
     $form_state['values'][$this->field_name_2] = $values_2;
