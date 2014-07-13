@@ -143,18 +143,6 @@ function drupal_build_form($form_id, &$form_state) {
 }
 
 /**
- * Constructs a new $form from the information in $form_state.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->rebuildForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
- */
-function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
-  return \Drupal::formBuilder()->rebuildForm($form_id, $form_state, $old_form);
-}
-
-/**
  * Fetches a form from the cache.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.

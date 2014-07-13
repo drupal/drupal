@@ -11,7 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests functionality of drupal_rebuild_form().
+ * Tests functionality of \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
  *
  * @group Form
  * @todo Add tests for other aspects of form rebuilding.

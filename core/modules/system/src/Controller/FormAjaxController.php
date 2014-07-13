@@ -90,7 +90,7 @@ class FormAjaxController {
 
     // When a form is rebuilt after Ajax processing, its #build_id and #action
     // should not change.
-    // @see drupal_rebuild_form()
+    // @see \Drupal\Core\Form\FormBuilderInterface::rebuildForm()
     $form_state['rebuild_info']['copy']['#build_id'] = TRUE;
     $form_state['rebuild_info']['copy']['#action'] = TRUE;
 
