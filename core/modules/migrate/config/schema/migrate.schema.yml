@@ -6,7 +6,7 @@ migrate.migration.*:
   mapping:
     id:
       type: string
-      lable: 'ID'
+      label: 'ID'
     label:
       type: label
       label: 'Label'
