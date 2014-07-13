@@ -20,14 +20,9 @@ class SelectTest extends DatabaseTestBase {
    */
   function testSimpleSelect() {
     $query = db_select('test');
-    $name_field = $query->addField('test', 'name');
-    $age_field = $query->addField('test', 'age', 'age');
-    $result = $query->execute();
-
-    $num_records = 0;
-    foreach ($result as $record) {
-      $num_records++;
-    }
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
+    $num_records = $query->countQuery()->execute()->fetchField();
 
     $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
   }
@@ -37,19 +32,16 @@ class SelectTest extends DatabaseTestBase {
    */
   function testSimpleComment() {
     $query = db_select('test')->comment('Testing query comments');
-    $name_field = $query->addField('test', 'name');
-    $age_field = $query->addField('test', 'age', 'age');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
     $result = $query->execute();
 
-    $num_records = 0;
-    foreach ($result as $record) {
-      $num_records++;
-    }
+    $records = $result->fetchAll();
 
-    $query = (string)$query;
+    $query = (string) $query;
     $expected = "/* Testing query comments */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
 
-    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
+    $this->assertEqual(count($records), 4, 'Returned the correct number of rows.');
     $this->assertEqual($query, $expected, 'The flattened query contains the comment string.');
   }
 
@@ -58,19 +50,16 @@ class SelectTest extends DatabaseTestBase {
    */
   function testVulnerableComment() {
     $query = db_select('test')->comment('Testing query comments */ SELECT nid FROM {node}; --');
-    $name_field = $query->addField('test', 'name');
-    $age_field = $query->addField('test', 'age', 'age');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
     $result = $query->execute();
 
-    $num_records = 0;
-    foreach ($result as $record) {
-      $num_records++;
-    }
+    $records = $result->fetchAll();
 
-    $query = (string)$query;
+    $query = (string) $query;
     $expected = "/* Testing query comments SELECT nid FROM {node}; -- */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
 
-    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
+    $this->assertEqual(count($records), 4, 'Returned the correct number of rows.');
     $this->assertEqual($query, $expected, 'The flattened query contains the sanitised comment string.');
   }
 
