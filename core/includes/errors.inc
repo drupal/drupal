@@ -210,7 +210,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         // once more in the backtrace.
         array_shift($backtrace);
         // Generate a backtrace containing only scalar argument values.
-        $message .= '<pre class="backtrace">' . format_backtrace($backtrace) . '</pre>';
+        $message .= '<pre class="backtrace">' . Error::formatBacktrace($backtrace) . '</pre>';
       }
       drupal_set_message($message, $class, TRUE);
     }
@@ -272,22 +272,4 @@ function _drupal_get_error_level() {
   // possibly in an edge-case error situation while trying to serve a regular
   // request on a public site, so use the non-verbose default value.
   return $error_level ?: ERROR_REPORTING_DISPLAY_ALL;
-}
-
-/**
- * Formats a backtrace into a plain-text string.
- *
- * The calls show values for scalar arguments and type names for complex ones.
- *
- * @param array $backtrace
- *   A standard PHP backtrace.
- *
- * @return string
- *   A plain-text line-wrapped string ready to be put inside <pre>.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Core\Utility\Error::formatBacktrace().
- */
-function format_backtrace(array $backtrace) {
-  return Error::formatBacktrace($backtrace);
 }
