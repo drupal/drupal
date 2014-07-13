@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\contact\Tests\ContactPersonalTest.
+ * Contains \Drupal\contact\Tests\ContactPersonalTest.
  */
 
 namespace Drupal\contact\Tests;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -73,13 +74,13 @@ class ContactPersonalTest extends WebTestBase {
     $this->assertEqual($mail['key'], 'user_mail');
     $variables = array(
       '!site-name' => \Drupal::config('system.site')->get('name'),
-      '!subject' => $message['subject'],
+      '!subject' => $message['subject[0][value]'],
       '!recipient-name' => $this->contact_user->getUsername(),
     );
     $this->assertEqual($mail['subject'], t('[!site-name] !subject', $variables), 'Subject is in sent message.');
     $this->assertTrue(strpos($mail['body'], t('Hello !recipient-name,', $variables)) !== FALSE, 'Recipient name is in sent message.');
     $this->assertTrue(strpos($mail['body'], $this->web_user->getUsername()) !== FALSE, 'Sender name is in sent message.');
-    $this->assertTrue(strpos($mail['body'], $message['message']) !== FALSE, 'Message body is in sent message.');
+    $this->assertTrue(strpos($mail['body'], $message['message[0][value]']) !== FALSE, 'Message body is in sent message.');
 
     // Check there was no problems raised during sending.
     $this->drupalLogout();
@@ -268,18 +269,22 @@ class ContactPersonalTest extends WebTestBase {
   /**
    * Fills out a user's personal contact form and submits it.
    *
-   * @param $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   A user object of the user being contacted.
-   * @param $message
+   * @param array $message
    *   (optional) An array with the form fields being used. Defaults to an empty
    *   array.
+   *
+   * @return array
+   *   An array with the form fields being used.
    */
-  protected function submitPersonalContact($account, array $message = array()) {
+  protected function submitPersonalContact(AccountInterface $account, array $message = array()) {
     $message += array(
-      'subject' => $this->randomName(16),
-      'message' => $this->randomName(64),
+      'subject[0][value]' => $this->randomName(16),
+      'message[0][value]' => $this->randomName(64),
     );
     $this->drupalPostForm('user/' . $account->id() . '/contact', $message, t('Send message'));
     return $message;
   }
+
 }

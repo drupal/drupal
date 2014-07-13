@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\contact\ContactAuthenticatedUserTest.
+ * Contains \Drupal\contact\ContactAuthenticatedUserTest.
  */
 
 namespace Drupal\contact\Tests;

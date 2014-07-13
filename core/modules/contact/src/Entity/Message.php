@@ -151,7 +151,7 @@ class Message extends ContentEntityBase implements MessageInterface {
     $fields['category'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Category ID'))
       ->setDescription(t('The ID of the associated category.'))
-      ->setSettings(array('target_type' => 'contact_category'))
+      ->setSetting('target_type', 'contact_category')
       ->setRequired(TRUE);
 
     $fields['name'] = FieldDefinition::create('string')
@@ -162,13 +162,35 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setLabel(t("The sender's email"))
       ->setDescription(t('The email of the person that is sending the contact message.'));
 
+    // The subject of the contact message.
     $fields['subject'] = FieldDefinition::create('string')
-      ->setLabel(t('The message subject'))
-      ->setDescription(t('The subject of the contact message.'));
+      ->setLabel(t('Subject'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', 100)
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -10,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
 
-    $fields['message'] = FieldDefinition::create('string')
-      ->setLabel(t('The message text'))
-      ->setDescription(t('The text of the contact message.'));
+    // The text of the contact message.
+    $fields['message'] = FieldDefinition::create('string_long')
+      ->setLabel(t('Message'))
+      ->setRequired(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textarea',
+        'weight' => 0,
+        'settings' => array(
+          'rows' => 12,
+        ),
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'string',
+        'weight' => 0,
+        'label' => 'above',
+      ))
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['copy'] = FieldDefinition::create('boolean')
       ->setLabel(t('Copy'))
@@ -177,7 +199,7 @@ class Message extends ContentEntityBase implements MessageInterface {
     $fields['recipient'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Recipient ID'))
       ->setDescription(t('The ID of the recipient user for personal contact messages.'))
-      ->setSettings(array('target_type' => 'user'));
+      ->setSetting('target_type', 'user');
 
     return $fields;
   }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\contact\Tests\ContactSitewideTest.
+ * Contains \Drupal\contact\Tests\ContactSitewideTest.
  */
 
 namespace Drupal\contact\Tests;
@@ -260,14 +260,14 @@ class ContactSitewideTest extends WebTestBase {
 
     // Submit the contact form and verify the content.
     $edit = array(
-      'subject' => $this->randomName(),
-      'message' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
+      'message[0][value]' => $this->randomName(),
       $field_name . '[0][value]' => $this->randomName(),
     );
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $mails = $this->drupalGetMails();
     $mail = array_pop($mails);
-    $this->assertEqual($mail['subject'], t('[@label] @subject', array('@label' => $label, '@subject' => $edit['subject'])));
+    $this->assertEqual($mail['subject'], t('[@label] @subject', array('@label' => $label, '@subject' => $edit['subject[0][value]'])));
     $this->assertTrue(strpos($mail['body'], $field_label));
     $this->assertTrue(strpos($mail['body'], $edit[$field_name . '[0][value]']));
   }
@@ -384,8 +384,8 @@ class ContactSitewideTest extends WebTestBase {
     $edit = array();
     $edit['name'] = $name;
     $edit['mail'] = $mail;
-    $edit['subject'] = $subject;
-    $edit['message'] = $message;
+    $edit['subject[0][value]'] = $subject;
+    $edit['message[0][value]'] = $message;
     if ($id == \Drupal::config('contact.settings')->get('default_category')) {
       $this->drupalPostForm('contact', $edit, t('Send message'));
     }

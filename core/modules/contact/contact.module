@@ -85,26 +85,10 @@ function contact_entity_extra_field_info() {
         'weight' => -30,
       );
     }
-    $fields['contact_message'][$bundle]['form']['subject'] = array(
-      'label' => t('Subject'),
-      'description' => t('Text'),
-      'weight' => -10,
-    );
-    $fields['contact_message'][$bundle]['form']['message'] = array(
-      'label' => t('Message'),
-      'description' => t('Long text'),
-      'weight' => 0,
-    );
     $fields['contact_message'][$bundle]['form']['copy'] = array(
       'label' => t('Send copy to sender'),
       'description' => t('Option'),
       'weight' => 50,
-    );
-
-    $fields['contact_message'][$bundle]['display']['message'] = array(
-      'label' => t('Message'),
-      'description' => t('The main contact message'),
-      'weight' => 0,
     );
   }
 

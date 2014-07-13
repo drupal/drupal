@@ -116,19 +116,6 @@ class MessageForm extends ContentEntityForm {
       );
     }
 
-    $form['subject'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Subject'),
-      '#maxlength' => 100,
-      '#required' => TRUE,
-    );
-    $form['message'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Message'),
-      '#required' => TRUE,
-      '#rows' => 12,
-    );
-
     $form['copy'] = array(
       '#type' => 'checkbox',
       '#title' => t('Send yourself a copy.'),
