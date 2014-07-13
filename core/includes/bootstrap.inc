@@ -1276,21 +1276,6 @@ function drupal_installation_attempted() {
 }
 
 /**
- * Returns the language object for a given language type.
- *
- * @see \Drupal\Core\Language\LanguageManager
- *
- * @param string $type
- *   The type of language object needed, e.g. Language::TYPE_INTERFACE.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::languageManager()->getCurrentLanguage().
- */
-function language($type) {
-  return \Drupal::languageManager()->getCurrentLanguage($type);
-}
-
-/**
  * Returns a list of languages set up on the site.
  *
  * @param $flags
