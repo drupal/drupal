@@ -559,7 +559,7 @@
 
       // Get rid of the explanatory text around the operator; its placement is
       // explanatory enough.
-      this.operator.find('label').add('div.description').addClass('element-invisible');
+      this.operator.find('label').add('div.description').addClass('visually-hidden');
       this.operator.find('select').addClass('form-select');
 
       // Keep a list of the operator dropdowns, so we can sync their behavior later.

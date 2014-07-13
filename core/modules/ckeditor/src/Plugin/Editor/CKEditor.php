@@ -215,7 +215,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     // because otherwise we cannot retrieve per-feature metadata.
     unset($config['allowedContent']);
     $form['hidden_ckeditor'] = array(
-      '#markup' => '<div id="ckeditor-hidden" class="element-hidden"></div>',
+      '#markup' => '<div id="ckeditor-hidden" class="hidden"></div>',
       '#attached' => array(
         'js' => array(
           array(
