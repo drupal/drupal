@@ -46,7 +46,7 @@ class HandlerFieldPermissionTest extends UserUnitTestBase {
     // machine name.
     $expected_permissions[$this->users[3]->id()][] = t('Administer permissions');
     $expected_permissions[$this->users[3]->id()][] = t('Administer users');
-    $expected_permissions[$this->users[3]->id()][] = t('View user profiles');
+    $expected_permissions[$this->users[3]->id()][] = t('View user information');
 
     foreach ($view->result as $index => $row) {
       $uid = $view->field['uid']->getValue($row);

@@ -477,7 +477,7 @@ function user_permission() {
       'restrict access' => TRUE,
     ),
     'access user profiles' => array(
-      'title' => t('View user profiles'),
+      'title' => t('View user information'),
     ),
     'change own username' => array(
       'title' => t('Change own username'),
