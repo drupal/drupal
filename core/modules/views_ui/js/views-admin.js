@@ -84,13 +84,13 @@
    * @param $target
    *   A jQuery object representing the form field or fields to prepopulate.
    * @param exclude
-   *   Optional. A regular expression representing characters to exclude from the
-   *   target field.
+   *   (optional) A regular expression representing characters to exclude from
+   *   the target field.
    * @param replace
-   *   Optional. A string to use as the replacement value for disallowed
+   *   (optional) A string to use as the replacement value for disallowed
    *   characters.
    * @param suffix
-   *   Optional. A suffix to append at the end of the target field content.
+   *   (optional) A suffix to append at the end of the target field content.
    */
   Drupal.viewsUi.FormFieldFiller = function ($target, exclude, replace, suffix) {
     this.source = $('#edit-label');
