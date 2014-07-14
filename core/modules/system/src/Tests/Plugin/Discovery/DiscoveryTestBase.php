@@ -8,12 +8,12 @@
 namespace Drupal\system\Tests\Plugin\Discovery;
 
 use Drupal\Core\StringTranslation\TranslationWrapper;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for plugin discovery tests.
  */
-abstract class DiscoveryTestBase extends UnitTestBase {
+abstract class DiscoveryTestBase extends KernelTestBase {
 
   /**
    * The discovery component to test.
@@ -46,7 +46,9 @@ abstract class DiscoveryTestBase extends UnitTestBase {
     // Ensure that getDefinitions() returns the expected definitions.
     // For the arrays to be identical (instead of only equal), they must be
     // sorted equally, which seems unnecessary here.
-    $this->assertEqual($this->discovery->getDefinitions(), $this->expectedDefinitions);
+    // The discovered definitions may contain circular references; use a custom
+    // assertion message to prevent var_export() from getting called.
+    $this->assertEqual($this->discovery->getDefinitions(), $this->expectedDefinitions, 'Expected definitions found.');
 
     // Ensure that getDefinition() returns the expected definition.
     foreach ($this->expectedDefinitions as $id => $definition) {

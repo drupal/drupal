@@ -1071,29 +1071,9 @@ abstract class TestBase {
     // Reset statics.
     drupal_static_reset();
 
-    // Reset and create a new service container.
-    $this->container = new ContainerBuilder();
-
-    // @todo Remove this once this class has no calls to t() and format_plural()
-    $this->container->setParameter('language.default_values', Language::$defaultValues);
-    $this->container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
-      ->addArgument('%language.default_values%');
-    $this->container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(new Reference('language.default'));
-    $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
-      ->addArgument(new Reference('language_manager'));
-
-    // Register info parser.
-    $this->container->register('info_parser', 'Drupal\Core\Extension\InfoParser');
-
-    $request = Request::create('/');
-    $this->container->set('request', $request);
-
-    // Run all tests as a anonymous user by default, web tests will replace that
-    // during the test set up.
-    $this->container->set('current_user', new AnonymousUserSession());
-
-    \Drupal::setContainer($this->container);
+    // Ensure there is no service container.
+    $this->container = NULL;
+    \Drupal::setContainer(NULL);
 
     // Unset globals.
     unset($GLOBALS['config_directories']);
@@ -1161,7 +1141,7 @@ abstract class TestBase {
     // which means they may need to access its filesystem and database.
     drupal_static_reset();
 
-    if ($this->container->has('state') && $state = $this->container->get('state')) {
+    if ($this->container && $this->container->has('state') && $state = $this->container->get('state')) {
       $captured_emails = $state->get('system.test_mail_collector') ?: array();
       $emailCount = count($captured_emails);
       if ($emailCount) {
@@ -1236,9 +1216,6 @@ abstract class TestBase {
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();
     $callbacks = $this->originalShutdownCallbacks;
-
-    // Restore original user session.
-    $this->container->set('current_user', $this->originalUser);
   }
 
   /**

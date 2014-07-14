@@ -20,6 +20,6 @@ class MissingDependentModuleUnitTest extends UnitTestBase {
    * Ensure that this test will not be loaded despite its dependency.
    */
   function testFail() {
-    $this->fail(t('Running test with missing required module.'));
+    $this->fail('Running test with missing required module.');
   }
 }

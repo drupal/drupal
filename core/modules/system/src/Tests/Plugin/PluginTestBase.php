@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Plugin;
 
 use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Drupal\plugin_test\Plugin\TestPluginManager;
 use Drupal\plugin_test\Plugin\MockBlockManager;
 use Drupal\plugin_test\Plugin\DefaultsTestPluginManager;
@@ -18,7 +18,15 @@ use Drupal\Core\Extension\ModuleHandler;
 /**
  * Base class for Plugin API unit tests.
  */
-abstract class PluginTestBase extends UnitTestBase {
+abstract class PluginTestBase extends KernelTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('plugin_test');
+
   protected $testPluginManager;
   protected $testPluginExpectedDefinitions;
   protected $mockBlockManager;

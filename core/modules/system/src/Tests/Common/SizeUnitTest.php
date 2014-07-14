@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\Bytes;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Parse a predefined amount of bytes and compare the output with the expected
@@ -16,11 +16,12 @@ use Drupal\simpletest\UnitTestBase;
  *
  * @group Common
  */
-class SizeUnitTest extends UnitTestBase {
+class SizeUnitTest extends KernelTestBase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
 
   function setUp() {
+    parent::setUp();
     $kb = Bytes::KILOBYTE;
     $this->exact_test_cases = array(
       '1 byte' => 1,
@@ -40,7 +41,6 @@ class SizeUnitTest extends UnitTestBase {
       round(67234178751368124 / ($this->exact_test_cases['1 PB']), 2) . ' PB' => 67234178751368124, // petabytes
       round(235346823821125814962843827 / ($this->exact_test_cases['1 YB']), 2) . ' YB' => 235346823821125814962843827, // yottabytes
     );
-    parent::setUp();
   }
 
   /**

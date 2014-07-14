@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\String;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group Common
  */
-class TableSortExtenderUnitTest extends UnitTestBase {
+class TableSortExtenderUnitTest extends KernelTestBase {
 
   /**
    * Tests tablesort_init().
