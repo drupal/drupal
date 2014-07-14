@@ -81,7 +81,7 @@ class SearchRankingTest extends SearchTestBase {
 
     // Add a comment to one of the nodes.
     $edit = array();
-    $edit['subject'] = 'my comment title';
+    $edit['subject[0][value]'] = 'my comment title';
     $edit['comment_body[0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->id() . '/comment');
     $this->drupalPostForm(NULL, $edit, t('Preview'));

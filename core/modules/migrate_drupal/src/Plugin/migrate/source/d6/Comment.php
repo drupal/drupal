@@ -28,7 +28,9 @@ class Comment extends DrupalSqlBase {
       ->fields('c', array('cid', 'pid', 'nid', 'uid', 'subject',
         'comment', 'hostname', 'timestamp', 'status', 'thread', 'name',
         'mail', 'homepage', 'format'));
-    $query->orderBy('timestamp');
+    $query->innerJoin('node', 'n', 'c.nid = n.nid');
+    $query->fields('n', array('type'));
+    $query->orderBy('c.timestamp');
     return $query;
   }
 
@@ -36,6 +38,15 @@ class Comment extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row, $keep = TRUE) {
+    if ($this->variableGet('comment_subject_field_' . $row->getSourceProperty('type'), 1)) {
+      // Comment subject visible.
+      $row->setSourceProperty('field_name', 'comment');
+      $row->setSourceProperty('comment_type', 'comment');
+    }
+    else {
+      $row->setSourceProperty('field_name', 'comment_no_subject');
+      $row->setSourceProperty('comment_type', 'comment_no_subject');
+    }
     // In D6, status=0 means published, while in D8 means the opposite.
     // See https://drupal.org/node/237636
     $row->setSourceProperty('status', !$row->getSourceProperty('status'));

@@ -106,9 +106,6 @@ field.comment.instance_settings:
     anonymous:
       type: integer
       label: 'Mode'
-    subject:
-      type: boolean
-      label: 'Allow comment title'
     form_location:
       type: boolean
       label: ' Allow comment title'

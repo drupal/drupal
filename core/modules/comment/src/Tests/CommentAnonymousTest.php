@@ -63,7 +63,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $edit = array(
       'name' => $this->admin_user->getUsername(),
       'mail' => $this->randomName() . '@example.com',
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(),
     );
     $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit, t('Save'));
@@ -131,7 +131,7 @@ class CommentAnonymousTest extends CommentTestBase {
     // Attempt to view node-comment form while disallowed.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
-    $this->assertNoFieldByName('subject', '', 'Subject field not found.');
+    $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
@@ -151,7 +151,7 @@ class CommentAnonymousTest extends CommentTestBase {
     ));
     $this->drupalGet('node/' . $this->node->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
-    $this->assertFieldByName('subject', '', 'Subject field found.');
+    $this->assertFieldByName('subject[0][value]', '', 'Subject field found.');
     $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $anonymous_comment3->id());

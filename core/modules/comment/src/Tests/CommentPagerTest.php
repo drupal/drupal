@@ -307,7 +307,6 @@ class CommentPagerTest extends CommentTestBase {
     $comments = array();
     foreach (array('comment', 'comment_2') as $field_name) {
       $this->setCommentForm(TRUE, $field_name);
-      $this->setCommentSubject(TRUE, $field_name);
       $this->setCommentPreview(DRUPAL_OPTIONAL, $field_name);
       $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT, 'Comment paging changed.', $field_name);
 

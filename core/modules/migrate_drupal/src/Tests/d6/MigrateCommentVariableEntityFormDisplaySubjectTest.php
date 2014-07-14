@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableFieldTest.
+ * Contains \Drupal\migrate_drupal\Tests\d6\MigrateCommentVariableEntityFormDisplaySubjectTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\d6;
@@ -11,28 +11,30 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Upgrade comment variables  to field.field.node.comment.yml.
+ * Upgrade comment subject variable to entity.form_display.comment.*.default.yml
  *
  * @group migrate_drupal
  */
-class MigrateCommentVariableFieldTest extends MigrateDrupalTestBase {
+class MigrateCommentVariableEntityFormDisplaySubjectTest extends MigrateDrupalTestBase {
 
-  static $modules = array('comment', 'node');
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  static $modules = array('comment');
 
   /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
-    foreach (array('page', 'story', 'test') as $type) {
-      entity_create('node_type', array('type' => $type))->save();
-    }
     foreach (['comment', 'comment_no_subject'] as $comment_type) {
       entity_create('comment_type', array(
         'id' => $comment_type,
         'target_entity_type_id' => 'node',
       ))
-      ->save();
+        ->save();
     }
     // Add some id mappings for the dependant migrations.
     $id_mappings = array(
@@ -42,7 +44,7 @@ class MigrateCommentVariableFieldTest extends MigrateDrupalTestBase {
     );
     $this->prepareIdMappings($id_mappings);
     /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_comment_field');
+    $migration = entity_load('migration', 'd6_comment_entity_form_display_subject');
     $dumps = array(
       $this->getDumpDirectory() . '/Drupal6CommentVariable.php',
     );
@@ -52,11 +54,16 @@ class MigrateCommentVariableFieldTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests comment variables migrated into a field entity.
+   * Tests comment subject variable migrated into an entity display.
    */
-  public function testCommentField() {
-    $this->assertTrue(is_object(entity_load('field_config', 'node.comment')));
-    $this->assertTrue(is_object(entity_load('field_config', 'node.comment_no_subject')));
+  public function testCommentEntityFormDisplay() {
+    $component = entity_get_form_display('comment', 'comment', 'default')
+      ->getComponent('subject');
+    $this->assertEqual($component['type'], 'string');
+    $this->assertEqual($component['weight'], 10);
+    $component = entity_get_form_display('comment', 'comment_no_subject', 'default')
+      ->getComponent('subject');
+    $this->assertNull($component);
   }
 
 }

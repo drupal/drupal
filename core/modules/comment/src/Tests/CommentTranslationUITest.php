@@ -106,7 +106,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   protected function getNewEntityValues($langcode) {
     // Comment subject is not translatable hence we use a fixed value.
     return array(
-      'subject' => $this->subject,
+      'subject' => array(array('value' => $this->subject)),
       'comment_body' => array(array('value' => $this->randomName(16))),
     ) + parent::getNewEntityValues($langcode);
   }

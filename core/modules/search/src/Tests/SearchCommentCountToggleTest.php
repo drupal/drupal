@@ -52,7 +52,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
     // Create a comment array
     $edit_comment = array();
-    $edit_comment['subject'] = $this->randomName();
+    $edit_comment['subject[0][value]'] = $this->randomName();
     $edit_comment['comment_body[0][value]'] = $this->randomName();
 
     // Post comment to the test node with comment

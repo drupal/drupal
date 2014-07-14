@@ -59,6 +59,8 @@ class CommentVariable extends DrupalSqlBase {
     // just the node type in it.
     foreach ($return as $node_type => $data) {
       $return[$node_type]['node_type'] = $node_type;
+      $return[$node_type]['comment_type'] = empty($data['comment_subject_field']) ?
+        'comment_no_subject' : 'comment';
     }
     return $return;
   }
@@ -69,6 +71,7 @@ class CommentVariable extends DrupalSqlBase {
   public function fields() {
     return $this->commentPrefixes() + array(
       'node_type' => $this->t('The node type'),
+      'comment_type' => $this->t('The comment type'),
     );
   }
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\source\d6\CommentSourceTestWithHighwater.
+ * Contains \Drupal\migrate_drupal\Tests\source\d6\CommentSourceWithHighwaterTest.
  */
 
 namespace Drupal\migrate_drupal\Tests\source\d6;

@@ -105,7 +105,7 @@ class CommentLanguageTest extends WebTestBase {
         $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
         $comment_values[$node_langcode][$langcode] = $this->randomName();
         $edit = array(
-          'subject' => $this->randomName(),
+          'subject[0][value]' => $this->randomName(),
           'comment_body[0][value]' => $comment_values[$node_langcode][$langcode],
         );
         $this->drupalPostForm($prefix . 'node/' . $node->id(), $edit, t('Preview'));

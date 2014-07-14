@@ -79,7 +79,7 @@ class StandardTest extends WebTestBase {
     $this->drupalLogin($admin);
     $this->drupalGet('node/1');
     $this->drupalPostForm(NULL, array(
-      'subject' => 'Barfoo',
+      'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
     ), t('Save'));
     // Fetch the feed.

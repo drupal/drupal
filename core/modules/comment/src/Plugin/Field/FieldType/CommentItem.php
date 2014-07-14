@@ -45,7 +45,6 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       'per_page' => 50,
       'form_location' => COMMENT_FORM_BELOW,
       'anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
-      'subject' => 1,
       'preview' => DRUPAL_OPTIONAL,
     ) + parent::defaultInstanceSettings();
   }
@@ -142,11 +141,6 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
         COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'),
       ),
       '#access' => $anonymous_user->hasPermission('post comments'),
-    );
-    $element['comment']['subject'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Allow comment title'),
-      '#default_value' => $settings['subject'],
     );
     $element['comment']['form_location'] = array(
       '#type' => 'checkbox',

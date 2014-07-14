@@ -102,7 +102,7 @@ class TrackerTest extends WebTestBase {
       'status' => 1,
     ));
     $comment = array(
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $other_published_my_comment->id() . '/comment', $comment, t('Save'));
@@ -180,7 +180,7 @@ class TrackerTest extends WebTestBase {
 
     // Add a comment to the page.
     $comment = array(
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $comment, t('Save'));
@@ -201,7 +201,7 @@ class TrackerTest extends WebTestBase {
 
     // Add another comment as other_user.
     $comment = array(
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(20),
     );
     // If the comment is posted in the same second as the last one then Drupal
@@ -233,7 +233,7 @@ class TrackerTest extends WebTestBase {
 
     // Add a comment to the first page.
     $comment = array(
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, t('Save'));
@@ -244,7 +244,7 @@ class TrackerTest extends WebTestBase {
 
     // Add a comment to the second page.
     $comment = array(
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node_two->id() . '/comment', $comment, t('Save'));
@@ -264,7 +264,7 @@ class TrackerTest extends WebTestBase {
 
     // Add a comment to the second page.
     $comment = array(
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, t('Save'));
@@ -299,7 +299,7 @@ class TrackerTest extends WebTestBase {
     // Add a comment to the last node as other user.
     $this->drupalLogin($this->other_user);
     $comment = array(
-      'subject' => $this->randomName(),
+      'subject[0][value]' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(20),
     );
     $this->drupalPostForm('comment/reply/node/' . $nodes[3]->id() . '/comment', $comment, t('Save'));

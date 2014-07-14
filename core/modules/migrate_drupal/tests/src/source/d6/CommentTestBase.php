@@ -49,6 +49,7 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
       'mail' => '',
       'homepage' => '',
       'format' => 'testformat1',
+      'type' => 'story',
     ),
     array(
       'cid' => 2,
@@ -65,6 +66,7 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
       'mail' => '',
       'homepage' => '',
       'format' => 'testformat2',
+      'type' => 'page',
     ),
   );
 
@@ -76,6 +78,9 @@ abstract class CommentTestBase extends MigrateSqlSourceTestCase {
       $this->databaseContents['comments'][$k] = $row;
       $this->databaseContents['comments'][$k]['status'] = 1 - $this->databaseContents['comments'][$k]['status'];
     }
+    // Add node table data.
+    $this->databaseContents['node'][] = array('nid' => 2, 'type' => 'story');
+    $this->databaseContents['node'][] = array('nid' => 3, 'type' => 'page');
     parent::setUp();
   }
 

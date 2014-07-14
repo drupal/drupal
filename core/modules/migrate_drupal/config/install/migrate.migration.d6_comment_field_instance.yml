@@ -4,21 +4,24 @@ source:
   plugin: d6_comment_variable
   constants:
     entity_type: node
-    field_name: comment
     label: Comment settings
     required: true
 process:
   entity_type: 'constants/entity_type'
-  field_name: 'constants/field_name'
   label: 'constants/label'
   required: 'constants/required'
 
+  field_name:
+    plugin: static_map
+    source: comment_subject_field
+    default_value: comment
+    map:
+      0: comment_no_subject
   bundle: node_type
   'default_value/0/status': comment
   'settings/default_mode': comment_default_mode
   'settings/per_page': comment_default_per_page
   'settings/anonymous': comment_anonymous
-  'settings/subject': comment_subject_field
   'settings/form_location': comment_form_location
   'settings/preview': comment_preview
 destination:

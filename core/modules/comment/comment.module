@@ -118,11 +118,6 @@ function comment_entity_extra_field_info() {
           'description' => t('Author textfield'),
           'weight' => -2,
         ),
-        'subject' => array(
-          'label' => t('Subject'),
-          'description' => t('Subject textfield'),
-          'weight' => -1,
-        ),
       ),
     );
   }

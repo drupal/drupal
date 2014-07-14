@@ -451,7 +451,7 @@ class ForumTest extends WebTestBase {
     $this->drupalLogin($this->post_comment_user);
     // Post a reply to the topic.
     $edit = array();
-    $edit['subject'] = $this->randomName();
+    $edit['subject[0][value]'] = $this->randomName();
     $edit['comment_body[0][value]'] = $this->randomName();
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);

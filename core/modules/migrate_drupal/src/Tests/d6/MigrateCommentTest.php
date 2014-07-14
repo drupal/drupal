@@ -27,14 +27,20 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
   public function setUp() {
     parent::setUp();
     entity_create('node_type', array('type' => 'page'))->save();
+    entity_create('node_type', array('type' => 'story'))->save();
     $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
       'id' => 'comment',
       'label' => 'comment',
       'target_entity_type_id' => 'node',
     ))->save();
+    $this->container->get('entity.manager')->getStorage('comment_type')->create(array(
+      'id' => 'comment_no_subject',
+      'label' => 'comment_no_subject',
+      'target_entity_type_id' => 'node',
+    ))->save();
 
     $node = entity_create('node', array(
-      'type' => 'page',
+      'type' => 'story',
       'nid' => 1,
     ));
     $node->enforceIsNew();
@@ -43,16 +49,19 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
       'd6_filter_format' => array(array(array(1), array('filtered_html'))),
       'd6_node' => array(array(array(1), array(1))),
       'd6_user' => array(array(array(0), array(0))),
-      'd6_comment_entity_display' => array(array(array('page'), array('node', 'page', 'default', 'comment'))),
-      'd6_comment_entity_form_display' => array(array(array('page'), array('node', 'page', 'default', 'comment'))),
+      'd6_comment_type' => array(array(array('comment'), array('comment_no_subject'))),
+      'd6_comment_entity_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),
+      'd6_comment_entity_form_display' => array(array(array('story'), array('node', 'story', 'default', 'comment'))),
     );
     $this->prepareIdMappings($id_mappings);
 
-    \Drupal::service('comment.manager')->addDefaultField('node', 'page');
+    \Drupal::service('comment.manager')->addDefaultField('node', 'story');
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_comment');
 
     $dumps = array(
+      $this->getDumpDirectory() . '/Drupal6Node.php',
+      $this->getDumpDirectory() . '/Drupal6CommentVariable.php',
       $this->getDumpDirectory() . '/Drupal6Comment.php',
     );
     $this->prepare($migration, $dumps);
@@ -64,15 +73,16 @@ class MigrateCommentTest extends MigrateDrupalTestBase {
    * Tests the Drupal 6 to Drupal 8 comment migration.
    */
   public function testComments() {
-    /** @var Comment $comment */
+    /** @var \Drupal\comment\CommentInterface $comment */
     $comment = entity_load('comment', 1);
-    $this->assertEqual('The first comment.', $comment->subject->value);
+    $this->assertEqual('The first comment.', $comment->getSubject());
     $this->assertEqual('The first comment body.', $comment->comment_body->value);
     $this->assertEqual('filtered_html', $comment->comment_body->format);
     $this->assertEqual(0, $comment->pid->target_id);
-    $this->assertEqual(1, $comment->entity_id->target_id);
-    $this->assertEqual('node', $comment->entity_type->value);
+    $this->assertEqual(1, $comment->getCommentedEntityId());
+    $this->assertEqual('node', $comment->getCommentedEntityTypeId());
     $this->assertEqual(LanguageInterface::LANGCODE_NOT_SPECIFIED, $comment->language()->id);
+    $this->assertEqual('comment_no_subject', $comment->getTypeId());
 
     $comment = entity_load('comment', 2);
     $this->assertEqual('The response to the second comment.', $comment->subject->value);

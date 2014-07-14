@@ -206,14 +206,6 @@ class CommentForm extends ContentEntityForm {
       '#access' => $is_admin,
     );
 
-    $form['subject'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Subject'),
-      '#maxlength' => 64,
-      '#default_value' => $comment->getSubject(),
-      '#access' => $field_definition->getSetting('subject'),
-    );
-
     // Used for conditional validation of author fields.
     $form['is_anonymous'] = array(
       '#type' => 'value',
