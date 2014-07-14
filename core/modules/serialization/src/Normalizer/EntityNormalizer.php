@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 /**
  * Normalizes/denormalizes Drupal entity objects into an array structure.
  */
-class EntityNormalizer extends NormalizerBase implements DenormalizerInterface {
+class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInterface {
 
   /**
    * The interface or class that this Normalizer supports.
@@ -38,18 +38,6 @@ class EntityNormalizer extends NormalizerBase implements DenormalizerInterface {
    */
   public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
-  }
-
-  /**
-     * {@inheritdoc}
-     */
-  public function normalize($object, $format = NULL, array $context = array()) {
-    $attributes = array();
-    foreach ($object as $name => $field) {
-      $attributes[$name] = $this->serializer->normalize($field, $format);
-    }
-
-    return $attributes;
   }
 
   /**
