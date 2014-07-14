@@ -16,6 +16,7 @@ use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Overrides default LanguageManager to provide configured languages.
@@ -46,9 +47,9 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * The request object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The language negotiator.
@@ -113,11 +114,12 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The configuration storage engine.
    */
-  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override) {
+  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override, RequestStack $requestStack) {
     $this->defaultLanguage = $default_language;
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->configFactoryOverride = $config_override;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -247,13 +249,6 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * {@inheritdoc}
    */
-  public function setRequest(Request $request) {
-    $this->request = $request;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getNegotiator() {
     return $this->negotiator;
   }
@@ -371,7 +366,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         $reflector = new \ReflectionClass($method['class']);
 
         if ($reflector->implementsInterface('\Drupal\language\LanguageSwitcherInterface')) {
-          $result = $this->negotiator->getNegotiationMethodInstance($method_id)->getLanguageSwitchLinks($this->request, $type, $path);
+          $result = $this->negotiator->getNegotiationMethodInstance($method_id)->getLanguageSwitchLinks($this->requestStack->getCurrentRequest(), $type, $path);
 
           if (!empty($result)) {
             // Allow modules to provide translations for specific links.

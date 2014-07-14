@@ -279,10 +279,6 @@ services:
     parent: default_plugin_manager
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
-  request:
-    class: Symfony\Component\HttpFoundation\Request
-    synthetic: true
-    synchronized: true
   request_stack:
     class: Symfony\Component\HttpFoundation\RequestStack
     tags:
@@ -304,9 +300,8 @@ services:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation']
   http_kernel:
-    class: Drupal\Core\HttpKernel
+    class: Symfony\Component\HttpKernel\HttpKernel
     arguments: ['@event_dispatcher', '@controller_resolver', '@request_stack']
-    parent: container.trait
   language_manager:
     class: Drupal\Core\Language\LanguageManager
     arguments: ['@language.default']
@@ -371,9 +366,8 @@ services:
       - { name: service_collector, tag: route_filter, call: addRouteFilter }
   url_generator:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@settings', '@logger.channel.default']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@settings', '@logger.channel.default', '@request_stack']
     calls:
-      - [setRequest, ['@?request']]
       - [setContext, ['@?router.request_context']]
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
@@ -566,10 +560,9 @@ services:
     class: Drupal\Core\Access\AccessArgumentsResolver
   access_manager:
     class: Drupal\Core\Access\AccessManager
-    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager', '@access_arguments_resolver']
+    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager', '@access_arguments_resolver', '@request_stack']
     calls:
       - [setContainer, ['@service_container']]
-      - [setRequest, ['@?request']]
   access_subscriber:
     class: Drupal\Core\EventSubscriber\AccessSubscriber
     arguments: ['@access_manager', '@current_user']
@@ -627,13 +620,11 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@language_manager', '@config.factory']
-    scope: request
   redirect_response_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectResponseSubscriber
     arguments: ['@url_generator']
     tags:
       - { name: event_subscriber }
-    scope: request
   request_close_subscriber:
     class: Drupal\Core\EventSubscriber\RequestCloseSubscriber
     tags:
@@ -804,7 +795,7 @@ services:
     arguments: ['@authentication']
   current_user:
     class: Drupal\Core\Session\AccountProxy
-    arguments: ['@authentication', '@request']
+    arguments: ['@authentication', '@request_stack']
   session_manager:
     class: Drupal\Core\Session\SessionManager
     arguments: ['@request_stack', '@database', '@session_manager.metadata_bag', '@settings']

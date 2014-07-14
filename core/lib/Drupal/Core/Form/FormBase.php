@@ -14,7 +14,7 @@ use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a base class for forms.
@@ -26,11 +26,11 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   use UrlGeneratorTrait;
 
   /**
-   * The current request.
+   * The request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The config factory.
@@ -127,22 +127,22 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    *   The request object.
    */
   protected function getRequest() {
-    if (!$this->request) {
-      $this->request = $this->container()->get('request');
+    if (!$this->requestStack) {
+      $this->requestStack = \Drupal::service('request_stack');
     }
-    return $this->request;
+    return $this->requestStack->getCurrentRequest();
   }
 
   /**
-   * Sets the request object to use.
+   * Sets the request stack object to use.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack object.
    *
    * @return $this
    */
-  public function setRequest(Request $request) {
-    $this->request = $request;
+  public function setRequestStack(RequestStack $request_stack) {
+    $this->requestStack = $request_stack;
     return $this;
   }
 

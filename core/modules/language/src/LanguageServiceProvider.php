@@ -52,7 +52,8 @@ class LanguageServiceProvider extends ServiceProviderBase {
     $definition->setClass('Drupal\language\ConfigurableLanguageManager')
       ->addArgument(new Reference('config.factory'))
       ->addArgument(new Reference('module_handler'))
-      ->addArgument(new Reference('language.config_factory_override'));
+      ->addArgument(new Reference('language.config_factory_override'))
+      ->addArgument(new Reference('request_stack'));
     if ($default_language_values = $this->getDefaultLanguageValues()) {
       $container->setParameter('language.default_values', $default_language_values);
     }

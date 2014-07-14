@@ -10,7 +10,6 @@ namespace Drupal\Core\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 
 /**
  * Defines a factory for logging channels.
@@ -39,16 +38,12 @@ class LoggerChannelFactory implements LoggerChannelFactoryInterface, ContainerAw
     if (!isset($this->channels[$channel])) {
       $instance = new LoggerChannel($channel);
 
-      // If the service container is set and request is available, set it with
-      // the current user to the channel.
+      // If we have a container set the request_stack and current_user services
+      // on the channel. It is up to the channel to determine if there is a
+      // current request.
       if ($this->container) {
-        try {
-          $instance->setRequest($this->container->get('request'));
-          $instance->setCurrentUser($this->container->get('current_user'));
-        }
-        catch (RuntimeException $e) {
-          // We are not in a request context.
-        }
+        $instance->setRequestStack($this->container->get('request_stack'));
+        $instance->setCurrentUser($this->container->get('current_user'));
       }
 
       // Pass the loggers to the channel.

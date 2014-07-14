@@ -355,10 +355,12 @@ function install_begin_request(&$install_state) {
     $environment = 'prod';
   }
 
-  $kernel = InstallerKernel::createFromRequest($request, drupal_classloader(), $environment);
+  // Only allow dumping the container once the hash salt has been created.
+  $kernel = InstallerKernel::createFromRequest($request, drupal_classloader(), $environment, (bool) Settings::get('hash_salt', FALSE));
   $kernel->setSitePath($site_path);
   $kernel->boot();
   $container = $kernel->getContainer();
+  $container->get('request_stack')->push($request);
 
   // Register the file translation service.
   if (isset($GLOBALS['config']['locale.settings']['translation.path'])) {

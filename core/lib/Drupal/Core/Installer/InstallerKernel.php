@@ -25,12 +25,4 @@ class InstallerKernel extends DrupalKernel {
     return $container;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function dumpDrupalContainer(ContainerBuilder $container, $baseClass) {
-    if (Settings::get('hash_salt')) {
-      return parent::dumpDrupalContainer($container, $baseClass);
-    }
-  }
 }

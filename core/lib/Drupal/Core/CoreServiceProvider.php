@@ -22,7 +22,6 @@ use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 /**
@@ -41,10 +40,6 @@ class CoreServiceProvider implements ServiceProviderInterface  {
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
-    // The 'request' scope and service enable services to depend on the Request
-    // object and get reconstructed when the request object changes (e.g.,
-    // during a subrequest).
-    $container->addScope(new Scope('request'));
     $this->registerTwig($container);
     $this->registerUuid($container);
     $this->registerTest($container);

@@ -34,8 +34,9 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    */
   public function testEntityViewBuilderCache() {
     // Force a request via GET so we can get drupal_render() cache working.
-    $request_method = \Drupal::request()->server->get('REQUEST_METHOD');
-    $this->container->get('request')->setMethod('GET');
+    $request = \Drupal::request();
+    $request_method = $request->server->get('REQUEST_METHOD');
+    $request->setMethod('GET');
 
     $entity_test = $this->createTestEntity('entity_test');
 
@@ -71,7 +72,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     $this->assertFalse($this->container->get('cache.' . $bin)->get($cid), 'The entity render cache has been cleared when the entity was deleted.');
 
     // Restore the previous request method.
-    $this->container->get('request')->setMethod($request_method);
+    $request->setMethod($request_method);
   }
 
   /**
@@ -79,8 +80,9 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    */
   public function testEntityViewBuilderCacheWithReferences() {
     // Force a request via GET so we can get drupal_render() cache working.
-    $request_method = \Drupal::request()->server->get('REQUEST_METHOD');
-    $this->container->get('request')->setMethod('GET');
+    $request = \Drupal::request();
+    $request_method = $request->server->get('REQUEST_METHOD');
+    $request->setMethod('GET');
 
     // Create an entity reference field and an entity that will be referenced.
     entity_reference_create_instance('entity_test', 'entity_test', 'reference_field', 'Reference', 'entity_test');
@@ -125,7 +127,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     $this->assertFalse($this->container->get('cache.' . $bin_reference)->get($cid_reference), 'The entity render cache for the referenced entity has been cleared when the entity was deleted.');
 
     // Restore the previous request method.
-    $this->container->get('request')->setMethod($request_method);
+    $request->setMethod($request_method);
   }
 
   /**

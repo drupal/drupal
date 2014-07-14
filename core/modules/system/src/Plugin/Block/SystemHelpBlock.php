@@ -85,7 +85,7 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('request'),
+      $container->get('request_stack')->getCurrentRequest(),
       $container->get('module_handler'),
       $container->get('current_route_match')
     );

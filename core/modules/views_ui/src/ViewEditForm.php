@@ -16,7 +16,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
 use Drupal\user\TempStoreFactory;
 use Drupal\views\Views;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,21 +34,21 @@ class ViewEditForm extends ViewFormBase {
   /**
    * The request object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * Constructs a new ViewEditForm object.
    *
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The request stack object.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, Request $request) {
+  public function __construct(TempStoreFactory $temp_store_factory, RequestStack $requestStack) {
     $this->tempStore = $temp_store_factory->get('views');
-    $this->request = $request;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -57,7 +57,7 @@ class ViewEditForm extends ViewFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('user.tempstore'),
-      $container->get('request')
+      $container->get('request_stack')
     );
   }
 
@@ -292,7 +292,7 @@ class ViewEditForm extends ViewFormBase {
     $view->set('display', $displays);
 
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
-    $query = $this->request->query;
+    $query = $this->requestStack->getCurrentRequest()->query;
     $destination = $query->get('destination');
 
     if (!empty($destination)) {
@@ -765,7 +765,7 @@ class ViewEditForm extends ViewFormBase {
    * should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, &$form_state) {
-    $query = $this->request->query;
+    $query = $this->requestStack->getCurrentRequest()->query;
     // @todo: Revisit this when http://drupal.org/node/1668866 is in.
     $destination = $query->get('destination');
     if (isset($destination) && $form_state['redirect'] !== FALSE) {

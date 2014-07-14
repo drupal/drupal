@@ -46,14 +46,6 @@ class DrupalTest extends UnitTestCase {
   }
 
   /**
-   * Tests the service() method.
-   */
-  public function testRequest() {
-    $this->setMockContainerService('request');
-    $this->assertNotNull(\Drupal::request());
-  }
-
-  /**
    * Tests the currentUser() method.
    */
   public function testCurrentUser() {

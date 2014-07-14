@@ -93,7 +93,7 @@ class UrlRewritingTest extends FileTestBase {
 
     // Create a mock Request for file_url_transform_relative().
     $request = Request::create($GLOBALS['base_url']);
-    $this->container->set('request', $request);
+    $this->container->get('request_stack')->push($request);
     \Drupal::setContainer($this->container);
 
     // Shipped file.

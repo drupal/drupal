@@ -232,7 +232,6 @@ abstract class ViewTestBase extends WebTestBase {
   protected function executeView(ViewExecutable $view, $args = array()) {
     // A view does not really work outside of a request scope, due to many
     // dependencies like the current user.
-    $this->container->enterScope('request');
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();

@@ -190,7 +190,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
           $admin_form = $this->entityManager->getFormObject('user', 'cancel');
           $admin_form->setEntity($account);
           // Calling this directly required to init form object with $account.
-          $admin_form->buildForm($admin_form_mock, $admin_form_state, $this->request);
+          $admin_form->buildForm($admin_form_mock, $admin_form_state);
           $admin_form->submit($admin_form_mock, $admin_form_state);
         }
         else {

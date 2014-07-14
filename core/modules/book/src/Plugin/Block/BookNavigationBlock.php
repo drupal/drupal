@@ -11,7 +11,7 @@ use Drupal\block\BlockBase;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a 'Book navigation' block.
@@ -27,9 +27,9 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * The request object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The book manager.
@@ -47,15 +47,15 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack object.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, BookManagerInterface $book_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->request = $request;
+    $this->requestStack = $request_stack;
     $this->bookManager = $book_manager;
   }
 
@@ -67,7 +67,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('request'),
+      $container->get('request_stack'),
       $container->get('book.manager')
     );
   }
@@ -113,7 +113,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   public function build() {
     $current_bid = 0;
 
-    if ($node = $this->request->get('node')) {
+    if ($node = $this->requestStack->getCurrentRequest()->get('node')) {
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
     }
     if ($this->configuration['block_mode'] == 'all pages') {
@@ -173,7 +173,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   public function getCacheKeys() {
     // Add a key for the active book trail.
     $current_bid = 0;
-    if ($node = $this->request->get('node')) {
+    if ($node = $this->requestStack->getCurrentRequest()->get('node')) {
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
     }
     if ($current_bid === 0) {

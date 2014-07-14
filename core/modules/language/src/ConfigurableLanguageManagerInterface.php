@@ -21,14 +21,6 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
   public static function rebuildServices();
 
   /**
-   * Injects the request object.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request
-   *   The request object.
-   */
-  public function setRequest(Request $request);
-
-  /**
    * Returns the language negotiator.
    *
    * @retun \Drupal\language\LanguageNegotiatorInterface

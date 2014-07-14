@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 
 /**
@@ -141,14 +140,6 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   does not match the requirement.
    */
   public function generateFromRoute($name, $parameters = array(), $options = array());
-
-  /**
-   * Sets the $request property.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HttpRequest object representing the current request.
-   */
-  public function setRequest(Request $request);
 
   /**
    * Sets the baseUrl property.

@@ -158,7 +158,7 @@ class Drupal {
    *   TRUE if there is a currently active request object, FALSE otherwise.
    */
   public static function hasRequest() {
-    return static::$container && static::$container->has('request') && static::$container->initialized('request') && static::$container->isScopeActive('request');
+    return static::$container && static::$container->has('request_stack') && static::$container->get('request_stack')->getCurrentRequest() !== NULL;
   }
 
   /**
@@ -184,7 +184,7 @@ class Drupal {
    *   The currently active request object.
    */
   public static function request() {
-    return static::$container->get('request');
+    return static::$container->get('request_stack')->getCurrentRequest();
   }
 
   /**

@@ -425,22 +425,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Initialize cookie globals.
     $this->initializeCookieGlobals($request);
 
-    // Ensure container has a request scope so we can load file stream wrappers.
-    if (!$this->container->isScopeActive('request')) {
-      // Enter the request scope so that current_user service is available for
-      // locale/translation sake.
-      $this->container->enterScope('request');
-      $this->container->set('request', $request, 'request');
-      $this->container->get('request_stack')->push($request);
-    }
+    // Put the request on the stack.
+    $this->container->get('request_stack')->push($request);
 
     // Make sure all stream wrappers are registered.
     file_get_stream_wrappers();
-
-    // Back out scope required to initialize the file stream wrappers.
-    if ($this->container->isScopeActive('request')) {
-      $this->container->leaveScope('request');
-    }
 
     // Set the allowed protocols once we have the config available.
     $allowed_protocols = $this->container->get('config.factory')->get('system.filter')->get('protocols');
@@ -582,8 +571,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->preHandle($request);
     // Enter the request scope so that current_user service is available for
     // locale/translation sake.
-    $this->container->enterScope('request');
-    $this->container->set('request', $request);
     $this->container->get('request_stack')->push($request);
     $this->container->get('router.request_context')->fromRequest($request);
     return $this;
@@ -680,21 +667,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function initializeContainer($rebuild = FALSE) {
     $this->containerNeedsDumping = FALSE;
-    // The request service requires custom persisting logic, since it is also
-    // potentially scoped.
-    $request_scope = FALSE;
-    $request_stack = $request = NULL;
     $session_manager_state = 0;
     if (isset($this->container)) {
-      if ($this->container->isScopeActive('request')) {
-        $request_scope = TRUE;
-      }
-      if ($this->container->initialized('request')) {
-        $request = $this->container->get('request');
-      }
-      if ($this->container->initialized('request_stack')) {
-        $request_stack = $this->container->get('request_stack');
-      }
       // If there is a session manager, close and save the session.
       if ($this->container->initialized('session_manager')) {
         $session_manager = $this->container->get('session_manager');
@@ -730,7 +704,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $container = $this->compileContainer();
     }
 
-    $this->attachSynthetic($container, $request, $request_stack, $request_scope);
+    $this->attachSynthetic($container);
 
     $this->container = $container;
     if ($session_manager_state & 0x1) {
@@ -996,15 +970,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @param ContainerInterface $container
    *   Container object
-   * @param Request $request
-   *   Request object.
-   * @param RequestStack $request_stack
-   *   Request stack.
-   * @param null $request_scope
+   *
    * @return ContainerInterface
    */
-  protected function attachSynthetic(ContainerInterface $container, Request $request = NULL, RequestStack $request_stack = NULL, $request_scope = NULL) {
-
+  protected function attachSynthetic(ContainerInterface $container) {
     $persist = array();
     if (isset($this->container)) {
       $persist = $this->getServicesToPersist($this->container);
@@ -1019,16 +988,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Set the class loader which was registered as a synthetic service.
     $container->set('class_loader', $this->classLoader);
-    // If we have a request set it back to the new container.
-    if ($request_scope) {
-      $container->enterScope('request');
-    }
-    if (isset($request)) {
-      $container->set('request', $request);
-    }
-    if (isset($request_stack)) {
-      $container->set('request_stack', $request_stack);
-    }
     return $container;
   }
 

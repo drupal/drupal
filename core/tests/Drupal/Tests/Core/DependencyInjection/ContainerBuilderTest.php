@@ -29,6 +29,9 @@ class ContainerBuilderTest extends UnitTestCase {
     $container->register('bar', 'BarClass')
       ->addMethodCall('setBaz', array(new Reference('baz')));
 
+    // Ensure that we can set services on a compiled container.
+    $container->compile();
+
     $container->set('baz', $baz = new \BazClass());
     $this->assertSame($baz, $container->get('bar')->getBaz());
 

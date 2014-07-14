@@ -981,7 +981,7 @@ function system_page_build(&$page) {
         'path' => current_path(),
         'front' => drupal_is_front_page(),
         'language' => \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->id,
-        'query' => \Drupal::service('request')->query->all(),
+        'query' => \Drupal::request()->query->all(),
       )
     );
   }

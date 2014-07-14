@@ -14,6 +14,7 @@ use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Base class for testing the interactive installer.
@@ -101,8 +102,10 @@ abstract class InstallerTestBase extends WebTestBase {
     // @see install_begin_request()
     $request = Request::create($GLOBALS['base_url'] . '/core/install.php');
     $this->container = new ContainerBuilder();
+    $request_stack = new RequestStack();
+    $request_stack->push($request);
     $this->container
-      ->set('request', $request);
+      ->set('request_stack', $request_stack);
     $this->container
       ->setParameter('language.default_values', Language::$defaultValues);
     $this->container

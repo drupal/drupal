@@ -69,7 +69,7 @@ class DisplayPageTest extends ViewUnitTestBase {
     $this->assertEqual($response->getStatusCode(), 200);
 
     $subrequest = Request::create('/test_page_display_200', 'GET');
-    \Drupal::getContainer()->set('request', $subrequest);
+    \Drupal::getContainer()->get('request_stack')->push($subrequest);
 
     // Test accessing a disabled page for a view.
     $view = Views::getView('test_page_display');

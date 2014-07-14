@@ -120,7 +120,7 @@ function template_preprocess_views_view(&$variables) {
     }
 
     $container = \Drupal::getContainer();
-    $form_object = new ViewsForm($container->get('class_resolver'), $container->get('url_generator'), $container->get('request'), $view->storage->id(), $view->current_display);
+    $form_object = new ViewsForm($container->get('class_resolver'), $container->get('url_generator'), $container->get('request_stack'), $view->storage->id(), $view->current_display);
     $form = \Drupal::formBuilder()->getForm($form_object, $view, $output);
     // The form is requesting that all non-essential views elements be hidden,
     // usually because the rendered step is not a view result.

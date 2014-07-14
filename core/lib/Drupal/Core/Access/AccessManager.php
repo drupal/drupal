@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -94,11 +95,11 @@ class AccessManager implements ContainerAwareInterface {
   protected $argumentsResolver;
 
   /**
-   * A request object.
+   * A request stack object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * Constructs a AccessManager instance.
@@ -111,25 +112,15 @@ class AccessManager implements ContainerAwareInterface {
    *   The param converter manager.
    * @param \Drupal\Core\Access\AccessArgumentsResolverInterface $arguments_resolver
    *   The access arguments resolver.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The request stack object.
    */
-  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverInterface $arguments_resolver) {
+  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverInterface $arguments_resolver, RequestStack $requestStack) {
     $this->routeProvider = $route_provider;
     $this->urlGenerator = $url_generator;
     $this->paramConverterManager = $paramconverter_manager;
     $this->argumentsResolver = $arguments_resolver;
-  }
-
-  /**
-   * Sets the request object to use.
-   *
-   * This is used by the RouterListener to make additional request attributes
-   * available.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   */
-  public function setRequest(Request $request) {
-    $this->request = $request;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -222,7 +213,7 @@ class AccessManager implements ContainerAwareInterface {
       if (empty($route_request)) {
         // Create a request and copy the account from the current request.
         $defaults = $parameters + $route->getDefaults();
-        $route_request = RequestHelper::duplicate($this->request, $this->urlGenerator->generate($route_name, $defaults));
+        $route_request = RequestHelper::duplicate($this->requestStack->getCurrentRequest(), $this->urlGenerator->generate($route_name, $defaults));
         $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
         $route_request->attributes->add($this->paramConverterManager->convert($defaults, $route_request));
       }

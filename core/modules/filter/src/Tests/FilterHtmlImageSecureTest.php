@@ -96,7 +96,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     // Create a list of test image sources.
     // The keys become the value of the IMG 'src' attribute, the values are the
     // expected filter conversions.
-    $host = $this->container->get('request')->getHost();
+    $host = \Drupal::request()->getHost();
     $host_pattern = '|^http\://' . $host . '(\:[0-9]{0,5})|';
     $images = array(
       $http_base_url . '/' . $druplicon => base_path() . $druplicon,

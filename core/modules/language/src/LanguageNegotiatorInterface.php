@@ -8,7 +8,6 @@
 namespace Drupal\language;
 
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Common interface for language negotiation services.
@@ -122,14 +121,6 @@ interface LanguageNegotiatorInterface {
    *   The current active user.
    */
   public function setCurrentUser(AccountInterface $current_user);
-
-  /**
-   * Sets the active request and resets all language types.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HttpRequest object representing the current request.
-   */
-  public function setRequest(Request $request);
 
   /**
    * Initializes the specified language type.

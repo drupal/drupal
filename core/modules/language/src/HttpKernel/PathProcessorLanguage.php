@@ -110,7 +110,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
       $this->multilingual = $this->languageManager->isMultilingual();
     }
     if ($this->multilingual) {
-      $this->negotiator->setRequest($request);
+      $this->negotiator->reset();
       $scope = 'outbound';
       if (!isset($this->processors[$scope])) {
         $this->initProcessors($scope);

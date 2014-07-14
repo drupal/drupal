@@ -41,7 +41,7 @@ class TagTest extends ViewUnitTestBase {
 
     // Make sure just ten results are returns.
     $controller = ViewsUIController::create($this->container);
-    $request = $this->container->get('request');
+    $request = $this->container->get('request_stack')->getCurrentRequest();
     $request->query->set('q', 'autocomplete_tag_test');
     $result = $controller->autocompleteTag($request);
     $matches = (array) json_decode($result->getContent());

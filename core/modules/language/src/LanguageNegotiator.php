@@ -12,7 +12,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class responsible for performing language negotiation.
@@ -48,11 +48,11 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   protected $settings;
 
   /**
-   * The request object.
+   * The request stack object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The current active user.
@@ -87,11 +87,12 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, PluginManagerInterface $negotiator_manager, ConfigFactoryInterface $config_factory, Settings $settings) {
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager, PluginManagerInterface $negotiator_manager, ConfigFactoryInterface $config_factory, Settings $settings, RequestStack $requestStack) {
     $this->languageManager = $language_manager;
     $this->negotiatorManager = $negotiator_manager;
     $this->configFactory = $config_factory;
     $this->settings = $settings;
+    $this->requestStack = $requestStack;
   }
 
   /**
@@ -124,18 +125,10 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function setRequest(Request $request) {
-    $this->request = $request;
-    $this->reset();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function initializeType($type) {
     $language = NULL;
 
-    if ($this->currentUser && $this->request) {
+    if ($this->currentUser) {
       // Execute the language negotiation methods in the order they were set up
       // and return the first valid language found.
       foreach ($this->getEnabledNegotiators($type) as $method_id => $info) {
@@ -207,7 +200,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
       // If the language negotiation method has no cache preference or this is
       // satisfied we can execute the callback.
       if ($cache = !isset($method['cache']) || $this->currentUser->isAuthenticated() || $method['cache'] == $cache_enabled) {
-        $langcode = $this->getNegotiationMethodInstance($method_id)->getLangcode($this->request);
+        $langcode = $this->getNegotiationMethodInstance($method_id)->getLangcode($this->requestStack->getCurrentRequest());
       }
     }
 

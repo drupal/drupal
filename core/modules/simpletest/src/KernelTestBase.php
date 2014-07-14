@@ -166,7 +166,6 @@ abstract class KernelTestBase extends UnitTestBase {
 
     // Set the request scope.
     $this->container = $this->kernel->getContainer();
-    $this->container->set('request', $request);
     $this->container->get('request_stack')->push($request);
 
     $this->container->get('state')->set('system.module.files', $this->moduleFiles);
@@ -301,7 +300,7 @@ abstract class KernelTestBase extends UnitTestBase {
     }
 
     $request = Request::create('/');
-    $this->container->set('request', $request);
+    $container->get('request_stack')->push($request);
   }
 
   /**

@@ -135,7 +135,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
     $request->query->replace(array(
       'page' => '3, 2, 1, 0',
     ));
-    \Drupal::getContainer()->set('request', $request);
+    \Drupal::getContainer()->get('request_stack')->push($request);
 
     $name = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')

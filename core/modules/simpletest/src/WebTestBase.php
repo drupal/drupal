@@ -1601,6 +1601,7 @@ abstract class WebTestBase extends TestBase {
     if (isset($path)) {
       $this->drupalGet($path, $options);
     }
+
     if ($this->parse()) {
       $edit_save = $edit;
       // Let's iterate over all the forms.
@@ -2693,7 +2694,8 @@ abstract class WebTestBase extends TestBase {
     $server = array_merge($server, $override_server_vars);
 
     $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
-    $generator->setRequest($request);
+    $this->container->get('request_stack')->push($request);
+    $generator->updateFromRequest();
     return $request;
   }
 }

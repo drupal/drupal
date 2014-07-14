@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines a logger channel that most implementations will use.
@@ -52,11 +52,11 @@ class LoggerChannel implements LoggerChannelInterface {
   protected $loggers = array();
 
   /**
-   * The request object.
+   * The request stack object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The current user object.
@@ -90,15 +90,15 @@ class LoggerChannel implements LoggerChannelInterface {
       'ip' => '',
       'timestamp' => time(),
     );
-    if ($this->currentUser) {
-      $context['user'] = $this->currentUser;
-      $context['uid'] = $this->currentUser->id();
-    }
     // Some context values are only available when in a request context.
-    if ($this->request) {
-      $context['request_uri'] = $this->request->getUri();
-      $context['referer'] = $this->request->headers->get('Referer', '');
-      $context['ip'] = $this->request->getClientIP();
+    if ($this->requestStack && $request = $this->requestStack->getCurrentRequest()) {
+      $context['request_uri'] = $request->getUri();
+      $context['referer'] = $request->headers->get('Referer', '');
+      $context['ip'] = $request->getClientIP();
+      if ($this->currentUser) {
+        $context['user'] = $this->currentUser;
+        $context['uid'] = $this->currentUser->id();
+      }
     }
 
     if (is_string($level)) {
@@ -114,8 +114,8 @@ class LoggerChannel implements LoggerChannelInterface {
   /**
    * {@inheritdoc}
    */
-  public function setRequest(Request $request = NULL) {
-    $this->request = $request;
+  public function setRequestStack(RequestStack $requestStack = NULL) {
+    $this->requestStack = $requestStack;
   }
 
   /**

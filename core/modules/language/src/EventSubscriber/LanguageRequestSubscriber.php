@@ -78,10 +78,9 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
       $request = $event->getRequest();
       $this->negotiator->setCurrentUser($this->currentUser);
-      $this->negotiator->setRequest($request);
+      $this->negotiator->reset();
       if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
         $this->languageManager->setNegotiator($this->negotiator);
-        $this->languageManager->setRequest($request);
         $this->languageManager->setConfigOverrideLanguage($this->languageManager->getCurrentLanguage());
       }
       // After the language manager has initialized, set the default langcode

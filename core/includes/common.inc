@@ -1731,7 +1731,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           // @todo Make this less hacky: http://drupal.org/node/1547376.
           $scriptPath = $GLOBALS['script_path'];
           $pathPrefix = '';
-          $current_query = \Drupal::service('request')->query->all();
+          $current_query = \Drupal::service('request_stack')->getCurrentRequest()->query->all();
           url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
           $current_path = current_path();
           $current_path_is_admin = FALSE;

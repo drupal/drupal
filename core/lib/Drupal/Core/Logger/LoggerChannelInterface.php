@@ -9,7 +9,7 @@ namespace Drupal\Core\Logger;
 
 use Drupal\Core\Session\AccountInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Logger channel interface.
@@ -17,12 +17,12 @@ use Symfony\Component\HttpFoundation\Request;
 interface LoggerChannelInterface extends LoggerInterface {
 
   /**
-   * Sets the request.
+   * Sets the request stack.
    *
-   * @param \Symfony\Component\HttpFoundation\Request|null $request
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The current request object.
    */
-  public function setRequest(Request $request = NULL);
+  public function setRequestStack(RequestStack $requestStack = NULL);
 
   /**
    * Sets the current user.

@@ -9,6 +9,7 @@ namespace Drupal\Core\Routing;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -27,11 +28,11 @@ use Drupal\Core\Site\Settings;
 class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterface {
 
   /**
-   * A request object.
+   * A request stack object.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  protected $request;
+  protected $requestStack;
 
   /**
    * The path processor to convert the system path to one suitable for urls.
@@ -91,7 +92,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    * @param \Psr\Log\LoggerInterface $logger
    *   An optional logger for recording errors.
    */
-  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, Settings $settings, LoggerInterface $logger = NULL) {
+  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, Settings $settings, LoggerInterface $logger = NULL, RequestStack $requestStack) {
     parent::__construct($provider, $logger);
 
     $this->pathProcessor = $path_processor;
@@ -99,13 +100,18 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
     $this->mixedModeSessions = $settings->get('mixed_mode_sessions', FALSE);
     $allowed_protocols = $config->get('system.filter')->get('protocols') ?: array('http', 'https');
     UrlHelper::setAllowedProtocols($allowed_protocols);
+    $this->requestStack = $requestStack;
+    $this->updateFromRequest();
   }
 
   /**
-   * {@inheritdoc}
+   * Updates instance properties using the current request from the stack.
+   *
+   * @todo This should probably be inline in the constructor as this is only
+   *   useful to get some current tests pass.
    */
-  public function setRequest(Request $request) {
-    $this->request = $request;
+  public function updateFromRequest() {
+    $request = $this->requestStack->getCurrentRequest();
     // Set some properties, based on the request, that are used during path-based
     // url generation.
     $this->basePath = $request->getBasePath() . '/';
@@ -351,7 +357,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
       $actual_path = $path;
       $query_string = '';
     }
-    $path = '/' . $this->pathProcessor->processOutbound(trim($actual_path, '/'), $options, $this->request);
+    $path = '/' . $this->pathProcessor->processOutbound(trim($actual_path, '/'), $options, $this->requestStack->getCurrentRequest());
     $path .= $query_string;
     return $path;
   }

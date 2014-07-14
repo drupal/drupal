@@ -60,8 +60,8 @@ function current_path() {
   // @todo Remove the check for whether the request service exists and the
   // fallback code below, once the path alias logic has been figured out in
   // http://drupal.org/node/1269742.
-  if (\Drupal::getContainer()->isScopeActive('request')) {
-    $path = \Drupal::request()->attributes->get('_system_path');
+  if ($request = \Drupal::request()) {
+    $path = $request->attributes->get('_system_path');
     if ($path !== NULL) {
       return $path;
     }

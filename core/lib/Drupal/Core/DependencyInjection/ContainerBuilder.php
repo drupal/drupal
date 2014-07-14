@@ -10,6 +10,7 @@ namespace Drupal\Core\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Drupal's dependency injection container builder.
@@ -19,13 +20,11 @@ use Symfony\Component\DependencyInjection\Reference;
 class ContainerBuilder extends SymfonyContainerBuilder {
 
   /**
-   * Overrides Symfony\Component\DependencyInjection\ContainerBuilder::addObjectResource().
-   *
-   * Drupal does not use Symfony's Config component, so we override
-   * addObjectResource() with an empty implementation to prevent errors during
-   * container compilation.
+   * {@inheritdoc}
    */
-  public function addObjectResource($object) {
+  public function __construct(ParameterBagInterface $parameterBag = NULL) {
+    $this->setResourceTracking(FALSE);
+    parent::__construct($parameterBag);
   }
 
   /**
