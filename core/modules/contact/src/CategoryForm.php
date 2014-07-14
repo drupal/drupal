@@ -65,11 +65,6 @@ class CategoryForm extends EntityForm {
       '#title' => t('Make this the default category.'),
       '#default_value' => $default_category === $category->id(),
     );
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save'),
-    );
 
     return $form;
   }
