@@ -231,7 +231,8 @@ class CommentLinksTest extends CommentTestBase {
 
             // For logged in users, a link containing the amount of new/unread
             // comments is expected.
-            // See important note about comment_num_new() below.
+            // See important note about
+            // \Drupal::service('comment.manager')->getCountNewComments() below.
             if ($this->loggedInUser && isset($this->comment) && !isset($this->comment->seen)) {
               $this->assertLink(t('1 new comment'));
               $this->comment->seen = TRUE;
@@ -243,9 +244,9 @@ class CommentLinksTest extends CommentTestBase {
         $this->assertNoLink(t('1 comment'));
         $this->assertNoLink(t('1 new comment'));
       }
-      // comment_num_new() is based on node views, so comments are marked as
-      // read when a node is viewed, regardless of whether we have access to
-      // comments.
+      // \Drupal::service('comment.manager')->getCountNewComments() is based on
+      // node views, so comments are marked as read when a node is viewed,
+      // regardless of whether we have access to comments.
       if ($path == "node/$nid" && $this->loggedInUser && isset($this->comment)) {
         $this->comment->seen = TRUE;
       }

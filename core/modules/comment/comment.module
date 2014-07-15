@@ -892,29 +892,6 @@ function comment_user_predelete($account) {
 }
 
 /**
- * Gets the number of new comments for the current user and the specified node.
- *
- * @param int $entity_id
- *   Entity ID of the entity to which the comments are attached.
- * @param string $entity_type
- *   Entity type of the entity to which the comments are attached.
- * @param string $field_name
- *   (optional) The field_name to count comments for. Defaults to NULL.
- * @param $timestamp
- *   Time to count from (defaults to time of last user access to node).
- *
- * @return int|false
- *   The number of new comments or FALSE if the user is not logged in.
- *
- * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
- *   Use \Drupal\comment\CommentManager::getCountNewComments().
- */
-function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestamp = 0) {
-  $entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity_id);
-  return \Drupal::service('comment.manager')->getCountNewComments($entity, $field_name, $timestamp);
-}
-
-/**
  * Gets the display ordinal for a comment, starting from 0.
  *
  * Count the number of comments which appear before the comment we want to
