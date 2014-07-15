@@ -1,7 +1,7 @@
 language_elements_test.config_element:
   path: '/language-tests/language_configuration_element'
   defaults:
-    _content: '\Drupal\language_elements_test\Form\LanguageElementsTestForm::configFormElement'
+    _form: '\Drupal\language_elements_test\Form\LanguageConfigurationElement'
     _title: 'Language configuration form element'
   requirements:
     _access: 'TRUE'
@@ -9,7 +9,7 @@ language_elements_test.config_element:
 language_elements_test.config_element_test:
   path: '/language-tests/language_configuration_element_test'
   defaults:
-    _content: '\Drupal\language_elements_test\Form\LanguageElementsTestForm::configFormElementTest'
+    _form: '\Drupal\language_elements_test\Form\LanguageConfigurationElementTest'
     _title: 'Language configuration form element'
   requirements:
     _access: 'TRUE'
