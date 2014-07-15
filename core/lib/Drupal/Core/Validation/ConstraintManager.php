@@ -107,7 +107,7 @@ class ConstraintManager extends DefaultPluginManager {
   }
 
   /**
-   * Process definition callback for the ProcessDecorator.
+   * {@inheritdoc}
    */
   public function processDefinition(&$definition, $plugin_id) {
     // Make sure 'type' is set and either an array or FALSE.

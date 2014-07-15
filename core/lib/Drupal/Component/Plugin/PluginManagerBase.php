@@ -7,13 +7,12 @@
 
 namespace Drupal\Component\Plugin;
 
-use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 
 /**
  * Base class for plugin managers.
  */
-abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface {
+abstract class PluginManagerBase implements PluginManagerInterface {
 
   use DiscoveryTrait;
 
@@ -50,15 +49,6 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
    */
   public function getDefinitions() {
     return $this->discovery->getDefinitions();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clearCachedDefinitions() {
-    if ($this->discovery instanceof CachedDiscoveryInterface) {
-      $this->discovery->clearCachedDefinitions();
-    }
   }
 
   /**
