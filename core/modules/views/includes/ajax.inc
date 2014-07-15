@@ -10,7 +10,8 @@ use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\AjaxResponse;
 
 /**
- * Wrapper around drupal_build_form to handle some AJAX stuff automatically.
+ * Wrapper around \Drupal\Core\Form\FormBuilderInterface::buildForm() to handle
+ * some AJAX stuff automatically.
  * This makes some assumptions about the client.
  */
 function views_ajax_form_wrapper($form_id, &$form_state) {
@@ -24,7 +25,7 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
     ),
   );
 
-  $form = drupal_build_form($form_id, $form_state);
+  $form = \Drupal::formBuilder()->buildForm($form_id, $form_state);
   $output = drupal_render($form);
 
   // These forms have the title built in, so set the title here:

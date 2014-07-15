@@ -453,7 +453,7 @@ function _batch_finished() {
 
     // If no redirection happened, redirect to the originating page. In case the
     // form needs to be rebuilt, save the final $form_state for
-    // drupal_build_form().
+    // \Drupal\Core\Form\FormBuilderInterface::buildForm().
     if (!empty($_batch['form_state']['rebuild'])) {
       $_SESSION['batch_form_state'] = $_batch['form_state'];
     }

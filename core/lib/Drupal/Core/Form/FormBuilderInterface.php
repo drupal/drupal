@@ -48,7 +48,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    * @return array
    *   The form array.
    *
-   * @see drupal_build_form()
+   * @see \Drupal\Core\Form\FormBuilderInterface::buildForm()
    */
   public function getForm($form_arg);
 
