@@ -41,25 +41,6 @@
   };
 
   /**
-   * Sends a 'formUpdated' event each time a form element is modified.
-   */
-  Drupal.behaviors.formUpdated = {
-    attach: function (context) {
-      // These events are namespaced so that we can remove them later.
-      var events = 'change.formUpdated click.formUpdated blur.formUpdated keyup.formUpdated';
-      $(context)
-        // Since context could be an input element itself, it's added back to
-        // the jQuery object and filtered again.
-        .find(':input').addBack().filter(':input')
-        // To prevent duplicate events, the handlers are first removed and then
-        // (re-)added.
-        .off(events).on(events, function () {
-          $(this).trigger('formUpdated');
-        });
-    }
-  };
-
-  /**
    * Prevents consecutive form submissions of identical form values.
    *
    * Repetitive form submissions that would submit the identical form values are
