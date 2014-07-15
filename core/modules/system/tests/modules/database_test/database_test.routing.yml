@@ -36,6 +36,6 @@ database_test.tablesort_first:
 database_test.tablesort_default_sort:
   path: '/database_test/tablesort_default_sort'
   defaults:
-    _content: '\Drupal\database_test\Form\DatabaseTestForm::testTablesortDefaultSort'
+    _form: '\Drupal\database_test\Form\DatabaseTestForm'
   requirements:
     _access: 'TRUE'
