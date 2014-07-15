@@ -242,15 +242,7 @@ class User extends ContentEntityBase implements UserInterface {
       return TRUE;
     }
 
-    $roles = \Drupal::entityManager()->getStorage('user_role')->loadMultiple($this->getRoles());
-
-    foreach ($roles as $role) {
-      if ($role->hasPermission($permission)) {
-        return TRUE;
-      }
-    }
-
-    return FALSE;
+    return $this->getRoleStorage()->isPermissionInRoles($permission, $this->getRoles());
   }
 
   /**
@@ -532,6 +524,16 @@ class User extends ContentEntityBase implements UserInterface {
       ->setDescription(t('The roles the user has.'));
 
     return $fields;
+  }
+
+  /**
+   * Returns the role storage object.
+   *
+   * @return \Drupal\user\RoleStorageInterface
+   *   The role storage object.
+   */
+  protected function getRoleStorage() {
+    return \Drupal::entityManager()->getStorage('user_role');
   }
 
 }
