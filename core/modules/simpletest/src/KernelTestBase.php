@@ -490,7 +490,7 @@ abstract class KernelTestBase extends UnitTestBase {
    */
   protected function registerStreamWrapper($scheme, $class, $type = STREAM_WRAPPERS_LOCAL_NORMAL) {
     if (isset($this->streamWrappers[$scheme])) {
-      $this->unregisterStreamWrapper($scheme);
+      $this->unregisterStreamWrapper($scheme, $this->streamWrappers[$scheme]);
     }
     $this->streamWrappers[$scheme] = $type;
     if (($type & STREAM_WRAPPERS_LOCAL) == STREAM_WRAPPERS_LOCAL) {
