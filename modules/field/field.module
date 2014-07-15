@@ -961,6 +961,13 @@ function field_has_data($field) {
 /**
  * Determine whether the user has access to a given field.
  *
+ * This function does not determine whether access is granted to the entity
+ * itself, only the specific field. Callers are responsible for ensuring that
+ * entity access is also respected. For example, when checking field access for
+ * nodes, check node_access() before checking field_access(), and when checking
+ * field access for entities using the Entity API contributed module,
+ * check entity_access() before checking field_access().
+ *
  * @param $op
  *   The operation to be performed. Possible values:
  *   - 'edit'
