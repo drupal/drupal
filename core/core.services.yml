@@ -63,6 +63,13 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [entity]
+  cache.menu:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [menu]
   cache.render:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -265,6 +272,9 @@ services:
   plugin.manager.action:
     class: Drupal\Core\Action\ActionManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  plugin.manager.menu.link:
+    class: Drupal\Core\Menu\MenuLinkManager
+    arguments: ['@menu.tree_storage', '@menu_link.static.overrides', '@module_handler']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
     arguments: ['@controller_resolver', '@request_stack', '@router.route_provider', '@module_handler', '@cache.discovery', '@language_manager', '@access_manager', '@current_user']
@@ -279,6 +289,13 @@ services:
     parent: default_plugin_manager
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
+  menu.tree_storage:
+    class: Drupal\Core\Menu\MenuTreeStorage
+    arguments: ['@database', '@cache.menu', 'menu_tree']
+    public: false  # Private to plugin.manager.menu.link and menu.link_tree
+  menu_link.static.overrides:
+    class: Drupal\Core\Menu\StaticMenuLinkOverrides
+    arguments: ['@config.factory']
   request_stack:
     class: Symfony\Component\HttpFoundation\RequestStack
     tags:
