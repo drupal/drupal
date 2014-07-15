@@ -70,6 +70,10 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    * for local files only, check for both local and remote files.
    */
   function testUpdateCheckStatus() {
+    // Case when contributed modules are absent.
+    $this->drupalGet('admin/reports/translations');
+    $this->assertText(t('Missing translations for one project'));
+
     $config = \Drupal::config('locale.settings');
     // Set a flag to let the locale_test module replace the project data with a
     // set of test projects.

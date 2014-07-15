@@ -1369,3 +1369,19 @@ function _locale_rebuild_js($langcode = NULL) {
       return TRUE;
   }
 }
+/**
+ * Form element callback: After build changes to the language update table.
+ *
+ * Adds labels to the languages and removes checkboxes from languages from which
+ * translation files could not be found.
+ */
+function locale_translation_language_table($form_element) {
+  // Remove checkboxes of languages without updates.
+  if ($form_element['#not_found']) {
+    foreach ($form_element['#not_found'] as $langcode) {
+      $form_element[$langcode] = array();
+    }
+  }
+  return $form_element;
+}
+

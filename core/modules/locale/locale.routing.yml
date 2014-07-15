@@ -40,7 +40,7 @@ locale.translate_export:
 locale.translate_status:
   path: '/admin/reports/translations'
   defaults:
-    _content: '\Drupal\locale\Form\LocaleForm::status'
+    _form: '\Drupal\locale\Form\TranslationStatusForm'
     _title: 'Available translation updates'
   requirements:
     _permission: 'translate interface'
