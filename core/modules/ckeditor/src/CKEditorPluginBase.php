@@ -25,10 +25,13 @@ use Drupal\editor\Entity\Editor;
  *
  * NOTE: the Drupal plugin ID should correspond to the CKEditor plugin name.
  *
- * @see CKEditorPluginInterface
- * @see CKEditorPluginButtonsInterface
- * @see CKEditorPluginContextualInterface
- * @see CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginInterface
+ * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
+ * @see \Drupal\ckeditor\CKEditorPluginContextualInterface
+ * @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginManager
+ * @see \Drupal\ckeditor\Annotation\CKEditorPlugin
+ * @see plugin_api
  */
 abstract class CKEditorPluginBase extends PluginBase implements CKEditorPluginInterface, CKEditorPluginButtonsInterface {
 

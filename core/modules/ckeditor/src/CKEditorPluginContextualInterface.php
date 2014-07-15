@@ -20,7 +20,13 @@ use Drupal\editor\Entity\Editor;
  * the case where it must be enabled based on an explicit setting), then one
  * must also implement the CKEditorPluginConfigurableInterface interface.
  *
- * @see CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginInterface
+ * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
+ * @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginBase
+ * @see \Drupal\ckeditor\CKEditorPluginManager
+ * @see \Drupal\ckeditor\Annotation\CKEditorPlugin
+ * @see plugin_api
  */
 interface CKEditorPluginContextualInterface extends CKEditorPluginInterface {
 

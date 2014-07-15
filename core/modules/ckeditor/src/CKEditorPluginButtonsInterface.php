@@ -20,8 +20,13 @@ namespace Drupal\ckeditor;
  * added as well. The downside of conditionally adding buttons is that the user
  * cannot see these buttons in the toolbar builder UI.
  *
- * @see CKEditorPluginContextualInterface
- * @see CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginInterface
+ * @see \Drupal\ckeditor\CKEditorPluginContextualInterface
+ * @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginBase
+ * @see \Drupal\ckeditor\CKEditorPluginManager
+ * @see \Drupal\ckeditor\Annotation\CKEditorPlugin
+ * @see plugin_api
  */
 interface CKEditorPluginButtonsInterface extends CKEditorPluginInterface {
 

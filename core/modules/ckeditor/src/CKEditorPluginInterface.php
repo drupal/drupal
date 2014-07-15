@@ -25,9 +25,13 @@ use Drupal\editor\Entity\Editor;
  * Finally, if your plugin must be configurable, you can also implement the
  * CKEditorPluginConfigurableInterface interface.
  *
- * @see CKEditorPluginButtonsInterface
- * @see CKEditorPluginContextualInterface
- * @see CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
+ * @see \Drupal\ckeditor\CKEditorPluginContextualInterface
+ * @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginBase
+ * @see \Drupal\ckeditor\CKEditorPluginManager
+ * @see \Drupal\ckeditor\Annotation\CKEditorPlugin
+ * @see plugin_api
  */
 interface CKEditorPluginInterface extends PluginInspectionInterface {
 

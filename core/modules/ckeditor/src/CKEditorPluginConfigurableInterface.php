@@ -16,9 +16,13 @@ use Drupal\editor\Entity\Editor;
  * then be automatically passed on to the corresponding CKEditor instance via
  * CKEditorPluginInterface::getConfig().
  *
- * @see CKEditorPluginInterface
- * @see CKEditorPluginButtonsInterface
- * @see CKEditorPluginContextualInterface
+ * @see \Drupal\ckeditor\CKEditorPluginInterface
+ * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
+ * @see \Drupal\ckeditor\CKEditorPluginContextualInterface
+ * @see \Drupal\ckeditor\CKEditorPluginBase
+ * @see \Drupal\ckeditor\CKEditorPluginManager
+ * @see \Drupal\ckeditor\Annotation\CKEditorPlugin
+ * @see plugin_api
  */
 interface CKEditorPluginConfigurableInterface extends CKEditorPluginInterface {
 

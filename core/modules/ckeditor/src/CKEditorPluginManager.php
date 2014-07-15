@@ -14,7 +14,15 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\editor\Entity\Editor;
 
 /**
- * CKEditor Plugin manager.
+ * Provides a CKEditor Plugin plugin manager.
+ *
+ * @see \Drupal\ckeditor\CKEditorPluginInterface
+ * @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
+ * @see \Drupal\ckeditor\CKEditorPluginContextualInterface
+ * @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
+ * @see \Drupal\ckeditor\CKEditorPluginBase
+ * @see \Drupal\ckeditor\Annotation\CKEditorPlugin
+ * @see plugin_api
  */
 class CKEditorPluginManager extends DefaultPluginManager {
 
