@@ -435,6 +435,9 @@ services:
   path.matcher:
     class: Drupal\Core\Path\PathMatcher
     arguments: ['@config.factory']
+  path.validator:
+    class: Drupal\Core\Path\PathValidator
+    arguments: ['@router', '@router.route_provider', '@request_stack', '@access_manager', '@current_user']
 
 # The argument to the hashing service defined in services.yml, to the
 # constructor of PhpassHashedPassword is the log2 number of iterations for
