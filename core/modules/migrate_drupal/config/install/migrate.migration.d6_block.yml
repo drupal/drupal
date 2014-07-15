@@ -1,5 +1,7 @@
 id: d6_block
 label: Drupal 6 blocks
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_block
 process:

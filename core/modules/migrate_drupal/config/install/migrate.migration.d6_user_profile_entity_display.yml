@@ -1,5 +1,7 @@
 id: d6_user_profile_entity_display
 label: Drupal 6 user profile display configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_profile_field
   constants:

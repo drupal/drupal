@@ -1,5 +1,7 @@
 id: d6_term_node
 label: Drupal 6 term/node relationships
+migration_groups:
+  - Drupal 6
 load:
   plugin: d6_term_node
 

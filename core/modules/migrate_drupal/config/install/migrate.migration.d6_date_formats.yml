@@ -1,5 +1,7 @@
 id: d6_date_formats
 label: Drupal 6 date format configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: variable_multirow
   variables:

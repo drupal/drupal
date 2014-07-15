@@ -1,5 +1,7 @@
 id: d6_node_type
 label: Drupal 6 node type configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_node_type
   constants:

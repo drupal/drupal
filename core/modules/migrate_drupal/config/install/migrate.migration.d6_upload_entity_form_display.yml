@@ -1,5 +1,7 @@
 id: d6_upload_entity_form_display
 label: Drupal 6 upload form display configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_upload_instance
   constants:

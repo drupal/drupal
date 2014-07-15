@@ -1,5 +1,7 @@
 id: d6_filter_format
 label: Drupal 6 filter format configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_filter_format
 process:

@@ -1,5 +1,7 @@
 id: d6_contact_category
 label: Drupal 6 contact category configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_contact_category
 process:

@@ -1,5 +1,7 @@
 id: d6_cck_field_revision
 label: Drupal 6 field revisions
+migration_groups:
+  - Drupal 6
 load:
   plugin: drupal_entity
   bundle_migration: d6_node_type

@@ -2,6 +2,8 @@
 # migration as an optional dependency to ensure d6_file runs first.
 id: d6_file
 label: Drupal 6 files
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_file
 process:

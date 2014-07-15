@@ -1,5 +1,7 @@
 id: d6_forum_settings
 label: Drupal 6 forum configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: variable
   variables:

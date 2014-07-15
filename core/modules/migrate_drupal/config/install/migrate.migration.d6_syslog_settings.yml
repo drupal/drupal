@@ -1,5 +1,7 @@
 id: d6_syslog_settings
 label: Drupal 6 system log configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: variable
   variables:

@@ -1,5 +1,7 @@
 id: d6_comment_entity_display
 label: Drupal 6 comment display configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_comment_variable
   constants:

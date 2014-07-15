@@ -1,5 +1,7 @@
 id: d6_user_picture_entity_form_display
 label: Drupal 6 user picture form display configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_user_picture_instance
   constants:

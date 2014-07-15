@@ -1,5 +1,7 @@
 id: d6_node_revision
 label: Drupal 6 node revisions
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_node_revision
 process:

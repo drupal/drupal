@@ -1,5 +1,7 @@
 id: d6_term_node_revision
 label: Drupal 6 term/node relationship revisions
+migration_groups:
+  - Drupal 6
 load:
   plugin: d6_term_node
   bundle_migration: d6_vocabulary_field

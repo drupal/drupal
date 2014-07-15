@@ -1,5 +1,7 @@
 id: d6_user_role
 label: Drupal 6 user roles
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_user_role
 process:

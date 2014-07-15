@@ -1,5 +1,7 @@
 id: d6_upload
 label: Drupal 6 file uploads
+migration_groups:
+  - Drupal 6
 source:
   plugin: d6_upload
 

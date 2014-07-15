@@ -1,5 +1,7 @@
 id: d6_node_settings
 label: Drupal 6 node configuration
+migration_groups:
+  - Drupal 6
 source:
   plugin: variable
   variables:
