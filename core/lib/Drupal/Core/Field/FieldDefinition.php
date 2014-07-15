@@ -183,7 +183,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    * {@inheritdoc}
    */
   public function getProvider() {
-    return $this->definition['provider'];
+    return isset($this->definition['provider']) ? $this->definition['provider'] : NULL;
   }
 
   /**

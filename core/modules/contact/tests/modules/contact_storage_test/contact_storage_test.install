@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update hooks.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function contact_storage_test_install() {
+  // ModuleHandler won't create the schema automatically because Message entity
+  // belongs to contact.module.
+  // @todo Remove this when https://www.drupal.org/node/1498720 is in.
+  $entity_manager = \Drupal::entityManager();
+  $schema = \Drupal::database()->schema();
+  $entity_type = $entity_manager->getDefinition('contact_message');
+  $storage = $entity_manager->getStorage($entity_type->id());
+  foreach ($storage->getSchema() as $table_name => $table_schema) {
+    if (!$schema->tableExists($table_name)) {
+      $schema->createTable($table_name, $table_schema);
+    }
+  }
+}

@@ -386,7 +386,7 @@ class EntityManager extends DefaultPluginManager implements EntityManagerInterfa
         foreach ($module_definitions as $field_name => $definition) {
           // @todo Remove this check once FieldDefinitionInterface exposes a
           //  proper provider setter. See https://drupal.org/node/2225961.
-          if ($definition instanceof FieldDefinition) {
+          if ($definition instanceof FieldDefinition && $definition->getProvider() == NULL) {
             $definition->setProvider($module);
           }
           $base_field_definitions[$field_name] = $definition;

@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Contains custom contact message functionality for ContactStorageTest.
+ */
+
+use Drupal\Core\Field\FieldDefinition;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function contact_storage_test_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'contact_message') {
+    $fields = array();
+    $fields['id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Message ID'))
+      ->setDescription(t('The message ID.'))
+      ->setReadOnly(TRUE)
+      // Explicitly set this to 'contact' so that
+      // ContentEntityDatabaseStorage::usesDedicatedTable() doesn't attempt to
+      // put the ID in a dedicated table.
+      // @todo Remove when https://www.drupal.org/node/1498720 is in.
+      ->setProvider('contact')
+      ->setSetting('unsigned', TRUE);
+
+    return $fields;
+  }
+}
+
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function contact_storage_test_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  // Set the controller class for nodes to an alternate implementation of the
+  // Drupal\Core\Entity\EntityStorageInterface interface.
+  $entity_types['contact_message']->setStorageClass('\Drupal\Core\Entity\ContentEntityDatabaseStorage');
+  $keys = $entity_types['contact_message']->getKeys();
+  $keys['id'] = 'id';
+  $entity_types['contact_message']->set('entity_keys', $keys);
+  $entity_types['contact_message']->set('base_table', 'contact_message');
+}

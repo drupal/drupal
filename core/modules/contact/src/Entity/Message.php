@@ -26,7 +26,8 @@ use Drupal\Core\Field\FieldDefinition;
  *     }
  *   },
  *   entity_keys = {
- *     "bundle" = "category"
+ *     "bundle" = "category",
+ *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "contact_category",
  *   fieldable = TRUE,
@@ -36,20 +37,6 @@ use Drupal\Core\Field\FieldDefinition;
  * )
  */
 class Message extends ContentEntityBase implements MessageInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function id() {
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uuid() {
-    return NULL;
-  }
 
   /**
    * {@inheritdoc}
@@ -153,6 +140,15 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDescription(t('The ID of the associated category.'))
       ->setSetting('target_type', 'contact_category')
       ->setRequired(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The message UUID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The comment language code.'));
 
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t("The sender's name"))
