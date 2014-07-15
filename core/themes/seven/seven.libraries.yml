@@ -4,7 +4,7 @@ maintenance-page:
     js/mobile.install.js: {}
   css:
     theme:
-      maintenance-page.css: {}
+      css/maintenance-page.css: {}
   dependencies:
     - system/maintenance
 
@@ -14,7 +14,7 @@ install-page:
     js/mobile.install.js: {}
   css:
     theme:
-      install-page.css: {}
+      css/install-page.css: {}
   dependencies:
     - system/maintenance
 
