@@ -172,10 +172,6 @@ function update_manager_access() {
  */
 function update_theme() {
   return array(
-    'update_manager_update_form' => array(
-      'render element' => 'form',
-      'file' => 'update.manager.inc',
-    ),
     'update_last_check' => array(
       'variables' => array('last' => 0),
       'template' => 'update-last-check',
