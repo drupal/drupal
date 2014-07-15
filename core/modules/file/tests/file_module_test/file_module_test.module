@@ -10,67 +10,6 @@ use Drupal\file\Entity\File;
 use Drupal\field\FieldConfigInterface;
 
 /**
- * Form constructor for testing a 'managed_file' element.
- *
- * @see file_module_test_menu()
- * @see file_module_test_form_submit()
- *
- * @deprecated Use \Drupal\file_module_test\Form\FileModuleTestForm::managedFileTest()
- */
-function file_module_test_form($form, &$form_state, $tree = TRUE, $extended = TRUE, $multiple = FALSE, $default_fids = NULL) {
-  $form['#tree'] = (bool) $tree;
-
-  $form['nested']['file'] = array(
-    '#type' => 'managed_file',
-    '#title' => t('Managed file'),
-    '#upload_location' => 'public://test',
-    '#progress_message' => t('Please wait...'),
-    '#extended' => (bool) $extended,
-    '#size' => 13,
-    '#multiple' => (bool) $multiple,
-  );
-  if ($default_fids) {
-    $default_fids = explode(',', $default_fids);
-    $form['nested']['file']['#default_value'] = $extended ? array('fids' => $default_fids) : $default_fids;
-  }
-
-  $form['textfield'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Type a value and ensure it stays'),
-  );
-
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-  );
-
-  return $form;
-}
-
-/**
- * Form submission handler for file_module_test_form().
- */
-function file_module_test_form_submit($form, &$form_state) {
-  if ($form['#tree']) {
-    $uploads = $form_state['values']['nested']['file'];
-  }
-  else {
-    $uploads = $form_state['values']['file'];
-  }
-
-  if ($form['nested']['file']['#extended']) {
-    $uploads = $uploads['fids'];
-  }
-
-  $fids = array();
-  foreach ($uploads as $fid) {
-    $fids[] = $fid;
-  }
-
-  drupal_set_message(t('The file ids are %fids.', array('%fids' => implode(',', $fids))));
-}
-
-/**
  * Implements hook_file_download_access().
  */
 function file_module_test_file_download_access(FieldConfigInterface $field, EntityInterface $entity, File $file) {

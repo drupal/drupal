@@ -7,16 +7,87 @@
 
 namespace Drupal\file_module_test\Form;
 
+use Drupal\Core\Form\FormBase;
+
 /**
- * Temporary form controller for file_module_test module.
+ * Form controller for file_module_test module.
  */
-class FileModuleTestForm {
+class FileModuleTestForm extends FormBase {
 
   /**
-   * @todo Remove file_module_test_form().
+   * {@inheritdoc}
    */
-  public function managedFileTest($tree, $extended, $multiple, $default_fids) {
-    return \Drupal::formBuilder()->getForm('file_module_test_form', $tree, $extended, $multiple, $default_fids);
+  public function getFormId() {
+    return 'file_module_test_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param array $form_state
+   *   An associative array containing the current state of the form.
+   * @param bool $tree
+   *   (optional) If the form should use #tree. Defaults to TRUE.
+   * @param bool $extended
+   *   (optional) If the form should use #extended. Defaults to TRUE.
+   * @param bool $multiple
+   *   (optional) If the form should use #multiple. Defaults to FALSE.
+   * @param array $default_fids
+   *   (optional) Any default file IDs to use.
+   */
+  public function buildForm(array $form, array &$form_state, $tree = TRUE, $extended = TRUE, $multiple = FALSE, $default_fids = NULL) {
+    $form['#tree'] = (bool) $tree;
+
+    $form['nested']['file'] = array(
+      '#type' => 'managed_file',
+      '#title' => $this->t('Managed file'),
+      '#upload_location' => 'public://test',
+      '#progress_message' => $this->t('Please wait...'),
+      '#extended' => (bool) $extended,
+      '#size' => 13,
+      '#multiple' => (bool) $multiple,
+    );
+    if ($default_fids) {
+      $default_fids = explode(',', $default_fids);
+      $form['nested']['file']['#default_value'] = $extended ? array('fids' => $default_fids) : $default_fids;
+    }
+
+    $form['textfield'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Type a value and ensure it stays'),
+    );
+
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, array &$form_state) {
+    if ($form['#tree']) {
+      $uploads = $form_state['values']['nested']['file'];
+    }
+    else {
+      $uploads = $form_state['values']['file'];
+    }
+
+    if ($form['nested']['file']['#extended']) {
+      $uploads = $uploads['fids'];
+    }
+
+    $fids = array();
+    foreach ($uploads as $fid) {
+      $fids[] = $fid;
+    }
+
+    drupal_set_message($this->t('The file ids are %fids.', array('%fids' => implode(',', $fids))));
   }
 
 }
