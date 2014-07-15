@@ -445,8 +445,9 @@ function _batch_finished() {
       }
     }
 
-    // Use drupal_redirect_form() to handle the redirection logic.
-    $redirect = drupal_redirect_form($_batch['form_state']);
+    // Use \Drupal\Core\Form\FormSubmitterInterface::redirectForm() to handle
+    // the redirection logic.
+    $redirect = \Drupal::service('form_submitter')->redirectForm($_batch['form_state']);
     if (is_object($redirect)) {
       return $redirect;
     }
