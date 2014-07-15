@@ -97,7 +97,10 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     );
     $header['status'] = array(
       'data' => $this->t('Status'),
-      'class' => array(RESPONSIVE_PRIORITY_LOW),
+    );
+    $header['progress'] = array(
+      'data' => $this->t('Indexing progress'),
+      'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
     );
     return $header + parent::buildHeader();
   }
@@ -131,6 +134,18 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       $status = $this->t('Disabled');
     }
     $row['status']['#markup'] = $status;
+
+    if ($entity->isIndexable()) {
+      $status = $entity->getPlugin()->indexStatus();
+      $row['progress']['#markup'] = $this->t('%num_indexed of %num_total indexed', array(
+        '%num_indexed' => $status['total'] - $status['remaining'],
+        '%num_total' => $status['total']
+      ));
+    }
+    else {
+      $row['progress']['#markup'] = $this->t('Does not use index');
+    }
+
     return $row + parent::buildRow($entity);
   }
 
@@ -158,7 +173,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     $status = '<p><strong>' . $this->t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) . ' ' . $count . '</strong></p>';
     $form['status'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Indexing status'),
+      '#title' => $this->t('Indexing progress'),
       '#open' => TRUE,
     );
     $form['status']['status'] = array('#markup' => $status);
