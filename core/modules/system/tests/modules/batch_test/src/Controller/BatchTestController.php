@@ -87,7 +87,7 @@ class BatchTestController {
     $form_state = array(
       'values' => array('value' => $value)
     );
-    drupal_form_submit('batch_test_chained_form', $form_state);
+    \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestChainedForm', $form_state);
     return array(
       'success' => array(
         '#markup' => 'Got out of a programmatic batched form.',

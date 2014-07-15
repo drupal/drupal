@@ -34,7 +34,7 @@ batch_test.no_form:
 batch_test.test_form:
   path: '/batch-test'
   defaults:
-    _content: '\Drupal\batch_test\Form\BatchTestForm::testForm'
+    _form: '\Drupal\batch_test\Form\BatchTestSimpleForm'
     _title: 'Batch test'
   requirements:
     _access: 'TRUE'
@@ -42,7 +42,7 @@ batch_test.test_form:
 batch_test.multistep:
   path: '/batch-test/multistep'
   defaults:
-    _content: '\Drupal\batch_test\Form\BatchTestForm::testMultistepForm'
+    _form: '\Drupal\batch_test\Form\BatchTestMultiStepForm'
     _title: 'Multistep'
   requirements:
     _access: 'TRUE'
@@ -50,7 +50,7 @@ batch_test.multistep:
 batch_test.chained:
   path: '/batch-test/chained'
   defaults:
-    _content: '\Drupal\batch_test\Form\BatchTestForm::testChainedForm'
+    _form: '\Drupal\batch_test\Form\BatchTestChainedForm'
     _title: 'Chained'
   requirements:
     _access: 'TRUE'
