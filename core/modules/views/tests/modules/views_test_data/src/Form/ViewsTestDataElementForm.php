@@ -6,12 +6,12 @@
 
 namespace Drupal\views_test_data\Form;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 
 /**
  * Simple form page callback to test the view element.
  */
-class ViewsTestDataElementForm implements FormInterface {
+class ViewsTestDataElementForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -32,12 +32,6 @@ class ViewsTestDataElementForm implements FormInterface {
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
   /**
