@@ -632,7 +632,7 @@
  *   call is \Drupal\Core\Datetime\Date::format().
  * - Some YML files contain UI text that is automatically translatable:
  *   - *.routing.yml files: route titles. This also applies to
- *     *.local_tasks.yml, *.local_actions, and *.contextual_links.yml files.
+ *     *.links.task.yml, *.links.action.yml, and *.links.contextual.yml files.
  *   - *.info.yml files: module names and descriptions.
  * - For configuration, make sure any configuration that is displayable to
  *   users is marked as translatable in the configuration schema. Configuration

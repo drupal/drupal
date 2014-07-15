@@ -163,7 +163,7 @@ use Drupal\Core\Template\Attribute;
  * Local tasks appear as tabs on a page when there are at least two defined for
  * a route, including the base route as the main tab, and additional routes as
  * other tabs. Static local tasks can be defined by adding lines like the
- * following to a module_name.local_tasks.yml file (in the top-level directory
+ * following to a module_name.links.task.yml file (in the top-level directory
  * for your module):
  * @code
  * book.admin:
@@ -196,7 +196,7 @@ use Drupal\Core\Template\Attribute;
  * instance, adding content is a common operation for the content management
  * page, so it should be a local action. Static local actions can be
  * defined by adding lines like the following to a
- * module_name.local_actions.yml file (in the top-level directory for your
+ * module_name.links.action.yml file (in the top-level directory for your
  * module):
  * @code
  * node.add_page:
@@ -235,7 +235,7 @@ use Drupal\Core\Template\Attribute;
  *
  * To declare that a defined route should be a contextual link for a
  * contextual links group, put lines like the following in a
- * module_name.contextual_links.yml file (in the top-level directory for your
+ * module_name.links.contextual.yml file (in the top-level directory for your
  * module):
  * @code
  * block_configure:

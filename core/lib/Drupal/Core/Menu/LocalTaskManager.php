@@ -128,7 +128,7 @@ class LocalTaskManager extends DefaultPluginManager {
    *   The current user.
    */
   public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
-    $this->discovery = new YamlDiscovery('local_tasks', $module_handler->getModuleDirectories());
+    $this->discovery = new YamlDiscovery('links.task', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
     $this->controllerResolver = $controller_resolver;

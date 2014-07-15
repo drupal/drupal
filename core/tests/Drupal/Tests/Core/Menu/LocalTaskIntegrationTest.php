@@ -108,7 +108,7 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
         return isset($module_dirs[$module]);
       }));
 
-    $pluginDiscovery = new YamlDiscovery('local_tasks', $module_dirs);
+    $pluginDiscovery = new YamlDiscovery('links.task', $module_dirs);
     $pluginDiscovery = new ContainerDerivativeDiscoveryDecorator($pluginDiscovery);
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setAccessible(TRUE);

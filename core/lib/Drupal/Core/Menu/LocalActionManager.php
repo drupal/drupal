@@ -122,7 +122,7 @@ class LocalActionManager extends DefaultPluginManager {
   public function __construct(ControllerResolverInterface $controller_resolver, RequestStack $request_stack, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManager $access_manager, AccountInterface $account) {
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
-    $this->discovery = new YamlDiscovery('local_actions', $module_handler->getModuleDirectories());
+    $this->discovery = new YamlDiscovery('links.action', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
     $this->controllerResolver = $controller_resolver;
