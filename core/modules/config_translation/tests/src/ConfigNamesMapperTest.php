@@ -45,6 +45,13 @@ class ConfigNamesMapperTest extends UnitTestCase {
   protected $localeConfigManager;
 
   /**
+   * The locale configuration manager.
+   *
+   * @var \Drupal\locale\LocaleConfigManager|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $typedConfigManager;
+
+  /**
    * The configuration mapper manager.
    *
    * @var \Drupal\config_translation\ConfigMapperManagerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -76,6 +83,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
       'weight' => 42,
     );
 
+    $this->typedConfigManager = $this->getMock('Drupal\Core\Config\TypedConfigManagerInterface');
+
     $this->localeConfigManager = $this->getMockBuilder('Drupal\locale\LocaleConfigManager')
       ->disableOriginalConstructor()
       ->getMock();
@@ -94,6 +103,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
       'system.site_information_settings',
       $this->pluginDefinition,
       $this->getConfigFactoryStub(),
+      $this->typedConfigManager,
       $this->localeConfigManager,
       $this->configMapperManager,
       $this->routeProvider,
@@ -456,7 +466,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     foreach ($config_names as $i => $config_name) {
       $map[] = array($config_name, $mock_return_values[$i]);
     }
-    $this->localeConfigManager
+    $this->typedConfigManager
       ->expects($this->any())
       ->method('hasConfigSchema')
       ->will($this->returnValueMap($map));

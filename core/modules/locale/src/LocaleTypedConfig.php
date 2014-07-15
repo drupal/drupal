@@ -11,6 +11,7 @@ use Drupal\Core\TypedData\ContextAwareInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\Config\Schema\Element;
 use Drupal\Core\Config\Schema\ArrayElement;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 
 /**
  * Defines the locale configuration wrapper object.
@@ -39,6 +40,13 @@ class LocaleTypedConfig extends Element {
   protected $localeConfig;
 
   /**
+   * The typed config manager.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
+   */
+  protected $typedConfigManager;
+
+  /**
    * Constructs a configuration wrapper object.
    *
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
@@ -50,17 +58,18 @@ class LocaleTypedConfig extends Element {
    * @param \Drupal\locale\LocaleConfigManager $localeConfig;
    *   The locale configuration manager object.
    */
-  public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $localeConfig) {
+  public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $localeConfig, TypedConfigManagerInterface $typed_config) {
     parent::__construct($definition, $name);
     $this->langcode = $langcode;
     $this->localeConfig = $localeConfig;
+    $this->typedConfigManager = $typed_config;
   }
 
   /**
    * Gets wrapped typed config object.
    */
   public function getTypedConfig() {
-    return $this->localeConfig->create($this->definition, $this->value);
+    return $this->typedConfigManager->create($this->definition, $this->value);
   }
 
   /**
@@ -72,7 +81,7 @@ class LocaleTypedConfig extends Element {
       'target' => $langcode,
     );
     $data = $this->getElementTranslation($this->getTypedConfig(), $options);
-    return $this->localeConfig->create($this->definition, $data);
+    return $this->typedConfigManager->create($this->definition, $data);
   }
 
   /**

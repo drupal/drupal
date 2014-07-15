@@ -7,8 +7,7 @@
 
 namespace Drupal\locale;
 
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\TypedConfigManager;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -17,7 +16,14 @@ use Drupal\language\ConfigurableLanguageManagerInterface;
 /**
  * Manages localized configuration type plugins.
  */
-class LocaleConfigManager extends TypedConfigManager {
+class LocaleConfigManager {
+
+  /**
+   * A storage instance for reading configuration data.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $configStorage;
 
   /**
    * A storage instance for reading default configuration data.
@@ -53,30 +59,35 @@ class LocaleConfigManager extends TypedConfigManager {
   protected $languageManager;
 
   /**
+   * The typed config manager.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
+   */
+  protected $typedConfigManager;
+
+  /**
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $configStorage
    *   The storage object to use for reading configuration data.
-   * @param \Drupal\Core\Config\StorageInterface $schemaStorage
-   *   The storage object to use for reading schema data.
    * @param \Drupal\Core\Config\StorageInterface $installStorage
    *   The storage object to use for reading default configuration
    *   data.
    * @param \Drupal\locale\StringStorageInterface $localeStorage
    *   The locale storage to use for reading string translations.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend to use for caching the definitions.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   *   The typed configuration manager.
    * @param \Drupal\language\ConfigurableLanguageManagerInterface
    *   The language manager.
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage, CacheBackendInterface $cache, ConfigFactoryInterface $config_factory, ConfigurableLanguageManagerInterface $language_manager) {
-    // Note we use the install storage for the parent constructor.
-    parent::__construct($configStorage, $schemaStorage, $cache);
+  public function __construct(StorageInterface $configStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, ConfigurableLanguageManagerInterface $language_manager) {
+    $this->configStorage = $configStorage;
     $this->installStorage = $installStorage;
     $this->localeStorage = $localeStorage;
     $this->configFactory = $config_factory;
+    $this->typedConfigManager = $typed_config;
     $this->languageManager = $language_manager;
   }
 
@@ -95,11 +106,11 @@ class LocaleConfigManager extends TypedConfigManager {
     $updated = $this->configStorage->read($name);
     // We get only the data that didn't change from default.
     $data = $this->compareConfigData($default, $updated);
-    $definition = $this->getDefinition($name);
-    $data_definition = $this->buildDataDefinition($definition, $data);
+    $definition = $this->typedConfigManager->getDefinition($name);
+    $data_definition = $this->typedConfigManager->buildDataDefinition($definition, $data);
     // Unless the configuration has a explicit language code we assume English.
     $langcode = isset($default['langcode']) ? $default['langcode'] : 'en';
-    $wrapper = new LocaleTypedConfig($data_definition, $name, $langcode, $this);
+    $wrapper = new LocaleTypedConfig($data_definition, $name, $langcode, $this, $this->typedConfigManager);
     $wrapper->setValue($data);
     return $wrapper;
   }
