@@ -1,8 +1,16 @@
-base_field: cid
-base_table: comment
-core: 8.x
-description: 'Recent comments.'
+langcode: en
 status: true
+dependencies:
+  module:
+    - comment
+id: comments_recent
+label: 'Recent comments'
+module: views
+description: 'Recent comments.'
+tag: default
+base_table: comment
+base_field: cid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -220,6 +228,8 @@ display:
           content: 'No comments available.'
           tokenize: false
           plugin_id: text_custom
+      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode_add_to_query: null
   block_1:
     display_plugin: block
     id: block_1
@@ -228,11 +238,7 @@ display:
     display_options:
       block_description: 'Recent comments'
       block_category: 'Lists (Views)'
-label: 'Recent comments'
-module: views
-id: comments_recent
-tag: default
-langcode: en
-dependencies:
-  module:
-    - comment
+      field_langcode: '***CURRENT_LANGUAGE***'
+      field_langcode_add_to_query: null
+      allow:
+        items_per_page: true

@@ -11,12 +11,13 @@ views.display.block:
     block_category:
       type: text
       label: 'Block category'
-    block_caching:
-      type: integer
-      label: 'Block caching'
     block_hide_empty:
       type: boolean
       label: 'Hide block if no result/empty text'
     allow:
-      type: boolean
+      type: mapping
       label: 'Allow'
+      mapping:
+        items_per_page:
+         type: boolean
+         label: 'Items per page'
