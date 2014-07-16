@@ -734,7 +734,10 @@ services:
       - { name: event_subscriber }
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@config.factory', '@module_handler']
+    arguments: ['@container.namespaces', '@cache.discovery', '@config.factory', '@module_handler', '@image.toolkit.operation.manager']
+  image.toolkit.operation.manager:
+    class: Drupal\Core\ImageToolkit\ImageToolkitOperationManager
+    parent: default_plugin_manager
   image.factory:
     class: Drupal\Core\Image\ImageFactory
     arguments: ['@image.toolkit.manager']

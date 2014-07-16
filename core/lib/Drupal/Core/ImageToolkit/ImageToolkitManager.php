@@ -11,6 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Component\Plugin\Factory\DefaultFactory;
 
 /**
  * Manages toolkit plugins.
@@ -25,6 +26,13 @@ class ImageToolkitManager extends DefaultPluginManager {
   protected $configFactory;
 
   /**
+   * The image toolkit operation manager.
+   *
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface
+   */
+  protected $operationManager;
+
+  /**
    * Constructs the ImageToolkitManager object.
    *
    * @param \Traversable $namespaces
@@ -36,12 +44,15 @@ class ImageToolkitManager extends DefaultPluginManager {
    *   The config factory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface $operation_manager
+   *   The toolkit operation manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ImageToolkitOperationManagerInterface $operation_manager) {
     parent::__construct('Plugin/ImageToolkit', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\Annotation\ImageToolkit');
 
     $this->setCacheBackend($cache_backend, 'image_toolkit_plugins');
     $this->configFactory = $config_factory;
+    $this->operationManager = $operation_manager;
   }
 
   /**
@@ -97,4 +108,14 @@ class ImageToolkitManager extends DefaultPluginManager {
 
     return $output;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($plugin_id, array $configuration = array()) {
+    $plugin_definition = $this->getDefinition($plugin_id);
+    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
+    return new $plugin_class($configuration, $plugin_id, $plugin_definition, $this->operationManager);
+  }
+
 }

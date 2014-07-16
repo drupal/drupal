@@ -58,7 +58,7 @@ class Image implements ImageInterface {
    */
   public function __construct(ImageToolkitInterface $toolkit, $source = NULL) {
     $this->toolkit = $toolkit;
-    $this->toolkit->setImage($this);
+    $this->getToolkit()->setImage($this);
     if ($source) {
       $this->source = $source;
       $this->parseFile();
@@ -76,14 +76,14 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getHeight() {
-    return $this->toolkit->getHeight();
+    return $this->getToolkit()->getHeight();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getWidth() {
-    return $this->toolkit->getWidth();
+    return $this->getToolkit()->getWidth();
   }
 
   /**
@@ -97,7 +97,7 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getMimeType() {
-    return $this->toolkit->getMimeType();
+    return $this->getToolkit()->getMimeType();
   }
 
   /**
@@ -111,7 +111,7 @@ class Image implements ImageInterface {
    * {@inheritdoc}
    */
   public function getToolkitId() {
-    return $this->toolkit->getPluginId();
+    return $this->getToolkit()->getPluginId();
   }
 
   /**
@@ -131,7 +131,7 @@ class Image implements ImageInterface {
     }
 
     $destination = $destination ?: $this->getSource();
-    if ($return = $this->toolkit->save($destination)) {
+    if ($return = $this->getToolkit()->save($destination)) {
       // Clear the cached file size and refresh the image information.
       clearstatcache(TRUE, $destination);
       $this->fileSize = filesize($destination);
@@ -157,48 +157,59 @@ class Image implements ImageInterface {
    *   image information is populated.
    */
   protected function parseFile() {
-    if ($this->valid = $this->toolkit->parseFile()) {
+    if ($this->valid = $this->getToolkit()->parseFile()) {
       $this->fileSize = filesize($this->source);
     }
     return $this->valid;
   }
 
   /**
-   * Passes through calls that represent image toolkit operations onto the
-   * image toolkit.
-   *
-   * This is a temporary solution to keep patches reviewable. The __call()
-   * method will be replaced in https://drupal.org/node/2110499 with a new
-   * interface method ImageInterface::apply(). An image operation will be
-   * performed as in the next example:
-   * @code
-   * $image = new Image($toolkit, $path);
-   * $image->apply('scale', array('width' => 50, 'height' => 100));
-   * @endcode
-   * Also in https://drupal.org/node/2110499 operation arguments sent to toolkit
-   * will be moved to a keyed array, unifying the interface of toolkit
-   * operations.
-   *
-   * @todo Drop this in https://drupal.org/node/2110499 in favor of new apply().
+   * {@inheritdoc}
    */
-  public function __call($method, $arguments) {
-    // @todo Temporary to avoid that legacy GD setResource(), getResource(),
-    //  hasResource() methods moved to GD toolkit in #2103621, setWidth(),
-    //  setHeight() methods moved to ImageToolkitInterface in #2196067,
-    //  getType() method moved to GDToolkit in #2211227 get
-    //  invoked from this class anyway through the magic __call. Will be
-    //  removed through https://drupal.org/node/2073759, when
-    //  call_user_func_array() will be replaced by
-    //  $this->toolkit->apply($name, $this, $arguments).
-    if (in_array($method, array('setResource', 'getResource', 'hasResource', 'setWidth', 'setHeight', 'getType', 'setImage'))) {
-      throw new \BadMethodCallException($method);
-    }
-    if (is_callable(array($this->toolkit, $method))) {
-      // @todo In https://drupal.org/node/2073759, call_user_func_array() will
-      //   be replaced by $this->toolkit->apply($name, $arguments).
-      return call_user_func_array(array($this->toolkit, $method), $arguments);
-    }
-    throw new \BadMethodCallException($method);
+  public function apply($operation, array $arguments = array()) {
+    return $this->getToolkit()->apply($operation, $arguments);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function crop($x, $y, $width, $height = NULL) {
+    return $this->apply('crop', array('x' => $x, 'y' => $y, 'width' => $width, 'height' => $height));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function desaturate() {
+    return $this->apply('desaturate', array());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resize($width, $height) {
+    return $this->apply('resize', array('width' => $width, 'height' => $height));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rotate($degrees, $background = NULL) {
+    return $this->apply('rotate', array('degrees' => $degrees, 'background' => $background));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function scaleAndCrop($width, $height) {
+    return $this->apply('scale_and_crop', array('width' => $width, 'height' => $height));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function scale($width, $height = NULL, $upscale = FALSE) {
+    return $this->apply('scale', array('width' => $width, 'height' => $height, 'upscale' => $upscale));
   }
 
   /**

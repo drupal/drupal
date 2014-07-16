@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\ImageToolkit;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\Plugin\PluginBase;
 
@@ -20,11 +21,35 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
   protected $image;
 
   /**
+   * The image toolkit operation manager.
+   *
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface
+   */
+  protected $operationManager;
+
+  /**
+   * Constructs an ImageToolkitBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface $operation_manager
+   *   The toolkit operation manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->operationManager = $operation_manager;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function setImage(ImageInterface $image) {
     if ($this->image) {
-      throw new \BadMethodCallException(__METHOD__ . '() may only be called once.');
+      throw new \BadMethodCallException(__METHOD__ . '() may only be called once');
     }
     $this->image = $image;
   }
@@ -41,6 +66,37 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
    */
   public function getRequirements() {
     return array();
+  }
+
+  /**
+   * Gets a toolkit operation plugin instance.
+   *
+   * @param string $operation
+   *   The toolkit operation requested.
+   *
+   * @return \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface
+   *   An instance of the requested toolkit operation plugin.
+   */
+  protected function getToolkitOperation($operation) {
+    return $this->operationManager->getToolkitOperation($this, $operation);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function apply($operation, array $arguments = array()) {
+    try {
+      // Get the plugin to use for the operation and apply the operation.
+      return $this->getToolkitOperation($operation)->apply($arguments);
+    }
+    catch (PluginNotFoundException $e) {
+      \Drupal::logger('image')->error("The selected image handling toolkit '@toolkit' can not process operation '@operation'.", array('@toolkit' => $this->getPluginId(), '@operation' => $operation));
+      return FALSE;
+    }
+    catch (\InvalidArgumentException $e) {
+      \Drupal::logger('image')->warning($e->getMessage(), array());
+      return FALSE;
+    }
   }
 
 }

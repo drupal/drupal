@@ -96,12 +96,12 @@ class ImageEffectsTest extends ToolkitTestBase {
       'width' => 5,
       'height' => 10,
     ));
-    $this->assertToolkitOperationsCalled(array('scaleAndCrop'));
+    $this->assertToolkitOperationsCalled(array('scale_and_crop'));
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['scaleAndCrop'][0][0], 5, 'Width was computed and passed correctly');
-    $this->assertEqual($calls['scaleAndCrop'][0][1], 10, 'Height was computed and passed correctly');
+    $this->assertEqual($calls['scale_and_crop'][0][0], 5, 'Width was computed and passed correctly');
+    $this->assertEqual($calls['scale_and_crop'][0][1], 10, 'Height was computed and passed correctly');
   }
 
   /**

@@ -124,49 +124,49 @@ class ToolkitGdTest extends DrupalUnitTestBase {
     $operations = array(
       'resize' => array(
         'function' => 'resize',
-        'arguments' => array(20, 10),
+        'arguments' => array('width' => 20, 'height' => 10),
         'width' => 20,
         'height' => 10,
         'corners' => $default_corners,
       ),
       'scale_x' => array(
         'function' => 'scale',
-        'arguments' => array(20, NULL),
+        'arguments' => array('width' => 20),
         'width' => 20,
         'height' => 10,
         'corners' => $default_corners,
       ),
       'scale_y' => array(
         'function' => 'scale',
-        'arguments' => array(NULL, 10),
+        'arguments' => array('height' => 10),
         'width' => 20,
         'height' => 10,
         'corners' => $default_corners,
       ),
       'upscale_x' => array(
         'function' => 'scale',
-        'arguments' => array(80, NULL, TRUE),
+        'arguments' => array('width' => 80, 'upscale' => TRUE),
         'width' => 80,
         'height' => 40,
         'corners' => $default_corners,
       ),
       'upscale_y' => array(
         'function' => 'scale',
-        'arguments' => array(NULL, 40, TRUE),
+        'arguments' => array('height' => 40, 'upscale' => TRUE),
         'width' => 80,
         'height' => 40,
         'corners' => $default_corners,
       ),
       'crop' => array(
         'function' => 'crop',
-        'arguments' => array(12, 4, 16, 12),
+        'arguments' => array('x' => 12, 'y' => 4, 'width' => 16, 'height' => 12),
         'width' => 16,
         'height' => 12,
         'corners' => array_fill(0, 4, $this->white),
       ),
       'scale_and_crop' => array(
-        'function' => 'scaleAndCrop',
-        'arguments' => array(10, 8),
+        'function' => 'scale_and_crop',
+        'arguments' => array('width' => 10, 'height' => 8),
         'width' => 10,
         'height' => 8,
         'corners' => array_fill(0, 4, $this->black),
@@ -178,28 +178,28 @@ class ToolkitGdTest extends DrupalUnitTestBase {
       $operations += array(
         'rotate_5' => array(
           'function' => 'rotate',
-          'arguments' => array(5, 0xFF00FF), // Fuchsia background.
+          'arguments' => array('degrees' => 5, 'background' => 0xFF00FF), // Fuchsia background.
           'width' => 42,
           'height' => 24,
           'corners' => array_fill(0, 4, $this->fuchsia),
         ),
         'rotate_90' => array(
           'function' => 'rotate',
-          'arguments' => array(90, 0xFF00FF), // Fuchsia background.
+          'arguments' => array('degrees' => 90, 'background' => 0xFF00FF), // Fuchsia background.
           'width' => 20,
           'height' => 40,
           'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
         ),
         'rotate_transparent_5' => array(
           'function' => 'rotate',
-          'arguments' => array(5),
+          'arguments' => array('degrees' => 5),
           'width' => 42,
           'height' => 24,
           'corners' => array_fill(0, 4, $this->transparent),
         ),
         'rotate_transparent_90' => array(
           'function' => 'rotate',
-          'arguments' => array(90),
+          'arguments' => array('degrees' => 90),
           'width' => 20,
           'height' => 40,
           'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
@@ -233,7 +233,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         // Load up a fresh image.
         $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
         $toolkit = $image->getToolkit();
-        if (!$image) {
+        if (!$image->isValid()) {
           $this->fail(String::format('Could not load image %file.', array('%file' => $file)));
           continue 2;
         }
@@ -250,7 +250,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         }
 
         // Perform our operation.
-        call_user_func_array(array($image, $values['function']), $values['arguments']);
+        $image->apply($values['function'], $values['arguments']);
 
         // To keep from flooding the test with assert values, make a general
         // value for whether each group of values fail.
@@ -308,6 +308,27 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         $image_reloaded = $this->imageFactory->get($file_path);
       }
     }
+  }
+
+  /**
+   * Tests calling a missing image operation plugin.
+   */
+  function testMissingOperation() {
+
+    // Test that the image factory is set to use the GD toolkit.
+    $this->assertEqual($this->imageFactory->getToolkitId(), 'gd', 'The image factory is set to use the \'gd\' image toolkit.');
+
+    // An image file that will be tested.
+    $file = 'image-test.png';
+
+    // Load up a fresh image.
+    $image = $this->imageFactory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
+    if (!$image->isValid()) {
+      $this->fail(String::format('Could not load image %file.', array('%file' => $file)));
+    }
+
+    // Try perform a missing toolkit operation.
+    $this->assertFalse($image->apply('missing_op', array()), 'Calling a missing image toolkit operation plugin fails.');
   }
 
 }

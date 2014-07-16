@@ -44,83 +44,31 @@ class ToolkitTest extends ToolkitTestBase {
   }
 
   /**
-   * Test the image_resize() function.
+   * Test the image_apply() function.
    */
-  function testResize() {
-    $this->assertTrue($this->image->resize(1, 2), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('resize'));
+  function testApply() {
+    $data = array('p1' => 1, 'p2' => TRUE, 'p3' => 'text');
+    $this->assertTrue($this->image->apply('my_operation', $data), 'Function returned the expected value.');
 
-    // Check the parameters.
+    // Check that apply was called and with the correct parameters.
+    $this->assertToolkitOperationsCalled(array('apply'));
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['resize'][0][0], 1, 'Width was passed correctly');
-    $this->assertEqual($calls['resize'][0][1], 2, 'Height was passed correctly');
+    $this->assertEqual($calls['apply'][0][0], 'my_operation', "'my_operation' was passed correctly as operation");
+    $this->assertEqual($calls['apply'][0][1]['p1'], 1, 'integer parameter p1 was passed correctly');
+    $this->assertEqual($calls['apply'][0][1]['p2'], TRUE, 'boolean parameter p2 was passed correctly');
+    $this->assertEqual($calls['apply'][0][1]['p3'], 'text', 'string parameter p3 was passed correctly');
   }
 
   /**
-   * Test the image_scale() function.
+   * Test the image_apply() function.
    */
-  function testScale() {
-// TODO: need to test upscaling
-    $this->assertTrue($this->image->scale(10, 10), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('scale'));
+  function testApplyNoParameters() {
+    $this->assertTrue($this->image->apply('my_operation'), 'Function returned the expected value.');
 
-    // Check the parameters.
+    // Check that apply was called and with the correct parameters.
+    $this->assertToolkitOperationsCalled(array('apply'));
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['scale'][0][0], 10, 'Width was passed correctly');
-    $this->assertEqual($calls['scale'][0][1], 10, 'Height was based off aspect ratio and passed correctly');
-  }
-
-  /**
-   * Test the image_scale_and_crop() function.
-   */
-  function testScaleAndCrop() {
-    $this->assertTrue($this->image->scaleAndCrop(5, 10), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('scaleAndCrop'));
-
-    // Check the parameters.
-    $calls = $this->imageTestGetAllCalls();
-
-    $this->assertEqual($calls['scaleAndCrop'][0][0], 5, 'Width was computed and passed correctly');
-    $this->assertEqual($calls['scaleAndCrop'][0][1], 10, 'Height was computed and passed correctly');
-  }
-
-  /**
-   * Test the image_rotate() function.
-   */
-  function testRotate() {
-    $this->assertTrue($this->image->rotate(90, 1), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('rotate'));
-
-    // Check the parameters.
-    $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['rotate'][0][0], 90, 'Degrees were passed correctly');
-    $this->assertEqual($calls['rotate'][0][1], 1, 'Background color was passed correctly');
-  }
-
-  /**
-   * Test the image_crop() function.
-   */
-  function testCrop() {
-    $this->assertTrue($this->image->crop(1, 2, 3, 4), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('crop'));
-
-    // Check the parameters.
-    $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['crop'][0][0], 1, 'X was passed correctly');
-    $this->assertEqual($calls['crop'][0][1], 2, 'Y was passed correctly');
-    $this->assertEqual($calls['crop'][0][2], 3, 'Width was passed correctly');
-    $this->assertEqual($calls['crop'][0][3], 4, 'Height was passed correctly');
-  }
-
-  /**
-   * Test the image_desaturate() function.
-   */
-  function testDesaturate() {
-    $this->assertTrue($this->image->desaturate(), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('desaturate'));
-
-    // Check the parameters.
-    $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual(count($calls['desaturate'][0]), 0, 'No parameters were passed.');
+    $this->assertEqual($calls['apply'][0][0], 'my_operation', "'my_operation' was passed correctly as operation");
+    $this->assertEqual($calls['apply'][0][1], array(), 'passing no parameters was handled correctly');
   }
 }
