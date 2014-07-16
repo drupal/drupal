@@ -348,7 +348,7 @@ Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
     // this is only needed for IFRAME submissions.
     var v = $.fieldValue(this.element);
     if (v !== null) {
-      options.extraData[this.element.name] = v;
+      options.extraData[this.element.name] = Drupal.checkPlain(v);
     }
   }
 

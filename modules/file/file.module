@@ -510,8 +510,9 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
           $callback($element, $input, $form_state);
         }
       }
-      // Load file if the FID has changed to confirm it exists.
-      if (isset($input['fid']) && $file = file_load($input['fid'])) {
+      // Load file and check access if the FID has changed, to confirm it
+      // exists and that the current user has access to it.
+      if (isset($input['fid']) && ($file = file_load($input['fid'])) && file_download_access($file->uri)) {
         $fid = $file->fid;
       }
     }

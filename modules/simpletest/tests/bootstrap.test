@@ -93,6 +93,11 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     $this->assertFalse(drupal_valid_http_host('security\\.drupal.org:80'), 'HTTP_HOST with \\ is invalid');
     $this->assertFalse(drupal_valid_http_host('security<.drupal.org:80'), 'HTTP_HOST with &lt; is invalid');
     $this->assertFalse(drupal_valid_http_host('security..drupal.org:80'), 'HTTP_HOST with .. is invalid');
+    // Verifies that host names are shorter than 1000 characters.
+    $this->assertFalse(drupal_valid_http_host(str_repeat('x', 1001)), 'HTTP_HOST with more than 1000 characters is invalid.');
+    $this->assertFalse(drupal_valid_http_host(str_repeat('.', 101)), 'HTTP_HOST with more than 100 subdomains is invalid.');
+    $this->assertFalse(drupal_valid_http_host(str_repeat(':', 101)), 'HTTP_HOST with more than 100 portseparators is invalid.');
+
     // IPv6 loopback address
     $this->assertTrue(drupal_valid_http_host('[::1]:80'), 'HTTP_HOST containing IPv6 loopback is valid');
   }
