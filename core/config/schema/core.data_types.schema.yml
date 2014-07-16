@@ -329,3 +329,13 @@ display_variant.plugin:
     uuid:
       type: string
       label: 'UUID'
+
+base_entity_reference_field_settings:
+  type: mapping
+  mapping:
+    target_type:
+      type: string
+      label: 'Type of item to reference'
+    target_bundle:
+      type: string
+      label: 'Bundle of item to reference'

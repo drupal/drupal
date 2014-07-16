@@ -24,3 +24,6 @@ menu.entity.node.*:
       sequence:
        - type: string
          label: 'Menu machine name'
+    parent:
+      type: string
+      label: 'Parent'

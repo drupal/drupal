@@ -10,9 +10,3 @@ shortcut.set.*:
     label:
       type: label
       label: 'Label'
-    links:
-      type: sequence
-      label: 'Shortcuts'
-      sequence:
-        - type: string
-          label: 'Shortcut'

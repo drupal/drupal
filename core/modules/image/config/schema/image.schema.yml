@@ -73,29 +73,17 @@ image.settings:
       label: 'Suppress the itok query string for image derivatives'
 
 field.image.settings:
-  type: mapping
+  type: field.file.settings
   label: 'Image settings'
   mapping:
-    uri_scheme:
-      type: string
-      label: 'Upload destination'
     default_image:
       type: field_default_image
       label: 'Default value'
 
 field.image.instance_settings:
-  type: mapping
+  type: base_file_field_instance_settings
   label: 'Image settings'
   mapping:
-    file_directory:
-      type: string
-      label: 'Upload destination'
-    file_extensions:
-      type: string
-      label: 'Allowed file extensions'
-    max_filesize:
-      type: string
-      label: 'Maximum upload size'
     max_resolution:
       type: string
       label: 'Maximum image resolution'

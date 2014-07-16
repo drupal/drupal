@@ -80,6 +80,11 @@ trait SchemaCheckTrait {
     $error_key = $this->configName . ':' . $key;
     $element = $this->schema->get($key);
     if ($element instanceof Undefined) {
+      // @todo Temporary workaround for https://www.drupal.org/node/2224761.
+      $key_parts = explode('.', $key);
+      if (array_pop($key_parts) == 'translation_sync' && strpos($this->configName, 'field.') === 0) {
+        return array();
+      }
       return array($error_key => 'Missing schema.');
     }
 

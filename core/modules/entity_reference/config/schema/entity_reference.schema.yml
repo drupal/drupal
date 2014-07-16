@@ -2,7 +2,7 @@
 
 field.entity_reference.settings:
   type: mapping
-  label: 'Settings'
+  label: 'Entity reference settings'
   mapping:
     target_type:
       type: string

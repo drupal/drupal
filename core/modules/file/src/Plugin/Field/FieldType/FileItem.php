@@ -32,8 +32,8 @@ class FileItem extends EntityReferenceItem {
   public static function defaultSettings() {
     return array(
       'target_type' => 'file',
-      'display_field' => 0,
-      'display_default' => 0,
+      'display_field' => FALSE,
+      'display_default' => FALSE,
       'uri_scheme' => file_default_scheme(),
     ) + parent::defaultSettings();
   }

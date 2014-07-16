@@ -35,7 +35,7 @@ taxonomy.vocabulary.*:
       label: 'Weight'
 
 field.taxonomy_term_reference.settings:
-  type: mapping
+  type: base_entity_reference_field_settings
   label: 'Taxonomy term reference settings'
   mapping:
     options_list_callback:
@@ -56,11 +56,12 @@ field.taxonomy_term_reference.settings:
               value: 'Parent'
 
 field.taxonomy_term_reference.instance_settings:
-  type: sequence
+  type: mapping
   label: 'Taxonomy term reference settings'
-  sequence:
-    - type: string
-      label: 'Setting'
+  mapping:
+    handler:
+      type: string
+      label: 'Reference method'
 
 field.taxonomy_term_reference.value:
   type: sequence
