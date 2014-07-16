@@ -256,13 +256,6 @@ class ApcuBackend implements CacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function isEmpty() {
-    return $this->getAll()->getTotalCount() === 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function invalidate($cid) {
     $this->invalidateMultiple(array($cid));
   }
