@@ -324,14 +324,14 @@ class DatabaseBackend implements CacheBackendInterface {
       $deleted_tags[$tag] = TRUE;
       unset($tag_cache[$tag]);
       try {
-        $this->connection->merge('cache_tags')
+        $this->connection->merge('cachetags')
           ->insertFields(array('deletions' => 1))
           ->expression('deletions', 'deletions + 1')
           ->key('tag', $tag)
           ->execute();
       }
       catch (\Exception $e) {
-        $this->catchException($e, 'cache_tags');
+        $this->catchException($e, 'cachetags');
       }
     }
   }
@@ -393,7 +393,7 @@ class DatabaseBackend implements CacheBackendInterface {
         }
         $invalidated_tags[$tag] = TRUE;
         unset($tag_cache[$tag]);
-        $this->connection->merge('cache_tags')
+        $this->connection->merge('cachetags')
           ->insertFields(array('invalidations' => 1))
           ->expression('invalidations', 'invalidations + 1')
           ->key('tag', $tag)
@@ -401,7 +401,7 @@ class DatabaseBackend implements CacheBackendInterface {
       }
     }
     catch (\Exception $e) {
-      $this->catchException($e, 'cache_tags');
+      $this->catchException($e, 'cachetags');
     }
   }
 
@@ -485,7 +485,7 @@ class DatabaseBackend implements CacheBackendInterface {
 
     $query_tags = array_diff($flat_tags, array_keys($tag_cache));
     if ($query_tags) {
-      $db_tags = $this->connection->query('SELECT tag, invalidations, deletions FROM {cache_tags} WHERE tag IN (:tags)', array(':tags' => $query_tags))->fetchAllAssoc('tag', \PDO::FETCH_ASSOC);
+      $db_tags = $this->connection->query('SELECT tag, invalidations, deletions FROM {cachetags} WHERE tag IN (:tags)', array(':tags' => $query_tags))->fetchAllAssoc('tag', \PDO::FETCH_ASSOC);
       $tag_cache += $db_tags;
 
       // Fill static cache with empty objects for tags not found in the database.
@@ -522,8 +522,8 @@ class DatabaseBackend implements CacheBackendInterface {
         $schema_definition = $this->schemaDefinition();
         $database_schema->createTable($this->bin, $schema_definition['bin']);
         // If the bin doesn't exist, the cache tags table may also not exist.
-        if (!$database_schema->tableExists('cache_tags')) {
-          $database_schema->createTable('cache_tags', $schema_definition['cache_tags']);
+        if (!$database_schema->tableExists('cachetags')) {
+          $database_schema->createTable('cachetags', $schema_definition['cachetags']);
         }
         return TRUE;
       }
@@ -540,14 +540,14 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Act on an exception when cache might be stale.
    *
-   * If the cache_tags table does not yet exist, that's fine but if the table
+   * If the {cachetags} table does not yet exist, that's fine but if the table
    * exists and yet the query failed, then the cache is stale and the
    * exception needs to propagate.
    *
    * @param $e
    *   The exception.
    * @param string|null $table_name
-   *   The table name, defaults to $this->bin. Can be cache_tags.
+   *   The table name, defaults to $this->bin. Can be cachetags.
    */
   protected function catchException(\Exception $e, $table_name = NULL) {
     if ($this->connection->schema()->tableExists($table_name ?: $this->bin)) {
@@ -576,7 +576,7 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * Defines the schema for the cache bin and cache_tags table.
+   * Defines the schema for the {cache_*} bin and {cachetags} tables.
    */
   public function schemaDefinition() {
     $schema['bin'] = array(
@@ -640,7 +640,7 @@ class DatabaseBackend implements CacheBackendInterface {
       ),
       'primary key' => array('cid'),
     );
-    $schema['cache_tags'] = array(
+    $schema['cachetags'] = array(
       'description' => 'Cache table for tracking cache tags related to the cache bin.',
       'fields' => array(
         'tag' => array(
