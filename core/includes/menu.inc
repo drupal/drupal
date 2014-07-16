@@ -135,7 +135,7 @@ use Drupal\Core\Template\Attribute;
  * @section sec_links Defining menu links for the administrative menu
  * Routes for administrative tasks can be added to the main Drupal
  * administrative menu hierarchy. To do this, add lines like the following to a
- * module_name.menu_links.yml file (in the top-level directory for your module):
+ * module_name.links.menu.yml file (in the top-level directory for your module):
  * @code
  * dblog.overview:
  *   title: 'Recent log messages'
@@ -148,7 +148,7 @@ use Drupal\Core\Template\Attribute;
  * - The first line is the machine name for your menu link, which usually
  *   matches the machine name of the route (given in the 'route_name' line).
  * - parent: The machine name of the menu link that is the parent in the
- *   administrative hierarchy. See system.menu_links.yml to find the main
+ *   administrative hierarchy. See system.links.menu.yml to find the main
  *   skeleton of the hierarchy.
  * - weight: Lower (negative) numbers come before higher (positive) numbers,
  *   for menu items with the same parent.

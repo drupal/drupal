@@ -154,7 +154,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    */
   protected function getDiscovery() {
     if (empty($this->discovery)) {
-      $yaml = new YamlDiscovery('menu_links', $this->moduleHandler->getModuleDirectories());
+      $yaml = new YamlDiscovery('links.menu', $this->moduleHandler->getModuleDirectories());
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($yaml);
     }
     return $this->discovery;

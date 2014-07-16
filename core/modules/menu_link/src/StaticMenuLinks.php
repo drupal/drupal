@@ -69,7 +69,7 @@ class StaticMenuLinks {
    *   An YAML discovery instance.
    */
   protected function getDiscovery() {
-    return new YamlDiscovery('menu_links', $this->moduleHandler->getModuleDirectories());
+    return new YamlDiscovery('links.menu', $this->moduleHandler->getModuleDirectories());
   }
 
 }
