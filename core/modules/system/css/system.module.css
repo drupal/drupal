@@ -303,9 +303,9 @@ tr .ajax-progress-throbber .throbber {
 }
 
 /**
- * Hide elements visually, but keep them available for screen-readers.
+ * Hide elements visually, but keep them available for screen readers.
  *
- * Used for information required for screen-reader users to understand and use
+ * Used for information required for screen reader users to understand and use
  * the site where visual display is undesirable. Information provided in this
  * manner should be kept concise, to avoid unnecessary burden on the user.
  * "!important" is used to prevent unintentional overrides.
@@ -333,7 +333,7 @@ tr .ajax-progress-throbber .throbber {
 }
 
 /**
- * Hide visually and from screen-readers, but maintain layout.
+ * Hide visually and from screen readers, but maintain layout.
  */
 .invisible {
   visibility: hidden;

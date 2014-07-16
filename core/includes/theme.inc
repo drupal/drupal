@@ -1140,8 +1140,8 @@ function template_preprocess_status_messages(&$variables) {
  *     level will default to 'h2'. Headings should be used on navigation menus
  *     and any list of links that consistently appears on multiple pages. To
  *     make the heading invisible use the 'visually-hidden' CSS class. Do not
- *     use 'display:none', which removes it from screen-readers and assistive
- *     technology. Headings allow screen-reader and keyboard only users to
+ *     use 'display:none', which removes it from screen readers and assistive
+ *     technology. Headings allow screen reader and keyboard only users to
  *     navigate to or skip the links. See
  *     http://juicystudio.com/article/screen-readers-display-none.php and
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.

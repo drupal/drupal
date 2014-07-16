@@ -45,7 +45,7 @@
           Drupal.tableDrag['filter-order'].restripeTable();
         });
 
-        // Attach summary for configurable filters (only for screen-readers).
+        // Attach summary for configurable filters (only for screen readers).
         if (filterSettingsTab) {
           filterSettingsTab.details.drupalSetSummary(function (tabContext) {
             return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');

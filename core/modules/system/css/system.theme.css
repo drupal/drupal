@@ -86,7 +86,7 @@ label.option {
 
 .form-required:after {
   color: #e00;
-  /* Use a Unicode symbol to prevent screen-readers from announcing the text. */
+  /* Use a Unicode symbol to prevent screen readers from announcing the text. */
   content: " \204E ";
   line-height: 1;
   vertical-align: super;
