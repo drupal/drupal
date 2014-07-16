@@ -892,30 +892,6 @@ function comment_user_predelete($account) {
 }
 
 /**
- * Gets the display ordinal for a comment, starting from 0.
- *
- * Count the number of comments which appear before the comment we want to
- * display, taking into account display settings and threading.
- *
- * @param int $cid
- *   The comment ID.
- * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
- *   Field definition of the comments.
- *
- * @return int
- *   The display ordinal for the comment, or 0 if the comment is not found.
- *
- * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
- *   Use \Drupal\comment\CommentStorageInterface::getDisplayOrdinal().
- */
-function comment_get_display_ordinal($cid, FieldDefinitionInterface $field_definition) {
-  $comment_storage = \Drupal::entityManager()->getStorage('comment');
-  $default_mode = $field_definition->getSetting('default_mode');
-  $comment = \Drupal::entityManager()->getStorage('comment')->load($cid);
-  return $comment ? $comment_storage->getDisplayOrdinal($comment, $default_mode) : 0;
-}
-
-/**
  * Returns the page number for a comment.
  *
  * Finds the correct page number for a comment taking into account display
