@@ -77,8 +77,7 @@ abstract class FormController {
     unset($args[0], $args[1]);
     $form_state['build_info']['args'] = array_values($args);
 
-    $form_id = $this->formBuilder->getFormId($form_object, $form_state);
-    return $this->formBuilder->buildForm($form_id, $form_state);
+    return $this->formBuilder->buildForm($form_object, $form_state);
   }
 
   /**

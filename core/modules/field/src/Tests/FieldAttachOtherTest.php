@@ -342,6 +342,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $values_2[1]['value'] = 0;
 
     // Pretend the form has been built.
+    $form_state['build_info']['callback_object'] = \Drupal::entityManager()->getFormObject($entity_type, 'default');
     \Drupal::formBuilder()->prepareForm('field_test_entity_form', $form, $form_state);
     drupal_process_form('field_test_entity_form', $form, $form_state);
     $form_state['values'][$this->field_name] = $values;

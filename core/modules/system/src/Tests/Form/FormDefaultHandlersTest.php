@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\system\Tests\Form\FormDefaultHandlersTest.
+ */
+
+namespace Drupal\system\Tests\Form;
+
+use Drupal\Core\Form\FormInterface;
+use Drupal\simpletest\KernelTestBase;
+
+/**
+ * Tests automatically added form handlers.
+ *
+ * @group Form
+ */
+class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'test_form_handlers';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, array &$form_state) {
+    $form['#validate'][] = array($this, 'customValidateForm');
+    $form['#submit'][] = array($this, 'customSubmitForm');
+    $form['submit'] = array('#type' => 'submit', '#value' => 'Save');
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function customValidateForm(array &$form, array &$form_state) {
+    $form_state['test_handlers']['validate'][] = __FUNCTION__;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, array &$form_state) {
+    $form_state['test_handlers']['validate'][] = __FUNCTION__;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function customSubmitForm(array &$form, array &$form_state) {
+    $form_state['test_handlers']['submit'][] = __FUNCTION__;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, array &$form_state) {
+    $form_state['test_handlers']['submit'][] = __FUNCTION__;
+  }
+
+  /**
+   * Tests that default handlers are added even if custom are specified.
+   */
+  function testDefaultAndCustomHandlers() {
+    $form_state['values'] = array();
+    $form_builder = $this->container->get('form_builder');
+    $form_builder->submitForm($this, $form_state);
+
+    $handlers = $form_state['test_handlers'];
+
+    $this->assertIdentical(count($handlers['validate']), 2);
+    $this->assertIdentical($handlers['validate'][0], 'customValidateForm');
+    $this->assertIdentical($handlers['validate'][1], 'validateForm');
+
+    $this->assertIdentical(count($handlers['submit']), 2);
+    $this->assertIdentical($handlers['submit'][0], 'customSubmitForm');
+    $this->assertIdentical($handlers['submit'][1], 'submitForm');
+  }
+
+}

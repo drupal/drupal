@@ -49,11 +49,6 @@ class EntityFormBuilderTest extends UnitTestCase {
    * @covers ::getForm()
    */
   public function testGetForm() {
-    $this->formBuilder->expects($this->once())
-      ->method('buildForm')
-      ->with('the_form_id', $this->isType('array'))
-      ->will($this->returnValue('the form contents'));
-
     $form_controller = $this->getMock('Drupal\Core\Entity\EntityFormInterface');
     $form_controller->expects($this->any())
       ->method('getFormId')
@@ -62,6 +57,11 @@ class EntityFormBuilderTest extends UnitTestCase {
       ->method('getFormObject')
       ->with('the_entity_type', 'default')
       ->will($this->returnValue($form_controller));
+
+    $this->formBuilder->expects($this->once())
+      ->method('buildForm')
+      ->with($form_controller, $this->isType('array'))
+      ->will($this->returnValue('the form contents'));
 
     $entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
     $entity->expects($this->once())

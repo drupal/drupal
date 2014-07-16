@@ -36,7 +36,6 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   The value must be one of the following:
    *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
    *   - An instance of a class that implements \Drupal\Core\Form\FormInterface.
-   *   - The name of a function that builds the form.
    * @param ...
    *   Any additional arguments are passed on to the functions called by
    *   \Drupal::formBuilder()->getForm(), including the unique form constructor
@@ -59,8 +58,10 @@ interface FormBuilderInterface extends FormErrorInterface {
    * previous page-load. The form is then passed on for processing, validation
    * and submission if there is proper input.
    *
-   * @param $form_id
-   *   The unique string identifying the desired form.
+   * @param \Drupal\Core\Form\FormInterface|string $form_arg
+   *   The value must be one of the following:
+   *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
+   *   - An instance of a class that implements \Drupal\Core\Form\FormInterface.
    * @param array $form_state
    *   An array which stores information about the form. This is passed as a
    *   reference so that the caller can use it to examine what in the form

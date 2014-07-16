@@ -379,7 +379,7 @@ function _batch_next_set() {
     if (isset($current_set['form_submit']) && ($callback = $current_set['form_submit']) && is_callable($callback)) {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
-      call_user_func_array($callback, array($batch['form_state']['complete_form'], &$batch['form_state']));
+      call_user_func_array($callback, array(&$batch['form_state']['complete_form'], &$batch['form_state']));
     }
     return TRUE;
   }

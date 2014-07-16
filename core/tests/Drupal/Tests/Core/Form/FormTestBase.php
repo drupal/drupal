@@ -237,7 +237,7 @@ abstract class FormTestBase extends UnitTestCase {
     $form_state['input']['op'] = 'Submit';
     $form_state['programmed'] = $programmed;
     $form_state['submitted'] = TRUE;
-    return $this->formBuilder->buildForm($form_id, $form_state);
+    return $this->formBuilder->buildForm($form_arg, $form_state);
   }
 
   /**

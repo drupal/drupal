@@ -128,7 +128,8 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // before rendering the second time.
     $drupal_add_js_original = _drupal_add_js();
     $drupal_add_js = &drupal_static('_drupal_add_js');
-    $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
+    $form_class = get_class($form_state['build_info']['callback_object']);
+    $response = views_ajax_form_wrapper($form_class, $form_state);
 
     // If the form has not been submitted, or was not set for rerendering, stop.
     if (!$form_state['submitted'] || !empty($form_state['rerender'])) {
@@ -151,7 +152,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
         return new RedirectResponse(url($form_path, array('absolute' => TRUE)));
       }
       $form_state['path'] = $form_path;
-      $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
+      $response = views_ajax_form_wrapper($form_class, $form_state);
     }
     elseif (!$form_state['ajax']) {
       // if nothing on the stack, non-js forms just go back to the main view editor.

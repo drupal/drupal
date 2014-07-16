@@ -14,7 +14,7 @@ use Drupal\Core\Ajax\AjaxResponse;
  * some AJAX stuff automatically.
  * This makes some assumptions about the client.
  */
-function views_ajax_form_wrapper($form_id, &$form_state) {
+function views_ajax_form_wrapper($form_class, &$form_state) {
   // This won't override settings already in.
   $form_state += array(
     'rerender' => FALSE,
@@ -25,7 +25,7 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
     ),
   );
 
-  $form = \Drupal::formBuilder()->buildForm($form_id, $form_state);
+  $form = \Drupal::formBuilder()->buildForm($form_class, $form_state);
   $output = drupal_render($form);
 
   // These forms have the title built in, so set the title here:

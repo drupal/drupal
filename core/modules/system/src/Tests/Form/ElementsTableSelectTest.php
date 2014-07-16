@@ -216,6 +216,7 @@ class ElementsTableSelectTest extends WebTestBase {
 
     $form_state['input'] = $edit;
     $form_state['input']['form_id'] = $form_id;
+    $form_state['build_info']['callback_object'] = new StubForm($form_id, $form);
 
     \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
 

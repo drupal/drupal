@@ -19,6 +19,9 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the getFormId() method with a string based form ID.
+   *
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage The form argument foo is not a valid form.
    */
   public function testGetFormIdWithString() {
     $form_arg = 'foo';
@@ -121,8 +124,6 @@ class FormBuilderTest extends FormTestBase {
       }));
 
     $form_state = array();
-    $this->formBuilder->getFormId($form_arg, $form_state);
-
     try {
       $form_state['values'] = array();
       $form_state['input']['form_id'] = $form_id;
@@ -177,8 +178,6 @@ class FormBuilderTest extends FormTestBase {
       }));
 
     $form_state = array();
-    $this->formBuilder->getFormId($form_arg, $form_state);
-
     try {
       $form_state['values'] = array();
       $form_state['input']['form_id'] = $form_id;
@@ -190,8 +189,12 @@ class FormBuilderTest extends FormTestBase {
     }
     $this->assertSame($response, $form_state['response']);
   }
+
   /**
    * Tests the getForm() method with a string based form ID.
+   *
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage The form argument test_form_id is not a valid form.
    */
   public function testGetFormWithString() {
     $form_id = 'test_form_id';
@@ -233,6 +236,9 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the buildForm() method with a string based form ID.
+   *
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage The form argument test_form_id is not a valid form.
    */
   public function testBuildFormWithString() {
     $form_id = 'test_form_id';
@@ -318,7 +324,13 @@ class FormBuilderTest extends FormTestBase {
 
     // FormBuilder::buildForm() will be called twice, but the form object will
     // only be called once due to caching.
-    $form_arg = $this->getMockForm($form_id, $expected_form, 1);
+    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->exactly(2))
+      ->method('getFormId')
+      ->will($this->returnValue($form_id));
+    $form_arg->expects($this->once())
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
 
     // The CSRF token is checked each time.
     $this->csrfToken->expects($this->exactly(2))
@@ -359,7 +371,7 @@ class FormBuilderTest extends FormTestBase {
     // use the form cache.
     $form_state['input']['form_id'] = $form_id;
     $form_state['input']['form_build_id'] = $form['#build_id'];
-    $this->formBuilder->buildForm($form_id, $form_state);
+    $this->formBuilder->buildForm($form_arg, $form_state);
     $this->assertEmpty($form_state['errors']);
   }
 
@@ -394,6 +406,9 @@ class FormBuilderTest extends FormTestBase {
 
     // Mock a form object that will be built two times.
     $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->exactly(2))
+      ->method('getFormId')
+      ->will($this->returnValue($form_id));
     $form_arg->expects($this->exactly(2))
       ->method('buildForm')
       ->will($this->returnValue($expected_form));
