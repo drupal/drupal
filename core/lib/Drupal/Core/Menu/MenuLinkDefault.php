@@ -66,7 +66,7 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
   /**
    * {@inheritdoc}
    */
-  public function isResetable() {
+  public function isResettable() {
     // The link can be reset if it has an override.
     return (bool) $this->staticOverride->loadOverride($this->getPluginId());
   }

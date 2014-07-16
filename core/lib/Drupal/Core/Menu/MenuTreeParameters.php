@@ -198,7 +198,7 @@ class MenuTreeParameters {
    *
    * @return $this
    */
-  public function topLevelOnly() {
+  public function setTopLevelOnly() {
     $this->setMaxDepth(1);
     return $this;
   }

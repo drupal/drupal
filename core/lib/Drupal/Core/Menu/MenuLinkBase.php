@@ -91,7 +91,7 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public function isResetable() {
+  public function isResettable() {
     return FALSE;
   }
 

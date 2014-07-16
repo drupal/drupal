@@ -88,7 +88,7 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    * @return bool
    *   TRUE if it can be reset, FALSE otherwise.
    */
-  public function isResetable();
+  public function isResettable();
 
   /**
    * Returns whether this link can be translated.
