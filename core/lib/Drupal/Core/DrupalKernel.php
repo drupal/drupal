@@ -520,9 +520,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Add site-specific service providers.
     if (!empty($GLOBALS['conf']['container_service_providers'])) {
-      foreach ($GLOBALS['conf']['container_service_providers'] as $class) {
-        if (class_exists($class)) {
-          $this->serviceProviderClasses['site'][] = $class;
+      foreach ($GLOBALS['conf']['container_service_providers'] as $key => $class) {
+        if (is_object($class)) {
+          $this->serviceProviderClasses['site'][$key] = get_class($class);
+          $this->serviceProviders['site'][$key] = $class;
+        }
+        elseif (class_exists($class)) {
+          $this->serviceProviderClasses['site'][$key] = $class;
         }
       }
     }
@@ -1085,13 +1089,18 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function initializeServiceProviders() {
     $this->discoverServiceProviders();
-    $this->serviceProviders = array(
+    if (!isset($this->serviceProviders)) {
+      $this->serviceProviders = array();
+    }
+    $this->serviceProviders += array(
       'app' => array(),
       'site' => array(),
     );
     foreach ($this->serviceProviderClasses as $origin => $classes) {
       foreach ($classes as $name => $class) {
-        $this->serviceProviders[$origin][$name] = new $class;
+        if (!isset($this->serviceProviders[$origin][$name])) {
+          $this->serviceProviders[$origin][$name] = new $class;
+        }
       }
     }
   }
