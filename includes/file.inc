@@ -974,17 +974,68 @@ function file_download() {
   }
 
   if (file_exists(file_create_path($filepath))) {
-    $headers = module_invoke_all('file_download', $filepath);
-    if (in_array(-1, $headers)) {
-      return drupal_access_denied();
-    }
+    $headers = file_download_headers($filepath);
     if (count($headers)) {
       file_transfer($filepath, $headers);
+    }
+    else {
+      return drupal_access_denied();
     }
   }
   return drupal_not_found();
 }
 
+/**
+ * Retrieves headers for a private file download.
+ *
+ * Calls all module implementations of hook_file_download() to retrieve headers
+ * for files by the module that originally provided the file. The presence of
+ * returned headers indicates the current user has access to the file.
+ *
+ * @param $filepath
+ *   The path for the file whose headers should be retrieved.
+ *
+ * @return
+ *   If access is allowed, headers for the file, suitable for passing to
+ *   file_transfer(). If access is not allowed, an empty array will be returned.
+ *
+ * @see file_transfer()
+ * @see file_download_access()
+ * @see hook_file_downlaod()
+ */
+function file_download_headers($filepath) {
+  $headers = module_invoke_all('file_download', $filepath);
+  if (in_array(-1, $headers)) {
+    // Throw away the headers received so far.
+    $headers = array();
+  }
+  return $headers;
+}
+
+/**
+ * Checks that the current user has access to a particular file.
+ *
+ * The return value of this function hinges on the return value from
+ * file_download_headers(), which is the function responsible for collecting
+ * access information through hook_file_download().
+ *
+ * If immediately transferring the file to the browser and the headers will
+ * need to be retrieved, the return value of file_download_headers() should be
+ * used to determine access directly, so that access checks will not be run
+ * twice.
+ *
+ * @param $filepath
+ *   The path for the file whose headers should be retrieved.
+ *
+ * @return
+ *   Boolean TRUE if access is allowed. FALSE if access is not allowed.
+ *
+ * @see file_download_headers()
+ * @see hook_file_download()
+ */
+function file_download_access($filepath) {
+  return count(file_download_headers($filepath)) > 0;
+}
 
 /**
  * Finds all files that match a given mask in a given directory.

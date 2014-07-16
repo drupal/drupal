@@ -364,7 +364,14 @@ function drupal_unset_globals() {
  *  TRUE if only containing valid characters, or FALSE otherwise.
  */
 function drupal_valid_http_host($host) {
-  return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $host);
+  // Limit the length of the host name to 1000 bytes to prevent DoS attacks with
+  // long host names.
+  return strlen($host) <= 1000
+    // Limit the number of subdomains and port separators to prevent DoS attacks
+    // in conf_path().
+    && substr_count($host, '.') <= 100
+    && substr_count($host, ':') <= 100
+    && preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host);
 }
 
 /**
