@@ -96,6 +96,7 @@ class EditorImageDialog extends FormBase {
     $form['attributes']['alt'] = array(
       '#title' => $this->t('Alternative text'),
       '#type' => 'textfield',
+      '#required' => TRUE,
       '#default_value' => isset($image_element['alt']) ? $image_element['alt'] : '',
       '#maxlength' => 2048,
     );
