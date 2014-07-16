@@ -22,6 +22,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testSetUpBeforeClass() {
     $this->assertSame(realpath(__DIR__ . '/../../../../'), getcwd());
+    $this->assertEquals(__CLASS__, $GLOBALS['conf']['container_service_providers']['test']);
   }
 
   /**

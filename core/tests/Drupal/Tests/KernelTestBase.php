@@ -52,11 +52,15 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    */
   protected $backupGlobals = TRUE;
 
-  private static $classLoader;
+  /**
+   * Fixtures shared across tests of this class.
+   *
+   * @var \stdClass
+   */
+  private static $sharedFixtures;
 
   protected $siteDirectory;
   protected $databasePrefix;
-
   protected $kernel; // @todo Remove.
   protected $container;
 
@@ -97,11 +101,63 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    */
   private $streamWrappers = array();
 
+  /**
+   * {@inheritdoc}
+   */
   public static function setUpBeforeClass() {
     parent::setUpBeforeClass();
     chdir(__DIR__ . '/../../../../');
+
+    require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+
+    // Create shared fixtures for this class.
+    // Booting an in-memory kernel is expensive as it involves many filesystem
+    // scans. Since the initial kernel/container is identical for all tests, it
+    // is only booted once for a test class and cloned for subsequent tests.
+    // Tests are able to perform test-specific customizations via setUp().
+    self::$sharedFixtures = new \stdClass;
+
     // @todo Better way? PHPUnit seems to access it from constants.
-    self::$classLoader = $GLOBALS['loader'];
+    self::$sharedFixtures->classLoader = $GLOBALS['loader'];
+
+    // Assign a unique test site directory; account for concurrent threads.
+    // @todo Remove, or replace with vfsStream. 
+    do {
+      $suffix = mt_rand(100000, 999999);
+      self::$sharedFixtures->siteDirectory = 'sites/simpletest/' . $suffix;
+    } while (is_dir(DRUPAL_ROOT . '/' . self::$sharedFixtures->siteDirectory));
+    #mkdir(self::$sharedFixtures->siteDirectory, 0775, TRUE);
+
+    self::$sharedFixtures->settings = new Settings(array(
+      'hash_salt' => get_called_class(),
+    ));
+
+    self::$sharedFixtures->databases['default']['default'] = array(
+      'driver' => 'sqlite',
+      'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
+      'host' => '',
+      'database' => ':memory:',
+      'username' => '',
+      'password' => '',
+      'prefix' => array(
+        'default' => '',
+      ),
+    );
+
+    // Allow for global test environment overrides.
+    if (file_exists($test_env = DRUPAL_ROOT . '/sites/default/testing.services.yml')) {
+      $GLOBALS['conf']['container_yamls']['testing'] = $test_env;
+    }
+    // Add this test class as a service provider.
+    $GLOBALS['conf']['container_service_providers']['test'] = get_called_class();
+
+    // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
+    $kernel = new DrupalKernel('testing', self::$sharedFixtures->classLoader, FALSE);
+    $kernel->setSitePath(self::$sharedFixtures->siteDirectory);
+    $kernel->boot();
+
+    self::$sharedFixtures->kernel = $kernel;
+    self::$sharedFixtures->container = $kernel->getContainer();
   }
 
   /**
@@ -129,38 +185,11 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     }
   }
 
-  /**
-   * BC layer: Prepares a test site environment.
-   *
-   * Sets up a public files directory for the test, which also contains the PHP
-   * error log, which is written to in case of a fatal error. Since the
-   * directory is based on the database prefix, all tests (even unit tests) need
-   * to have one, in order to access and read the error log.
-   *
-   * @see \Drupal\simpletest\TestBase::prepareDatabasePrefix()
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
-   * @see drupal_valid_test_ua()
-   */
-  private function prepareEnvironment() {
-    // Ensure that the generated test site directory does not exist already,
-    // which may happen with a large amount of concurrent threads and
-    // long-running tests.
-    do {
-      $suffix = mt_rand(100000, 999999);
-      $this->siteDirectory = 'sites/simpletest/' . $suffix;
-//      $this->databasePrefix = 'simpletest' . $suffix;
-    } while (is_dir(DRUPAL_ROOT . '/' . $this->siteDirectory));
-
-    #mkdir($this->siteDirectory, 0775, TRUE);
-
-    $this->databasePrefix = ''; // sqlite://:memory:
-  }
-
   public function __get($name) {
     $denied = array(
       // @see \Drupal\simpletest\TestBase
       'testId',
-      'databasePrefix',
+      'databasePrefix', // @todo 
       'timeLimit',
       'results',
       'assertions',
@@ -197,60 +226,30 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    */
   protected function setUp() {
     parent::setUp();
+    \Drupal::setContainer(NULL);
 
-    $this->prepareEnvironment();
-
-    require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+    $this->siteDirectory = self::$sharedFixtures->siteDirectory;
+    $this->databasePrefix = ''; // sqlite://:memory:
 
     // Create and set new configuration directories.
     #$this->prepareConfigDirectories();
 
-    new Settings(array(
-      'hash_salt' => get_class($this),
-    ));
-    // @todo Move into protected property to allow overrides?
-    Database::addConnectionInfo('default', 'default', array(
-      'driver' => 'sqlite',
-      'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
-      'host' => '',
-      'database' => ':memory:',
-      'username' => '',
-      'password' => '',
-      'prefix' => array(
-        'default' => '',
-      ),
-    ));
+    new Settings(self::$sharedFixtures->settings->getAll());
 
-    // Allow for global test environment overrides.
-    $settings_services_file = DRUPAL_ROOT . '/sites/default/testing.services.yml';
-    if (file_exists($settings_services_file)) {
-      $GLOBALS['conf']['container_yamls']['testing'] = $settings_services_file;
+    foreach (Database::getAllConnectionInfo() as $key => $targets) {
+      Database::removeConnection($key);
     }
-    // Add this test class as a service provider.
-    $GLOBALS['conf']['container_service_providers']['test'] = $this;
+    Database::setMultipleConnectionInfo(self::$sharedFixtures->databases);
 
-//    // Back up settings from TestBase::prepareEnvironment().
-//    $settings = Settings::getAll();
-
-    // Bootstrap a new kernel. Don't use createFromRequest so we don't mess with settings.
-    $request = Request::create('/');
-    $this->kernel = new DrupalKernel('testing', self::$classLoader, FALSE);
-//    $this->kernel->setSitePath(DrupalKernel::findSitePath($request));
-    $this->kernel->setSitePath($this->siteDirectory);
-    $this->kernel->boot();
-
-//    // Restore and merge settings.
-//    // DrupalKernel::boot() initializes new Settings, and the containerBuild()
-//    // method sets additional settings.
-//    new Settings($settings + Settings::getAll());
+    $this->kernel = clone self::$sharedFixtures->kernel;
+    $this->container = clone self::$sharedFixtures->container;
 
     // Set the request scope.
-    $this->container = $this->kernel->getContainer();
+    $request = Request::create('/');
     $this->container->set('request', $request);
     $this->container->get('request_stack')->push($request);
 
-//    $this->container->get('state')->set('system.module.files', $this->moduleFiles);
-//    $this->container->get('state')->set('system.theme.files', $this->themeFiles);
+    \Drupal::setContainer($this->container);
 
     // Create a minimal core.extension configuration object so that the list of
     // enabled modules can be maintained allowing
