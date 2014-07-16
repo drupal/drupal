@@ -892,31 +892,6 @@ function comment_user_predelete($account) {
 }
 
 /**
- * Returns the page number for a comment.
- *
- * Finds the correct page number for a comment taking into account display
- * and paging settings.
- *
- * @param int $cid
- *   The comment ID.
- * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
- *   Field definition of the comments.
- *
- * @return int
- *   The page number, or 0 if the comment is not found.
- *
- * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
- *   Use \Drupal\comment\CommentStorageInterface::getDisplayOrdinal().
- */
-function comment_get_display_page($cid, FieldDefinitionInterface $field_definition) {
-  $comment_storage = \Drupal::entityManager()->getStorage('comment');
-  $default_mode = $field_definition->getSetting('default_mode');
-  $items_per_page = $field_definition->getSetting('per_page');
-  $comment = \Drupal::entityManager()->getStorage('comment')->load($cid);
-  return $comment ? $comment_storage->getDisplayOrdinal($comment, $default_mode, $items_per_page) : 0;
-}
-
-/**
  * Generates a comment preview.
  *
  * @param \Drupal\comment\CommentInterface $comment
