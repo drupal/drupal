@@ -76,6 +76,56 @@ class ConfigLanguageOverrideTest extends DrupalUnitTestBase {
     $config = \Drupal::config('config_test.new');
     $this->assertIdentical($config->get('language'), NULL);
     \Drupal::configFactory()->setOverrideState($old_state);
+
+    // Test how overrides react to base configuration changes. Set up some base
+    // values.
+    \Drupal::config('config_test.foo')
+      ->set('value', array('key' => 'original'))
+      ->set('label', 'Original')
+      ->save();
+    \Drupal::languageManager()
+      ->getLanguageConfigOverride('de', 'config_test.foo')
+      ->set('value', array('key' => 'override'))
+      ->set('label', 'Override')
+      ->save();
+    \Drupal::languageManager()
+      ->getLanguageConfigOverride('fr', 'config_test.foo')
+      ->set('value', array('key' => 'override'))
+      ->save();
+    \Drupal::configFactory()->clearStaticCache();
+    $config = \Drupal::config('config_test.foo');
+    $this->assertIdentical($config->get('value'), array('key' => 'override'));
+
+    // Ensure renaming the config will rename the override.
+    \Drupal::configFactory()->rename('config_test.foo', 'config_test.bar');
+    $config = \Drupal::config('config_test.bar');
+    $this->assertEqual($config->get('value'), array('key' => 'original'));
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'config_test.foo');
+    $this->assertTrue($override->isNew());
+    $this->assertEqual($override->get('value'), NULL);
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'config_test.bar');
+    $this->assertFalse($override->isNew());
+    $this->assertEqual($override->get('value'), array('key' => 'override'));
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'config_test.bar');
+    $this->assertFalse($override->isNew());
+    $this->assertEqual($override->get('value'), array('key' => 'override'));
+
+    // Ensure changing data in the config will update the overrides.
+    $config = \Drupal::config('config_test.bar')->clear('value.key')->save();
+    $this->assertEqual($config->get('value'), array());
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'config_test.bar');
+    $this->assertFalse($override->isNew());
+    $this->assertEqual($override->get('value'), NULL);
+    // The French override will become empty and therefore removed.
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'config_test.bar');
+    $this->assertTrue($override->isNew());
+    $this->assertEqual($override->get('value'), NULL);
+
+    // Ensure deleting the config will delete the override.
+    \Drupal::configFactory()->get('config_test.bar')->delete();
+    $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'config_test.bar');
+    $this->assertTrue($override->isNew());
+    $this->assertEqual($override->get('value'), NULL);
   }
 }
 

@@ -9,7 +9,9 @@ namespace Drupal\language\Config;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigCollectionInfo;
-use Drupal\Core\Config\ConfigEvents;
+use Drupal\Core\Config\ConfigCrudEvent;
+use Drupal\Core\Config\ConfigFactoryOverrideBase;
+use Drupal\Core\Config\ConfigRenameEvent;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Language\LanguageDefault;
@@ -20,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Provides language overrides for the configuration factory.
  */
-class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInterface, EventSubscriberInterface {
+class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements LanguageConfigFactoryOverrideInterface, EventSubscriberInterface {
 
   /**
    * The configuration storage.
@@ -194,10 +196,7 @@ class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInte
   }
 
   /**
-   * Reacts to the ConfigEvents::COLLECTION_INFO event.
-   *
-   * @param \Drupal\Core\Config\ConfigCollectionInfo $collection_info
-   *   The configuration collection names event.
+   * {@inheritdoc}
    */
   public function addCollections(ConfigCollectionInfo $collection_info) {
     foreach (\Drupal::languageManager()->getLanguages() as $language) {
@@ -208,9 +207,47 @@ class LanguageConfigFactoryOverride implements LanguageConfigFactoryOverrideInte
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
-    $events[ConfigEvents::COLLECTION_INFO][] = array('addCollections');
-    return $events;
+  public function onConfigSave(ConfigCrudEvent $event) {
+    $config = $event->getConfig();
+    $name = $config->getName();
+    foreach (\Drupal::languageManager()->getLanguages() as $language) {
+      $config_translation = $this->getOverride($language->getId(), $name);
+      if (!$config_translation->isNew()) {
+        $this->filterOverride($config, $config_translation);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onConfigRename(ConfigRenameEvent $event) {
+    $config = $event->getConfig();
+    $name = $config->getName();
+    $old_name = $event->getOldName();
+    foreach (\Drupal::languageManager()->getLanguages() as $language) {
+      $config_translation = $this->getOverride($language->getId(), $old_name);
+      if (!$config_translation->isNew()) {
+        $saved_config = $config_translation->get();
+        $storage = $this->getStorage($language->getId());
+        $storage->write($name, $saved_config);
+        $config_translation->delete();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onConfigDelete(ConfigCrudEvent $event) {
+    $config = $event->getConfig();
+    $name = $config->getName();
+    foreach (\Drupal::languageManager()->getLanguages() as $language) {
+      $config_translation = $this->getOverride($language->getId(), $name);
+      if (!$config_translation->isNew()) {
+        $config_translation->delete();
+      }
+    }
   }
 
 }
