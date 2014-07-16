@@ -228,32 +228,6 @@ function comment_permission() {
 }
 
 /**
- * Calculates the page number for the first new comment.
- *
- * @param int $total_comments
- *   The total number of comments that the entity has.
- * @param int $new_comments
- *   The number of new comments that the entity has.
- * @param \Drupal\Core\Entity\ContentEntityInterface $entity
- *   The entity to which the comments belong.
- * @param string $field_name
- *   The field name on the entity to which comments are attached.
- *
- * @return array|null
- *   An array "page=X" if the page number is greater than zero; NULL otherwise.
- *
- * @deprecated Deprecated since Drupal 8.x-dev, to be removed in Drupal 8.0.
- *   Use \Drupal\comment\CommentStorageInterface::getNewCommentPageNumber();
- *   Note this returns an integer instead of array|null.
- */
-function comment_new_page_count($total_comments, $new_comments, ContentEntityInterface $entity, $field_name = 'comment') {
-  $page_number = \Drupal::entityManager()->getStorage('comment')
-    ->getNewCommentPageNumber($total_comments, $new_comments, $entity, $field_name);
-
-  return $page_number ? array('page' => $page_number) : NULL;
-}
-
-/**
  * Implements hook_entity_build_defaults_alter().
  */
 function comment_entity_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {

@@ -187,7 +187,7 @@ class CommentPagerTest extends CommentTestBase {
   }
 
   /**
-   * Tests comment_new_page_count().
+   * Tests calculation of first page with new comment.
    */
   function testCommentNewPageIndicator() {
     $this->drupalLogin($this->admin_user);
