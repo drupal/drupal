@@ -42,7 +42,8 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
   /**
    * Tests that removeRoute() removes routes when the module is not enabled.
    *
-   * @dataProvider testRemoveRouteProvider
+   * @dataProvider providerTestRemoveRoute
+   * @covers ::onAlterRoutes
    *
    * @param string $route_name
    *   The machine name for the route.
@@ -71,7 +72,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
   /**
    * Data provider for testRemoveRoute().
    */
-  public function testRemoveRouteProvider() {
+  public function providerTestRemoveRoute() {
     return array(
       array('enabled', array('_module_dependencies' => 'enabled'), FALSE),
       array('disabled', array('_module_dependencies' => 'disabled'), TRUE),

@@ -91,9 +91,9 @@ class AccessSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests access denied throws a Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException exception.
+   * Tests access denied throws an exception.
    *
-   * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   * @expectedException \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function testAccessSubscriberThrowsAccessDeniedException() {
 
@@ -132,25 +132,27 @@ class AccessSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests that if access is granted, AccessSubscriber will not throw a Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException exception.
+   * Tests that if access is granted, AccessSubscriber will not throw an exception.
    */
   public function testAccessSubscriberDoesNotAlterRequestIfAccessManagerGrantsAccess() {
-    $this->parameterBag->expects($this->any())
+    $this->parameterBag->expects($this->once())
       ->method('has')
       ->with(RouteObjectInterface::ROUTE_OBJECT)
       ->will($this->returnValue(TRUE));
 
-    $this->parameterBag->expects($this->any())
+    $this->parameterBag->expects($this->once())
       ->method('get')
       ->with(RouteObjectInterface::ROUTE_OBJECT)
       ->will($this->returnValue($this->route));
 
-    $this->accessManager->expects($this->any())
+    $this->accessManager->expects($this->once())
       ->method('check')
-      ->with($this->anything())
+      ->with($this->equalTo($this->route))
       ->will($this->returnValue(TRUE));
 
     $subscriber = new AccessSubscriber($this->accessManager, $this->currentUser);
+    // We're testing that no exception is thrown in this case. There is no
+    // return.
     $subscriber->onKernelRequestAccessCheck($this->event);
   }
 

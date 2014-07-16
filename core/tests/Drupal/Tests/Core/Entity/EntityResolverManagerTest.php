@@ -60,7 +60,6 @@ class EntityResolverManagerTest extends UnitTestCase {
    * {@inheritdoc}
    *
    * @covers ::__construct()
-   * @covers ::setContainer()
    */
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');

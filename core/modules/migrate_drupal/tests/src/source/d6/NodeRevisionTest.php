@@ -329,7 +329,8 @@ class NodeRevisionTest extends MigrateSqlSourceTestCase {
    * {@inheritdoc}
    */
   public function testRetrieval() {
-    // FakeSelect does not support multiple source identifiers, can not test.
+    // @todo: Fix this as per https://www.drupal.org/node/2299795
+    $this->markTestIncomplete('FakeSelect does not support multiple source identifiers, can not test.');
   }
 
 }

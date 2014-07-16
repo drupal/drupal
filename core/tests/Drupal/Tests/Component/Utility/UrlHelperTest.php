@@ -13,7 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Utility\Url
+ * @coversDefaultClass \Drupal\Component\Utility\UrlHelper
  * @group Utility
  */
 class UrlHelperTest extends UnitTestCase {
