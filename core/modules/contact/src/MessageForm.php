@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\contact\MessageForm.
+ * Contains \Drupal\contact\MessageForm.
  */
 
 namespace Drupal\contact;
@@ -70,7 +70,7 @@ class MessageForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $user = $this->currentUser();
@@ -88,7 +88,7 @@ class MessageForm extends ContentEntityForm {
 
     $language_configuration = $this->moduleHandler->invoke('language', 'get_default_configuration', array('contact_message', $message->getCategory()->id()));
     $form['langcode'] = array(
-      '#title' => t('Language'),
+      '#title' => $this->t('Language'),
       '#type' => 'language_select',
       '#default_value' => $message->getUntranslated()->language()->id,
       '#languages' => Language::STATE_ALL,
@@ -97,13 +97,13 @@ class MessageForm extends ContentEntityForm {
 
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Your name'),
+      '#title' => $this->t('Your name'),
       '#maxlength' => 255,
       '#required' => TRUE,
     );
     $form['mail'] = array(
       '#type' => 'email',
-      '#title' => t('Your email address'),
+      '#title' => $this->t('Your email address'),
       '#required' => TRUE,
     );
     if ($user->isAnonymous()) {
@@ -128,7 +128,7 @@ class MessageForm extends ContentEntityForm {
     if ($message->isPersonal()) {
       $form['recipient'] = array(
         '#type' => 'item',
-        '#title' => t('To'),
+        '#title' => $this->t('To'),
         '#value' => $message->getPersonalRecipient()->id(),
         'name' => array(
           '#theme' => 'username',
@@ -139,7 +139,7 @@ class MessageForm extends ContentEntityForm {
 
     $form['copy'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Send yourself a copy.'),
+      '#title' => $this->t('Send yourself a copy.'),
       // Do not allow anonymous users to send themselves a copy, because it can
       // be abused to spam people.
       '#access' => $user->isAuthenticated(),
@@ -148,13 +148,13 @@ class MessageForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::actions().
+   * {@inheritdoc}
    */
   public function actions(array $form, array &$form_state) {
     $elements = parent::actions($form, $form_state);
-    $elements['submit']['#value'] = t('Send message');
+    $elements['submit']['#value'] = $this->t('Send message');
     $elements['preview'] = array(
-      '#value' => t('Preview'),
+      '#value' => $this->t('Preview'),
       '#validate' => array(
         array($this, 'validate'),
       ),
@@ -176,7 +176,7 @@ class MessageForm extends ContentEntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::save().
+   * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
     $user = $this->currentUser();
@@ -195,7 +195,7 @@ class MessageForm extends ContentEntityForm {
       user_cookie_save(array('name' => $message->getSenderName(), 'mail' => $message->getSenderMail()));
       // For the email message, clarify that the sender name is not verified; it
       // could potentially clash with a username on this site.
-      $sender->name = t('!name (not verified)', array('!name' => $message->getSenderName()));
+      $sender->name = $this->t('!name (not verified)', array('!name' => $message->getSenderName()));
     }
 
     // Build email parameters.
@@ -217,7 +217,7 @@ class MessageForm extends ContentEntityForm {
       $params['recipient'] = $recipient;
     }
     else {
-      throw new \RuntimeException(t('Unable to determine message recipient.'));
+      throw new \RuntimeException($this->t('Unable to determine message recipient.'));
     }
 
     // Send email to the recipient(s).
@@ -236,8 +236,7 @@ class MessageForm extends ContentEntityForm {
       drupal_mail('contact', 'page_autoreply', $sender->getEmail(), $language_interface->id, $params);
     }
 
-    $config = $this->config('contact.settings');
-    $this->flood->register('contact', $config->get('flood.interval'));
+    $this->flood->register('contact', $this->config('contact.settings')->get('flood.interval'));
     if (!$message->isPersonal()) {
       watchdog('contact', '%sender-name (@sender-from) sent an email regarding %category.', array(
         '%sender-name' => $sender->getUsername(),
@@ -253,7 +252,7 @@ class MessageForm extends ContentEntityForm {
       ));
     }
 
-    drupal_set_message(t('Your message has been sent.'));
+    drupal_set_message($this->t('Your message has been sent.'));
 
     // To avoid false error messages caused by flood control, redirect away from
     // the contact form; either to the contacted user account or the front page.

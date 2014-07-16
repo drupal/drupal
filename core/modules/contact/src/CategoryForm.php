@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\contact\CategoryForm.
+ * Contains \Drupal\contact\CategoryForm.
  */
 
 namespace Drupal\contact;
@@ -16,20 +16,20 @@ use Drupal\Core\Entity\EntityTypeInterface;
 class CategoryForm extends EntityForm {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $form = parent::form($form, $form_state);
 
     $category = $this->entity;
-    $default_category = \Drupal::config('contact.settings')->get('default_category');
+    $default_category = $this->config('contact.settings')->get('default_category');
 
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Label'),
+      '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $category->label(),
-      '#description' => t("Example: 'website feedback' or 'product information'."),
+      '#description' => $this->t("Example: 'website feedback' or 'product information'."),
       '#required' => TRUE,
     );
     $form['id'] = array(
@@ -43,26 +43,26 @@ class CategoryForm extends EntityForm {
     );
     $form['recipients'] = array(
       '#type' => 'textarea',
-      '#title' => t('Recipients'),
+      '#title' => $this->t('Recipients'),
       '#default_value' => implode(', ', $category->recipients),
-      '#description' => t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each email address with a comma."),
+      '#description' => $this->t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each email address with a comma."),
       '#required' => TRUE,
     );
     $form['reply'] = array(
       '#type' => 'textarea',
-      '#title' => t('Auto-reply'),
+      '#title' => $this->t('Auto-reply'),
       '#default_value' => $category->reply,
-      '#description' => t('Optional auto-reply. Leave empty if you do not want to send the user an auto-reply message.'),
+      '#description' => $this->t('Optional auto-reply. Leave empty if you do not want to send the user an auto-reply message.'),
     );
     $form['weight'] = array(
       '#type' => 'weight',
-      '#title' => t('Weight'),
+      '#title' => $this->t('Weight'),
       '#default_value' => $category->weight,
-      '#description' => t('When listing categories, those with lighter (smaller) weights get listed before categories with heavier (larger) weights. Categories with equal weights are sorted alphabetically.'),
+      '#description' => $this->t('When listing categories, those with lighter (smaller) weights get listed before categories with heavier (larger) weights. Categories with equal weights are sorted alphabetically.'),
     );
     $form['selected'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Make this the default category.'),
+      '#title' => $this->t('Make this the default category.'),
       '#default_value' => $default_category === $category->id(),
     );
 
@@ -70,7 +70,7 @@ class CategoryForm extends EntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::validate().
+   * {@inheritdoc}
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
@@ -88,33 +88,33 @@ class CategoryForm extends EntityForm {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityForm::save().
+   * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
     $category = $this->entity;
     $status = $category->save();
+    $contact_settings = $this->config('contact.settings');
 
     $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
 
     if ($status == SAVED_UPDATED) {
-      drupal_set_message(t('Category %label has been updated.', array('%label' => $category->label())));
+      drupal_set_message($this->t('Category %label has been updated.', array('%label' => $category->label())));
       watchdog('contact', 'Category %label has been updated.', array('%label' => $category->label()), WATCHDOG_NOTICE, $edit_link);
     }
     else {
-      drupal_set_message(t('Category %label has been added.', array('%label' => $category->label())));
+      drupal_set_message($this->t('Category %label has been added.', array('%label' => $category->label())));
       watchdog('contact', 'Category %label has been added.', array('%label' => $category->label()), WATCHDOG_NOTICE, $edit_link);
     }
 
     // Update the default category.
-    $contact_config = \Drupal::config('contact.settings');
     if ($form_state['values']['selected']) {
-      $contact_config
+      $contact_settings
         ->set('default_category', $category->id())
         ->save();
     }
     // If it was the default category, empty out the setting.
-    elseif ($contact_config->get('default_category') == $category->id()) {
-      $contact_config
+    elseif ($contact_settings->get('default_category') == $category->id()) {
+      $contact_settings
         ->set('default_category', NULL)
         ->save();
     }
