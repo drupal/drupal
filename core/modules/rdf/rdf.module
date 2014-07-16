@@ -567,9 +567,9 @@ function rdf_preprocess_image(&$variables) {
 function template_preprocess_rdf_metadata(&$variables) {
   foreach ($variables['metadata'] as $key => $attributes) {
     // Add a class so that developers viewing the HTML source can see why there
-    // are empty <span> tags in the document. The class can also be used to set
-    // a CSS display:none rule in a theme where empty spans affect display.
+    // are empty <span> tags in the document.
     $attributes['class'][] = 'rdf-meta';
+    $attributes['class'][] = 'hidden';
     // The XHTML+RDFa doctype allows either <span></span> or <span /> syntax to
     // be used, but for maximum browser compatibility, W3C recommends the
     // former when serving pages using the text/html media type, see
