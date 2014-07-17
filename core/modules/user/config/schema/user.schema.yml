@@ -166,8 +166,6 @@ action.configuration.user_unblock_user_action:
 search.plugin.user_search:
   type: sequence
   label: 'User search'
-  sequence:
-    - type: undefined
 
 condition.plugin.user_role:
   type: condition.plugin

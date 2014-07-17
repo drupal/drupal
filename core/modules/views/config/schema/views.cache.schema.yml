@@ -7,8 +7,6 @@ views.cache.none:
     options:
       type: sequence
       label: 'Options'
-      sequence:
-        - type: undefined
 
 views.cache.tag:
   type: views_cache
@@ -17,8 +15,6 @@ views.cache.tag:
     options:
       type: sequence
       label: 'Options'
-      sequence:
-        - type: undefined
 
 views.cache.time:
   type: views_cache
