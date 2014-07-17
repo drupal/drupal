@@ -58,6 +58,14 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::setUp
    */
   public function testSetUp() {
+    $this->assertTrue($this->container->has('request_stack'));
+    $this->assertTrue($this->container->initialized('request_stack'));
+    $request = $this->container->get('request_stack')->getCurrentRequest();
+    $this->assertNotEmpty($request);
+    $this->assertEquals('/', $request->getPathInfo());
+
+    $this->assertSame($request, \Drupal::request());
+
     $GLOBALS['destroy-me'] = TRUE;
     $this->assertArrayHasKey('destroy-me', $GLOBALS);
 
@@ -84,6 +92,23 @@ class KernelTestBaseTest extends KernelTestBase {
     );
     $schema = $this->container->get('database')->schema();
     $this->assertEquals($expected, $schema->findTables('%'));
+  }
+
+  /**
+   * @covers ::register
+   */
+  public function testRegister() {
+    $this->assertFalse($this->container->has('request'));
+    $this->assertSame(static::$currentContainer, \Drupal::getContainer());
+    $this->assertSame($this->container, \Drupal::getContainer());
+    $this->assertSame($this->container->get('request_stack')->getCurrentRequest(), \Drupal::request());
+
+    $this->enableModules(array('system'));
+
+    $this->assertFalse($this->container->has('request'));
+    $this->assertSame(static::$currentContainer, \Drupal::getContainer());
+    $this->assertSame($this->container, \Drupal::getContainer());
+    $this->assertSame($this->container->get('request_stack')->getCurrentRequest(), \Drupal::request());
   }
 
 }

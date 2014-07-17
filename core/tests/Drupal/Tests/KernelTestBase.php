@@ -16,6 +16,7 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -61,8 +62,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
   protected $siteDirectory;
   protected $databasePrefix;
-  protected $kernel; // @todo Remove.
-  protected $container;
+  protected static $currentContainer;
 
   /**
    * Modules to enable.
@@ -112,8 +112,8 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     // Create shared fixtures for this class.
     // Booting an in-memory kernel is expensive as it involves many filesystem
-    // scans. Since the initial kernel/container is identical for all tests, it
-    // is only booted once for a test class and cloned for subsequent tests.
+    // scans. Since the initial container is identical for all tests, it is only
+    // booted once for a test class and cloned for subsequent tests.
     // Tests are able to perform test-specific customizations via setUp().
     self::$sharedFixtures = new \stdClass;
 
@@ -156,7 +156,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $kernel->setSitePath(self::$sharedFixtures->siteDirectory);
     $kernel->boot();
 
-    self::$sharedFixtures->kernel = $kernel;
     self::$sharedFixtures->container = $kernel->getContainer();
   }
 
@@ -186,6 +185,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   }
 
   public function __get($name) {
+    if ($name === 'container') {
+      return static::$currentContainer;
+    }
     $denied = array(
       // @see \Drupal\simpletest\TestBase
       'testId',
@@ -200,7 +202,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       'verboseDirectory',
       'verboseDirectoryUrl',
       'dieOnFail',
-      'kernel', // @todo 
+      'kernel',
       'configImporter',
       'randomGenerator',
       // @see \Drupal\simpletest\TestBase::prepareEnvironment()
@@ -234,22 +236,22 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Create and set new configuration directories.
     #$this->prepareConfigDirectories();
 
+    // Reset settings.
     new Settings(self::$sharedFixtures->settings->getAll());
 
+    // Reset database connections/info.
     foreach (Database::getAllConnectionInfo() as $key => $targets) {
       Database::removeConnection($key);
     }
     Database::setMultipleConnectionInfo(self::$sharedFixtures->databases);
 
-    $this->kernel = clone self::$sharedFixtures->kernel;
-    $this->container = clone self::$sharedFixtures->container;
-
-    // Set the request scope.
-    $request = Request::create('/');
-    $this->container->set('request', $request);
-    $this->container->get('request_stack')->push($request);
-
+    // Reset the container.
+    static::$currentContainer = clone self::$sharedFixtures->container;
     \Drupal::setContainer($this->container);
+
+    // Reset the request stack.
+    $request = Request::create('/');
+    $this->container->get('request_stack')->push($request);
 
     // Create a minimal core.extension configuration object so that the list of
     // enabled modules can be maintained allowing
@@ -299,9 +301,8 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * {@inheritdoc}
    */
   protected function tearDown() {
-    if ($this->kernel instanceof DrupalKernel) {
-      $this->kernel->shutdown();
-    }
+    $this->container->get('kernel')->shutdown();
+
     // Before tearing down the test environment, ensure that no stream wrapper
     // of this test leaks into the parent environment. Unlike all other global
     // state variables in Drupal, stream wrappers are a global state construct
@@ -310,6 +311,10 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // @see https://drupal.org/node/2028109
     foreach ($this->streamWrappers as $scheme => $type) {
       $this->unregisterStreamWrapper($scheme, $type);
+    }
+
+    foreach (Database::getAllConnectionInfo() as $key => $targets) {
+      Database::removeConnection($key);
     }
 
     if (is_dir($this->siteDirectory)) {
@@ -331,17 +336,14 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @see \Drupal\simpletest\KernelTestBase::disableModules()
    */
   public function register(ContainerBuilder $container) {
-    // Keep the container object around for tests.
-    $this->container = $container;
+    static::$currentContainer = $container;
 
     // Set the default language on the minimal container.
-    $this->container->setParameter('language.default_values', Language::$defaultValues);
+    $container->setParameter('language.default_values', Language::$defaultValues);
 
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $container->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
 
-//    $this->settingsSet('keyvalue_default', 'keyvalue.memory');
-//    $container->set('keyvalue.memory', $this->keyValueFactory);
     $container
       ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
     $container
@@ -359,9 +361,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')->setArguments(array(1));
     }
-
-    $request = Request::create('/');
-    $this->container->set('request', $request);
   }
 
   /**
@@ -493,7 +492,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     // Update the kernel to make their services available.
     $module_filenames = $module_handler->getModuleList();
-    $this->kernel->updateModules($module_filenames, $module_filenames);
+    $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
 
     // Ensure isLoaded() is TRUE in order to make _theme() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
@@ -526,7 +525,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $module_handler->setModuleList($module_filenames);
     $module_handler->resetImplementations();
     // Update the kernel to remove their services.
-    $this->kernel->updateModules($module_filenames, $module_filenames);
+    $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
 
     // Ensure isLoaded() is TRUE in order to make _theme() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
