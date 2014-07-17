@@ -12,16 +12,13 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Base class for integration tests.
+ * Base class for functional integration tests.
  *
  * Tests extending this base class can access files and the database, but the
  * entire environment is initially empty. Drupal runs in a minimal mocked
@@ -31,8 +28,8 @@ use Symfony\Component\HttpFoundation\Request;
  * Additional modules needed in a test may be loaded and added to the fixed
  * module list.
  *
- * @see \Drupal\simpletest\KernelTestBase::$modules
- * @see \Drupal\simpletest\KernelTestBase::enableModules()
+ * @see \Drupal\Tests\KernelTestBase::$modules
+ * @see \Drupal\Tests\KernelTestBase::enableModules()
  */
 abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements ServiceProviderInterface {
 
@@ -68,14 +65,14 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * this property. The values of all properties in all classes in the hierarchy
    * are merged.
    *
-   * Unlike UnitTestBase::setUp(), any modules specified in the $modules
-   * property are automatically loaded and set as the fixed module list.
+   * Unlike \Drupal\Tests\UnitTestCase, modules specified in the $modules
+   * property are automatically added to the service container for each test.
    *
-   * Unlike WebTestBase::setUp(), the specified modules are loaded only, but not
-   * automatically installed. Modules need to be installed manually, if needed.
+   * Unlike \Drupal\simpletest\WebTestBase, the modules are only loaded, but not
+   * installed. Modules need to be installed manually, if needed.
    *
-   * @see \Drupal\simpletest\KernelTestBase::enableModules()
-   * @see \Drupal\simpletest\KernelTestBase::setUp()
+   * @see \Drupal\Tests\KernelTestBase::enableModules()
+   * @see \Drupal\Tests\KernelTestBase::setUp()
    *
    * @var array
    */
@@ -91,7 +88,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   /**
    * A list of stream wrappers that have been registered for this test.
    *
-   * @see \Drupal\simpletest\KernelTestBase::registerStreamWrapper()
+   * @see \Drupal\Tests\KernelTestBase::registerStreamWrapper()
    *
    * @var array
    */
@@ -128,42 +125,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       // Provide the already resolved path for tests.
       $this->configDirectories[$type] = $path;
     }
-  }
-
-  public function __get($name) {
-    $denied = array(
-      // @see \Drupal\simpletest\TestBase
-      'testId',
-      'databasePrefix', // @todo 
-      'timeLimit',
-      'results',
-      'assertions',
-      'skipClasses',
-      'verbose',
-      'verboseId',
-      'verboseClassName',
-      'verboseDirectory',
-      'verboseDirectoryUrl',
-      'dieOnFail',
-      'kernel',
-      'configImporter',
-      'randomGenerator',
-      // @see \Drupal\simpletest\TestBase::prepareEnvironment()
-      'public_files_directory',
-      'private_files_directory',
-      'temp_files_directory',
-      'translation_files_directory',
-      'generatedTestFiles',
-      // @see \Drupal\simpletest\KernelTestBase::containerBuild()
-      'keyValueFactory',
-    );
-    if (in_array($name, $denied) || strpos($name, 'original') === 0) {
-      throw new \RuntimeException(sprintf('TestBase::$%s property no longer exists', $name));
-    }
-  }
-
-  public function __set($name, $value) {
-    $this->__get($name);
   }
 
   /**
@@ -278,6 +239,45 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   }
 
   /**
+   * Sets up the base service container for this test.
+   *
+   * Extend this method in your test to register additional service overrides
+   * that need to persist a DrupalKernel reboot. This method is called whenever
+   * the kernel is rebuilt.
+   *
+   * @see \Drupal\Tests\KernelTestBase::setUp()
+   * @see \Drupal\Tests\KernelTestBase::enableModules()
+   * @see \Drupal\Tests\KernelTestBase::disableModules()
+   */
+  public function register(ContainerBuilder $container) {
+    $this->container = $container;
+
+    // Set the default language on the minimal container.
+    $container->setParameter('language.default_values', Language::$defaultValues);
+
+    $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
+    $container->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
+
+    $container
+      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
+    $container
+      ->setAlias('keyvalue', 'keyvalue.memory');
+
+    if ($container->hasDefinition('path_processor_alias')) {
+      // Prevent the alias-based path processor, which requires a url_alias db
+      // table, from being registered to the path processor manager. We do this
+      // by removing the tags that the compiler pass looks for. This means the
+      // url generator can safely be used within tests.
+      $definition = $container->getDefinition('path_processor_alias');
+      $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
+    }
+
+    if ($container->hasDefinition('password')) {
+      $container->getDefinition('password')->setArguments(array(1));
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function tearDown() {
@@ -307,45 +307,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     new Settings(array());
 
     parent::tearDown();
-  }
-
-  /**
-   * Sets up the base service container for this test.
-   *
-   * Extend this method in your test to register additional service overrides
-   * that need to persist a DrupalKernel reboot. This method is called whenever
-   * the kernel is rebuilt.
-   *
-   * @see \Drupal\simpletest\KernelTestBase::setUp()
-   * @see \Drupal\simpletest\KernelTestBase::enableModules()
-   * @see \Drupal\simpletest\KernelTestBase::disableModules()
-   */
-  public function register(ContainerBuilder $container) {
-    $this->container = $container;
-
-    // Set the default language on the minimal container.
-    $container->setParameter('language.default_values', Language::$defaultValues);
-
-    $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
-    $container->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
-
-    $container
-      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
-    $container
-      ->setAlias('keyvalue', 'keyvalue.memory');
-
-    if ($container->hasDefinition('path_processor_alias')) {
-      // Prevent the alias-based path processor, which requires a url_alias db
-      // table, from being registered to the path processor manager. We do this
-      // by removing the tags that the compiler pass looks for. This means the
-      // url generator can safely be used within tests.
-      $definition = $container->getDefinition('path_processor_alias');
-      $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
-    }
-
-    if ($container->hasDefinition('password')) {
-      $container->getDefinition('password')->setArguments(array(1));
-    }
   }
 
   /**
@@ -596,6 +557,42 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $this->setRawContent($content);
     $this->verbose('<pre style="white-space: pre-wrap">' . String::checkPlain($content));
     return $content;
+  }
+
+  public function __get($name) {
+    $denied = array(
+      // @see \Drupal\simpletest\TestBase
+      'testId',
+      'databasePrefix', // @todo 
+      'timeLimit',
+      'results',
+      'assertions',
+      'skipClasses',
+      'verbose',
+      'verboseId',
+      'verboseClassName',
+      'verboseDirectory',
+      'verboseDirectoryUrl',
+      'dieOnFail',
+      'kernel',
+      'configImporter',
+      'randomGenerator',
+      // @see \Drupal\simpletest\TestBase::prepareEnvironment()
+      'public_files_directory',
+      'private_files_directory',
+      'temp_files_directory',
+      'translation_files_directory',
+      'generatedTestFiles',
+      // @see \Drupal\simpletest\KernelTestBase::containerBuild()
+      'keyValueFactory',
+    );
+    if (in_array($name, $denied) || strpos($name, 'original') === 0) {
+      throw new \RuntimeException(sprintf('TestBase::$%s property no longer exists', $name));
+    }
+  }
+
+  public function __set($name, $value) {
+    $this->__get($name);
   }
 
 }
