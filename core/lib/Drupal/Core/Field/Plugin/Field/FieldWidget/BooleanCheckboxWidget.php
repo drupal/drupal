@@ -2,27 +2,27 @@
 
 /**
  * @file
- * Contains \Drupal\options\Plugin\Field\FieldWidget\OnOffWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\CheckboxWidget.
  */
 
-namespace Drupal\options\Plugin\Field\FieldWidget;
+namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase;
+use Drupal\Core\Field\WidgetBase;
 
 /**
- * Plugin implementation of the 'options_onoff' widget.
+ * Plugin implementation of the 'boolean_checkbox' widget.
  *
  * @FieldWidget(
- *   id = "options_onoff",
+ *   id = "boolean_checkbox",
  *   label = @Translation("Single on/off checkbox"),
  *   field_types = {
- *     "list_boolean"
+ *     "boolean"
  *   },
  *   multiple_values = TRUE
  * )
  */
-class OnOffWidget extends OptionsWidgetBase {
+class BooleanCheckboxWidget extends WidgetBase {
 
   /**
    * {@inheritdoc}
@@ -39,7 +39,7 @@ class OnOffWidget extends OptionsWidgetBase {
   public function settingsForm(array $form, array &$form_state) {
     $element['display_label'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Use field label instead of the "On value" as label'),
+      '#title' => t('Use field label instead of the "On label" as label'),
       '#default_value' => $this->getSetting('display_label'),
       '#weight' => -1,
     );
@@ -62,22 +62,17 @@ class OnOffWidget extends OptionsWidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
-    $element = parent::formElement($items, $delta, $element, $form, $form_state);
-
-    $options = $this->getOptions($items[$delta]);
-    $selected = $this->getSelectedOptions($items);
-
-    $element += array(
+    $element['value'] = $element + array(
       '#type' => 'checkbox',
-      '#default_value' => !empty($selected[0]),
+      '#default_value' => !empty($items[0]->value),
     );
 
     // Override the title from the incoming $element.
     if ($this->getSetting('display_label')) {
-      $element['#title'] = $this->fieldDefinition->getLabel();
+      $element['value']['#title'] = $this->fieldDefinition->getLabel();
     }
     else {
-      $element['#title'] = isset($options[1]) ? $options[1] : '';
+      $element['value']['#title'] = $this->fieldDefinition->getSetting('on_label');
     }
 
     return $element;

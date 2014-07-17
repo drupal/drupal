@@ -53,7 +53,7 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     entity_create('field_config', array(
       'entity_type' => 'user',
       'name' => 'profile_sell_address',
-      'type' => 'list_boolean',
+      'type' => 'boolean',
     ))->save();
     entity_create('field_config', array(
       'entity_type' => 'user',
@@ -85,7 +85,7 @@ class MigrateProfileValuesTest extends MigrateDrupalTestBase {
     entity_create('field_config', array(
       'entity_type' => 'user',
       'name' => 'profile_love_migrations',
-      'type' => 'list_boolean',
+      'type' => 'boolean',
     ))->save();
 
     // Create the field instances.

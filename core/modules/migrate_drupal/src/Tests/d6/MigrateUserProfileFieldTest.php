@@ -49,7 +49,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
 
     // Migrated checkbox field.
     $field = entity_load('field_config', 'user.profile_sell_address');
-    $this->assertEqual($field->type, 'list_boolean', 'Field type is list_boolean.');
+    $this->assertEqual($field->type, 'boolean', 'Field type is boolean.');
 
     // Migrated selection field.
     $field = entity_load('field_config', 'user.profile_sold_to');

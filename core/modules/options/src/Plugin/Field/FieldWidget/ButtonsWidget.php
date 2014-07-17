@@ -8,7 +8,6 @@
 namespace Drupal\options\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase;
 
 /**
  * Plugin implementation of the 'options_buttons' widget.
@@ -17,10 +16,10 @@ use Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase;
  *   id = "options_buttons",
  *   label = @Translation("Check boxes/radio buttons"),
  *   field_types = {
+ *     "boolean",
  *     "list_integer",
  *     "list_float",
  *     "list_text",
- *     "list_boolean"
  *   },
  *   multiple_values = TRUE
  * )

@@ -20,7 +20,6 @@ use Drupal\Core\Field\FieldItemListInterface;
  *     "list_integer",
  *     "list_float",
  *     "list_text",
- *     "list_boolean"
  *   }
  * )
  */

@@ -40,7 +40,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
     entity_create('field_config', array(
       'entity_type' => 'user',
       'name' => 'profile_sell_address',
-      'type' => 'list_boolean',
+      'type' => 'boolean',
     ))->save();
     entity_create('field_config', array(
       'entity_type' => 'user',
@@ -66,7 +66,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
     entity_create('field_config', array(
       'entity_type' => 'user',
       'name' => 'profile_love_migrations',
-      'type' => 'list_boolean',
+      'type' => 'boolean',
     ))->save();
     $field_data = Drupal6UserProfileFields::getData('profile_fields');
     foreach ($field_data as $field) {
@@ -116,7 +116,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupalTestBase {
 
     // Test that a checkbox field has the proper display label setting.
     $component = $display->getComponent('profile_love_migrations');
-    $this->assertEqual($component['type'], 'options_onoff');
+    $this->assertEqual($component['type'], 'boolean_checkbox');
     $this->assertEqual($component['settings']['display_label'], true);
   }
 

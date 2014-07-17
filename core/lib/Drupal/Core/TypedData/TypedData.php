@@ -8,6 +8,7 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * The abstract base class for typed data.
@@ -18,6 +19,8 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  * @ingroup typed_data
  */
 abstract class TypedData implements TypedDataInterface, PluginInspectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The data definition.

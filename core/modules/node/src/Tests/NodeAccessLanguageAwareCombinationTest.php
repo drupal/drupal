@@ -53,11 +53,12 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
     $field_private = entity_create('field_config', array(
       'name' => 'field_private',
       'entity_type' => 'node',
-      'type' => 'list_boolean',
+      'type' => 'boolean',
       'cardinality' => 1,
       'translatable'  => TRUE,
       'settings' => array(
-        'allowed_values' => array(0 => 'Not private', 1 => 'Private'),
+        'on_label' => 'Private',
+        'off_label' => 'Not private',
       ),
     ));
     $field_private->save();

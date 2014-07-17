@@ -2,12 +2,10 @@ id: taxonomy_term.forum_container
 status: true
 langcode: en
 name: forum_container
-type: list_boolean
+type: boolean
 settings:
-  allowed_values:
-    - ''
-    - ''
-  allowed_values_function: ''
+  on_label: Yes
+  off_label: No
 module: options
 entity_type: taxonomy_term
 locked: true

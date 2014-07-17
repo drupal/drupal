@@ -9,10 +9,10 @@ description: ''
 required: true
 default_value:
   -
-    value: false
+    value: 0
 default_value_function: ''
 settings: {  }
-field_type: list_boolean
+field_type: boolean
 dependencies:
   entity:
     - field.field.taxonomy_term.forum_container
