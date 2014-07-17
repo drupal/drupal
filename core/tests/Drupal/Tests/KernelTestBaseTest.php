@@ -35,7 +35,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
   /**
    * @covers ::__get
-   * @covers ::__set
    * @expectedException \RuntimeException
    * @dataProvider providerTestGet
    */
@@ -52,6 +51,14 @@ class KernelTestBaseTest extends KernelTestBase {
       ['translation_files_directory'],
       ['generatedTestFiles'],
     ];
+  }
+
+  /**
+   * @covers ::__set
+   * @expectedException \LogicException
+   */
+  public function testSet() {
+    $this->container = NULL;
   }
 
   /**
@@ -98,17 +105,35 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::register
    */
   public function testRegister() {
-    $this->assertFalse($this->container->has('request'));
+    // Verify that our container is identical to the actual container.
+    $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', static::$currentContainer);
     $this->assertSame(static::$currentContainer, \Drupal::getContainer());
     $this->assertSame($this->container, \Drupal::getContainer());
-    $this->assertSame($this->container->get('request_stack')->getCurrentRequest(), \Drupal::request());
 
+    // Request should not exist anymore.
+    $this->assertFalse($this->container->has('request'));
+
+    // Verify that there is a request stack.
+    $request = $this->container->get('request_stack')->getCurrentRequest();
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', $request);
+    $this->assertSame($request, \Drupal::request());
+
+    // Trigger a container rebuild.
     $this->enableModules(array('system'));
 
-    $this->assertFalse($this->container->has('request'));
+    // Verify that our container is identical to the actual container.
+    $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', static::$currentContainer);
     $this->assertSame(static::$currentContainer, \Drupal::getContainer());
     $this->assertSame($this->container, \Drupal::getContainer());
-    $this->assertSame($this->container->get('request_stack')->getCurrentRequest(), \Drupal::request());
+
+    // Request should not exist anymore.
+    $this->assertFalse($this->container->has('request'));
+
+    // Verify that there is a request stack (and that it persisted).
+    $new_request = $this->container->get('request_stack')->getCurrentRequest();
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', $new_request);
+    $this->assertSame($new_request, \Drupal::request());
+    $this->assertSame($request, $new_request);
   }
 
 }

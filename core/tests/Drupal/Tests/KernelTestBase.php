@@ -128,9 +128,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     } while (is_dir(DRUPAL_ROOT . '/' . self::$sharedFixtures->siteDirectory));
     #mkdir(self::$sharedFixtures->siteDirectory, 0775, TRUE);
 
-    self::$sharedFixtures->settings = new Settings(array(
+    self::$sharedFixtures->settings = array(
       'hash_salt' => get_called_class(),
-    ));
+    );
 
     self::$sharedFixtures->databases['default']['default'] = array(
       'driver' => 'sqlite',
@@ -152,11 +152,17 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $GLOBALS['conf']['container_service_providers']['test'] = get_called_class();
 
     // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
+    new Settings(self::$sharedFixtures->settings);
     $kernel = new DrupalKernel('testing', self::$sharedFixtures->classLoader, FALSE);
     $kernel->setSitePath(self::$sharedFixtures->siteDirectory);
     $kernel->boot();
+    $container = $kernel->getContainer();
 
-    self::$sharedFixtures->container = $kernel->getContainer();
+    // Add a master request to the stack.
+    $request = Request::create('/');
+    $container->get('request_stack')->push($request);
+
+    self::$sharedFixtures->container = $container;
   }
 
   /**
@@ -220,6 +226,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   }
 
   public function __set($name, $value) {
+    if ($name === 'container') {
+      throw new \LogicException(__CLASS__ . '::$container cannot be set.');
+    }
     $this->__get($name);
   }
 
@@ -237,7 +246,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     #$this->prepareConfigDirectories();
 
     // Reset settings.
-    new Settings(self::$sharedFixtures->settings->getAll());
+    new Settings(self::$sharedFixtures->settings);
 
     // Reset database connections/info.
     foreach (Database::getAllConnectionInfo() as $key => $targets) {
@@ -248,10 +257,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Reset the container.
     static::$currentContainer = clone self::$sharedFixtures->container;
     \Drupal::setContainer($this->container);
-
-    // Reset the request stack.
-    $request = Request::create('/');
-    $this->container->get('request_stack')->push($request);
 
     // Create a minimal core.extension configuration object so that the list of
     // enabled modules can be maintained allowing
@@ -480,7 +485,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     // Write directly to active storage to avoid early instantiation of
     // the event dispatcher which can prevent modules from registering events.
-    $active_storage =  \Drupal::service('config.storage');
+    $active_storage = \Drupal::service('config.storage');
     $extensions = $active_storage->read('core.extension');
 
     foreach ($modules as $module) {
