@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\config_translation\Access\ConfigNameCheck.
+ * Contains \Drupal\config_translation\Access\ConfigTranslationFormAccess.
  */
 
 namespace Drupal\config_translation\Access;
