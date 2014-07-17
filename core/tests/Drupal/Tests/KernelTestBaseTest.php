@@ -22,7 +22,6 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testSetUpBeforeClass() {
     $this->assertSame(realpath(__DIR__ . '/../../../../'), getcwd());
-    $this->assertEquals(__CLASS__, $GLOBALS['conf']['container_service_providers']['test']);
   }
 
   /**
@@ -54,14 +53,6 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::__set
-   * @expectedException \LogicException
-   */
-  public function testSet() {
-    $this->container = NULL;
-  }
-
-  /**
    * @covers ::setUp
    */
   public function testSetUp() {
@@ -72,6 +63,8 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertEquals('/', $request->getPathInfo());
 
     $this->assertSame($request, \Drupal::request());
+
+    $this->assertEquals($this, $GLOBALS['conf']['container_service_providers']['test']);
 
     $GLOBALS['destroy-me'] = TRUE;
     $this->assertArrayHasKey('destroy-me', $GLOBALS);
@@ -106,8 +99,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testRegister() {
     // Verify that our container is identical to the actual container.
-    $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', static::$currentContainer);
-    $this->assertSame(static::$currentContainer, \Drupal::getContainer());
+    $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $this->container);
     $this->assertSame($this->container, \Drupal::getContainer());
 
     // Request should not exist anymore.
@@ -122,8 +114,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->enableModules(array('system'));
 
     // Verify that our container is identical to the actual container.
-    $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', static::$currentContainer);
-    $this->assertSame(static::$currentContainer, \Drupal::getContainer());
+    $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $this->container);
     $this->assertSame($this->container, \Drupal::getContainer());
 
     // Request should not exist anymore.

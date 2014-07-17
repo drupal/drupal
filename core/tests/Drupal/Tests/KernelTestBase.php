@@ -39,14 +39,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   #use AssertContentTrait;
 
   /**
-   * Every kernel test MUST run in a separate process.
-   *
-   * @see \PHPUnit_Framework_TestCase::setRunTestInSeparateProcess()
-   * @var bool
-   */
-  #protected $runTestInSeparateProcess = TRUE;
-
-  /**
    * Implicitly TRUE by default, but MUST be TRUE for kernel tests.
    *
    * @var bool
@@ -56,18 +48,17 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   protected $backupStaticAttributes = TRUE;
   protected $backupStaticAttributesBlacklist = array(
     'Drupal' => array('container'),
+    'Drupal\Component\Discovery\YamlDiscovery' => array('parsedFiles'),
+    'Drupal\Core\DependencyInjection\YamlFileLoader' => array('yaml'),
+    'Drupal\Core\Extension\ExtensionDiscovery' => array('files'),
+    'Drupal\Core\Extension\InfoParser' => array('parsedInfos'),
   );
 
-  /**
-   * Fixtures shared across tests of this class.
-   *
-   * @var \stdClass
-   */
-  private static $sharedFixtures;
-
+  protected $classLoader;
   protected $siteDirectory;
   protected $databasePrefix;
-  protected static $currentContainer;
+  protected $container;
+  protected static $compiledContainer;
 
   /**
    * Modules to enable.
@@ -112,69 +103,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   public static function setUpBeforeClass() {
     parent::setUpBeforeClass();
     chdir(__DIR__ . '/../../../../');
-
-    require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
-
-    // Create shared fixtures for this class.
-    // Booting an in-memory kernel is expensive as it involves many filesystem
-    // scans. Since the initial container is identical for all tests, it is only
-    // booted once for a test class and cloned for subsequent tests.
-    // Tests are able to perform test-specific customizations via setUp().
-    self::$sharedFixtures = new \stdClass;
-
-    // @todo Better way? PHPUnit seems to access it from constants.
-    self::$sharedFixtures->classLoader = $GLOBALS['loader'];
-
-    // Assign a unique test site directory; account for concurrent threads.
-    // @todo Remove, or replace with vfsStream. 
-    do {
-      $suffix = mt_rand(100000, 999999);
-      self::$sharedFixtures->siteDirectory = 'sites/simpletest/' . $suffix;
-    } while (is_dir(DRUPAL_ROOT . '/' . self::$sharedFixtures->siteDirectory));
-    #mkdir(self::$sharedFixtures->siteDirectory, 0775, TRUE);
-
-    self::$sharedFixtures->settings = array(
-      'hash_salt' => get_called_class(),
-    );
-
-    self::$sharedFixtures->databases['default']['default'] = array(
-      'driver' => 'sqlite',
-      'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
-      'host' => '',
-      'database' => ':memory:',
-      'username' => '',
-      'password' => '',
-      'prefix' => array(
-        'default' => '',
-      ),
-    );
-
-    // Allow for global test environment overrides.
-    if (file_exists($test_env = DRUPAL_ROOT . '/sites/default/testing.services.yml')) {
-      $GLOBALS['conf']['container_yamls']['testing'] = $test_env;
-    }
-    // Add this test class as a service provider.
-    $GLOBALS['conf']['container_service_providers']['test'] = get_called_class();
-
-    // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
-    new Settings(self::$sharedFixtures->settings);
-    $kernel = new DrupalKernel('testing', self::$sharedFixtures->classLoader, FALSE);
-    $kernel->setSitePath(self::$sharedFixtures->siteDirectory);
-    $kernel->boot();
-    $container = $kernel->getContainer();
-
-    // Add a master request to the stack.
-    $request = Request::create('/');
-    $container->get('request_stack')->push($request);
-
-    self::$sharedFixtures->container = $container;
-  }
-
-  public static function tearDownAfterClass() {
-    self::$sharedFixtures = NULL;
-    static::$currentContainer = NULL;
-    \Drupal::setContainer(NULL);
-    new Settings(array());
   }
 
   /**
@@ -203,9 +131,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   }
 
   public function __get($name) {
-    if ($name === 'container') {
-      return static::$currentContainer;
-    }
     $denied = array(
       // @see \Drupal\simpletest\TestBase
       'testId',
@@ -238,9 +163,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   }
 
   public function __set($name, $value) {
-    if ($name === 'container') {
-      throw new \LogicException(__CLASS__ . '::$container cannot be set.');
-    }
     $this->__get($name);
   }
 
@@ -251,24 +173,65 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     parent::setUp();
     \Drupal::setContainer(NULL);
 
-    $this->siteDirectory = self::$sharedFixtures->siteDirectory;
+    require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+
+    // @todo Better way? PHPUnit seems to access it from constants.
+    $this->classLoader = $GLOBALS['loader'];
+
+    // Assign a unique test site directory; account for concurrent threads.
+    // @todo Remove, or replace with vfsStream. 
+    do {
+      $suffix = mt_rand(100000, 999999);
+      $this->siteDirectory = 'sites/simpletest/' . $suffix;
+    } while (is_dir(DRUPAL_ROOT . '/' . $this->siteDirectory));
+    #mkdir($this->siteDirectory, 0775, TRUE);
+
     $this->databasePrefix = ''; // sqlite://:memory:
 
-    // Create and set new configuration directories.
-    #$this->prepareConfigDirectories();
+    $settings = array(
+      'hash_salt' => get_class($this),
+    );
 
-    // Reset settings.
-    new Settings(self::$sharedFixtures->settings);
-
-    // Reset database connections/info.
+    $databases['default']['default'] = array(
+      'driver' => 'sqlite',
+      'namespace' => 'Drupal\\Core\\Database\\Driver\\sqlite',
+      'host' => '',
+      'database' => ':memory:',
+      'username' => '',
+      'password' => '',
+      'prefix' => array(
+        'default' => '',
+      ),
+    );
     foreach (Database::getAllConnectionInfo() as $key => $targets) {
       Database::removeConnection($key);
     }
-    Database::setMultipleConnectionInfo(self::$sharedFixtures->databases);
+    Database::setMultipleConnectionInfo($databases);
 
-    // Reset the container.
-    static::$currentContainer = clone self::$sharedFixtures->container;
+    // Allow for global test environment overrides.
+    if (file_exists($test_env = DRUPAL_ROOT . '/sites/default/testing.services.yml')) {
+      $GLOBALS['conf']['container_yamls']['testing'] = $test_env;
+    }
+    // Add this test class as a service provider.
+    $GLOBALS['conf']['container_service_providers']['test'] = $this;
+
+    // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
+    new Settings($settings);
+    if (!isset(static::$compiledContainer)) {
+      $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
+      $kernel->setSitePath($this->siteDirectory);
+      $kernel->boot();
+      static::$compiledContainer = serialize($kernel->getContainer());
+    }
+    $this->container = unserialize(static::$compiledContainer);
     \Drupal::setContainer($this->container);
+
+    // Add a master request to the stack.
+    $request = Request::create('/');
+    $this->container->get('request_stack')->push($request);
+
+    // Create and set new configuration directories.
+    #$this->prepareConfigDirectories();
 
     // Create a minimal core.extension configuration object so that the list of
     // enabled modules can be maintained allowing
@@ -335,8 +298,13 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     }
 
     if (is_dir($this->siteDirectory)) {
+      // @todo Recurse. 
       rmdir($this->siteDirectory);
     }
+
+    $this->container = NULL;
+    \Drupal::setContainer(NULL);
+    new Settings(array());
 
     parent::tearDown();
   }
@@ -353,7 +321,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * @see \Drupal\simpletest\KernelTestBase::disableModules()
    */
   public function register(ContainerBuilder $container) {
-    static::$currentContainer = $container;
+    $this->container = $container;
 
     // Set the default language on the minimal container.
     $container->setParameter('language.default_values', Language::$defaultValues);
@@ -501,6 +469,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $extensions = $active_storage->read('core.extension');
 
     foreach ($modules as $module) {
+      $this->assertFalse($module_handler->moduleExists($module), "$module is already enabled.");
       $module_handler->addModule($module, drupal_get_path('module', $module));
       // Maintain the list of enabled modules in configuration.
       $extensions['module'][$module] = 0;

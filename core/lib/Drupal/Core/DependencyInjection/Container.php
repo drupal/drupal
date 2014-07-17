@@ -31,7 +31,10 @@ class Container extends SymfonyContainer {
    * {@inheritdoc}
    */
   public function __sleep() {
-    trigger_error('The container was serialized.', E_USER_ERROR);
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    if (!isset($backtrace[2]['class']) || $backtrace[2]['class'] !== 'Drupal\Tests\KernelTestBase') {
+      trigger_error('The container was serialized.', E_USER_ERROR);
+    }
     return array_keys(get_object_vars($this));
   }
 
