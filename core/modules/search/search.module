@@ -599,6 +599,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // Prepare text by stripping HTML tags and decoding HTML entities.
   $text = strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text));
   $text = decode_entities($text);
+  $text_length = strlen($text);
 
   // Make a list of unique keywords that are actually found in the text,
   // which could be items in $keys or replacements that are equivalent through
@@ -651,11 +652,15 @@ function search_excerpt($keys, $text, $langcode = NULL) {
         // characters of context on each end.
         $before = strpos(' ' . $text, ' ', max(0, $found_position - 61));
         if ($before !== FALSE && $before <= $found_position) {
-          $after = strrpos(' ' . $text . ' ', ' ', min($found_position + 61, strlen($text) + 1));
+          if ($text_length > $found_position + 60) {
+            $after = strrpos(substr($text, 0, $found_position + 60), ' ', $found_position);
+          }
+          else {
+            $after = $text_length;
+          }
           if ($after !== FALSE && $after > $found_position) {
             // Account for the spaces we added.
             $before = max($before - 1, 0);
-            $after = min($after - 1, strlen($text));
             if ($before < $after) {
               // Save this range.
               $ranges[$before] = $after;

@@ -52,6 +52,11 @@ class SearchExcerptTest extends WebTestBase {
     $result = preg_replace('| +|', ' ', search_excerpt('dog', $text));
     $this->assertEqual(preg_replace('| +|', ' ', $result), $expected, 'Keyword is highlighted at end of short string');
 
+    $longtext = str_repeat(str_replace('brown', 'silver', $text) . ' ', 10) . $text . str_repeat(' ' . str_replace('brown', 'pink', $text), 10);
+    $result = preg_replace('| +|', ' ', search_excerpt('brown', $longtext));
+    $expected = '… silver fox &amp; jumps over the lazy dog The quick <strong>brown</strong> fox &amp; jumps over the lazy dog The quick …';
+    $this->assertEqual($result, $expected, 'Snippet around keyword in long text is correctly capped');
+
     $longtext = str_repeat($text . ' ', 10);
     $result = preg_replace('| +|', ' ', search_excerpt('nothing', $longtext));
     $expected = 'The quick brown fox &amp; jumps over the lazy dog';
