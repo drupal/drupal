@@ -689,7 +689,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // If the module list hasn't already been set in updateModules and we are
     // not forcing a rebuild, then try and load the container from the disk.
-    if (empty($this->moduleList) && !$rebuild) {
+    if (!isset($this->moduleList) && !$rebuild) {
       $class = $this->getClassName();
       $cache_file = $class . '.php';
 

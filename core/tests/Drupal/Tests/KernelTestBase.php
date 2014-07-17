@@ -53,6 +53,11 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    */
   protected $backupGlobals = TRUE;
 
+  protected $backupStaticAttributes = TRUE;
+  protected $backupStaticAttributesBlacklist = array(
+    'Drupal' => array('container'),
+  );
+
   /**
    * Fixtures shared across tests of this class.
    *
@@ -163,6 +168,13 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $container->get('request_stack')->push($request);
 
     self::$sharedFixtures->container = $container;
+  }
+
+  public static function tearDownAfterClass() {
+    self::$sharedFixtures = NULL;
+    static::$currentContainer = NULL;
+    \Drupal::setContainer(NULL);
+    new Settings(array());
   }
 
   /**
@@ -502,10 +514,11 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Ensure isLoaded() is TRUE in order to make _theme() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
     // no longer the $module_handler instance from above.
-    $this->container->get('module_handler')->reload();
-    $this->pass(format_string('Enabled modules: %modules.', array(
-      '%modules' => implode(', ', $modules),
-    )));
+    $module_handler = $this->container->get('module_handler');
+    $module_handler->reload();
+    foreach ($modules as $module) {
+      $this->assertTrue($module_handler->moduleExists($module), "$module was enabled.");
+    }
   }
 
   /**
