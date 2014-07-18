@@ -20,6 +20,9 @@ function options_test_allowed_values_callback(FieldDefinitionInterface $field_de
     'Group 2' => array(
       2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>',
     ),
+    'More <script>dangerous</script> markup' => array(
+      3 => 'Three',
+    ),
   );
 
   return $values;

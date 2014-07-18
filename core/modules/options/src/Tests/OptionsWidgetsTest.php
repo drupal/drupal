@@ -317,6 +317,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoOptionSelected('edit-card-1', 1);
     $this->assertNoOptionSelected('edit-card-1', 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
+    $this->assertRaw('More &lt;script&gt;dangerous&lt;/script&gt; markup', 'Option group text was properly filtered.');
     $this->assertRaw('Group 1', 'Option groups are displayed.');
 
     // Submit form: select first option.
@@ -437,6 +438,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoOptionSelected('edit-card-2', 1);
     $this->assertNoOptionSelected('edit-card-2', 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
+    $this->assertRaw('More &lt;script&gt;dangerous&lt;/script&gt; markup', 'Option group text was properly filtered.');
     $this->assertRaw('Group 1', 'Option groups are displayed.');
 
     // Submit form: select first option.

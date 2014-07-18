@@ -888,7 +888,7 @@ function form_select_options($element, $choices = NULL) {
   $options = '';
   foreach ($choices as $key => $choice) {
     if (is_array($choice)) {
-      $options .= '<optgroup label="' . $key . '">';
+      $options .= '<optgroup label="' . String::checkPlain($key) . '">';
       $options .= form_select_options($element, $choice);
       $options .= '</optgroup>';
     }
