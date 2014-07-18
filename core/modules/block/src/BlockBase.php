@@ -344,6 +344,9 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
    * @see \Drupal\block\BlockBase::blockValidate()
    */
   public function validateConfigurationForm(array &$form, array &$form_state) {
+    // Remove the admin_label form item element value so it will not persist.
+    unset($form_state['values']['admin_label']);
+
     // Transform the #type = checkboxes value to a numerically indexed array.
     $form_state['values']['cache']['contexts'] = array_values(array_filter($form_state['values']['cache']['contexts']));
 

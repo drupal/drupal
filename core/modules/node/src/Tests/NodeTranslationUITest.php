@@ -174,22 +174,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Tests translate link on content admin page.
-   */
-  function testTranslateLinkContentAdminPage() {
-    $this->drupalLogin($this->administrator);
-
-    $page = $this->drupalCreateNode(array('type' => 'page'));
-    $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => $this->langcodes[0]));
-
-    // Verify translation links.
-    $this->drupalGet('admin/content');
-    $this->assertResponse(200);
-    $this->assertLinkByHref('node/' . $article->id() . '/translations');
-    $this->assertNoLinkByHref('node/' . $page->id() . '/translations');
-  }
-
-  /**
    * Tests that translation page inherits admin status of edit page.
    */
   function testTranslationLinkTheme() {

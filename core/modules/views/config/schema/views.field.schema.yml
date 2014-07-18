@@ -174,3 +174,7 @@ views.field.url:
 views.field.xss:
   type: views_field
   label: 'Xss'
+
+views.field.language:
+  type: views_field
+  label: 'Language'

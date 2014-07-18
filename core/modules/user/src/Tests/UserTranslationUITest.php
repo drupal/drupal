@@ -52,19 +52,4 @@ class UserTranslationUITest extends ContentTranslationUITest {
     return array('name' => $this->name) + parent::getNewEntityValues($langcode);
   }
 
-  /**
-   * Tests translate link on user admin list.
-   */
-  function testTranslateLinkUserAdminPage() {
-    $this->admin_user = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer users')));
-    $this->drupalLogin($this->admin_user);
-
-    $uid = $this->createEntity(array('name' => $this->randomName()), $this->langcodes[0]);
-
-    // Verify translation links.
-    $this->drupalGet('admin/people');
-    $this->assertResponse(200);
-    $this->assertLinkByHref('user/' . $uid . '/translations');
-  }
-
 }

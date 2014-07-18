@@ -77,7 +77,6 @@ display:
             created: created
             access: access
             edit_node: edit_node
-            translation_link: translation_link
             dropbutton: dropbutton
           info:
             user_bulk_form:
@@ -125,11 +124,6 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            translation_link:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
             dropbutton:
               sortable: false
               default_sort_order: asc
@@ -511,58 +505,6 @@ display:
           text: Edit
           plugin_id: user_link_edit
           provider: user
-        translation_link:
-          id: translation_link
-          table: users
-          field: translation_link
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: 'Translation link'
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: ''
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          text: Translate
-          optional: true
-          plugin_id: content_translation_link
-          provider: content_translation
         dropbutton:
           id: dropbutton
           table: views
@@ -613,7 +555,6 @@ display:
           hide_alter_empty: true
           fields:
             edit_node: edit_node
-            translation_link: translation_link
             user_bulk_form: '0'
             name: '0'
             status: '0'

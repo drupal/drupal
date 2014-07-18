@@ -2,12 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\language\Plugin\views\argument\LanguageArgument.
+ * Contains Drupal\views\Plugin\views\argument\LanguageArgument.
  */
 
-namespace Drupal\language\Plugin\views\argument;
-
-use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
+namespace Drupal\views\Plugin\views\argument;
 
 /**
  * Defines an argument handler to accept a language.

@@ -2,12 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\language\Plugin\views\filter\LanguageFilter.
+ * Contains Drupal\views\Plugin\views\filter\LanguageFilter.
  */
 
-namespace Drupal\language\Plugin\views\filter;
-
-use Drupal\views\Plugin\views\filter\InOperator;
+namespace Drupal\views\Plugin\views\filter;
 
 /**
  * Provides filtering by language.

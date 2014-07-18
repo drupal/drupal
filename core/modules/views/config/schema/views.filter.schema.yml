@@ -140,3 +140,11 @@ views.filter_value.boolean:
 
 views.filter_value.combine:
   type: string
+
+views.filter.language:
+  type: views.filter.in_operator
+  label: 'Language'
+
+views.filter_value.language:
+  type: string
+  label: 'Language'

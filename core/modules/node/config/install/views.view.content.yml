@@ -53,7 +53,6 @@ display:
             changed: changed
             edit_node: edit_node
             delete_node: delete_node
-            translation_link: translation_link
             dropbutton: dropbutton
             timestamp: title
           info:
@@ -105,13 +104,6 @@ display:
               empty_column: false
               responsive: ''
             delete_node:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            translation_link:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -268,24 +260,6 @@ display:
           text: Delete
           plugin_id: node_link_delete
           provider: node
-        translation_link:
-          id: translation_link
-          table: node
-          field: translation_link
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-          element_class: ''
-          element_default_classes: true
-          hide_alter_empty: true
-          hide_empty: false
-          empty_zero: false
-          empty: ''
-          text: Translate
-          optional: true
-          plugin_id: content_translation_link
-          provider: content_translation
         dropbutton:
           id: dropbutton
           table: views
@@ -294,7 +268,6 @@ display:
           fields:
             edit_node: edit_node
             delete_node: delete_node
-            translation_link: translation_link
           destination: true
           plugin_id: dropbutton
           provider: views

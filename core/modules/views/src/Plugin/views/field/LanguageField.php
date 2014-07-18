@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Contains Drupal\language\Plugin\views\field\LanguageField.
+ * Contains Drupal\views\Plugin\views\field\LanguageField.
  */
 
-namespace Drupal\language\Plugin\views\field;
+namespace Drupal\views\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**

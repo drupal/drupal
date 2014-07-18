@@ -143,3 +143,7 @@ views.argument.date_year_month:
     created:
       type: string
       label: 'Date Year month'
+
+views.argument.language:
+  type: views_argument
+  label: 'Language'
