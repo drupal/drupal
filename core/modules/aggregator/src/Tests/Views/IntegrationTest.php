@@ -62,10 +62,20 @@ class IntegrationTest extends ViewUnitTestBase {
    * Tests basic aggregator_item view.
    */
   public function testAggregatorItemView() {
+    $feed = $this->feedStorage->create(array(
+      'title' => $this->randomName(),
+      'url' => 'http://drupal.org/',
+      'refresh' => 900,
+      'checked' => 123543535,
+      'description' => $this->randomName(),
+    ));
+    $feed->save();
+
     $items = array();
     $expected = array();
     for ($i = 0; $i < 10; $i++) {
       $values = array();
+      $values['fid'] = $feed->id();
       $values['timestamp'] = mt_rand(REQUEST_TIME - 10, REQUEST_TIME + 10);
       $values['title'] = $this->randomName();
       $values['description'] = $this->randomName();

@@ -23,6 +23,7 @@ use Drupal\aggregator\FeedInterface;
  *   controllers = {
  *     "storage" = "Drupal\aggregator\FeedStorage",
  *     "view_builder" = "Drupal\aggregator\FeedViewBuilder",
+ *     "access" = "Drupal\aggregator\FeedAccessController",
  *     "form" = {
  *       "default" = "Drupal\aggregator\FeedForm",
  *       "delete" = "Drupal\aggregator\Form\FeedDeleteForm",
@@ -36,6 +37,7 @@ use Drupal\aggregator\FeedInterface;
  *   },
  *   base_table = "aggregator_feed",
  *   fieldable = TRUE,
+ *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "fid",
  *     "label" = "title",
@@ -107,6 +109,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
     if (\Drupal::moduleHandler()->moduleExists('block')) {
       // Make sure there are no active blocks for these feeds.
       $ids = \Drupal::entityQuery('block')

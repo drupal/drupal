@@ -206,6 +206,9 @@ class AggregatorController extends ControllerBase {
         '#theme' => 'aggregator_summary_items',
         '#summary_items' => $summary_items,
         '#source' => $feed,
+        '#cache' => array(
+          'tags' => $feed->getCacheTag(),
+        ),
       );
     }
     $build['feed_icon'] = array(

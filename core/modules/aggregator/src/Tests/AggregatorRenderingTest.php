@@ -56,11 +56,19 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $href = 'aggregator/sources/' . $feed->id();
     $links = $this->xpath('//a[@href = :href]', array(':href' => url($href)));
     $this->assert(isset($links[0]), format_string('Link to href %href found.', array('%href' => $href)));
+    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
+    $cache_tags = explode(' ', $cache_tags_header);
+    $this->assertTrue(in_array('block_plugin:aggregator_feed_block', $cache_tags));
+    $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));
 
     // Visit that page.
     $this->drupalGet($href);
     $correct_titles = $this->xpath('//h1[normalize-space(text())=:title]', array(':title' => $feed->label()));
     $this->assertFalse(empty($correct_titles), 'Aggregator feed page is available and has the correct title.');
+    $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
+    $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));
+    $this->assertTrue(in_array('aggregator_feed_view:1', $cache_tags));
+    $this->assertTrue(in_array('aggregator_item_view:1', $cache_tags));
 
     // Set the number of news items to 0 to test that the block does not show
     // up.
@@ -101,10 +109,18 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $href = 'aggregator/sources/' . $feed->id();
     $links = $this->xpath('//a[@href = :href]', array(':href' => url($href)));
     $this->assertTrue(isset($links[0]), String::format('Link to href %href found.', array('%href' => $href)));
+    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
+    $cache_tags = explode(' ', $cache_tags_header);
+    $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));
 
     // Check for the presence of a pager.
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $elements = $this->xpath("//ul[@class=:class]", array(':class' => 'pager'));
     $this->assertTrue(!empty($elements), 'Individual source page contains a pager.');
+    $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
+    $this->assertTrue(in_array('aggregator_feed:' . $feed->id(), $cache_tags));
+    $this->assertTrue(in_array('aggregator_feed_view:1', $cache_tags));
+    $this->assertTrue(in_array('aggregator_item_view:1', $cache_tags));
   }
+
 }

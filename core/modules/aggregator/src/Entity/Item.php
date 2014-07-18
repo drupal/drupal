@@ -7,11 +7,13 @@
 
 namespace Drupal\aggregator\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\aggregator\ItemInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Url;
 
 /**
  * Defines the aggregator item entity class.
@@ -21,10 +23,13 @@ use Drupal\Core\Field\FieldDefinition;
  *   label = @Translation("Aggregator feed item"),
  *   controllers = {
  *     "storage" = "Drupal\aggregator\ItemStorage",
- *     "view_builder" = "Drupal\aggregator\ItemViewBuilder"
+ *     "view_builder" = "Drupal\aggregator\ItemViewBuilder",
+ *     "access" = "Drupal\aggregator\FeedAccessController",
  *   },
+ *   uri_callback = "Drupal\aggregator\Entity\Item::buildUri",
  *   base_table = "aggregator_item",
  *   fieldable = TRUE,
+ *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "iid",
  *     "label" = "title",
@@ -184,4 +189,40 @@ class Item extends ContentEntityBase implements ItemInterface {
   public function setGuid($guid) {
     return $this->set('guid', $guid);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
+    // Entity::postSave() calls Entity::invalidateTagsOnSave(), which only
+    // handles the regular cases. The Item entity has one special case: a newly
+    // created Item is *also* associated with a Feed, so we must invalidate the
+    // associated Feed's cache tag.
+    Cache::invalidateTags($this->getCacheTag());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTag() {
+    return Feed::load($this->getFeedId())->getCacheTag();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListCacheTags() {
+    return Feed::load($this->getFeedId())->getListCacheTags();
+  }
+
+
+  /**
+   * Entity URI callback.
+   */
+  public static function buildUri(ItemInterface $item) {
+    return Url::createFromPath($item->getLink());
+  }
+
 }
