@@ -9,6 +9,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
@@ -361,6 +362,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
               require_once DRUPAL_ROOT . '/' . $file;
             }
           }
+          // Retrieve the list of previously known safe strings and store it
+          // for this request.
+          // @todo Ensure we are not storing an excessively large string list
+          //   in: https://www.drupal.org/node/2295823
+          $form_state['build_info'] += array('safe_strings' => array());
+          SafeMarkup::setMultiple($form_state['build_info']['safe_strings']);
+          unset($form_state['build_info']['safe_strings']);
         }
         return $form;
       }
@@ -383,6 +391,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     // Cache form state.
+
+    // Store the known list of safe strings for form re-use.
+    // @todo Ensure we are not storing an excessively large string list in:
+    //   https://www.drupal.org/node/2295823
+    $form_state['build_info']['safe_strings'] = SafeMarkup::getAll();
+
     if ($data = array_diff_key($form_state, array_flip($this->getUncacheableKeys()))) {
       $this->keyValueExpirableFactory->get('form_state')->setWithExpire($form_build_id, $data, $expire);
     }

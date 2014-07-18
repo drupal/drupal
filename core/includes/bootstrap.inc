@@ -7,6 +7,7 @@
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DrupalKernel;
@@ -888,8 +889,27 @@ function watchdog($type, $message, array $variables = array(), $severity = WATCH
  *
  * @return array|null
  *   A multidimensional array with keys corresponding to the set message types.
- *   The indexed array values of each contain the set messages for that type.
- *   Or, if there are no messages set, the function returns NULL.
+ *   The indexed array values of each contain the set messages for that type,
+ *   and each message is an associative array with the following format:
+ *   - safe: Boolean indicating whether the message string has been marked as
+ *     safe. Non-safe strings will be escaped automatically.
+ *   - message: The message string.
+ *   So, the following is an example of the full return array structure:
+ *   @code
+ *     array(
+ *       'status' => array(
+ *         array(
+ *           'safe' => TRUE,
+ *           'message' => 'A <em>safe</em> markup string.',
+ *         ),
+ *         array(
+ *           'safe' => FALSE,
+ *           'message' => "$arbitrary_user_input to escape.",
+ *         ),
+ *       ),
+ *     );
+ *   @endcode
+ *   If there are no messages set, the function returns NULL.
  *
  * @see drupal_get_messages()
  * @see theme_status_messages()
@@ -901,7 +921,10 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
     }
 
     if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
-      $_SESSION['messages'][$type][] = $message;
+      $_SESSION['messages'][$type][] = array(
+        'safe' => SafeMarkup::isSafe($message),
+        'message' => $message,
+      );
     }
 
     // Mark this page as being uncacheable.
@@ -928,17 +951,25 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = FALSE) 
  *   intact. Defaults to TRUE.
  *
  * @return array
- *   A multidimensional array with keys corresponding to the set message types.
- *   The indexed array values of each contain the set messages for that type.
- *   The messages returned are limited to the type specified in the $type
- *   parameter. If there are no messages of the specified type, an empty array
- *   is returned.
+ *   An associative, nested array of messages grouped by message type, with
+ *   the top-level keys as the message type. The messages returned are
+ *   limited to the type specified in the $type parameter, if any. If there
+ *   are no messages of the specified type, an empty array is returned. See
+ *   drupal_set_message() for the array structure of indivdual messages.
  *
  * @see drupal_set_message()
  * @see theme_status_messages()
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
+    foreach ($messages as $message_type => $message_typed_messages) {
+      foreach ($message_typed_messages as $key => $message) {
+        if ($message['safe']) {
+          $message['message'] = SafeMarkup::set($message['message']);
+        }
+        $messages[$message_type][$key] = $message['message'];
+      }
+    }
     if ($type) {
       if ($clear_queue) {
         unset($_SESSION['messages'][$type]);

@@ -8,6 +8,7 @@
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
@@ -82,7 +83,7 @@ class FilterCaption extends FilterBase {
         // caption.
         $filter_caption = array(
           '#theme' => 'filter_caption',
-          '#node' => $node->C14N(),
+          '#node' => SafeMarkup::set($node->C14N()),
           '#tag' => $node->tagName,
           '#caption' => $caption,
           '#align' => $align,

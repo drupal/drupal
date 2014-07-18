@@ -768,7 +768,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
     }
   }
 
-  $return = '';
+  $build = array();
 
   if ($index_comments) {
     foreach (\Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
@@ -782,12 +782,11 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
       if ($node->get($field_name)->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = entity_load_multiple('comment', $cids);
         comment_prepare_thread($comments);
-        $build = comment_view_multiple($comments);
-        $return .= drupal_render($build);
+        $build[] = comment_view_multiple($comments);
       }
     }
   }
-  return $return;
+  return drupal_render($build);
 }
 
 /**

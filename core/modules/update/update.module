@@ -11,6 +11,7 @@
  * ability to install contributed modules and themes via an user interface.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -533,7 +534,8 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
     }
   }
 
-  return $text;
+  // All strings are t() and empty space concatenated so return SafeMarkup.
+  return SafeMarkup::set($text);
 }
 
 /**

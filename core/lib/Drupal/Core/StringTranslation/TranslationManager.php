@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\StringTranslation;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
@@ -140,7 +141,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
     $string = $translation === FALSE ? $string : $translation;
 
     if (empty($args)) {
-      return $string;
+      return SafeMarkup::set($string);
     }
     else {
       return String::format($string, $args);
@@ -160,7 +161,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
     $translated_array = explode(LOCALE_PLURAL_DELIMITER, $translated_strings);
 
     if ($count == 1) {
-      return $translated_array[0];
+      return SafeMarkup::set($translated_array[0]);
     }
 
     // Get the plural index through the gettext formula.
@@ -168,20 +169,21 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
     $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
     if ($index == 0) {
       // Singular form.
-      return $translated_array[0];
+      $return = $translated_array[0];
     }
     else {
       if (isset($translated_array[$index])) {
         // N-th plural form.
-        return $translated_array[$index];
+        $return = $translated_array[$index];
       }
       else {
         // If the index cannot be computed or there's no translation, use
         // the second plural form as a fallback (which allows for most flexiblity
         // with the replaceable @count value).
-        return $translated_array[1];
+        $return = $translated_array[1];
       }
     }
+    return SafeMarkup::set($return);
   }
 
   /**

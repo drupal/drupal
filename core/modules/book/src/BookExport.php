@@ -105,18 +105,16 @@ class BookExport {
     // If there is no valid callable, use the default callback.
     $callable = !empty($callable) ? $callable : array($this, 'bookNodeExport');
 
-    $output = '';
+    $build = array();
     foreach ($tree as $data) {
       // Note- access checking is already performed when building the tree.
       if ($node = $this->nodeStorage->load($data['link']['nid'])) {
         $children = $data['below'] ? $this->exportTraverse($data['below'], $callable) : '';
-
-        $callable_output = call_user_func($callable, $node, $children);
-        $output .= drupal_render($callable_output);
+        $build[] = call_user_func($callable, $node, $children);
       }
     }
 
-    return $output;
+    return drupal_render($build);
   }
 
   /**

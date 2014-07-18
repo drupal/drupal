@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
@@ -202,7 +203,7 @@ class ViewUI implements ViewStorageInterface {
   }
 
   public static function getDefaultAJAXMessage() {
-    return '<div class="message">' . t("Click on an item to edit that item's details.") . '</div>';
+    return SafeMarkup::set('<div class="message">' . t("Click on an item to edit that item's details.") . '</div>');
   }
 
   /**
@@ -677,7 +678,10 @@ class ViewUI implements ViewStorageInterface {
                 }
               }
             }
-            $rows['query'][] = array('<strong>' . t('Query') . '</strong>', '<pre>' . String::checkPlain(strtr($query_string, $quoted)) . '</pre>');
+            $rows['query'][] = array(
+              SafeMarkup::set('<strong>' . t('Query') . '</strong>'),
+              SafeMarkup::set('<pre>' . String::checkPlain(strtr($query_string, $quoted)) . '</pre>'),
+            );
             if (!empty($this->additionalQueries)) {
               $queries = '<strong>' . t('These queries were run during view rendering:') . '</strong>';
               foreach ($this->additionalQueries as $query) {
@@ -688,18 +692,24 @@ class ViewUI implements ViewStorageInterface {
                 $queries .= t('[@time ms] @query', array('@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string));
               }
 
-              $rows['query'][] = array('<strong>' . t('Other queries') . '</strong>', '<pre>' . $queries . '</pre>');
+              $rows['query'][] = array(
+                SafeMarkup::set('<strong>' . t('Other queries') . '</strong>'),
+                SafeMarkup::set('<pre>' . $queries . '</pre>'),
+              );
             }
           }
           if ($show_info) {
-            $rows['query'][] = array('<strong>' . t('Title') . '</strong>', Xss::filterAdmin($this->executable->getTitle()));
+            $rows['query'][] = array(
+              SafeMarkup::set('<strong>' . t('Title') . '</strong>'),
+              Xss::filterAdmin($this->executable->getTitle()),
+            );
             if (isset($path)) {
               $path = l($path, $path);
             }
             else {
               $path = t('This display has no path.');
             }
-            $rows['query'][] = array('<strong>' . t('Path') . '</strong>', $path);
+            $rows['query'][] = array(SafeMarkup::set('<strong>' . t('Path') . '</strong>'), $path);
           }
 
           if ($show_stats) {
@@ -714,10 +724,10 @@ class ViewUI implements ViewStorageInterface {
           // No query was run. Display that information in place of either the
           // query or the performance statistics, whichever comes first.
           if ($combined || ($show_location === 'above')) {
-            $rows['query'] = array(array('<strong>' . t('Query') . '</strong>', t('No query was run')));
+            $rows['query'] = array(array(SafeMarkup::set('<strong>' . t('Query') . '</strong>'), t('No query was run')));
           }
           else {
-            $rows['statistics'] = array(array('<strong>' . t('Query') . '</strong>', t('No query was run')));
+            $rows['statistics'] = array(array(SafeMarkup::set('<strong>' . t('Query') . '</strong>'), t('No query was run')));
           }
         }
       }

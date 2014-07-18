@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -117,7 +118,13 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         $usage[] = $this->bundles[$field->entity_type][$bundle]['label'];
       }
     }
-    $row['data']['usage'] = implode(', ', $usage);
+    $usage_escaped = '';
+    $separator = '';
+    foreach ($usage as $usage_item) {
+      $usage_escaped .=  $separator . SafeMarkup::escape($usage_item);
+      $separator = ', ';
+    }
+    $row['data']['usage'] = SafeMarkup::set($usage_escaped);
     return $row;
   }
 

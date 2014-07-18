@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Page;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -84,7 +85,10 @@ class HtmlPage extends HtmlFragment {
    *   A string of meta and link tags.
    */
   public function getHead() {
-    return implode("\n", $this->getMetaElements()) . implode("\n", $this->getLinkElements());
+    // Each MetaElement or LinkElement is a subclass of
+    // \Drupal\Core\Page\HeadElement and generates safe output when __toString()
+    // is called on it. Thus, the whole concatenation is also safe.
+    return SafeMarkup::set(implode("\n", $this->getMetaElements()) . implode("\n", $this->getLinkElements()));
   }
 
   /**

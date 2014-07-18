@@ -8,11 +8,12 @@
 namespace Drupal\Core\Utility;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Path\AliasManagerInterface;
-use Drupal\Core\Template\Attribute;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 
 /**
@@ -122,8 +123,7 @@ class LinkGenerator implements LinkGeneratorInterface {
 
     // Sanitize the link text if necessary.
     $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
-
-    return '<a href="' . $url . '"' . $attributes . '>' . $text . '</a>';
+    return SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $text . '</a>');
   }
 
   /**

@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Component\Utility\SafeMarkup;
+
 /**
  * Default style plugin to render an RSS feed.
  *
@@ -138,7 +140,7 @@ class Rss extends StylePluginBase {
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
       '#options' => $this->options,
-      '#rows' => $rows,
+      '#rows' => SafeMarkup::set($rows),
     );
     unset($this->view->row_index);
     return drupal_render($build);

@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\row;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
@@ -162,7 +163,7 @@ class Rss extends RowPluginBase {
     }
 
     $item = new \stdClass();
-    $item->description = $item_text;
+    $item->description = SafeMarkup::set($item_text);
     $item->title = $node->label();
     $item->link = $node->link;
     $item->elements = $node->rss_elements;

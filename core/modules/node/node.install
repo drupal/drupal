@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the node module.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
 
@@ -29,7 +30,9 @@ function node_requirements($phase) {
     $requirements['node_access'] = array(
       'title' => t('Node Access Permissions'),
       'value' => $value,
-      'description' => $description . ' ' . l(t('Rebuild permissions'), 'admin/reports/status/rebuild'),
+      // The result of t() is safe and so is the result of l(). Preserving
+      // safe object.
+      'description' => SafeMarkup::set($description . ' ' . l(t('Rebuild permissions'), 'admin/reports/status/rebuild')),
     );
   }
   return $requirements;

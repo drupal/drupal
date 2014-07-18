@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\views\field;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
@@ -686,12 +687,22 @@ class Field extends FieldPluginBase {
    */
   protected function renderItems($items) {
     if (!empty($items)) {
+      $output = '';
       if (!$this->options['group_rows']) {
-        return implode('', $items);
+        foreach ($items as $item) {
+          $output .= SafeMarkup::escape($item);
+        }
+        return SafeMarkup::set($output);
       }
-
       if ($this->options['multi_type'] == 'separator') {
-        return implode(Xss::filterAdmin($this->options['separator']), $items);
+        $output = '';
+        $separator = '';
+        $escaped_separator = Xss::filterAdmin($this->options['separator']);
+        foreach ($items as $item) {
+          $output .= $separator . SafeMarkup::escape($item);
+          $separator = $escaped_separator;
+        }
+        return SafeMarkup::set($output);
       }
       else {
         $item_list = array(

@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Number;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -907,7 +908,7 @@ function form_select_options($element, $choices = NULL) {
       $options .= '<option value="' . String::checkPlain($key) . '"' . $selected . '>' . String::checkPlain($choice) . '</option>';
     }
   }
-  return $options;
+  return SafeMarkup::set($options);
 }
 
 /**
@@ -1575,7 +1576,7 @@ function theme_tableselect($variables) {
           // A header can span over multiple cells and in this case the cells
           // are passed in an array. The order of this array determines the
           // order in which they are added.
-          if (!isset($element['#options'][$key][$fieldname]['data']) && is_array($element['#options'][$key][$fieldname])) {
+          if (is_array($element['#options'][$key][$fieldname]) && !isset($element['#options'][$key][$fieldname]['data'])) {
             foreach ($element['#options'][$key][$fieldname] as $cell) {
               $row['data'][] = $cell;
             }
@@ -1921,13 +1922,13 @@ function form_process_machine_name($element, &$form_state) {
   $element['#machine_name']['suffix'] = '#' . $suffix_id;
 
   if ($element['#machine_name']['standalone']) {
-    $element['#suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
+    $element['#suffix'] = SafeMarkup::set($element['#suffix'] . ' <small id="' . $suffix_id . '">&nbsp;</small>');
   }
   else {
     // Append a field suffix to the source form element, which will contain
     // the live preview of the machine name.
     $source += array('#field_suffix' => '');
-    $source['#field_suffix'] .= ' <small id="' . $suffix_id . '">&nbsp;</small>';
+    $source['#field_suffix'] = SafeMarkup::set($source['#field_suffix'] . ' <small id="' . $suffix_id . '">&nbsp;</small>');
 
     $parents = array_merge($element['#machine_name']['source'], array('#field_suffix'));
     NestedArray::setValue($form_state['complete_form'], $parents, $source['#field_suffix']);
@@ -3104,6 +3105,8 @@ function _form_set_attributes(&$element, $class = array()) {
  *   - css: Array of paths to CSS files to be used on the progress page.
  *   - url_options: options passed to url() when constructing redirect URLs for
  *     the batch.
+ *   - safe_strings: Internal use only. Used to store and retrieve strings
+ *     marked as safe between requests.
  */
 function batch_set($batch_definition) {
   if ($batch_definition) {
@@ -3226,6 +3229,11 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
         $batch['destination'] = $request->query->get('destination');
         $request->query->remove('destination');
       }
+
+      // Store safe strings.
+      // @todo Ensure we are not storing an excessively large string list in:
+      //   https://www.drupal.org/node/2295823
+      $batch['safe_strings'] = SafeMarkup::getAll();
 
       // Store the batch.
       \Drupal::service('batch.storage')->create($batch);

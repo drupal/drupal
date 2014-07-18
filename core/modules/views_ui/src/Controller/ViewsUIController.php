@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Controller;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\views\ViewExecutable;
@@ -92,7 +93,7 @@ class ViewsUIController extends ControllerBase {
       foreach ($views as $view) {
         $rows[$field_name]['data'][1][] = $this->l($view, 'views_ui.edit', array('view' => $view));
       }
-      $rows[$field_name]['data'][1] = implode(', ', $rows[$field_name]['data'][1]);
+      $rows[$field_name]['data'][1] = SafeMarkup::set(implode(', ', $rows[$field_name]['data'][1]));
     }
 
     // Sort rows by field name.
@@ -120,7 +121,7 @@ class ViewsUIController extends ControllerBase {
       foreach ($row['views'] as $row_name => $view) {
         $row['views'][$row_name] = $this->l($view, 'views_ui.edit', array('view' => $view));
       }
-      $row['views'] = implode(', ', $row['views']);
+      $row['views'] = SafeMarkup::set(implode(', ', $row['views']));
     }
 
     // Sort rows by field name.

@@ -5,10 +5,10 @@
  * Functions for error handling.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
 use Drupal\Core\Utility\Error;
-use Drupal\Component\Utility\String;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -212,7 +212,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         // Generate a backtrace containing only scalar argument values.
         $message .= '<pre class="backtrace">' . Error::formatBacktrace($backtrace) . '</pre>';
       }
-      drupal_set_message($message, $class, TRUE);
+      drupal_set_message(SafeMarkup::set($message), $class, TRUE);
     }
 
     if ($fatal) {

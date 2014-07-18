@@ -110,6 +110,8 @@ function _drupal_maintenance_theme() {
  * @param $variables
  *   An associative array containing:
  *   - items: An associative array of maintenance tasks.
+ *     It's the caller's responsibility to ensure this array's items contain no
+ *     dangerous HTML such as SCRIPT tags.
  *   - active: The key for the currently active maintenance task.
  *
  * @ingroup themeable
@@ -187,6 +189,8 @@ function theme_authorize_report($variables) {
  * @param $variables
  *   An associative array containing:
  *   - message: The log message.
+ *     It's the caller's responsibility to ensure this string contains no
+ *     dangerous HTML such as SCRIPT tags.
  *   - success: A boolean indicating failure or success.
  *
  * @ingroup themeable

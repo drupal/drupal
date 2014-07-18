@@ -7,10 +7,13 @@
 
 namespace Drupal\Core\Page;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Template\Attribute;
 
 /**
  * This class represents an HTML element that appears in the HEAD tag.
+ *
+ * @see template_preprocess_html()
  */
 class HeadElement {
 
@@ -52,7 +55,7 @@ class HeadElement {
     if ($this->noScript) {
       $string = "<noscript>$string</noscript>";
     }
-    return $string;
+    return SafeMarkup::set($string);
   }
 
   /**

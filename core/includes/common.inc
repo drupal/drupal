@@ -14,6 +14,7 @@ use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Number;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
@@ -442,11 +443,15 @@ function format_rss_item($title, $link, $description, $args = array()) {
 /**
  * Formats XML elements.
  *
+ * Note: It is the caller's responsibility to sanitize any input parameters.
+ * This function does not perform sanitization.
+ *
  * @param $array
  *   An array where each item represents an element and is either a:
  *   - (key => value) pair (<key>value</key>)
  *   - Associative array with fields:
- *     - 'key': element name
+ *     - 'key': The element name. Element names are not sanitized, so do not
+ *       pass user input.
  *     - 'value': element contents
  *     - 'attributes': associative array of element attributes
  *
@@ -475,7 +480,11 @@ function format_xml_elements($array) {
       $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : String::checkPlain($value)) . "</$key>\n";
     }
   }
-  return $output;
+  // @todo This is marking the output string as safe HTML, but we have only
+  //   sanitized the attributes and tag values, not the tag names, and we
+  //   cannot guarantee the assembled markup is safe. Consider a fix in:
+  //   https://www.drupal.org/node/2296885
+  return SafeMarkup::set($output);
 }
 
 /**
@@ -859,8 +868,7 @@ function l($text, $path, array $options = array()) {
 
   // Sanitize the link text if necessary.
   $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
-
-  return '<a href="' . $url . '"' . $attributes . '>' . $text . '</a>';
+  return SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $text . '</a>');
 }
 
 /**
@@ -2640,12 +2648,17 @@ function drupal_pre_render_conditional_comments($elements) {
 /**
  * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
  *
+ * Note: It is the caller's responsibility to sanitize any input parameters.
+ * This callback does not perform sanitization.
+ *
  * @param array $element
  *   An associative array containing:
  *   - #tag: The tag name to output. Typical tags added to the HTML HEAD:
  *     - meta: To provide meta information, such as a page refresh.
  *     - link: To refer to stylesheets and other contextual information.
  *     - script: To load JavaScript.
+ *     The value of #tag is not escaped or sanitized, so do not pass in user
+ *     input.
  *   - #attributes: (optional) An array of HTML attributes to apply to the
  *     tag.
  *   - #value: (optional) A string containing tag content, such as inline
@@ -2658,7 +2671,11 @@ function drupal_pre_render_conditional_comments($elements) {
 function drupal_pre_render_html_tag($element) {
   $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
   if (!isset($element['#value'])) {
-    $markup = '<' . $element['#tag'] . $attributes . " />\n";
+    // This function is intended for internal use, so we assume that no unsafe
+    // values are passed in #tag. The attributes are already safe because
+    // Attribute output is already automatically sanitized.
+    // @todo Escape this properly instead? https://www.drupal.org/node/2296101
+    $markup = SafeMarkup::set('<' . $element['#tag'] . $attributes . " />\n");
   }
   else {
     $markup = '<' . $element['#tag'] . $attributes . '>';
@@ -2670,6 +2687,9 @@ function drupal_pre_render_html_tag($element) {
       $markup .= $element['#value_suffix'];
     }
     $markup .= '</' . $element['#tag'] . ">\n";
+    // @todo We cannot actually guarantee this markup is safe. Consider a fix
+    //   in: https://www.drupal.org/node/2296101
+    $markup = SafeMarkup::set($markup);
   }
   if (!empty($element['#noscript'])) {
     $element['#markup'] = '<noscript>' . $markup . '</noscript>';
@@ -3109,6 +3129,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
       if (!$is_recursive_call) {
         _drupal_render_process_post_render_cache($elements);
       }
+      $elements['#markup'] = SafeMarkup::set($elements['#markup']);
       return $elements['#markup'];
     }
   }
@@ -3161,6 +3182,11 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     $elements['#children'] = '';
   }
 
+  // @todo Simplify after https://drupal.org/node/2273925
+  if (isset($elements['#markup'])) {
+    $elements['#markup'] = SafeMarkup::set($elements['#markup']);
+  }
+
   // Assume that if #theme is set it represents an implemented hook.
   $theme_is_implemented = isset($elements['#theme']);
 
@@ -3184,6 +3210,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     foreach ($children as $key) {
       $elements['#children'] .= drupal_render($elements[$key], TRUE);
     }
+    $elements['#children'] = SafeMarkup::set($elements['#children']);
   }
 
   // If #theme is not implemented and the element has raw #markup as a
@@ -3194,7 +3221,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // required. Eventually #theme_wrappers will expect both #markup and
   // #children to be a single string as #children.
   if (!$theme_is_implemented && isset($elements['#markup'])) {
-    $elements['#children'] = $elements['#markup'] . $elements['#children'];
+    $elements['#children'] = SafeMarkup::set($elements['#markup'] . $elements['#children']);
   }
 
   // Let the theme functions in #theme_wrappers add markup around the rendered
@@ -3284,6 +3311,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   }
 
   $elements['#printed'] = TRUE;
+  $elements['#markup'] = SafeMarkup::set($elements['#markup']);
   return $elements['#markup'];
 }
 
@@ -3311,7 +3339,7 @@ function drupal_render_children(&$element, $children_keys = NULL) {
       $output .= drupal_render($element[$key]);
     }
   }
-  return $output;
+  return SafeMarkup::set($output);
 }
 
 /**

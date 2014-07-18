@@ -39,7 +39,7 @@
             <h3>
               {{- theme.name }} {{ theme.version -}}
               {% if theme.notes %}
-                ({{ theme.notes|join(', ') }})
+                ({{ theme.notes|safe_join(', ') }})
               {%- endif -%}
             </h3>
             <div class="theme-description">{{ theme.description }}</div>

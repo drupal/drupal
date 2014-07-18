@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
@@ -121,7 +122,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
       $row[] = $display;
     }
     $row[] = $weight;
-    $row[] = $operations;
+    $row[] = SafeMarkup::set($operations);
     $rows[] = array(
       'data' => $row,
       'class' => isset($widget['#attributes']['class']) ? array_merge($widget['#attributes']['class'], array('draggable')) : array('draggable'),

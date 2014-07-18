@@ -8,6 +8,7 @@
  * customized by user themes.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -584,7 +585,7 @@ function _theme($hook, $variables = array()) {
   $output = '';
   if (isset($info['function'])) {
     if (function_exists($info['function'])) {
-      $output = $info['function']($variables);
+      $output = SafeMarkup::set($info['function']($variables));
     }
   }
   else {
@@ -2003,7 +2004,7 @@ function template_preprocess_html(&$variables) {
   // Construct page title.
   if ($page->hasTitle()) {
     $head_title = array(
-      'title' => trim(strip_tags($page->getTitle())),
+      'title' => SafeMarkup::set(trim(strip_tags($page->getTitle()))),
       'name' => String::checkPlain($site_config->get('name')),
     );
   }
@@ -2023,7 +2024,13 @@ function template_preprocess_html(&$variables) {
   }
 
   $variables['head_title_array'] = $head_title;
-  $variables['head_title'] = implode(' | ', $head_title);
+  $output = '';
+  $separator = '';
+  foreach ($head_title as $item) {
+    $output .= $separator . SafeMarkup::escape($item);
+    $separator = ' | ';
+  }
+  $variables['head_title'] = SafeMarkup::set($output);
 
   // @todo Remove drupal_*_html_head() and refactor accordingly.
   $html_heads = drupal_get_html_head(FALSE);

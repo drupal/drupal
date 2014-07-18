@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -80,6 +81,12 @@ class ViewListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $view) {
     $row = parent::buildRow($view);
+    $display_paths = '';
+    $separator = '';
+    foreach ($this->getDisplayPaths($view) as $display_path) {
+      $display_paths .= $separator . SafeMarkup::escape($display_path);
+      $separator = ', ';
+    }
     return array(
       'data' => array(
         'view_name' => array(
@@ -96,7 +103,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
           'class' => array('views-table-filter-text-source'),
         ),
         'tag' => $view->get('tag'),
-        'path' => implode(', ', $this->getDisplayPaths($view)),
+        'path' => SafeMarkup::set($display_paths),
         'operations' => $row['operations'],
       ),
       'title' => $this->t('Machine name: @name', array('@name' => $view->id())),

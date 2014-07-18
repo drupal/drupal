@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
@@ -1707,10 +1708,10 @@ function install_finished(&$install_state) {
   // @todo Temporary hack to satisfy PIFR.
   // @see https://drupal.org/node/1317548
   $pifr_assertion = '<span style="display: none;">Drupal installation complete</span>';
-
-  drupal_set_message(t('Congratulations, you installed @drupal!', array(
+  $success_message = t('Congratulations, you installed @drupal!', array(
     '@drupal' => drupal_install_profile_distribution_name(),
-  )) . $pifr_assertion);
+  ));
+  drupal_set_message(SafeMarkup::set($success_message . $pifr_assertion));
 }
 
 /**

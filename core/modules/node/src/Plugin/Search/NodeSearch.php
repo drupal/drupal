@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\Search;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
@@ -266,10 +267,12 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $node = $node_storage->load($item->sid)->getTranslation($item->langcode);
       $build = $node_render->view($node, 'search_result', $item->langcode);
       unset($build['#theme']);
-      $node->rendered = drupal_render($build);
 
       // Fetch comment count for snippet.
-      $node->rendered .= ' ' . $this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode));
+      $node->rendered = SafeMarkup::set(
+        drupal_render($build) . ' ' .
+        SafeMarkup::escape($this->moduleHandler->invoke('comment', 'node_update_index', array($node, $item->langcode)))
+      );
 
       $extra = $this->moduleHandler->invokeAll('node_search_result', array($node, $item->langcode));
 

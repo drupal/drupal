@@ -124,7 +124,7 @@ abstract class DateFormatFormBase extends EntityForm {
       '#machine_name' => array(
         'exists' => array($this, 'exists'),
         'replace_pattern' =>'([^a-z0-9_]+)|(^custom$)',
-        'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
+        'error' => $this->t('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".'),
       ),
     );
 

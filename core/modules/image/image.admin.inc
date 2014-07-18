@@ -4,8 +4,11 @@
  * @file
  * Administration pages for image settings.
  */
+
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
+
 /**
  * Returns HTML for a listing of the effects within a specific image style.
  *
@@ -30,7 +33,8 @@ function theme_image_style_effects($variables) {
     }
     else {
       // Add the row for adding a new image effect.
-      $row[] = '<div class="image-style-new">' . drupal_render($form['new']['new']) . drupal_render($form['new']['add']) . '</div>';
+      $cell = '<div class="image-style-new">' . drupal_render($form['new']['new']) . drupal_render($form['new']['add']) . '</div>';
+      $row[] = SafeMarkup::set($cell);
       $row[] = drupal_render($form['new']['weight']);
       $row[] = '';
     }

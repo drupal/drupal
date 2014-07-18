@@ -25,5 +25,4 @@
  * @see http://www.w3.org/TR/html5-author/the-time-element.html#attr-time-datetime
  */
 #}
-{# @todo Revisit once http://drupal.org/node/1825952 is resolved. #}
-<time{{ attributes }}>{{ html ? text|raw : text|escape }}</time>
+<time{{ attributes }}>{{ html ? text|raw : text }}</time>

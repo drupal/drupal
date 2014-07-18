@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
@@ -57,7 +58,8 @@ function system_requirements($phase) {
   if (function_exists('phpinfo')) {
     $requirements['php'] = array(
       'title' => t('PHP'),
-      'value' => ($phase == 'runtime') ? $phpversion .' ('. l(t('more information'), 'admin/reports/status/php') .')' : $phpversion,
+      // $phpversion is safe and output of l() is safe, so this value is safe.
+      'value' => SafeMarkup::set(($phase == 'runtime') ? $phpversion . ' (' . l(t('more information'), 'admin/reports/status/php') . ')' : $phpversion),
     );
   }
   else {
@@ -320,7 +322,11 @@ function system_requirements($phase) {
       'title' => t('Cron maintenance tasks'),
       'severity' => $severity,
       'value' => $summary,
-      'description' => $description
+      // @todo This string is concatenated from t() calls, safe drupal_render()
+      //   output, whitespace, and <br /> tags, so is safe. However, as a best
+      //   practice, we should not use SafeMarkup::set() around a variable. Fix
+      //   in: https://www.drupal.org/node/2296929
+      'description' => SafeMarkup::set($description),
     );
   }
   if ($phase != 'install') {

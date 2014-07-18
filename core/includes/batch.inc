@@ -14,6 +14,7 @@
  * @see batch_get()
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Batch\Percentage;
 use Drupal\Core\Page\DefaultHtmlPageRenderer;
@@ -44,7 +45,12 @@ function _batch_page(Request $request) {
       return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
     }
   }
-
+  // Restore safe strings from previous batches.
+  // @todo Ensure we are not storing an excessively large string list in:
+  //   https://www.drupal.org/node/2295823
+  if (!empty($batch['safe_strings'])) {
+    SafeMarkup::setMultiple($batch['safe_strings']);
+  }
   // Register database update for the end of processing.
   drupal_register_shutdown_function('_batch_shutdown');
 
@@ -481,6 +487,10 @@ function _batch_finished() {
  */
 function _batch_shutdown() {
   if ($batch = batch_get()) {
+    // Update safe strings.
+    // @todo Ensure we are not storing an excessively large string list in:
+    //   https://www.drupal.org/node/2295823
+    $batch['safe_strings'] = SafeMarkup::getAll();
     \Drupal::service('batch.storage')->update($batch);
   }
 }

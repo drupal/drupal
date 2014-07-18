@@ -5,6 +5,7 @@
  * Interface translation summary, editing and deletion user interfaces.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 use Drupal\locale\SourceString;
 use Drupal\locale\TranslationString;
@@ -63,7 +64,7 @@ function theme_locale_translate_edit_form_strings($variables) {
     }
     $source .= empty($string['context']) ? '' : '<br /><small>' . t('In Context') . ':&nbsp;' . $string['context']['#value'] . '</small>';
     $rows[] = array(
-      array('data' => $source),
+      array('data' => SafeMarkup::set($source)),
       array('data' => $string['translations']),
     );
   }

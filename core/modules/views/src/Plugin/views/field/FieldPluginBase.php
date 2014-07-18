@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
@@ -899,7 +900,7 @@ abstract class FieldPluginBase extends HandlerBase {
       $form['alter']['help'] = array(
         '#type' => 'details',
         '#title' => t('Replacement patterns'),
-        '#value' => $output,
+        '#value' => SafeMarkup::set($output),
         '#states' => array(
           'visible' => array(
             array(
@@ -1181,6 +1182,9 @@ abstract class FieldPluginBase extends HandlerBase {
         $this->last_render = $this->renderText($alter);
       }
     }
+    // @todo Fix this in https://www.drupal.org/node/2280961
+    $this->last_render = SafeMarkup::set($this->last_render);
+
 
     return $this->last_render;
   }

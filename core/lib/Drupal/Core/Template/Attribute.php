@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * A class that can be used for collecting then rendering HTML attributtes.
@@ -117,7 +117,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
         $return .= ' ' . $rendered;
       }
     }
-    return $return;
+    return SafeMarkup::set($return);
   }
 
   /**

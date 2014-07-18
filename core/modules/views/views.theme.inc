@@ -5,6 +5,7 @@
  * Preprocessors and helper functions to make theming easier.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
@@ -541,7 +542,8 @@ function template_preprocess_views_view_table(&$variables) {
             '#theme' => 'tablesort_indicator',
             '#style' => $initial,
           );
-          $label .= drupal_render($tablesort_indicator);
+          $markup = drupal_render($tablesort_indicator);
+          $label = SafeMarkup::set($label . $markup);
         }
 
         $query['order'] = $field;
@@ -632,7 +634,7 @@ function template_preprocess_views_view_table(&$variables) {
         $field_output = $handler->getField($num, $field);
         $element_type = $fields[$field]->elementType(TRUE, TRUE);
         if ($element_type) {
-          $field_output = '<' . $element_type . '>' . $field_output . '</' . $element_type . '>';
+          $field_output = SafeMarkup::set('<' . $element_type . '>' .  SafeMarkup::escape($field_output) . '</' . $element_type . '>');
         }
 
         // Only bother with separators and stuff if the field shows up.
@@ -640,13 +642,17 @@ function template_preprocess_views_view_table(&$variables) {
           // Place the field into the column, along with an optional separator.
           if (!empty($column_reference['content'])) {
             if (!empty($options['info'][$column]['separator'])) {
-              $column_reference['content'] .= Xss::filterAdmin($options['info'][$column]['separator']);
+              $safe_content = SafeMarkup::escape($column_reference['content']);
+              $safe_separator = Xss::filterAdmin($options['info'][$column]['separator']);
+              $column_reference['content'] = SafeMarkup::set($safe_content . $safe_separator);
             }
           }
           else {
             $column_reference['content'] = '';
           }
-          $column_reference['content'] .= $field_output;
+          $safe_content = SafeMarkup::escape($column_reference['content']);
+          $safe_field_output = SafeMarkup::escape($field_output);
+          $column_reference['content'] = SafeMarkup::set($safe_content . $safe_field_output);
         }
       }
       $column_reference['attributes'] = new Attribute($column_reference['attributes']);

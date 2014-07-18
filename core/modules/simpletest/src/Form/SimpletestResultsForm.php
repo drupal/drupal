@@ -7,6 +7,7 @@
 
 namespace Drupal\simpletest\Form;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\simpletest\TestDiscovery;
@@ -163,7 +164,8 @@ class SimpletestResultsForm extends FormBase {
       $rows = array();
       foreach ($assertions as $assertion) {
         $row = array();
-        $row[] = $assertion->message;
+        // Assertion messages are in code, so we assume they are safe.
+        $row[] = SafeMarkup::set($assertion->message);
         $row[] = $assertion->message_group;
         $row[] = drupal_basename($assertion->file);
         $row[] = $assertion->line;

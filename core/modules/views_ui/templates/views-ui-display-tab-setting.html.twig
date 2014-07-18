@@ -20,6 +20,6 @@
     <span class="label">{{ description }}</span>
   {%- endif %}
   {% if settings_links %}
-    {{ settings_links|join('<span class="label">&nbsp;|&nbsp;</span>') }}
+    {{ settings_links|safe_join('<span class="label">&nbsp;|&nbsp;</span>') }}
   {% endif %}
 </div>

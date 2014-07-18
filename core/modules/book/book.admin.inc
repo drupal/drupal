@@ -5,6 +5,7 @@
  * Administration page callbacks for the Book module.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 
 /**
@@ -36,9 +37,9 @@ function theme_book_admin_table($variables) {
 
     $indentation = array('#theme' => 'indentation', '#size' => $form[$key]['depth']['#value'] - 2);
     $data = array(
-      drupal_render($indentation) . drupal_render($form[$key]['title']),
+      SafeMarkup::set(drupal_render($indentation) . drupal_render($form[$key]['title'])),
       drupal_render($form[$key]['weight']),
-      drupal_render($form[$key]['pid']) . drupal_render($form[$key]['nid']),
+      SafeMarkup::set(drupal_render($form[$key]['pid']) . drupal_render($form[$key]['nid'])),
     );
     $links = array();
     $links['view'] = array(

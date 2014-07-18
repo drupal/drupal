@@ -9,6 +9,7 @@ namespace Drupal\Core\Utility;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Drupal error utility class.
@@ -101,7 +102,7 @@ class Error {
     // no longer function correctly (as opposed to a user-triggered error), so
     // we assume that it is safe to include a verbose backtrace.
     $output .= '<pre>' . static::formatBacktrace($backtrace) . '</pre>';
-    return $output;
+    return SafeMarkup::set($output);
   }
 
   /**

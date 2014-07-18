@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Drupal\Core\ContentNegotiation;
@@ -316,7 +317,7 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
         // Generate a backtrace containing only scalar argument values.
         $message .= '<pre class="backtrace">' . Error::formatFlattenedBacktrace($backtrace) . '</pre>';
       }
-      drupal_set_message($message, $class, TRUE);
+      drupal_set_message(SafeMarkup::set($message), $class, TRUE);
     }
 
     $content = $this->t('The website has encountered an error. Please try again later.');

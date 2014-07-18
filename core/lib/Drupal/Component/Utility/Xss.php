@@ -41,12 +41,14 @@ class Xss {
    * Based on kses by Ulf Harnhammar, see http://sourceforge.net/projects/kses.
    * For examples of various XSS attacks, see: http://ha.ckers.org/xss.html.
    *
-   * This code does four things:
+   * This code does five things:
    * - Removes characters and constructs that can trick browsers.
    * - Makes sure all HTML entities are well-formed.
    * - Makes sure all HTML tags and attributes are well-formed.
    * - Makes sure no HTML tags contain URLs with a disallowed protocol (e.g.
    *   javascript:).
+   * - Marks the sanitized, XSS-safe version of $string as safe markup for
+   *   rendering.
    *
    * @param $string
    *   The string with raw HTML in it. It will be stripped of everything that
@@ -63,6 +65,7 @@ class Xss {
    *   valid UTF-8.
    *
    * @see \Drupal\Component\Utility\Unicode::validateUtf8()
+   * @see \Drupal\Component\Utility\SafeMarkup
    *
    * @ingroup sanitization
    */
@@ -90,7 +93,7 @@ class Xss {
     $splitter = function ($matches) use ($html_tags, $mode) {
       return static::split($matches[1], $html_tags, $mode);
     };
-    return preg_replace_callback('%
+    return SafeMarkup::set(preg_replace_callback('%
       (
       <(?=[^a-zA-Z!/])  # a lone <
       |                 # or
@@ -99,7 +102,7 @@ class Xss {
       <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
       |                 # or
       >                 # just a >
-      )%x', $splitter, $string);
+      )%x', $splitter, $string));
   }
 
   /**

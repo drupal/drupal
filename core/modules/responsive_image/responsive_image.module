@@ -6,6 +6,7 @@
  */
 
 use Drupal\breakpoint\Entity\Breakpoint;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use \Drupal\Core\Template\Attribute;
 
@@ -195,7 +196,6 @@ function theme_responsive_image($variables) {
   }
 
   $sources = array();
-  $output = array();
 
   // Fallback image, output as source with media query.
   $sources[] = array(
@@ -239,6 +239,7 @@ function theme_responsive_image($variables) {
   }
 
   if (!empty($sources)) {
+    $output = array();
     $output[] = '<picture>';
 
     // Add source tags to the output.
@@ -258,7 +259,7 @@ function theme_responsive_image($variables) {
     }
 
     $output[] = '</picture>';
-    return implode("\n", $output);
+    return SafeMarkup::set(implode("\n", $output));
   }
 }
 

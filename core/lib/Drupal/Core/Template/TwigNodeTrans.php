@@ -133,7 +133,13 @@ class TwigNodeTrans extends \Twig_Node {
           while ($n instanceof \Twig_Node_Expression_Filter) {
             $n = $n->getNode('node');
           }
-          $args = $n->getNode('arguments')->getNode(0);
+
+          $args = $n;
+
+          // Support twig_render_var function in chain.
+          if ($args instanceof \Twig_Node_Expression_Function) {
+            $args = $n->getNode('arguments')->getNode(0);
+          }
 
           // Detect if a token implements one of the filters reserved for
           // modifying the prefix of a token. The default prefix used for

@@ -5,6 +5,7 @@
  * Enables semantically enriched output for Drupal sites in the form of RDFa.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
@@ -444,8 +445,8 @@ function rdf_preprocess_comment(&$variables) {
     $author_attributes = array('rel' => $author_mapping['properties']);
     // Wraps the author variable and the submitted variable which are both
     // available in comment.html.twig.
-    $variables['author'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['author'] . '</span>';
-    $variables['submitted'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>';
+    $variables['author'] = SafeMarkup::set('<span ' . new Attribute($author_attributes) . '>' . $variables['author'] . '</span>');
+    $variables['submitted'] = SafeMarkup::set('<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>');
   }
   // Adds RDFa markup for the date of the comment.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
@@ -461,8 +462,8 @@ function rdf_preprocess_comment(&$variables) {
     $created_metadata_markup = drupal_render($rdf_metadata);
     // Appends the markup to the created variable and the submitted variable
     // which are both available in comment.html.twig.
-    $variables['created'] .= $created_metadata_markup;
-    $variables['submitted'] .= $created_metadata_markup;
+    $variables['created'] = SafeMarkup::set(SafeMarkup::escape($variables['created']) . $created_metadata_markup);
+    $variables['submitted'] = SafeMarkup::set($variables['submitted'] . $created_metadata_markup);
   }
   $title_mapping = $mapping->getPreparedFieldMapping('subject');
   if (!empty($title_mapping)) {

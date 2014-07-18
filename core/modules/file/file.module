@@ -5,6 +5,7 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
@@ -931,10 +932,10 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
           '#theme' => 'item_list',
           '#items' => $errors,
         );
-        $message .= drupal_render($item_list);
+        $message = SafeMarkup::set($message . drupal_render($item_list));
       }
       else {
-        $message .= ' ' . array_pop($errors);
+        $message = SafeMarkup::set($message . ' ' . SafeMarkup::escape(array_pop($errors)));
       }
       drupal_set_message($message, 'error');
       $files[$i] = FALSE;

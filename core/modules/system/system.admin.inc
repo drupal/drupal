@@ -5,6 +5,7 @@
  * Admin page callbacks for the system module.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\Extension;
@@ -231,7 +232,7 @@ function theme_system_modules_details($variables) {
 
     // Add the module label and expand/collapse functionalty.
     $col2 = '<label id="module-' . $key . '" for="' . $module['enable']['#id'] . '" class="module-name table-filter-text-source">' . drupal_render($module['name']) . '</label>';
-    $row[] = array('class' => array('module'), 'data' => $col2);
+    $row[] = array('class' => array('module'), 'data' => SafeMarkup::set($col2));
 
     // Add the description, along with any modules it requires.
     $description = '';
@@ -259,9 +260,9 @@ function theme_system_modules_details($variables) {
     }
     $details = array(
       '#type' => 'details',
-      '#title' => '<span class="text"> ' . drupal_render($module['description']) . '</span>',
+      '#title' => SafeMarkup::set('<span class="text"> ' . drupal_render($module['description']) . '</span>'),
       '#attributes' => array('id' => $module['enable']['#id'] . '-description'),
-      '#description' => $description,
+      '#description' => SafeMarkup::set($description),
     );
     $col4 = drupal_render($details);
     $row[] = array('class' => array('description', 'expand'), 'data' => $col4);

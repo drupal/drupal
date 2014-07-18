@@ -5,6 +5,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -259,7 +260,7 @@ function field_entity_bundle_delete($entity_type, $bundle) {
  *   UTF-8.
  */
 function field_filter_xss($string) {
-  return Html::normalize(Xss::filter($string, _field_filter_xss_allowed_tags()));
+  return SafeMarkup::set(Html::normalize(Xss::filter($string, _field_filter_xss_allowed_tags())));
 }
 
 /**

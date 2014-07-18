@@ -5,6 +5,7 @@
  * Preprocessors and theme functions for the Views UI.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 
@@ -88,7 +89,19 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
  */
 function template_preprocess_views_ui_view_info(&$variables) {
   $variables['title'] = $variables['view']->label();
-  $variables['displays'] = empty($variables['displays']) ? t('None') : format_plural(count($variables['displays']), 'Display', 'Displays') . ': ' . '<em>' . implode(', ', $variables['displays']) . '</em>';
+  if (empty($variables['displays'])) {
+    $displays = t('None');
+  }
+  else {
+    $displays = format_plural(count($variables['displays']), 'Display', 'Displays') . ': <em>';
+    $separator = '';
+    foreach ($variables['displays'] as $displays_item) {
+      $displays .= $separator . SafeMarkup::escape($displays_item);
+      $separator = ', ';
+    }
+    $displays = SafeMarkup::set($displays . '</em>');
+  }
+  $variables['displays'] = $displays;
 }
 
 /**

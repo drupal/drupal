@@ -21,7 +21,7 @@
 <div class="inner" tabindex="0" role="button">
   <span class="update-description-prefix visually-hidden">Show description</span>
   {% if modules %}
-    {% set module_list = modules|join(', ') %}
+    {% set module_list = modules|safe_join(', ') %}
     <span class="text">{% trans %}Updates for: {{ module_list }}{% endtrans %}</span>
   {% elseif missing_updates_status %}
     <span class="text">{{ missing_updates_status }}</span>

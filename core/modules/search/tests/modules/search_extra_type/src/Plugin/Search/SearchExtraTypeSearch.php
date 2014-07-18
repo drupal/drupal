@@ -7,6 +7,7 @@
 
 namespace Drupal\search_extra_type\Plugin\Search;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 
 /**
@@ -58,7 +59,7 @@ class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
         'link' => url('node'),
         'type' => 'Dummy result type',
         'title' => 'Dummy title',
-        'snippet' => "Dummy search snippet to display. Keywords: {$this->keywords}\n\nConditions: " . print_r($this->searchParameters, TRUE),
+        'snippet' => SafeMarkup::set("Dummy search snippet to display. Keywords: {$this->keywords}\n\nConditions: " . print_r($this->searchParameters, TRUE)),
       ),
     );
   }
