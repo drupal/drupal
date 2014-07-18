@@ -61,6 +61,8 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   protected $databasePrefix;
   protected $container;
 
+  private static $initialContainerBuilder;
+
   /**
    * Modules to enable.
    *
@@ -184,28 +186,12 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     new Settings($settings);
 
-    $container_classname = get_class($this) . '_Container';
-    $container_parts = explode('\\', $container_classname);
-    $container_shortname = array_pop($container_parts);
+    // Variant #1: Actually compiled + dumped Container class.
+    //$this->setCompiledContainer();
+    // Variant #2: Clone of a compiled, empty ContainerBuilder instance.
+    $this->setCompiledContainerBuider();
 
-    if (!class_exists($container_classname, FALSE)) {
-      // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
-      $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
-      $kernel->setSitePath($this->siteDirectory);
-      $kernel->boot();
-      $dumper = new PhpDumper($kernel->getContainer());
-      $code = $dumper->dump(array(
-        'namespace' => implode('\\', $container_parts),
-        'class' => $container_shortname,
-        'base_class' => \Drupal\Core\DrupalKernel::CONTAINER_BASE_CLASS,
-      ));
-      $container_file = tempnam(sys_get_temp_dir(), 'drupal-phpunit-container-');
-      file_put_contents($container_file, $code);
-      include $container_file;
-      unlink($container_file);
-    }
-
-    $this->container = new $container_classname();
+    // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
     $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
     $kernel->setSitePath($this->siteDirectory);
     $kernel->setContainer($this->container);
@@ -250,6 +236,72 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // The temporary stream wrapper is able to operate both with and without
     // configuration.
 //    $this->registerStreamWrapper('temporary', 'Drupal\Core\StreamWrapper\TemporaryStream');
+  }
+
+  /**
+   * Prepares the initial, compiled, and dumped Container for tests.
+   *
+   * Advantages:
+   * - Truly compiled Container instead of a (frozen) ContainerBuilder.
+   *
+   * Disadvantages:
+   * - Each dumped Container is loaded separately into memory.
+   * - Initial PhpDumper invocation (once per class) is slow.
+   */
+  private function setCompiledContainer() {
+    // The container classname is the name of the current test class, but in a
+    // fake \Drupal\Container namespace, so as to guarantee that it does not
+    // conflict with any code that might introspect available classes.
+    $container_classname = substr_replace(get_class($this), 'Drupal\Container', 0, strlen('Drupal'));
+    $container_parts = explode('\\', $container_classname);
+    $container_shortname = array_pop($container_parts);
+
+    if (!class_exists($container_classname, FALSE)) {
+      $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
+      $kernel->setSitePath($this->siteDirectory);
+      $kernel->boot();
+
+      // Dump the container to disk and load its PHP code.
+      $dumper = new PhpDumper($kernel->getContainer());
+      $code = $dumper->dump(array(
+        'namespace' => implode('\\', $container_parts),
+        'class' => $container_shortname,
+        'base_class' => \Drupal\Core\DrupalKernel::CONTAINER_BASE_CLASS,
+      ));
+      $container_file = tempnam(sys_get_temp_dir(), 'drupal-phpunit-container-');
+      file_put_contents($container_file, $code);
+      include $container_file;
+      unlink($container_file);
+    }
+    $this->container = new $container_classname();
+  }
+
+  /**
+   * Prepares the initial, compiled ContainerBuilder for tests.
+   *
+   * Advantages:
+   * - No memory pollution from many different Container classes.
+   * - No filesystem dumping.
+   *
+   * Disadvantages:
+   * - A ContainerBuilder does not match actual Drupal environment.
+   */
+  private function setCompiledContainerBuider() {
+    if (!isset(self::$initialContainerBuilder)) {
+      $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
+      $kernel->setSitePath($this->siteDirectory);
+      $kernel->boot();
+
+      // Remove all instantiated services, so the container is safe for cloning.
+      $container = $kernel->getContainer();
+      foreach ($container->getServiceIds() as $id) {
+        if ($id !== 'service_container' && $container->initialized($id)) {
+          $container->set($id, NULL);
+        }
+      }
+      self::$initialContainerBuilder = $container;
+    }
+    $this->container = clone self::$initialContainerBuilder;
   }
 
   /**
@@ -329,6 +381,14 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     new Settings(array());
 
     parent::tearDown();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function tearDownAfterClass() {
+    self::$initialContainerBuilder = NULL;
+    parent::tearDownAfterClass();
   }
 
   /**
