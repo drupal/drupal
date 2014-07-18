@@ -152,13 +152,20 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       $suffix = mt_rand(100000, 999999);
       $this->siteDirectory = 'sites/simpletest/' . $suffix;
     } while (is_dir(DRUPAL_ROOT . '/' . $this->siteDirectory));
-    #mkdir($this->siteDirectory, 0775, TRUE);
+
+//    mkdir($this->siteDirectory, 0775, TRUE);
+
+    // Ensure that all code that relies on drupal_valid_test_ua() can still be
+    // safely executed. This primarily affects the (test) site directory
+    // resolution (which is used by e.g. LocalStream and PhpStorage).
+    drupal_valid_test_ua('simpletest' . $suffix);
 
     $this->databasePrefix = ''; // sqlite://:memory:
 
     $settings = array(
       'hash_salt' => get_class($this),
-      // @todo Disable Twig template compiler/dumper.
+      // Disable Twig template caching/dumping.
+      'twig_cache' => FALSE,
     );
 
     $databases['default']['default'] = array(
