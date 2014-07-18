@@ -63,6 +63,9 @@ search.settings:
             a:
               type: integer
               label: 'Tag a weight'
+    logging:
+      type: boolean
+      label: 'Log searches'
 
 search.page.*:
   type: config_entity

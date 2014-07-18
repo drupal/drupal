@@ -223,6 +223,20 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#description' => $this->t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.')
     );
 
+    // Indexing settings:
+    $form['logging'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Logging'),
+      '#open' => TRUE,
+    );
+
+    $form['logging']['logging'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Log searches'),
+      '#default_value' => $search_settings->get('logging'),
+      '#description' => $this->t('If checked, all searches will be logged. Uncheck to skip logging. Logging may affect performance.'),
+    );
+
     $form['search_pages'] = array(
       '#type' => 'details',
       '#title' => $this->t('Search pages'),
@@ -320,6 +334,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
 
     $search_settings
       ->set('index.cron_limit', $form_state['values']['cron_limit'])
+      ->set('logging', $form_state['values']['logging'])
       ->save();
 
     drupal_set_message($this->t('The configuration options have been saved.'));
