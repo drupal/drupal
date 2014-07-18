@@ -38,15 +38,24 @@
 .install-page table td {
   word-break: break-word;
 }
+
 @media all and (max-width: 1010px) and (min-width: 48em) {
   .install-page .password-strength,
-  .install-page .confirm-parent,
-  .install-page .password-confirm {
-    float: none;
-    width: auto;
+  .install-page .confirm-parent {
+    width: 100%;
+  }
+  .install-configure-form .form-type-password {
+    float: left;
+    width: 100%;
   }
   input.password-confirm,
   input.password-field {
     float: none;
   }
+  div.password-confirm {
+    float: none;
+    width: auto;
+    max-width: 100%;
+  }
+
 }

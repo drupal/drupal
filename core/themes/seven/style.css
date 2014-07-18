@@ -713,27 +713,36 @@ fieldset {
   }
 }
 .form-item {
-  margin: 1em 0;
+  margin: 0.75em 0;
 }
 .form-type-checkbox {
   padding: 0;
 }
 label {
   display: table;
-  margin: 0;
+  margin: 0 0 0 0.2em; /* LTR */
   padding: 0;
-  font-weight: bold;
+  font-weight: normal;
+}
+[dir="rtl"] label {
+  margin: 0 0.2em 0 0;
+}
+label.error {
+  color: #e62600;
 }
 label[for] {
   cursor: pointer;
 }
 .form-item label.option {
-  font-size: 0.923em;
   text-transform: none;
 }
 .form-item label.option input {
   vertical-align: middle;
 }
+.form-disabled label {
+  color: #737373;
+}
+
 .form-disabled input.form-text,
 .form-disabled input.form-tel,
 .form-disabled input.form-email,
@@ -744,9 +753,35 @@ label[for] {
 .form-disabled input.form-file,
 .form-disabled textarea.form-textarea,
 .form-disabled select.form-select {
-  background-color: #eee;
-  color: #777;
+  border-color: #d4d4d4;
+  background-color: hsla(0, 0%, 0%, .08);
+  box-shadow: none;
 }
+
+.form-item input.error,
+.form-item textarea.error,
+.form-item select.error {
+  border-width: 2px;
+  border-color: #e62600;
+  background-color: hsla(15, 75%, 97%, 1);
+  box-shadow: inset 0 5px 5px -5px #b8b8b8;
+  color: #e62600;
+}
+.form-item input.error:focus,
+.form-item textarea.error:focus,
+.form-item select.error:focus {
+  border-color: #e62600;
+  outline: 0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05), 0 0 8px 1px #e62600;
+  background-color: #fcf4f2;
+}
+.form-required:after {
+  font-weight: bold;
+  color: #e62600;
+  font-size: 1.1em;
+  padding-left: 2px;
+}
+
 
 /* Filter */
 .filter-wrapper {
@@ -754,27 +789,37 @@ label[for] {
 }
 ul.tips,
 div.description,
-.form-item div.description {
-  margin: 5px 0;
-  line-height: 1.231em;
-  font-size: 0.923em;
-  color: #555;
+.form-item .description {
+  margin: 0.2em 0 0 0;
+  color: #595959;
+  font-size: 0.9em;
 }
+.form-item .description.error {
+  color: #e62600;
+}
+
 ul.tips li {
   margin: 0.25em 0 0.25em 1.5em; /* LTR */
 }
 [dir="rtl"] ul.tips li {
   margin: 0.25em 1.5em 0.25em 0;
 }
-body div.form-type-radio div.description,
-body div.form-type-checkbox div.description {
+.form-type-radio .description,
+.form-type-checkbox .description {
   margin-left: 1.5em; /* LTR */
 }
-[dir="rtl"] body div.form-type-radio div.description,
-[dir="rtl"] body div.form-type-checkbox div.description {
+[dir="rtl"] .form-type-radio .description,
+[dir="rtl"] .form-type-checkbox .description {
   margin-left: 0;
   margin-right: 1.5em;
 }
+.form-text,
+.form-textarea {
+  border-radius: 2px;
+  font-size: 1em;
+  line-height: normal;
+}
+
 input.form-autocomplete,
 input.form-text,
 input.form-tel,
@@ -784,36 +829,61 @@ input.form-search,
 input.form-number,
 input.form-color,
 input.form-file,
+input.form-date,
+input.form-time,
 textarea.form-textarea,
 select.form-select {
   -webkit-box-sizing: border-box;
   -moz-box-sizing:    border-box;
   box-sizing:         border-box;
-  padding: 2px;
+  padding: .3em .4em .3em .5em;
   max-width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid #b8b8b8;
   border-top-color: #999;
   background: #fff;
   color: #333;
+  border-radius: 2px;
+  background: #fcfcfa;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .125);
+  font-size: 1em;
+  color: #595959;
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
-input.form-text:focus,
-input.form-tel:focus,
-input.form-email:focus,
-input.form-url:focus,
-input.form-search:focus,
-input.form-number:focus,
-input.form-color:focus,
-input.form-file:focus,
-textarea.form-textarea:focus,
-select.form-select:focus {
-  color: #000;
-  border-color: rgba(0, 116, 189, 0.8);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(220, 220, 220, 0.4);
-  outline-color: rgba(0, 116, 189, 0.5);
+.form-text:focus,
+.form-tel:focus,
+.form-email:focus,
+.form-url:focus,
+.form-search:focus,
+.form-number:focus,
+.form-color:focus,
+.form-file:focus,
+.form-textarea:focus,
+.form-date:focus,
+.form-time:focus,
+.form-select:focus {
+  border-color: #40b6ff;
+  outline: 0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .05), 0 0 8px #40b6ff;
+  background-color: #fff;
 }
+
+.confirm-parent,
+.password-parent {
+  overflow: visible;
+  width: auto;
+}
+
+.form-item .password-suggestions {
+  float: left;
+  clear: left;
+  width: 100%;
+}
+.form-item-pass .description {
+  clear: both;
+}
+
 
 /**
  * Improve spacing of cancel link.
@@ -874,6 +944,9 @@ select.form-select:focus {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+  }
+  div.form-item div.password-suggestions {
+    float: none;
   }
   #dblog-filter-form .form-actions {
     float: none;
