@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements ServiceProviderInterface, LoggerInterface {
 
+  use AssertLegacyTrait;
   #use AssertContentTrait;
   use LoggerTrait;
 
@@ -358,7 +359,26 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   /**
    * {@inheritdoc}
    */
+  protected function assertPostConditions() {
+    // Execute registered Drupal shutdown functions prior to tearing down.
+    // @see _drupal_shutdown_function()
+    $callbacks = &drupal_register_shutdown_function();
+    while ($callback = array_shift($callbacks)) {
+      call_user_func_array($callback['callback'], $callback['arguments']);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown() {
+    // Die hard if any (new) shutdown functions exist; PHP will halt with a
+    // fatal error in addition to the exception, because the shutdown functions
+    // will still be executed but won't be able to access any services.
+    if ($count = count(drupal_register_shutdown_function())) {
+      throw new \RuntimeException(sprintf('%d Drupal shutdown callbacks left (not executed).', $count));
+    }
+
     // tearDown() is always invoked, even in case setUp() failed.
     if ($this->container) {
       $this->container->get('kernel')->shutdown();
@@ -508,6 +528,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    *   A list of modules to enable. Dependencies are not resolved; i.e.,
    *   multiple modules have to be specified with dependent modules first.
    *   The new modules are only added to the active module list and loaded.
+   *
+   * @throws \LogicException
+   *   If a module is already enabled or is not be enabled after enabling it.
    */
   protected function enableModules(array $modules) {
     // Set the list of modules in the extension handler.
@@ -519,7 +542,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $extensions = $active_storage->read('core.extension');
 
     foreach ($modules as $module) {
-      $this->assertFalse($module_handler->moduleExists($module), "$module is already enabled.");
+      if ($module_handler->moduleExists($module)) {
+        throw new \LogicException("$module module is already enabled.");
+      }
       $module_handler->addModule($module, drupal_get_path('module', $module));
       // Maintain the list of enabled modules in configuration.
       $extensions['module'][$module] = 0;
@@ -536,7 +561,9 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $module_handler = $this->container->get('module_handler');
     $module_handler->reload();
     foreach ($modules as $module) {
-      $this->assertTrue($module_handler->moduleExists($module), "$module was enabled.");
+      if (!$module_handler->moduleExists($module)) {
+        throw new \LogicException("$module module is not enabled after enabling it.");
+      }
     }
   }
 
