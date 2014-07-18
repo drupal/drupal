@@ -8,7 +8,7 @@ field.settings:
       type: integer
       label: 'Maximum number of field data records to purge'
 
-field.field.*.*:
+field.storage.*.*:
   type: config_entity
   label: 'Field'
   mapping:

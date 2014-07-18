@@ -67,7 +67,7 @@ class FieldInstanceEditForm extends FormBase {
 
     $bundle = $this->instance->bundle;
     $entity_type = $this->instance->entity_type;
-    $field = $this->instance->getFieldStorageDefinition();
+    $field_storage = $this->instance->getFieldStorageDefinition();
     $bundles = entity_get_bundles();
 
     $form_title = $this->t('%instance settings for %bundle', array(
@@ -76,13 +76,13 @@ class FieldInstanceEditForm extends FormBase {
     ));
     $form['#title'] = $form_title;
 
-    $form['#field'] = $field;
+    $form['#field'] = $field_storage;
     // Create an arbitrary entity object (used by the 'default value' widget).
     $ids = (object) array('entity_type' => $this->instance->entity_type, 'bundle' => $this->instance->bundle, 'entity_id' => NULL);
     $form['#entity'] = _field_create_entity_from_ids($ids);
     $items = $form['#entity']->get($this->instance->getName());
 
-    if (!empty($field->locked)) {
+    if (!empty($field_storage->locked)) {
       $form['locked'] = array(
         '#markup' => $this->t('The field %field is locked and cannot be edited.', array('%field' => $this->instance->getLabel())),
       );
@@ -112,7 +112,7 @@ class FieldInstanceEditForm extends FormBase {
     $form['instance']['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#default_value' => $this->instance->getLabel() ?: $field->getName(),
+      '#default_value' => $this->instance->getLabel() ?: $field_storage->getName(),
       '#required' => TRUE,
       '#weight' => -20,
     );

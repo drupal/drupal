@@ -35,7 +35,7 @@ class LegacyTest extends TaxonomyTestBase {
     $vocabulary->save();
     $field_name = 'field_' . $vocabulary->id();
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',

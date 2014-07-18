@@ -24,16 +24,16 @@ class OptionsWidgetsTest extends FieldTestBase {
   public static $modules = array('node', 'options', 'entity_test', 'options_test', 'taxonomy', 'field_ui');
 
   /**
-   * A field with cardinality 1 to use in this test class.
+   * A field storage with cardinality 1 to use in this test class.
    *
-   * @var \Drupal\field\Entity\FieldConfig
+   * @var \Drupal\field\Entity\FieldStorageConfig
    */
   protected $card_1;
 
   /**
-   * A field with cardinality 2 to use in this test class.
+   * A field storage with cardinality 2 to use in this test class.
    *
-   * @var \Drupal\field\Entity\FieldConfig
+   * @var \Drupal\field\Entity\FieldStorageConfig
    */
   protected $card_2;
 
@@ -48,8 +48,8 @@ class OptionsWidgetsTest extends FieldTestBase {
   function setUp() {
     parent::setUp();
 
-    // Field with cardinality 1.
-    $this->card_1 = entity_create('field_config', array(
+    // Field storage with cardinality 1.
+    $this->card_1 = entity_create('field_storage_config', array(
       'name' => 'card_1',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
@@ -68,8 +68,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     ));
     $this->card_1->save();
 
-    // Field with cardinality 2.
-    $this->card_2 = entity_create('field_config', array(
+    // Field storage with cardinality 2.
+    $this->card_2 = entity_create('field_storage_config', array(
       'name' => 'card_2',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
@@ -97,7 +97,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testRadioButtons() {
     // Create an instance of the 'single value' field.
     $instance = entity_create('field_instance_config', array(
-      'field' => $this->card_1,
+      'field_storage' => $this->card_1,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -154,7 +154,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
     $instance = entity_create('field_instance_config', array(
-      'field' => $this->card_2,
+      'field_storage' => $this->card_2,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -243,7 +243,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListSingle() {
     // Create an instance of the 'single value' field.
     $instance = entity_create('field_instance_config', array(
-      'field' => $this->card_1,
+      'field_storage' => $this->card_1,
       'bundle' => 'entity_test',
       'required' => TRUE,
     ));
@@ -343,7 +343,7 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
     $instance = entity_create('field_instance_config', array(
-      'field' => $this->card_2,
+      'field_storage' => $this->card_2,
       'bundle' => 'entity_test',
     ));
     $instance->save();

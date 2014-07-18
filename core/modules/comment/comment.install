@@ -6,14 +6,14 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Implements hook_uninstall().
  */
 function comment_uninstall() {
   // Remove the comment fields.
-  $fields = entity_load_multiple_by_properties('field_config', array('type' => 'comment'));
+  $fields = entity_load_multiple_by_properties('field_storage_config', array('type' => 'comment'));
   foreach ($fields as $field) {
     $field->delete();
   }
@@ -56,7 +56,7 @@ function comment_schema() {
         'type' => 'varchar',
         'not null' => TRUE,
         'default' => '',
-        'length' => FieldConfig::NAME_MAX_LENGTH,
+        'length' => FieldStorageConfig::NAME_MAX_LENGTH,
         'description' => 'The field_name of the field that was used to add this comment.',
       ),
       'cid' => array(

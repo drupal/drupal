@@ -226,9 +226,9 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
     // Get the machine names of the vocabularies we will search, keyed by the
     // vocabulary IDs.
     $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($element['#entity_type']);
-    $field = $field_storage_definitions[$element['#field_name']];
+    $field_storage = $field_storage_definitions[$element['#field_name']];
     $vocabularies = array();
-    $allowed_values = $field->getSetting('allowed_values');
+    $allowed_values = $field_storage->getSetting('allowed_values');
     if (!empty($allowed_values)) {
       foreach ($allowed_values as $tree) {
         if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {

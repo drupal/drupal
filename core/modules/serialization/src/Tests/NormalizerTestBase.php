@@ -27,7 +27,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
     $this->installConfig(array('field'));
 
     // Auto-create a field for testing.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'field_test_text',
       'entity_type' => 'entity_test_mulrev',
       'type' => 'text',

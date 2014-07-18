@@ -218,7 +218,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'entity_type' => 'node',
       'type' => 'text',
     );
-    entity_create('field_config', $field)->save();
+    entity_create('field_storage_config', $field)->save();
     $instance = array(
       'field_name' => 'article_text',
       'entity_type' => 'node',

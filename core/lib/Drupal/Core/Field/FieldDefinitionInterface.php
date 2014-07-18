@@ -27,20 +27,20 @@ use Drupal\Core\TypedData\ListDataDefinitionInterface;
  * It is up to the class implementing this interface to manage where the
  * information comes from. For example, field.module provides an implementation
  * based on two levels of configuration. It allows the site administrator to add
- * custom fields to any entity type and bundle via the "field_config" and
- * "field_instance_config" configuration entities. The former for storing
+ * custom fields to any entity type and bundle via the "field_storage_config"
+ * and "field_instance_config" configuration entities. The former for storing
  * configuration that is independent of which entity type and bundle the field
  * is added to, and the latter for storing configuration that is specific to the
  * entity type and bundle. The class that implements "field_instance_config"
  * configuration entities also implements this interface, returning information
- * from either itself, or from the corresponding "field_config" configuration,
- * as appropriate.
+ * from either itself, or from the corresponding "field_storage_config"
+ * configuration, as appropriate.
  *
  * However, entity base fields, such as $node->title, are not managed by
- * field.module and its "field_config"/"field_instance_config" configuration
- * entities. Therefore, their definitions are provided by different objects
- * based on the class \Drupal\Core\Field\FieldDefinition, which implements this
- * interface as well.
+ * field.module and its "field_storage_config"/"field_instance_config"
+ * configuration entities. Therefore, their definitions are provided by
+ * different objects based on the class \Drupal\Core\Field\FieldDefinition,
+ * which implements this interface as well.
  *
  * Field definitions may fully define a concrete data object (e.g.,
  * $node_1->body), or may provide a best-guess definition for a data object that

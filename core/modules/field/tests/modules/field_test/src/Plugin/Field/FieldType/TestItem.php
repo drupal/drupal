@@ -29,9 +29,9 @@ class TestItem extends FieldItemBase {
    */
   public static function defaultSettings() {
     return array(
-      'test_field_setting' => 'dummy test string',
-      'changeable' => 'a changeable field setting',
-      'unchangeable' => 'an unchangeable field setting',
+      'test_field_storage_setting' => 'dummy test string',
+      'changeable' => 'a changeable field storage setting',
+      'unchangeable' => 'an unchangeable field storage setting',
     ) + parent::defaultSettings();
   }
 
@@ -77,12 +77,12 @@ class TestItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function settingsForm(array &$form, array &$form_state, $has_data) {
-    $form['test_field_setting'] = array(
+    $form['test_field_storage_setting'] = array(
       '#type' => 'textfield',
-      '#title' => t('Field test field setting'),
-      '#default_value' => $this->getSetting('test_field_setting'),
+      '#title' => t('Field test field storage setting'),
+      '#default_value' => $this->getSetting('test_field_storage_setting'),
       '#required' => FALSE,
-      '#description' => t('A dummy form element to simulate field setting.'),
+      '#description' => t('A dummy form element to simulate field storage setting.'),
     );
 
     return $form;

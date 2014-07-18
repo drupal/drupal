@@ -140,15 +140,15 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->enableModules(array('field_test'));
 
     $field_name = 'test_field';
-    // Create a field and an instance.
-    $field = entity_create('field_config', array(
+    // Create a field storage and an instance.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -161,7 +161,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
 
     // Check that providing no options results in default values being used.
     $display->setComponent($field_name);
-    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->type);
+    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->type);
     $default_formatter = $field_type_info['default_formatter'];
     $formatter_settings =  \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($default_formatter);
     $expected = array(
@@ -317,15 +317,15 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->enableModules(array('field_test'));
 
     $field_name = 'test_field';
-    // Create a field and an instance.
-    $field = entity_create('field_config', array(
+    // Create a field storage and an instance.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $instance->save();

@@ -30,8 +30,8 @@ class EntityResolverTest extends NormalizerTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Create the test field.
-    entity_create('field_config', array(
+    // Create the test field storage.
+    entity_create('field_storage_config', array(
       'settings' => array(
         'target_type' => 'entity_test_mulrev',
       ),

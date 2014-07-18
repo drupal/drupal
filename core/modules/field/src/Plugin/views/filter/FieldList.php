@@ -20,8 +20,8 @@ class FieldList extends ManyToOne {
 
   public function getValueOptions() {
     $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($this->definition['entity_type']);
-    $field = $field_storage_definitions[$this->definition['field_name']];
-    $this->value_options = list_allowed_values($field);
+    $field_storage = $field_storage_definitions[$this->definition['field_name']];
+    $this->value_options = list_allowed_values($field_storage);
   }
 
 }

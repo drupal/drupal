@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\quickedit\Access\EditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -70,24 +70,24 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->method('access')
       ->will($this->returnValue(FALSE));
 
-    $field_with_access = $this->getMockBuilder('Drupal\field\Entity\FieldConfig')
+    $field_storage_with_access = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
       ->disableOriginalConstructor()
       ->getMock();
-    $field_with_access->expects($this->any())
+    $field_storage_with_access->expects($this->any())
       ->method('access')
       ->will($this->returnValue(TRUE));
-    $field_without_access = $this->getMockBuilder('Drupal\field\Entity\FieldConfig')
+    $field_storage_without_access = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
       ->disableOriginalConstructor()
       ->getMock();
-    $field_without_access->expects($this->any())
+    $field_storage_without_access->expects($this->any())
       ->method('access')
       ->will($this->returnValue(FALSE));
 
     $data = array();
-    $data[] = array($editable_entity, $field_with_access, AccessCheckInterface::ALLOW);
-    $data[] = array($non_editable_entity, $field_with_access, AccessCheckInterface::DENY);
-    $data[] = array($editable_entity, $field_without_access, AccessCheckInterface::DENY);
-    $data[] = array($non_editable_entity, $field_without_access, AccessCheckInterface::DENY);
+    $data[] = array($editable_entity, $field_storage_with_access, AccessCheckInterface::ALLOW);
+    $data[] = array($non_editable_entity, $field_storage_with_access, AccessCheckInterface::DENY);
+    $data[] = array($editable_entity, $field_storage_without_access, AccessCheckInterface::DENY);
+    $data[] = array($non_editable_entity, $field_storage_without_access, AccessCheckInterface::DENY);
 
     return $data;
   }
@@ -97,14 +97,14 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   A mocked entity.
-   * @param \Drupal\field\FieldConfigInterface $field
-   *   A mocked field.
+   * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+   *   A mocked field storage.
    * @param bool|null $expected_result
    *   The expected result of the access call.
    *
    * @dataProvider providerTestAccess
    */
-  public function testAccess(EntityInterface $entity, FieldConfigInterface $field = NULL, $expected_result) {
+  public function testAccess(EntityInterface $entity, FieldStorageConfigInterface $field_storage = NULL, $expected_result) {
     $request = new Request();
 
     $field_name = 'valid';
@@ -112,7 +112,7 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $entity_with_field->expects($this->any())
       ->method('get')
       ->with($field_name)
-      ->will($this->returnValue($field));
+      ->will($this->returnValue($field_storage));
     $entity_with_field->expects($this->once())
       ->method('hasTranslation')
       ->with(LanguageInterface::LANGCODE_NOT_SPECIFIED)

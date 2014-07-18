@@ -89,7 +89,7 @@ function content_translation_install() {
   module_set_weight('content_translation', 10);
   \Drupal::service('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_CONTENT, array(LanguageNegotiationUrl::METHOD_ID => 0));
 
-  $config_names = \Drupal::configFactory()->listAll('field.field.');
+  $config_names = \Drupal::configFactory()->listAll(\Drupal::entityManager()->getDefinition('field_storage_config')->getConfigPrefix() . '.');
   foreach ($config_names as $name) {
     \Drupal::config($name)
       ->set('settings.translation_sync', FALSE)
@@ -123,7 +123,7 @@ function content_translation_enable() {
  * Implements hook_uninstall().
  */
 function content_translation_uninstall() {
-  $config_names = \Drupal::configFactory()->listAll('field.field.');
+  $config_names = \Drupal::configFactory()->listAll(\Drupal::entityManager()->getDefinition('field_storage_config')->getConfigPrefix() . '.');
   foreach ($config_names as $name) {
     \Drupal::config($name)
       ->clear('settings.translation_sync')

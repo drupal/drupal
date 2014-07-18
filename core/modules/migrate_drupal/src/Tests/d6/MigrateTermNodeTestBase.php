@@ -31,7 +31,7 @@ abstract class MigrateTermNodeTestBase extends MigrateDrupalTestBase {
     $node_type = entity_create('node_type', array('type' => 'story'));
     $node_type->save();
     foreach (array('vocabulary_1_i_0_', 'vocabulary_2_i_1_', 'vocabulary_3_i_2_') as $name) {
-      entity_create('field_config', array(
+      entity_create('field_storage_config', array(
         'name' => $name,
         'entity_type' => 'node',
         'type' => 'taxonomy_term_reference',

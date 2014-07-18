@@ -111,7 +111,7 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
         }
       }
 
-      $fields = \Drupal::entityManager()->getStorage('field_config')->loadMultiple($field_ids);
+      $fields = \Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple($field_ids);
 
       foreach ($fields as $field) {
         $update_field = FALSE;
@@ -160,7 +160,7 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
     }
     // Load all Taxonomy module fields and delete those which use only this
     // vocabulary.
-    $taxonomy_fields = entity_load_multiple_by_properties('field_config', array('module' => 'taxonomy'));
+    $taxonomy_fields = entity_load_multiple_by_properties('field_storage_config', array('module' => 'taxonomy'));
     foreach ($taxonomy_fields as $taxonomy_field) {
       $modified_field = FALSE;
       // Term reference fields may reference terms from more than one

@@ -9,10 +9,10 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 
 /**
  * @MigrateDestination(
- *   id = "entity:field_config"
+ *   id = "entity:field_storage_config"
  * )
  */
-class EntityFieldConfig extends EntityConfigBase {
+class EntityFieldStorageConfig extends EntityConfigBase {
 
   /**
    * {@inheritdoc}

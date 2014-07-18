@@ -49,16 +49,16 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
   public function testFieldComponent() {
     $this->enableModules(array('field_test'));
 
-    // Create a field and an instance.
+    // Create a field storage and an instance.
     $field_name = 'test_field';
-    $field = entity_create('field_config', array(
+    $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $instance->save();
@@ -71,7 +71,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
 
     // Check that providing no options results in default values being used.
     $form_display->setComponent($field_name);
-    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->type);
+    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_storage->type);
     $default_widget = $field_type_info['default_widget'];
     $widget_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($default_widget);
     $expected = array(
@@ -180,15 +180,15 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     $this->enableModules(array('field_sql_storage', 'field_test'));
 
     $field_name = 'test_field';
-    // Create a field and an instance.
-    $field = entity_create('field_config', array(
+    // Create a field storage and an instance.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'entity_test',
     ));
     $instance->save();

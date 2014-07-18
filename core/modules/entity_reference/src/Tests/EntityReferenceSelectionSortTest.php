@@ -31,7 +31,7 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
    */
   public function testSort() {
     // Add text field to entity, to sort by.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'field_text',
       'entity_type' => 'node',
       'type' => 'text',
@@ -48,8 +48,8 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
     ))->save();
 
 
-    // Create a field and instance.
-    $field = entity_create('field_config', array(
+    // Create a field storage and instance.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -59,9 +59,9 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
       'type' => 'entity_reference',
       'cardinality' => 1,
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
       'settings' => array(

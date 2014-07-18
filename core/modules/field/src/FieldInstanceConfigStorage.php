@@ -11,13 +11,11 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -124,11 +122,11 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
     // Merge deleted instances (stored in state) if needed.
     if ($include_deleted || !empty($conditions['deleted'])) {
       $deleted_instances = $this->state->get('field.instance.deleted') ?: array();
-      $deleted_fields = $this->state->get('field.field.deleted') ?: array();
+      $deleted_storages = $this->state->get('field.storage.deleted') ?: array();
       foreach ($deleted_instances as $id => $config) {
         // If the field itself is deleted, inject it directly in the instance.
-        if (isset($deleted_fields[$config['field_uuid']])) {
-          $config['field'] = $this->entityManager->getStorage('field_config')->create($deleted_fields[$config['field_uuid']]);
+        if (isset($deleted_storages[$config['field_storage_uuid']])) {
+          $config['field_storage'] = $this->entityManager->getStorage('field_storage_config')->create($deleted_storages[$config['field_storage_uuid']]);
         }
         $instances[$id] = $this->create($config);
       }
@@ -138,19 +136,19 @@ class FieldInstanceConfigStorage extends ConfigEntityStorage {
     $matching_instances = array();
     foreach ($instances as $instance) {
       // Some conditions are checked against the field.
-      $field = $instance->getFieldStorageDefinition();
+      $field_storage = $instance->getFieldStorageDefinition();
 
       // Only keep the instance if it matches all conditions.
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.
         switch ($key) {
           case 'field_name':
-            $checked_value = $field->name;
+            $checked_value = $field_storage->name;
             break;
 
           case 'field_id':
-          case 'field_uuid':
-            $checked_value = $field->uuid();
+          case 'field_storage_uuid':
+            $checked_value = $field_storage->uuid();
             break;
 
           case 'uuid';

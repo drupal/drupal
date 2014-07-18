@@ -50,7 +50,7 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
         'target_entity_type_id' => 'entity_test_string_id',
       ));
       $bundle->save();
-      $field = entity_create('field_config', array(
+      $field_storage = entity_create('field_storage_config', array(
         'name' => 'foo',
         'entity_type' => 'entity_test_string_id',
         'settings' => array(
@@ -58,7 +58,7 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
         ),
         'type' => 'comment',
       ));
-      $field->save();
+      $field_storage->save();
       $this->fail('Did not throw an exception as expected.');
     }
     catch (\UnexpectedValueException $e) {

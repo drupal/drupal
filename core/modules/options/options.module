@@ -6,11 +6,10 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
-use Drupal\field\FieldConfigInterface;
-use Drupal\field\FieldConfigUpdateForbiddenException;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Implements hook_help().
@@ -35,16 +34,16 @@ function options_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_config'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
  */
-function options_field_config_update(FieldConfigInterface $field) {
+function options_field_storage_config_update(FieldStorageConfigInterface $field_storage) {
   drupal_static_reset('options_allowed_values');
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
+ * Implements hook_ENTITY_TYPE_delete() for 'field_storage_config'.
  */
-function options_field_config_delete(FieldConfigInterface $field) {
+function options_field_storage_config_delete(FieldStorageConfigInterface $field_storage) {
   drupal_static_reset('options_allowed_values');
 }
 
@@ -92,16 +91,16 @@ function options_allowed_values(FieldDefinitionInterface $field_definition, Enti
 }
 
 /**
- * Implements hook_field_config_update_forbid().
+ * Implements hook_field_storage_config_update_forbid().
  */
-function options_field_config_update_forbid(FieldConfigInterface $field, FieldConfigInterface $prior_field) {
-  if ($field->module == 'options' && $field->hasData()) {
+function options_field_storage_config_update_forbid(FieldStorageConfigInterface $field_storage, FieldStorageConfigInterface $prior_field_storage) {
+  if ($field_storage->module == 'options' && $field_storage->hasData()) {
     // Forbid any update that removes allowed values with actual data.
-    $allowed_values = $field->getSetting('allowed_values');
-    $prior_allowed_values = $prior_field->getSetting('allowed_values');
+    $allowed_values = $field_storage->getSetting('allowed_values');
+    $prior_allowed_values = $prior_field_storage->getSetting('allowed_values');
     $lost_keys = array_diff(array_keys($prior_allowed_values), array_keys($allowed_values));
-    if (_options_values_in_use($field->entity_type, $field->getName(), $lost_keys)) {
-      throw new FieldStorageDefinitionUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field->getName())));
+    if (_options_values_in_use($field_storage->entity_type, $field_storage->getName(), $lost_keys)) {
+      throw new FieldStorageDefinitionUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field_storage->getName())));
     }
   }
 }

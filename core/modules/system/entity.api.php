@@ -132,7 +132,7 @@ use Drupal\Core\Render\Element;
  *
  * Some specific entity types invoke hooks during preSave() or postSave()
  * operations. Examples:
- * - Field configuration preSave(): hook_field_config_update_forbid()
+ * - Field configuration preSave(): hook_field_storage_config_update_forbid()
  * - Node postSave(): hook_node_access_records() and
  *   hook_node_access_records_alter()
  * - Config entities that are acting as entity bundles, in postSave():
@@ -1465,15 +1465,15 @@ function hook_entity_field_storage_info(\Drupal\Core\Entity\EntityTypeInterface 
   if ($entity_type->isFieldable()) {
     // Query by filtering on the ID as this is more efficient than filtering
     // on the entity_type property directly.
-    $ids = \Drupal::entityQuery('field_config')
+    $ids = \Drupal::entityQuery('field_storage_config')
       ->condition('id', $entity_type->id() . '.', 'STARTS_WITH')
       ->execute();
 
     // Fetch all fields and key them by field name.
-    $field_configs = entity_load_multiple('field_config', $ids);
+    $field_storages = entity_load_multiple('field_storage_config', $ids);
     $result = array();
-    foreach ($field_configs as $field_config) {
-      $result[$field_config->getName()] = $field_config;
+    foreach ($field_storages as $field_storage) {
+      $result[$field_storage->getName()] = $field_storage;
     }
     return $result;
   }

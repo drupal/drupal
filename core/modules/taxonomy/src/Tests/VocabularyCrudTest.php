@@ -141,7 +141,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyChangeMachineName() {
     // Add a field instance to the vocabulary.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'field_test',
       'entity_type' => 'taxonomy_term',
       'type' => 'test_field',
@@ -173,21 +173,21 @@ class VocabularyCrudTest extends TaxonomyTestBase {
   function testUninstallReinstall() {
     // Fields and field instances attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
-    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
-    $this->field_definition = array(
-      'name' => $this->field_name,
+    $field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $storage_definition = array(
+      'name' => $field_name,
       'entity_type' => 'taxonomy_term',
       'type' => 'text',
       'cardinality' => 4
     );
-    entity_create('field_config', $this->field_definition)->save();
-    $this->instance_definition = array(
-      'field_name' => $this->field_name,
+    entity_create('field_storage_config', $storage_definition)->save();
+    $instance_definition = array(
+      'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
       'label' => $this->randomName() . '_label',
     );
-    entity_create('field_instance_config', $this->instance_definition)->save();
+    entity_create('field_instance_config', $instance_definition)->save();
 
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     $this->container->get('module_handler')->uninstall(array('taxonomy'));
@@ -199,7 +199,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     // an instance of this field on the same bundle name should be successful.
     $this->vocabulary->enforceIsNew();
     $this->vocabulary->save();
-    entity_create('field_config', $this->field_definition)->save();
-    entity_create('field_instance_config', $this->instance_definition)->save();
+    entity_create('field_storage_config', $storage_definition)->save();
+    entity_create('field_instance_config', $instance_definition)->save();
   }
 }

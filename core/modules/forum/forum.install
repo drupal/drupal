@@ -6,7 +6,7 @@
  */
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Implements hook_install().
@@ -23,8 +23,8 @@ function forum_install() {
     // Create the 'taxonomy_forums' field if it doesn't already exist. If forum
     // is being enabled at the same time as taxonomy after both modules have been
     // enabled, the field might exist but still be marked inactive.
-    if (!FieldConfig::loadByName('node', 'taxonomy_forums')) {
-      entity_create('field_config', array(
+    if (!FieldStorageConfig::loadByName('node', 'taxonomy_forums')) {
+      entity_create('field_storage_config', array(
         'name' => 'taxonomy_forums',
         'entity_type' => 'node',
         'type' => 'taxonomy_term_reference',
@@ -80,12 +80,12 @@ function forum_install() {
         ->save();
     }
     // Add the comment field to the forum node type.
-    $fields = entity_load_multiple_by_properties('field_config', array(
+    $field_storages = entity_load_multiple_by_properties('field_storage_config', array(
       'type' => 'comment',
       'name' => 'comment_forum',
       'include_deleted' => FALSE,
     ));
-    if (empty($fields)) {
+    if (empty($field_storages)) {
       Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum', CommentItemInterface::OPEN, 'comment_forum');
     }
   }
@@ -95,16 +95,16 @@ function forum_install() {
  * Implements hook_uninstall().
  */
 function forum_uninstall() {
-  if ($field = FieldConfig::loadByName('node', 'taxonomy_forums')) {
-    $field->delete();
+  if ($field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums')) {
+    $field_storage->delete();
   }
 
-  if ($field = FieldConfig::loadByName('node', 'comment_forum')) {
-    $field->delete();
+  if ($field_storage = FieldStorageConfig::loadByName('node', 'comment_forum')) {
+    $field_storage->delete();
   }
 
-  if ($field = FieldConfig::loadByName('taxonomy_term', 'forum_container')) {
-    $field->delete();
+  if ($field_storage = FieldStorageConfig::loadByName('taxonomy_term', 'forum_container')) {
+    $field_storage->delete();
   }
 
   // Purge field data now to allow taxonomy and options module to be uninstalled

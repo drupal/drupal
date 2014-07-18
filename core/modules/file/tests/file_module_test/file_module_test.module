@@ -7,15 +7,15 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\Entity\File;
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Implements hook_file_download_access().
  */
-function file_module_test_file_download_access(FieldConfigInterface $field, EntityInterface $entity, File $file) {
+function file_module_test_file_download_access(FieldStorageConfigInterface $field_storage, EntityInterface $entity, File $file) {
   $field_definitions = \Drupal::entityManager()->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
   // Allow the file to be downloaded only if the given arguments are correct.
-  if (empty($field_definitions[$field->getName()])) {
+  if (empty($field_definitions[$field_storage->getName()])) {
     return FALSE;
   }
 }

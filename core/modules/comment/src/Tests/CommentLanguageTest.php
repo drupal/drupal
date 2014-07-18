@@ -9,7 +9,7 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -70,10 +70,10 @@ class CommentLanguageTest extends WebTestBase {
     $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // Make comment body translatable.
-    $field = FieldConfig::loadByName('comment', 'comment_body');
-    $field->translatable = TRUE;
-    $field->save();
-    $this->assertTrue($field->isTranslatable(), 'Comment body is translatable.');
+    $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
+    $field_storage->translatable = TRUE;
+    $field_storage->save();
+    $this->assertTrue($field_storage->isTranslatable(), 'Comment body is translatable.');
   }
 
   /**

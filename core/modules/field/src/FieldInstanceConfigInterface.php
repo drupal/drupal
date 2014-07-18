@@ -18,8 +18,8 @@ interface FieldInstanceConfigInterface extends ConfigEntityInterface, FieldDefin
   /**
    * Returns the field entity for this instance.
    *
-   * @return \Drupal\field\FieldConfigInterface
-   *   The field entity for this instance.
+   * @return \Drupal\field\FieldStorageConfigInterface
+   *   The field storage entity for this instance.
    */
   public function getFieldStorageDefinition();
 

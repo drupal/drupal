@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
@@ -56,9 +56,9 @@ class NodeFieldMultilingualTest extends WebTestBase {
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Make node body translatable.
-    $field = FieldConfig::loadByName('node', 'body');
-    $field->translatable = TRUE;
-    $field->save();
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    $field_storage->translatable = TRUE;
+    $field_storage->save();
   }
 
   /**

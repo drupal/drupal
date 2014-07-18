@@ -16,7 +16,7 @@ use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -357,19 +357,19 @@ function node_type_load($name) {
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
-  $field = FieldConfig::loadByName('node', 'body');
+  $field_storage = FieldStorageConfig::loadByName('node', 'body');
   $instance = FieldInstanceConfig::loadByName('node', $type->id(), 'body');
-  if (empty($field)) {
-    $field = entity_create('field_config', array(
+  if (empty($field_storage)) {
+    $field_storage = entity_create('field_storage_config', array(
       'name' => 'body',
       'entity_type' => 'node',
       'type' => 'text_with_summary',
     ));
-    $field->save();
+    $field_storage->save();
   }
   if (empty($instance)) {
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => $type->id(),
       'label' => $label,
       'settings' => array('display_summary' => TRUE),

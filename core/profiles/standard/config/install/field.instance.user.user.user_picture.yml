@@ -28,4 +28,4 @@ settings:
 field_type: image
 dependencies:
   entity:
-    - field.field.user.user_picture
+    - field.storage.user.user_picture

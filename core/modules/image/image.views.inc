@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Implements hook_field_views_data().
@@ -16,15 +16,15 @@ use Drupal\field\FieldConfigInterface;
  *
  * @see field_views_field_default_views_data()
  */
-function image_field_views_data(FieldConfigInterface $field) {
-  $data = field_views_field_default_views_data($field);
+function image_field_views_data(FieldStorageConfigInterface $field_storage) {
+  $data = field_views_field_default_views_data($field_storage);
   foreach ($data as $table_name => $table_data) {
     // Add the relationship only on the target_id field.
-    $data[$table_name][$field->getName() . '_target_id']['relationship'] = array(
+    $data[$table_name][$field_storage->getName() . '_target_id']['relationship'] = array(
       'id' => 'standard',
       'base' => 'file_managed',
       'base field' => 'target_id',
-      'label' => t('image from !field_name', array('!field_name' => $field->getName())),
+      'label' => t('image from !field_name', array('!field_name' => $field_storage->getName())),
     );
   }
 
@@ -36,9 +36,9 @@ function image_field_views_data(FieldConfigInterface $field) {
  *
  * Views integration to provide reverse relationships on image fields.
  */
-function image_field_views_data_views_data_alter(array &$data, FieldConfigInterface $field) {
-  $entity_type_id = $field->entity_type;
-  $field_name = $field->getName();
+function image_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
+  $entity_type_id = $field_storage->entity_type;
+  $field_name = $field_storage->getName();
   $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
 
@@ -50,7 +50,7 @@ function image_field_views_data_views_data_alter(array &$data, FieldConfigInterf
     'id' => 'entity_reverse',
     'field_name' => $field_name,
     'entity_type' => $entity_type_id,
-    'field table' => ContentEntityDatabaseStorage::_fieldTableName($field),
+    'field table' => ContentEntityDatabaseStorage::_fieldTableName($field_storage),
     'field field' => $field_name . '_target_id',
     'base' => $entity_type->getBaseTable(),
     'base field' => $entity_type->getKey('id'),

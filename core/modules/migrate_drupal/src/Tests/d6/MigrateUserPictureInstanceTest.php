@@ -36,7 +36,7 @@ class MigrateUserPictureInstanceTest extends MigrateDrupalTestBase {
       ),
     );
     $this->prepareIdMappings($id_mappings);
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'entity_type' => 'user',
       'name' => 'user_picture',
       'type' => 'image',

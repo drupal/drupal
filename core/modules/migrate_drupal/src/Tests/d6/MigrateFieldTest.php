@@ -44,32 +44,32 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
    */
   public function testFields() {
     // Text field.
-    $field = entity_load('field_config', 'node.field_test');
+    /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
+    $field_storage = entity_load('field_storage_config', 'node.field_test');
     $expected = array('max_length' => 255);
-    $this->assertEqual($field->type, "text", "Field type is text.");
-    $this->assertEqual($field->status(), TRUE, "Status is TRUE");
-    $this->assertEqual($field->settings, $expected, "Field type text settings are correct");
+    $this->assertEqual($field_storage->type, "text", "Field type is text.");
+    $this->assertEqual($field_storage->status(), TRUE, "Status is TRUE");
+    $this->assertEqual($field_storage->settings, $expected, "Field type text settings are correct");
 
     // Integer field.
-    $field = entity_load('field_config', 'node.field_test_two');
-    $this->assertEqual($field->type, "integer", "Field type is integer.");
+    $field_storage = entity_load('field_storage_config', 'node.field_test_two');
+    $this->assertEqual($field_storage->type, "integer", "Field type is integer.");
 
     // Float field.
-    $field = entity_load('field_config', 'node.field_test_three');
-    $this->assertEqual($field->type, "decimal", "Field type is decimal.");
+    $field_storage = entity_load('field_storage_config', 'node.field_test_three');
+    $this->assertEqual($field_storage->type, "decimal", "Field type is decimal.");
 
     // Link field.
-    $field = entity_load('field_config', 'node.field_test_link');
-    $this->assertEqual($field->type, "link", "Field type is link.");
+    $field_storage = entity_load('field_storage_config', 'node.field_test_link');
+    $this->assertEqual($field_storage->type, "link", "Field type is link.");
 
     // File field.
-    $field = entity_load('field_config', 'node.field_test_filefield');
-    $this->assertEqual($field->type, "file", "Field type is file.");
+    $field_storage = entity_load('field_storage_config', 'node.field_test_filefield');
+    $this->assertEqual($field_storage->type, "file", "Field type is file.");
 
-    /** @var \Drupal\field\Entity\FieldConfig $field */
-    $field = entity_load('field_config', 'node.field_test_imagefield');
-    $this->assertEqual($field->type, "image", "Field type is image.");
-    $settings = $field->getSettings();
+    $field_storage = entity_load('field_storage_config', 'node.field_test_imagefield');
+    $this->assertEqual($field_storage->type, "image", "Field type is image.");
+    $settings = $field_storage->getSettings();
     $this->assertEqual($settings['column_groups']['alt']['label'], 'Test alt');
     $this->assertEqual($settings['column_groups']['title']['label'], 'Test title');
     $this->assertEqual($settings['target_type'], 'file');
@@ -78,13 +78,13 @@ class MigrateFieldTest extends MigrateDrupalTestBase {
     $this->assertEqual(array_filter($settings['default_image']), array());
 
     // Phone field.
-    $field = entity_load('field_config', 'node.field_test_phone');
-    $this->assertEqual($field->type, "telephone", "Field type is telephone.");
+    $field_storage = entity_load('field_storage_config', 'node.field_test_phone');
+    $this->assertEqual($field_storage->type, "telephone", "Field type is telephone.");
 
     // Date field.
-    $field = entity_load('field_config', 'node.field_test_datetime');
-    $this->assertEqual($field->type, "datetime", "Field type is datetime.");
-    $this->assertEqual($field->status(), FALSE, "Status is FALSE");
+    $field_storage = entity_load('field_storage_config', 'node.field_test_datetime');
+    $this->assertEqual($field_storage->type, "datetime", "Field type is datetime.");
+    $this->assertEqual($field_storage->status(), FALSE, "Status is FALSE");
   }
 
 }

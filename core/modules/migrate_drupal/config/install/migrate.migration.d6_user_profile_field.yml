@@ -31,4 +31,4 @@ process:
     map:
       list: -1
 destination:
-  plugin: entity:field_config
+  plugin: entity:field_storage_config

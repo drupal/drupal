@@ -8,7 +8,7 @@
 namespace Drupal\entity_reference\Tests\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewUnitTestBase;
@@ -53,7 +53,7 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
 
     ViewTestData::createTestViews(get_class($this), array('entity_reference_test_views'));
 
-    $field = FieldConfig::create(array(
+    $field_storage = FieldStorageConfig::create(array(
       'settings' => array(
         'target_type' => 'entity_test',
       ),
@@ -62,7 +62,7 @@ class EntityReferenceRelationshipTest extends ViewUnitTestBase {
       'type' => 'entity_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ));
-    $field->save();
+    $field_storage->save();
 
     $instance = FieldInstanceConfig::create(array(
       'entity_type' => 'entity_test',

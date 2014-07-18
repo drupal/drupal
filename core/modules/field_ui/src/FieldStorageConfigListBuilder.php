@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\FieldConfigListBuilder.
+ * Contains \Drupal\field_ui\FieldStorageConfigListBuilder.
  */
 
 namespace Drupal\field_ui;
@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\field\Entity\Field
  * @see field_ui_entity_info()
  */
-class FieldConfigListBuilder extends ConfigEntityListBuilder {
+class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
 
   /**
    * An array of information about field types.
@@ -52,7 +52,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
   protected $fieldTypeManager;
 
   /**
-   * Constructs a new FieldConfigListBuilder object.
+   * Constructs a new FieldStorageConfigListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.

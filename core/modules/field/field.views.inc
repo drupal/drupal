@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
 
 /**
@@ -21,7 +21,7 @@ function field_views_data() {
   $data = array();
   $module_handler = \Drupal::moduleHandler();
 
-  foreach (\Drupal::entityManager()->getStorage('field_config')->loadMultiple() as $field) {
+  foreach (\Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple() as $field) {
     if (_field_views_is_sql_entity_type($field)) {
       $result = (array) $module_handler->invoke($field->module, 'field_views_data', array($field));
       if (empty($result)) {
@@ -47,7 +47,7 @@ function field_views_data() {
  * in field_views_data.
  */
 function field_views_data_alter(&$data) {
-  foreach (\Drupal::entityManager()->getStorage('field_config')->loadMultiple() as $field) {
+  foreach (\Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple() as $field) {
     if (_field_views_is_sql_entity_type($field)) {
       $function = $field->module . '_field_views_data_views_data_alter';
       if (function_exists($function)) {
@@ -60,15 +60,15 @@ function field_views_data_alter(&$data) {
 /**
  * Determines whether the entity type the field appears in is SQL based.
  *
- * @param \Drupal\field\FieldConfigInterface $field
- *   The field definition.
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *   The field storage definition.
  *
  * @return bool
  *   True if the entity type uses ContentEntityDatabaseStorage.
  */
-function _field_views_is_sql_entity_type(FieldConfigInterface $field) {
+function _field_views_is_sql_entity_type(FieldStorageConfigInterface $field_storage) {
   $entity_manager = \Drupal::entityManager();
-  return $entity_manager->hasDefinition($field->entity_type) && $entity_manager->getStorage($field->entity_type) instanceof ContentEntityDatabaseStorage;
+  return $entity_manager->hasDefinition($field_storage->entity_type) && $entity_manager->getStorage($field_storage->entity_type) instanceof ContentEntityDatabaseStorage;
 }
 
 /**
@@ -103,30 +103,30 @@ function field_views_field_label($entity_type, $field_name) {
 /**
  * Default views data implementation for a field.
  *
- * @param \Drupal\field\FieldConfigInterface $field
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
  *   The field definition.
  *
  * @return array
  *   The default views data for the field.
  */
-function field_views_field_default_views_data(FieldConfigInterface $field) {
+function field_views_field_default_views_data(FieldStorageConfigInterface $field_storage) {
   $data = array();
 
   // Check the field type is available.
-  if (!\Drupal::service('plugin.manager.field.field_type')->hasDefinition($field->getType())) {
+  if (!\Drupal::service('plugin.manager.field.field_type')->hasDefinition($field_storage->getType())) {
     return $data;
   }
   // Check the field has instances.
-  if (!$field->getBundles()) {
+  if (!$field_storage->getBundles()) {
     return $data;
   }
 
-  $field_name = $field->getName();
-  $field_columns = $field->getColumns();
+  $field_name = $field_storage->getName();
+  $field_columns = $field_storage->getColumns();
 
   // Grab information about the entity type tables.
   $entity_manager = \Drupal::entityManager();
-  $entity_type_id = $field->entity_type;
+  $entity_type_id = $field_storage->entity_type;
   $entity_type = $entity_manager->getDefinition($entity_type_id);
   if (!$entity_table = $entity_type->getBaseTable()) {
     return $data;
@@ -141,13 +141,13 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
   // Description of the field tables.
   $field_tables = array(
     EntityStorageInterface::FIELD_LOAD_CURRENT => array(
-      'table' => ContentEntityDatabaseStorage::_fieldTableName($field),
+      'table' => ContentEntityDatabaseStorage::_fieldTableName($field_storage),
       'alias' => "{$entity_type_id}__{$field_name}",
     ),
   );
   if ($supports_revisions) {
     $field_tables[EntityStorageInterface::FIELD_LOAD_REVISION] = array(
-      'table' => ContentEntityDatabaseStorage::_fieldRevisionTableName($field),
+      'table' => ContentEntityDatabaseStorage::_fieldRevisionTableName($field_storage),
       'alias' => "{$entity_type_id}_revision__{$field_name}",
     );
   }
@@ -174,11 +174,11 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
 
   $group_name = $entity_type->getLabel();
   // Get the list of bundles the field appears in.
-  $bundles_names = $field->getBundles();
+  $bundles_names = $field_storage->getBundles();
   // Build the list of additional fields to add to queries.
   $add_fields = array('delta', 'langcode', 'bundle');
   foreach (array_keys($field_columns) as $column) {
-    $add_fields[] = ContentEntityDatabaseStorage::_fieldColumnName($field, $column);
+    $add_fields[] = ContentEntityDatabaseStorage::_fieldColumnName($field_storage, $column);
   }
   // Determine the label to use for the field. We don't have a label available
   // at the field level, so we just go through all instances and take the one
@@ -302,10 +302,10 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
       else {
         $group = t('@group (historical data)', array('@group' => $group_name));
       }
-      $column_real_name = ContentEntityDatabaseStorage::_fieldColumnName($field, $column);
+      $column_real_name = ContentEntityDatabaseStorage::_fieldColumnName($field_storage, $column);
 
       // Load all the fields from the table by default.
-      $field_sql_schema = ContentEntityDatabaseStorage::_fieldSqlSchema($field);
+      $field_sql_schema = ContentEntityDatabaseStorage::_fieldSqlSchema($field_storage);
       $additional_fields = array_keys($field_sql_schema[$table]['fields']);
 
       $data[$table_alias][$column_real_name] = array(
@@ -370,7 +370,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
       }
 
       // Expose additional delta column for multiple value fields.
-      if ($field->isMultiple()) {
+      if ($field_storage->isMultiple()) {
         $title_delta = t('@label (!name:delta)', array('@label' => $label, '!name' => $field_name));
         $title_short_delta = t('@label:delta', array('@label' => $label));
 
@@ -412,7 +412,7 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
       }
 
       // Expose additional language column for translatable fields.
-      if ($field->isTranslatable()) {
+      if ($field_storage->isTranslatable()) {
         $title_language = t('@label (!name:language)', array('@label' => $label, '!name' => $field_name));
         $title_short_language = t('@label:language', array('@label' => $label));
 
@@ -461,15 +461,15 @@ function field_views_field_default_views_data(FieldConfigInterface $field) {
 /**
  * Have a different filter handler for lists. This should allow to select values of the list.
  */
-function list_field_views_data($field) {
-  $data = field_views_field_default_views_data($field);
+function list_field_views_data(FieldStorageConfigInterface $field_storage) {
+  $data = field_views_field_default_views_data($field_storage);
   foreach ($data as $table_name => $table_data) {
     foreach ($table_data as $field_name => $field_data) {
       if (isset($field_data['filter']) && $field_name != 'delta') {
         $data[$table_name][$field_name]['filter']['id'] = 'field_list';
       }
       if (isset($field_data['argument']) && $field_name != 'delta') {
-        if ($field->getType() == 'list_text') {
+        if ($field_storage->getType() == 'list_text') {
           $data[$table_name][$field_name]['argument']['id'] = 'field_list_string';
         }
         else {

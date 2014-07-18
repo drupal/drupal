@@ -39,21 +39,22 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
    */
   public function testUserProfileFields() {
     // Migrated a text field.
-    $field = entity_load('field_config', 'user.profile_color');
-    $this->assertEqual($field->type, 'text', 'Field type is text.');
-    $this->assertEqual($field->cardinality, 1, 'Text field has correct cardinality');
+    $field_storage = entity_load('field_storage_config', 'user.profile_color');
+    $this->assertEqual($field_storage->type, 'text', 'Field type is text.');
+    $this->assertEqual($field_storage->cardinality, 1, 'Text field has correct cardinality');
 
     // Migrated a textarea.
-    $field = entity_load('field_config', 'user.profile_biography');
-    $this->assertEqual($field->type, 'text_long', 'Field type is text_long.');
+    $field_storage = entity_load('field_storage_config', 'user.profile_biography');
+    $this->assertEqual($field_storage->type, 'text_long', 'Field type is text_long.');
 
     // Migrated checkbox field.
-    $field = entity_load('field_config', 'user.profile_sell_address');
-    $this->assertEqual($field->type, 'boolean', 'Field type is boolean.');
+    $field_storage = entity_load('field_storage_config', 'user.profile_sell_address');
+    $this->assertEqual($field_storage->type, 'boolean', 'Field type is boolean.');
 
     // Migrated selection field.
-    $field = entity_load('field_config', 'user.profile_sold_to');
-    $settings = $field->getSettings();
+    $field_storage = entity_load('field_storage_config', 'user.profile_sold_to');
+    $this->assertEqual($field_storage->type, 'list_text', 'Field type is list_text.');
+    $settings = $field_storage->getSettings();
     $this->assertEqual($settings['allowed_values'], array(
       'Pill spammers' => 'Pill spammers',
       'Spammers' => 'Spammers',
@@ -61,23 +62,23 @@ class MigrateUserProfileFieldTest extends MigrateDrupalTestBase {
       'Faithful servant' => 'Faithful servant',
       'Anonymous donor' => 'Anonymous donor',
     ));
-    $this->assertEqual($field->type, 'list_text', 'Field type is list_text.');
+    $this->assertEqual($field_storage->type, 'list_text', 'Field type is list_text.');
 
     // Migrated list field.
-    $field = entity_load('field_config', 'user.profile_bands');
-    $this->assertEqual($field->type, 'text', 'Field type is text.');
-    $this->assertEqual($field->cardinality, -1, 'List field has correct cardinality');
+    $field_storage = entity_load('field_storage_config', 'user.profile_bands');
+    $this->assertEqual($field_storage->type, 'text', 'Field type is text.');
+    $this->assertEqual($field_storage->cardinality, -1, 'List field has correct cardinality');
 
 /*
     // Migrated URL field.
-    $field = entity_load('field_config', 'user.profile_blog');
-    $this->assertEqual($field->type, 'link', 'Field type is link.');
+    $field_storage = entity_load('field_storage_config', 'user.profile_blog');
+    $this->assertEqual($field_storage->type, 'link', 'Field type is link.');
 */
 
     // Migrated date field.
-    $field = entity_load('field_config', 'user.profile_birthdate');
-    $this->assertEqual($field->type, 'datetime', 'Field type is datetime.');
-    $this->assertEqual($field->settings['datetime_type'], 'date');
+    $field_storage = entity_load('field_storage_config', 'user.profile_birthdate');
+    $this->assertEqual($field_storage->type, 'datetime', 'Field type is datetime.');
+    $this->assertEqual($field_storage->settings['datetime_type'], 'date');
   }
 
 }

@@ -11,7 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests load, save and delete for taxonomy terms.
@@ -27,7 +27,7 @@ class TermTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
 
     $field_name = 'taxonomy_' . $this->vocabulary->id();
-    $field = array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
@@ -40,8 +40,7 @@ class TermTest extends TaxonomyTestBase {
           ),
         ),
       ),
-    );
-    entity_create('field_config', $field)->save();
+    ))->save();
 
     $this->instance = entity_create('field_instance_config', array(
       'field_name' => $field_name,
@@ -232,7 +231,7 @@ class TermTest extends TaxonomyTestBase {
     $field_name = $this->randomName();
     $tag = $this->randomName();
     $message = t("Taxonomy field @field_name not found.", array('@field_name' => $field_name));
-    $this->assertFalse(FieldConfig::loadByName('node', $field_name), format_string('Field %field_name does not exist.', array('%field_name' => $field_name)));
+    $this->assertFalse(FieldStorageConfig::loadByName('node', $field_name), format_string('Field %field_name does not exist.', array('%field_name' => $field_name)));
     $this->drupalGet('taxonomy/autocomplete/node/' . $field_name, array('query' => array('q' => $tag)));
     $this->assertRaw($message, 'Autocomplete returns correct error message when the taxonomy field does not exist.');
   }

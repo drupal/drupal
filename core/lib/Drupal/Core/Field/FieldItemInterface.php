@@ -234,8 +234,8 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Returns a form for the field-level settings.
    *
-   * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow administrators to
-   * configure field-level settings.
+   * Invoked from \Drupal\field_ui\Form\FieldStorageEditForm to allow
+   * administrators to configure field-level settings.
    *
    * Field storage might reject field definition changes that affect the field
    * storage schema if the field already has data. When the $has_data parameter

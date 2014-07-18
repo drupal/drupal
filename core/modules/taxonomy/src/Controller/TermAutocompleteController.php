@@ -105,7 +105,7 @@ class TermAutocompleteController implements ContainerInjectionInterface {
       // will display it as debugging information.
       return new Response(t('Taxonomy field @field_name not found.', array('@field_name' => $field_name)), 403);
     }
-    $field = $field_storage_definitions[$field_name];
+    $field_storage = $field_storage_definitions[$field_name];
 
     // The user enters a comma-separated list of tags. We only autocomplete the
     // last tag.
@@ -117,7 +117,7 @@ class TermAutocompleteController implements ContainerInjectionInterface {
 
       // Part of the criteria for the query come from the field's own settings.
       $vids = array();
-      foreach ($field->getSetting('allowed_values') as $tree) {
+      foreach ($field_storage->getSetting('allowed_values') as $tree) {
         $vids[] = $tree['vocabulary'];
       }
 

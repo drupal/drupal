@@ -6,7 +6,8 @@
  */
 
 namespace Drupal\taxonomy\Tests;
-use Drupal\field\Entity\FieldConfig;
+
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the creation of term fields.
@@ -14,6 +15,13 @@ use Drupal\field\Entity\FieldConfig;
  * @group taxonomy
  */
 class TermFieldTest extends TaxonomyTestBase {
+
+  /**
+   * The field storage to test against.
+   *
+   * @var \Drupal\field\FieldStorageConfigInterface
+   */
+  protected $field_storage;
 
   /**
    * Modules to enable.
@@ -37,9 +45,9 @@ class TermFieldTest extends TaxonomyTestBase {
     $this->drupalLogin($web_user);
     $this->vocabulary = $this->createVocabulary();
 
-    // Setup a field and instance.
+    // Setup a field.
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = entity_create('field_config', array(
+    $this->field_storage = entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
@@ -52,9 +60,9 @@ class TermFieldTest extends TaxonomyTestBase {
         ),
       )
     ));
-    $this->field->save();
+    $this->field_storage->save();
     entity_create('field_instance_config', array(
-      'field' => $this->field,
+      'field_storage' => $this->field_storage,
       'bundle' => 'entity_test',
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
@@ -143,7 +151,7 @@ class TermFieldTest extends TaxonomyTestBase {
   function testTaxonomyTermFieldChangeMachineName() {
     // Add several entries in the 'allowed_values' setting, to make sure that
     // they all get updated.
-    $this->field->settings['allowed_values'] = array(
+    $this->field_storage->settings['allowed_values'] = array(
       array(
         'vocabulary' => $this->vocabulary->id(),
         'parent' => '0',
@@ -157,15 +165,15 @@ class TermFieldTest extends TaxonomyTestBase {
         'parent' => '0',
       ),
     );
-    $this->field->save();
+    $this->field_storage->save();
     // Change the machine name.
     $new_name = drupal_strtolower($this->randomName());
     $this->vocabulary->vid = $new_name;
     $this->vocabulary->save();
 
     // Check that the field instance is still attached to the vocabulary.
-    $field = FieldConfig::loadByName('entity_test', $this->field_name);
-    $allowed_values = $field->getSetting('allowed_values');
+    $field_storage = FieldStorageConfig::loadByName('entity_test', $this->field_name);
+    $allowed_values = $field_storage->getSetting('allowed_values');
     $this->assertEqual($allowed_values[0]['vocabulary'], $new_name, 'Index 0: Machine name was updated correctly.');
     $this->assertEqual($allowed_values[1]['vocabulary'], $new_name, 'Index 1: Machine name was updated correctly.');
     $this->assertEqual($allowed_values[2]['vocabulary'], 'foo', 'Index 2: Machine name was left untouched.');

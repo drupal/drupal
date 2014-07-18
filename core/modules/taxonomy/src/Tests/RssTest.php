@@ -32,7 +32,7 @@ class RssTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
     $this->field_name = 'taxonomy_' . $this->vocabulary->id();
 
-    $this->field = entity_create('field_config', array(
+    $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
@@ -46,9 +46,9 @@ class RssTest extends TaxonomyTestBase {
         ),
       ),
     ));
-    $this->field->save();
+    $this->fieldStorage->save();
     entity_create('field_instance_config', array(
-      'field' => $this->field,
+      'field_storage' => $this->fieldStorage,
       'bundle' => 'article',
     ))->save();
     entity_get_form_display('node', 'article', 'default')

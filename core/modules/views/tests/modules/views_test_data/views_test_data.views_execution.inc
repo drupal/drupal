@@ -5,6 +5,7 @@
  * Provides views data and hooks for views_test_data module.
  */
 
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 
@@ -25,14 +26,14 @@ function views_test_data_views_form_substitutions(ViewExecutable $view) {
 /**
  * Implements hook_field_views_data().
  */
-function views_test_data_field_views_data($field) {
+function views_test_data_field_views_data(FieldStorageConfigInterface $field_storage) {
   \Drupal::state()->set('views_hook_test_field_views_data', TRUE);
 }
 
 /**
  * Implements hook_field_views_data_alter().
  */
-function views_test_data_field_views_data_alter(&$data, $field, $module) {
+function views_test_data_field_views_data_alter(&$data, FieldStorageConfigInterface $field_storage, $module) {
   \Drupal::state()->set('views_hook_test_field_views_data_alter', TRUE);
 }
 

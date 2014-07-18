@@ -10,8 +10,8 @@ namespace Drupal\field_ui\Tests;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests the Field UI "Manage fields" screen.
@@ -40,20 +40,18 @@ class ManageFieldsTest extends FieldUiTestBase {
     ));
     $vocabulary->save();
 
-    $field = array(
+    entity_create('field_storage_config', array(
       'name' => 'field_' . $vocabulary->id(),
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
-    );
-    entity_create('field_config', $field)->save();
+    ))->save();
 
-    $instance = array(
+    entity_create('field_instance_config', array(
       'field_name' => 'field_' . $vocabulary->id(),
       'entity_type' => 'node',
       'label' => 'Tags',
       'bundle' => 'article',
-    );
-    entity_create('field_instance_config', $instance)->save();
+    ))->save();
 
     entity_get_form_display('node', 'article', 'default')
       ->setComponent('field_' . $vocabulary->id())
@@ -107,7 +105,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $result = $this->xpath('//ul[@class = "dropbutton"]/li/a');
     $url = base_path() . "admin/structure/types/manage/$type/fields/node.$type.body";
     $this->assertIdentical($url, (string) $result[0]['href']);
-    $this->assertIdentical("$url/field", (string) $result[1]['href']);
+    $this->assertIdentical("$url/storage", (string) $result[1]['href']);
     $this->assertIdentical("$url/delete", (string) $result[3]['href']);
   }
 
@@ -132,12 +130,12 @@ class ManageFieldsTest extends FieldUiTestBase {
   function updateField() {
     $instance_id = 'node.' . $this->type . '.' . $this->field_name;
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id . '/field');
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id . '/storage');
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
     $edit = array(
-      'field[settings][test_field_setting]' => $string,
+      'field[settings][test_field_storage_setting]' => $string,
     );
     $this->drupalPostForm(NULL, $edit, t('Save field settings'));
 
@@ -182,7 +180,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    * numeric value. That is tested already in FormTest::testNumber().
    */
   function cardinalitySettings() {
-    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/field';
+    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/storage';
 
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to 'number'.
@@ -239,9 +237,9 @@ class ManageFieldsTest extends FieldUiTestBase {
    *   The entity type for the instance.
    */
   function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
-    // Assert field settings.
-    $field = FieldConfig::loadByName($entity_type, $field_name);
-    $this->assertTrue($field->getSetting('test_field_setting') == $string, 'Field settings were found.');
+    // Assert field storage settings.
+    $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
+    $this->assertTrue($field_storage->getSetting('test_field_storage_setting') == $string, 'Field storage settings were found.');
 
     // Assert instance settings.
     $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
@@ -284,7 +282,7 @@ class ManageFieldsTest extends FieldUiTestBase {
   function testDefaultValue() {
     // Create a test field and instance.
     $field_name = 'test';
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'test_field'
@@ -366,16 +364,16 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the field instance was deleted.
     $this->assertNull(FieldInstanceConfig::loadByName('node', $this->type, $this->field_name), 'Field instance was deleted.');
-    // Check that the field was not deleted
-    $this->assertNotNull(FieldConfig::loadByName('node', $this->field_name), 'Field was not deleted.');
+    // Check that the field storage was not deleted
+    $this->assertNotNull(FieldStorageConfig::loadByName('node', $this->field_name), 'Field storage was not deleted.');
 
     // Delete the second instance.
     $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$this->field_name", $this->field_label, $type_name2);
 
     // Check that the field instance was deleted.
     $this->assertNull(FieldInstanceConfig::loadByName('node', $type_name2, $this->field_name), 'Field instance was deleted.');
-    // Check that the field was deleted too.
-    $this->assertNull(FieldConfig::loadByName('node', $this->field_name), 'Field was deleted.');
+    // Check that the field storage was deleted too.
+    $this->assertNull(FieldStorageConfig::loadByName('node', $this->field_name), 'Field storage was deleted.');
   }
 
   /**
@@ -410,33 +408,34 @@ class ManageFieldsTest extends FieldUiTestBase {
   function testLockedField() {
     // Create a locked field and attach it to a bundle. We need to do this
     // programatically as there's no way to create a locked field through UI.
-    $field = entity_create('field_config', array(
-      'name' => strtolower($this->randomName(8)),
+    $field_name = strtolower($this->randomName(8));
+    $field_storage = entity_create('field_storage_config', array(
+      'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'test_field',
       'cardinality' => 1,
       'locked' => TRUE
     ));
-    $field->save();
+    $field_storage->save();
     entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => $this->type,
     ))->save();
     entity_get_form_display('node', $this->type, 'default')
-      ->setComponent($field->name, array(
+      ->setComponent($field_storage->name, array(
         'type' => 'test_field_widget',
       ))
       ->save();
 
     // Check that the links for edit and delete are not present.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
-    $locked = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->name));
+    $locked = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field_name));
     $this->assertTrue(in_array('Locked', $locked), 'Field is marked as Locked in the UI');
-    $edit_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->name));
+    $edit_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field_name));
     $this->assertFalse(in_array('edit', $edit_link), 'Edit option for locked field is not present the UI');
-    $delete_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->name));
+    $delete_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field_name));
     $this->assertFalse(in_array('delete', $delete_link), 'Delete option for locked field is not present the UI');
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $field->name . '/delete');
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $field_name . '/delete');
     $this->assertResponse(403);
   }
 
@@ -452,7 +451,7 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Create a field and an instance programmatically.
     $field_name = 'hidden_test_field';
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => $field_name,
@@ -540,8 +539,8 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the field instance was deleted.
     $this->assertNull(FieldInstanceConfig::loadByName('taxonomy_term', 'tags', $this->field_name), 'Field instance was deleted.');
-    // Check that the field was deleted too.
-    $this->assertNull(FieldConfig::loadByName('taxonomy_term', $this->field_name), 'Field was deleted.');
+    // Check that the field storage was deleted too.
+    $this->assertNull(FieldStorageConfig::loadByName('taxonomy_term', $this->field_name), 'Field storage was deleted.');
   }
 
   /**
@@ -549,7 +548,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function testHelpDescriptions() {
     // Create an image field
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'field_image',
       'entity_type' => 'node',
       'type' => 'image',

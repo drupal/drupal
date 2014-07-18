@@ -2,20 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\field\Tests\FieldConfigEntityUnitTest.
+ * Contains \Drupal\field\Tests\FieldStorageConfigEntityUnitTest.
  */
 
 namespace Drupal\field\Tests;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field\Entity\FieldConfig
+ * @coversDefaultClass \Drupal\field\Entity\FieldStorageConfig
+ *
  * @group field
  */
-class FieldConfigEntityUnitTest extends UnitTestCase {
+class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * The entity type used for testing.
@@ -62,9 +63,9 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    // Create a mock entity type for fieldConfig.
-    $fieldConfigentityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
-    $fieldConfigentityType->expects($this->any())
+    // Create a mock entity type for FieldStorageConfig.
+    $fieldStorageConfigentityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $fieldStorageConfigentityType->expects($this->any())
       ->method('getProvider')
       ->will($this->returnValue('field'));
 
@@ -77,25 +78,25 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
 
     // Get definition is called three times. Twice in
     // ConfigEntityBase::addDependency() to get the provider of the field config
-    // entity type and once in FieldConfig::calculateDependencies() to get the
-    // provider of the entity type that field is attached to.
+    // entity type and once in FieldStorageConfig::calculateDependencies() to
+    // get the provider of the entity type that field is attached to.
     $this->entityManager->expects($this->at(0))
       ->method('getDefinition')
-      ->with('fieldConfig')
-      ->will($this->returnValue($fieldConfigentityType));
+      ->with('field_storage_config')
+      ->will($this->returnValue($fieldStorageConfigentityType));
     $this->entityManager->expects($this->at(1))
       ->method('getDefinition')
       ->with($attached_entity_type_id)
       ->will($this->returnValue($attached_entity_type));
     $this->entityManager->expects($this->at(2))
       ->method('getDefinition')
-      ->with('fieldConfig')
-      ->will($this->returnValue($fieldConfigentityType));
+      ->with('field_storage_config')
+      ->will($this->returnValue($fieldStorageConfigentityType));
 
     $values = array('name' => 'test_field', 'type' => 'test_field_type', 'entity_type' => $attached_entity_type_id, 'module' => 'test_module');
-    $field = new FieldConfig($values, 'fieldConfig');
+    $field_storage = new FieldStorageConfig($values);
 
-    $dependencies = $field->calculateDependencies();
+    $dependencies = $field_storage->calculateDependencies();
     $this->assertContains('test_module', $dependencies['module']);
     $this->assertContains('entity_provider_module', $dependencies['module']);
   }

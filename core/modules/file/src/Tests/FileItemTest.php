@@ -39,7 +39,7 @@ class FileItemTest extends FieldUnitTestBase {
     $this->installEntitySchema('file');
     $this->installSchema('file', array('file_usage'));
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'file_test',
       'entity_type' => 'entity_test',
       'type' => 'file',

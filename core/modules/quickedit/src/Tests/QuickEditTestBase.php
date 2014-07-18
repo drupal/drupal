@@ -53,18 +53,18 @@ abstract class QuickEditTestBase extends DrupalUnitTestBase {
    *   The formatter settings.
    */
   public function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
-    $field = $field_name . '_field';
-    $this->$field = entity_create('field_config', array(
+    $field_storage = $field_name . '_field_storage';
+    $this->$field_storage = entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => $type,
       'cardinality' => $cardinality,
     ));
-    $this->$field->save();
+    $this->$field_storage->save();
 
     $instance = $field_name . '_instance';
     $this->$instance = entity_create('field_instance_config', array(
-      'field' => $this->$field,
+      'field_storage' => $this->$field_storage,
       'bundle' => 'entity_test',
       'label' => $label,
       'description' => $label,

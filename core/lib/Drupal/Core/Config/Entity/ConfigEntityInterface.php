@@ -85,12 +85,12 @@ interface ConfigEntityInterface extends EntityInterface {
    * because imported entities were already given the body field when they were
    * originally created, and the imported configuration includes all of their
    * currently-configured fields. On the other hand,
-   * \Drupal\field\Entity\FieldConfig::preSave() and the methods it calls make
-   * sure that the storage tables are created or updated for the field
-   * configuration entity, which is not a configuration change, and it must be
-   * done whether due to an import or not. So, the first method should check
-   * $entity->isSyncing() and skip executing if it returns TRUE, and the second
-   * should not perform this check.
+   * \Drupal\field\Entity\FieldStorageConfig::preSave() and the methods it calls
+   * make sure that the storage tables are created or updated for the field
+   * storage configuration entity, which is not a configuration change, and it
+   * must be done whether due to an import or not. So, the first method should
+   * check $entity->isSyncing() and skip executing if it returns TRUE, and the
+   * second should not perform this check.
    *
    * @return bool
    *   TRUE if the configuration entity is being created, updated, or deleted

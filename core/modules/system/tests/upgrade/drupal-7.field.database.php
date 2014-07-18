@@ -57,7 +57,7 @@ db_insert('variable')
 
 // Add a field shared across different entity types (instance on article nodes
 // and users).
-$field_id = db_insert('field_config')
+$field_id = db_insert('field_storage_config')
   ->fields(array(
     'field_name' => 'test_shared_field',
     'type' => 'text',
@@ -348,7 +348,7 @@ db_insert('field_revision_test_shared_field')
   ->execute();
 
 // Add a deleted field and instance.
-$field_id = db_insert('field_config')
+$field_id = db_insert('field_storage_config')
   ->fields(array(
     'field_name' => 'test_deleted_field',
     'type' => 'text',

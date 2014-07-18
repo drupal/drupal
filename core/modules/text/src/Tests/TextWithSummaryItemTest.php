@@ -26,11 +26,11 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
   public static $modules = array('filter');
 
   /**
-   * Field entity.
+   * Field storage entity.
    *
-   * @var \Drupal\field\Entity\FieldConfig.
+   * @var \Drupal\field\Entity\FieldStorageConfig.
    */
-  protected $field;
+  protected $fieldStorage;
 
   /**
    * Field instance.
@@ -103,7 +103,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
    */
   protected function createField($entity_type) {
     // Create a field .
-    $this->field = entity_create('field_config', array(
+    $this->fieldStorage = entity_create('field_storage_config', array(
       'name' => 'summary_field',
       'entity_type' => $entity_type,
       'type' => 'text_with_summary',
@@ -111,9 +111,9 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
         'max_length' => 10,
       )
     ));
-    $this->field->save();
+    $this->fieldStorage->save();
     $this->instance = entity_create('field_instance_config', array(
-      'field' => $this->field,
+      'field_storage' => $this->fieldStorage,
       'bundle' => $entity_type,
       'settings' => array(
         'text_processing' => 0,

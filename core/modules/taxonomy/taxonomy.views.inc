@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Implements hook_views_data().
@@ -388,19 +388,19 @@ function taxonomy_views_data_alter(&$data) {
  *
  * @see field_views_field_default_views_data()
  */
-function taxonomy_field_views_data(FieldConfigInterface $field) {
-  $data = field_views_field_default_views_data($field);
+function taxonomy_field_views_data(FieldStorageConfigInterface $field_storage) {
+  $data = field_views_field_default_views_data($field_storage);
   foreach ($data as $table_name => $table_data) {
     foreach ($table_data as $field_name => $field_data) {
       if (isset($field_data['filter']) && $field_name != 'delta') {
         $data[$table_name][$field_name]['filter']['id'] = 'taxonomy_index_tid';
-        $allowed_values = $field->getSetting('allowed_values');
+        $allowed_values = $field_storage->getSetting('allowed_values');
         $data[$table_name][$field_name]['filter']['vocabulary'] = $allowed_values[0]['vocabulary'];
       }
     }
 
     // Add the relationship only on the tid field.
-    $field_name = $field->getName();
+    $field_name = $field_storage->getName();
     $data[$table_name][$field_name . '_target_id']['relationship'] = array(
       'id' => 'standard',
       'base' => 'taxonomy_term_data',
@@ -418,9 +418,9 @@ function taxonomy_field_views_data(FieldConfigInterface $field) {
  *
  * Views integration to provide reverse relationships on term references.
  */
-function taxonomy_field_views_data_views_data_alter(array &$data, FieldConfigInterface $field) {
-  $field_name = $field->getName();
-  $entity_type_id = $field->entity_type;
+function taxonomy_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage) {
+  $field_name = $field_storage->getName();
+  $entity_type_id = $field_storage->entity_type;
   $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
 
@@ -432,7 +432,7 @@ function taxonomy_field_views_data_views_data_alter(array &$data, FieldConfigInt
     'id' => 'entity_reverse',
     'field_name' => $field_name,
     'entity_type' => $entity_type_id,
-    'field table' => ContentEntityDatabaseStorage::_fieldTableName($field),
+    'field table' => ContentEntityDatabaseStorage::_fieldTableName($field_storage),
     'field field' => $field_name . '_target_id',
     'base' => $entity_type->getBaseTable(),
     'base field' => $entity_type->getKey('id'),

@@ -55,8 +55,8 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    * Test the node-specific overrides of the entity handler.
    */
   public function testNodeHandler() {
-    // Create a field and instance.
-    $field = entity_create('field_config', array(
+    // Create a field storage and instance.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -67,9 +67,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'type' => 'entity_reference',
       'cardinality' => '1',
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'test_bundle',
       'settings' => array(
         'handler' => 'default',
@@ -198,8 +198,8 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    * Test the user-specific overrides of the entity handler.
    */
   public function testUserHandler() {
-    // Create a field and instance.
-    $field = entity_create('field_config', array(
+    // Create a field storage and instance.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -209,9 +209,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'type' => 'entity_reference',
       'cardinality' => '1',
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'test_bundle',
       'settings' => array(
         'handler' => 'default',
@@ -342,8 +342,8 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    * Test the comment-specific overrides of the entity handler.
    */
   public function testCommentHandler() {
-    // Create a field and instance.
-    $field = entity_create('field_config', array(
+    // Create a field storage and instance.
+    $field_storage = entity_create('field_storage_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -354,9 +354,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'type' => 'entity_reference',
       'cardinality' => '1',
     ));
-    $field->save();
+    $field_storage->save();
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'test_bundle',
       'settings' => array(
         'handler' => 'default',

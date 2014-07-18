@@ -49,7 +49,7 @@ abstract class MigrateUploadBase extends MigrateDrupalTestBase {
     $node_type->save();
 
     // Add a file field.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'upload',
       'entity_type' => 'node',
       'type' => 'file',

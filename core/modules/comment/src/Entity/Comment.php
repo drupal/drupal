@@ -13,7 +13,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\UserInterface;
 
 /**
@@ -302,7 +302,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['field_name'] = FieldDefinition::create('string')
       ->setLabel(t('Comment field name'))
       ->setDescription(t('The field name through which this comment was added.'))
-      ->setSetting('max_length', FieldConfig::NAME_MAX_LENGTH);
+      ->setSetting('max_length', FieldStorageConfig::NAME_MAX_LENGTH);
 
     return $fields;
   }
@@ -509,8 +509,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
    */
   public static function preCreate(EntityStorageInterface $storage, array &$values) {
     if (empty($values['comment_type']) && !empty($values['field_name']) && !empty($values['entity_type'])) {
-      $field = FieldConfig::loadByName($values['entity_type'], $values['field_name']);
-      $values['comment_type'] = $field->getSetting('comment_type');
+      $field_storage = FieldStorageConfig::loadByName($values['entity_type'], $values['field_name']);
+      $values['comment_type'] = $field_storage->getSetting('comment_type');
     }
   }
 

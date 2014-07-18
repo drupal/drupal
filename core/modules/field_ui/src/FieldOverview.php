@@ -15,7 +15,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldInstanceConfigInterface;
 
 /**
@@ -116,7 +116,7 @@ class FieldOverview extends OverviewBase {
 
     // Fields.
     foreach ($instances as $name => $instance) {
-      $field = $instance->getFieldStorageDefinition();
+      $field_storage = $instance->getFieldStorageDefinition();
       $route_parameters = array(
         $this->bundleEntityType => $this->bundle,
         'field_instance_config' => $instance->id(),
@@ -133,8 +133,8 @@ class FieldOverview extends OverviewBase {
         ),
         'type' => array(
           '#type' => 'link',
-          '#title' => $field_types[$field->getType()]['label'],
-          '#route_name' => 'field_ui.field_edit_' . $this->entity_type,
+          '#title' => $field_types[$field_storage->getType()]['label'],
+          '#route_name' => 'field_ui.storage_edit_' . $this->entity_type,
           '#route_parameters' => $route_parameters,
           '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
         ),
@@ -145,7 +145,7 @@ class FieldOverview extends OverviewBase {
         '#links' => $this->entityManager->getListBuilder('field_instance_config')->getOperations($instance),
       );
 
-      if (!empty($field->locked)) {
+      if (!empty($field_storage->locked)) {
         $table[$name]['operations'] = array('#markup' => $this->t('Locked'));
         $table[$name]['#attributes']['class'][] = 'menu-disabled';
       }
@@ -186,7 +186,7 @@ class FieldOverview extends OverviewBase {
           '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
           // Calculate characters depending on the length of the field prefix
           // setting. Maximum length is 32.
-          '#maxlength' => FieldConfig::NAME_MAX_LENGTH - strlen($field_prefix),
+          '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
           '#machine_name' => array(
             'source' => array('fields', $name, 'label'),
@@ -370,7 +370,7 @@ class FieldOverview extends OverviewBase {
     if (!empty($form_values['_add_new_field']['field_name'])) {
       $values = $form_values['_add_new_field'];
 
-      $field = array(
+      $field_storage = array(
         'name' => $values['field_name'],
         'entity_type' => $this->entity_type,
         'type' => $values['type'],
@@ -387,7 +387,7 @@ class FieldOverview extends OverviewBase {
 
       // Create the field and instance.
       try {
-        $this->entityManager->getStorage('field_config')->create($field)->save();
+        $this->entityManager->getStorage('field_storage_config')->create($field_storage)->save();
         $new_instance = $this->entityManager->getStorage('field_instance_config')->create($instance);
         $new_instance->save();
 
@@ -411,7 +411,7 @@ class FieldOverview extends OverviewBase {
           $this->bundleEntityType => $this->bundle,
           'field_instance_config' => $new_instance->id(),
         );
-        $destinations[] = array('route_name' => 'field_ui.field_edit_' . $this->entity_type, 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => 'field_ui.storage_edit_' . $this->entity_type, 'route_parameters' => $route_parameters);
         $destinations[] = array('route_name' => 'field_ui.instance_edit_' . $this->entity_type, 'route_parameters' => $route_parameters);
 
         // Store new field information for any additional submit handlers.
@@ -427,8 +427,8 @@ class FieldOverview extends OverviewBase {
     if (!empty($form_values['_add_existing_field']['field_name'])) {
       $values = $form_values['_add_existing_field'];
       $field_name = $values['field_name'];
-      $field = FieldConfig::loadByName($this->entity_type, $field_name);
-      if (!empty($field->locked)) {
+      $field_storage = FieldStorageConfig::loadByName($this->entity_type, $field_name);
+      if (!empty($field_storage->locked)) {
         drupal_set_message($this->t('The field %label cannot be added because it is locked.', array('%label' => $values['label'])), 'error');
       }
       else {
@@ -515,8 +515,8 @@ class FieldOverview extends OverviewBase {
         // - locked fields,
         // - fields that should not be added via user interface.
         $field_type = $instance->getType();
-        $field = $instance->getFieldStorageDefinition();
-        if (empty($field->locked) && empty($field_types[$field_type]['no_ui'])) {
+        $field_storage = $instance->getFieldStorageDefinition();
+        if (empty($field_storage->locked) && empty($field_types[$field_type]['no_ui'])) {
           $options[$instance->getName()] = array(
             'type' => $field_type,
             'type_label' => $field_types[$field_type]['label'],

@@ -33,7 +33,7 @@ class UserCreateTest extends WebTestBase {
 
     // Create a field and an instance.
     $field_name = 'test_field';
-    $field = array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'user',
       'module' => 'image',
@@ -44,10 +44,9 @@ class UserCreateTest extends WebTestBase {
       'settings' => array(
         'uri_scheme' => 'public',
       ),
-    );
-    entity_create('field_config', $field)->save();
+    ))->save();
 
-    $instance = array(
+    entity_create('field_instance_config', array(
       'field_name' => $field_name,
       'entity_type' => 'user',
       'label' => 'Picture',
@@ -63,8 +62,7 @@ class UserCreateTest extends WebTestBase {
         'max_resolution' => '85x85',
         'min_resolution' => '',
       ),
-    );
-    entity_create('field_instance_config', $instance)->save();
+    ))->save();
 
     // Test user creation page for valid fields.
     $this->drupalGet('admin/people/create');

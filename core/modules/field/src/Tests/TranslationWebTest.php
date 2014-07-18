@@ -38,11 +38,11 @@ class TranslationWebTest extends FieldTestBase {
   protected $entity_type = 'entity_test_mulrev';
 
   /**
-   * The field to use in this test.
+   * The field storage to use in this test.
    *
-   * @var \Drupal\field\Entity\FieldConfig
+   * @var \Drupal\field\Entity\FieldStorageConfig
    */
-  protected $field;
+  protected $fieldStorage;
 
   /**
    * The field instance to use in this test.
@@ -63,11 +63,11 @@ class TranslationWebTest extends FieldTestBase {
       'cardinality' => 4,
       'translatable' => TRUE,
     );
-    entity_create('field_config', $field)->save();
-    $this->field = entity_load('field_config', $this->entity_type . '.' . $this->field_name);
+    entity_create('field_storage_config', $field)->save();
+    $this->fieldStorage = entity_load('field_storage_config', $this->entity_type . '.' . $this->field_name);
 
     $instance = array(
-      'field' => $this->field,
+      'field_storage' => $this->fieldStorage,
       'bundle' => $this->entity_type,
     );
     entity_create('field_instance_config', $instance)->save();
@@ -97,7 +97,7 @@ class TranslationWebTest extends FieldTestBase {
     field_test_entity_info_translatable($this->entity_type, TRUE);
     $entity = entity_create($this->entity_type);
     $available_langcodes = array_flip(array_keys($this->container->get('language_manager')->getLanguages()));
-    $field_name = $this->field->getName();
+    $field_name = $this->fieldStorage->getName();
 
     // Store the field translations.
     ksort($available_langcodes);
@@ -126,7 +126,7 @@ class TranslationWebTest extends FieldTestBase {
    * by the passed arguments were correctly stored.
    */
   private function checkTranslationRevisions($id, $revision_id, $available_langcodes) {
-    $field_name = $this->field->getName();
+    $field_name = $this->fieldStorage->getName();
     $entity = entity_revision_load($this->entity_type, $revision_id);
     foreach ($available_langcodes as $langcode => $value) {
       $passed = $entity->getTranslation($langcode)->{$field_name}->value == $value + 1;

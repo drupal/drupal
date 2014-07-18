@@ -71,8 +71,8 @@ class ConfigImportAllTest extends ModuleTestBase {
     // example, if a comment field exists then module becomes required and can
     // not be uninstalled.
 
-    $fields = \Drupal::entityManager()->getStorage('field_config')->loadMultiple();
-    \Drupal::entityManager()->getStorage('field_config')->delete($fields);
+    $field_storages = \Drupal::entityManager()->getStorage('field_storage_config')->loadMultiple();
+    \Drupal::entityManager()->getStorage('field_storage_config')->delete($field_storages);
     // Purge the data.
     field_purge_batch(1000);
 

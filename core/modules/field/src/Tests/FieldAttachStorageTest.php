@@ -44,7 +44,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   function testFieldAttachSaveLoad() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithInstance('', $entity_type);
-    $cardinality = $this->field->getCardinality();
+    $cardinality = $this->field_storage->getCardinality();
 
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
     // Preparation: create three revisions and store them in $revision array.
@@ -108,13 +108,13 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     );
     for ($i = 1; $i <= 3; $i++) {
       $field_names[$i] = 'field_' . $i;
-      $field = entity_create('field_config', array(
+      $field_storage = entity_create('field_storage_config', array(
         'name' => $field_names[$i],
         'entity_type' => $entity_type,
         'type' => 'test_field',
       ));
-      $field->save();
-      $field_ids[$i] = $field->uuid();
+      $field_storage->save();
+      $field_ids[$i] = $field_storage->uuid();
       foreach ($field_bundles_map[$i] as $bundle) {
         entity_create('field_instance_config', array(
           'field_name' => $field_names[$i],
@@ -235,7 +235,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   function testFieldAttachDelete() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithInstance('', $entity_type);
-    $cardinality = $this->field->getCardinality();
+    $cardinality = $this->field_storage->getCardinality();
     $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
     $vids = array();
 
@@ -293,7 +293,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   function testEntityCreateRenameBundle() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithInstance('', $entity_type);
-    $cardinality = $this->field->getCardinality();
+    $cardinality = $this->field_storage->getCardinality();
 
     // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
@@ -344,13 +344,13 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Create a second field for the test bundle
     $field_name = drupal_strtolower($this->randomName() . '_field_name');
-    $field = array(
+    $field_storage = array(
       'name' => $field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',
       'cardinality' => 1,
     );
-    entity_create('field_config', $field)->save();
+    entity_create('field_storage_config', $field_storage)->save();
     $instance = array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,
@@ -363,7 +363,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Save an entity with data for both fields
     $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
-    $values = $this->_generateTestFieldValues($this->field->getCardinality());
+    $values = $this->_generateTestFieldValues($this->field_storage->getCardinality());
     $entity->{$this->field_name} = $values;
     $entity->{$field_name} = $this->_generateTestFieldValues(1);
     $entity = $this->entitySaveReload($entity);

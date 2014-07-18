@@ -46,7 +46,7 @@ class CommentValidationTest extends EntityUnitTestBase {
     ))->save();
 
     // Add comment field to content.
-    $this->entityManager->getStorage('field_config')->create(array(
+    $this->entityManager->getStorage('field_storage_config')->create(array(
       'entity_type' => 'node',
       'name' => 'comment',
       'type' => 'comment',

@@ -66,7 +66,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     $this->label = $this->randomName();
     $this->cardinality = 4;
 
-    $field = array(
+    $field_storage = array(
       'name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
@@ -94,7 +94,7 @@ class DisplayApiTest extends FieldUnitTestBase {
       ),
     );
 
-    entity_create('field_config', $field)->save();
+    entity_create('field_storage_config', $field_storage)->save();
     entity_create('field_instance_config', $instance)->save();
     // Create a display for the default view mode.
     entity_get_display($instance['entity_type'], $instance['bundle'], 'default')

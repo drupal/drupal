@@ -19,7 +19,7 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -1934,7 +1934,7 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
    *   unique among all other fields.
    */
   public static function _fieldColumnName(FieldStorageDefinitionInterface $storage_definition, $column) {
-    return in_array($column, FieldConfig::getReservedColumns()) ? $column : $storage_definition->getName() . '_' . $column;
+    return in_array($column, FieldStorageConfig::getReservedColumns()) ? $column : $storage_definition->getName() . '_' . $column;
   }
 
 }

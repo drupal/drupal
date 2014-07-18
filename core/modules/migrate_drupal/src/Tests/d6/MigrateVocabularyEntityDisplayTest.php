@@ -30,7 +30,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupalTestBase {
   protected function setUp() {
     parent::setUp();
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'name' => 'tags',
       'type' => 'taxonomy_term_reference',

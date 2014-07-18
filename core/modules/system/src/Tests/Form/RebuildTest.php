@@ -65,19 +65,17 @@ class RebuildTest extends WebTestBase {
   function testPreserveFormActionAfterAJAX() {
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
-    $field = array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'text',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    );
-    entity_create('field_config', $field)->save();
-    $instance = array(
+    ))->save();
+    entity_create('field_instance_config', array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'page',
-    );
-    entity_create('field_instance_config', $instance)->save();
+    ))->save();
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($field_name, array('type' => 'text_textfield'))
       ->save();

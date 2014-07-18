@@ -53,7 +53,7 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupalTestBase {
       'vid' => 'tags',
     ))->save();
     // Create the field itself.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'name' => 'tags',
       'type' => 'taxonomy_term_reference',

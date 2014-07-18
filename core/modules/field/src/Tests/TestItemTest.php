@@ -36,18 +36,16 @@ class TestItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create an field field and instance for validation.
-    $field = array(
+    entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-    );
-    entity_create('field_config', $field)->save();
-    $instance = array(
+    ))->save();
+    entity_create('field_instance_config', array(
       'entity_type' => 'entity_test',
       'field_name' => $this->field_name,
       'bundle' => 'entity_test',
-    );
-    entity_create('field_instance_config', $instance)->save();
+    ))->save();
   }
 
   /**

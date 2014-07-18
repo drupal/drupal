@@ -651,7 +651,7 @@ function file_file_download($uri, $field_type = 'file') {
   foreach ($references as $field_name => $field_references) {
     foreach ($field_references as $entity_type => $entities) {
       $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type);
-      $field = $field_storage_definitions[$field_name];
+      $field_storage = $field_storage_definitions[$field_name];
       foreach ($entities as $entity) {
         // Check if access to this field is not disallowed.
         if (!$entity->get($field_name)->access('view')) {
@@ -663,12 +663,12 @@ function file_file_download($uri, $field_type = 'file') {
         // Default to FALSE and let entities overrule this ruling.
         $grants = array('system' => FALSE);
         foreach (\Drupal::moduleHandler()->getImplementations('file_download_access') as $module) {
-          $grants = array_merge($grants, array($module => \Drupal::moduleHandler()->invoke($module, 'file_download_access', array($field, $entity, $file))));
+          $grants = array_merge($grants, array($module => \Drupal::moduleHandler()->invoke($module, 'file_download_access', array($field_storage, $entity, $file))));
         }
         // Allow other modules to alter the returned grants/denies.
         $context = array(
           'entity' => $entity,
-          'field' => $field,
+          'field' => $field_storage,
           'file' => $file,
         );
         \Drupal::moduleHandler()->alter('file_download_access', $grants, $context);

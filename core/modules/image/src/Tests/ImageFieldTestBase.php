@@ -56,20 +56,20 @@ abstract class ImageFieldTestBase extends WebTestBase {
    *   The name of the new field (all lowercase), exclude the "field_" prefix.
    * @param $type_name
    *   The node type that this field will be added to.
-   * @param $field_settings
-   *   A list of field settings that will be added to the defaults.
+   * @param $storage_settings
+   *   A list of field storage settings that will be added to the defaults.
    * @param $instance_settings
    *   A list of instance settings that will be added to the instance defaults.
    * @param $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  function createImageField($name, $type_name, $field_settings = array(), $instance_settings = array(), $widget_settings = array()) {
-    entity_create('field_config', array(
+  function createImageField($name, $type_name, $storage_settings = array(), $instance_settings = array(), $widget_settings = array()) {
+    entity_create('field_storage_config', array(
       'name' => $name,
       'entity_type' => 'node',
       'type' => 'image',
-      'settings' => $field_settings,
-      'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
+      'settings' => $storage_settings,
+      'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,
     ))->save();
 
     $field_instance_config = entity_create('field_instance_config', array(

@@ -7,13 +7,11 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Implements hook_help().
@@ -65,34 +63,34 @@ function entity_reference_field_widget_info_alter(&$info) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_config'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
  *
  * Reset the instance handler settings, when the target type is changed.
  */
-function entity_reference_field_config_update(FieldConfigInterface $field) {
-  if ($field->type != 'entity_reference') {
+function entity_reference_field_storage_config_update(FieldStorageConfigInterface $field_storage) {
+  if ($field_storage->type != 'entity_reference') {
     // Only act on entity reference fields.
     return;
   }
 
-  if ($field->isSyncing()) {
+  if ($field_storage->isSyncing()) {
     // Don't change anything during a configuration sync.
     return;
   }
 
-  if ($field->getSetting('target_type') == $field->original->getSetting('target_type')) {
+  if ($field_storage->getSetting('target_type') == $field_storage->original->getSetting('target_type')) {
     // Target type didn't change.
     return;
   }
 
-  if (empty($field->bundles)) {
+  if (empty($field_storage->bundles)) {
     // Field has no instances.
     return;
   }
 
-  $field_name = $field->getName();
+  $field_name = $field_storage->getName();
 
-  foreach ($field->bundles() as $entity_type => $bundles) {
+  foreach ($field_storage->bundles() as $entity_type => $bundles) {
     foreach ($bundles as $bundle) {
       $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
       $instance->settings['handler_settings'] = array();
@@ -207,11 +205,11 @@ function entity_reference_query_entity_reference_alter(AlterableInterface $query
  */
 function entity_reference_create_instance($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = array(), $cardinality = 1) {
   // Look for or add the specified field to the requested entity bundle.
-  $field = FieldConfig::loadByName($entity_type, $field_name);
+  $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
   $instance = FieldInstanceConfig::loadByName($entity_type, $bundle, $field_name);
 
-  if (empty($field)) {
-    $field = array(
+  if (empty($field_storage)) {
+    $field_storage = array(
       'name' => $field_name,
       'type' => 'entity_reference',
       'entity_type' => $entity_type,
@@ -220,7 +218,7 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
         'target_type' => $target_entity_type,
       ),
     );
-    entity_create('field_config', $field)->save();
+    entity_create('field_storage_config', $field_storage)->save();
   }
 
   if (empty($instance)) {

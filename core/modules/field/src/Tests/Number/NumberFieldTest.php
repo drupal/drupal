@@ -24,20 +24,6 @@ class NumberFieldTest extends WebTestBase {
   public static $modules = array('node', 'entity_test', 'field_ui');
 
   /**
-   * A field to use in this class.
-   *
-   * @var \Drupal\field\Entity\FieldConfig
-   */
-  protected $field;
-
-  /**
-   * A field instance to use in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldInstanceConfig
-   */
-  protected $instance;
-
-  /**
    * A user with permission to view and manage entities and content types.
    *
    * @var \Drupal\user\UserInterface
@@ -57,7 +43,7 @@ class NumberFieldTest extends WebTestBase {
   function testNumberDecimalField() {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomName());
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'decimal',
@@ -149,7 +135,7 @@ class NumberFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomName());
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'integer',
@@ -253,7 +239,7 @@ class NumberFieldTest extends WebTestBase {
   function testNumberFloatField() {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomName());
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'float',
@@ -352,13 +338,13 @@ class NumberFieldTest extends WebTestBase {
     // Create a content type containing float and integer fields.
     $this->drupalCreateContentType(array('type' => $type));
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $float_field,
       'entity_type' => 'node',
       'type' => 'float',
     ))->save();
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $integer_field,
       'entity_type' => 'node',
       'type' => 'integer',

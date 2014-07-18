@@ -29,7 +29,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $referenced = $this->drupalCreateContentType();
     $this->referenced_type = $referenced->type;
 
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'test_field',
       'entity_type' => 'node',
       'translatable' => FALSE,

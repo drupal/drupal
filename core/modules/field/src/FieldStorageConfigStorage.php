@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\field\FieldConfigStorage.
+ * Contains \Drupal\field\FieldStorageConfigStorage.
  */
 
 namespace Drupal\field;
 
 use Drupal\Component\Uuid\UuidInterface;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -21,9 +19,9 @@ use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\State\StateInterface;
 
 /**
- * Controller class for fields.
+ * Controller class for "field storage" configuration entities.
  */
-class FieldConfigStorage extends ConfigEntityStorage {
+class FieldStorageConfigStorage extends ConfigEntityStorage {
 
   /**
    * The module handler.
@@ -47,7 +45,7 @@ class FieldConfigStorage extends ConfigEntityStorage {
   protected $state;
 
   /**
-   * Constructs a FieldConfigStorage object.
+   * Constructs a FieldStorageConfigStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
@@ -97,34 +95,34 @@ class FieldConfigStorage extends ConfigEntityStorage {
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
-    $fields = array();
+    $storages = array();
 
-    // Get fields stored in configuration. If we are explicitly looking for
-    // deleted fields only, this can be skipped, because they will be retrieved
-    // from state below.
+    // Get field storages living in configuration. If we are explicitly looking
+    // for deleted storages only, this can be skipped, because they will be
+    // retrieved from state below.
     if (empty($conditions['deleted'])) {
       if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
         // Optimize for the most frequent case where we do have a specific ID.
         $id = $conditions['entity_type'] . $conditions['field_name'];
-        $fields = $this->loadMultiple(array($id));
+        $storages = $this->loadMultiple(array($id));
       }
       else {
-        // No specific ID, we need to examine all existing fields.
-        $fields = $this->loadMultiple();
+        // No specific ID, we need to examine all existing storages.
+        $storages = $this->loadMultiple();
       }
     }
 
-    // Merge deleted fields (stored in state) if needed.
+    // Merge deleted field storages (living in state) if needed.
     if ($include_deleted || !empty($conditions['deleted'])) {
-      $deleted_fields = $this->state->get('field.field.deleted') ?: array();
-      foreach ($deleted_fields as $id => $config) {
-        $fields[$id] = $this->create($config);
+      $deleted_storages = $this->state->get('field.storage.deleted') ?: array();
+      foreach ($deleted_storages as $id => $config) {
+        $storages[$id] = $this->create($config);
       }
     }
 
     // Collect matching fields.
-    $matching_fields = array();
-    foreach ($fields as $field) {
+    $matches = array();
+    foreach ($storages as $field) {
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.
         switch ($key) {
@@ -150,10 +148,10 @@ class FieldConfigStorage extends ConfigEntityStorage {
       // When returning deleted fields, key the results by UUID since they can
       // include several fields with the same ID.
       $key = $include_deleted ? $field->uuid() : $field->id();
-      $matching_fields[$key] = $field;
+      $matches[$key] = $field;
     }
 
-    return $matching_fields;
+    return $matches;
 
   }
 }

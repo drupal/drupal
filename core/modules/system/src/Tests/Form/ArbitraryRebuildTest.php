@@ -27,7 +27,7 @@ class ArbitraryRebuildTest extends WebTestBase {
     parent::setUp();
 
     // Auto-create a field for testing.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => 'test_multiple',
       'entity_type' => 'user',
       'type' => 'text',

@@ -27,11 +27,11 @@ class CommentNodeChangesTest extends CommentTestBase {
     $this->assertFalse(Comment::load($comment->id()), 'The comment could not be loaded after the node was deleted.');
     // Make sure the comment field and all its instances are deleted when node
     // type is deleted.
-    $this->assertNotNull(entity_load('field_config', 'node.comment'), 'Comment field exists');
+    $this->assertNotNull(entity_load('field_storage_config', 'node.comment'), 'Comment field exists');
     $this->assertNotNull(entity_load('field_instance_config', 'node.article.comment'), 'Comment instance exists');
     // Delete the node type.
     entity_delete_multiple('node_type', array($this->node->bundle()));
-    $this->assertNull(entity_load('field_config', 'node.comment'), 'Comment field deleted');
+    $this->assertNull(entity_load('field_storage_config', 'node.comment'), 'Comment field deleted');
     $this->assertNull(entity_load('field_instance_config', 'node.article.comment'), 'Comment instance deleted');
   }
 }

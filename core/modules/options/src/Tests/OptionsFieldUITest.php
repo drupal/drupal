@@ -7,7 +7,7 @@
 
 namespace Drupal\options\Tests;
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Tests\FieldTestBase;
 
 /**
@@ -222,7 +222,7 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   protected function createOptionsField($type) {
     // Create a test field and instance.
-    entity_create('field_config', array(
+    entity_create('field_storage_config', array(
       'name' => $this->field_name,
       'entity_type' => 'node',
       'type' => $type,
@@ -235,7 +235,7 @@ class OptionsFieldUITest extends FieldTestBase {
 
     entity_get_form_display('node', $this->type, 'default')->setComponent($this->field_name)->save();
 
-    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->field_name . '/field';
+    $this->admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $this->field_name . '/storage';
   }
 
   /**
@@ -258,8 +258,8 @@ class OptionsFieldUITest extends FieldTestBase {
       $this->assertText($result, $message);
     }
     else {
-      $field = FieldConfig::loadByName('node', $this->field_name);
-      $this->assertIdentical($field->getSetting('allowed_values'), $result, $message);
+      $field_storage = FieldStorageConfig::loadByName('node', $this->field_name);
+      $this->assertIdentical($field_storage->getSetting('allowed_values'), $result, $message);
     }
   }
 

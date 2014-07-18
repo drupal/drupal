@@ -6,8 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Implements hook_help().
@@ -77,19 +77,19 @@ function block_content_entity_type_alter(array &$entity_types) {
  */
 function block_content_add_body_field($block_type_id, $label = 'Body') {
   // Add or remove the body field, as needed.
-  $field = FieldConfig::loadByName('block_content', 'body');
+  $field_storage = FieldStorageConfig::loadByName('block_content', 'body');
   $instance = FieldInstanceConfig::loadByName('block_content', $block_type_id, 'body');
-  if (empty($field)) {
-    $field = entity_create('field_config', array(
+  if (empty($field_storage)) {
+    $field_storage = entity_create('field_storage_config', array(
       'name' => 'body',
       'entity_type' => 'block_content',
       'type' => 'text_with_summary',
     ));
-    $field->save();
+    $field_storage->save();
   }
   if (empty($instance)) {
     $instance = entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => array('display_summary' => FALSE),

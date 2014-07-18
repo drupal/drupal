@@ -54,22 +54,22 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
       $bundle = $entity_type;
     }
     $field_name = 'field_name' . $suffix;
-    $field = 'field' . $suffix;
-    $field_id = 'field_id' . $suffix;
+    $field_storage = 'field_storage' . $suffix;
+    $field_storage_uuid = 'field_storage_uuid' . $suffix;
     $instance = 'instance' . $suffix;
     $instance_definition = 'instance_definition' . $suffix;
 
     $this->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
-    $this->$field = entity_create('field_config', array(
+    $this->$field_storage = entity_create('field_storage_config', array(
       'name' => $this->$field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',
       'cardinality' => 4,
     ));
-    $this->$field->save();
-    $this->$field_id = $this->{$field}->uuid();
+    $this->$field_storage->save();
+    $this->$field_storage_uuid = $this->{$field_storage}->uuid();
     $this->$instance_definition = array(
-      'field' => $this->$field,
+      'field_storage' => $this->$field_storage,
       'bundle' => $bundle,
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',

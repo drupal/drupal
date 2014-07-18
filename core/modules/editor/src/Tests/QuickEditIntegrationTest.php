@@ -144,8 +144,8 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $this->assertEqual('editor', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
-    $this->field_textarea_field->cardinality = 2;
-    $this->field_textarea_field->save();
+    $this->field_textarea_field_storage->cardinality = 2;
+    $this->field_textarea_field_storage->save();
     $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
   }
 

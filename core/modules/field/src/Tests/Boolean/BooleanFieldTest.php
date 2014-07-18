@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Tests\Boolean;
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\simpletest\WebTestBase;
 
@@ -28,7 +28,7 @@ class BooleanFieldTest extends WebTestBase {
   /**
    * A field to use in this test class.
    *
-   * @var \Drupal\field\Entity\FieldConfig
+   * @var \Drupal\field\Entity\FieldStorageConfig
    */
   protected $field;
 
@@ -64,7 +64,7 @@ class BooleanFieldTest extends WebTestBase {
 
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomName());
-    $this->field = FieldConfig::create(array(
+    $this->field = FieldStorageConfig::create(array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'boolean',
@@ -169,7 +169,7 @@ class BooleanFieldTest extends WebTestBase {
     );
 
     // Test the boolean field settings.
-    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name . '/field');
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name . '/storage');
     $this->assertFieldById('edit-field-settings-on-label', $on);
     $this->assertFieldById('edit-field-settings-off-label', $off);
   }

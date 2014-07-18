@@ -397,9 +397,9 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertRaw(t('Saved %name configuration', array('%name' => 'Barfoo')));
 
     // Check the field contains the correct comment type.
-    $field = entity_load('field_config', 'entity_test.field_barfoo');
-    $this->assertTrue($field);
-    $this->assertEqual($field->getSetting('comment_type'), 'foobar');
+    $field_storage = entity_load('field_storage_config', 'entity_test.field_barfoo');
+    $this->assertTrue($field_storage);
+    $this->assertEqual($field_storage->getSetting('comment_type'), 'foobar');
 
     // Test the new entity commenting inherits default.
     $random_label = $this->randomName();

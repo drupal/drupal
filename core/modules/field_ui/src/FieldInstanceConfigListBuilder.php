@@ -62,11 +62,11 @@ class FieldInstanceConfigListBuilder extends ConfigEntityListBuilder {
     /** @var \Drupal\field\FieldInstanceConfigInterface $entity */
     $operations = parent::getDefaultOperations($entity);
 
-    $operations['field-settings'] = array(
+    $operations['storage-settings'] = array(
       'title' => $this->t('Field settings'),
       'weight' => 20,
       'attributes' => array('title' => $this->t('Edit field settings.')),
-    ) + $entity->urlInfo('field-settings-form')->toArray();
+    ) + $entity->urlInfo('storage-edit-form')->toArray();
     $operations['edit']['attributes']['title'] = $this->t('Edit instance settings.');
     $operations['delete']['attributes']['title'] = $this->t('Delete instance.');
 

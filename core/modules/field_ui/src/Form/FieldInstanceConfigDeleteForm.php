@@ -68,11 +68,11 @@ class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function submit(array $form, array &$form_state) {
-    $field = $this->entity->getFieldStorageDefinition();
+    $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = entity_get_bundles();
     $bundle_label = $bundles[$this->entity->entity_type][$this->entity->bundle]['label'];
 
-    if ($field && !$field->locked) {
+    if ($field_storage && !$field_storage->locked) {
       $this->entity->delete();
       drupal_set_message($this->t('The field %field has been deleted from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)));
     }

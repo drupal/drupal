@@ -7,8 +7,6 @@
 
 namespace Drupal\path\Tests;
 
-use Drupal\field\Entity\FieldConfig;
-
 /**
  * Confirm that paths work with translated nodes.
  *

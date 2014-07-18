@@ -13,8 +13,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Adds tables and fields to the SQL entity query.
@@ -107,20 +107,20 @@ class Tables implements TablesInterface {
       // field.
       $specifier = $specifiers[$key];
       if (isset($field_storage_definitions[$specifier])) {
-        $field = $field_storage_definitions[$specifier];
+        $field_storage = $field_storage_definitions[$specifier];
       }
       else {
-        $field = FALSE;
+        $field_storage = FALSE;
       }
       // If we managed to retrieve a configurable field, process it.
-      if ($field instanceof FieldConfigInterface) {
+      if ($field_storage instanceof FieldStorageConfigInterface) {
         // Find the field column.
-        $column = $field->getMainPropertyName();
+        $column = $field_storage->getMainPropertyName();
         if ($key < $count) {
           $next = $specifiers[$key + 1];
           // Is this a field column?
-          $columns = $field->getColumns();
-          if (isset($columns[$next]) || in_array($next, FieldConfig::getReservedColumns())) {
+          $columns = $field_storage->getColumns();
+          if (isset($columns[$next]) || in_array($next, FieldStorageConfig::getReservedColumns())) {
             // Use it.
             $column = $next;
             // Do not process it again.
@@ -135,14 +135,14 @@ class Tables implements TablesInterface {
           // also use the property definitions for column.
           if ($key < $count) {
             $relationship_specifier = $specifiers[$key + 1];
-            $propertyDefinitions = $field->getPropertyDefinitions();
+            $propertyDefinitions = $field_storage->getPropertyDefinitions();
 
             // Prepare the next index prefix.
             $next_index_prefix = "$relationship_specifier.$column";
           }
         }
-        $table = $this->ensureFieldTable($index_prefix, $field, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
-        $sql_column = ContentEntityDatabaseStorage::_fieldColumnName($field, $column);
+        $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
+        $sql_column = ContentEntityDatabaseStorage::_fieldColumnName($field_storage, $column);
       }
       // This is an entity base field (non-configurable field).
       else {
@@ -161,16 +161,16 @@ class Tables implements TablesInterface {
         $table = $this->ensureEntityTable($index_prefix, $specifier, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
       }
       // If there are more specifiers to come, it's a relationship.
-      if ($field && $key < $count) {
+      if ($field_storage && $key < $count) {
         // Computed fields have prepared their property definition already, do
         // it for properties as well.
         if (!$propertyDefinitions) {
-          $propertyDefinitions = $field->getPropertyDefinitions();
+          $propertyDefinitions = $field_storage->getPropertyDefinitions();
           $relationship_specifier = $specifiers[$key + 1];
           $next_index_prefix = $relationship_specifier;
         }
         // Check for a valid relationship.
-        if (isset($propertyDefinitions[$relationship_specifier]) && $field->getPropertyDefinition('entity')->getDataType() == 'entity_reference' ) {
+        if (isset($propertyDefinitions[$relationship_specifier]) && $field_storage->getPropertyDefinition('entity')->getDataType() == 'entity_reference' ) {
           // If it is, use the entity type.
           $entity_type_id = $propertyDefinitions[$relationship_specifier]->getTargetDefinition()->getEntityTypeId();
           $entity_type = $this->entityManager->getDefinition($entity_type_id);

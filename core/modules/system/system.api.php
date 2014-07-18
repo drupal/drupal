@@ -2830,7 +2830,7 @@ function hook_link_alter(&$variables) {
  */
 function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\ConfigImporter $config_importer) {
   $deletes = $config_importer->getUnprocessedConfiguration('delete');
-  if (isset($deletes['field.field.node.body'])) {
+  if (isset($deletes['field.storage.node.body'])) {
     $sync_steps[] = '_additional_configuration_step';
   }
 }

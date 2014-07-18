@@ -11,7 +11,7 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
 /**
- * Upgrade comment variables  to field.field.node.comment.yml.
+ * Upgrade comment variables to field.storage.node.comment.yml.
  *
  * @group migrate_drupal
  */
@@ -55,8 +55,7 @@ class MigrateCommentVariableFieldTest extends MigrateDrupalTestBase {
    * Tests comment variables migrated into a field entity.
    */
   public function testCommentField() {
-    $this->assertTrue(is_object(entity_load('field_config', 'node.comment')));
-    $this->assertTrue(is_object(entity_load('field_config', 'node.comment_no_subject')));
+    $this->assertTrue(is_object(entity_load('field_storage_config', 'node.comment')));
   }
 
 }

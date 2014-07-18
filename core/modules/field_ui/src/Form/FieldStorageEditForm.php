@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\Form\FieldEditForm.
+ * Contains \Drupal\field_ui\Form\FieldStorageEditForm.
  */
 
 namespace Drupal\field_ui\Form;
@@ -16,9 +16,9 @@ use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a form for the field settings edit page.
+ * Provides a form for the "field storage" edit page.
  */
-class FieldEditForm extends FormBase {
+class FieldStorageEditForm extends FormBase {
 
   /**
    * The field instance being edited.
@@ -45,11 +45,11 @@ class FieldEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'field_ui_field_edit_form';
+    return 'field_ui_field_storage_edit_form';
   }
 
   /**
-   * Constructs a new FieldEditForm object.
+   * Constructs a new FieldStorageEditForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
@@ -78,8 +78,8 @@ class FieldEditForm extends FormBase {
     $this->instance = $form_state['instance'] = $field_instance_config;
     $form['#title'] = $this->instance->label();
 
-    $field = $this->instance->getFieldStorageDefinition();
-    $form['#field'] = $field;
+    $field_storage = $this->instance->getFieldStorageDefinition();
+    $form['#field'] = $field_storage;
     $form['#bundle'] = $this->instance->bundle;
 
     $description = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. These settings impact the way that data is stored in the database and cannot be changed once data has been created.', array('%field' => $this->instance->label())) . '</p>';
@@ -92,12 +92,12 @@ class FieldEditForm extends FormBase {
 
     // See if data already exists for this field.
     // If so, prevent changes to the field settings.
-    if ($field->hasData()) {
+    if ($field_storage->hasData()) {
       $form['field']['#prefix'] = '<div class="messages messages--error">' . $this->t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#prefix'];
     }
 
     // Build the configurable field values.
-    $cardinality = $field->getCardinality();
+    $cardinality = $field_storage->getCardinality();
     $form['field']['cardinality_container'] = array(
       // Reset #parents to 'field', so the additional container does not appear.
       '#parents' => array('field'),
@@ -134,10 +134,10 @@ class FieldEditForm extends FormBase {
     );
 
     // Build the non-configurable field values.
-    $form['field']['field_name'] = array('#type' => 'value', '#value' => $field->getName());
-    $form['field']['type'] = array('#type' => 'value', '#value' => $field->getType());
-    $form['field']['module'] = array('#type' => 'value', '#value' => $field->module);
-    $form['field']['translatable'] = array('#type' => 'value', '#value' => $field->isTranslatable());
+    $form['field']['field_name'] = array('#type' => 'value', '#value' => $field_storage->getName());
+    $form['field']['type'] = array('#type' => 'value', '#value' => $field_storage->getType());
+    $form['field']['module'] = array('#type' => 'value', '#value' => $field_storage->module);
+    $form['field']['translatable'] = array('#type' => 'value', '#value' => $field_storage->isTranslatable());
 
     // Add settings provided by the field module. The field module is
     // responsible for not returning settings that cannot be changed if
@@ -149,7 +149,7 @@ class FieldEditForm extends FormBase {
     // FieldItem.
     $ids = (object) array('entity_type' => $this->instance->entity_type, 'bundle' => $this->instance->bundle, 'entity_id' => NULL);
     $entity = _field_create_entity_from_ids($ids);
-    $form['field']['settings'] += $entity->get($field->getName())->first()->settingsForm($form, $form_state, $field->hasData());
+    $form['field']['settings'] += $entity->get($field_storage->getName())->first()->settingsForm($form, $form_state, $field_storage->hasData());
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));
@@ -185,14 +185,14 @@ class FieldEditForm extends FormBase {
     unset($field_values['container']);
 
     // Merge incoming form values into the existing field.
-    $field = $this->instance->getFieldStorageDefinition();
+    $field_storage = $this->instance->getFieldStorageDefinition();
     foreach ($field_values as $key => $value) {
-      $field->{$key} = $value;
+      $field_storage->{$key} = $value;
     }
 
     // Update the field.
     try {
-      $field->save();
+      $field_storage->save();
       drupal_set_message($this->t('Updated field %label field settings.', array('%label' => $this->instance->label())));
       $request = $this->getRequest();
       if (($destinations = $request->query->get('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {

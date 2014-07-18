@@ -43,14 +43,14 @@ class reEnableModuleFieldTest extends WebTestBase {
   function testReEnabledField() {
 
     // Add a telephone field to the article content type.
-    $field = entity_create('field_config', array(
+    $field_storage = entity_create('field_storage_config', array(
       'name' => 'field_telephone',
       'entity_type' => 'node',
       'type' => 'telephone',
     ));
-    $field->save();
+    $field_storage->save();
     entity_create('field_instance_config', array(
-      'field' => $field,
+      'field_storage' => $field_storage,
       'bundle' => 'article',
       'label' => 'Telephone Number',
     ))->save();
@@ -90,7 +90,7 @@ class reEnableModuleFieldTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/modules');
     $this->assertText('Fields type(s) in use');
-    $field->delete();
+    $field_storage->delete();
     $this->drupalGet('admin/modules');
     $this->assertText('Fields pending deletion');
     $this->cronRun();

@@ -13,5 +13,5 @@ status: true
 langcode: und
 dependencies:
   entity:
-    - field.field.node.field_tags
+    - field.storage.node.field_tags
     - node.type.article

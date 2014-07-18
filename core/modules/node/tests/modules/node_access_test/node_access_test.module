@@ -19,7 +19,7 @@
  * @see \Drupal\node\Tests\NodeAccessBaseTableTest
  */
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
@@ -134,12 +134,12 @@ function node_access_test_permission() {
  *   A node type entity.
  */
 function node_access_test_add_field(NodeTypeInterface $type) {
-  $field = FieldConfig::create(array(
+  $field_storage = FieldStorageConfig::create(array(
     'name' => 'private',
     'entity_type' => 'node',
     'type' => 'integer',
   ));
-  $field->save();
+  $field_storage->save();
   $instance = FieldInstanceConfig::create(array(
     'field_name' => 'private',
     'entity_type' => 'node',
