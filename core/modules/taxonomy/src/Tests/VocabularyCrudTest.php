@@ -190,7 +190,7 @@ class VocabularyCrudTest extends TaxonomyTestBase {
     entity_create('field_instance_config', $this->instance_definition)->save();
 
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    module_uninstall(array('taxonomy'));
+    $this->container->get('module_handler')->uninstall(array('taxonomy'));
     \Drupal::moduleHandler()->install(array('taxonomy'));
 
     // Now create a vocabulary with the same name. All field instances

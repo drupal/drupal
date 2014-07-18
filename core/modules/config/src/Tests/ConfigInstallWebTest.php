@@ -66,7 +66,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->container->get('config.factory')->reset();
 
     // Disable and uninstall the integration module.
-    module_uninstall(array('config_integration_test'));
+    $this->container->get('module_handler')->uninstall(array('config_integration_test'));
 
     // Verify the integration module's config was uninstalled.
     $config_static = \Drupal::config($default_config);

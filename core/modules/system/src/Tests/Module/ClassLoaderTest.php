@@ -44,7 +44,7 @@ class ClassLoaderTest extends WebTestBase {
    */
   function testClassLoadingDisabledModules() {
     // Ensure that module_autoload_test is disabled.
-    module_uninstall(array('module_autoload_test'), FALSE);
+    $this->container->get('module_handler')->uninstall(array('module_autoload_test'), FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i=0; $i<2; $i++) {
