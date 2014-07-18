@@ -901,14 +901,8 @@ abstract class DisplayPluginBase extends PluginBase {
         // If this is during form submission and there are temporary options
         // which can only appear if the view is in the edit cache, use those
         // options instead. This is used for AJAX multi-step stuff.
-        // @todo Remove dependency on Request object
-        //   https://drupal.org/node/2059003.
-        try {
-          if ($this->view->getRequest()->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
-            $info = $this->view->temporary_options[$type][$id];
-          }
-        }
-        catch (DependencyInjectionRuntimeException $e) {
+        if ($this->view->getRequest()->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
+          $info = $this->view->temporary_options[$type][$id];
         }
 
         if ($info['id'] != $id) {
