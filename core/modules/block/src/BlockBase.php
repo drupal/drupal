@@ -49,13 +49,6 @@ abstract class BlockBase extends ContextAwarePluginBase implements BlockPluginIn
   /**
    * {@inheritdoc}
    */
-  public static function contextDefinitions() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function label() {
     if (!empty($this->configuration['label'])) {
       return $this->configuration['label'];
