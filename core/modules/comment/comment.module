@@ -413,129 +413,6 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
 }
 
 /**
- * Retrieves comments for a thread.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity whose comment(s) needs rendering.
- * @param string $field_name
- *   The field_name whose comment(s) needs rendering.
- * @param int $mode
- *   The comment display mode; COMMENT_MODE_FLAT or COMMENT_MODE_THREADED.
- * @param int $comments_per_page
- *   The amount of comments to display per page.
- * @param int $pager_id
- *   (optional) Pager id to use in case of multiple pagers on the one page.
- *   Defaults to 0.
- *
- * @return int[]
- *   An array of the IDs of the comment to be displayed.
- *
- * To display threaded comments in the correct order we keep a 'thread' field
- * and order by that value. This field keeps this data in
- * a way which is easy to update and convenient to use.
- *
- * A "thread" value starts at "1". If we add a child (A) to this comment,
- * we assign it a "thread" = "1.1". A child of (A) will have "1.1.1". Next
- * brother of (A) will get "1.2". Next brother of the parent of (A) will get
- * "2" and so on.
- *
- * First of all note that the thread field stores the depth of the comment:
- * depth 0 will be "X", depth 1 "X.X", depth 2 "X.X.X", etc.
- *
- * Now to get the ordering right, consider this example:
- *
- * 1
- * 1.1
- * 1.1.1
- * 1.2
- * 2
- *
- * If we "ORDER BY thread ASC" we get the above result, and this is the
- * natural order sorted by time. However, if we "ORDER BY thread DESC"
- * we get:
- *
- * 2
- * 1.2
- * 1.1.1
- * 1.1
- * 1
- *
- * Clearly, this is not a natural way to see a thread, and users will get
- * confused. The natural order to show a thread by time desc would be:
- *
- * 2
- * 1
- * 1.2
- * 1.1
- * 1.1.1
- *
- * which is what we already did before the standard pager patch. To achieve
- * this we simply add a "/" at the end of each "thread" value. This way, the
- * thread fields will look like this:
- *
- * 1/
- * 1.1/
- * 1.1.1/
- * 1.2/
- * 2/
- *
- * we add "/" since this char is, in ASCII, higher than every number, so if
- * now we "ORDER BY thread DESC" we get the correct order. However this would
- * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
- * to consider the trailing "/" so we use a substring only.
- */
-function comment_get_thread(EntityInterface $entity, $field_name, $mode, $comments_per_page, $pager_id = 0) {
-  $query = db_select('comment_field_data', 'c')
-    ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-  if ($pager_id) {
-    $query->element($pager_id);
-  }
-  $query->addField('c', 'cid');
-  $query
-    ->condition('c.entity_id', $entity->id())
-    ->condition('c.entity_type', $entity->getEntityTypeId())
-    ->condition('c.field_name', $field_name)
-    ->condition('default_langcode', 1)
-    ->addTag('entity_access')
-    ->addTag('comment_filter')
-    ->addMetaData('base_table', 'comment')
-    ->addMetaData('entity', $entity)
-    ->addMetaData('field_name', $field_name)
-    ->limit($comments_per_page);
-
-  $count_query = db_select('comment_field_data', 'c');
-  $count_query->addExpression('COUNT(*)');
-  $count_query
-    ->condition('c.entity_id', $entity->id())
-    ->condition('c.entity_type', $entity->getEntityTypeId())
-    ->condition('c.field_name', $field_name)
-    ->condition('default_langcode', 1)
-    ->addTag('entity_access')
-    ->addTag('comment_filter')
-    ->addMetaData('base_table', 'comment')
-    ->addMetaData('entity', $entity)
-    ->addMetaData('field_name', $field_name);
-
-  if (!\Drupal::currentUser()->hasPermission('administer comments')) {
-    $query->condition('c.status', CommentInterface::PUBLISHED);
-    $count_query->condition('c.status', CommentInterface::PUBLISHED);
-  }
-  if ($mode == CommentManagerInterface::COMMENT_MODE_FLAT) {
-    $query->orderBy('c.cid', 'ASC');
-  }
-  else {
-    // See comment above. Analysis reveals that this doesn't cost too
-    // much. It scales much much better than having the whole comment
-    // structure.
-    $query->addExpression('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'torder');
-    $query->orderBy('torder', 'ASC');
-  }
-
-  $query->setCountQuery($count_query);
-  return $query->execute()->fetchCol();
-}
-
-/**
  * Calculates the indentation level of each comment in a comment thread.
  *
  * This function loops over an array representing a comment thread. For each
@@ -779,10 +656,13 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
       $field_definition = $node->getFieldDefinition($field_name);
       $mode = $field_definition->getSetting('default_mode');
       $comments_per_page = $field_definition->getSetting('per_page');
-      if ($node->get($field_name)->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
-        $comments = entity_load_multiple('comment', $cids);
-        comment_prepare_thread($comments);
-        $build[] = comment_view_multiple($comments);
+      if ($node->get($field_name)->status) {
+        $comments = \Drupal::entityManager()->getStorage('comment')
+          ->loadThread($node, $field_name, $mode, $comments_per_page);
+        if ($comments) {
+          comment_prepare_thread($comments);
+          $build[] = \Drupal::entityManager()->getViewBuilder('comment')->viewMultiple($comments);
+        }
       }
     }
   }

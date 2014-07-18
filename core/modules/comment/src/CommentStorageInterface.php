@@ -8,6 +8,7 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
@@ -61,8 +62,8 @@ interface CommentStorageInterface extends EntityStorageInterface {
    * @param \Drupal\comment\CommentInterface $comment
    *   The comment to use as a reference point.
    * @param int $comment_mode
-   *   Comment mode (CommentManagerInterface::COMMENT_MODE_FLAT or
-   *   CommentManagerInterface::COMMENT_MODE_THREADED).
+   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT or
+   *   CommentManagerInterface::COMMENT_MODE_THREADED.
    * @param int $divisor
    *   Defaults to 1, which returns the display ordinal for a comment. If the
    *   number of comments per page is provided, the returned value will be the
@@ -83,6 +84,28 @@ interface CommentStorageInterface extends EntityStorageInterface {
    *   The entity ids of the passed comment entities' children as an array.
    */
   public function getChildCids(array $comments);
+
+  /**
+   * Retrieves comments for a thread, sorted in an order suitable for display.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity whose comment(s) needs rendering.
+   * @param string $field_name
+   *   The field_name whose comment(s) needs rendering.
+   * @param int $mode
+   *   The comment display mode: CommentManagerInterface::COMMENT_MODE_FLAT or
+   *   CommentManagerInterface::COMMENT_MODE_THREADED.
+   * @param int $comments_per_page
+   *   (optional) The amount of comments to display per page.
+   *   Defaults to 0, which means show all comments.
+   * @param int $pager_id
+   *   (optional) Pager id to use in case of multiple pagers on the one page.
+   *   Defaults to 0; is only used when $comments_per_page is greater than zero.
+   *
+   * @return array
+   *   Ordered array of comment objects, keyed by comment id.
+   */
+  public function loadThread(EntityInterface $entity, $field_name, $mode, $comments_per_page = 0, $pager_id = 0);
 
   /**
    * Updates the comment statistics for a given node.

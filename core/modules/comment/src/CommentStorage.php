@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -216,6 +217,123 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       ->condition('default_langcode', 1)
       ->execute()
       ->fetchCol();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * To display threaded comments in the correct order we keep a 'thread' field
+   * and order by that value. This field keeps this data in
+   * a way which is easy to update and convenient to use.
+   *
+   * A "thread" value starts at "1". If we add a child (A) to this comment,
+   * we assign it a "thread" = "1.1". A child of (A) will have "1.1.1". Next
+   * brother of (A) will get "1.2". Next brother of the parent of (A) will get
+   * "2" and so on.
+   *
+   * First of all note that the thread field stores the depth of the comment:
+   * depth 0 will be "X", depth 1 "X.X", depth 2 "X.X.X", etc.
+   *
+   * Now to get the ordering right, consider this example:
+   *
+   * 1
+   * 1.1
+   * 1.1.1
+   * 1.2
+   * 2
+   *
+   * If we "ORDER BY thread ASC" we get the above result, and this is the
+   * natural order sorted by time. However, if we "ORDER BY thread DESC"
+   * we get:
+   *
+   * 2
+   * 1.2
+   * 1.1.1
+   * 1.1
+   * 1
+   *
+   * Clearly, this is not a natural way to see a thread, and users will get
+   * confused. The natural order to show a thread by time desc would be:
+   *
+   * 2
+   * 1
+   * 1.2
+   * 1.1
+   * 1.1.1
+   *
+   * which is what we already did before the standard pager patch. To achieve
+   * this we simply add a "/" at the end of each "thread" value. This way, the
+   * thread fields will look like this:
+   *
+   * 1/
+   * 1.1/
+   * 1.1.1/
+   * 1.2/
+   * 2/
+   *
+   * we add "/" since this char is, in ASCII, higher than every number, so if
+   * now we "ORDER BY thread DESC" we get the correct order. However this would
+   * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
+   * to consider the trailing "/" so we use a substring only.
+   */
+  public function loadThread(EntityInterface $entity, $field_name, $mode, $comments_per_page = 0, $pager_id = 0) {
+    $query = $this->database->select('comment_field_data', 'c');
+    if ($comments_per_page) {
+      $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+        ->limit($comments_per_page);
+      if ($pager_id) {
+        $query->element($pager_id);
+      }
+    }
+    $query->addField('c', 'cid');
+    $query
+      ->condition('c.entity_id', $entity->id())
+      ->condition('c.entity_type', $entity->getEntityTypeId())
+      ->condition('c.field_name', $field_name)
+      ->condition('c.default_langcode', 1)
+      ->addTag('entity_access')
+      ->addTag('comment_filter')
+      ->addMetaData('base_table', 'comment')
+      ->addMetaData('entity', $entity)
+      ->addMetaData('field_name', $field_name);
+
+    $count_query = $this->database->select('comment_field_data', 'c');
+    $count_query->addExpression('COUNT(*)');
+    $count_query
+      ->condition('c.entity_id', $entity->id())
+      ->condition('c.entity_type', $entity->getEntityTypeId())
+      ->condition('c.field_name', $field_name)
+      ->condition('c.default_langcode', 1)
+      ->addTag('entity_access')
+      ->addTag('comment_filter')
+      ->addMetaData('base_table', 'comment')
+      ->addMetaData('entity', $entity)
+      ->addMetaData('field_name', $field_name);
+
+    if (!$this->currentUser->hasPermission('administer comments')) {
+      $query->condition('c.status', CommentInterface::PUBLISHED);
+      $count_query->condition('c.status', CommentInterface::PUBLISHED);
+    }
+    if ($mode == CommentManagerInterface::COMMENT_MODE_FLAT) {
+      $query->orderBy('c.cid', 'ASC');
+    }
+    else {
+      // See comment above. Analysis reveals that this doesn't cost too
+      // much. It scales much much better than having the whole comment
+      // structure.
+      $query->addExpression('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'torder');
+      $query->orderBy('torder', 'ASC');
+    }
+
+    $query->setCountQuery($count_query);
+    $cids = $query->execute()->fetchCol();
+
+    $comments = array();
+    if ($cids) {
+      $comments = $this->loadMultiple($cids);
+    }
+
+    return $comments;
   }
 
   /**

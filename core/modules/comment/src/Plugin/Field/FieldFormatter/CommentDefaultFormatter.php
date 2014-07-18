@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
+use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentStorageInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
@@ -152,8 +153,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
         $this->currentUser->hasPermission('administer comments'))) {
         $mode = $comment_settings['default_mode'];
         $comments_per_page = $comment_settings['per_page'];
-        if ($cids = comment_get_thread($entity, $field_name, $mode, $comments_per_page, $this->getSetting('pager_id'))) {
-          $comments = $this->storage->loadMultiple($cids);
+        $comments = $this->storage->loadThread($entity, $field_name, $mode, $comments_per_page, $this->getSetting('pager_id'));
+        if ($comments) {
           comment_prepare_thread($comments);
           $build = $this->viewBuilder->viewMultiple($comments);
           $build['pager']['#theme'] = 'pager';
