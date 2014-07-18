@@ -15,6 +15,10 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -31,9 +35,10 @@ use Symfony\Component\HttpFoundation\Request;
  * @see \Drupal\Tests\KernelTestBase::$modules
  * @see \Drupal\Tests\KernelTestBase::enableModules()
  */
-abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements ServiceProviderInterface {
+abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements ServiceProviderInterface, LoggerInterface {
 
   #use AssertContentTrait;
+  use LoggerTrait;
 
   /**
    * Implicitly TRUE by default, but MUST be TRUE for kernel tests.
@@ -55,7 +60,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   protected $siteDirectory;
   protected $databasePrefix;
   protected $container;
-  protected static $compiledContainer;
 
   /**
    * Modules to enable.
@@ -132,6 +136,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    */
   protected function setUp() {
     parent::setUp();
+    $this->streamWrappers = array();
     \Drupal::setContainer(NULL);
 
     require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
@@ -151,6 +156,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     $settings = array(
       'hash_salt' => get_class($this),
+      // @todo Disable Twig template compiler/dumper.
     );
 
     $databases['default']['default'] = array(
@@ -176,20 +182,40 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Add this test class as a service provider.
     $GLOBALS['conf']['container_service_providers']['test'] = $this;
 
-    // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
     new Settings($settings);
-    if (!isset(static::$compiledContainer)) {
+
+    $container_classname = get_class($this) . '_Container';
+    $container_parts = explode('\\', $container_classname);
+    $container_shortname = array_pop($container_parts);
+
+    if (!class_exists($container_classname, FALSE)) {
+      // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
       $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
       $kernel->setSitePath($this->siteDirectory);
       $kernel->boot();
-      static::$compiledContainer = serialize($kernel->getContainer());
+      $dumper = new PhpDumper($kernel->getContainer());
+      $code = $dumper->dump(array(
+        'namespace' => implode('\\', $container_parts),
+        'class' => $container_shortname,
+        'base_class' => \Drupal\Core\DrupalKernel::CONTAINER_BASE_CLASS,
+      ));
+      $container_file = tempnam(sys_get_temp_dir(), 'drupal-phpunit-container-');
+      file_put_contents($container_file, $code);
+      include $container_file;
+      unlink($container_file);
     }
-    $this->container = unserialize(static::$compiledContainer);
-    \Drupal::setContainer($this->container);
+
+    $this->container = new $container_classname();
+    $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
+    $kernel->setSitePath($this->siteDirectory);
+    $kernel->setContainer($this->container);
+    $kernel->boot();
 
     // Add a master request to the stack.
     $request = Request::create('/');
     $this->container->get('request_stack')->push($request);
+
+    $this->container->set('test.logger', $this);
 
     // Create and set new configuration directories.
     #$this->prepareConfigDirectories();
@@ -199,43 +225,31 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // \Drupal\Core\Config\ConfigInstaller::installDefaultConfig() to work.
     // Write directly to active storage to avoid early instantiation of
     // the event dispatcher which can prevent modules from registering events.
-    \Drupal::service('config.storage')->write('core.extension', array('module' => array(), 'theme' => array()));
+    $this->container->get('config.storage')->write('core.extension', array(
+      'module' => array(),
+      'theme' => array(),
+    ));
 
     // Collect and set a fixed module list.
-    $class = get_class($this);
-    $modules = array();
-    while ($class) {
-      if (property_exists($class, 'modules')) {
-        // Only add the modules, if the $modules property was not inherited.
-        $rp = new \ReflectionProperty($class, 'modules');
-        if ($rp->class == $class) {
-          $modules[$class] = $class::$modules;
-        }
-      }
-      $class = get_parent_class($class);
-    }
-    // Modules have been collected in reverse class hierarchy order; modules
-    // defined by base classes should be sorted first. Then, merge the results
-    // together.
-    $modules = array_reverse($modules);
-    $modules = call_user_func_array('array_merge_recursive', $modules);
+    // @todo Move before $kernel->boot() + prime core.extension above.
+    $modules = self::getModulesToEnable(get_class($this));
     if ($modules) {
       $this->enableModules($modules);
     }
+
     // In order to use theme functions default theme config needs to exist.
-    \Drupal::config('system.theme')->set('default', 'stark');
+//    \Drupal::config('system.theme')->set('default', 'stark')->save();
 
     // Tests based on this class are entitled to use Drupal's File and
     // StreamWrapper APIs.
     // @todo Move StreamWrapper management into DrupalKernel.
     // @see https://drupal.org/node/2028109
-    $this->streamWrappers = array();
     // The public stream wrapper only depends on the file_public_path setting,
     // which is provided by UnitTestBase::setUp().
-    $this->registerStreamWrapper('public', 'Drupal\Core\StreamWrapper\PublicStream');
+//    $this->registerStreamWrapper('public', 'Drupal\Core\StreamWrapper\PublicStream');
     // The temporary stream wrapper is able to operate both with and without
     // configuration.
-    $this->registerStreamWrapper('temporary', 'Drupal\Core\StreamWrapper\TemporaryStream');
+//    $this->registerStreamWrapper('temporary', 'Drupal\Core\StreamWrapper\TemporaryStream');
   }
 
   /**
@@ -252,12 +266,10 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   public function register(ContainerBuilder $container) {
     $this->container = $container;
 
-    // Set the default language on the minimal container.
-    $container->setParameter('language.default_values', Language::$defaultValues);
-
-    $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
-    $container->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
-
+    $container
+      ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
+    $container
+      ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
     $container
       ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
     $container
@@ -268,20 +280,30 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       // table, from being registered to the path processor manager. We do this
       // by removing the tags that the compiler pass looks for. This means the
       // url generator can safely be used within tests.
-      $definition = $container->getDefinition('path_processor_alias');
-      $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
+      $container->getDefinition('path_processor_alias')
+        ->clearTag('path_processor_inbound')
+        ->clearTag('path_processor_outbound');
     }
 
     if ($container->hasDefinition('password')) {
-      $container->getDefinition('password')->setArguments(array(1));
+      $container->getDefinition('password')
+        ->setArguments(array(1));
     }
+
+    $container
+      ->register('test.logger', __CLASS__)
+      ->setSynthetic(TRUE)
+      ->addTag('logger');
   }
 
   /**
    * {@inheritdoc}
    */
   protected function tearDown() {
-    $this->container->get('kernel')->shutdown();
+    // tearDown() is always invoked, even in case setUp() failed.
+    if ($this->container) {
+      $this->container->get('kernel')->shutdown();
+    }
 
     // Before tearing down the test environment, ensure that no stream wrapper
     // of this test leaks into the parent environment. Unlike all other global
@@ -557,6 +579,48 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     $this->setRawContent($content);
     $this->verbose('<pre style="white-space: pre-wrap">' . String::checkPlain($content));
     return $content;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function log($level, $message, array $context = array()) {
+    if ($level <= WATCHDOG_WARNING) {
+      $message_placeholders = $this->container->get('logger.log_message_parser')
+        ->parseMessagePlaceholders($message, $context);
+      if (!empty($message_placeholders)) {
+        $message = strtr($message, $message_placeholders);
+      }
+      if (!isset($context['backtrace'])) {
+        $context['backtrace'][0]['file'] = __FILE__;
+        $context['backtrace'][0]['line'] = __LINE__;
+      }
+      throw new \ErrorException($message, $level, $level, $context['backtrace'][0]['file'], $context['backtrace'][0]['line']);
+    }
+  }
+
+  /**
+   * Returns the modules to enable for this test.
+   *
+   * @return array
+   */
+  private static function getModulesToEnable($class) {
+    $modules = array();
+    while ($class) {
+      if (property_exists($class, 'modules')) {
+        // Only add the modules, if the $modules property was not inherited.
+        $rp = new \ReflectionProperty($class, 'modules');
+        if ($rp->class == $class) {
+          $modules[$class] = $class::$modules;
+        }
+      }
+      $class = get_parent_class($class);
+    }
+    // Modules have been collected in reverse class hierarchy order; modules
+    // defined by base classes should be sorted first. Then, merge the results
+    // together.
+    $modules = array_reverse($modules);
+    return call_user_func_array('array_merge_recursive', $modules);
   }
 
   public function __get($name) {

@@ -21,6 +21,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::setUpBeforeClass
    */
   public function testSetUpBeforeClass() {
+    // Note: PHPUnit automatically restores the original working directory.
     $this->assertSame(realpath(__DIR__ . '/../../../../'), getcwd());
   }
 
@@ -125,6 +126,17 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', $new_request);
     $this->assertSame($new_request, \Drupal::request());
     $this->assertSame($request, $new_request);
+  }
+
+  /**
+   * @covers ::log
+   * @expectedException \ErrorException
+   * @expectedExceptionCode WATCHDOG_WARNING
+   * @expectedExceptionMessage Some problem.
+   */
+  public function testLog() {
+    watchdog('system', 'Not a problem.', array(), WATCHDOG_NOTICE);
+    watchdog('system', 'Some problem.', array(), WATCHDOG_WARNING);
   }
 
 }

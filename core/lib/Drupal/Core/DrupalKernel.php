@@ -410,6 +410,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setContainer(ContainerInterface $container) {
+    $this->container = $container;
+    return $this;
+  }
+
+  /**
    * Helper method that does request related initialization.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -687,9 +695,16 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
 
+    // If we haven't booted yet but there is a container, then we're asked to
+    // boot the container injected via setContainer().
+    // @see \Drupal\Tests\KernelTestBase::setUp()
+    if (isset($this->container) && !$this->booted) {
+      $container = $this->container;
+    }
+
     // If the module list hasn't already been set in updateModules and we are
     // not forcing a rebuild, then try and load the container from the disk.
-    if (!isset($this->moduleList) && !$rebuild) {
+    if (!isset($container) && !isset($this->moduleList) && !$rebuild) {
       $class = $this->getClassName();
       $cache_file = $class . '.php';
 
@@ -704,6 +719,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
 
+    // If there is still no container, build a new one from scratch.
     if (!isset($container)) {
       $container = $this->compileContainer();
     }
