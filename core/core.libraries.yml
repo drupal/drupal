@@ -3,6 +3,10 @@
 backbone:
   remote: https://github.com/jashkenas/backbone
   version: 1.1.0
+  license:
+    name: MIT
+    url: https://github.com/jashkenas/backbone/blob/1.1.0/LICENSE
+    gpl-compatible: true
   js:
     assets/vendor/backbone/backbone.js: { weight: -19 }
   dependencies:
@@ -12,18 +16,30 @@ classList:
   remote: https://github.com/eligrey/classList.js
   # @todo Stable release required for Drupal 8.0.
   version: master
+  license:
+    name: Public Domain
+    url: https://github.com/eligrey/classList.js/blob/master/LICENSE.md
+    gpl-compatible: true
   js:
     assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false } }
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev
   version: 4.4.0
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor-dev/blob/887d81ac1824008b690e439a1b29eb4f13b51212/LICENSE.md
+    gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false }
 
 domready:
   remote: https://github.com/ded/domready
   version: 1.0.4
+  license:
+    name: MIT
+    url: https://github.com/ded/domready/blob/v1.0.4/LICENSE
+    gpl-compatible: true
   js:
     assets/vendor/domready/ready.min.js: { weight: -21 }
 
@@ -278,18 +294,30 @@ drupal.vertical-tabs:
 html5shiv:
   remote: https://github.com/aFarkas/html5shiv
   version: 3.6.2
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: http://www.gnu.org/licenses/gpl-2.0.html
+    gpl-compatible: true
   js:
     assets/vendor/html5shiv/html5.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false } }
 
 jquery:
   remote: https://github.com/jquery/jquery
   version: 2.1.0
+  license:
+    name: MIT
+    url: https://github.com/jquery/jquery/blob/2.1.0/MIT-LICENSE.txt
+    gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.js: { weight: -20 }
 
 jquery.cookie:
   remote: https://github.com/carhartl/jquery-cookie
   version: v1.4.0
+  license:
+    name: MIT
+    url: https://github.com/carhartl/jquery-cookie/blob/v1.4.0/MIT-LICENSE.txt
+    gpl-compatible: true
   js:
     assets/vendor/jquery.cookie/jquery.cookie.js: {}
   dependencies:
@@ -299,6 +327,10 @@ jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic
   # @todo Ping @robloach or @mattfarina to retroactively create this release.
   version: 1.2
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/mattfarina/farbtastic/blob/master/LICENSE.txt
+    gpl-compatible: true
   js:
     assets/vendor/farbtastic/farbtastic.js: {}
   css:
@@ -310,6 +342,10 @@ jquery.farbtastic:
 jquery.form:
   remote: https://github.com/malsup/form
   version: 3.50
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: http://malsup.github.com/gpl-license-v2.txt
+    gpl-compatible: true
   js:
     assets/vendor/jquery-form/jquery.form.js: {}
   dependencies:
@@ -325,6 +361,10 @@ jquery.intrinsic:
 jquery.joyride:
   remote: https://github.com/zurb/joyride
   version: v2.0.3
+  license:
+    name: MIT
+    url: https://github.com/zurb/joyride/blob/v2.0.3/README.markdown
+    gpl-compatible: true
   js:
     assets/vendor/jquery-joyride/jquery.joyride-2.0.3.js: {}
   dependencies:
@@ -334,6 +374,10 @@ jquery.joyride:
 jquery.once:
   remote: https://github.com/RobLoach/jquery-once
   version: 1.2.3
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/RobLoach/jquery-once/blob/1.2.3/LICENSE
+    gpl-compatible: true
   js:
     assets/vendor/jquery-once/jquery.once.js: { weight: -19 }
   dependencies:
@@ -341,7 +385,11 @@ jquery.once:
 
 jquery.ui:
   remote: https://github.com/jquery/jquery-ui
-  version: &jquery_ui 1.10.2
+  version: &jquery_ui_version 1.10.2
+  license: &jquery_ui_license
+    name: MIT
+    url: https://github.com/jquery/jquery-ui/blob/1.10.2/MIT-LICENSE.txt
+    gpl-compatible: true
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.core.js: { weight: -11 }
   css:
@@ -353,7 +401,8 @@ jquery.ui:
     - core/jquery
 
 jquery.ui.accordion:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.accordion.js: {}
   css:
@@ -364,7 +413,8 @@ jquery.ui.accordion:
     - core/jquery.ui.widget
 
 jquery.ui.autocomplete:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.autocomplete.js: {}
   css:
@@ -377,7 +427,8 @@ jquery.ui.autocomplete:
     - core/jquery.ui.menu
 
 jquery.ui.button:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.button.js: {}
   css:
@@ -388,7 +439,8 @@ jquery.ui.button:
     - core/jquery.ui.widget
 
 jquery.ui.datepicker:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.datepicker.js: {}
   css:
@@ -398,7 +450,8 @@ jquery.ui.datepicker:
     - core/jquery.ui
 
 jquery.ui.dialog:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.dialog.js: {}
   css:
@@ -414,7 +467,8 @@ jquery.ui.dialog:
     - core/jquery.ui.resizable
 
 jquery.ui.draggable:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.draggable.js: {}
   dependencies:
@@ -423,7 +477,8 @@ jquery.ui.draggable:
     - core/jquery.ui.widget
 
 jquery.ui.droppable:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.droppable.js: {}
   dependencies:
@@ -433,103 +488,118 @@ jquery.ui.droppable:
     - core/jquery.ui.draggable
 
 jquery.ui.effects.core:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.core.js: { weight: -9 }
 
 jquery.ui.effects.blind:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.blind.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.bounce:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.bounce.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.clip:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.clip.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.drop:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.drop.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.explode:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.explode.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.fade:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.fade.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.fold:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.fold.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.highlight:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.highlight.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.pulsate:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.pulsate.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.scale:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.scale.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.shake:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.shake.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.slide:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.slide.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.effects.transfer:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.effects.transfer.js: {}
   dependencies:
     - core/jquery.ui.effects.core
 
 jquery.ui.menu:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.menu.js: {}
   css:
@@ -540,19 +610,22 @@ jquery.ui.menu:
     - core/jquery.ui.widget
 
 jquery.ui.mouse:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.mouse.js: {}
   dependencies:
     - core/jquery.ui.widget
 
 jquery.ui.position:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.position.js: {}
 
 jquery.ui.progressbar:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.progressbar.js: {}
   css:
@@ -563,7 +636,8 @@ jquery.ui.progressbar:
     - core/jquery.ui.widget
 
 jquery.ui.resizable:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.resizable.js: {}
   css:
@@ -575,7 +649,8 @@ jquery.ui.resizable:
     - core/jquery.ui.mouse
 
 jquery.ui.selectable:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.selectable.js: {}
   css:
@@ -587,7 +662,8 @@ jquery.ui.selectable:
     - core/jquery.ui.widget
 
 jquery.ui.slider:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.slider.js: {}
   css:
@@ -599,7 +675,8 @@ jquery.ui.slider:
     - core/jquery.ui.widget
 
 jquery.ui.sortable:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.sortable.js: {}
   dependencies:
@@ -608,7 +685,8 @@ jquery.ui.sortable:
     - core/jquery.ui.widget
 
 jquery.ui.spinner:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.spinner.js: {}
   dependencies:
@@ -617,7 +695,8 @@ jquery.ui.spinner:
     - core/jquery.ui.button
 
 jquery.ui.tabs:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.tabs.js: {}
   css:
@@ -628,7 +707,8 @@ jquery.ui.tabs:
     - core/jquery.ui.widget
 
 jquery.ui.tooltip:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.tooltip.js: {}
   css:
@@ -642,13 +722,18 @@ jquery.ui.tooltip:
 jquery.ui.touch-punch:
   remote: https://github.com/furf/jquery-ui-touch-punch
   version: 0.2.2
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/furf/jquery-ui-touch-punch
+    gpl-compatible: true
   js:
     assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js: {}
   dependencies:
     - core/jquery.ui
 
 jquery.ui.widget:
-  version: *jquery_ui
+  version: *jquery_ui_version
+  license: *jquery_ui_license
   js:
     assets/vendor/jquery.ui/ui/jquery.ui.widget.js: { weight: -10 }
   dependencies:
@@ -659,6 +744,10 @@ matchmedia:
   # @todo Contribute upstream and replace with upstream version.
   # @see http://drupal.org/node/1815602
   version: VERSION
+  license:
+    name: MIT
+    url: https://github.com/paulirish/matchMedia.js/blob/0.1.0/LICENSE.txt
+    gpl-compatible: true
   js:
     misc/matchmedia.js: {}
   dependencies:
@@ -666,6 +755,10 @@ matchmedia:
 
 modernizr:
   remote: https://github.com/Modernizr/Modernizr
+  license:
+    name: MIT
+    url: http://modernizr.com/license/
+    gpl-compatible: true
   version: v2.6.2
   js:
     assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, scope: header, weight: -21 }
@@ -673,6 +766,10 @@ modernizr:
 normalize:
   remote: https://github.com/necolas/normalize.css
   version: 3.0.1
+  license:
+    name: MIT
+    url: https://github.com/necolas/normalize.css/blob/master/LICENSE.md
+    gpl-compatible: true
   css:
     base:
       assets/vendor/normalize-css/normalize.css: { every_page: true, weight: -20 }
@@ -682,6 +779,10 @@ picturefill:
   # @todo Contribute upstream and/or replace with upstream version.
   # @see https://drupal.org/node/1775530
   version: VERSION
+  license:
+    name: MIT
+    url: https://github.com/scottjehl/picturefill/blob/master/LICENSE
+    gpl-compatible: true
   js:
     assets/vendor/picturefill/picturefill.js: { weight: -10 }
   dependencies:
@@ -690,6 +791,9 @@ picturefill:
 underscore:
   remote: https://github.com/jashkenas/underscore
   version: 1.5.2
+  license:
+    name: MIT
+    url: https://github.com/jashkenas/underscore/blob/1.5.2/LICENSE
+    gpl-compatible: true
   js:
     assets/vendor/underscore/underscore.js: { weight: -20 }
-

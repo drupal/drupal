@@ -9,6 +9,7 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
+use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Yaml;
@@ -85,6 +86,20 @@ class LibraryDiscoveryParser {
         elseif ($library['version'][0] === 'v') {
           $library['version'] = substr($library['version'], 1);
         }
+      }
+
+      // If this is a 3rd party library, the license info is required.
+      if (isset($library['remote']) && !isset($library['license'])) {
+        throw new LibraryDefinitionMissingLicenseException(sprintf("Missing license information in library definition for '%s' in %s: it has a remote, but no license.", $id, $library_file));
+      }
+
+      // Assign Drupal's license to libraries that don't have license info.
+      if (!isset($library['license'])) {
+        $library['license'] = array(
+          'name' => 'GNU-GPL-2.0-or-later',
+          'url' => 'https://drupal.org/licensing/faq',
+          'gpl-compatible' => TRUE,
+        );
       }
 
       foreach (array('js', 'css') as $type) {
