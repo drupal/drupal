@@ -18,7 +18,7 @@ easily test the client.
 Procedural API
 --------------
 
-Here's an example of sending a ``GET`` request using the procedural API.
+Here's an example of sending a ``POST`` request using the procedural API.
 
 .. code-block:: php
 
@@ -377,7 +377,7 @@ Guzzle can maintain a cookie session for you if instructed using the
 - Set to ``true`` to use a shared cookie session associated with the client.
 - Pass an associative array containing cookies to send in the request and start
   a new cookie session.
-- Set to a ``GuzzleHttp\Subscriber\CookieJar\CookieJarInterface`` object to uss
+- Set to a ``GuzzleHttp\Subscriber\CookieJar\CookieJarInterface`` object to use
   an existing cookie jar.
 
 Redirects
@@ -437,7 +437,7 @@ Guzzle throws exceptions for errors that occur during a transfer.
           }
       }
 
-- A ``GuzzleHttp\Exception\ClientErrorResponseException`` is thrown for 400
+- A ``GuzzleHttp\Exception\ClientException`` is thrown for 400
   level errors if the ``exceptions`` request option is set to true. This
   exception extends from ``GuzzleHttp\Exception\BadResponseException`` and
   ``GuzzleHttp\Exception\BadResponseException`` extends from
@@ -445,16 +445,16 @@ Guzzle throws exceptions for errors that occur during a transfer.
 
   .. code-block:: php
 
-      use GuzzleHttp\Exception\ClientErrorResponseException;
+      use GuzzleHttp\Exception\ClientException;
 
       try {
           $client->get('https://github.com/_abc_123_404');
-      } catch (ClientErrorResponseException $e) {
+      } catch (ClientException $e) {
           echo $e->getRequest();
           echo $e->getResponse();
       }
 
-- A ``GuzzleHttp\Exception\ServerErrorResponse`` is thrown for 500 level
+- A ``GuzzleHttp\Exception\ServerException`` is thrown for 500 level
   errors if the ``exceptions`` request option is set to true. This
   exception extends from ``GuzzleHttp\Exception\BadResponseException``.
 - A ``GuzzleHttp\Exception\TooManyRedirectsException`` is thrown when too

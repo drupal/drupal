@@ -25,7 +25,14 @@ interface StreamInterface
     /**
      * Separates any underlying resources from the stream.
      *
-     * After the stream has been detached, the stream is in an unusable state.
+     * After the underlying resource has been detached, the stream object is in
+     * an unusable state. If you wish to use a Stream object as a PHP stream
+     * but keep the Stream object in a consistent state, use
+     * {@see GuzzleHttp\Stream\GuzzleStreamWrapper::getResource}.
+     *
+     * @return resource|null Returns the underlying PHP stream resource or null
+     *                       if the Stream object did not utilize an underlying
+     *                       stream resource.
      */
     public function detach();
 
@@ -68,7 +75,7 @@ interface StreamInterface
      *                    SEEK_CUR: Set position to current location plus offset
      *                    SEEK_END: Set position to end-of-stream plus offset
      *
-     * @return bool Returns TRUE on success or FALSE on failure
+     * @return bool Returns true on success or false on failure
      * @link   http://www.php.net/manual/en/function.fseek.php
      */
     public function seek($offset, $whence = SEEK_SET);
@@ -86,7 +93,7 @@ interface StreamInterface
      * @param string $string The string that is to be written.
      *
      * @return int|bool Returns the number of bytes written to the stream on
-     *                  success or FALSE on failure.
+     *                  success or false on failure.
      */
     public function write($string);
 

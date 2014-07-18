@@ -135,8 +135,19 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $r = fopen('php://temp', 'w+');
         $stream = new Stream($r);
         $this->assertTrue($stream->isReadable());
-        $stream->detach();
+        $this->assertSame($r, $stream->detach());
+        $this->assertNull($stream->detach());
         $this->assertFalse($stream->isReadable());
+        $this->assertSame('', $stream->read(10));
+        $this->assertFalse($stream->isWritable());
+        $this->assertFalse($stream->write('foo'));
+        $this->assertFalse($stream->isSeekable());
+        $this->assertFalse($stream->seek(10));
+        $this->assertFalse($stream->tell());
+        $this->assertFalse($stream->eof());
+        $this->assertNull($stream->getSize());
+        $this->assertSame('', (string) $stream);
+        $this->assertSame('', $stream->getContents());
         $stream->close();
     }
 

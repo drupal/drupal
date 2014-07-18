@@ -252,15 +252,19 @@ class PostBody implements PostBodyInterface
      */
     private function createMultipart()
     {
-        $fields = $this->fields;
-        $query = (new Query())
-            ->setEncodingType(false)
-            ->setAggregator($this->getAggregator());
+        // Flatten the nested query string values using the correct aggregator
+        if (!$this->fields) {
+            $fields = [];
+        } else {
+            $query = (string) (new Query($this->fields))
+                ->setEncodingType(false)
+                ->setAggregator($this->getAggregator());
 
-        // Account for fields with an array value
-        foreach ($fields as $name => &$field) {
-            if (is_array($field)) {
-                $field = (string) $query->replace([$name => $field]);
+            // Convert the flattened query string back into an array
+            $fields = [];
+            foreach (explode('&', $query, 2) as $kvp) {
+                $parts = explode('=', $kvp, 2);
+                $fields[$parts[0]] = isset($parts[1]) ? $parts[1] : null;
             }
         }
 

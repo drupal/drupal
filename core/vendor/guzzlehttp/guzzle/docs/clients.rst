@@ -70,7 +70,7 @@ base URL that is a URI template with parameters.
     use GuzzleHttp\Client;
 
     $client = new Client([
-        'base_url' => ['https://api.twitter.com/{version}', ['version' => 'v1.1']],
+        'base_url' => ['https://api.twitter.com/{version}/', ['version' => 'v1.1']],
         'defaults' => [
             'headers' => ['Foo' => 'Bar'],
             'query'   => ['testing' => '123'],
@@ -203,7 +203,7 @@ The ``sendAll()`` method accepts the following associative array of options:
 The "before", "complete", and "error" event options accept a callable or an
 array of associative arrays where each associative array contains a "fn" key
 with a callable value, an optional "priority" key representing the event
-priority (with a default value is 0), and an optional "once" key that can be
+priority (with a default value of 0), and an optional "once" key that can be
 set to true so that the event listener will be removed from the request after
 it is first triggered.
 
@@ -289,7 +289,7 @@ Throwing Errors Immediately
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It sometimes is useful to throw exceptions immediately when the occur. The
-following exmaple shows how to use an event listener to throw exceptions
+following example shows how to use an event listener to throw exceptions
 immeditaley and prevent subsequent requests from being sent.
 
 .. code-block:: php
@@ -308,7 +308,7 @@ Batching Requests
 -----------------
 
 Sometimes you just want to send a few requests in parallel and then process
-the results all at once after they've sent. Guzzle provides a convenience
+the results all at once after they've been sent. Guzzle provides a convenience
 function ``GuzzleHttp\batch()`` that makes this very simple:
 
 .. code-block:: php
@@ -339,7 +339,7 @@ function ``GuzzleHttp\batch()`` that makes this very simple:
 
 ``GuzzleHttp\batch()`` accepts an optional associative array of options in the
 third argument that allows you to specify the 'before', 'complete' and 'error'
-events as well as specify the maximum number of request to send in parallel
+events as well as specify the maximum number of requests to send in parallel
 using the 'parallel' option key. This options array is the exact same format as
 the options array exposed in ``GuzzleHttp\ClientInterface::sendAll()``.
 
@@ -699,7 +699,7 @@ to an open Guzzle stream:
 events
 ------
 
-:Summary: Associative array mapping event names to a callable. or an
+:Summary: An associative array mapping event names to a callable. Or an
     associative array containing the 'fn' key that maps to a callable, an
     optional 'priority' key used to specify the event priority, and an optional
     'once' key used to specify if the event should remove itself the first time
@@ -896,7 +896,7 @@ Pass a string to specify a proxy for all protocols.
 
 .. code-block:: php
 
-    $client->get('/', ['proxy' => 'tcp://localhost:8124']);
+    $client->get('/', ['proxy' => 'tcp://localhost:8125']);
 
 Pass an associative array to specify HTTP proxies for specific URI schemes
 (i.e., "http", "https").
@@ -905,7 +905,7 @@ Pass an associative array to specify HTTP proxies for specific URI schemes
 
     $client->get('/', [
         'proxy' => [
-            'http'  => 'tcp://localhost:8124', // Use this proxy with "http"
+            'http'  => 'tcp://localhost:8125', // Use this proxy with "http"
             'https' => 'tcp://localhost:9124'  // Use this proxy with "https"
         ]
     ]);
@@ -1103,7 +1103,7 @@ behavior of the library.
 ``HTTP_PROXY``
     Defines the proxy to use when sending requests using the "http" protocol.
 ``HTTPS_PROXY``
-    Defines the proxy to use when sending requests using the "https": protocol.
+    Defines the proxy to use when sending requests using the "https" protocol.
 
 Relevant ini Settings
 ---------------------

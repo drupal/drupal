@@ -64,6 +64,21 @@ class PostBodyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($m->hasHeader('Content-Length'));
     }
 
+    public function testMultipartWithNestedFields()
+    {
+      $b = new PostBody();
+      $b->setField('foo', ['bar' => 'baz']);
+      $b->forceMultipartUpload(true);
+      $this->assertEquals(['foo' => ['bar' => 'baz']], $b->getFields());
+      $m = new Request('POST', '/');
+      $b->applyRequestHeaders($m);
+      $this->assertContains('multipart/form-data', (string) $m->getHeader('Content-Type'));
+      $this->assertTrue($m->hasHeader('Content-Length'));
+      $contents = $b->getContents();
+      $this->assertContains('name="foo[bar]"', $contents);
+      $this->assertNotContains('name="foo"', $contents);
+    }
+
     public function testCountProvidesFieldsAndFiles()
     {
         $b = new PostBody();
@@ -136,5 +151,20 @@ class PostBodyTest extends \PHPUnit_Framework_TestCase
         $s = (string) $b;
         $this->assertContains(file_get_contents(__FILE__), $s);
         $this->assertContains('testing=bar', $s);
+    }
+
+    public function testMultipartWithBase64Fields()
+    {
+      $b = new PostBody();
+      $b->setField('foo64', '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc=');
+      $b->forceMultipartUpload(true);
+      $this->assertEquals(['foo64' => '/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc='], $b->getFields());
+      $m = new Request('POST', '/');
+      $b->applyRequestHeaders($m);
+      $this->assertContains('multipart/form-data', (string) $m->getHeader('Content-Type'));
+      $this->assertTrue($m->hasHeader('Content-Length'));
+      $contents = $b->getContents();
+      $this->assertContains('name="foo64"', $contents);
+      $this->assertContains('/xA2JhWEqPcgyLRDdir9WSRi/khpb2Lh3ooqv+5VYoc=', $contents);
     }
 }

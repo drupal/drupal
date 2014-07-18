@@ -40,7 +40,9 @@ class LimitStream implements StreamInterface, MetadataStreamInterface
 
         $tell = $this->stream->tell();
 
-        return $tell === false || (($this->offset + $this->limit) - $tell) <= 0;
+        return $tell === false ||
+            ($tell >= $this->offset + $this->limit) ||
+            $this->stream->eof();
     }
 
     /**

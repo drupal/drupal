@@ -78,6 +78,9 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
         $url = Url::buildUrl(['path' => '0']);
         $this->assertSame('0', $url);
+
+        $url = Url::buildUrl(['host' => '', 'path' => '0']);
+        $this->assertSame('0', $url);
     }
 
     public function testUrlStoresParts()
@@ -193,6 +196,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             [self::RFC3986_BASE, 'g..',           'http://a/b/c/g..'],
             [self::RFC3986_BASE, '..g',           'http://a/b/c/..g'],
             [self::RFC3986_BASE, './../g',        'http://a/b/g'],
+            [self::RFC3986_BASE, 'foo////g',      'http://a/b/c/foo////g'],
             [self::RFC3986_BASE, './g/.',         'http://a/b/c/g/'],
             [self::RFC3986_BASE, 'g/./h',         'http://a/b/c/g/h'],
             [self::RFC3986_BASE, 'g/../h',        'http://a/b/c/h'],
@@ -248,7 +252,8 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('/foo/..', '/'),
-            array('//foo//..', '/'),
+            array('//foo//..', '//foo/'),
+            array('/foo//', '/foo//'),
             array('/foo/../..', '/'),
             array('/foo/../.', '/'),
             array('/./foo/..', '/'),
