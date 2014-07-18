@@ -7,6 +7,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -46,13 +47,15 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
    *   The database connection to be used.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
    * @param \Drupal\comment\CommentStatisticsInterface $comment_statistics
    *   The comment statistics service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, CommentStatisticsInterface $comment_statistics, AccountInterface $current_user) {
-    parent::__construct($entity_info, $database, $entity_manager);
+  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityManagerInterface $entity_manager, CommentStatisticsInterface $comment_statistics, AccountInterface $current_user, CacheBackendInterface $cache) {
+    parent::__construct($entity_info, $database, $entity_manager, $cache);
     $this->statistics = $comment_statistics;
     $this->currentUser = $current_user;
   }
@@ -66,7 +69,8 @@ class CommentStorage extends ContentEntityDatabaseStorage implements CommentStor
       $container->get('database'),
       $container->get('entity.manager'),
       $container->get('comment.statistics'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('cache.entity')
     );
   }
 

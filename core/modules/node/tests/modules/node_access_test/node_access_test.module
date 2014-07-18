@@ -19,8 +19,9 @@
  * @see \Drupal\node\Tests\NodeAccessBaseTableTest
  */
 
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -127,74 +128,32 @@ function node_access_test_permission() {
 }
 
 /**
- * Implements hook_entity_base_field_info().
+ * Adds the private field to a node type.
+ *
+ * @param \Drupal\node\NodeTypeInterface $type
+ *   A node type entity.
  */
-function node_access_test_entity_base_field_info(EntityTypeInterface $entity_type) {
-  if ($entity_type->id() === 'node') {
-    $fields['private'] = FieldDefinition::create('boolean')
-      ->setLabel(t('Private'))
-      ->setComputed(TRUE)
-      ->setCustomStorage(TRUE);
+function node_access_test_add_field(NodeTypeInterface $type) {
+  $field = FieldConfig::create(array(
+    'name' => 'private',
+    'entity_type' => 'node',
+    'type' => 'integer',
+  ));
+  $field->save();
+  $instance = FieldInstanceConfig::create(array(
+    'field_name' => 'private',
+    'entity_type' => 'node',
+    'bundle' => $type->id(),
+    'label' => 'Private',
+  ));
+  $instance->save();
 
-    return $fields;
-  }
-}
-
-/**
- * Implements hook_form_BASE_FORM_ID_alter().
- */
-function node_access_test_form_node_form_alter(&$form, $form_state) {
-  // Only show this checkbox for NodeAccessBaseTableTestCase.
-  if (\Drupal::state()->get('node_access_test.private')) {
-    $node = $form_state['controller']->getEntity($form_state);
-    $form['private'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Private'),
-      '#description' => t('Check here if this content should be set private and only shown to privileged users.'),
-      '#default_value' => $node->private->value,
-    );
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_load() for node entities.
- */
-function node_access_test_node_load($nodes) {
-  $result = db_query('SELECT nid, private FROM {node_access_test} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
-  foreach ($result as $record) {
-    $nodes[$record->nid]->private = $record->private;
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for node entities.
- */
-function node_access_test_node_predelete(NodeInterface $node) {
-  db_delete('node_access_test')->condition('nid', $node->id())->execute();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert() for node entities.
- */
-function node_access_test_node_insert(NodeInterface $node) {
-  _node_access_test_node_write($node);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for node entities.
- */
-function node_access_test_node_update(NodeInterface $node) {
-  _node_access_test_node_write($node);
-}
-
-/**
- * Saves the private status of the node in the database.
- */
-function _node_access_test_node_write(NodeInterface $node) {
-  db_merge('node_access_test')
-    ->key('nid', $node->id())
-    ->fields(array('private' => (int) $node->private->value))
-    ->execute();
+  // Assign widget settings for the 'default' form mode.
+  entity_get_form_display('node', $type->id(), 'default')
+    ->setComponent('private', array(
+      'type' => 'number',
+    ))
+    ->save();
 }
 
 /**

@@ -537,7 +537,10 @@ function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * This is a generic load hook called for all entity types loaded via the
  * entity API.
  *
- * @param array $entities
+ * hook_entity_storage_load() should be used to load additional data for
+ * content entities.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
  *   The entities keyed by entity ID.
  * @param string $entity_type_id
  *   The type of entities being loaded (i.e. node, user, comment).
@@ -545,7 +548,7 @@ function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_load()
  */
-function hook_entity_load($entities, $entity_type_id) {
+function hook_entity_load(array $entities, $entity_type_id) {
   foreach ($entities as $entity) {
     $entity->foo = mymodule_add_something($entity);
   }
@@ -563,6 +566,40 @@ function hook_entity_load($entities, $entity_type_id) {
 function hook_ENTITY_TYPE_load($entities) {
   foreach ($entities as $entity) {
     $entity->foo = mymodule_add_something($entity);
+  }
+}
+
+/**
+ * Act on content entities when loaded from the storage.
+ *
+ * The results of this hook will be cached.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
+ *   The entities keyed by entity ID.
+ * @param string $entity_type
+ *   The type of entities being loaded (i.e. node, user, comment).
+ *
+ * @see hook_entity_load()
+ */
+function hook_entity_storage_load(array $entities, $entity_type) {
+  foreach ($entities as $entity) {
+    $entity->foo = mymodule_add_something_uncached($entity);
+  }
+}
+
+/**
+ * Act on content entities of a given type when loaded from the storage.
+ *
+ * The results of this hook will be cached if the entity type supports it.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
+ *   The entities keyed by entity ID.
+ *
+ * @see hook_entity_storage_load()
+ */
+function hook_ENTITY_TYPE_storage_load(array $entities) {
+  foreach ($entities as $entity) {
+    $entity->foo = mymodule_add_something_uncached($entity);
   }
 }
 

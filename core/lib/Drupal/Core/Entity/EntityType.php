@@ -40,7 +40,7 @@ class EntityType implements EntityTypeInterface {
    *
    * @var bool
    */
-  protected $field_cache;
+  protected $persistent_cache;
 
   /**
    * An array of entity keys.
@@ -260,8 +260,8 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function isFieldDataCacheable() {
-    return isset($this->field_cache) ? $this->field_cache: TRUE;
+  public function isPersistentlyCacheable() {
+    return isset($this->persistent_cache) ? $this->persistent_cache: TRUE;
   }
 
   /**

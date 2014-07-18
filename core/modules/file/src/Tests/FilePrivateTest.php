@@ -23,6 +23,7 @@ class FilePrivateTest extends FileFieldTestBase {
 
   public function setUp() {
     parent::setUp();
+    node_access_test_add_field(entity_load('node_type', 'article'));
     node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
   }

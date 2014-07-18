@@ -170,17 +170,19 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test field cache.
+   * Test entity cache.
+   *
+   * Complements unit test coverage in
+   * \Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTest.
    */
-  function testFieldAttachCache() {
+  function testEntityCache() {
     // Initialize random values and a test entity.
     $entity_init = entity_create('entity_test', array('type' => $this->instance->bundle));
-    $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field->getCardinality());
 
     // Non-cacheable entity type.
     $entity_type = 'entity_test';
-    $cid = "field:$entity_type:" . $entity_init->id();
+    $cid = "values:$entity_type:" . $entity_init->id();
 
     // Check that no initial cache entry is present.
     $this->assertFalse(\Drupal::cache('entity')->get($cid), 'Non-cached: no initial cache entry');
@@ -189,7 +191,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $entity = clone($entity_init);
     $entity->{$this->field_name}->setValue($values);
     $entity = $this->entitySaveReload($entity);
-    $cid = "field:$entity_type:" . $entity->id();
+    $cid = "values:$entity_type:" . $entity->id();
     $this->assertFalse(\Drupal::cache('entity')->get($cid), 'Non-cached: no cache entry on insert and load');
 
     // Cacheable entity type.
@@ -201,22 +203,22 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     ));
 
     // Check that no initial cache entry is present.
-    $cid = "field:$entity_type:" . $entity->id();
+    $cid = "values:$entity_type:" . $entity->id();
     $this->assertFalse(\Drupal::cache('entity')->get($cid), 'Cached: no initial cache entry');
 
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
     $entity->{$this->field_name_2} = $values;
     $entity->save();
-    $cid = "field:$entity_type:" . $entity->id();
+    $cid = "values:$entity_type:" . $entity->id();
 
     $this->assertFalse(\Drupal::cache('entity')->get($cid), 'Cached: no cache entry on insert');
     // Load, and check that a cache entry is present with the expected values.
     $controller = $this->container->get('entity.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
-    $controller->load($entity->id());
+    $cached_entity = $controller->load($entity->id());
     $cache = \Drupal::cache('entity')->get($cid);
-    $this->assertEqual($cache->data[$langcode][$this->field_name_2], $values, 'Cached: correct cache entry on load');
+    $this->assertEqual($cache->data, $cached_entity, 'Cached: correct cache entry on load');
 
     // Update with different values, and check that the cache entry is wiped.
     $values = $this->_generateTestFieldValues($this->field_2->getCardinality());
@@ -226,9 +228,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // Load, and check that a cache entry is present with the expected values.
     $controller->resetCache();
-    $controller->load($entity->id());
+    $cached_entity = $controller->load($entity->id());
     $cache = \Drupal::cache('entity')->get($cid);
-    $this->assertEqual($cache->data[$langcode][$this->field_name_2], $values, 'Cached: correct cache entry on load');
+    $this->assertEqual($cache->data, $cached_entity, 'Cached: correct cache entry on load');
 
     // Create a new revision, and check that the cache entry is wiped.
     $values = $this->_generateTestFieldValues($this->field_2->getCardinality());
@@ -239,9 +241,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // Load, and check that a cache entry is present with the expected values.
     $controller->resetCache();
-    $controller->load($entity->id());
+    $cached_entity = $controller->load($entity->id());
     $cache = \Drupal::cache('entity')->get($cid);
-    $this->assertEqual($cache->data[$langcode][$this->field_name_2], $values, 'Cached: correct cache entry on load');
+    $this->assertEqual($cache->data, $cached_entity, 'Cached: correct cache entry on load');
 
     // Delete, and check that the cache entry is wiped.
     $entity->delete();

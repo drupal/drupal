@@ -251,6 +251,10 @@ class CommentStatistics implements CommentStatisticsInterface {
         ->condition('field_name', $comment->getFieldName())
         ->execute();
     }
+
+    // Reset the cache of the commented entity so that when the entity is loaded
+    // the next time, the statistics will be loaded again.
+    $this->entityManager->getStorage($comment->getCommentedEntityTypeId())->resetCache(array($comment->getCommentedEntityId()));
   }
 
 }

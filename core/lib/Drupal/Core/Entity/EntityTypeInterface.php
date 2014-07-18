@@ -153,7 +153,7 @@ interface EntityTypeInterface {
    *
    * @return bool
    */
-  public function isFieldDataCacheable();
+  public function isPersistentlyCacheable();
 
   /**
    * Sets the name of the entity type class.

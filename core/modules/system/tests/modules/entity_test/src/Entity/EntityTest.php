@@ -32,7 +32,7 @@ use Drupal\user\UserInterface;
  *   },
  *   base_table = "entity_test",
  *   fieldable = TRUE,
- *   field_cache = FALSE,
+ *   persistent_cache = FALSE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

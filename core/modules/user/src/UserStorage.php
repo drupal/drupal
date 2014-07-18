@@ -8,6 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -32,13 +33,6 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
   protected $password;
 
   /**
-   * Provides the user data service object.
-   *
-   * @var \Drupal\user\UserDataInterface
-   */
-  protected $userData;
-
-  /**
    * Constructs a new UserStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -47,16 +41,15 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
    *   The database connection to be used.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
    * @param \Drupal\Core\Password\PasswordInterface $password
    *   The password hashing service.
-   * @param \Drupal\user\UserDataInterface $user_data
-   *   The user data service.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, PasswordInterface $password, UserDataInterface $user_data) {
-    parent::__construct($entity_type, $database, $entity_manager);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache, PasswordInterface $password) {
+    parent::__construct($entity_type, $database, $entity_manager, $cache);
 
     $this->password = $password;
-    $this->userData = $user_data;
   }
 
   /**
@@ -67,8 +60,8 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
       $entity_type,
       $container->get('database'),
       $container->get('entity.manager'),
-      $container->get('password'),
-      $container->get('user.data')
+      $container->get('cache.entity'),
+      $container->get('password')
     );
   }
 
@@ -149,6 +142,8 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
       ->fields(array('login' => $account->getLastLoginTime()))
       ->condition('uid', $account->id())
       ->execute();
+    // Ensure that the entity cache is cleared.
+    $this->resetCache(array($account->id()));
   }
 
   /**

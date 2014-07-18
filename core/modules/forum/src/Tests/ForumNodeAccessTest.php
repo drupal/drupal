@@ -26,6 +26,7 @@ class ForumNodeAccessTest extends WebTestBase {
   function setUp() {
     parent::setUp();
     node_access_rebuild();
+    node_access_test_add_field(entity_load('node_type', 'forum'));
     \Drupal::state()->set('node_access_test.private', TRUE);
   }
 
@@ -48,7 +49,7 @@ class ForumNodeAccessTest extends WebTestBase {
     $edit = array(
       'title[0][value]' => $private_node_title,
       'body[0][value]' => $this->randomName(200),
-      'private' => TRUE,
+      'private[0][value]' => TRUE,
     );
     $this->drupalPostForm('node/add/forum', $edit, t('Save'), array('query' => array('forum_id' => 1)));
     $private_node = $this->drupalGetNodeByTitle($private_node_title);

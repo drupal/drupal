@@ -77,11 +77,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Access the update page as user 1.
-    $user1 = user_load(1);
-    $user1->pass_raw = user_password();
-    $user1->pass = $this->container->get('password')->hash(trim($user1->pass_raw));
-    db_query("UPDATE {users} SET pass = :pass WHERE uid = :uid", array(':pass' => $user1->getPassword(), ':uid' => $user1->id()));
-    $this->drupalLogin($user1);
+    $this->drupalLogin($this->root_user);
     $this->drupalGet($this->update_url, array('external' => TRUE));
     $this->assertResponse(200);
   }

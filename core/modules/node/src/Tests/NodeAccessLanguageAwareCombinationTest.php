@@ -48,6 +48,8 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
   public function setUp() {
     parent::setUp();
 
+    node_access_test_add_field(entity_load('node_type', 'page'));
+
     // Create the 'private' field, which allows the node to be marked as private
     // (restricted access) in a given translation.
     $field_private = entity_create('field_config', array(

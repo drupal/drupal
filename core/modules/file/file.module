@@ -1893,15 +1893,14 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
           $file_fields[$entity_type_id][$bundle] = array();
           // This contains the possible field names.
           foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
-            $field_type = $field_definition->getType();
             // If this is the first time this field type is seen, check
             // whether it references files.
-            if (!isset($field_columns[$field_type])) {
-              $field_columns[$field_type] = file_field_find_file_reference_column($field_definition);
+            if (!isset($field_columns[$field_definition->getType()])) {
+              $field_columns[$field_definition->getType()] = file_field_find_file_reference_column($field_definition);
             }
             // If the field type does reference files then record it.
-            if ($field_columns[$field_type]) {
-              $file_fields[$entity_type_id][$bundle][$field_name] = $field_columns[$field_type];
+            if ($field_columns[$field_definition->getType()]) {
+              $file_fields[$entity_type_id][$bundle][$field_name] = $field_columns[$field_definition->getType()];
             }
           }
         }

@@ -158,7 +158,14 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     foreach ($this->getEntityType()->getKeys() as $key => $field_name) {
       if (isset($this->values[$field_name])) {
         if (is_array($this->values[$field_name]) && isset($this->values[$field_name][LanguageInterface::LANGCODE_DEFAULT])) {
-          $this->entityKeys[$key] = $this->values[$field_name][LanguageInterface::LANGCODE_DEFAULT];
+          if (is_array($this->values[$field_name][LanguageInterface::LANGCODE_DEFAULT])) {
+            if (isset($this->values[$field_name][LanguageInterface::LANGCODE_DEFAULT][0]['value'])) {
+              $this->entityKeys[$key] = $this->values[$field_name][LanguageInterface::LANGCODE_DEFAULT][0]['value'];
+            }
+          }
+          else {
+            $this->entityKeys[$key] = $this->values[$field_name][LanguageInterface::LANGCODE_DEFAULT];
+          }
         }
       }
     }
@@ -563,6 +570,11 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       $language = $this->languages[$this->activeLangcode];
     }
     else {
+      // @todo Avoid this check by getting the language from the language
+      //   manager directly in https://www.drupal.org/node/2303877.
+      if (!isset($this->languages[$this->defaultLangcode])) {
+        $this->languages += $this->languageManager()->getLanguages(LanguageInterface::STATE_ALL);
+      }
       $language = $this->languages[$this->defaultLangcode];
     }
     return $language;

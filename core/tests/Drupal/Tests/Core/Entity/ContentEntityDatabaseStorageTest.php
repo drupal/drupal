@@ -7,7 +7,10 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -47,15 +50,58 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   protected $entityManager;
 
   /**
+   * The entity type ID.
+   *
+   * @var string
+   */
+  protected $entityTypeId = 'entity_test';
+
+  /**
+   * The dependency injection container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $moduleHandler;
+
+  /**
+   * The cache backend to use.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cache;
+
+  /**
+   * The database connection to use.
+   *
+   * @var \Drupal\Core\Database\Connection|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $connection;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
     $this->entityType = $this->getMock('Drupal\Core\Entity\ContentEntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('id')
-      ->will($this->returnValue('entity_test'));
+      ->will($this->returnValue($this->entityTypeId));
+
+    $this->container = new ContainerBuilder();
+    \Drupal::setContainer($this->container);
 
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
+      ->disableOriginalConstructor()
+      ->getMock();
   }
 
   /**
@@ -905,10 +951,8 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
   public function testFieldSqlSchemaForEntityWithStringIdentifier() {
     $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
 
-    $container = new ContainerBuilder();
-    $container->set('plugin.manager.field.field_type', $field_type_manager);
-    $container->set('entity.manager', $this->entityManager);
-    \Drupal::setContainer($container);
+    $this->container->set('plugin.manager.field.field_type', $field_type_manager);
+    $this->container->set('entity.manager', $this->entityManager);
 
     $this->entityType->expects($this->any())
       ->method('getKey')
@@ -937,7 +981,7 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
       ->method('getDefinition')
       ->with('test_entity')
       ->will($this->returnValue($this->entityType));
-    $this->entityManager->expects($this->once())
+    $this->entityManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
@@ -981,19 +1025,19 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
    */
   public function testCreate() {
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
-    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $container = new ContainerBuilder();
-    $container->set('language_manager', $language_manager);
-    $container->set('entity.manager', $this->entityManager);
-    $container->set('module_handler', $module_handler);
-    \Drupal::setContainer($container);
+    $this->container->set('language_manager', $language_manager);
+    $this->container->set('entity.manager', $this->entityManager);
+    $this->container->set('module_handler', $this->moduleHandler);
 
     $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
       ->setMethods(array('id'))
       ->getMockForAbstractClass();
 
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('id')
+      ->will($this->returnValue($this->entityTypeId));
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
       ->will($this->returnValue(get_class($entity)));
@@ -1031,15 +1075,176 @@ class ContentEntityDatabaseStorageTest extends UnitTestCase {
    * Sets up the content entity database storage.
    */
   protected function setUpEntityStorage() {
-    $connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->entityManager->expects($this->any())
       ->method('getBaseFieldDefinitions')
       ->will($this->returnValue($this->fieldDefinitions));
 
-    $this->entityStorage = new ContentEntityDatabaseStorage($this->entityType, $connection, $this->entityManager);
+    $this->entityStorage = new ContentEntityDatabaseStorage($this->entityType, $this->connection, $this->entityManager, $this->cache);
+  }
+
+  /**
+   * @covers ::doLoadMultiple
+   * @covers ::buildCacheId
+   * @covers ::getFromPersistentCache
+   */
+  public function testLoadMultiplePersistentCached() {
+    $this->setUpModuleHandlerNoImplementations();
+
+    $key = 'values:' . $this->entityTypeId . ':1';
+    $id = 1;
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTestEntityInterface')
+      ->getMockForAbstractClass();
+    $entity->expects($this->any())
+      ->method('id')
+      ->will($this->returnValue($id));
+
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('isPersistentlyCacheable')
+      ->will($this->returnValue(TRUE));
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('id')
+      ->will($this->returnValue($this->entityTypeId));
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('getClass')
+      ->will($this->returnValue(get_class($entity)));
+
+    $this->cache->expects($this->once())
+      ->method('getMultiple')
+      ->with(array($key))
+      ->will($this->returnValue(array($key => (object) array(
+          'data' => $entity,
+        ))));
+    $this->cache->expects($this->never())
+      ->method('set');
+
+    $this->setUpEntityStorage();
+    $entities = $this->entityStorage->loadMultiple(array($id));
+    $this->assertEquals($entity, $entities[$id]);
+  }
+
+  /**
+   * @covers ::doLoadMultiple
+   * @covers ::buildCacheId
+   * @covers ::getFromPersistentCache
+   * @covers ::setPersistentCache
+   */
+  public function testLoadMultipleNoPersistentCache() {
+    $this->setUpModuleHandlerNoImplementations();
+
+    $id = 1;
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTestEntityInterface')
+      ->getMockForAbstractClass();
+    $entity->expects($this->any())
+      ->method('id')
+      ->will($this->returnValue($id));
+
+    $this->entityType->expects($this->any())
+      ->method('isPersistentlyCacheable')
+      ->will($this->returnValue(FALSE));
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('id')
+      ->will($this->returnValue($this->entityTypeId));
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('getClass')
+      ->will($this->returnValue(get_class($entity)));
+
+    // There should be no calls to the cache backend for an entity type without
+    // persistent caching.
+    $this->cache->expects($this->never())
+      ->method('getMultiple');
+    $this->cache->expects($this->never())
+      ->method('set');
+
+    $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
+      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
+      ->setMethods(array('getFromStorage'))
+      ->getMock();
+    $entity_storage->expects($this->once())
+      ->method('getFromStorage')
+      ->with(array($id))
+      ->will($this->returnValue(array($id => $entity)));
+
+    $entities = $entity_storage->loadMultiple(array($id));
+    $this->assertEquals($entity, $entities[$id]);
+  }
+
+  /**
+   * @covers ::doLoadMultiple
+   * @covers ::buildCacheId
+   * @covers ::getFromPersistentCache
+   * @covers ::setPersistentCache
+   */
+  public function testLoadMultiplePersistentCacheMiss() {
+    $this->setUpModuleHandlerNoImplementations();
+
+    $id = 1;
+    $entity = $this->getMockBuilder('\Drupal\Tests\Core\Entity\ContentEntityDatabaseStorageTestEntityInterface')
+      ->getMockForAbstractClass();
+    $entity->expects($this->any())
+      ->method('id')
+      ->will($this->returnValue($id));
+
+    $this->entityType->expects($this->any())
+      ->method('isPersistentlyCacheable')
+      ->will($this->returnValue(TRUE));
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('id')
+      ->will($this->returnValue($this->entityTypeId));
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('getClass')
+      ->will($this->returnValue(get_class($entity)));
+
+    // In case of a cache miss, the entity is loaded from the storage and then
+    // set in the cache.
+    $key = 'values:' . $this->entityTypeId . ':1';
+    $this->cache->expects($this->once())
+      ->method('getMultiple')
+      ->with(array($key))
+      ->will($this->returnValue(array()));
+    $this->cache->expects($this->once())
+      ->method('set')
+      ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, array($this->entityTypeId . '_values' => TRUE, 'entity_field_info' => TRUE));
+
+    $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityDatabaseStorage')
+      ->setConstructorArgs(array($this->entityType, $this->connection, $this->entityManager, $this->cache))
+      ->setMethods(array('getFromStorage'))
+      ->getMock();
+    $entity_storage->expects($this->once())
+      ->method('getFromStorage')
+      ->with(array($id))
+      ->will($this->returnValue(array($id => $entity)));
+
+    $entities = $entity_storage->loadMultiple(array($id));
+    $this->assertEquals($entity, $entities[$id]);
+
+  }
+
+  /**
+   * Sets up the module handler with no implementations.
+   */
+  protected function setUpModuleHandlerNoImplementations() {
+    $this->moduleHandler->expects($this->any())
+      ->method('getImplementations')
+      ->will($this->returnValueMap(array(
+        array('entity_load', array()),
+        array($this->entityTypeId . '_load', array())
+      )));
+
+    $this->container->set('module_handler', $this->moduleHandler);
+  }
+}
+
+/**
+ * Provides an entity with dummy implementations of static methods, because
+ * those cannot be mocked.
+ */
+abstract class ContentEntityDatabaseStorageTestEntityInterface implements EntityInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
   }
 
 }

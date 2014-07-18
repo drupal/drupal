@@ -225,9 +225,9 @@ function rdf_entity_prepare_view($entity_type, array $entities, array $displays)
 }
 
 /**
- * Implements hook_ENTITY_TYPE_load() for comment entities.
+ * Implements hook_ENTITY_TYPE_storage_load() for comment entities.
  */
-function rdf_comment_load($comments) {
+function rdf_comment_storage_load($comments) {
   foreach ($comments as $comment) {
     // Pages with many comments can show poor performance. This information
     // isn't needed until rdf_preprocess_comment() is called, but set it here

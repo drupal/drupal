@@ -22,7 +22,6 @@ namespace Drupal\entity_test\Entity;
  *   },
  *   base_table = "entity_test",
  *   fieldable = TRUE,
- *   field_cache = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

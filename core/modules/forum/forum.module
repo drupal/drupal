@@ -328,9 +328,9 @@ function forum_node_predelete(EntityInterface $node) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_load() for node entities.
+ * Implements hook_ENTITY_TYPE_storage_load() for node entities.
  */
-function forum_node_load($nodes) {
+function forum_node_storage_load($nodes) {
   $node_vids = array();
   foreach ($nodes as $node) {
     if (\Drupal::service('forum_manager')->checkNodeType($node)) {

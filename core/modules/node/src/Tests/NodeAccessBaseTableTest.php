@@ -33,6 +33,8 @@ class NodeAccessBaseTableTest extends NodeTestBase {
   public function setUp() {
     parent::setUp();
 
+    node_access_test_add_field(entity_load('node_type', 'article'));
+
     node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
   }
@@ -69,7 +71,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           'title[0][value]' => t('@private_public Article created by @user', array('@private_public' => $type, '@user' => $this->webUser->getUsername())),
         );
         if ($is_private) {
-          $edit['private'] = TRUE;
+          $edit['private[0][value]'] = TRUE;
           $edit['body[0][value]'] = 'private node';
           $edit['field_tags'] = 'private';
         }
@@ -79,14 +81,13 @@ class NodeAccessBaseTableTest extends NodeTestBase {
         }
 
         $this->drupalPostForm('node/add/article', $edit, t('Save'));
-        $nid = db_query('SELECT nid FROM {node_field_data} WHERE title = :title', array(':title' => $edit['title[0][value]']))->fetchField();
-        $private_status = db_query('SELECT private FROM {node_access_test} where nid = :nid', array(':nid' => $nid))->fetchField();
-        $this->assertTrue($is_private == $private_status, 'The private status of the node was properly set in the node_access_test table.');
+        $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+        $this->assertEqual($is_private, (int)$node->private->value, 'The private status of the node was properly set in the node_access_test table.');
         if ($is_private) {
-          $private_nodes[] = $nid;
+          $private_nodes[] = $node->id();
         }
-        $titles[$nid] = $edit['title[0][value]'];
-        $this->nodesByUser[$this->webUser->id()][$nid] = $is_private;
+        $titles[$node->id()] = $edit['title[0][value]'];
+        $this->nodesByUser[$this->webUser->id()][$node->id()] = $is_private;
       }
     }
     $this->publicTid = db_query('SELECT tid FROM {taxonomy_term_data} WHERE name = :name', array(':name' => 'public'))->fetchField();

@@ -506,9 +506,9 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
 }
 
 /**
- * Implements hook_entity_load().
+ * Implements hook_entity_storage_load().
  */
-function content_translation_entity_load(array $entities, $entity_type) {
+function content_translation_entity_storage_load(array $entities, $entity_type) {
   $enabled_entities = array();
 
   if (content_translation_enabled($entity_type)) {

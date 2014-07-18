@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
@@ -112,13 +113,21 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   protected $schemaHandler;
 
   /**
+   * Cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
       $container->get('database'),
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('cache.entity')
     );
   }
 
@@ -142,12 +151,15 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
    *   The database connection to be used.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend to be used.
    */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager) {
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, EntityManagerInterface $entity_manager, CacheBackendInterface $cache) {
     parent::__construct($entity_type);
 
     $this->database = $database;
     $this->entityManager = $entity_manager;
+    $this->cacheBackend = $cache;
 
     // @todo Remove table names from the entity type definition in
     //   https://drupal.org/node/2232465
@@ -342,13 +354,163 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
    * {@inheritdoc}
    */
   protected function doLoadMultiple(array $ids = NULL) {
-    // Build and execute the query.
-    $records = $this
-      ->buildQuery($ids)
-      ->execute()
-      ->fetchAllAssoc($this->idKey);
+    // Attempt to load entities from the persistent cache. This will remove IDs
+    // that were loaded from $ids.
+    $entities_from_cache = $this->getFromPersistentCache($ids);
 
-    return $this->mapFromStorageRecords($records);
+    // Load any remaining entities from the database.
+    $entities_from_storage = $this->getFromStorage($ids);
+    $this->setPersistentCache($entities_from_storage);
+
+    return $entities_from_cache + $entities_from_storage;
+  }
+
+  /**
+   * Gets entities from the storage.
+   *
+   * @param array|null $ids
+   *   If not empty, return entities that match these IDs. Return all entities
+   *   when NULL.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface[]
+   *   Array of entities from the storage.
+   */
+  protected function getFromStorage(array $ids = NULL) {
+    $entities = array();
+
+    if ($ids === NULL || $ids) {
+      // Build and execute the query.
+      $query_result = $this->buildQuery($ids)->execute();
+      $records = $query_result->fetchAllAssoc($this->idKey);
+
+      // Map the loaded records into entity objects and according fields.
+      if ($records) {
+        $entities = $this->mapFromStorageRecords($records);
+
+        // Call hook_entity_storage_load().
+        foreach ($this->moduleHandler()->getImplementations('entity_storage_load') as $module) {
+          $function = $module . '_entity_storage_load';
+          $function($entities, $this->entityTypeId);
+        }
+        // Call hook_TYPE_storage_load().
+        foreach ($this->moduleHandler()->getImplementations($this->entityTypeId . '_storage_load') as $module) {
+          $function = $module . '_' . $this->entityTypeId . '_storage_load';
+          $function($entities);
+        }
+      }
+    }
+
+    return $entities;
+  }
+
+  /**
+   * Gets entities from the persistent cache backend.
+   *
+   * @param array|null &$ids
+   *   If not empty, return entities that match these IDs. IDs that were found
+   *   will be removed from the list.
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface[]
+   *   Array of entities from the persistent cache.
+   */
+  protected function getFromPersistentCache(array &$ids = NULL) {
+    if (!$this->entityType->isPersistentlyCacheable() || empty($ids)) {
+      return array();
+    }
+    $entities = array();
+    // Build the list of cache entries to retrieve.
+    $cid_map = array();
+    foreach ($ids as $id) {
+      $cid_map[$id] = $this->buildCacheId($id);
+    }
+    $cids = array_values($cid_map);
+    if ($cache = $this->cacheBackend->getMultiple($cids)) {
+      // Get the entities that were found in the cache.
+      foreach ($ids as $index => $id) {
+        $cid = $cid_map[$id];
+        if (isset($cache[$cid])) {
+          $entities[$id] = $cache[$cid]->data;
+          unset($ids[$index]);
+        }
+      }
+    }
+    return $entities;
+  }
+
+  /**
+   * Stores entities in the persistent cache backend.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface[] $entities
+   *   Entities to store in the cache.
+   */
+  protected function setPersistentCache($entities) {
+    if (!$this->entityType->isPersistentlyCacheable()) {
+      return;
+    }
+
+    $cache_tags = array(
+      $this->entityTypeId . '_values' => TRUE,
+      'entity_field_info' => TRUE,
+    );
+    foreach ($entities as $id => $entity) {
+      $this->cacheBackend->set($this->buildCacheId($id), $entity, CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
+    }
+  }
+
+  /**
+   * Invokes hook_entity_load_uncached().
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface[] $entities
+   *   List of entities, keyed on the entity ID.
+   */
+  protected function invokeLoadUncachedHook(array &$entities) {
+    if (!empty($entities)) {
+      // Call hook_entity_load_uncached().
+      foreach ($this->moduleHandler()->getImplementations('entity_load_uncached') as $module) {
+        $function = $module . '_entity_load_uncached';
+        $function($entities, $this->entityTypeId);
+      }
+      // Call hook_TYPE_load_uncached().
+      foreach ($this->moduleHandler()->getImplementations($this->entityTypeId . '_load_uncached') as $module) {
+        $function = $module . '_' . $this->entityTypeId . '_load_uncached';
+        $function($entities);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetCache(array $ids = NULL) {
+    if ($ids) {
+      $cids = array();
+      foreach ($ids as $id) {
+        unset($this->entities[$id]);
+        $cids[] = $this->buildCacheId($id);
+      }
+      if ($this->entityType->isPersistentlyCacheable()) {
+        $this->cacheBackend->deleteMultiple($cids);
+      }
+    }
+    else {
+      $this->entities = array();
+      if ($this->entityType->isPersistentlyCacheable()) {
+        $this->cacheBackend->deleteTags(array($this->entityTypeId . '_values' => TRUE));
+      }
+    }
+  }
+
+  /**
+   * Returns the cache ID for the passed in entity ID.
+   *
+   * @param int $id
+   *   Entity ID for which the cache ID should be built.
+   *
+   * @return string
+   *   Cache ID that can be passed to the cache backend.
+   */
+  protected function buildCacheId($id) {
+    return "values:{$this->entityTypeId}:$id";
   }
 
   /**
@@ -931,9 +1093,26 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * {@inheritdoc}
+   * Loads values of configurable fields for a group of entities.
+   *
+   * Loads all fields for each entity object in a group of a single entity type.
+   * The loaded field values are added directly to the entity objects.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface[] $entities
+   *   An array of entities keyed by entity ID.
    */
-  protected function doLoadFieldItems($entities, $age) {
+  protected function loadFieldItems(array $entities) {
+    if (empty($entities) || !$this->entityType->isFieldable()) {
+      return;
+    }
+
+    $age = static::FIELD_LOAD_CURRENT;
+    foreach ($entities as $entity) {
+      if (!$entity->isDefaultRevision()) {
+        $age = static::FIELD_LOAD_REVISION;
+        break;
+      }
+    }
     $load_current = $age == static::FIELD_LOAD_CURRENT;
 
     // Collect entities ids, bundles and languages.
@@ -1006,9 +1185,14 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * {@inheritdoc}
+   * Saves values of configurable fields for an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
+   * @param bool $update
+   *   TRUE if the entity is being updated, FALSE if it is being inserted.
    */
-  protected function doSaveFieldItems(EntityInterface $entity, $update) {
+  protected function saveFieldItems(EntityInterface $entity, $update = TRUE) {
     $vid = $entity->getRevisionId();
     $id = $entity->id();
     $bundle = $entity->bundle();
@@ -1094,9 +1278,12 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * {@inheritdoc}
+   * Deletes values of configurable fields for all revisions of an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
    */
-  protected function doDeleteFieldItems(EntityInterface $entity) {
+  protected function deleteFieldItems(EntityInterface $entity) {
     foreach ($this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {
       $storage_definition = $field_definition->getFieldStorageDefinition();
       if (!$this->usesDedicatedTable($storage_definition)) {
@@ -1114,9 +1301,12 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
   }
 
   /**
-   * {@inheritdoc}
+   * Deletes values of configurable fields for a single revision of an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity. It must have a revision ID.
    */
-  protected function doDeleteFieldItemsRevision(EntityInterface $entity) {
+  protected function deleteFieldItemsRevision(EntityInterface $entity) {
     $vid = $entity->getRevisionId();
     if (isset($vid)) {
       foreach ($this->entityManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_definition) {

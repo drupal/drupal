@@ -28,6 +28,8 @@ class NodeAccessLanguageTest extends NodeTestBase {
   function setUp() {
     parent::setUp();
 
+    node_access_test_add_field(entity_load('node_type', 'page'));
+
     // After enabling a node access module, the access table has to be rebuild.
     node_access_rebuild();
 
