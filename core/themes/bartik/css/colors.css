@@ -20,13 +20,13 @@ body {
   border-bottom: 1px solid #ffffff;
 }
 #header {
-  background-color: #48a9e4;
-  background-image: -moz-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: -ms-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: -o-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #0779bf), color-stop(1, #48a9e4));
-  background-image: -webkit-linear-gradient(top, #0779bf 0%, #48a9e4 100%);
-  background-image: linear-gradient(top, #0779bf 0%, #48a9e4 100%);
+  background-color: #1d84c3;
+  background-image: -moz-linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
+  background-image: -ms-linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
+  background-image: -o-linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.7, #055a8e), color-stop(1, #1d84c3));
+  background-image: -webkit-linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
+  background-image: linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
 }
 a,
 .link {
