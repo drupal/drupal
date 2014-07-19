@@ -75,7 +75,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *
    * @covers ::buildByExtension()
    */
-  public function testBuildLibrariesByExtensionSimple() {
+  public function testBuildByExtensionSimple() {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('example_module')
@@ -102,7 +102,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *
    * @covers ::buildByExtension()
    */
-  public function testBuildLibrariesByExtensionWithTheme() {
+  public function testBuildByExtensionWithTheme() {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('example_theme')
@@ -126,7 +126,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *
    * @covers ::buildByExtension()
    */
-  public function testBuildLibrariesByExtensionWithMissingLibraryFile() {
+  public function testBuildByExtensionWithMissingLibraryFile() {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('example_module')
@@ -167,7 +167,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *
    * @covers ::buildByExtension()
    */
-  public function testBuildLibrariesByExtensionWithMissingInformation() {
+  public function testBuildByExtensionWithMissingInformation() {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('example_module_missing_information')
@@ -352,7 +352,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * @expectedException \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException
    * @expectedExceptionMessage Missing license information in library definition for 'no-license-info-but-remote' in core/tests/Drupal/Tests/Core/Asset/library_test_files/licenses_missing_information.libraries.yml: it has a remote, but no license.
    *
-   * @covers ::buildLibrariesByExtension()
+   * @covers ::buildByExtension()
    */
   public function testLibraryThirdPartyWithMissingLicense() {
     $this->moduleHandler->expects($this->atLeastOnce())
@@ -370,7 +370,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * Tests a library with various licenses, some GPL-compatible, some not.
    *
-   * @covers ::buildLibrariesByExtension()
+   * @covers ::buildByExtension()
    */
   public function testLibraryWithLicenses() {
     $this->moduleHandler->expects($this->atLeastOnce())
