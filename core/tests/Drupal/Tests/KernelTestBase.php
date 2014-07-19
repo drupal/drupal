@@ -12,12 +12,12 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Entity\Schema\EntitySchemaProviderInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -194,10 +194,12 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
 
     new Settings($settings);
 
+    $modules = self::getModulesToEnable(get_class($this));
+
     // Variant #1: Actually compiled + dumped Container class.
-    //$this->setCompiledContainer();
+    //$this->setCompiledContainer($modules);
     // Variant #2: Clone of a compiled, empty ContainerBuilder instance.
-    $this->setCompiledContainerBuider();
+    $this->setCompiledContainerBuilder($modules);
 
     // Bootstrap a kernel. Don't use createFromRequest to retain Settings.
     $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
@@ -219,20 +221,13 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // \Drupal\Core\Config\ConfigInstaller::installDefaultConfig() to work.
     // Write directly to active storage to avoid early instantiation of
     // the event dispatcher which can prevent modules from registering events.
-    $this->container->get('config.storage')->write('core.extension', array(
-      'module' => array(),
-      'theme' => array(),
-    ));
-
-    // Collect and set a fixed module list.
-    // @todo Move before $kernel->boot() + prime core.extension above.
-    $modules = self::getModulesToEnable(get_class($this));
-    if ($modules) {
-      $this->enableModules($modules);
+    if (!$modules) {
+      $this->container->get('config.storage')->write('core.extension', array(
+        'module' => array(),
+        'theme' => array(),
+        'disabled' => array('theme' => array()),
+      ));
     }
-
-    // In order to use theme functions default theme config needs to exist.
-//    \Drupal::config('system.theme')->set('default', 'stark')->save();
 
     // Tests based on this class are entitled to use Drupal's File and
     // StreamWrapper APIs.
@@ -256,7 +251,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * - Each dumped Container is loaded separately into memory.
    * - Initial PhpDumper invocation (once per class) is slow.
    */
-  private function setCompiledContainer() {
+  private function setCompiledContainer(array $modules) {
     // The container classname is the name of the current test class, but in a
     // fake \Drupal\Container namespace, so as to guarantee that it does not
     // conflict with any code that might introspect available classes.
@@ -267,7 +262,18 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     if (!class_exists($container_classname, FALSE)) {
       $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
       $kernel->setSitePath($this->siteDirectory);
+      if ($modules && $extensions = $this->getExtensionsForModules($modules)) {
+        $kernel->updateModules($extensions, $extensions);
+      }
       $kernel->boot();
+      if ($modules) {
+        $kernel->getContainer()->get('config.storage')->write('core.extension', array(
+          'module' => array_fill_keys($modules, 0),
+          'theme' => array(),
+          'disabled' => array('theme' => array()),
+        ));
+        $kernel->getContainer()->get('module_handler')->loadAll();
+      }
 
       // Dump the container to disk and load its PHP code.
       $dumper = new PhpDumper($kernel->getContainer());
@@ -280,6 +286,10 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       file_put_contents($container_file, $code);
       include $container_file;
       unlink($container_file);
+      // Trigger garbage collection.
+      \Drupal::setContainer(NULL);
+      $kernel->shutdown();
+      $kernel = NULL;
     }
     $this->container = new $container_classname();
   }
@@ -294,11 +304,22 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
    * Disadvantages:
    * - A ContainerBuilder does not match actual Drupal environment.
    */
-  private function setCompiledContainerBuider() {
+  private function setCompiledContainerBuilder(array $modules) {
     if (!isset(self::$initialContainerBuilder)) {
       $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
       $kernel->setSitePath($this->siteDirectory);
+      if ($modules && $extensions = $this->getExtensionsForModules($modules)) {
+        $kernel->updateModules($extensions, $extensions);
+      }
       $kernel->boot();
+      if ($modules) {
+        $kernel->getContainer()->get('config.storage')->write('core.extension', array(
+          'module' => array_fill_keys($modules, 0),
+          'theme' => array(),
+          'disabled' => array('theme' => array()),
+        ));
+        $kernel->getContainer()->get('module_handler')->loadAll();
+      }
 
       // Remove all instantiated services, so the container is safe for cloning.
       $container = $kernel->getContainer();
@@ -307,9 +328,36 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
           $container->set($id, NULL);
         }
       }
-      self::$initialContainerBuilder = $container;
+      self::$initialContainerBuilder = clone $container;
+      // Trigger garbage collection.
+      \Drupal::setContainer(NULL);
+      $kernel->shutdown();
+      $kernel = NULL;
     }
     $this->container = clone self::$initialContainerBuilder;
+  }
+
+  /**
+   * Returns Extension objects for test class $modules.
+   *
+   * @param array $modules
+   *   The list of modules to install.
+   *
+   * @return \Drupal\Core\Extension\Extension[]
+   *   Extension objects for $modules, keyed by module name.
+   *
+   * @see \Drupal\Tests\KernelTestBase::enableModules()
+   * @see \Drupal\Core\Extension\ModuleHandler::add()
+   */
+  private function getExtensionsForModules(array $modules) {
+    $extensions = array();
+    $discovery = new ExtensionDiscovery();
+    $discovery->setProfileDirectories(array());
+    $list = $discovery->scan('module');
+    foreach ($modules as $name) {
+      $extensions[$name] = $list[$name];
+    }
+    return $extensions;
   }
 
   /**
@@ -485,8 +533,6 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     )));
   }
 
-
-
   /**
    * Installs the tables for a specific entity type.
    *
@@ -539,7 +585,7 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
     // Write directly to active storage to avoid early instantiation of
     // the event dispatcher which can prevent modules from registering events.
     $active_storage = \Drupal::service('config.storage');
-    $extensions = $active_storage->read('core.extension');
+    $extension_config = $active_storage->read('core.extension');
 
     foreach ($modules as $module) {
       if ($module_handler->moduleExists($module)) {
@@ -547,13 +593,13 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
       }
       $module_handler->addModule($module, drupal_get_path('module', $module));
       // Maintain the list of enabled modules in configuration.
-      $extensions['module'][$module] = 0;
+      $extension_config['module'][$module] = 0;
     }
-    $active_storage->write('core.extension', $extensions);
+    $active_storage->write('core.extension', $extension_config);
 
     // Update the kernel to make their services available.
-    $module_filenames = $module_handler->getModuleList();
-    $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
+    $extensions = $module_handler->getModuleList();
+    $this->container->get('kernel')->updateModules($extensions, $extensions);
 
     // Ensure isLoaded() is TRUE in order to make _theme() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
@@ -579,17 +625,17 @@ abstract class KernelTestBase extends \PHPUnit_Framework_TestCase implements Ser
   protected function disableModules(array $modules) {
     // Unset the list of modules in the extension handler.
     $module_handler = $this->container->get('module_handler');
-    $module_filenames = $module_handler->getModuleList();
+    $extensions = $module_handler->getModuleList();
     $extension_config = $this->container->get('config.factory')->get('core.extension');
     foreach ($modules as $module) {
-      unset($module_filenames[$module]);
+      unset($extensions[$module]);
       $extension_config->clear('module.' . $module);
     }
     $extension_config->save();
-    $module_handler->setModuleList($module_filenames);
+    $module_handler->setModuleList($extensions);
     $module_handler->resetImplementations();
     // Update the kernel to remove their services.
-    $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
+    $this->container->get('kernel')->updateModules($extensions, $extensions);
 
     // Ensure isLoaded() is TRUE in order to make _theme() work.
     // Note that the kernel has rebuilt the container; this $module_handler is
