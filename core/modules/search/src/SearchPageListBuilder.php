@@ -169,7 +169,11 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
 
     $this->moduleHandler->loadAllIncludes('admin.inc');
     $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
-    $percentage = ((int) min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
+    $done = $total - $remaining;
+    // Use floor() to calculate the percentage, so if it is not quite 100%, it
+    // will show as 99%, to indicate "almost done".
+    $percentage = $total > 0 ? floor(100 * $done / $total) : 100;
+    $percentage .= '%';
     $status = '<p><strong>' . $this->t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) . ' ' . $count . '</strong></p>';
     $form['status'] = array(
       '#type' => 'details',

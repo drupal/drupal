@@ -122,3 +122,35 @@ function search_schema() {
 
   return $schema;
 }
+
+/**
+ * Implements hook_requirements().
+ *
+ * For the Status Report, return information about search index status.
+ */
+function search_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    $remaining = 0;
+    $total = 0;
+    $search_page_repository = \Drupal::service('search.search_page_repository');
+    foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
+      $status = $entity->getPlugin()->indexStatus();
+      $remaining += $status['remaining'];
+      $total += $status['total'];
+    }
+
+    $done = $total - $remaining;
+    // Use floor() to calculate the percentage, so if it is not quite 100%, it
+    // will show as 99%, to indicate "almost done".
+    $percent = ($total > 0 ? floor(100 * $done / $total) : 100);
+    $requirements['search_status'] = array(
+      'title' => t('Search index progress'),
+      'value' => t('@percent% (@remaining remaining)', array('@percent' => $percent, '@remaining' => $remaining)),
+      'severity' => REQUIREMENT_INFO,
+    );
+  }
+
+  return $requirements;
+}
