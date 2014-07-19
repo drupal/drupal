@@ -9,7 +9,6 @@ namespace Drupal\user;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 
@@ -17,13 +16,6 @@ use Drupal\Core\Entity\Query\QueryFactory;
  * Defines a helper class to get user autocompletion results.
  */
 class UserAutocomplete {
-
-  /**
-   * The database connection to query for the user names.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
 
   /**
    * The config factory to get the anonymous user name.
@@ -49,13 +41,14 @@ class UserAutocomplete {
   /**
    * Constructs a UserAutocomplete object.
    *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The database connection to query for the user names.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
+   *   The entity query factory.
    */
-  public function __construct(Connection $connection, ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, QueryFactory $entity_query) {
-    $this->connection = $connection;
+  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, QueryFactory $entity_query) {
     $this->configFactory = $config_factory;
     $this->entityQuery = $entity_query;
     $this->entityManager = $entity_manager;
