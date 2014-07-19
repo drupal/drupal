@@ -648,6 +648,10 @@ class ModuleHandler implements ModuleHandlerInterface {
     $extension_config = \Drupal::config('core.extension');
     if ($enable_dependencies) {
       // Get all module data so we can find dependencies and sort.
+      // @todo Remove dependency on system.module.
+      if (!function_exists('system_rebuild_module_data')) {
+        require_once DRUPAL_ROOT . '/core/modules/system/system.module';
+      }
       $module_data = system_rebuild_module_data();
       $module_list = $module_list ? array_combine($module_list, $module_list) : array();
       if (array_diff_key($module_list, $module_data)) {
@@ -856,6 +860,10 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function uninstall(array $module_list, $uninstall_dependents = TRUE) {
     // Get all module data so we can find dependencies and sort.
+    // @todo Remove dependency on system.module.
+    if (!function_exists('system_rebuild_module_data')) {
+      require_once DRUPAL_ROOT . '/core/modules/system/system.module';
+    }
     $module_data = system_rebuild_module_data();
     $module_list = $module_list ? array_combine($module_list, $module_list) : array();
     if (array_diff_key($module_list, $module_data)) {

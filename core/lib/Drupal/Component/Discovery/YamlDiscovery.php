@@ -29,6 +29,15 @@ class YamlDiscovery implements DiscoverableInterface {
   protected $directories = array();
 
   /**
+   * Array of all parsed files, keyed by filename.
+   *
+   * Especially during kernel tests, YAML files are re-parsed often.
+   *
+   * @var array
+   */
+  protected static $parsedFiles = array();
+
+  /**
    * Constructs a YamlDiscovery object.
    *
    * @param string $name
@@ -48,9 +57,11 @@ class YamlDiscovery implements DiscoverableInterface {
   public function findAll() {
     $all = array();
     foreach ($this->findFiles() as $provider => $file) {
-      $all[$provider] = Yaml::decode(file_get_contents($file));
+      if (!isset(static::$parsedFiles[$file])) {
+        static::$parsedFiles[$file] = Yaml::decode(file_get_contents($file));
+      }
+      $all[$provider] = static::$parsedFiles[$file];
     }
-
     return $all;
   }
 

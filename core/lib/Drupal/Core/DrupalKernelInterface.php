@@ -7,6 +7,7 @@
 
 namespace Drupal\Core;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -55,6 +56,18 @@ interface DrupalKernelInterface extends HttpKernelInterface {
    * @return ContainerInterface A ContainerInterface instance
    */
   public function getContainer();
+
+  /**
+   * Sets the current container.
+   *
+   * Must be called before boot() in order to bootstrap the given container.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container to set.
+   *
+   * @return $this
+   */
+  public function setContainer(ContainerInterface $container);
 
   /**
    * Set the current site path.

@@ -7,7 +7,7 @@
 
 namespace Drupal\simpletest\Tests;
 
-use Drupal\simpletest\KernelTestBase;
+use Drupal\Tests\KernelTestBase;
 
 /**
  * Tests KernelTestBase functionality.
@@ -22,15 +22,6 @@ class KernelTestBaseTest extends KernelTestBase {
    * @var array
    */
   public static $modules = array('entity', 'entity_test');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    $original_container = \Drupal::getContainer();
-    parent::setUp();
-    $this->assertNotIdentical(\Drupal::getContainer(), $original_container, 'KernelTestBase test creates a new container.');
-  }
 
   /**
    * Tests expected behavior of setUp().
@@ -222,7 +213,7 @@ class KernelTestBaseTest extends KernelTestBase {
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 
     // Load some additional modules; entity_test should still exist.
-    $this->enableModules(array('entity', 'field', 'text', 'entity_test'));
+    $this->enableModules(array('field', 'text'));
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 

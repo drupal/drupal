@@ -173,7 +173,9 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * @see http://php.net/manual/reserved.variables.server.php
  * @see http://php.net/manual/function.time.php
  */
-define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
+if (!defined('REQUEST_TIME')) {
+  define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
+}
 
 /**
  * Regular expression to match PHP function names.
@@ -201,7 +203,9 @@ const CONFIG_STAGING_DIRECTORY = 'staging';
  *
  * This strips two levels of directories off the current directory.
  */
-define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
+if (!defined('DRUPAL_ROOT')) {
+  define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
+}
 
 /**
  * Returns the appropriate configuration directory.

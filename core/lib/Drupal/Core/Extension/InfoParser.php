@@ -19,6 +19,8 @@ class InfoParser implements InfoParserInterface {
   /**
    * Array of all info keyed by filename.
    *
+   * Especially during kernel tests, YAML files are re-parsed often.
+   *
    * @var array
    */
   protected static $parsedInfos = array();
