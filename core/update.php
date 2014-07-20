@@ -69,7 +69,7 @@ function update_helpful_links() {
     'title' => t('Front page'),
     'href' => '<front>',
   );
-  if (user_access('access administration pages')) {
+  if (\Drupal::currentUser()->hasPermission('access administration pages')) {
     $links['admin-pages'] = array(
       'title' => t('Administration pages'),
       'href' => 'admin',
@@ -97,7 +97,7 @@ function update_flush_all_caches() {
  */
 function update_results_page() {
   // Report end result.
-  if (\Drupal::moduleHandler()->moduleExists('dblog') && user_access('access site reports')) {
+  if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
     $log_message = ' All errors have been <a href="' . base_path() . '?q=admin/reports/dblog">logged</a>.';
   }
   else {
@@ -249,25 +249,7 @@ function update_access_denied_page() {
  *   TRUE if the current user should be granted access, or FALSE otherwise.
  */
 function update_access_allowed() {
-  $user = \Drupal::currentUser();
-
-  // Allow the global variable in settings.php to override the access check.
-  if (Settings::get('update_free_access')) {
-    return TRUE;
-  }
-  // Calls to user_access() might fail during the Drupal 6 to 7 update process,
-  // so we fall back on requiring that the user be logged in as user #1.
-  try {
-    $module_handler = \Drupal::moduleHandler();
-    $module_handler->addModule('user', 'core/modules/user');
-    $module_handler->reload();
-    $module_filenames = $module_handler->getModuleList();
-    \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
-    return user_access('administer software updates');
-  }
-  catch (\Exception $e) {
-    return ($user->id() == 1);
-  }
+  return Settings::get('update_free_access') || \Drupal::currentUser()->hasPermission('administer software updates');
 }
 
 /**

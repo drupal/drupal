@@ -50,7 +50,7 @@ const MAINTENANCE_MODE = 'update';
  */
 function authorize_access_allowed() {
   \Drupal::service('session_manager')->startLazy();
-  return Settings::get('allow_authorize_operations', TRUE) && user_access('administer software updates');
+  return Settings::get('allow_authorize_operations', TRUE) && \Drupal::currentUser()->hasPermission('administer software updates');
 }
 
 $request = Request::createFromGlobals();

@@ -1536,13 +1536,13 @@ function drupal_classloader_register($name, $path) {
  *
  * Example:
  * @code
- * function user_access($string, $account = NULL) {
+ * function example_default_format_type() {
  *   // Use the advanced drupal_static() pattern, since this is called very often.
  *   static $drupal_static_fast;
  *   if (!isset($drupal_static_fast)) {
- *     $drupal_static_fast['perm'] = &drupal_static(__FUNCTION__);
+ *     $drupal_static_fast['format_type'] = &drupal_static(__FUNCTION__);
  *   }
- *   $perm = &$drupal_static_fast['perm'];
+ *   $format_type = &$drupal_static_fast['format_type'];
  *   ...
  * }
  * @endcode
