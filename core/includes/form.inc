@@ -132,18 +132,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 
 /**
- * Builds and processes a form for a given form ID.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::formBuilder()->buildForm().
- *
- * @see \Drupal\Core\Form\FormBuilderInterface::buildForm().
- */
-function drupal_build_form($form_id, &$form_state) {
-  return \Drupal::formBuilder()->buildForm($form_id, $form_state);
-}
-
-/**
  * Fetches a form from the cache.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
