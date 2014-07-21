@@ -175,7 +175,7 @@ class CommentManager implements CommentManagerInterface {
     // Make sure the instance doesn't already exist.
     if (!array_key_exists($field_name, $this->entityManager->getFieldDefinitions($entity_type, $bundle))) {
       $instance = $this->entityManager->getStorage('field_instance_config')->create(array(
-        'label' => 'Comment settings',
+        'label' => 'Comments',
         'description' => '',
         'field_name' => $field_name,
         'entity_type' => $entity_type,
@@ -212,7 +212,7 @@ class CommentManager implements CommentManagerInterface {
       // Set default to display comment list.
       entity_get_display($entity_type, $bundle, 'default')
         ->setComponent($field_name, array(
-          'label' => 'hidden',
+          'label' => 'above',
           'type' => 'comment_default',
           'weight' => 20,
         ))

@@ -65,6 +65,9 @@ class CommentWidget extends WidgetBase {
       // Get default value from the field instance.
       $field_default_values = $this->fieldDefinition->getDefaultValue($entity);
 
+      // Override widget title to be helpful for end users.
+      $element['#title'] = $this->t('Comment settings');
+
       $element += array(
         '#type' => 'details',
         // Open the details when the selected value is different to the stored

@@ -134,9 +134,9 @@ function comment_theme() {
       'render element' => 'elements',
       'template' => 'comment',
     ),
-    'comment_wrapper' => array(
-      'render element' => 'content',
-      'template' => 'comment-wrapper',
+    'field__comment' => array(
+      'base hook' => 'field',
+      'template' => 'field--comment',
     ),
   );
 }
@@ -988,31 +988,37 @@ function template_preprocess_comment(&$variables) {
 }
 
 /**
- * Prepares variables for comment wrapper templates.
+ * Prepares variables for comment field templates.
  *
- * Default template: comment-wrapper.html.twig.
+ * Default template: field--comment.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
- *   - content: An associative array containing render arrays for the list of
+ *   - element: An associative array containing render arrays for the list of
  *     comments, and the comment form. Array keys: comments, comment_form.
+ *
+ * @todo Rename to template_preprocess_field__comment() once
+ *   https://www.drupal.org/node/939462 is resolved.
  */
-function template_preprocess_comment_wrapper(&$variables) {
-  // Provide contextual information.
-  $variables['entity'] = $variables['content']['#entity'];
-  $variables['display_mode'] = $variables['content']['#display_mode'];
+function comment_preprocess_field(&$variables) {
+  $element = $variables['element'];
+  if ($element['#field_type'] == 'comment') {
+    // Provide contextual information.
+    $variables['comment_display_mode'] = $element[0]['#comment_display_mode'];
+    $variables['comment_type'] = $element[0]['#comment_type'];
 
-  // The comment form is optional and may not exist.
-  $variables['content'] += array('comment_form' => array());
+    // Adjust a comment field's attributes.
+    $variables['attributes']['class'][] = 'comment-wrapper';
+    $variables['title_attributes']['class'][] = 'title';
 
-  $variables['attributes']['id'] = 'comments';
+    // Append additional attributes (eg. RDFa) from the first field item.
+    $variables['attributes'] += $variables['item_attributes'][0]->storage();
 
-  // Add a comment wrapper class.
-  $variables['attributes']['class'][] = 'comment-wrapper';
-
-  // Create separate variables for the comments and comment form.
-  $variables['comments'] = $variables['content']['comments'];
-  $variables['form'] = $variables['content']['comment_form'];
+    // Create separate variables for the comments and comment form.
+    $variables['comments'] = $element[0]['comments'];
+    $variables['comment_form'] = $element[0]['comment_form'];
+    $variables['content_attributes']['class'] = array('title', 'comment-form__title');
+  }
 }
 
 /**

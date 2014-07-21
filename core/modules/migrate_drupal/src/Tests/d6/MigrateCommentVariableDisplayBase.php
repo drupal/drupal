@@ -58,7 +58,7 @@ abstract class MigrateCommentVariableDisplayBase extends MigrateDrupalTestBase {
     foreach ($this->types as $type) {
       entity_create('node_type', array('type' => $type))->save();
       entity_create('field_instance_config', array(
-        'label' => 'Comment settings',
+        'label' => 'Comments',
         'description' => '',
         'field_name' => 'comment',
         'entity_type' => 'node',

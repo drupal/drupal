@@ -6,7 +6,7 @@ source:
   plugin: d6_comment_variable
   constants:
     entity_type: node
-    label: Comment settings
+    label: Comments
     required: true
 process:
   entity_type: 'constants/entity_type'

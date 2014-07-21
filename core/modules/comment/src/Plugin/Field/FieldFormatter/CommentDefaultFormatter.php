@@ -219,9 +219,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       }
 
       $elements[] = $output + array(
-        '#theme' => 'comment_wrapper__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $field_name,
-        '#entity' => $entity,
-        '#display_mode' => $this->getFieldSetting('default_mode'),
+        '#comment_type' => $this->getFieldSetting('comment_type'),
+        '#comment_display_mode' => $this->getFieldSetting('default_mode'),
         'comments' => array(),
         'comment_form' => array(),
       );

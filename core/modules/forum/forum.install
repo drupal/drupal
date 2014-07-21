@@ -87,6 +87,14 @@ function forum_install() {
     ));
     if (empty($field_storages)) {
       Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum', CommentItemInterface::OPEN, 'comment_forum');
+      // Hide label for comment field.
+      entity_get_display('node', 'forum', 'default')
+        ->setComponent('comment_forum', array(
+          'label' => 'hidden',
+          'type' => 'comment_default',
+          'weight' => 20,
+        ))
+        ->save();
     }
   }
 }
