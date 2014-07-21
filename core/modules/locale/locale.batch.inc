@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Batch process to check the availability of remote or local po files.
+ * Batch process to check the availability of remote or local po files.
  */
 
 use GuzzleHttp\Exception\RequestException;
@@ -85,7 +85,7 @@ function locale_translation_batch_status_check($project, $langcode, $options = a
 /**
  * Batch finished callback: Set result message.
  *
- * @param boolean $success
+ * @param bool $success
  *   TRUE if batch successfully completed.
  * @param array $results
  *   Batch results.
@@ -93,13 +93,13 @@ function locale_translation_batch_status_check($project, $langcode, $options = a
 function locale_translation_batch_status_finished($success, $results) {
   if ($success) {
     if (isset($results['failed_files'])) {
-        if (\Drupal::moduleHandler()->moduleExists('dblog')) {
-          $message = format_plural(count($results['failed_files']), 'One translation file could not be checked. <a href="@url">See the log</a> for details.', '@count translation files could not be checked. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
-        }
-        else {
-          $message = format_plural(count($results['failed_files']), 'One translation files could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
-        }
-        drupal_set_message($message, 'error');
+      if (\Drupal::moduleHandler()->moduleExists('dblog')) {
+        $message = format_plural(count($results['failed_files']), 'One translation file could not be checked. <a href="@url">See the log</a> for details.', '@count translation files could not be checked. <a href="@url">See the log</a> for details.', array('@url' => url('admin/reports/dblog')));
+      }
+      else {
+        $message = format_plural(count($results['failed_files']), 'One translation files could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
+      }
+      drupal_set_message($message, 'error');
     }
     if (isset($results['files'])) {
       drupal_set_message(format_plural(
@@ -201,9 +201,9 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
 /**
  * Batch finished callback: Set result message.
  *
- * @param boolean $success
+ * @param bool $success
  *   TRUE if batch successfully completed.
- * @param array
+ * @param array $results
  *   Batch results.
  */
 function locale_translation_batch_fetch_finished($success, $results) {
@@ -220,7 +220,7 @@ function locale_translation_batch_fetch_finished($success, $results) {
  * @param string $uri
  *   URI of remote file.
  *
- * @return array|boolean
+ * @return array|bool
  *   Associative array of file data with the following elements:
  *   - last_modified: Last modified timestamp of the translation file.
  *   - (optional) location: The location of the translation file. Is only set

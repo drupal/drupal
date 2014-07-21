@@ -89,7 +89,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   /**
    * {@inheritdoc}
    */
-  function getLocations(array $conditions = array()) {
+  public function getLocations(array $conditions = array()) {
     $query = $this->connection->select('locales_location', 'l', $this->options)
       ->fields('l');
     foreach ($conditions as $field => $value) {
@@ -199,7 +199,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     }
     else {
       throw new StringStorageException(format_string('The string cannot be deleted because it lacks some key fields: @string', array(
-        '@string' => $string->getString()
+        '@string' => $string->getString(),
       )));
     }
     return $this;
@@ -212,8 +212,8 @@ class StringDatabaseStorage implements StringStorageInterface {
     $lids = $this->dbStringSelect($conditions, array('fields' => array('lid')))->execute()->fetchCol();
     if ($lids) {
       $this->dbDelete('locales_target', array('lid' => $lids))->execute();
-      $this->dbDelete('locales_source',  array('lid' => $lids))->execute();
-      $this->dbDelete('locales_location',  array('sid' => $lids))->execute();
+      $this->dbDelete('locales_source', array('lid' => $lids))->execute();
+      $this->dbDelete('locales_location', array('sid' => $lids))->execute();
     }
   }
 
@@ -237,7 +237,7 @@ class StringDatabaseStorage implements StringStorageInterface {
   public function createTranslation($values = array()) {
     return new TranslationString($values + array(
       'storage' => $this,
-      'is_new' => TRUE
+      'is_new' => TRUE,
     ));
   }
 
@@ -351,6 +351,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   these additional ones:
    *   - 'translation', Whether to include translation fields too. Defaults to
    *     FALSE.
+   *
    * @return \Drupal\Core\Database\Query\Select
    *   Query object with all the tables, fields and conditions.
    */
@@ -382,7 +383,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       if (isset($conditions['language'])) {
         // If we've got a language condition, we use it for the join.
         $query->$join('locales_target', 't', "t.lid = s.lid AND t.language = :langcode", array(
-          ':langcode' => $conditions['language']
+          ':langcode' => $conditions['language'],
         ));
         unset($conditions['language']);
       }
@@ -481,7 +482,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     }
     else {
       throw new StringStorageException(format_string('The string cannot be saved: @string', array(
-          '@string' => $string->getString()
+          '@string' => $string->getString(),
       )));
     }
   }
@@ -514,7 +515,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     }
     else {
       throw new StringStorageException(format_string('The string cannot be updated: @string', array(
-          '@string' => $string->getString()
+          '@string' => $string->getString(),
       )));
     }
   }

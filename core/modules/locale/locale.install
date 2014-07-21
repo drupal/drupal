@@ -123,7 +123,7 @@ function locale_schema() {
       ),
     ),
     'indexes' => array(
-      'lid'      => array('lid'),
+      'lid' => array('lid'),
     ),
   );
 
@@ -170,8 +170,8 @@ function locale_schema() {
       ),
     ),
     'indexes' => array(
-       'string_id' => array('sid'),
-       'string_type' => array('sid', 'type'),
+      'string_id' => array('sid'),
+      'string_type' => array('sid', 'type'),
     ),
   );
 

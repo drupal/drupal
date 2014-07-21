@@ -115,11 +115,11 @@ class ExportForm extends FormBase {
     }
 
     $form['actions'] = array(
-      '#type' => 'actions'
+      '#type' => 'actions',
     );
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->t('Export')
+      '#value' => $this->t('Export'),
     );
     return $form;
   }
@@ -137,13 +137,13 @@ class ExportForm extends FormBase {
     }
     $content_options = isset($form_state['values']['content_options']) ? $form_state['values']['content_options'] : array();
     $reader = new PoDatabaseReader();
-    $languageName = '';
+    $language_name = '';
     if ($language != NULL) {
       $reader->setLangcode($language->id);
       $reader->setOptions($content_options);
       $languages = $this->languageManager->getLanguages();
-      $languageName = isset($languages[$language->id]) ? $languages[$language->id]->name : '';
-      $filename = $language->id .'.po';
+      $language_name = isset($languages[$language->id]) ? $languages[$language->id]->name : '';
+      $filename = $language->id . '.po';
     }
     else {
       // Template required.
@@ -155,9 +155,9 @@ class ExportForm extends FormBase {
       $uri = tempnam('temporary://', 'po_');
       $header = $reader->getHeader();
       $header->setProjectName($this->config('system.site')->get('name'));
-      $header->setLanguageName($languageName);
+      $header->setLanguageName($language_name);
 
-      $writer = new PoStreamWriter;
+      $writer = new PoStreamWriter();
       $writer->setUri($uri);
       $writer->setHeader($header);
 

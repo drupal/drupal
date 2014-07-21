@@ -26,13 +26,16 @@ class LocaleExportTest extends WebTestBase {
   /**
    * A user able to create languages and export translations.
    */
-  protected $admin_user = NULL;
+  protected $adminUser = NULL;
 
-  function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
-    $this->drupalLogin($this->admin_user);
+    $this->adminUser = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
+    $this->drupalLogin($this->adminUser);
 
     // Copy test po files to the translations directory.
     file_unmanaged_copy(drupal_get_path('module', 'locale') . '/tests/test.de.po', 'translations://', FILE_EXISTS_REPLACE);
@@ -42,7 +45,7 @@ class LocaleExportTest extends WebTestBase {
   /**
    * Test exportation of translations.
    */
-  function testExportTranslation() {
+  public function testExportTranslation() {
     // First import some known translations.
     // This will also automatically add the 'fr' language.
     $name = tempnam('temporary://', "po_") . '.po';
@@ -114,7 +117,7 @@ class LocaleExportTest extends WebTestBase {
   /**
    * Test exportation of translation template file.
    */
-  function testExportTranslationTemplateFile() {
+  public function testExportTranslationTemplateFile() {
     // Load an admin page with JavaScript so _drupal_add_library() fires at
     // least once and _locale_parse_js_file() gets to run at least once so that
     // the locales_source table gets populated with something.
@@ -128,7 +131,7 @@ class LocaleExportTest extends WebTestBase {
   /**
    * Helper function that returns a proper .po file.
    */
-  function getPoFile() {
+  public function getPoFile() {
     return <<< EOF
 msgid ""
 msgstr ""
@@ -147,7 +150,7 @@ EOF;
    * Helper function that returns a .po file which strings will be marked
    * as customized.
    */
-  function getCustomPoFile() {
+  public function getCustomPoFile() {
     return <<< EOF
 msgid ""
 msgstr ""
@@ -168,7 +171,7 @@ EOF;
    * @return string
    *   A .po file fragment with an untranslated string.
    */
-  function getUntranslatedString() {
+  public function getUntranslatedString() {
     return <<< EOF
 msgid "February"
 msgstr ""

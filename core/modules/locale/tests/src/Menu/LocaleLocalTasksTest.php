@@ -16,6 +16,9 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
  */
 class LocaleLocalTasksTest extends LocalTaskIntegrationTest {
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     $this->directoryList = array(
       'locale' => 'core/modules/locale',

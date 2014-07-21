@@ -23,7 +23,10 @@ class LocalePluralFormatTest extends WebTestBase {
    */
   public static $modules = array('locale');
 
-  function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
@@ -33,7 +36,7 @@ class LocalePluralFormatTest extends WebTestBase {
   /**
    * Tests locale_get_plural() and format_plural() functionality.
    */
-  function testGetPluralFormat() {
+  public function testGetPluralFormat() {
     // Import some .po files with formulas to set up the environment.
     // These will also add the languages to the system.
     $this->importPoFile($this->getPoFileWithSimplePlural(), array(
@@ -134,7 +137,7 @@ class LocalePluralFormatTest extends WebTestBase {
   /**
    * Tests plural editing and export functionality.
    */
-  function testPluralEditExport() {
+  public function testPluralEditExport() {
     // Import some .po files with formulas to set up the environment.
     // These will also add the languages to the system.
     $this->importPoFile($this->getPoFileWithSimplePlural(), array(
@@ -244,7 +247,7 @@ class LocalePluralFormatTest extends WebTestBase {
     );
     $this->drupalPostForm($path, $edit, t('Save translations'));
 
-   // Get the French translations.
+    // Get the French translations.
     $this->drupalPostForm('admin/config/regional/translate/export', array(
       'langcode' => 'fr',
     ), t('Export'));
@@ -269,7 +272,7 @@ class LocalePluralFormatTest extends WebTestBase {
    * @param $options
    *   Additional options to pass to the translation import form.
    */
-  function importPoFile($contents, array $options = array()) {
+  public function importPoFile($contents, array $options = array()) {
     $name = tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
@@ -280,7 +283,7 @@ class LocalePluralFormatTest extends WebTestBase {
   /**
    * Returns a .po file with a simple plural formula.
    */
-  function getPoFileWithSimplePlural() {
+  public function getPoFileWithSimplePlural() {
     return <<< EOF
 msgid ""
 msgstr ""
@@ -303,7 +306,7 @@ EOF;
   /**
    * Returns a .po file with a complex plural formula.
    */
-  function getPoFileWithComplexPlural() {
+  public function getPoFileWithComplexPlural() {
     return <<< EOF
 msgid ""
 msgstr ""
@@ -327,7 +330,7 @@ EOF;
   /**
    * Returns a .po file with a missing plural formula.
    */
-  function getPoFileWithMissingPlural() {
+  public function getPoFileWithMissingPlural() {
     return <<< EOF
 msgid ""
 msgstr ""
@@ -344,7 +347,7 @@ EOF;
   /**
    * Returns a .po file with a broken plural formula.
    */
-  function getPoFileWithBrokenPlural() {
+  public function getPoFileWithBrokenPlural() {
     return <<< EOF
 msgid ""
 msgstr ""

@@ -24,7 +24,7 @@ class LocaleJavascriptTranslationTest extends WebTestBase {
    */
   public static $modules = array('locale');
 
-  function testFileParsing() {
+  public function testFileParsing() {
     $filename = drupal_get_path('module', 'locale') . '/tests/locale_test.js';
 
     // Parse the file to look for source strings.

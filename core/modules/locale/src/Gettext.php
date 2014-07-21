@@ -46,7 +46,7 @@ class Gettext {
    *
    * @see \Drupal\locale\PoDatabaseWriter
    */
-  static function fileToDatabase($file, $options) {
+  public static function fileToDatabase($file, $options) {
     // Add the default values to the options array.
     $options += array(
       'overwrite_options' => array(),

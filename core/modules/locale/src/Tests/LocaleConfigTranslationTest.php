@@ -25,6 +25,9 @@ class LocaleConfigTranslationTest extends WebTestBase {
    */
   public static $modules = array('locale', 'contact');
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
     // Add a default locale storage for all these tests.
@@ -40,7 +43,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
   /**
    * Tests basic configuration translation.
    */
-  function testConfigTranslation() {
+  public function testConfigTranslation() {
     // Add custom language.
     $langcode = 'xx';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form', 'administer contact forms'));
@@ -54,7 +57,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Set path prefix.
-    $edit = array( "prefix[$langcode]" => $langcode );
+    $edit = array("prefix[$langcode]" => $langcode);
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Check site name string exists and create translation for it.

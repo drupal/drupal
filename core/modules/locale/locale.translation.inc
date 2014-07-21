@@ -9,6 +9,7 @@
  * Comparison result of source files timestamps.
  *
  * Timestamp of source 1 is less than the timestamp of source 2.
+ *
  * @see _locale_translation_source_compare()
  */
 const LOCALE_TRANSLATION_SOURCE_COMPARE_LT = -1;
@@ -17,6 +18,7 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_LT = -1;
  * Comparison result of source files timestamps.
  *
  * Timestamp of source 1 is equal to the timestamp of source 2.
+ *
  * @see _locale_translation_source_compare()
  */
 const LOCALE_TRANSLATION_SOURCE_COMPARE_EQ = 0;
@@ -25,6 +27,7 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_EQ = 0;
  * Comparison result of source files timestamps.
  *
  * Timestamp of source 1 is greater than the timestamp of source 2.
+ *
  * @see _locale_translation_source_compare()
  */
 const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
@@ -41,8 +44,8 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  * disabled this function will return the last known module state. The status
  * will only be updated once Update module is enabled.
  *
- *  @params array $project_names
- *    Array of names of the projects to get.
+ * @param array $project_names
+ *   Array of names of the projects to get.
  *
  * @return array
  *   Array of project data for translation update.
@@ -107,7 +110,7 @@ function locale_translation_load_sources($projects = NULL, $langcodes = NULL) {
   $status = locale_translation_get_status();
 
   // Use only the selected projects and languages for update.
-  foreach($projects as $project) {
+  foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
       $sources[$project][$langcode] = isset($status[$project][$langcode]) ? $status[$project][$langcode] : NULL;
     }
@@ -158,7 +161,7 @@ function locale_translation_build_sources($projects = array(), $langcodes = arra
  * @param object $source
  *   Translation source object.
  *
- * @return stdClass
+ * @return object
  *   Source file object of the po file, updated with:
  *   - "uri": File name and path.
  *   - "timestamp": Last updated time of the po file.
@@ -203,8 +206,8 @@ function locale_translation_source_check_file($source) {
  *   - "files": Array of file objects containing properties of local and remote
  *     translation files.
  *   Other processes can add the following properties:
- *   - "type": Most recent translation source found. LOCALE_TRANSLATION_REMOTE and
- *      LOCALE_TRANSLATION_LOCAL indicate available new translations,
+ *   - "type": Most recent translation source found. LOCALE_TRANSLATION_REMOTE
+ *      and LOCALE_TRANSLATION_LOCAL indicate available new translations,
  *      LOCALE_TRANSLATION_CURRENT indicate that the current translation is them
  *      most recent. "type" sorresponds with a key of the "files" array.
  *   - "timestamp": The creation time of the "type" translation (file).
@@ -367,7 +370,7 @@ function locale_cron_fill_queue() {
  * @param string $uri
  *   The URI or URI pattern of the file.
  *
- * @return boolean
+ * @return bool
  *   TRUE if the $uri is a remote file.
  */
 function _locale_translation_file_is_remote($uri) {
@@ -389,7 +392,7 @@ function _locale_translation_file_is_remote($uri) {
  * @param object $source2
  *   Source object of available update.
  *
- * @return integer
+ * @return int
  *   - "LOCALE_TRANSLATION_SOURCE_COMPARE_LT": $source1 < $source2 OR $source1
  *     is missing.
  *   - "LOCALE_TRANSLATION_SOURCE_COMPARE_EQ":  $source1 == $source2 OR both

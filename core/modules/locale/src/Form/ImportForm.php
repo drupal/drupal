@@ -109,7 +109,7 @@ class ImportForm extends FormBase {
         '#theme' => 'file_upload_help',
         '#description' => $this->t('A Gettext Portable Object file.'),
         '#upload_validators' => $validators,
-       ),
+      ),
       '#size' => 50,
       '#upload_validators' => $validators,
       '#attributes' => array('class' => array('file-import-input')),
@@ -145,11 +145,11 @@ class ImportForm extends FormBase {
     );
 
     $form['actions'] = array(
-      '#type' => 'actions'
+      '#type' => 'actions',
     );
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->t('Import')
+      '#value' => $this->t('Import'),
     );
     return $form;
   }
@@ -174,7 +174,7 @@ class ImportForm extends FormBase {
     $language = $this->languageManager->getLanguage($form_state['values']['langcode']);
     if (empty($language)) {
       $language = new Language(array(
-        'id' => $form_state['values']['langcode']
+        'id' => $form_state['values']['langcode'],
       ));
       $language = language_save($language);
       drupal_set_message($this->t('The language %language has been created.', array('%language' => $this->t($language->name))));

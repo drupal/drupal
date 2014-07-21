@@ -132,7 +132,7 @@ interface StringInterface {
    * Sets an array of values as object properties.
    *
    * @param array $values
-   *   Array with values indexed by property name,
+   *   Array with values indexed by property name.
    * @param bool $override
    *   (optional) Whether to override already set fields, defaults to TRUE.
    *
@@ -188,9 +188,9 @@ interface StringInterface {
   /**
    * Checks whether the string has a given location.
    *
-   * @param string $type.
+   * @param string $type
    *   Location type.
-   * @param string $name.
+   * @param string $name
    *   Location name.
    *
    * @return bool

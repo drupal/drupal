@@ -33,21 +33,21 @@ class PoDatabaseWriter implements PoWriterInterface {
    *
    * @var array
    */
-  private $_options;
+  private $options;
 
   /**
    * Language code of the language being written to the database.
    *
    * @var string
    */
-  private $_langcode;
+  private $langcode;
 
   /**
    * Header of the po file written to the database.
    *
    * @var \Drupal\Component\Gettext\PoHeader
    */
-  private $_header;
+  private $header;
 
   /**
    * Associative array summarizing the number of changes done.
@@ -60,12 +60,12 @@ class PoDatabaseWriter implements PoWriterInterface {
    *
    * @var array
    */
-  private $_report;
+  private $report;
 
   /**
    * Constructor, initialize reporting array.
    */
-  function __construct() {
+  public function __construct() {
     $this->setReport();
   }
 
@@ -73,21 +73,21 @@ class PoDatabaseWriter implements PoWriterInterface {
    * Implements Drupal\Component\Gettext\PoMetadataInterface::getLangcode().
    */
   public function getLangcode() {
-    return $this->_langcode;
+    return $this->langcode;
   }
 
   /**
    * Implements Drupal\Component\Gettext\PoMetadataInterface::setLangcode().
    */
   public function setLangcode($langcode) {
-    $this->_langcode = $langcode;
+    $this->langcode = $langcode;
   }
 
   /**
    * Get the report of the write operations.
    */
   public function getReport() {
-    return $this->_report;
+    return $this->report;
   }
 
   /**
@@ -96,7 +96,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    * @param array $report
    *   Associative array with result information.
    */
-  function setReport($report = array()) {
+  public function setReport($report = array()) {
     $report += array(
       'additions' => 0,
       'updates' => 0,
@@ -104,20 +104,20 @@ class PoDatabaseWriter implements PoWriterInterface {
       'skips' => 0,
       'strings' => array(),
     );
-    $this->_report = $report;
+    $this->report = $report;
   }
 
   /**
    * Get the options used by the writer.
    */
-  function getOptions() {
-    return $this->_options;
+  public function getOptions() {
+    return $this->options;
   }
 
   /**
    * Set the options for the current writer.
    */
-  function setOptions(array $options) {
+  public function setOptions(array $options) {
     if (!isset($options['overwrite_options'])) {
       $options['overwrite_options'] = array();
     }
@@ -128,14 +128,14 @@ class PoDatabaseWriter implements PoWriterInterface {
     $options += array(
       'customized' => LOCALE_NOT_CUSTOMIZED,
     );
-    $this->_options = $options;
+    $this->options = $options;
   }
 
   /**
    * Implements Drupal\Component\Gettext\PoMetadataInterface::getHeader().
    */
-  function getHeader() {
-    return $this->_header;
+  public function getHeader() {
+    return $this->header;
   }
 
   /**
@@ -153,8 +153,8 @@ class PoDatabaseWriter implements PoWriterInterface {
    *
    * @throws Exception
    */
-  function setHeader(PoHeader $header) {
-    $this->_header = $header;
+  public function setHeader(PoHeader $header) {
+    $this->header = $header;
     $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
 
     // Check for options.
@@ -165,7 +165,7 @@ class PoDatabaseWriter implements PoWriterInterface {
     $overwrite_options = $options['overwrite_options'];
 
     // Check for langcode.
-    $langcode = $this->_langcode;
+    $langcode = $this->langcode;
     if (empty($langcode)) {
       throw new \Exception('Langcode should be set before assigning a PoHeader.');
     }
@@ -187,10 +187,10 @@ class PoDatabaseWriter implements PoWriterInterface {
   /**
    * Implements Drupal\Component\Gettext\PoWriterInterface::writeItem().
    */
-  function writeItem(PoItem $item) {
+  public function writeItem(PoItem $item) {
     if ($item->isPlural()) {
-      $item->setSource(join(LOCALE_PLURAL_DELIMITER, $item->getSource()));
-      $item->setTranslation(join(LOCALE_PLURAL_DELIMITER, $item->getTranslation()));
+      $item->setSource(implode(LOCALE_PLURAL_DELIMITER, $item->getSource()));
+      $item->setTranslation(implode(LOCALE_PLURAL_DELIMITER, $item->getTranslation()));
     }
     $this->importString($item);
   }
@@ -216,12 +216,12 @@ class PoDatabaseWriter implements PoWriterInterface {
    */
   private function importString(PoItem $item) {
     // Initialize overwrite options if not set.
-    $this->_options['overwrite_options'] += array(
+    $this->options['overwrite_options'] += array(
       'not_customized' => FALSE,
       'customized' => FALSE,
     );
-    $overwrite_options = $this->_options['overwrite_options'];
-    $customized = $this->_options['customized'];
+    $overwrite_options = $this->options['overwrite_options'];
+    $customized = $this->options['customized'];
 
     $context = $item->getContext();
     $source = $item->getSource();
@@ -229,9 +229,9 @@ class PoDatabaseWriter implements PoWriterInterface {
 
     // Look up the source string and any existing translation.
     $strings = \Drupal::service('locale.storage')->getTranslations(array(
-      'language' => $this->_langcode,
+      'language' => $this->langcode,
       'source' => $source,
-      'context' => $context
+      'context' => $context,
     ));
     $string = reset($strings);
 
@@ -239,7 +239,7 @@ class PoDatabaseWriter implements PoWriterInterface {
       // Skip this string unless it passes a check for dangerous code.
       if (!locale_string_is_safe($translation)) {
         watchdog('locale', 'Import of string "%string" was skipped because of disallowed or malformed HTML.', array('%string' => $translation), WATCHDOG_ERROR);
-        $this->_report['skips']++;
+        $this->report['skips']++;
         return 0;
       }
       elseif ($string) {
@@ -247,19 +247,19 @@ class PoDatabaseWriter implements PoWriterInterface {
         if ($string->isNew()) {
           // No translation in this language.
           $string->setValues(array(
-            'language' => $this->_langcode,
-            'customized' => $customized
+            'language' => $this->langcode,
+            'customized' => $customized,
           ));
           $string->save();
-          $this->_report['additions']++;
+          $this->report['additions']++;
         }
         elseif ($overwrite_options[$string->customized ? 'customized' : 'not_customized']) {
           // Translation exists, only overwrite if instructed.
           $string->customized = $customized;
           $string->save();
-          $this->_report['updates']++;
+          $this->report['updates']++;
         }
-        $this->_report['strings'][] = $string->getId();
+        $this->report['strings'][] = $string->getId();
         return $string->lid;
       }
       else {
@@ -268,21 +268,21 @@ class PoDatabaseWriter implements PoWriterInterface {
           ->save();
         \Drupal::service('locale.storage')->createTranslation(array(
           'lid' => $string->getId(),
-          'language' => $this->_langcode,
+          'language' => $this->langcode,
           'translation' => $translation,
           'customized' => $customized,
         ))->save();
 
-        $this->_report['additions']++;
-        $this->_report['strings'][] = $string->getId();
+        $this->report['additions']++;
+        $this->report['strings'][] = $string->getId();
         return $string->lid;
       }
     }
     elseif ($string && !$string->isNew() && $overwrite_options[$string->customized ? 'customized' : 'not_customized']) {
       // Empty translation, remove existing if instructed.
       $string->delete();
-      $this->_report['deletes']++;
-      $this->_report['strings'][] = $string->lid;
+      $this->report['deletes']++;
+      $this->report['strings'][] = $string->lid;
       return $string->lid;
     }
   }

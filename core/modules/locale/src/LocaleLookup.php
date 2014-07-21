@@ -119,7 +119,7 @@ class LocaleLookup extends CacheCollector {
       $this->stringStorage->createString(array(
         'source' => $offset,
         'context' => $this->context,
-        'version' => \Drupal::VERSION
+        'version' => \Drupal::VERSION,
       ))->addLocation('path', $this->requestUri())->save();
       $value = TRUE;
     }
@@ -129,7 +129,7 @@ class LocaleLookup extends CacheCollector {
     if ($value === TRUE) {
       $fallbacks = $this->languageManager->getFallbackCandidates($this->langcode, array('operation' => 'locale_lookup', 'data' => $offset));
       if (!empty($fallbacks)) {
-        foreach($fallbacks as $langcode) {
+        foreach ($fallbacks as $langcode) {
           $translation = $this->stringStorage->findTranslation(array(
             'language' => $langcode,
             'source' => $offset,

@@ -68,24 +68,24 @@ class LocaleConfigManager {
   /**
    * Creates a new typed configuration manager.
    *
-   * @param \Drupal\Core\Config\StorageInterface $configStorage
+   * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The storage object to use for reading configuration data.
-   * @param \Drupal\Core\Config\StorageInterface $installStorage
+   * @param \Drupal\Core\Config\StorageInterface $install_storage
    *   The storage object to use for reading default configuration
    *   data.
-   * @param \Drupal\locale\StringStorageInterface $localeStorage
+   * @param \Drupal\locale\StringStorageInterface $locale_storage
    *   The locale storage to use for reading string translations.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
-   * @param \Drupal\language\ConfigurableLanguageManagerInterface
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, ConfigurableLanguageManagerInterface $language_manager) {
-    $this->configStorage = $configStorage;
-    $this->installStorage = $installStorage;
-    $this->localeStorage = $localeStorage;
+  public function __construct(StorageInterface $config_storage, StorageInterface $install_storage, StringStorageInterface $locale_storage, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, ConfigurableLanguageManagerInterface $language_manager) {
+    $this->configStorage = $config_storage;
+    $this->installStorage = $install_storage;
+    $this->localeStorage = $locale_storage;
     $this->configFactory = $config_factory;
     $this->typedConfigManager = $typed_config;
     $this->languageManager = $language_manager;
@@ -273,7 +273,7 @@ class LocaleConfigManager {
       if (!isset($this->translations[$name][$langcode])) {
         // Preload all translations for this configuration name and language.
         $this->translations[$name][$langcode] = array();
-        foreach ($this->localeStorage->getTranslations(array('language' => $langcode, 'type' => 'configuration', 'name' => $name)) as $string){
+        foreach ($this->localeStorage->getTranslations(array('language' => $langcode, 'type' => 'configuration', 'name' => $name)) as $string) {
           $this->translations[$name][$langcode][$string->context][$string->source] = $string;
         }
       }

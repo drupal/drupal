@@ -30,6 +30,9 @@ class LocaleTranslateStringTourTest extends TourTestBase {
    */
   public static $modules = array('locale', 'tour');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser(array('translate interface', 'access tour', 'administer languages'));
@@ -40,7 +43,7 @@ class LocaleTranslateStringTourTest extends TourTestBase {
    * Tests locale tour tip availability.
    */
   public function testTranslateStringTourTips() {
-    // Add Another Language so there is no missing form items
+    // Add another language so there are no missing form items.
     $edit = array();
     $edit['predefined_langcode'] = 'es';
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));

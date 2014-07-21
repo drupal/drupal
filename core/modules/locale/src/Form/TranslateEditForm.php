@@ -83,7 +83,7 @@ class TranslateEditForm extends TranslateFormBase {
             '#type' => 'item',
             '#title' => $this->t('Singular form'),
             '#markup' => '<span lang="en">' . String::checkPlain($source_array[0]) . '</span>',
-            '#prefix' => '<span class="visually-hidden">' . $this->t('Source string (@language)', array('@language' => $this->t('Built-in English'))) . '</span>'
+            '#prefix' => '<span class="visually-hidden">' . $this->t('Source string (@language)', array('@language' => $this->t('Built-in English'))) . '</span>',
           );
           $form['strings'][$string->lid]['original_plural'] = array(
             '#type' => 'item',
@@ -120,7 +120,7 @@ class TranslateEditForm extends TranslateFormBase {
                 '#rows' => $rows,
                 '#default_value' => isset($translation_array[$i]) ? $translation_array[$i] : '',
                 '#attributes' => array('lang' => $langcode),
-                '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)',  array('@language' => $langname)) . '</span>') : '',
+                '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', array('@language' => $langname)) . '</span>') : '',
               );
             }
           }
@@ -132,7 +132,7 @@ class TranslateEditForm extends TranslateFormBase {
               '#rows' => $rows,
               '#default_value' => $translation_array[0],
               '#attributes' => array('lang' => $langcode),
-              '#prefix' => '<span class="visually-hidden">' . $this->t('Translated string (@language)',  array('@language' => $langname)) . '</span>',
+              '#prefix' => '<span class="visually-hidden">' . $this->t('Translated string (@language)', array('@language' => $langname)) . '</span>',
             );
             $form['strings'][$string->lid]['translations'][1] = array(
               '#type' => 'textarea',
@@ -189,7 +189,8 @@ class TranslateEditForm extends TranslateFormBase {
       $existing_translation = isset($existing_translation_objects[$lid]);
 
       // Plural translations are saved in a delimited string. To be able to
-      // compare the new strings with the existing strings a string in the same format is created.
+      // compare the new strings with the existing strings a string in the same
+      // format is created.
       $new_translation_string_delimited = implode(LOCALE_PLURAL_DELIMITER, $new_translation['translations']);
 
       // Generate an imploded string without delimiter, to be able to run

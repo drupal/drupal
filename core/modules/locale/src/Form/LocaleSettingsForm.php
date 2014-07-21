@@ -108,12 +108,14 @@ class LocaleSettingsForm extends ConfigFormBase {
           ->set('translation.overwrite_not_customized', TRUE)
           ->save();
         break;
+
       case LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED:
         $config
           ->set('translation.overwrite_customized', FALSE)
           ->set('translation.overwrite_not_customized', TRUE)
           ->save();
         break;
+
       case LOCALE_TRANSLATION_OVERWRITE_NONE:
         $config
           ->set('translation.overwrite_customized', FALSE)
@@ -122,8 +124,8 @@ class LocaleSettingsForm extends ConfigFormBase {
         break;
     }
 
-    // Invalidate the cached translation status when the configuration setting of
-    // 'use_source' changes.
+    // Invalidate the cached translation status when the configuration setting
+    // of 'use_source' changes.
     if ($form['use_source']['#default_value'] != $form_state['values']['use_source']) {
       locale_translation_clear_status();
     }

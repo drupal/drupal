@@ -162,8 +162,10 @@ class LocaleLookupTest extends UnitTestCase {
         switch ($langcode) {
           case 'pl':
             return array('cs', 'en');
+
           case 'cs':
             return array('en');
+
           default:
             return array();
         }

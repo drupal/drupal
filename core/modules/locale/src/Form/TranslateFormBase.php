@@ -120,7 +120,7 @@ abstract class TranslateFormBase extends FormBase {
    * @param bool $reset
    *   If the list of values should be reset.
    *
-   * @return array $filter_values
+   * @return array
    *   The filter values.
    */
   protected function translateFilterValues($reset = FALSE) {

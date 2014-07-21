@@ -42,18 +42,18 @@ class TranslationString extends StringBase {
    *
    * @var bool
    */
-  protected $is_new;
+  protected $isNew;
 
   /**
    * Overrides Drupal\locale\StringBase::__construct().
    */
   public function __construct($values = array()) {
     parent::__construct($values);
-    if (!isset($this->is_new)) {
+    if (!isset($this->isNew)) {
       // We mark the string as not new if it is a complete translation.
       // This will work when loading from database, otherwise the storage
       // controller that creates the string object must handle it.
-      $this->is_new = !$this->isTranslation();
+      $this->isNew = !$this->isTranslation();
     }
   }
 
@@ -104,7 +104,7 @@ class TranslationString extends StringBase {
    * Implements Drupal\locale\StringInterface::isNew().
    */
   public function isNew() {
-    return $this->is_new;
+    return $this->isNew;
   }
 
   /**
@@ -112,7 +112,7 @@ class TranslationString extends StringBase {
    */
   public function save() {
     parent::save();
-    $this->is_new = FALSE;
+    $this->isNew = FALSE;
     return $this;
   }
 
@@ -121,7 +121,7 @@ class TranslationString extends StringBase {
    */
   public function delete() {
     parent::delete();
-    $this->is_new = TRUE;
+    $this->isNew = TRUE;
     return $this;
   }
 

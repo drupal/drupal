@@ -45,7 +45,8 @@
  * Multiple custom modules or themes sharing the same po file should have
  * matching definitions. Such as modules and sub-modules or multiple modules in
  * the same project/code tree. Both "interface translation project" and
- * "interface translation server pattern" definitions of these modules should match.
+ * "interface translation server pattern" definitions of these modules should
+ * match.
  *
  * Example .info.yml file properties for a custom module with a po file located
  * on a remote translation server.
@@ -109,7 +110,7 @@
  * @param array $projects
  *   Project data as returned by update_get_projects().
  *
- * @see locale_translation_project_list().
+ * @see locale_translation_project_list()
  * @ingroup interface_translation_properties
  */
 function hook_locale_translation_projects_alter(&$projects) {

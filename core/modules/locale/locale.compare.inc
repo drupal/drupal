@@ -114,8 +114,8 @@ function locale_translation_build_projects() {
       ))
       ->execute();
 
-      // Invalidate the cache of translatable projects.
-      locale_translation_clear_cache_projects();
+    // Invalidate the cache of translatable projects.
+    locale_translation_clear_cache_projects();
   }
   return $projects;
 }
@@ -193,7 +193,8 @@ function _locale_translation_prepare_project_list($data, $type) {
 function locale_translation_default_translation_server() {
   $pattern = \Drupal::config('locale.settings')->get('translation.default_server_pattern');
   // An additional check is required here. During the upgrade process
-  // \Drupal::config()->get() returns NULL. We use the defined value as fallback.
+  // \Drupal::config()->get() returns NULL. We use the defined value as
+  // fallback.
   $pattern  = $pattern ? $pattern : LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN;
 
   return array(
@@ -211,8 +212,9 @@ function locale_translation_default_translation_server() {
  *
  * @return array
  *   Available sources indexed by project and language.
+ *
+ * @todo Return batch or NULL.
  */
-// @todo Return batch or NULL
 function locale_translation_check_projects($projects = array(), $langcodes = array()) {
   if (locale_translation_use_remote_source()) {
     // Retrieve the status of both remote and local translation sources by

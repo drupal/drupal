@@ -48,10 +48,10 @@ function locale_test_locale_translation_projects_alter(&$projects) {
     $remote_url = $url . PublicStream::basePath() . '/remote/';
 
     // Completely replace the project data with a set of test projects.
-    $projects = array (
-      'contrib_module_one' => array (
+    $projects = array(
+      'contrib_module_one' => array(
         'name' => 'contrib_module_one',
-        'info' => array (
+        'info' => array(
           'name' => 'Contributed module one',
           'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
@@ -64,9 +64,9 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'contrib_module_two' => array (
+      'contrib_module_two' => array(
         'name' => 'contrib_module_two',
-        'info' => array (
+        'info' => array(
           'name' => 'Contributed module two',
           'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
@@ -79,9 +79,9 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'contrib_module_three' => array (
+      'contrib_module_three' => array(
         'name' => 'contrib_module_three',
-        'info' => array (
+        'info' => array(
           'name' => 'Contributed module three',
           'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
           'package' => 'Other',
@@ -94,9 +94,9 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'locale_test' => array (
+      'locale_test' => array(
         'name' => 'locale_test',
-        'info' => array (
+        'info' => array(
           'name' => 'Locale test',
           'interface translation project' => 'locale_test',
           'interface translation server pattern' => 'core/modules/locale/tests/test.%language.po',
@@ -110,9 +110,9 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ),
-      'custom_module_one' => array (
+      'custom_module_one' => array(
         'name' => 'custom_module_one',
-        'info' => array (
+        'info' => array(
           'name' => 'Custom module one',
           'interface translation project' => 'custom_module_one',
           'interface translation server pattern' => 'translations://custom_module_one.%language.po',

@@ -41,7 +41,7 @@ class LocaleTranslationTest extends UnitTestCase {
   }
 
   /**
-   * Tests for \Drupal\locale\LocaleTranslation::destruct()
+   * Tests for \Drupal\locale\LocaleTranslation::destruct().
    */
   public function testDestruct() {
     $translation = new LocaleTranslation($this->storage, $this->cache, $this->lock, $this->getConfigFactoryStub(), $this->languageManager);

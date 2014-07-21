@@ -38,7 +38,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
   protected $configFactory;
 
   /**
-   * Cached translations
+   * Cached translations.
    *
    * @var array
    *   Array of \Drupal\locale\LocaleLookup objects indexed by language code

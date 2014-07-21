@@ -24,7 +24,10 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    */
   public static $modules = array('update', 'locale', 'locale_test');
 
-  function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
     parent::setUp();
     module_load_include('compare.inc', 'locale');
     module_load_include('fetch.inc', 'locale');
@@ -39,7 +42,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   /**
    * Checks if a list of translatable projects gets build.
    */
-  function testUpdateProjects() {
+  public function testUpdateProjects() {
     module_load_include('compare.inc', 'locale');
 
     // Make the test modules look like a normal custom module. i.e. make the
@@ -52,7 +55,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $projects = locale_translation_project_list();
     $this->assertFalse(isset($projects['locale_test_translate']), 'Hidden module not found');
     $this->assertEqual($projects['locale_test']['info']['interface translation server pattern'], 'core/modules/locale/test/test.%language.po', 'Interface translation parameter found in project info.');
-    $this->assertEqual($projects['locale_test']['name'] , 'locale_test', format_string('%key found in project info.', array('%key' => 'interface translation project')));
+    $this->assertEqual($projects['locale_test']['name'], 'locale_test', format_string('%key found in project info.', array('%key' => 'interface translation project')));
   }
 
   /**
@@ -69,7 +72,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    * the most recent files are selected in the different check scenarios: check
    * for local files only, check for both local and remote files.
    */
-  function testUpdateCheckStatus() {
+  public function testUpdateCheckStatus() {
     // Case when contributed modules are absent.
     $this->drupalGet('admin/reports/translations');
     $this->assertText(t('Missing translations for one project'));
@@ -93,9 +96,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->drupalGet('admin/reports/translations/check');
     $result = locale_translation_get_status();
     $this->assertEqual($result['contrib_module_one']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_one found');
-    $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestamp_old, 'Translation timestamp found');
+    $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestampOld, 'Translation timestamp found');
     $this->assertEqual($result['contrib_module_two']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_two found');
-    $this->assertEqual($result['contrib_module_two']['de']->timestamp, $this->timestamp_new, 'Translation timestamp found');
+    $this->assertEqual($result['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation timestamp found');
     $this->assertEqual($result['locale_test']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of locale_test found');
     $this->assertEqual($result['custom_module_one']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of custom_module_one found');
 
@@ -109,11 +112,11 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->drupalGet('admin/reports/translations/check');
     $result = locale_translation_get_status();
     $this->assertEqual($result['contrib_module_one']['de']->type, LOCALE_TRANSLATION_REMOTE, 'Translation of contrib_module_one found');
-    $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestamp_new, 'Translation timestamp found');
+    $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestampNew, 'Translation timestamp found');
     $this->assertEqual($result['contrib_module_two']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_two found');
-    $this->assertEqual($result['contrib_module_two']['de']->timestamp, $this->timestamp_new, 'Translation timestamp found');
+    $this->assertEqual($result['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation timestamp found');
     $this->assertEqual($result['contrib_module_three']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_three found');
-    $this->assertEqual($result['contrib_module_three']['de']->timestamp, $this->timestamp_old, 'Translation timestamp found');
+    $this->assertEqual($result['contrib_module_three']['de']->timestamp, $this->timestampOld, 'Translation timestamp found');
     $this->assertEqual($result['locale_test']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of locale_test found');
     $this->assertEqual($result['custom_module_one']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of custom_module_one found');
   }
@@ -125,12 +128,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Source: remote and local files
    *  - Import overwrite: all existing translations
    */
-  function testUpdateImportSourceRemote() {
+  public function testUpdateImportSourceRemote() {
     $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
-    $this-> setCurrentTranslations();
+    $this->setCurrentTranslations();
     $config->set('translation.default_filename', '%project-%version.%language._po');
 
     // Set the update conditions for this test.
@@ -147,7 +150,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertRaw('<label class="visually-hidden" for="edit-langcodes-de">Update German</label>', 'German language found');
     $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
     $this->assertText('Contributed module one (' . format_date($this->timestamp_now, 'html_date') . ')', 'Updates for Contrib module one');
-    $this->assertText('Contributed module two (' . format_date($this->timestamp_new, 'html_date') . ')', 'Updates for Contrib module two');
+    $this->assertText('Contributed module two (' . format_date($this->timestampNew, 'html_date') . ')', 'Updates for Contrib module two');
 
     // Execute the translation update.
     $this->drupalPostForm('admin/reports/translations', array(), t('Update translations'));
@@ -165,10 +168,10 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $history = locale_translation_get_file_history();
     $this->assertTrue($history['contrib_module_one']['de']->timestamp >= $this->timestamp_now, 'Translation of contrib_module_one is imported');
     $this->assertTrue($history['contrib_module_one']['de']->last_checked >= $this->timestamp_now, 'Translation of contrib_module_one is updated');
-    $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestamp_new, 'Translation of contrib_module_two is imported');
+    $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation of contrib_module_two is imported');
     $this->assertTrue($history['contrib_module_two']['de']->last_checked >= $this->timestamp_now, 'Translation of contrib_module_two is updated');
-    $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestamp_medium, 'Translation of contrib_module_three is not imported');
-    $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestamp_medium, 'Translation of contrib_module_three is not updated');
+    $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestampMedium, 'Translation of contrib_module_three is not imported');
+    $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_three is not updated');
 
     // Check whether existing translations have (not) been overwritten.
     $this->assertEqual(t('January', array(), array('langcode' => 'de')), 'Januar_1', 'Translation of January');
@@ -187,12 +190,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Source: local files only
    *  - Import overwrite: all existing translations
    */
-  function testUpdateImportSourceLocal() {
+  public function testUpdateImportSourceLocal() {
     $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
-    $this-> setCurrentTranslations();
+    $this->setCurrentTranslations();
     $config->set('translation.default_filename', '%project-%version.%language._po');
 
     // Set the update conditions for this test.
@@ -217,12 +220,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // from the database. The function was called earlier during this test.
     drupal_static_reset('locale_translation_get_file_history');
     $history = locale_translation_get_file_history();
-    $this->assertTrue($history['contrib_module_one']['de']->timestamp >= $this->timestamp_medium, 'Translation of contrib_module_one is imported');
-    $this->assertEqual($history['contrib_module_one']['de']->last_checked, $this->timestamp_medium, 'Translation of contrib_module_one is updated');
-    $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestamp_new, 'Translation of contrib_module_two is imported');
+    $this->assertTrue($history['contrib_module_one']['de']->timestamp >= $this->timestampMedium, 'Translation of contrib_module_one is imported');
+    $this->assertEqual($history['contrib_module_one']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_one is updated');
+    $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation of contrib_module_two is imported');
     $this->assertTrue($history['contrib_module_two']['de']->last_checked >= $this->timestamp_now, 'Translation of contrib_module_two is updated');
-    $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestamp_medium, 'Translation of contrib_module_three is not imported');
-    $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestamp_medium, 'Translation of contrib_module_three is not updated');
+    $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestampMedium, 'Translation of contrib_module_three is not imported');
+    $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_three is not updated');
 
     // Check whether existing translations have (not) been overwritten.
     $this->assertEqual(t('January', array(), array('langcode' => 'de')), 'Januar_customized', 'Translation of January');
@@ -241,12 +244,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Source: remote and local files
    *  - Import overwrite: only overwrite non-customized translations
    */
-  function testUpdateImportModeNonCustomized() {
+  public function testUpdateImportModeNonCustomized() {
     $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
-    $this-> setCurrentTranslations();
+    $this->setCurrentTranslations();
     $config->set('translation.default_filename', '%project-%version.%language._po');
 
     // Set the test conditions.
@@ -277,12 +280,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Source: remote and local files
    *  - Import overwrite: don't overwrite any existing translation
    */
-  function testUpdateImportModeNone() {
+  public function testUpdateImportModeNone() {
     $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
-    $this-> setCurrentTranslations();
+    $this->setCurrentTranslations();
     $config->set('translation.default_filename', '%project-%version.%language._po');
 
     // Set the test conditions.
@@ -309,7 +312,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   /**
    * Tests automatic translation import when a module is enabled.
    */
-  function testEnableUninstallModule() {
+  public function testEnableUninstallModule() {
     // Make the hidden test modules look like a normal custom module.
     \Drupal::state()->set('locale.test_system_info_alter', TRUE);
 
@@ -347,7 +350,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    * enabled modules and will import them. When a language is removed the system
    * will remove all translations of that langugue from the database.
    */
-  function testEnableLanguage() {
+  public function testEnableLanguage() {
     // Make the hidden test modules look like a normal custom module.
     \Drupal::state()->set('locale.test_system_info_alter', TRUE);
 
@@ -391,7 +394,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   /**
    * Tests automatic translation import when a custom langauge is added.
    */
-  function testEnableCustomLanguage() {
+  public function testEnableCustomLanguage() {
     // Make the hidden test modules look like a normal custom module.
     \Drupal::state()->set('locale.test_system_info_alter', TRUE);
 

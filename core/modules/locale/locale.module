@@ -155,13 +155,14 @@ function locale_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'language.admin_overview':
-        return '<p>' . t('Interface translations are automatically imported when a language is added, or when new modules or themes are enabled. The report <a href="!update">Available translation updates</a> shows the status. Interface text can be customized in the <a href="!translate">user interface translation</a> page.', array('!update' => \Drupal::url('locale.translate_status'), '!translate' => \Drupal::url('locale.translate_page'))) . '</p>';
+      return '<p>' . t('Interface translations are automatically imported when a language is added, or when new modules or themes are enabled. The report <a href="!update">Available translation updates</a> shows the status. Interface text can be customized in the <a href="!translate">user interface translation</a> page.', array('!update' => \Drupal::url('locale.translate_status'), '!translate' => \Drupal::url('locale.translate_page'))) . '</p>';
+
     case 'locale.translate_page':
       $output = '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: Because translation tasks involve many strings, it may be more convenient to <a title="User interface translation export" href="!export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings in a specific language.', array('!export' => \Drupal::url('locale.translate_export'))) . '</p>';
       return $output;
 
     case 'locale.translate_import':
-      $output = '<p>' . t('Translation files are automatically downloaded and imported when <a title="Languages" href="!language">languages</a> are added, or when modules or themes are enabled.', array('!language' => \Drupal::url('language.admin_overview'))). '</p>';
+      $output = '<p>' . t('Translation files are automatically downloaded and imported when <a title="Languages" href="!language">languages</a> are added, or when modules or themes are enabled.', array('!language' => \Drupal::url('language.admin_overview'))) . '</p>';
       $output .= '<p>' . t('This page allows translators to manually import translated strings contained in a Gettext Portable Object (.po) file. Manual import may be used for customized translations or for the translation of custom modules and themes. To customize translations you can download a translation file from the <a href="!url">Drupal translation server</a> or <a title="User interface translation export" href="!export">export</a> translations from the site, customize the translations using a Gettext translation editor, and import the result using this page.', array('!url' => 'https://localize.drupal.org', '!export' => \Drupal::url('locale.translate_export'))) . '</p>';
       $output .= '<p>' . t('Note that importing large .po files may take several minutes.') . '</p>';
       return $output;
@@ -290,6 +291,7 @@ function locale_translatable_language_list() {
  * @param $langcode
  *   Optional language code to translate to a language other than
  *   what is used to display the page.
+ *
  * @return
  *   The numeric index of the plural variant to use for this $langcode and
  *   $count combination or -1 if the language was not found or does not have a
@@ -412,7 +414,7 @@ function locale_queue_info() {
  * queue data.
  *
  * @param array $data
- * Queue data array containing:
+ *   Queue data array containing:
  *   - Function name.
  *   - Array of function arguments. Optionally contains the batch context data.
  *
@@ -481,7 +483,8 @@ function locale_system_update(array $components) {
     $projects = array_keys(locale_translation_build_projects());
     if ($list = array_intersect($list, $projects)) {
       module_load_include('fetch.inc', 'locale');
-      // Get translation status of the projects, download and update translations.
+      // Get translation status of the projects, download and update
+      // translations.
       $options = _locale_translation_default_update_options();
       $batch = locale_translation_batch_update_build($list, array(), $options);
       batch_set($batch);
@@ -514,7 +517,8 @@ function locale_system_remove($components) {
     \Drupal\locale\Locale::config()->deleteComponentTranslations($components, array_keys($language_list));
 
     // Only when projects are removed, the translation files and records will be
-    // deleted. Not each disabled module will remove a project. E.g. sub modules.
+    // deleted. Not each disabled module will remove a project, e.g., sub
+    // modules.
     $projects = array_keys(locale_translation_get_projects());
     if ($list = array_intersect($list, $projects)) {
       locale_translation_file_history_delete($list);
@@ -561,6 +565,7 @@ function locale_js_alter(&$javascript) {
  *
  * @param array $files
  *   An array of local file paths.
+ *
  * @return string|null
  *   The filepath to the translation file or NULL if no translation is
  *   applicable.
@@ -693,7 +698,7 @@ function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for language_admin_add_form(().
+ * Implements hook_form_FORM_ID_alter() for language_admin_add_form().
  */
 function locale_form_language_admin_add_form_alter(&$form, &$form_state) {
   $form['predefined_submit']['#submit'][] = 'locale_form_language_admin_add_form_alter_submit';
@@ -847,7 +852,7 @@ function locale_translation_get_file_history() {
  * @param object $file
  *   Object representing the file just imported.
  *
- * @return integer
+ * @return int
  *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
  */
 function locale_translation_update_file_history($file) {
@@ -874,7 +879,7 @@ function locale_translation_update_file_history($file) {
  * @param array $projects
  *   Project name(s) to be deleted from the file history. If both project(s) and
  *   language code(s) are specified the conditions will be ANDed.
- * @param array $langcode
+ * @param array $langcodes
  *   Language code(s) to be deleted from the file history.
  */
 function locale_translation_file_history_delete($projects = array(), $langcodes = array()) {
@@ -963,6 +968,7 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
           }
         }
         break;
+
       case LOCALE_TRANSLATION_CURRENT:
         $data->last_checked = REQUEST_TIME;
         $status[$project][$langcode]->timestamp = $data->timestamp;
@@ -1200,7 +1206,8 @@ function _locale_parse_js_file($filepath) {
     $source = \Drupal::service('locale.storage')->findString($match);
 
     if (!$source) {
-      // We don't have the source string yet, thus we insert it into the database.
+      // We don't have the source string yet, thus we insert it into the
+      // database.
       $source = \Drupal::service('locale.storage')->createString($match);
     }
 
@@ -1267,7 +1274,7 @@ function _locale_rebuild_js($langcode = NULL) {
   // Only add strings with a translation to the translations array.
   $conditions = array(
     'type' => 'javascript',
-    'language' =>  $language->id,
+    'language' => $language->id,
     'translated' => TRUE,
   );
   $translations = array();
@@ -1296,7 +1303,8 @@ function _locale_rebuild_js($langcode = NULL) {
   // There is (on purpose) no front end to edit that variable.
   $dir = 'public://' . $config->get('javascript.directory');
 
-  // Delete old file, if we have no translations anymore, or a different file to be saved.
+  // Delete old file, if we have no translations anymore, or a different file to
+  // be saved.
   $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
   $changed_hash = !isset($locale_javascripts[$language->id]) || ($locale_javascripts[$language->id] != $data_hash);
   if (!empty($locale_javascripts[$language->id]) && (!$data || $changed_hash)) {
@@ -1353,17 +1361,21 @@ function _locale_rebuild_js($langcode = NULL) {
 
     case 'rebuilt':
       $logger->warning('JavaScript translation file %file.js was lost.', array('%file' => $locale_javascripts[$language->id]));
-    // Proceed to the 'created' case as the JavaScript translation file has
-    // been created again.
+      // Proceed to the 'created' case as the JavaScript translation file has
+      // been created again.
+
     case 'created':
       $logger->notice('Created JavaScript translation file for the language %language.', array('%language' => $language->name));
       return TRUE;
+
     case 'deleted':
       $logger->notice('Removed JavaScript translation file for the language %language because no translations currently exist for that language.', array('%language' => $language->name));
       return TRUE;
+
     case 'error':
       $logger->error('An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => $language->name));
       return FALSE;
+
     default:
       // No operation needed.
       return TRUE;

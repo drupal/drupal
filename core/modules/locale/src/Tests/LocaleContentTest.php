@@ -28,7 +28,7 @@ class LocaleContentTest extends WebTestBase {
   /**
    * Verifies that machine name fields are always LTR.
    */
-  function testMachineNameLTR() {
+  public function testMachineNameLTR() {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content types', 'access administration pages', 'administer site configuration'));
 
@@ -57,7 +57,7 @@ class LocaleContentTest extends WebTestBase {
   /**
    * Test if a content type can be set to multilingual and language is present.
    */
-  function testContentTypeLanguageConfiguration() {
+  public function testContentTypeLanguageConfiguration() {
     $type1 = $this->drupalCreateContentType();
     $type2 = $this->drupalCreateContentType();
 
@@ -106,7 +106,7 @@ class LocaleContentTest extends WebTestBase {
 
     // Create a node.
     $node_title = $this->randomName();
-    $node_body =  $this->randomName();
+    $node_body = $this->randomName();
     $edit = array(
       'type' => $type2->type,
       'title' => $node_title,
@@ -131,7 +131,7 @@ class LocaleContentTest extends WebTestBase {
   /**
    * Test if a dir and lang tags exist in node's attributes.
    */
-  function testContentTypeDirLang() {
+  public function testContentTypeDirLang() {
     $type = $this->drupalCreateContentType();
 
     // User to add and remove language.
@@ -175,7 +175,6 @@ class LocaleContentTest extends WebTestBase {
       ));
     }
 
-
     // Check if English node does not have lang tag.
     $this->drupalGet('node/' . $nodes['en']->id());
     $pattern = '|class="[^"]*node[^"]*"[^<>]*lang="en"|';
@@ -202,9 +201,9 @@ class LocaleContentTest extends WebTestBase {
 
 
   /**
-   *  Test filtering Node content by language.
+   * Test filtering Node content by language.
    */
-  function testNodeAdminLanguageFilter() {
+  public function testNodeAdminLanguageFilter() {
     \Drupal::moduleHandler()->install(array('views'));
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));

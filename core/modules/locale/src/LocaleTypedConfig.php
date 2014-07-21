@@ -55,13 +55,13 @@ class LocaleTypedConfig extends Element {
    *   The configuration object name.
    * @param string $langcode
    *   Language code for the source configuration data.
-   * @param \Drupal\locale\LocaleConfigManager $localeConfig;
+   * @param \Drupal\locale\LocaleConfigManager $locale_config
    *   The locale configuration manager object.
    */
-  public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $localeConfig, TypedConfigManagerInterface $typed_config) {
+  public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $locale_config, TypedConfigManagerInterface $typed_config) {
     parent::__construct($definition, $name);
     $this->langcode = $langcode;
-    $this->localeConfig = $localeConfig;
+    $this->localeConfig = $locale_config;
     $this->typedConfigManager = $typed_config;
   }
 
@@ -117,7 +117,7 @@ class LocaleTypedConfig extends Element {
    *   \Drupal\Core\Config\Schema\ArrayElement.
    * @param array $options
    *   Array with translation options that must contain the keys defined in
-   *   \Drupal\locale\LocaleTypedConfig::translateElement()
+   *   \Drupal\locale\LocaleTypedConfig::translateElement().
    *
    * @return array
    *   Configuration data translated to the requested language if available,
@@ -141,7 +141,7 @@ class LocaleTypedConfig extends Element {
    *   Typed configuration array element.
    * @param array $options
    *   Array with translation options that must contain the keys defined in
-   *   \Drupal\locale\LocaleTypedConfig::translateElement()
+   *   \Drupal\locale\LocaleTypedConfig::translateElement().
    *
    * @return array
    *   Configuration data translated to the requested language.

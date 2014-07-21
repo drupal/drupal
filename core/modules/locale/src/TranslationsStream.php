@@ -17,17 +17,18 @@ use Drupal\Core\StreamWrapper\LocalStream;
 class TranslationsStream extends LocalStream {
 
   /**
-   * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
+   * {@inheritdoc}
    */
-  function getDirectoryPath() {
+  public function getDirectoryPath() {
     return \Drupal::config('locale.settings')->get('translation.path');
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getExternalUrl().
+   * {@inheritdoc}
+   *
    * @throws \LogicException PO files URL should not be public.
    */
-  function getExternalUrl() {
+  public function getExternalUrl() {
     throw new \LogicException('PO files URL should not be public.');
   }
 }

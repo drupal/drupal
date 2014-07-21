@@ -31,26 +31,26 @@ class PoDatabaseReader implements PoReaderInterface {
    *
    * @var array
    */
-  private $_options;
+  private $options;
 
   /**
    * Language code of the language being read from the database.
    *
    * @var string
    */
-  private $_langcode;
+  private $langcode;
 
   /**
    * Store the result of the query so it can be iterated later.
    *
    * @var resource
    */
-  private $_result;
+  private $result;
 
   /**
    * Constructor, initializes with default options.
    */
-  function __construct() {
+  public function __construct() {
     $this->setOptions(array());
   }
 
@@ -58,39 +58,39 @@ class PoDatabaseReader implements PoReaderInterface {
    * Implements Drupal\Component\Gettext\PoMetadataInterface::getLangcode().
    */
   public function getLangcode() {
-    return $this->_langcode;
+    return $this->langcode;
   }
 
   /**
    * Implements Drupal\Component\Gettext\PoMetadataInterface::setLangcode().
    */
   public function setLangcode($langcode) {
-    $this->_langcode = $langcode;
+    $this->langcode = $langcode;
   }
 
   /**
    * Get the options used by the reader.
    */
-  function getOptions() {
-    return $this->_options;
+  public function getOptions() {
+    return $this->options;
   }
 
   /**
    * Set the options for the current reader.
    */
-  function setOptions(array $options) {
+  public function setOptions(array $options) {
     $options += array(
       'customized' => FALSE,
       'not_customized' => FALSE,
       'not_translated' => FALSE,
     );
-    $this->_options = $options;
+    $this->options = $options;
   }
 
   /**
    * Implements Drupal\Component\Gettext\PoMetadataInterface::getHeader().
    */
-  function getHeader() {
+  public function getHeader() {
     return new PoHeader($this->getLangcode());
   }
 
@@ -100,7 +100,7 @@ class PoDatabaseReader implements PoReaderInterface {
    * @throws Exception
    *   Always, because you cannot set the PO header of a reader.
    */
-  function setHeader(PoHeader $header) {
+  public function setHeader(PoHeader $header) {
     throw new \Exception('You cannot set the PO header in a reader.');
   }
 
@@ -108,8 +108,8 @@ class PoDatabaseReader implements PoReaderInterface {
    * Builds and executes a database query based on options set earlier.
    */
   private function loadStrings() {
-    $langcode = $this->_langcode;
-    $options = $this->_options;
+    $langcode = $this->langcode;
+    $options = $this->options;
     $conditions = array();
 
     if (array_sum($options) == 0) {
@@ -156,21 +156,21 @@ class PoDatabaseReader implements PoReaderInterface {
    * Get the database result resource for the given language and options.
    */
   private function readString() {
-    if (!isset($this->_result)) {
-      $this->_result = $this->loadStrings();
+    if (!isset($this->result)) {
+      $this->result = $this->loadStrings();
     }
-    return array_shift($this->_result);
+    return array_shift($this->result);
   }
 
   /**
    * Implements Drupal\Component\Gettext\PoReaderInterface::readItem().
    */
-  function readItem() {
+  public function readItem() {
     if ($string = $this->readString()) {
-      $values = (array)$string;
-      $poItem = new PoItem();
-      $poItem->setFromArray($values);
-      return $poItem;
+      $values = (array) $string;
+      $po_item = new PoItem();
+      $po_item->setFromArray($values);
+      return $po_item;
     }
   }
 
