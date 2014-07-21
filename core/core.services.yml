@@ -301,6 +301,11 @@ services:
     parent: default_plugin_manager
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
+  paramconverter.menu_link:
+    class: Drupal\Core\ParamConverter\MenuLinkPluginConverter
+    tags:
+      - { name: paramconverter }
+    arguments: ['@plugin.manager.menu.link']
   menu.tree_storage:
     class: Drupal\Core\Menu\MenuTreeStorage
     arguments: ['@database', '@cache.menu', 'menu_tree']

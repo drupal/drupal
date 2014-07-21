@@ -41,6 +41,7 @@ use Drupal\Core\Url;
  *   links = {
  *     "canonical" = "menu_link_content.link_edit",
  *     "edit-form" = "menu_link_content.link_edit",
+ *     "delete-form" = "menu_link_content.link_delete",
  *   }
  * )
  */
@@ -336,30 +337,9 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ->setDescription(t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'))
       ->setSetting('default_value', FALSE);
 
-    // The form widget doesn't work yet for core fields, so we skip the
-    // for display and manually create form elements for the boolean fields.
-    // @see https://drupal.org/node/2226493
-    // @see https://drupal.org/node/2150511
-    $fields['expanded'] = FieldDefinition::create('boolean')
-      ->setLabel(t('Expanded'))
-      ->setDescription(t('Flag for whether this link should be rendered as expanded in menus - expanded links always have their child links displayed, instead of only when the link is in the active trail (1 = expanded, 0 = not expanded).'))
-      ->setSetting('default_value', FALSE)
-      ->setDisplayOptions('view', array(
-        'label' => 'hidden',
-        'type' => 'boolean',
-        'weight' => 0,
-      ));
-
-    // We manually create a form element for this, since the form logic is
-    // is inverted to show enabled.
-    $fields['hidden'] = FieldDefinition::create('boolean')
-      ->setLabel(t('Hidden'))
-      ->setDescription(t('A flag for whether the link should be hidden in menus or rendered normally.'))
-      ->setSetting('default_value', FALSE);
-
     $fields['weight'] = FieldDefinition::create('integer')
       ->setLabel(t('Weight'))
-      ->setDescription(t('Link weight among links in the same menu at the same depth.'))
+      ->setDescription(t('Link weight among links in the same menu at the same depth. In the menu, the links with high weight will sink and links with a low weight will be positioned nearer the top.'))
       ->setSetting('default_value', 0)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
@@ -368,8 +348,30 @@ class MenuLinkContent extends ContentEntityBase implements MenuLinkContentInterf
       ))
       ->setDisplayOptions('form', array(
         'type' => 'integer',
+        'weight' => 20,
+      ));
+
+    $fields['expanded'] = FieldDefinition::create('boolean')
+      ->setLabel(t('Show as expanded'))
+      ->setDescription(t('If selected and this menu link has children, the menu will always appear expanded.'))
+      ->setSetting('default_value', FALSE)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'boolean',
+        'weight' => 0,
+      ))
+    ->setDisplayOptions('form', array(
+        'settings' => array('display_label' => TRUE),
         'weight' => 0,
       ));
+
+    // @todo We manually create a form element for this, since the form logic is
+    // is inverted to show enabled. Flip this to a status field and use the
+    // normal entity Boolean widget. https://www.drupal.org/node/2305707
+    $fields['hidden'] = FieldDefinition::create('boolean')
+      ->setLabel(t('Hidden'))
+      ->setDescription(t('A flag for whether the link should be hidden in menus or rendered normally.'))
+      ->setSetting('default_value', FALSE);
 
     $fields['langcode'] = FieldDefinition::create('language')
       ->setLabel(t('Language code'))

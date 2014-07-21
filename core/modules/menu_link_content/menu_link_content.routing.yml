@@ -1,0 +1,23 @@
+menu_link_content.link_add:
+  path: '/admin/structure/menu/manage/{menu}/add'
+  defaults:
+    _content: '\Drupal\menu_link_content\Controller\MenuController::addLink'
+    _title: 'Add menu link'
+  requirements:
+    _entity_create_access: 'menu_link_content'
+
+menu_link_content.link_edit:
+  path: '/admin/structure/menu/item/{menu_link_content}/edit'
+  defaults:
+    _entity_form: 'menu_link_content.default'
+    _title: 'Edit menu link'
+  requirements:
+    _entity_access: 'menu_link_content.update'
+
+menu_link_content.link_delete:
+  path: '/admin/structure/menu/item/{menu_link_content}/delete'
+  defaults:
+    _entity_form: 'menu_link_content.delete'
+    _title: 'Delete menu link'
+  requirements:
+    _entity_access: 'menu_link_content.delete'
