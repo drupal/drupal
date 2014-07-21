@@ -663,27 +663,6 @@ function views_hook_info() {
 }
 
 /**
- * Fetch a list of all base tables available
- *
- * @param $type
- *   Either 'display', 'style' or 'row'
- * @param $key
- *   For style plugins, this is an optional type to restrict to. May be 'normal',
- *   'summary', 'feed' or others based on the neds of the display.
- * @param $base
- *   An array of possible base tables.
- *
- * @return
- *   A keyed array of in the form of 'base_table' => 'Description'.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::fetchPluginNames().
- */
-function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
-  return Views::fetchPluginNames($type, $key, $base);
-}
-
-/**
  * Gets all the views plugin definitions.
  *
  * @return array
