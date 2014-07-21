@@ -583,7 +583,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $bundles = entity_get_bundles($this->entityTypeId);
     // If the current base table support bundles and has more than one (like user).
-    if (!empty($bundles) && $this->entityType) {
+    if (!empty($bundles) && $this->entityType && $this->entityType->hasKey('bundle')) {
       // Get all bundles and their human readable names.
       $options = array('all' => t('All'));
       foreach ($bundles as $type => $bundle) {
