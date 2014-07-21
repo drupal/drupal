@@ -694,23 +694,6 @@ function user_translated_menu_link_alter(MenuLink &$menu_link) {
 }
 
 /**
- * Try to validate the user's login credentials locally.
- *
- * @param $name
- *   User name to authenticate.
- * @param $password
- *   A plain-text password, such as trimmed text from form values.
- * @return
- *   The user's uid on success, or FALSE on failure to authenticate.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\user\UserAuth::authenticate() instead.
- */
-function user_authenticate($name, $password) {
-  return \Drupal::service('user.auth')->authenticate($name, $password);
-}
-
-/**
  * Finalizes the login process and logs in a user.
  *
  * The function logs in the user, records a watchdog message about the new
