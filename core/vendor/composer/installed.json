@@ -2470,5 +2470,37 @@
             "rest",
             "web service"
         ]
+    },
+    {
+        "name": "mikey179/vfsStream",
+        "version": "v1.2.0",
+        "version_normalized": "1.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/mikey179/vfsStream.git",
+            "reference": "063fb10633f10c5ccbcac26227e94f46d9336f90"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/063fb10633f10c5ccbcac26227e94f46d9336f90",
+            "reference": "063fb10633f10c5ccbcac26227e94f46d9336f90",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2013-04-01 10:41:02",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "org\\bovigo\\vfs\\": "src/main/php"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "homepage": "http://vfs.bovigo.org/"
     }
 ]
