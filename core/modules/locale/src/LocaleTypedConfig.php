@@ -57,6 +57,8 @@ class LocaleTypedConfig extends Element {
    *   Language code for the source configuration data.
    * @param \Drupal\locale\LocaleConfigManager $locale_config
    *   The locale configuration manager object.
+   * @param \Drupal\locale\TypedConfigManagerInterface $typed_config;
+   *   The typed configuration manager interface.
    */
   public function __construct(DataDefinitionInterface $definition, $name, $langcode, LocaleConfigManager $locale_config, TypedConfigManagerInterface $typed_config) {
     parent::__construct($definition, $name);
