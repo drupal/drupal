@@ -203,7 +203,7 @@ class RoutingFixtures {
           'default' => '',
         ),
         'access_callback' => array(
-          'description' => 'The callback which determines the access to this router path. Defaults to user_access.',
+          'description' => 'The callback which determines the access to this router path. Defaults to \Drupal\Core\Session\AccountInterface::hasPermission.',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,

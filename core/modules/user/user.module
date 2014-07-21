@@ -417,32 +417,6 @@ function _user_role_permissions_update($roles) {
 }
 
 /**
- * Determine whether the user has a given privilege.
- *
- * @param $string
- *   The permission, such as "administer nodes", being checked for.
- * @param \Drupal\Core\Session\AccountInterface $account
- *   (optional) The account to check, if not given use currently logged in user.
- *
- * @return bool
- *   Boolean TRUE if the current user has the requested permission.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Core\Session\AccountInterface::hasPermission().
- */
-function user_access($string, AccountInterface $account = NULL) {
-  global $user;
-
-  if (!isset($account)) {
-    // In the installer request session is not set, so we have to fall back
-    // to the global $user. In all other cases the session key is preferred.
-    $account = \Drupal::currentUser() ?: $user;
-  }
-
-  return $account->hasPermission($string);
-}
-
-/**
  * Checks for usernames blocked by user administration.
  *
  * @param $name
