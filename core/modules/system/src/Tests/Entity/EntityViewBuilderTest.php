@@ -154,6 +154,24 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
   }
 
   /**
+   * Tests weighting of display components.
+   */
+  public function testEntityViewBuilderWeight() {
+    // Set a weight for the label component.
+    entity_get_display('entity_test', 'entity_test', 'full')
+      ->setComponent('label', array('weight' => 20))
+      ->save();
+
+    // Create and build a test entity.
+    $entity_test = $this->createTestEntity('entity_test');
+    $view =  $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
+    drupal_render($view);
+
+    // Check that the weight is respected.
+    $this->assertEqual($view['label']['#weight'], 20, 'The weight of a display component is respected.');
+  }
+
+  /**
    * Creates an entity for testing.
    *
    * @param string $entity_type

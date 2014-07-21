@@ -275,7 +275,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
         //   taken care of in EntityViewDisplay::buildMultiple().
         foreach ($display->getComponents() as $name => $options) {
           if (isset($build_list[$key][$name])) {
-            $build_list[$key]['#weight'] = $options['weight'];
+            $build_list[$key][$name]['#weight'] = $options['weight'];
           }
         }
 
