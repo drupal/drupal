@@ -188,6 +188,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    * {@inheritdoc}
    */
   public function generateFromRoute($name, $parameters = array(), $options = array()) {
+    $options += array('prefix' => '');
     $absolute = !empty($options['absolute']);
     $route = $this->getRoute($name);
     $this->processRoute($route, $parameters);
@@ -199,6 +200,12 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
 
     $path = $this->getInternalPathFromRoute($route, $parameters);
     $path = $this->processPath($path, $options);
+    if (!empty($options['prefix'])) {
+      $path = ltrim($path, '/');
+      $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
+      $path = '/' . str_replace('%2F', '/', rawurlencode($prefix)) . $path;
+    }
+
     $fragment = '';
     if (isset($options['fragment'])) {
       if (($fragment = trim($options['fragment'])) != '') {

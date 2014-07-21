@@ -141,7 +141,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
     $config = $this->config->get('language.negotiation')->get('url');
     if ($config['source'] == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
       if (is_object($options['language']) && !empty($config['prefixes'][$options['language']->id])) {
-        return empty($path) ? $config['prefixes'][$options['language']->id] : $config['prefixes'][$options['language']->id] . '/' . $path;
+        $options['prefix'] = $config['prefixes'][$options['language']->id] . '/';
       }
     }
     elseif ($config['source'] ==  LanguageNegotiationUrl::CONFIG_DOMAIN) {

@@ -127,6 +127,8 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. if mixed mode sessions are permitted, TRUE enforces HTTPS
    *     and FALSE enforces HTTP.
+   *   - 'prefix': Only used internally, to modify the path when a language
+   *     dependent URL requires so.
    *
    * @return string
    *   The generated URL for the given route.
