@@ -27,23 +27,13 @@ class SearchController extends ControllerBase {
   protected $searchPageRepository;
 
   /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactory
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a new search controller.
    *
    * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
    *   The search page repository.
-   * @param \Drupal\Core\Config\ConfigFactory $factory
-   *   The configuration factory object.
    */
-  public function __construct(SearchPageRepositoryInterface $search_page_repository, ConfigFactory $factory) {
+  public function __construct(SearchPageRepositoryInterface $search_page_repository) {
     $this->searchPageRepository = $search_page_repository;
-    $this->configFactory = $factory;
   }
 
   /**
@@ -51,8 +41,7 @@ class SearchController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('search.search_page_repository'),
-      $container->get('config.factory')
+      $container->get('search.search_page_repository')
     );
   }
 
@@ -87,7 +76,7 @@ class SearchController extends ControllerBase {
     if ($request->query->has('keys')) {
       if ($plugin->isSearchExecutable()) {
         // Log the search.
-        if ($this->configFactory->get('search.settings')->get('logging')) {
+        if ($this->config('search.settings')->get('logging')) {
           watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $entity->label()), WATCHDOG_NOTICE);
         }
 
