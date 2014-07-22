@@ -46,6 +46,35 @@ class EditorSecurityTest extends WebTestBase {
    */
   public static $modules = array('filter', 'editor', 'editor_test', 'node');
 
+  /**
+   * User with access to Restricted HTML text format without text editor.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $untrusted_user;
+
+  /**
+   * User with access to Restricted HTML text format with text editor.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $normal_user;
+
+  /**
+   * User with access to Restricted HTML text format, dangerous tags allowed
+   * with text editor.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $trusted_user;
+
+  /**
+   * User with access to all text formats and text editors.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $privileged_user;
+
   function setUp() {
     parent::setUp();
 
@@ -140,7 +169,7 @@ class EditorSecurityTest extends WebTestBase {
       'name' => 'Article',
     ));
 
-    // Create 3 users, each with access to different text formats/editors:
+    // Create 4 users, each with access to different text formats/editors:
     //   - "untrusted": restricted_without_editor
     //   - "normal": restricted_with_editor,
     //   - "trusted": restricted_plus_dangerous_tag_with_editor
@@ -399,7 +428,7 @@ class EditorSecurityTest extends WebTestBase {
     $this->assertIdentical(self::$sampleContentSecured, (string) $dom_node[0], 'The value was filtered by the Standard text editor XSS filter.');
 
     // Enable editor_test.module's hook_editor_xss_filter_alter() implementation
-    // to ater the text editor XSS filter class being used.
+    // to alter the text editor XSS filter class being used.
     \Drupal::state()->set('editor_test_editor_xss_filter_alter_enabled', TRUE);
 
     // First: the Insecure text editor XSS filter.
