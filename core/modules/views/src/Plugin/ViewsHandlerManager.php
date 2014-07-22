@@ -70,9 +70,6 @@ class ViewsHandlerManager extends DefaultPluginManager {
    *   An associative array representing the handler to be retrieved:
    *   - table: The name of the table containing the handler.
    *   - field: The name of the field the handler represents.
-   *   - optional: (optional) Whether or not this handler is optional. If a
-   *     handler is missing and not optional, a debug message will be displayed.
-   *     Defaults to FALSE.
    * @param string|null $override
    *   (optional) Override the actual handler object with this plugin ID. Used for
    *   aggregation when the handler is redirected to the aggregation handler.
@@ -83,7 +80,6 @@ class ViewsHandlerManager extends DefaultPluginManager {
   public function getHandler($item, $override = NULL) {
     $table = $item['table'];
     $field = $item['field'];
-    $optional = !empty($item['optional']);
     // Get the plugin manager for this type.
     $data = $this->viewsData->get($table);
 
@@ -119,12 +115,8 @@ class ViewsHandlerManager extends DefaultPluginManager {
       }
     }
 
-    if (!$optional) {
-      // debug(t("Missing handler: @table @field @type", array('@table' => $table, '@field' => $field, '@type' => $this->handlerType)));
-    }
-
     // Finally, use the 'broken' handler.
-    return $this->createInstance('broken', array('optional' => $optional, 'original_configuration' => $item));
+    return $this->createInstance('broken', array('original_configuration' => $item));
   }
 
   /**

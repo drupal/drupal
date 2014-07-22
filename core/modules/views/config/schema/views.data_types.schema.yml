@@ -330,9 +330,6 @@ views_handler:
     provider:
       type: string
       label: 'Provider'
-    optional:
-      type: boolean
-      label: 'Optional'
 
 views_argument:
   type: views_handler

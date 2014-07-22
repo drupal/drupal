@@ -86,13 +86,6 @@ abstract class HandlerBase extends PluginBase {
   public $relationship = NULL;
 
   /**
-   * Whether or not this handler is optional.
-   *
-   * @var bool
-   */
-  protected $optional = FALSE;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -112,7 +105,6 @@ abstract class HandlerBase extends PluginBase {
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->is_handler = TRUE;
-    $this->optional = !empty($configuration['optional']);
   }
 
   /**
@@ -176,15 +168,6 @@ abstract class HandlerBase extends PluginBase {
     $options['dependencies'] = array('default' => array());
 
     return $options;
-  }
-
-  /**
-   * Returns whether this handler is optional.
-   *
-   * @return bool
-   */
-  public function isOptional() {
-    return $this->optional;
   }
 
   /**

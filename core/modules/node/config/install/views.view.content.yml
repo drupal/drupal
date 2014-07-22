@@ -321,7 +321,6 @@ display:
           hide_alter_empty: true
           link_to_node: false
           comments: false
-          optional: true
           plugin_id: history_user_timestamp
           provider: history
       filters:
@@ -473,7 +472,6 @@ display:
             identifier: langcode
             remember_roles:
               authenticated: authenticated
-          optional: true
           plugin_id: language
           provider: language
       sorts: {  }
