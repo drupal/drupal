@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\views\argument_validator;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Plugin\views\argument_validator\Entity;
 
 /**
@@ -52,6 +53,7 @@ class User extends Entity {
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
+    $sanitized_id = ArgumentPluginBase::encodeValidatorId($this->definition['id']);
 
     $form['restrict_roles'] = array(
       '#type' => 'checkbox',
@@ -67,7 +69,7 @@ class User extends Entity {
       '#description' => $this->t('If no roles are selected, users from any role will be allowed.'),
       '#states' => array(
         'visible' => array(
-          ':input[name="options[validate][options][user][restrict_roles]"]' => array('checked' => TRUE),
+          ':input[name="options[validate][options][' . $sanitized_id . '][restrict_roles]"]' => array('checked' => TRUE),
         ),
       ),
     );
