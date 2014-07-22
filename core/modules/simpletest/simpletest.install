@@ -10,8 +10,12 @@ use Drupal\Component\Utility\String;
 
 /**
  * Minimum value of PHP memory_limit for SimpleTest.
+ *
+ * @todo Reduce the memory required to use SimpleTest on some environments in
+ *   https://www.drupal.org/node/2289201 and
+ *   https://www.drupal.org/node/2307163 and then decrease this limit.
  */
-const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '64M';
+const SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT = '320M';
 
 /**
  * Implements hook_requirements().
@@ -57,7 +61,7 @@ function simpletest_requirements($phase) {
   // to load all tests and throw a fatal error.
   $memory_limit = ini_get('memory_limit');
   if (!Environment::checkMemoryLimit(SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, $memory_limit)) {
-    $requirements['php_memory_limit']['severity'] = REQUIREMENT_ERROR;
+    $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     $requirements['php_memory_limit']['description'] = t('The testing framework requires the PHP memory limit to be at least %memory_minimum_limit. The current value is %memory_limit. <a href="@url">Follow these steps to continue</a>.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => SIMPLETEST_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'http://drupal.org/node/207036'));
   }
 
