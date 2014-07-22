@@ -1499,9 +1499,10 @@ function hook_stream_wrappers_alter(&$wrappers) {
 /**
  * Control access to private file downloads and specify HTTP headers.
  *
- * This hook allows modules enforce permissions on file downloads when the
- * private file download method is selected. Modules can also provide headers
- * to specify information like the file's name or MIME type.
+ * This hook allows modules to enforce permissions on file downloads whenever
+ * Drupal is handling file download, as opposed to the web server bypassing
+ * Drupal and returning the file from a public directory. Modules can also
+ * provide headers to specify information like the file's name or MIME type.
  *
  * @param $uri
  *   The URI of the file.
