@@ -16,12 +16,31 @@ use Drupal\Core\Ajax\CommandInterface;
  */
 class ShowButtonsCommand implements CommandInterface {
 
+
+  /**
+   * Whether the view has been changed.
+   *
+   * @var bool
+   */
+  protected $changed;
+
+  /**
+   * Constructs a \Drupal\views\Ajax\ShowButtonsCommand object.
+   *
+   * @param bool $changed
+   *   Whether the view has been changed.
+   */
+  public function __construct($changed) {
+    $this->changed = $changed;
+  }
+
   /**
    * Implements \Drupal\Core\Ajax\CommandInterface::render().
    */
   public function render() {
     return array(
       'command' => 'viewsShowButtons',
+      'changed' => $this->changed,
     );
   }
 

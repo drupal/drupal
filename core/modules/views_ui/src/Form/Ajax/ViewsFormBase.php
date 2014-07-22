@@ -161,7 +161,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     else {
       $response = new AjaxResponse();
       $response->addCommand(new CloseModalDialogCommand());
-      $response->addCommand(new Ajax\ShowButtonsCommand());
+      $response->addCommand(new Ajax\ShowButtonsCommand(!empty($view->changed)));
       $response->addCommand(new Ajax\TriggerPreviewCommand());
       if (!empty($form_state['#page_title'])) {
         $response->addCommand(new Ajax\ReplaceTitleCommand($form_state['#page_title']));
