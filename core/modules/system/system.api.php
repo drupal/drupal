@@ -2304,16 +2304,17 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
 /**
  * Alter MIME type mappings used to determine MIME type from a file extension.
  *
- * This hook is run when file_mimetype_mapping() is called. It is used to
- * allow modules to add to or modify the default mapping from
- * file_default_mimetype_mapping().
+ * Invoked by \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guess(). It
+ * is used to allow modules to add to or modify the default mapping from
+ * \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping.
  *
  * @param $mapping
  *   An array of mimetypes correlated to the extensions that relate to them.
  *   The array has 'mimetypes' and 'extensions' elements, each of which is an
  *   array.
  *
- * @see file_default_mimetype_mapping()
+ * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guess()
+ * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping
  */
 function hook_file_mimetype_mapping_alter(&$mapping) {
   // Add new MIME type 'drupal/info'.
