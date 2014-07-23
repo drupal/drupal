@@ -53,28 +53,28 @@ function theme_update_report($variables) {
       case UPDATE_CURRENT:
         $class = 'ok';
         $uri = 'core/misc/icons/73b355/check.png';
-        $text = t('ok');
+        $text = t('Ok');
         break;
       case UPDATE_UNKNOWN:
       case UPDATE_FETCH_PENDING:
       case UPDATE_NOT_FETCHED:
         $class = 'unknown';
         $uri = 'core/misc/icons/e29700/warning.png';
-        $text = t('warning');
+        $text = t('Warning');
         break;
       case UPDATE_NOT_SECURE:
       case UPDATE_REVOKED:
       case UPDATE_NOT_SUPPORTED:
         $class = 'error';
         $uri = 'core/misc/icons/ea2800/error.png';
-        $text = t('error');
+        $text = t('Error');
         break;
       case UPDATE_NOT_CHECKED:
       case UPDATE_NOT_CURRENT:
       default:
         $class = 'warning';
         $uri = 'core/misc/icons/e29700/warning.png';
-        $text = t('warning');
+        $text = t('Warning');
         break;
     }
 
