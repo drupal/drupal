@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Lock\LockBackendInterface.
+ * Contains \Drupal\Core\Lock\LockBackendInterface.
  */
 
 namespace Drupal\Core\Lock;
@@ -95,13 +95,13 @@ interface LockBackendInterface {
    *
    * While this method is subject to have a generic implementation in abstract
    * backend implementation, some backends may provide non blocking or less I/O
-   * intensive wait mecanism: this is why this method remains on the backend
+   * intensive wait mechanism: this is why this method remains on the backend
    * interface.
    *
    * @param string $name
    *   Lock name currently being locked.
    * @param int $delay = 30
-   *   Miliseconds to wait for.
+   *   Milliseconds to wait for.
    *
    * @return bool
    *   TRUE if the lock holds, FALSE if it may be available. You still need to
@@ -126,8 +126,9 @@ interface LockBackendInterface {
   public function releaseAll($lockId = NULL);
 
   /**
-   * Gets the unique page token for locks. Locks will be wipeout at each end of
-   * page request on a token basis.
+   * Gets the unique page token for locks.
+   *
+   * Locks will be wiped out at the end of each page request on a token basis.
    *
    * @return string
    */
