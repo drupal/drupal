@@ -113,7 +113,7 @@
   z-index: 51;
 }
 
-.views-displays .views-display-deleted-link {
+.views-displays .secondary .views-display-deleted-link {
   text-decoration: line-through;
 }
 
