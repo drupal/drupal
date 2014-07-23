@@ -5,12 +5,12 @@
  *
  * Available variables:
  * - attributes: HTML attributes for the containing element.
- * - label_hidden: Whether the field label has been set to hidden.
+ * - label_hidden: Whether to show the field label or not.
  * - title_attributes: HTML attributes for the label.
  * - label: The label for the field.
  * - content_attributes: HTML attributes for the content.
  * - items: List of all the field items.
- * - item_attributes: HTML attributes for each item.
+ * - item_attributes: List of HTML attributes for each item.
  *
  * @see template_preprocess_field()
  * @see bartik_preprocess_field()
@@ -20,7 +20,7 @@
   {% if not label_hidden %}
     <h3{{ title_attributes }}>{{ label }}: </h3>
   {% endif %}
-  <ul class="links">
+  <ul class="links field-items {{ content_attributes.class }}"{{ content_attributes|without('class') }}>
     {% for delta, item in items %}
       <li class="taxonomy-term-reference-{{ delta }}"{{ item_attributes[delta] }}>{{ item }}</li>
     {% endfor %}
