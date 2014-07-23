@@ -237,12 +237,26 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
     }
 
     // Retrieve the desired properties and set them in config.
-    foreach ($entity->toArray() as $key => $value) {
+    $record = $this->mapToStorageRecord($entity);
+    foreach ($record as $key => $value) {
       $config->set($key, $value);
     }
     $config->save();
 
     return $is_new ? SAVED_NEW : SAVED_UPDATED;
+  }
+
+  /**
+   * Maps from an entity object to the storage record.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return array
+   *   The record to store.
+   */
+  protected function mapToStorageRecord(EntityInterface $entity) {
+    return $entity->toArray();
   }
 
   /**

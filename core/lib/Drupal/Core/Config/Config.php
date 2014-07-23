@@ -110,7 +110,7 @@ class Config extends StorableConfigBase {
    * {@inheritdoc}
    */
   public function setData(array $data) {
-    $this->data = $data;
+    parent::setData($data);
     $this->resetOverriddenData();
     return $this;
   }

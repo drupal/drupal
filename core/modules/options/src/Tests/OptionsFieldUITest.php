@@ -94,6 +94,11 @@ class OptionsFieldUITest extends FieldTestBase {
     $string = "0|Zero";
     $array = array('0' => 'Zero');
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
+
+    // Check that the same key can only be used once.
+    $string = "0|Zero\n0|One";
+    $array = array('0' => 'One');
+    $this->assertAllowedValuesInput($string, $array, 'Same value cannot be used multiple times.');
   }
 
   /**
@@ -144,6 +149,16 @@ class OptionsFieldUITest extends FieldTestBase {
     $string = "0|Zero";
     $array = array('0' => 'Zero');
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
+
+    // Check that the same key can only be used once.
+    $string = "0.5|Point five\n0.5|Half";
+    $array = array('0.5' => 'Half');
+    $this->assertAllowedValuesInput($string, $array, 'Same value cannot be used multiple times.');
+
+    // Check that different forms of the same float value cannot be used.
+    $string = "0|Zero\n.5|Point five\n0.5|Half";
+    $array = array('0' => 'Zero', '0.5' => 'Half');
+    $this->assertAllowedValuesInput($string, $array, 'Different forms of the same value cannot be used.');
   }
 
   /**
@@ -199,6 +214,16 @@ class OptionsFieldUITest extends FieldTestBase {
     $string = "Zero";
     $array = array('Zero' => 'Zero');
     $this->assertAllowedValuesInput($string, $array, 'Values not in use can be removed.');
+
+    // Check that string values with dots can be used.
+    $string = "Zero\nexample.com|Example";
+    $array = array('Zero' => 'Zero', 'example.com' => 'Example');
+    $this->assertAllowedValuesInput($string, $array, 'String value with dot is supported.');
+
+    // Check that the same key can only be used once.
+    $string = "zero|Zero\nzero|One";
+    $array = array('zero' => 'One');
+    $this->assertAllowedValuesInput($string, $array, 'Same value cannot be used multiple times.');
   }
 
   /**

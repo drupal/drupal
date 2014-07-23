@@ -90,4 +90,23 @@ class ListFloatItem extends ListItemBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function simplifyAllowedValues(array $structured_values) {
+    $values = array();
+    foreach ($structured_values as $item) {
+      // Nested elements are embedded in the label.
+      if (is_array($item['label'])) {
+        $item['label'] = static::simplifyAllowedValues($item['label']);
+      }
+      // Cast the value to a float first so that .5 and 0.5 are the same value
+      // and then cast to a string so that values like 0.5 can be used as array
+      // keys.
+      // @see http://php.net/manual/en/language.types.array.php
+      $values[(string) (float) $item['value']] = $item['label'];
+    }
+    return $values;
+  }
+
 }

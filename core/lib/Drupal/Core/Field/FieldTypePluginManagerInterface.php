@@ -48,4 +48,15 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface {
    */
   public function getUiDefinitions();
 
+  /**
+   * Returns the PHP class that implements the field type plugin.
+   *
+   * @param string $type
+   *   A field type name.
+   *
+   * @return string
+   *   Field type plugin class name.
+   */
+  public function getPluginClass($type);
+
 }

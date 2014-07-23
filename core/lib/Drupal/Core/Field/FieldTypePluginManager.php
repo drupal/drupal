@@ -80,4 +80,12 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     });
   }
 
+  /**
+   * @inheritdoc
+   */
+  public function getPluginClass($type) {
+    $plugin_definition = $this->getDefinition($type, FALSE);
+    return $plugin_definition['class'];
+  }
+
 }

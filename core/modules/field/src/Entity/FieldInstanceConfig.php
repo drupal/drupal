@@ -254,7 +254,8 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     }
 
     // Discard the 'field_type' entry that is added in config records to ease
-    // schema generation. See self::toArray().
+    // schema generation and mapping settings from storage.
+    // @see Drupal\field\Entity\FieldInstanceConfig::toArray().
     unset($values['field_type']);
 
     parent::__construct($values, $entity_type);
@@ -288,7 +289,9 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public function toArray() {
     $properties = parent::toArray();
     // Additionally, include the field type, that is needed to be able to
-    // generate the field-type-dependant parts of the config schema.
+    // generate the field-type-dependant parts of the config schema and to
+    // allow for mapping settings from storage by field type.
+    // @see \Drupal\field\FieldInstanceConfigStorage::mapFromStorageRecords().
     $properties['field_type'] = $this->getType();
 
     return $properties;

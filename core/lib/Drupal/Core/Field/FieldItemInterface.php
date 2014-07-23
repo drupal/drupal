@@ -232,6 +232,94 @@ interface FieldItemInterface extends ComplexDataInterface {
   public static function defaultInstanceSettings();
 
   /**
+   * Returns a settings array that can be stored as a configuration value.
+   *
+   * For all use cases where field settings are stored and managed as
+   * configuration, this method is used to map from the field type's
+   * representation of its settings to a representation compatible with
+   * deployable configuration. This includes:
+   * - Array keys at any depth must not contain a ".".
+   * - Ideally, array keys at any depth are either numeric or can be enumerated
+   *   as a "mapping" within the configuration schema. While not strictly
+   *   required, this simplifies configuration translation UIs, configuration
+   *   migrations between Drupal versions, and other use cases.
+   * - To support configuration deployments, references to content entities
+   *   must use UUIDs rather than local IDs.
+   *
+   * An example of a conversion between representations might be an
+   * "allowed_values" setting that's structured by the field type as a
+   * \Drupal\Core\TypedData\AllowedValuesInterface::getPossibleOptions()
+   * result (i.e., values as keys and labels as values). For such a use case,
+   * in order to comply with the above, this method could convert that
+   * representation to a numerically indexed array whose values are sub-arrays
+   * with the schema definable keys of "value" and "label".
+   *
+   * @param array $settings
+   *   The field's settings in the field type's canonical representation.
+   *
+   * @return array
+   *   An array (either the unmodified $settings or a modified representation)
+   *   that is suitable for storing as a deployable configuration value.
+   *
+   * @see \Drupal\Core\Config\Config::set()
+   */
+  public static function settingsToConfigData(array $settings);
+
+  /**
+   * Returns a settings array in the field type's canonical representation.
+   *
+   * This function does the inverse of static::settingsToConfigData(). It's
+   * called when loading a field's settings from a configuration object.
+   *
+   * @param array $settings
+   *   The field's settings, as it is stored within a configuration object.
+   *
+   * @return array
+   *   The settings, in the representation expected by the field type and code
+   *   that interacts with it.
+   *
+   * @see \Drupal\Core\Field\FieldItemInterface::settingsToConfigData()
+   */
+  public static function settingsFromConfigData(array $settings);
+
+  /**
+   * Returns a settings array that can be stored as a configuration value.
+   *
+   * Same as static::settingsToConfigData(), but for the field's instance
+   * settings.
+   *
+   * @param array $settings
+   *   The field's instance settings in the field type's canonical
+   *   representation.
+   *
+   * @return array
+   *   An array (either the unmodified $settings or a modified representation)
+   *   that is suitable for storing as a deployable configuration value.
+   *
+   * @see \Drupal\Core\Field\FieldItemInterface::settingsToConfigData()
+   */
+  public static function instanceSettingsToConfigData(array $settings);
+
+  /**
+   * Returns a settings array in the field type's canonical representation.
+   *
+   * This function does the inverse of static::instanceSettingsToConfigData().
+   * It's called when loading a field's instance settings from a configuration
+   * object.
+   *
+   * @param array $settings
+   *   The field's instance settings, as it is stored within a configuration
+   *   object.
+   *
+   * @return array
+   *   The instance settings, in the representation expected by the field type
+   *   and code that interacts with it.
+   *
+   * @see \Drupal\Core\Field\FieldItemInterface::instanceSettingsToConfigData()
+   */
+  public static function instanceSettingsFromConfigData(array $settings);
+
+  /**
    * Returns a form for the field-level settings.
    *
    * Invoked from \Drupal\field_ui\Form\FieldStorageEditForm to allow

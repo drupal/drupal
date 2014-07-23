@@ -8,8 +8,15 @@ field.list_integer.settings:
       type: sequence
       label: 'Allowed values list'
       sequence:
-        - type: string
-          label: 'Value'
+        - type: mapping
+          label: 'Allowed value with label'
+          mapping:
+            value:
+              type: integer
+              label: 'Value'
+            label:
+              type: label
+              label: 'Label'
     allowed_values_function:
       type: string
       label: 'Allowed values function'
@@ -35,8 +42,18 @@ field.list_float.settings:
   label: 'List (float) settings'
   mapping:
     allowed_values:
-      type: ignore
+      type: sequence
       label: 'Allowed values list'
+      sequence:
+        - type: mapping
+          label: 'Allowed value with label'
+          mapping:
+            value:
+              type: float
+              label: 'Value'
+            label:
+              type: label
+              label: 'Label'
     allowed_values_function:
       type: string
       label: 'Allowed values function'
@@ -65,8 +82,15 @@ field.list_text.settings:
       type: sequence
       label: 'Allowed values list'
       sequence:
-        - type: string
-          label: 'Value'
+        - type: mapping
+          label: 'Allowed value with label'
+          mapping:
+            value:
+              type: string
+              label: 'Value'
+            label:
+              type: label
+              label: 'Label'
     allowed_values_function:
       type: string
       label: 'Allowed values function'

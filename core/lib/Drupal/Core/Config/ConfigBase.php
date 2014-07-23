@@ -160,8 +160,12 @@ abstract class ConfigBase {
    *
    * @return $this
    *   The configuration object.
+   *
+   * @throws \Drupal\Core\Config\ConfigValueException
+   *   If any key in $data in any depth contains a dot.
    */
   public function setData(array $data) {
+    $this->validateKeys($data);
     $this->data = $data;
     return $this;
   }
@@ -176,10 +180,16 @@ abstract class ConfigBase {
    *
    * @return $this
    *   The configuration object.
+   *
+   * @throws \Drupal\Core\Config\ConfigValueException
+   *   If $value is an array and any of its keys in any depth contains a dot.
    */
   public function set($key, $value) {
     // The dot/period is a reserved character; it may appear between keys, but
     // not within keys.
+    if (is_array($value)) {
+      $this->validateKeys($value);
+    }
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       $this->data[$key] = $value;
@@ -188,6 +198,28 @@ abstract class ConfigBase {
       NestedArray::setValue($this->data, $parts, $value);
     }
     return $this;
+  }
+
+  /**
+   * Validates all keys in a passed in config array structure.
+   *
+   * @param array $data
+   *   Configuration array structure.
+   *
+   * @return null
+   *
+   * @throws \Drupal\Core\Config\ConfigValueException
+   *   If any key in $data in any depth contains a dot.
+   */
+  protected function validateKeys(array $data) {
+    foreach ($data as $key => $value) {
+      if (strpos($key, '.') !== FALSE) {
+        throw new ConfigValueException(String::format('@key key contains a dot which is not supported.', array('@key' => $key)));
+      }
+      if (is_array($value)) {
+        $this->validateKeys($value);
+      }
+    }
   }
 
   /**

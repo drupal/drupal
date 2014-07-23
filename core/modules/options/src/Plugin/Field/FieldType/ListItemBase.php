@@ -237,4 +237,76 @@ abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterf
     return implode("\n", $lines);
   }
 
+  /**
+   * @inheritdoc.
+   */
+  public static function settingsToConfigData(array $settings) {
+    if (isset($settings['allowed_values'])) {
+      $settings['allowed_values'] = static::structureAllowedValues($settings['allowed_values']);
+    }
+    return $settings;
+  }
+
+  /**
+   * @inheritdoc.
+   */
+  public static function settingsFromConfigData(array $settings) {
+    if (isset($settings['allowed_values'])) {
+      $settings['allowed_values'] = static::simplifyAllowedValues($settings['allowed_values']);
+    }
+    return $settings;
+  }
+
+  /**
+   * Simplifies allowed values to a key-value array from the structured array.
+   *
+   * @param array $structured_values
+   *   Array of items with a 'value' and 'label' key each for the allowed
+   *   values.
+   *
+   * @return array
+   *   Allowed values were the array key is the 'value' value, the value is
+   *   the 'label' value.
+   *
+   * @see Drupal\options\Plugin\Field\FieldType\ListItemBase::structureAllowedValues()
+   */
+  protected static function simplifyAllowedValues(array $structured_values) {
+    $values = array();
+    foreach ($structured_values as $item) {
+      if (is_array($item['label'])) {
+        // Nested elements are embedded in the label.
+        $item['label'] = static::simplifyAllowedValues($item['label']);
+      }
+      $values[$item['value']] = $item['label'];
+    }
+    return $values;
+  }
+
+  /**
+   * Creates a structured array of allowed values from a key-value array.
+   *
+   * @param array $values
+   *   Allowed values were the array key is the 'value' value, the value is
+   *   the 'label' value.
+   *
+   * @return array
+   *   Array of items with a 'value' and 'label' key each for the allowed
+   *   values.
+   *
+   * @see Drupal\options\Plugin\Field\FieldType\ListItemBase::simplifyAllowedValues()
+   */
+  protected static function structureAllowedValues(array $values) {
+    $structured_values = array();
+    foreach ($values as $value => $label) {
+      if (is_array($label)) {
+        $label = static::structureAllowedValues($label);
+      }
+      $structured_values[] = array(
+        'value' => $value,
+        'label' => $label,
+      );
+    }
+    return $structured_values;
+  }
+
 }

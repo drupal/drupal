@@ -9,6 +9,7 @@ namespace Drupal\config\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigNameException;
+use Drupal\Core\Config\ConfigValueException;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Config\FileStorage;
@@ -181,6 +182,31 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
       $this->fail($message);
     }
 
+  }
+
+  /**
+   * Tests the validation of configuration object values.
+   */
+  function testValueValidation() {
+    // Verify that setData() will catch dotted keys.
+    $message = 'Expected ConfigValueException was thrown from setData() for value with dotted keys.';
+    try {
+      \Drupal::config('namespace.object')->setData(array('key.value' => 12))->save();
+      $this->fail($message);
+    }
+    catch (ConfigValueException $e) {
+      $this->pass($message);
+    }
+
+    // Verify that set() will catch dotted keys.
+    $message = 'Expected ConfigValueException was thrown from set() for value with dotted keys.';
+    try {
+      \Drupal::config('namespace.object')->set('foo', array('key.value' => 12))->save();
+      $this->fail($message);
+    }
+    catch (ConfigValueException $e) {
+      $this->pass($message);
+    }
   }
 
   /**

@@ -255,4 +255,32 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     return array();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function settingsToConfigData(array $settings) {
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function settingsFromConfigData(array $settings) {
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function instanceSettingsToConfigData(array $settings) {
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function instanceSettingsFromConfigData(array $settings) {
+    return $settings;
+  }
+
 }
