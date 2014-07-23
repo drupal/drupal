@@ -18,10 +18,11 @@
 .in-maintenance {
   background: none;
 }
-.name-and-slogan h1 {
+.page-title {
   font-size: 2em;
   line-height: 1.2em;
   color: #0074bd;
+  word-wrap: break-word;
 }
 
 /**
@@ -36,10 +37,10 @@
     font-size: 1.385em;
     position: absolute;
     top: 0.2em;
-    right: 0.5em;
+    right: 0.5em; /* LTR */
   }
   [dir="rtl"] .step-indicator {
-    left: 2em;
+    left: 0.5em;
     right: auto;
   }
   .task-list {
@@ -118,8 +119,13 @@
     margin: 1.25em;
     padding: 10px 20px;
   }
-  .name-and-slogan {
-    margin: 0 0 1.45em 0;
+  .page-title {
+    margin-right: 2em; /* LTR */
+    margin-bottom: 0.725em;
+  }
+  [dir="rtl"] .page-title {
+    margin-right: 0;
+    margin-left: 2em;
   }
 }
 
@@ -153,7 +159,7 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     clear: none;
-    float: left;
+    float: left; /* LTR */
     padding-left: 3.85em;
     padding-right: 3.85em;
     width: 65%;
@@ -166,7 +172,7 @@
     margin: 0.25em 0;
   }
   .layout-sidebar-first {
-    float: left;
+    float: left; /* LTR */
     width: 35%;
   }
   [dir="rtl"] .layout-sidebar-first {
@@ -174,11 +180,7 @@
   }
 
   /* Margins for sitename */
-  h1.page-title,
-  .name-and-slogan h1 {
-    margin: 0.75em 0 0.75em 1.9em; /* LTR */
-  }
-  [dir="rtl"] .name-and-slogan h1 {
-    margin: 0.75em 1.9em 0.75em 0;
+  .page-title {
+    margin: 0.75em 1.9em;
   }
 }

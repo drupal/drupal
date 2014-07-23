@@ -12,15 +12,8 @@
 <div class="layout-container">
 
   <header role="banner">
-    {% if site_name or site_slogan %}
-      <div class="name-and-slogan">
-        {% if site_name %}
-          <h1>{{ site_name }}</h1>
-        {% endif %}
-        {% if site_slogan %}
-          <div class="site-slogan">{{ site_slogan }}</div>
-        {% endif %}
-      </div>{# /.name-and-slogan #}
+    {% if site_name %}
+      <h1 class="page-title">{{ site_name }}</h1>
     {% endif %}
   </header>
 
