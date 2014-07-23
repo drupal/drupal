@@ -882,9 +882,9 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
         ->fields((array) $record)
         ->execute();
       // Even if this is a new entity the ID key might have been set, in which
-      // case we should not override the provided ID. An empty value for the
-      // ID is interpreted as NULL and thus overridden.
-      if (empty($record->{$this->idKey})) {
+      // case we should not override the provided ID. An ID key that is not set
+      // to any value is interpreted as NULL (or DEFAULT) and thus overridden.
+      if (!isset($record->{$this->idKey})) {
         $record->{$this->idKey} = $insert_id;
       }
       $return = SAVED_NEW;
@@ -1012,7 +1012,14 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
         if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
           $value = serialize($value);
         }
-        $record->$schema_name = drupal_schema_get_field_value($definition->getSchema()['columns'][$column_name], $value);
+
+        // Do not set serial fields if we do not have a value. This supports all
+        // SQL database drivers.
+        // @see https://www.drupal.org/node/2279395
+        $value = drupal_schema_get_field_value($definition->getSchema()['columns'][$column_name], $value);
+        if (!(empty($value) && $this->getSchema()[$table_name]['fields'][$schema_name]['type'] == 'serial')) {
+          $record->$schema_name = $value;
+        }
       }
     }
 

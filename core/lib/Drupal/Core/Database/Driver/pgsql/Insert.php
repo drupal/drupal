@@ -58,6 +58,10 @@ class Insert extends QueryInsert {
             if ($index == 0) {
               $last_insert_id = $serial_value;
             }
+            // Sequences must be greater than or equal to 1.
+            if ($serial_value === NULL || !$serial_value) {
+              $serial_value = 1;
+            }
             // Set the sequence to the bigger value of either the passed
             // value or the max value of the column. It can happen that another
             // thread calls nextval() which could lead to a serial number being
