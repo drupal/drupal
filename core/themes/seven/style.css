@@ -722,7 +722,7 @@ label {
   display: table;
   margin: 0 0 0 0.2em; /* LTR */
   padding: 0;
-  font-weight: normal;
+  font-weight: bold;
 }
 [dir="rtl"] label {
   margin: 0 0.2em 0 0;
