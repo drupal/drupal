@@ -1,6 +1,9 @@
 
 Drupal 7.30, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a regression introduced in Drupal 7.29 that caused files or images
+  attached to taxonomy terms to be deleted when the taxonomy term was edited
+  and resaved (and other related bugs with contributed and custom modules).
 - Added a warning on the permissions page to recommend restricting access to
   the "View site reports" permission to trusted administrators. See
   DRUPAL-PSA-2014-002.

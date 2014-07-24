@@ -478,6 +478,7 @@ function file_managed_file_process($element, &$form_state, $form) {
  */
 function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) {
   $fid = 0;
+  $force_default = FALSE;
 
   // Find the current value of this field from the form state.
   $form_state_fid = $form_state['values'];
@@ -510,16 +511,25 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
           $callback($element, $input, $form_state);
         }
       }
-      // Load file and check access if the FID has changed, to confirm it
-      // exists and that the current user has access to it.
-      if (isset($input['fid']) && ($file = file_load($input['fid'])) && file_download_access($file->uri)) {
-        $fid = $file->fid;
+      // If a FID was submitted, load the file (and check access if it's not a
+      // public file) to confirm it exists and that the current user has access
+      // to it.
+      if (isset($input['fid']) && ($file = file_load($input['fid']))) {
+        if (file_uri_scheme($file->uri) == 'public' || file_download_access($file->uri)) {
+          $fid = $file->fid;
+        }
+        // If the current user doesn't have access, don't let the file be
+        // changed.
+        else {
+          $force_default = TRUE;
+        }
       }
     }
   }
 
-  // If there is no input, set the default value.
-  else {
+  // If there is no input or if the default value was requested above, use the
+  // default value.
+  if ($input === FALSE || $force_default) {
     if ($element['#extended']) {
       $default_fid = isset($element['#default_value']['fid']) ? $element['#default_value']['fid'] : 0;
       $return = isset($element['#default_value']) ? $element['#default_value'] : array('fid' => 0);
