@@ -13,7 +13,7 @@ use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\Core\Datetime\Date;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\user\UserStorageInterface;
 
 /**
@@ -22,11 +22,11 @@ use Drupal\user\UserStorageInterface;
 class UserController extends ControllerBase {
 
   /**
-   * The date formatting service.
+   * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\Date
    */
-  protected $date;
+  protected $dateFormatter;
 
   /**
    * The user storage.
@@ -38,13 +38,13 @@ class UserController extends ControllerBase {
   /**
    * Constructs a UserController object.
    *
-   * @param \Drupal\Core\Datetime\Date $date
-   *   The date formatting service.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date formatter service.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
    */
-  public function __construct(Date $date, UserStorageInterface $user_storage) {
-    $this->date = $date;
+  public function __construct(DateFormatter $date_formatter, UserStorageInterface $user_storage) {
+    $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
   }
 
@@ -112,7 +112,7 @@ class UserController extends ControllerBase {
           return $this->redirect('user.pass');
         }
         elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && ($hash === user_pass_rehash($user->getPassword(), $timestamp, $user->getLastLoginTime()))) {
-          $expiration_date = $user->getLastLoginTime() ? $this->date->format($timestamp + $timeout) : NULL;
+          $expiration_date = $user->getLastLoginTime() ? $this->dateFormatter->format($timestamp + $timeout) : NULL;
           return $this->formBuilder()->getForm('Drupal\user\Form\UserPasswordResetForm', $user, $expiration_date, $timestamp, $hash);
         }
         else {

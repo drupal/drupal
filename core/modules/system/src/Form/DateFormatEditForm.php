@@ -18,7 +18,7 @@ class DateFormatEditForm extends DateFormatFormBase {
   public function form(array $form, array &$form_state) {
     $form = parent::form($form, $form_state);
 
-    $now = t('Displayed as %date', array('%date' => $this->dateService->format(REQUEST_TIME, $this->entity->id())));
+    $now = t('Displayed as %date', array('%date' => $this->dateFormatter->format(REQUEST_TIME, $this->entity->id())));
     $form['date_format_pattern']['#field_suffix'] = ' <small id="edit-date-format-suffix">' . $now . '</small>';
     $form['date_format_pattern']['#default_value'] = $this->entity->getPattern();
 

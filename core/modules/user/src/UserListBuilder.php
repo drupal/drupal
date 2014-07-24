@@ -7,6 +7,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -29,6 +30,13 @@ class UserListBuilder extends EntityListBuilder {
   protected $queryFactory;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $dateFormatter;
+
+  /**
    * Constructs a new UserListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -37,10 +45,13 @@ class UserListBuilder extends EntityListBuilder {
    *   The entity storage class.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date formatter service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, QueryFactory $query_factory) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, QueryFactory $query_factory, DateFormatter $date_formatter) {
     parent::__construct($entity_type, $storage);
     $this->queryFactory = $query_factory;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -50,7 +61,8 @@ class UserListBuilder extends EntityListBuilder {
     return new static(
       $entity_type,
       $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('entity.query')
+      $container->get('entity.query'),
+      $container->get('date')
     );
   }
 
@@ -127,9 +139,9 @@ class UserListBuilder extends EntityListBuilder {
       '#theme' => 'item_list',
       '#items' => $users_roles,
     );
-    $row['member_for'] = format_interval(REQUEST_TIME - $entity->getCreatedTime());
+    $row['member_for'] = $this->dateFormatter->formatInterval(REQUEST_TIME - $entity->getCreatedTime());
     $row['access'] = $entity->access ? $this->t('@time ago', array(
-      '@time' => format_interval(REQUEST_TIME - $entity->getLastAccessedTime()),
+      '@time' => $this->dateFormatter->formatInterval(REQUEST_TIME - $entity->getLastAccessedTime()),
     )) : t('never');
     return $row + parent::buildRow($entity);
   }

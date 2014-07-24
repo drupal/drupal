@@ -10,7 +10,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
-use Drupal\Core\Datetime\Date;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -22,11 +22,11 @@ use Drupal\Core\Entity\EntityForm;
 abstract class DateFormatFormBase extends EntityForm {
 
   /**
-   * The date service.
+   * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\Date
    */
-  protected $dateService;
+  protected $dateFormatter;
 
   /**
    * The date format storage.
@@ -38,15 +38,15 @@ abstract class DateFormatFormBase extends EntityForm {
   /**
    * Constructs a new date format form.
    *
-   * @param \Drupal\Core\Datetime\Date $date_service
+   * @param \Drupal\Core\Datetime\Date $date_formatter
    *   The date service.
    * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $date_format_storage
    *   The date format storage.
    */
-  public function __construct(Date $date_service, ConfigEntityStorageInterface $date_format_storage) {
+  public function __construct(DateFormatter $date_formatter, ConfigEntityStorageInterface $date_format_storage) {
     $date = new DrupalDateTime();
 
-    $this->dateService = $date_service;
+    $this->dateFormatter = $date_formatter;
     $this->dateFormatStorage = $date_format_storage;
   }
 

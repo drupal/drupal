@@ -8,13 +8,46 @@
 namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Form\ConfigFormBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure file system settings for this site.
  */
 class FileSystemForm extends ConfigFormBase {
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $dateFormatter;
+
+  /**
+   * Constructs a FileSystemForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date formatter service.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, DateFormatter $date_formatter) {
+    parent::__construct($config_factory);
+    $this->dateFormatter = $date_formatter;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static (
+      $container->get('config.factory'),
+      $container->get('date')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -70,7 +103,7 @@ class FileSystemForm extends ConfigFormBase {
     }
 
     $intervals = array(0, 21600, 43200, 86400, 604800, 2419200, 7776000);
-    $period = array_combine($intervals, array_map('format_interval', $intervals));
+    $period = array_combine($intervals, array_map(array($this->dateFormatter, 'formatInterval'), $intervals));
     $period[0] = t('Never');
     $form['temporary_maximum_age'] = array(
       '#type' => 'select',

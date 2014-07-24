@@ -8,7 +8,7 @@
 namespace Drupal\node;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Datetime\Date;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -24,11 +24,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeListBuilder extends EntityListBuilder {
 
   /**
-   * The date service.
+   * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\Date
    */
-  protected $dateService;
+  protected $dateFormatter;
 
   /**
    * Constructs a new NodeListBuilder object.
@@ -37,13 +37,13 @@ class NodeListBuilder extends EntityListBuilder {
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Core\Datetime\Date $date_service
-   *   The date service.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date formatter service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, Date $date_service) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatter $date_formatter) {
     parent::__construct($entity_type, $storage);
 
-    $this->dateService = $date_service;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -112,7 +112,7 @@ class NodeListBuilder extends EntityListBuilder {
       '#account' => $entity->getOwner(),
     );
     $row['status'] = $entity->isPublished() ? $this->t('published') : $this->t('not published');
-    $row['changed'] = $this->dateService->format($entity->getChangedTime(), 'short');
+    $row['changed'] = $this->dateFormatter->format($entity->getChangedTime(), 'short');
     $language_manager = \Drupal::languageManager();
     if ($language_manager->isMultilingual()) {
       $row['language_name'] = $language_manager->getLanguageName($langcode);

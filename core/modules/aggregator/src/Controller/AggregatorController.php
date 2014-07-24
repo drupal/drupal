@@ -9,14 +9,42 @@ namespace Drupal\aggregator\Controller;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\aggregator\FeedInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Returns responses for aggregator module routes.
  */
 class AggregatorController extends ControllerBase {
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $dateFormatter;
+
+  /**
+   * Constructs a \Drupal\aggregator\Controller\AggregatorController object.
+   *
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *    The date formatter service.
+   */
+  public function __construct(DateFormatter $date_formatter) {
+    $this->dateFormatter = $date_formatter;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('date')
+    );
+  }
 
   /**
    * Presents the aggregator feed creation form.
@@ -114,11 +142,11 @@ class AggregatorController extends ControllerBase {
     foreach ($feeds as $feed) {
       $row = array();
       $row[] = l($feed->label(), "aggregator/sources/" . $feed->id());
-      $row[] = format_plural($entity_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
+      $row[] = $this->dateFormatter->formatInterval($entity_manager->getStorage('aggregator_item')->getItemCount($feed), '1 item', '@count items');
       $last_checked = $feed->getLastCheckedTime();
       $refresh_rate = $feed->getRefreshRate();
-      $row[] = ($last_checked ? $this->t('@time ago', array('@time' => format_interval(REQUEST_TIME - $last_checked))) : $this->t('never'));
-      $row[] = ($last_checked && $refresh_rate ? $this->t('%time left', array('%time' => format_interval($last_checked + $refresh_rate - REQUEST_TIME))) : $this->t('never'));
+      $row[] = ($last_checked ? $this->t('@time ago', array('@time' => $this->dateFormatter->formatInterval(REQUEST_TIME - $last_checked))) : $this->t('never'));
+      $row[] = ($last_checked && $refresh_rate ? $this->t('%time left', array('%time' => $this->dateFormatter->formatInterval($last_checked + $refresh_rate - REQUEST_TIME))) : $this->t('never'));
       $links['edit'] = array(
         'title' => $this->t('Edit'),
         'route_name' => 'aggregator.feed_configure',

@@ -8,6 +8,7 @@
 namespace Drupal\contact\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\contact\CategoryInterface;
 use Drupal\user\UserInterface;
@@ -29,13 +30,23 @@ class ContactController extends ControllerBase {
   protected $flood;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $dateFormatter;
+
+  /**
    * Constructs a ContactController object.
    *
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date service.
    */
-  public function __construct(FloodInterface $flood) {
+  public function __construct(FloodInterface $flood, DateFormatter $date_formatter) {
     $this->flood = $flood;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -43,7 +54,8 @@ class ContactController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('flood')
+      $container->get('flood'),
+      $container->get('date')
     );
   }
 
@@ -131,7 +143,7 @@ class ContactController extends ControllerBase {
     if (!$this->flood->isAllowed('contact', $limit, $interval)) {
       drupal_set_message($this->t('You cannot send more than %limit messages in @interval. Try again later.', array(
         '%limit' => $limit,
-        '@interval' => format_interval($interval),
+        '@interval' => $this->dateFormatter->formatInterval($interval),
       )), 'error');
       throw new AccessDeniedHttpException();
     }

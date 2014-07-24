@@ -68,7 +68,7 @@ function system_token_info() {
   );
   $date['since'] = array(
     'name' => t("Time-since"),
-    'description' => t("A date in 'time-since' format. (%date)", array('%date' => format_interval(REQUEST_TIME - 360, 2))),
+    'description' => t("A date in 'time-since' format. (%date)", array('%date' => \Drupal::service('date')->formatInterval(REQUEST_TIME - 360, 2))),
   );
   $date['raw'] = array(
     'name' => t("Raw timestamp"),
@@ -157,7 +157,7 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'since':
-          $replacements[$original] = format_interval((REQUEST_TIME - $date), 2, $langcode);
+          $replacements[$original] = \Drupal::service('date')->formatInterval((REQUEST_TIME - $date), 2, $langcode);
           break;
 
         case 'raw':

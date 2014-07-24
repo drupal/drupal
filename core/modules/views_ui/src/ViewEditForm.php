@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Render\Element;
@@ -39,16 +40,26 @@ class ViewEditForm extends ViewFormBase {
   protected $requestStack;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $dateFormatter;
+
+  /**
    * Constructs a new ViewEditForm object.
    *
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack object.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date Formatter service.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, RequestStack $requestStack) {
+  public function __construct(TempStoreFactory $temp_store_factory, RequestStack $requestStack, DateFormatter $date_formatter) {
     $this->tempStore = $temp_store_factory->get('views');
     $this->requestStack = $requestStack;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -57,7 +68,8 @@ class ViewEditForm extends ViewFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('user.tempstore'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('date')
     );
   }
 
@@ -125,7 +137,7 @@ class ViewEditForm extends ViewFormBase {
       );
       $lock_message_substitutions = array(
         '!user' => drupal_render($username),
-        '!age' => format_interval(REQUEST_TIME - $view->lock->updated),
+        '!age' => $this->dateFormatter->formatInterval(REQUEST_TIME - $view->lock->updated),
         '!break' => $view->url('break-lock'),
       );
       $form['locked'] = array(

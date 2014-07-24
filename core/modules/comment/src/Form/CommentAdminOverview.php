@@ -10,7 +10,7 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentStorageInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Datetime\Date;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
@@ -36,11 +36,11 @@ class CommentAdminOverview extends FormBase {
   protected $commentStorage;
 
   /**
-   * Date service object.
+   * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\Date
    */
-  protected $date;
+  protected $dateFormatter;
 
   /**
    * The module handler.
@@ -56,15 +56,15 @@ class CommentAdminOverview extends FormBase {
    *   The entity manager service.
    * @param \Drupal\comment\CommentStorageInterface $comment_storage
    *   The comment storage.
-   * @param \Drupal\Core\Datetime\Date $date
-   *   The date service.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date formatter service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(EntityManagerInterface $entity_manager, CommentStorageInterface $comment_storage, Date $date, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityManagerInterface $entity_manager, CommentStorageInterface $comment_storage, DateFormatter $date_formatter, ModuleHandlerInterface $module_handler) {
     $this->entityManager = $entity_manager;
     $this->commentStorage = $comment_storage;
-    $this->date = $date;
+    $this->dateFormatter = $date_formatter;
     $this->moduleHandler = $module_handler;
   }
 
@@ -209,7 +209,7 @@ class CommentAdminOverview extends FormBase {
             '#access' => $commented_entity->access('view'),
           ) + $commented_entity->urlInfo()->toRenderArray(),
         ),
-        'changed' => $this->date->format($comment->getChangedTime(), 'short'),
+        'changed' => $this->dateFormatter->format($comment->getChangedTime(), 'short'),
       );
       $comment_uri_options = $comment->urlInfo()->getOptions();
       $links = array();

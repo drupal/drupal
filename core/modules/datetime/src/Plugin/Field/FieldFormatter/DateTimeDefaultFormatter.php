@@ -7,7 +7,7 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Datetime\Date;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -39,11 +39,11 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
   }
 
   /**
-   * The date service.
+   * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\Date
    */
-  protected $dateService;
+  protected $dateFormatter;
 
   /**
    * The date storage.
@@ -69,15 +69,15 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
    *   The view mode.
    * @param array $third_party_settings
    *   Third party settings.
-   * @param \Drupal\Core\Datetime\Date $date_service
-   *   The date service.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date formatter service.
    * @param \Drupal\Core\Entity\EntityStorageInterface $date_storage
    *   The date storage.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, Date $date_service, EntityStorageInterface $date_storage) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, DateFormatter $date_formatter, EntityStorageInterface $date_storage) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
-    $this->dateService = $date_service;
+    $this->dateFormatter = $date_formatter;
     $this->dateStorage = $date_storage;
   }
 
@@ -156,7 +156,7 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
    */
   function dateFormat($date) {
     $format_type = $this->getSetting('format_type');
-    return $this->dateService->format($date->getTimestamp(), $format_type);
+    return $this->dateFormatter->format($date->getTimestamp(), $format_type);
   }
 
   /**
@@ -166,7 +166,7 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
     $time = new DrupalDateTime();
     $format_types = $this->dateStorage->loadMultiple();
     foreach ($format_types as $type => $type_info) {
-      $format = $this->dateService->format($time->format('U'), $type);
+      $format = $this->dateFormatter->format($time->format('U'), $type);
       $options[$type] = $type_info->label() . ' (' . $format . ')';
     }
 

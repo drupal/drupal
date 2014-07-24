@@ -12,7 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Datetime\Date;
+use Drupal\Core\Datetime\Date as DateFormatter;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,11 +37,11 @@ class DbLogController extends ControllerBase {
   protected $moduleHandler;
 
   /**
-   * The date service.
+   * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\Date
    */
-  protected $date;
+  protected $dateFormatter;
 
   /**
    * The form builder service.
@@ -69,15 +69,15 @@ class DbLogController extends ControllerBase {
    *   A database connection.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   A module handler.
-   * @param \Drupal\Core\Datetime\Date $date
-   *   The date service.
+   * @param \Drupal\Core\Datetime\Date $date_formatter
+   *   The date formatter service.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder service.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, Date $date, FormBuilderInterface $form_builder) {
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, DateFormatter $date_formatter, FormBuilderInterface $form_builder) {
     $this->database = $database;
     $this->moduleHandler = $module_handler;
-    $this->date = $date;
+    $this->dateFormatter = $date_formatter;
     $this->formBuilder = $form_builder;
   }
 
@@ -184,7 +184,7 @@ class DbLogController extends ControllerBase {
           // Cells.
           array('class' => array('icon')),
           $this->t($dblog->type),
-          $this->date->format($dblog->timestamp, 'short'),
+          $this->dateFormatter->format($dblog->timestamp, 'short'),
           $message,
           array('data' => $username),
           Xss::filter($dblog->link),
@@ -237,7 +237,7 @@ class DbLogController extends ControllerBase {
         ),
         array(
           array('data' => $this->t('Date'), 'header' => TRUE),
-          $this->date->format($dblog->timestamp, 'long'),
+          $this->dateFormatter->format($dblog->timestamp, 'long'),
         ),
         array(
           array('data' => $this->t('User'), 'header' => TRUE),

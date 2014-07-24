@@ -737,7 +737,7 @@ function template_preprocess_forum_submitted(&$variables) {
     $username = array('#theme' => 'username', '#account' => user_load($variables['topic']->uid));
     $variables['author'] = drupal_render($username);
   }
-  $variables['time'] = isset($variables['topic']->created) ? format_interval(REQUEST_TIME - $variables['topic']->created) : '';
+  $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date')->formatInterval(REQUEST_TIME - $variables['topic']->created) : '';
 }
 
 /**

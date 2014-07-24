@@ -162,7 +162,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ));
 
     $intervals = array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200);
-    $period = array_map('format_interval', array_combine($intervals, $intervals));
+    $period = array_map(array(\Drupal::service('date'), 'formatInterval'), array_combine($intervals, $intervals));
     $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
 
     $fields['refresh'] = FieldDefinition::create('list_integer')

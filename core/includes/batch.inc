@@ -319,9 +319,9 @@ function _batch_process() {
       '@total'      => $total,
       '@current'    => floor($current),
       '@percentage' => $percentage,
-      '@elapsed'    => format_interval($elapsed / 1000),
+      '@elapsed'    => \Drupal::service('date')->formatInterval($elapsed / 1000),
       // If possible, estimate remaining processing time.
-      '@estimate'   => ($current > 0) ? format_interval(($elapsed * ($total - $current) / $current) / 1000) : '-',
+      '@estimate'   => ($current > 0) ? \Drupal::service('date')->formatInterval(($elapsed * ($total - $current) / $current) / 1000) : '-',
     );
     $message = strtr($progress_message, $values);
     if (!empty($task_message)) {
@@ -410,7 +410,7 @@ function _batch_finished() {
       if (is_callable($batch_set['finished'])) {
         $queue = _batch_queue($batch_set);
         $operations = $queue->getAllItems();
-        call_user_func_array($batch_set['finished'], array($batch_set['success'], $batch_set['results'], $operations, format_interval($batch_set['elapsed'] / 1000)));
+        call_user_func_array($batch_set['finished'], array($batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date')->formatInterval($batch_set['elapsed'] / 1000)));
       }
     }
   }

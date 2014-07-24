@@ -33,7 +33,7 @@ function template_preprocess_aggregator_item(&$variables) {
     $variables['source_title'] = String::checkPlain($item->ftitle);
   }
   if (date('Ymd', $item->getPostedTime()) == date('Ymd')) {
-    $variables['source_date'] = t('%ago ago', array('%ago' => format_interval(REQUEST_TIME - $item->getPostedTime())));
+    $variables['source_date'] = t('%ago ago', array('%ago' => \Drupal::service('date')->formatInterval(REQUEST_TIME - $item->getPostedTime())));
   }
   else {
     $variables['source_date'] = format_date($item->getPostedTime(), 'medium');
@@ -121,7 +121,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
       'datetime' => format_date($item->getPostedTime(), 'html_datetime', '', 'UTC'),
       'class' => array('feed-item-age',),
     ),
-    '#text' => t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->getPostedTime()))),
+    '#text' => t('%age old', array('%age' => \Drupal::service('date')->formatInterval(REQUEST_TIME - $item->getPostedTime()))),
     '#html' => TRUE,
   );
 }
@@ -161,7 +161,7 @@ function template_preprocess_aggregator_feed_source(&$variables) {
   $variables['source_url'] = check_url(url($feed->getWebsiteUrl(), array('absolute' => TRUE)));
 
   if ($feed->checked) {
-    $variables['last_checked'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->getLastCheckedTime())));
+    $variables['last_checked'] = t('@time ago', array('@time' => \Drupal::service('date')->formatInterval(REQUEST_TIME - $feed->getLastCheckedTime())));
   }
   else {
     $variables['last_checked'] = t('never');

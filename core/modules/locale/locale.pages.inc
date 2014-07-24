@@ -156,6 +156,6 @@ function template_preprocess_locale_translation_update_info(&$variables) {
 function template_preprocess_locale_translation_last_check(&$variables) {
   $last = $variables['last'];
   $variables['last_checked'] = ($last != NULL);
-  $variables['time'] = format_interval(REQUEST_TIME - $last);
+  $variables['time'] = \Drupal::service('date')->formatInterval(REQUEST_TIME - $last);
   $variables['link'] = l(t('Check manually'), 'admin/reports/translations/check', array('query' => drupal_get_destination()));
 }
