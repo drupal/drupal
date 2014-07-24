@@ -242,6 +242,7 @@ function system_permission() {
     ),
     'access site reports' => array(
       'title' => t('View site reports'),
+      'restrict access' => TRUE,
     ),
     'block IP addresses' => array(
       'title' => t('Block IP addresses'),
