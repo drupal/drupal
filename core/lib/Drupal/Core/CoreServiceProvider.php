@@ -9,6 +9,7 @@ namespace Drupal\Core;
 
 use Drupal\Core\Cache\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
+use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
@@ -48,6 +49,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     // service definitions. This pass must come first so that later
     // list-building passes are operating on the post-alter services list.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
+
+    $container->addCompilerPass(new BackendCompilerPass());
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());
