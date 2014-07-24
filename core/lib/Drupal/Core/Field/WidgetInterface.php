@@ -76,7 +76,7 @@ interface WidgetInterface extends WidgetBaseInterface {
    * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   Array of default values for this field.
    * @param int $delta
-   *   The order of this item in the array of subelements (0, 1, 2, etc).
+   *   The order of this item in the array of sub-elements (0, 1, 2, etc).
    * @param array $element
    *   A form element array containing basic properties for the widget:
    *   - #field_parents: The 'parents' space for the field in the form. Most
@@ -92,12 +92,12 @@ interface WidgetInterface extends WidgetBaseInterface {
    *   - #required: A Boolean indicating whether the element value is required;
    *     for required multiple value fields, only the first widget's values are
    *     required.
-   *   - #delta: The order of this item in the array of subelements; see $delta
+   *   - #delta: The order of this item in the array of sub-elements; see $delta
    *     above.
-   * @param string $form
+   * @param array $form
    *   The form structure where widgets are being attached to. This might be a
    *   full form structure, or a sub-element of a larger form.
-   * @param string $form_state
+   * @param array $form_state
    *   An associative array containing the current state of the form.
    *
    * @return array
