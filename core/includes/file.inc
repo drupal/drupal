@@ -880,7 +880,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     // Remove any null bytes. See http://php.net/manual/en/security.filesystem.nullbytes.php
     $filename = str_replace(chr(0), '', $filename);
 
-    $whitelist = array_unique(explode(' ', trim($extensions)));
+    $whitelist = array_unique(explode(' ', strtolower(trim($extensions))));
 
     // Split the filename up by periods. The first part becomes the basename
     // the last part the final extension.
@@ -893,7 +893,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     // of allowed extensions.
     foreach ($filename_parts as $filename_part) {
       $new_filename .= '.' . $filename_part;
-      if (!in_array($filename_part, $whitelist) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
+      if (!in_array(strtolower($filename_part), $whitelist) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
         $new_filename .= '_';
       }
     }
