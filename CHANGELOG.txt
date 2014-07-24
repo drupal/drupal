@@ -1,4 +1,7 @@
 
+Drupal 7.31, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.30, 2014-07-24
 -----------------------
 - Fixed a regression introduced in Drupal 7.29 that caused files or images
