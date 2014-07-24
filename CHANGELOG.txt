@@ -7,6 +7,8 @@ Drupal 7.30, xxxx-xx-xx (development version)
 - Added a warning on the permissions page to recommend restricting access to
   the "View site reports" permission to trusted administrators. See
   DRUPAL-PSA-2014-002.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.29, 2014-07-16
 ----------------------
