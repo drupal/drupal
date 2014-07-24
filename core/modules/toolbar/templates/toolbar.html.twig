@@ -22,24 +22,26 @@
  * @ingroup themeable
  */
 #}
-<nav{{ attributes }}>
-  <div{{ toolbar_attributes }}>
+<div{{ attributes }}>
+  <nav{{ toolbar_attributes }}>
     <h2 class="visually-hidden">{{ toolbar_heading }}</h2>
     {% for tab in tabs %}
       <div{{ tab.attributes }}>{{ tab.link }}</div>
     {% endfor %}
-  </div>
+  </nav>
   {% for tray in trays %}
     {% spaceless %}
     <div{{ tray.attributes }}>
-      <div class="toolbar-lining clearfix">
-        {% if tray.label %}
+    {% if tray.label %}
+      <nav class="toolbar-lining clearfix" role="navigation" aria-label="{{ tray.label }}">
           <h3 class="toolbar-tray-name visually-hidden">{{ tray.label }}</h3>
-        {% endif %}
+    {% else %}
+      <nav class="toolbar-lining clearfix" role="navigation">
+    {% endif %}
         {{ tray.links }}
-      </div>
+      </nav>
     </div>
     {% endspaceless %}
   {% endfor %}
   {{ remainder }}
-</nav>
+</div>
