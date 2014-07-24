@@ -15,6 +15,8 @@ namespace Drupal\Core\Queue;
  * - Ensures FIFO ordering.
  * - Allows an item to be repeatedly claimed until it is actually deleted (no
  *   notion of lease time or 'expire' date), to allow multipass operations.
+ *
+ * @ingroup queue
  */
 class BatchMemory extends Memory {
 

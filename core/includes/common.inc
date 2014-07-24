@@ -310,6 +310,7 @@ function drupal_get_feeds() {
  *     not available, the current path.
  *
  * @see current_path()
+ * @ingroup form_api
  */
 function drupal_get_destination() {
   $destination = &drupal_static(__FUNCTION__);

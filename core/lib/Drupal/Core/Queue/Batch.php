@@ -17,6 +17,8 @@ namespace Drupal\Core\Queue;
  *
  * Stale items from failed batches are cleaned from the {queue} table on cron
  * using the 'created' date.
+ *
+ * @ingroup queue
  */
 class Batch extends DatabaseQueue {
 

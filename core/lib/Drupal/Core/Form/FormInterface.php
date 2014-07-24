@@ -9,6 +9,8 @@ namespace Drupal\Core\Form;
 
 /**
  * Provides an interface for a Form.
+ *
+ * @ingroup form_api
  */
 interface FormInterface {
 

@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a base class for forms.
+ *
+ * @ingroup form_api
  */
 abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   use StringTranslationTrait;

@@ -28,6 +28,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Provides form building and processing.
+ *
+ * @ingroup form_api
  */
 class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface {
 

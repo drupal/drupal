@@ -11,6 +11,8 @@ use Drupal\Core\Database\Connection;
 
 /**
  * Default queue implementation.
+ *
+ * @ingroup queue
  */
 class DatabaseQueue implements ReliableQueueInterface {
 

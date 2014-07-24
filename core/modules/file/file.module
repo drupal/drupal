@@ -1813,6 +1813,8 @@ function file_icon_map(FileInterface $file) {
  * @return
  *   A multidimensional array. The keys are field_name, entity_type,
  *   entity_id and the value is an entity referencing this file.
+ *
+ * @ingroup file
  */
 function file_get_file_references(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = &drupal_static(__FUNCTION__, array());

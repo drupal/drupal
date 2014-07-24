@@ -12,6 +12,8 @@ namespace Drupal\Core\Queue;
  *
  * Classes implementing this interface will do a best effort to preserve order
  * in messages and to execute them at least once.
+ *
+ * @ingroup queue
  */
 interface QueueInterface {
 

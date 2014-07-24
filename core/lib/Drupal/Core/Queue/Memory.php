@@ -13,6 +13,8 @@ namespace Drupal\Core\Queue;
  * This allows "undelayed" variants of processes relying on the Queue
  * interface. The queue data resides in memory. It should only be used for
  * items that will be queued and dequeued within a given page request.
+ *
+ * @ingroup queue
  */
 class Memory implements QueueInterface {
   /**
