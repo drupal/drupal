@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Prepares variables for CKEditor settings toolbar templates.
@@ -65,10 +66,10 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
   $build_button_item = function($button, $rtl) {
     // Value of the button item.
     if (isset($button['image_alternative' . $rtl])) {
-      $value = $button['image_alternative' . $rtl];
+      $value = SafeMarkup::set($button['image_alternative' . $rtl]);
     }
     elseif (isset($button['image_alternative'])) {
-      $value = $button['image_alternative'];
+      $value = SafeMarkup::set($button['image_alternative']);
     }
     elseif (isset($button['image'])) {
       $value = array(
