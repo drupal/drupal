@@ -100,6 +100,14 @@ class UserStorage extends ContentEntityDatabaseStorage implements UserStorageInt
   /**
    * {@inheritdoc}
    */
+  protected function isColumnSerial($table_name, $schema_name) {
+    // User storage does not use a serial column for the user id.
+    return $table_name == $this->revisionTable && $schema_name == $this->revisionKey;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function saveRoles(UserInterface $account) {
     $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
     foreach ($account->getRoles() as $rid) {

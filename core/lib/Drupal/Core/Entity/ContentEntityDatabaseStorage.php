@@ -1017,13 +1017,43 @@ class ContentEntityDatabaseStorage extends ContentEntityStorageBase implements S
         // SQL database drivers.
         // @see https://www.drupal.org/node/2279395
         $value = drupal_schema_get_field_value($definition->getSchema()['columns'][$column_name], $value);
-        if (!(empty($value) && $this->getSchema()[$table_name]['fields'][$schema_name]['type'] == 'serial')) {
+        if (!(empty($value) && $this->isColumnSerial($table_name, $schema_name))) {
           $record->$schema_name = $value;
         }
       }
     }
 
     return $record;
+  }
+
+  /**
+   * Checks whether a field column should be treated as serial.
+   *
+   * @param $table_name
+   *   The name of the table the field column belongs to.
+   * @param $schema_name
+   *   The schema name of the field column.
+   *
+   * @return bool
+   *   TRUE if the the column is serial, FALSE otherwise.
+   *
+   * @see \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler::processBaseTable()
+   * @see \Drupal\Core\Entity\Schema\ContentEntitySchemaHandler::processRevisionTable()
+   */
+  protected function isColumnSerial($table_name, $schema_name) {
+    $result = FALSE;
+
+    switch ($table_name) {
+      case $this->baseTable:
+        $result = $schema_name == $this->idKey;
+        break;
+
+      case $this->revisionTable:
+        $result = $schema_name == $this->revisionKey;
+        break;
+    }
+
+    return $result;
   }
 
   /**
