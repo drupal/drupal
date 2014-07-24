@@ -139,9 +139,6 @@ Accessibility
 Documentation
 - Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
 
-Security
-- Greg Knaddison 'greggles' http://drupal.org/user/36762
-
 Translations
 - Gerhard Killesreiter 'killes' http://drupal.org/user/83
 
@@ -153,6 +150,20 @@ Node Access
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - Ken Rickard 'agentrickard' http://drupal.org/user/20975
 - Jess Myrbo 'xjm' http://drupal.org/user/65776
+
+
+Security team
+-----------------
+
+To report a security issue, see: https://drupal.org/security-team/report-issue
+
+The Drupal security team provides Security Advisories for vulnerabilities,
+assists developers in resolving security issues, and provides security
+documentation. See http://drupal.org/security-team for more information. The
+security team lead is:
+
+- Michael Hess 'mlhess' https://drupal.org/user/102818
+
 
 Module maintainers
 ------------------
