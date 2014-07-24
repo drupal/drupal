@@ -13,6 +13,14 @@ use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
 
+/**
+ * Base class for migrate destination classes.
+ *
+ * @see \Drupal\migrate\Plugin\MigrateDestinationInterface
+ * @see \Drupal\migrate\Plugin\MigrateDestinationPluginManager
+ * @see \Drupal\migrate\Annotation\MigrateDestination
+ * @see plugin_api
+ */
 abstract class DestinationBase extends PluginBase implements MigrateDestinationInterface, RequirementsInterface {
 
   /**

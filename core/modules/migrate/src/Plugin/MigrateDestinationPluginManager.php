@@ -13,6 +13,14 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\migrate\Entity\MigrationInterface;
 
+/**
+ * Plugin manager for migrate destination plugins.
+ *
+ * @see \Drupal\migrate\Plugin\MigrateDestinationInterface
+ * @see \Drupal\migrate\Plugin\destination\DestinationBase
+ * @see \Drupal\migrate\Annotation\MigrateDestination
+ * @see plugin_api
+ */
 class MigrateDestinationPluginManager extends MigratePluginManager {
 
   /**

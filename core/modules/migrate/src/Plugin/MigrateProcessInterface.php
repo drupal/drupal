@@ -12,7 +12,12 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Row;
 
 /**
- * An interface for migrate processes.
+ * An interface for migrate process plugins.
+ *
+ * @see \Drupal\migrate\Plugin\MigratePluginManager
+ * @see \Drupal\migrate\Plugin\migrate\process\ProcessPluginBase
+ * @see \Drupal\migrate\Annotation\MigrateProcessPlugin
+ * @see plugin_api
  */
 interface MigrateProcessInterface extends PluginInspectionInterface {
 

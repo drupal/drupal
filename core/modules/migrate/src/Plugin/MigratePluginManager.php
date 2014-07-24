@@ -17,6 +17,13 @@ use Drupal\migrate\Entity\MigrationInterface;
  * Manages migrate plugins.
  *
  * @see hook_migrate_info_alter()
+ * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Plugin\MigrateSourceInterface
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ * @see \Drupal\migrate\Annotation\MigrateProcessPlugin
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
+ * @see \Drupal\migrate\Plugin\migrate\process\ProcessPluginBase
+ * @see plugin_api
  */
 class MigratePluginManager extends DefaultPluginManager {
 

@@ -8,13 +8,17 @@
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**
  * Destinations are responsible for persisting source data into the destination
  * Drupal.
+ *
+ * @see \Drupal\migrate\Plugin\destination\DestinationBase
+ * @see \Drupal\migrate\Plugin\MigrateDestinationPluginManager
+ * @see \Drupal\migrate\Annotation\MigrateDestination
+ * @see plugin_api
  */
 interface MigrateDestinationInterface extends PluginInspectionInterface {
 

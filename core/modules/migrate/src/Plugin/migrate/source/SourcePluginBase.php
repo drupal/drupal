@@ -14,6 +14,11 @@ use Drupal\migrate\Row;
 
 /**
  * The base class for all source plugins.
+ *
+ * @see \Drupal\migrate\Plugin\MigratePluginManager
+ * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Plugin\MigrateSourceInterface
+ * @see plugin_api
  */
 abstract class SourcePluginBase extends PluginBase implements MigrateSourceInterface  {
 
