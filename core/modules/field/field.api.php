@@ -71,7 +71,7 @@ function hook_field_info_alter(&$info) {
  *
  * Widgets are Plugins managed by the
  * \Drupal\Core\Field\WidgetPluginManager class. A widget is a plugin annotated
- * with class \Drupal\Core\Entity\Annotation\FieldWidget that implements
+ * with class \Drupal\Core\Field\Annotation\FieldWidget that implements
  * \Drupal\Core\Field\WidgetInterface (in most cases, by
  * subclassing \Drupal\Core\Field\WidgetBase). Widget plugins need to be in the
  * namespace \Drupal\{your_module}\Plugin\Field\FieldWidget.
