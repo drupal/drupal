@@ -15,7 +15,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * This interface details base wrapping methods that most widget implementations
  * will want to directly inherit from Drupal\Core\Field\WidgetBase. See
  * Drupal\Core\Field\WidgetInterface for methods that will more likely be
- * overriden in actual widget implementations.
+ * overridden in actual widget implementations.
  */
 interface WidgetBaseInterface extends PluginSettingsInterface {
 
