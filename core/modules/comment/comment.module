@@ -1027,18 +1027,3 @@ function comment_preprocess_field(&$variables) {
 function comment_ranking() {
   return \Drupal::service('comment.statistics')->getRankingInfo();
 }
-
-/**
- * Implements hook_file_download_access().
- */
-function comment_file_download_access($field, EntityInterface $entity, FileInterface $file) {
-  if ($entity instanceof CommentInterface) {
-    $current_user = \Drupal::currentUser();
-    if ($current_user->hasPermission('access comments') && $entity->isPublished() || $current_user->hasPermission('administer comments')) {
-      $commented_entity = $entity->getCommentedEntity();
-      // Check access to parent entity.
-      return $commented_entity->access('view');
-    }
-    return FALSE;
-  }
-}

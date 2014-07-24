@@ -205,17 +205,6 @@ function image_file_download($uri) {
     }
     return -1;
   }
-
-  // Private file access for the original files. Note that we only
-  // check access for non-temporary images, since file.module will
-  // grant access for all temporary files.
-  $files = entity_load_multiple_by_properties('file', array('uri' => $uri));
-  if (count($files)) {
-    $file = reset($files);
-    if ($file->status) {
-      return file_file_download($uri, 'image');
-    }
-  }
 }
 
 /**

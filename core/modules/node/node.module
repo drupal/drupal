@@ -1600,15 +1600,6 @@ function node_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_file_download_access().
- */
-function node_file_download_access($field, EntityInterface $entity, File $file) {
-  if ($entity->getEntityTypeId() == 'node') {
-    return $entity->access('view');
-  }
-}
-
-/**
  * Implements hook_ENTITY_TYPE_delete() for 'language_entity'.
  */
 function node_language_entity_delete(LanguageEntity $language) {

@@ -604,13 +604,8 @@ function file_theme() {
 
 /**
  * Implements hook_file_download().
- *
- * This function takes an extra parameter $field_type so that it may
- * be re-used by other File-like modules, such as Image.
  */
-function file_file_download($uri, $field_type = 'file') {
-  $user = \Drupal::currentUser();
-
+function file_file_download($uri) {
   // Get the file record based on the URI. If not in the database just return.
   /** @var \Drupal\file\FileInterface[] $files */
   $files = entity_load_multiple_by_properties('file', array('uri' => $uri));
@@ -629,69 +624,18 @@ function file_file_download($uri, $field_type = 'file') {
   }
 
   // Find out which (if any) fields of this type contain the file.
-  $references = file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_CURRENT, $field_type);
+  $references = file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_CURRENT, NULL);
 
   // Stop processing if there are no references in order to avoid returning
   // headers for files controlled by other modules. Make an exception for
   // temporary files where the host entity has not yet been saved (for example,
   // an image preview on a node/add form) in which case, allow download by the
   // file's owner.
-  if (empty($references) && ($file->isPermanent() || $file->getOwnerId() != $user->id())) {
+  if (empty($references) && ($file->isPermanent() || $file->getOwnerId() != \Drupal::currentUser()->id())) {
     return;
   }
 
-  // Default to allow access.
-  $denied = FALSE;
-  // Loop through all references of this file. If a reference explicitly allows
-  // access to the field to which this file belongs, no further checks are done
-  // and download access is granted. If a reference denies access, eventually
-  // existing additional references are checked. If all references were checked
-  // and no reference denied access, access is granted as well. If at least one
-  // reference denied access, access is denied.
-  foreach ($references as $field_name => $field_references) {
-    foreach ($field_references as $entity_type => $entities) {
-      $field_storage_definitions = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type);
-      $field_storage = $field_storage_definitions[$field_name];
-      foreach ($entities as $entity) {
-        // Check if access to this field is not disallowed.
-        if (!$entity->get($field_name)->access('view')) {
-          $denied = TRUE;
-          continue;
-        }
-
-        // Invoke hook and collect grants/denies for download access.
-        // Default to FALSE and let entities overrule this ruling.
-        $grants = array('system' => FALSE);
-        foreach (\Drupal::moduleHandler()->getImplementations('file_download_access') as $module) {
-          $grants = array_merge($grants, array($module => \Drupal::moduleHandler()->invoke($module, 'file_download_access', array($field_storage, $entity, $file))));
-        }
-        // Allow other modules to alter the returned grants/denies.
-        $context = array(
-          'entity' => $entity,
-          'field' => $field_storage,
-          'file' => $file,
-        );
-        \Drupal::moduleHandler()->alter('file_download_access', $grants, $context);
-
-        if (in_array(TRUE, $grants)) {
-          // If TRUE is returned, access is granted and no further checks are
-          // necessary.
-          $denied = FALSE;
-          break 3;
-        }
-
-        if (in_array(FALSE, $grants)) {
-          // If an implementation returns FALSE, access to this entity is denied
-          // but the file could belong to another entity to which the user might
-          // have access. Continue with these.
-          $denied = TRUE;
-        }
-      }
-    }
-  }
-
-  // Access specifically denied.
-  if ($denied) {
+  if (!$file->access('download')) {
     return -1;
   }
 
