@@ -20,12 +20,12 @@ ul.menu li {
 }
 .item-list ul li.collapsed,
 ul.menu li.collapsed {
-  list-style-image: url(../../misc/menu-collapsed.png);
+  list-style-image: url(../../../misc/menu-collapsed.png);
   list-style-type: disc;
 }
 .item-list ul li.expanded,
 ul.menu li.expanded {
-  list-style-image: url(../../misc/menu-expanded.png);
+  list-style-image: url(../../../misc/menu-expanded.png);
   list-style-type: circle;
 }
 /**
@@ -224,10 +224,10 @@ li.tabs__tab a {
 /* Only add the arrow if there's space */
 @media screen and (min-width:18.75em) { /* 300px */
   .tabs.primary a {
-    background: url(../../misc/icons/0074bd/chevron-right.svg) 99% center no-repeat;
+    background: url(../../../misc/icons/0074bd/chevron-right.svg) 99% center no-repeat;
   }
   [dir="rtl"] .tabs.primary a {
-    background: url(../../misc/icons/0074bd/chevron-left.svg) 1% center no-repeat;
+    background: url(../../../misc/icons/0074bd/chevron-left.svg) 1% center no-repeat;
   }
   .tabs.primary .tabs__tab.active a {
     background-image: none;
@@ -441,13 +441,13 @@ ul.admin-list {
   border: none;
 }
 .admin-list li a {
-  background: url(../../misc/icons/bebebe/chevron-disc-right.svg) no-repeat 1px 16px; /* LTR */
+  background: url(../../../misc/icons/bebebe/chevron-disc-right.svg) no-repeat 1px 16px; /* LTR */
   display: block;
   padding: 14px 15px 14px 25px; /* LTR */
   min-height: 0;
 }
 [dir="rtl"] .admin-list li a {
-  background: url(../../misc/icons/bebebe/chevron-disc-left.svg) no-repeat right 16px;
+  background: url(../../../misc/icons/bebebe/chevron-disc-left.svg) no-repeat right 16px;
   padding-right: 25px;
   padding-left: 15px;
 }
