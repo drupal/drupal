@@ -132,9 +132,15 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   }
 
   /**
-   * {@inheritdoc}
+   * Returns the prefix used to create the configuration name.
+   *
+   * The prefix consists of the config prefix from the entity type plus a dot
+   * for separating from the ID.
+   *
+   * @return string
+   *   The full configuration prefix, for example 'views.view.'.
    */
-  public function getConfigPrefix() {
+  protected function getPrefix() {
     return $this->entityType->getConfigPrefix() . '.';
   }
 
@@ -149,7 +155,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   protected function doLoadMultiple(array $ids = NULL) {
-    $prefix = $this->getConfigPrefix();
+    $prefix = $this->getPrefix();
 
     // Get the names of the configuration entities we are going to load.
     if ($ids === NULL) {
@@ -187,7 +193,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   protected function doDelete($entities) {
     foreach ($entities as $entity) {
-      $config = $this->configFactory->get($this->getConfigPrefix() . $entity->id());
+      $config = $this->configFactory->get($this->getPrefix() . $entity->id());
       $config->delete();
     }
   }
@@ -224,7 +230,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   protected function doSave($id, EntityInterface $entity) {
     $is_new = $entity->isNew();
-    $prefix = $this->getConfigPrefix();
+    $prefix = $this->getPrefix();
     if ($id !== $entity->id()) {
       // Renaming a config object needs to cater for:
       // - Storage needs to access the original object.
@@ -263,7 +269,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   protected function has($id, EntityInterface $entity) {
-    $prefix = $this->getConfigPrefix();
+    $prefix = $this->getPrefix();
     $config = $this->configFactory->get($prefix . $id);
     return !$config->isNew();
   }

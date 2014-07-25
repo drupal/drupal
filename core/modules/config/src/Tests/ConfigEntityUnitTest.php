@@ -45,9 +45,6 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
   public function testStorageMethods() {
     $entity_type = \Drupal::entityManager()->getDefinition('config_test');
 
-    $expected = $entity_type->getConfigPrefix() . '.';
-    $this->assertIdentical($this->storage->getConfigPrefix(), $expected);
-
     // Test the static extractID() method.
     $expected_id = 'test_id';
     $config_name = $entity_type->getConfigPrefix() . '.' . $expected_id;

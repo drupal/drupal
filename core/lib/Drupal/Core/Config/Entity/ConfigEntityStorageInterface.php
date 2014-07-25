@@ -16,14 +16,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 interface ConfigEntityStorageInterface extends EntityStorageInterface {
 
   /**
-   * Returns the config prefix used by the configuration entity type.
-   *
-   * @return string
-   *   The full configuration prefix, for example 'views.view.'.
-   */
-  public function getConfigPrefix();
-
-  /**
    * Extracts the configuration entity ID from the full configuration name.
    *
    * @param string $config_name
