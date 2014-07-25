@@ -5,8 +5,8 @@
  * Administration functions for editor.module.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\editor\Entity\Editor;
-use Drupal\Component\Utility\NestedArray;
 
 /**
  * Subform constructor to configure the text editor's image upload settings.
@@ -95,8 +95,8 @@ function editor_image_upload_settings_form(Editor $editor) {
   $form['max_dimensions'] = array(
     '#type' => 'item',
     '#title' => t('Maximum dimensions'),
-    '#field_prefix' => '<div class="container-inline clearfix">',
-    '#field_suffix' => '</div>',
+    '#field_prefix' => SafeMarkup::set('<div class="container-inline clearfix">'),
+    '#field_suffix' => SafeMarkup::set('</div>'),
     '#description' => t('Images larger than these dimensions will be scaled down.'),
     '#states' => $show_if_image_uploads_enabled,
   );
