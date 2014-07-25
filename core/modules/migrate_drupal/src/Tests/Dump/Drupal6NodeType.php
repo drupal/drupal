@@ -65,6 +65,22 @@ class Drupal6NodeType extends Drupal6DumpBase {
         'locked' => 0,
         'orig_type' => 'story',
       ))
+      ->values(array(
+        'type' => 'test_event',
+        'name' => 'Migrate test event',
+        'module' => 'node',
+        'description' => "test event description here",
+        'help' => 'help text here',
+        'has_title' => 1,
+        'title_label' => 'Event Name',
+        'has_body' => 1,
+        'body_label' => 'Body',
+        'min_word_count' => 0,
+        'custom' => 1,
+        'modified' => 1,
+        'locked' => 0,
+        'orig_type' => 'event',
+      ))
       ->execute();
 
     $this->database->merge('node_type')
@@ -92,7 +108,7 @@ class Drupal6NodeType extends Drupal6DumpBase {
       'value',
     ))
     ->values(array(
-      'name' => 'node_options_migrate_test_page',
+      'name' => 'node_options_test_page',
       'value' => serialize(array(
         0 => 'status',
         1 => 'promote',
@@ -100,10 +116,17 @@ class Drupal6NodeType extends Drupal6DumpBase {
       )),
     ))
     ->values(array(
-      'name' => 'node_options_migrate_test_story',
+      'name' => 'node_options_test_story',
       'value' => serialize(array(
         0 => 'status',
         1 => 'promote',
+      )),
+    ))
+    ->values(array(
+      'name' => 'node_options_test_event',
+      'value' => serialize(array(
+        0 => 'sticky',
+        1 => 'revision',
       )),
     ))
     ->values(array(
@@ -127,8 +150,9 @@ class Drupal6NodeType extends Drupal6DumpBase {
         'default_favicon' => 1,
         'favicon_path' => '',
         'favicon_upload' => '',
-        'toggle_node_info_migrate_test_page' => 1,
-        'toggle_node_info_migrate_test_story' => 1,
+        'toggle_node_info_test_page' => 1,
+        'toggle_node_info_test_story' => 1,
+        'toggle_node_info_test_event' => 1,
       )),
     ))
     ->execute();
