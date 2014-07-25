@@ -26,7 +26,7 @@ interface ConfirmFormInterface extends FormInterface {
    * @return \Drupal\Core\Url
    *   A URL object.
    */
-  public function getCancelRoute();
+  public function getCancelUrl();
 
   /**
    * Returns additional text to display as a description.

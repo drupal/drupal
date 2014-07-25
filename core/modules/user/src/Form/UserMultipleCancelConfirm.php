@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Url;
 use Drupal\user\TempStoreFactory;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -86,7 +87,8 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
+    return new Url('user.admin_account');
   }
 
   /**
@@ -160,8 +162,6 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
-    // @todo Convert to getCancelRoute() after https://drupal.org/node/1938884.
-    $form['actions']['cancel']['#href'] = 'admin/people';
     return $form;
   }
 

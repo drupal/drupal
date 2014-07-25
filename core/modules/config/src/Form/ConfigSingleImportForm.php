@@ -80,7 +80,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('config.import_single');
   }
 

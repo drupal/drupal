@@ -25,7 +25,7 @@ class SearchPageDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('search.settings');
   }
 
@@ -41,7 +41,7 @@ class SearchPageDeleteForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
     drupal_set_message($this->t('The %label search page has been deleted.', array('%label' => $this->entity->label())));
   }
 

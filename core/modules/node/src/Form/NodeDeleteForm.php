@@ -57,7 +57,7 @@ class NodeDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return $this->entity->urlInfo();
   }
 

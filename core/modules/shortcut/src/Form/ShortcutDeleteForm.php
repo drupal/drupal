@@ -32,7 +32,7 @@ class ShortcutDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('shortcut.set_customize', array(
       'shortcut_set' => $this->entity->bundle(),
     ));
@@ -50,7 +50,7 @@ class ShortcutDeleteForm extends ContentEntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
     drupal_set_message($this->t('The shortcut %title has been deleted.', array('%title' => $this->entity->title->value)));
   }
 

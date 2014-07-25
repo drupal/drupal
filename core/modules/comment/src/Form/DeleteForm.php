@@ -24,7 +24,7 @@ class DeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     // Point to the entity of which this comment is a reply.
     return $this->entity->get('entity_id')->entity->urlInfo();
   }
@@ -52,7 +52,7 @@ class DeleteForm extends ContentEntityConfirmFormBase {
     drupal_set_message($this->t('The comment and all its replies have been deleted.'));
     watchdog('content', 'Deleted comment @cid and its replies.', array('@cid' => $this->entity->id()));
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

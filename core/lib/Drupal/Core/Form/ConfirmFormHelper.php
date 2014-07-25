@@ -40,8 +40,8 @@ class ConfirmFormHelper {
       );
     }
     // Check for a route-based cancel link.
-    elseif ($route = $form->getCancelRoute()) {
-      $link = $route->toRenderArray();
+    elseif ($url = $form->getCancelUrl()) {
+      $link = $url->toRenderArray();
     }
 
     $link['#type'] = 'link';

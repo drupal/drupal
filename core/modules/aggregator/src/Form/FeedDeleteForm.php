@@ -25,7 +25,7 @@ class FeedDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('aggregator.admin_overview');
   }
 

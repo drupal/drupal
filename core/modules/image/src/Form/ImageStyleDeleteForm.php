@@ -32,7 +32,7 @@ class ImageStyleDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('image.style_list');
   }
 
@@ -65,7 +65,7 @@ class ImageStyleDeleteForm extends EntityConfirmFormBase {
     $this->entity->set('replacementID', $form_state['values']['replacement']);
     $this->entity->delete();
     drupal_set_message($this->t('Style %name was deleted.', array('%name' => $this->entity->label())));
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

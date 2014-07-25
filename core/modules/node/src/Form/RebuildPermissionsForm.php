@@ -29,7 +29,7 @@ class RebuildPermissionsForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('system.status');
   }
 
@@ -52,7 +52,7 @@ class RebuildPermissionsForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     node_access_rebuild(TRUE);
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

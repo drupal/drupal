@@ -41,7 +41,8 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
+    return $this->entity->urlInfo();
   }
 
   /**
@@ -110,8 +111,6 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
-    // @todo Convert to getCancelRoute() after https://drupal.org/node/1987896.
-    $form['actions']['cancel'] += $this->entity->urlInfo()->toRenderArray();
     return $form;
   }
 

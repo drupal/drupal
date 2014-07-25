@@ -101,7 +101,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url($this->mapper->getOverviewRouteName(), $this->mapper->getOverviewRouteParameters());
   }
 
@@ -146,7 +146,7 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
 
     drupal_set_message($this->t('@language translation of %label was deleted', array('%label' => $this->mapper->getTitle(), '@language' => $this->language->name)));
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

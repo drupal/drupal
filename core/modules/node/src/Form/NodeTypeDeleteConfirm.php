@@ -53,7 +53,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('node.overview_types');
   }
 
@@ -88,7 +88,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
     drupal_set_message(t('The content type %name has been deleted.', $t_args));
     watchdog('node', 'Deleted content type %name.', $t_args, WATCHDOG_NOTICE);
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

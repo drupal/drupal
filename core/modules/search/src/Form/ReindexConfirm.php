@@ -53,7 +53,7 @@ class ReindexConfirm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('search.settings');
   }
 
@@ -64,7 +64,7 @@ class ReindexConfirm extends ConfirmFormBase {
     if ($form['confirm']) {
       search_reindex();
       drupal_set_message($this->t('The index will be rebuilt.'));
-      $form_state['redirect_route'] = $this->getCancelRoute();
+      $form_state['redirect_route'] = $this->getCancelUrl();
     }
   }
 }

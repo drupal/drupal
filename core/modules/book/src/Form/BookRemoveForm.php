@@ -96,7 +96,7 @@ class BookRemoveForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return $this->node->urlInfo();
   }
 
@@ -108,7 +108,7 @@ class BookRemoveForm extends ConfirmFormBase {
       $this->bookManager->deleteFromBook($this->node->id());
       drupal_set_message($this->t('The post has been removed from the book.'));
     }
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

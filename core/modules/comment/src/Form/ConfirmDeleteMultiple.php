@@ -68,7 +68,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('comment.admin');
   }
 
@@ -123,7 +123,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase {
       watchdog('content', 'Deleted @count comments.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -32,7 +33,8 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
+    return new Url('language.negotiation_browser');
   }
 
   /**
@@ -50,8 +52,6 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
-    // @todo Convert to getCancelRoute() after http://drupal.org/node/2082071.
-    $form['actions']['cancel']['#href'] = 'admin/config/regional/language/detection/browser';
     return $form;
   }
 

@@ -46,7 +46,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return $this->imageStyle->urlInfo('edit-form');
   }
 

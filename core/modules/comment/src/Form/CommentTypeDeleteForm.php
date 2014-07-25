@@ -97,7 +97,7 @@ class CommentTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('comment.type_list');
   }
 

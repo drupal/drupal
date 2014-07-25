@@ -18,7 +18,7 @@ class EntityTestDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('<front>');
   }
 
@@ -38,7 +38,7 @@ class EntityTestDeleteForm extends ContentEntityConfirmFormBase {
     $entity = $this->entity;
     $entity->delete();
     drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId())));
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

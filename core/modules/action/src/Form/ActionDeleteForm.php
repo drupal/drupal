@@ -32,7 +32,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('action.admin');
   }
 
@@ -45,7 +45,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
     watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $this->entity->id(), '%action' => $this->entity->label()));
     drupal_set_message($this->t('Action %action was deleted', array('%action' => $this->entity->label())));
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

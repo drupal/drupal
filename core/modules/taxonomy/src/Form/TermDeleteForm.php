@@ -34,7 +34,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('taxonomy.vocabulary_list');
   }
 
@@ -65,7 +65,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
 
     drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->getName())));
     watchdog('taxonomy', 'Deleted term %name.', array('%name' => $this->entity->getName()), WATCHDOG_NOTICE);
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

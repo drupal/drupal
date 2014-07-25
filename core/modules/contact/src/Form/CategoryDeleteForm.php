@@ -25,7 +25,7 @@ class CategoryDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('contact.category_list');
   }
 
@@ -43,7 +43,7 @@ class CategoryDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('Category %label has been deleted.', array('%label' => $this->entity->label())));
     watchdog('contact', 'Category %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

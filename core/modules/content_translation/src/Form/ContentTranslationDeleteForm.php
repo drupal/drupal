@@ -62,7 +62,7 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return $this->entity->urlInfo('drupal:content-translation-overview');
   }
 
@@ -82,7 +82,7 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
       \Drupal::service('path.alias_storage')->delete($conditions);
     }
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

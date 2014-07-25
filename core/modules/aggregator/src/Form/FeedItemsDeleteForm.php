@@ -25,7 +25,7 @@ class FeedItemsDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('aggregator.admin_overview');
   }
 
@@ -42,7 +42,7 @@ class FeedItemsDeleteForm extends ContentEntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity->deleteItems();
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

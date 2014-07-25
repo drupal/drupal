@@ -44,7 +44,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
     $cancel_route = new Url($route_name);
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
-      ->method('getCancelRoute')
+      ->method('getCancelUrl')
       ->will($this->returnValue($cancel_route));
     $link = ConfirmFormHelper::buildCancelLink($form, new Request());
     $this->assertSame($route_name, $link['#route_name']);
@@ -67,7 +67,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
     );
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
-      ->method('getCancelRoute')
+      ->method('getCancelUrl')
       ->will($this->returnValue(new Url($cancel_route['route_name'], $cancel_route['route_parameters'], $cancel_route['options'])));
     $link = ConfirmFormHelper::buildCancelLink($form, new Request());
     $this->assertSame($cancel_route['route_name'], $link['#route_name']);
@@ -91,7 +91,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
     );
     $form = $this->getMock('Drupal\Core\Form\ConfirmFormInterface');
     $form->expects($this->any())
-      ->method('getCancelRoute')
+      ->method('getCancelUrl')
       ->will($this->returnValue($cancel_route));
     $link = ConfirmFormHelper::buildCancelLink($form, new Request());
     $this->assertSame($cancel_route->getRouteName(), $link['#route_name']);

@@ -25,7 +25,7 @@ class ViewDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('views_ui.list');
   }
 
@@ -45,7 +45,7 @@ class ViewDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('View %name deleted',array('%name' => $this->entity->label())));
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

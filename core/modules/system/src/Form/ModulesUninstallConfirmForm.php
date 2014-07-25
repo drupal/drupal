@@ -104,7 +104,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('system.modules_uninstall');
   }
 
@@ -200,7 +200,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
     $this->moduleHandler->uninstall($this->modules);
 
     drupal_set_message($this->t('The selected modules have been uninstalled.'));
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

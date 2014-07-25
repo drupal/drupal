@@ -9,6 +9,7 @@ namespace Drupal\path\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Path\AliasStorageInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -66,7 +67,8 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
+    return new Url('path.admin_overview');
   }
 
   /**
@@ -77,8 +79,6 @@ class DeleteForm extends ConfirmFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
-    // @todo Convert to getCancelRoute() after http://drupal.org/node/1987802.
-    $form['actions']['cancel']['#href'] = 'admin/config/search/path';
     return $form;
   }
 
@@ -90,4 +90,5 @@ class DeleteForm extends ConfirmFormBase {
 
     $form_state['redirect'] = 'admin/config/search/path';
   }
+
 }

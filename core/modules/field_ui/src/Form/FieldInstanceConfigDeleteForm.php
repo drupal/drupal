@@ -60,7 +60,7 @@ class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return FieldUI::getOverviewRouteInfo($this->entity->entity_type, $this->entity->bundle);
   }
 
@@ -80,7 +80,7 @@ class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
       drupal_set_message($this->t('There was a problem removing the %field from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)), 'error');
     }
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
 
     // Fields are purged on cron. However field module prevents disabling modules
     // when field types they provided are used in a field until it is fully

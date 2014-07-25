@@ -25,7 +25,7 @@ class MenuLinkResetForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('menu_ui.menu_edit', array(
       'menu' => $this->entity->menu_name,
     ));
@@ -51,7 +51,7 @@ class MenuLinkResetForm extends EntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity = $this->entity->reset();
     drupal_set_message(t('The menu link was reset to its default settings.'));
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

@@ -25,7 +25,7 @@ class BlockContentDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('block.admin_display');
   }
 

@@ -56,7 +56,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('language.admin_overview');
   }
 
@@ -114,7 +114,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
       drupal_set_message($this->t('The %language (%langcode) language has been removed.', array('%language' => $this->entity->label(), '%langcode' => $this->entity->id())));
     }
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

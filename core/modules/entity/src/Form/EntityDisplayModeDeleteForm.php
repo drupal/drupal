@@ -18,7 +18,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('entity.' . $this->entity->getEntityTypeId() . '_list');
   }
 
@@ -55,7 +55,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
     drupal_set_message(t('Deleted the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $entity_type->getLowercaseLabel())));
     $this->entity->delete();
     \Drupal::entityManager()->clearCachedFieldDefinitions();
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

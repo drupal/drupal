@@ -25,7 +25,7 @@ class MenuLinkDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('menu_ui.menu_edit', array(
       'menu' => $this->entity->menu_name,
     ));
@@ -39,7 +39,7 @@ class MenuLinkDeleteForm extends EntityConfirmFormBase {
     $t_args = array('%title' => $this->entity->link_title);
     drupal_set_message(t('The menu link %title has been deleted.', $t_args));
     watchdog('menu', 'Deleted menu link %title.', $t_args, WATCHDOG_NOTICE);
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

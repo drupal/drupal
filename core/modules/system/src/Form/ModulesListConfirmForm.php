@@ -73,7 +73,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('system.modules_list');
   }
 
@@ -151,7 +151,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       drupal_set_message($this->t('The configuration options have been saved.'));
     }
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

@@ -53,7 +53,7 @@ class BlockContentTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('block_content.type_list');
   }
 
@@ -86,7 +86,7 @@ class BlockContentTypeDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message(t('Custom block type %label has been deleted.', array('%label' => $this->entity->label())));
     watchdog('block_content', 'Custom block type %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
   }
 
 }

@@ -9,6 +9,7 @@ namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Drupal\Component\Utility\String;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -80,7 +81,8 @@ class DeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
+    return new Url('system.admin_content');
   }
 
   /**
@@ -107,8 +109,6 @@ class DeleteMultiple extends ConfirmFormBase {
     );
     $form = parent::buildForm($form, $form_state);
 
-    // @todo Convert to getCancelRoute() after http://drupal.org/node/2021161.
-    $form['actions']['cancel']['#href'] = 'admin/content';
     return $form;
   }
 

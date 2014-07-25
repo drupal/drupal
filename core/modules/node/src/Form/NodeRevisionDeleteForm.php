@@ -10,6 +10,7 @@ namespace Drupal\node\Form;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -91,7 +92,8 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
+    return new Url('node.revision_overview', array('node' => $this->revision->id()));
   }
 
   /**
@@ -108,8 +110,6 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
     $this->revision = $this->nodeStorage->loadRevision($node_revision);
     $form = parent::buildForm($form, $form_state);
 
-    // @todo Convert to getCancelRoute() after http://drupal.org/node/1863906.
-    $form['actions']['cancel']['#href'] = 'node/' . $this->revision->id() . '/revisions';
     return $form;
   }
 
