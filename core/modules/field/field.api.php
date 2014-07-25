@@ -18,7 +18,7 @@ use Drupal\Component\Utility\NestedArray;
  * hook_field_schema().
  *
  * Field types are plugins annotated with class
- * \Drupal\Core\Entity\Annotation\FieldType, and implement plugin interface
+ * \Drupal\Core\Field\Annotation\FieldType, and implement plugin interface
  * \Drupal\Core\Field\FieldItemInterface. Field Type plugins are managed by the
  * \Drupal\Core\Field\FieldTypePluginManager class. Field type classes usually
  * extend base class \Drupal\Core\Field\FieldItemBase. Field-type plugins need
@@ -172,7 +172,7 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
  *
  * Formatters are Plugins managed by the
  * \Drupal\Core\Field\FormatterPluginManager class. A formatter is a plugin
- * annotated with class \Drupal\Core\Entity\Annotation\FieldFormatter that
+ * annotated with class \Drupal\Core\Field\Annotation\FieldFormatter that
  * implements \Drupal\Core\Field\FormatterInterface (in most cases, by
  * subclassing \Drupal\Core\Field\FormatterBase). Formatter plugins need to be
  * in the namespace \Drupal\{your_module}\Plugin\Field\FieldFormatter.
@@ -247,7 +247,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  * that cannot be updated.
  *
  * To forbid the update from occurring, throw a
- * \Drupal\Core\Entity\Exception\StorageDefinitionUpdateForbiddenException.
+ * \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException.
  *
  * @param \Drupal\field\FieldStorageConfigInterface $field_storage
  *   The field storage as it will be post-update.
