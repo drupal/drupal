@@ -126,6 +126,25 @@ function node_views_data() {
     ),
   );
 
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
+    $data['node_field_data']['langcode'] = array(
+      'title' => t('Translation language'),
+      'help' => t('The language of the content or translation.'),
+      'field' => array(
+        'id' => 'node_language',
+      ),
+      'filter' => array(
+        'id' => 'language',
+      ),
+      'argument' => array(
+        'id' => 'language',
+      ),
+      'sort' => array(
+        'id' => 'standard',
+      ),
+    );
+  }
+
   $data['node_field_data']['status'] = array(
     'title' => t('Published status'),
     'help' => t('Whether or not the content is published.'),
@@ -466,8 +485,8 @@ function node_views_data() {
 
   if (\Drupal::moduleHandler()->moduleExists('language')) {
     $data['node_revision']['langcode'] = array(
-      'title' => t('Language'),
-      'help' => t('The language the content is in.'),
+      'title' => t('Original language'),
+      'help' => t('The language the original content is in.'),
       'field' => array(
         'id' => 'node_language',
       ),
@@ -564,7 +583,7 @@ function node_views_data() {
 
   $data['node_field_revision']['changed'] = array(
     'title' => t('Updated date'),
-    'help' => t('The date the node was last updated.'),
+    'help' => t('The date the content was last updated.'),
     'field' => array(
       'id' => 'date',
     ),
