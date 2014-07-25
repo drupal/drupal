@@ -59,6 +59,7 @@ class AccountSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
+    $form = parent::buildForm($form, $form_state);
     $config = $this->config('user.settings');
     $mail_config = $this->config('user.mail');
     $site_config = $this->config('system.site');
@@ -401,7 +402,7 @@ class AccountSettingsForm extends ConfigFormBase {
       '#rows' => 3,
     );
 
-    return parent::buildForm($form, $form_state);
+    return $form;
   }
 
   /**
