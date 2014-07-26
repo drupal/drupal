@@ -82,22 +82,29 @@ function hook_views_analyze(Drupal\views\ViewExecutable $view) {
 }
 
 /**
- * Describe data tables (or the equivalent) to Views.
+ * Describe data tables and fields (or the equivalent) to Views.
+ *
+ * The table and fields are processed in Views using various plugins. See
+ * the @link views_plugins Views plugins topic @endlink for more information.
  *
  * The data described with this hook is fetched and retrieved by
  * \Drupal\views\Views::viewsData()->get().
  *
  * @return array
- *   An associative array describing the data structure. Primary key is the
- *   name used internally by Views for the table(s) – usually the actual table
- *   name. The values for the key entries are described in detail below.
+ *   An associative array describing the structure of database tables and fields
+ *   (and their equivalents) provided for use in Views. At the outermost level,
+ *   the keys are the names used internally by Views for the tables (usually the
+ *   actual table name). Each table's array describes the table itself, how to
+ *   join to other tables, and the fields that are part of the table. The sample
+ *   function body provides documentation of the details.
+ *
+ * @see hook_views_data_alter()
  */
 function hook_views_data() {
-  // This example describes how to write hook_views_data() for the following
-  // table:
-  //
+  // This example describes how to write hook_views_data() for a table defined
+  // like this:
   // CREATE TABLE example_table (
-  //   nid INT(11) NOT NULL         COMMENT 'Primary key; refers to {node}.nid.',
+  //   nid INT(11) NOT NULL         COMMENT 'Primary key: {node}.nid.',
   //   plain_text_field VARCHAR(32) COMMENT 'Just a plain text field.',
   //   numeric_field INT(11)        COMMENT 'Just a numeric field.',
   //   boolean_field INT(1)         COMMENT 'Just an on/off field.',
@@ -105,136 +112,229 @@ function hook_views_data() {
   //   PRIMARY KEY(nid)
   // );
 
-  // First, the entry $data['example_table']['table'] describes properties of
-  // the actual table – not its content.
+  // Define the return array.
+  $data = array();
 
-  // The 'group' index will be used as a prefix in the UI for any of this
-  // table's fields, sort criteria, etc. so it's easy to tell where they came
-  // from.
+  // The outermost keys of $data are Views table names, which should usually
+  // be the same as the hook_schema() table names.
+  $data['example_table'] = array();
+
+  // The value corresponding to key 'table' gives properties of the table
+  // itself.
+  $data['example_table']['table'] = array();
+
+  // Within 'table', the value of 'group' (translated string) is used as a
+  // prefix in Views UI for this table's fields, filters, etc. When adding
+  // a field, filter, etc. you can also filter by the group.
   $data['example_table']['table']['group'] = t('Example table');
 
-  // Define this as a base table – a table that can be described in itself by
-  // views (and not just being brought in as a relationship). In reality this
-  // is not very useful for this table, as it isn't really a distinct object of
-  // its own, but it makes a good example.
+  // Some tables are "base" tables, meaning that they can be the base tables
+  // for views. Non-base tables can only be brought in via relationships in
+  // views based on other tables. To define a table to be a base table, add
+  // key 'base' to the 'table' array:
   $data['example_table']['table']['base'] = array(
-    'field' => 'nid', // This is the identifier field for the view.
+    // Identifier (primary) field in this table for Views.
+    'field' => 'nid',
+    // Label in the UI.
     'title' => t('Example table'),
+    // Longer description in the UI. Required.
     'help' => t('Example table contains example content and can be related to nodes.'),
     'weight' => -10,
   );
 
-  // This table references the {node} table. The declaration below creates an
-  // 'implicit' relationship to the node table, so that when 'node' is the base
-  // table, the fields are automatically available.
+  // Some tables have an implicit, automatic relationship to other tables,
+  // meaning that when the other table is available in a view (either as the
+  // base table or through a relationship), this table's fields, filters, etc.
+  // are automatically made available without having to add an additional
+  // relationship. To define an implicit relationship that will make your
+  // table automatically available when another table is present, add a 'join'
+  // section to your 'table' section. Note that it is usually only a good idea
+  // to do this for one-to-one joins, because otherwise your automatic join
+  // will add more rows to the view. It is also not a good idea to do this if
+  // most views won't need your table -- if that is the case, define a
+  // relationship instead (see the field section below).
+  //
+  // If you've decided an automatic join is a good idea, here's how to do it:
   $data['example_table']['table']['join'] = array(
-    // Index this array by the table name to which this table refers.
-    // 'left_field' is the primary key in the referenced table.
-    // 'field' is the foreign key in this table.
+    // Within the 'join' section, list one or more tables to automatically
+    // join to. In this example, every time 'node' is available in a view,
+    // 'example_table' will be too. The array keys here are the array keys
+    // for the other tables, given in their hook_views_data() implementations.
+    // If the table listed here is from another module's hook_views_data()
+    // implementation, make sure your module depends on that other module.
     'node' => array(
+      // Primary key field in node to use in the join.
       'left_field' => 'nid',
+      // Foreign key field in example_table to use in the join.
       'field' => 'nid',
     ),
   );
 
-  // Next, describe each of the individual fields in this table to Views. This
-  // is done by describing $data['example_table']['FIELD_NAME']. This part of
-  // the array may then have further entries:
-  //   - title: The label for the table field, as presented in Views.
-  //   - help: The description text for the table field.
-  //   - relationship: A description of any relationship handler for the table
-  //     field.
-  //   - field: A description of any field handler for the table field.
-  //   - sort: A description of any sort handler for the table field.
-  //   - filter: A description of any filter handler for the table field.
-  //   - argument: A description of any argument handler for the table field.
-  //   - area: A description of any handler for adding content to header,
-  //     footer or as no result behavior.
+  // Other array elements at the top level of your table's array describe
+  // individual database table fields made available to Views. The array keys
+  // are the names (unique within the table) used by Views for the fields,
+  // usually equal to the database field names.
   //
-  // The handler descriptions are described with examples below.
+  // Each field entry must have the following elements:
+  // - title: Translated label for the field in the UI.
+  // - help: Description of the field in the UI.
+  //
+  // Each field entry may also have one or more of the following elements,
+  // describing "handlers" (plugins) for the field:
+  // - relationship: Specifies a handler that allows this field to be used
+  //   to define a relationship to another table in Views.
+  // - field: Specifies a handler to make it available to Views as a field.
+  // - filter: Specifies a handler to make it available to Views as a filter.
+  // - sort: Specifies a handler to make it available to Views as a sort.
+  // - argument: Specifies a handler to make it available to Views as an
+  //   argument, or contextual filter as it is known in the UI.
+  // - area: Specifies a handler to make it available to Views to add content
+  //   to the header, footer, or as no result behavior.
+  //
+  // Note that when specifying handlers, you must give the handler plugin ID
+  // and you may also specify overrides for various settings that make up the
+  // plugin definition. See examples below; the Boolean example demonstrates
+  // setting overrides.
 
-  // Node ID table field.
+  // Node ID field, exposed as relationship only, since it is a foreign key
+  // in this table.
   $data['example_table']['nid'] = array(
     'title' => t('Example content'),
-    'help' => t('Some example content that references a node.'),
-    // Define a relationship to the {node} table, so example_table views can
-    // add a relationship to nodes. If you want to define a relationship the
-    // other direction, use hook_views_data_alter(), or use the 'implicit' join
-    // method described above.
+    'help' => t('Relate example content to the node content'),
+
+    // Define a relationship to the node table, so views whose base table is
+    // example_table can add a relationship to the node table. To make a
+    // relationship in the other direction, you can:
+    // - Use hook_views_data_alter() -- see the function body example on that
+    //   hook for details.
+    // - Use the implicit join method described above.
     'relationship' => array(
-      'base' => 'node', // The name of the table to join with
-      'field' => 'nid', // The name of the field to join with
+      // Views name of the table to join to for the relationship.
+      'base' => 'node',
+      // Database field name in the other table to join on.
+      'base field' => 'nid',
+      // ID of relationship handler plugin to use.
       'id' => 'standard',
+      // Default label for relationship in the UI.
       'label' => t('Example node'),
     ),
   );
 
-  // Example plain text field.
+  // Plain text field, exposed as a field, sort, filter, and argument.
   $data['example_table']['plain_text_field'] = array(
     'title' => t('Plain text field'),
     'help' => t('Just a plain text field.'),
+
     'field' => array(
+      // ID of field handler plugin to use.
       'id' => 'standard',
     ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'standard',
     ),
+
     'filter' => array(
+      // ID of filter handler plugin to use.
       'id' => 'string',
     ),
+
     'argument' => array(
+      // ID of argument handler plugin to use.
       'id' => 'string',
     ),
   );
 
-  // Example numeric text field.
+  // Numeric field, exposed as a field, sort, filter, and argument.
   $data['example_table']['numeric_field'] = array(
     'title' => t('Numeric field'),
     'help' => t('Just a numeric field.'),
+
     'field' => array(
+      // ID of field handler plugin to use.
       'id' => 'numeric',
     ),
-    'filter' => array(
-      'id' => 'numeric',
-    ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'standard',
+    ),
+
+    'filter' => array(
+      // ID of filter handler plugin to use.
+      'id' => 'numeric',
+    ),
+
+    'argument' => array(
+      // ID of argument handler plugin to use.
+      'id' => 'numeric',
     ),
   );
 
-  // Example boolean field.
+  // Boolean field, exposed as a field, sort, and filter. The filter section
+  // illustrates overriding various settings.
   $data['example_table']['boolean_field'] = array(
     'title' => t('Boolean field'),
     'help' => t('Just an on/off field.'),
+
     'field' => array(
+      // ID of field handler plugin to use.
       'id' => 'boolean',
     ),
-    'filter' => array(
-      'id' => 'boolean',
-      // Note that you can override the field-wide label:
-      'label' => t('Published'),
-      // This setting is used by the boolean filter handler, as possible option.
-      'type' => 'yes-no',
-      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statement.
-      'use_equal' => TRUE,
-    ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'standard',
+    ),
+
+    'filter' => array(
+      // ID of filter handler plugin to use.
+      'id' => 'boolean',
+      // Override the generic field title, so that the filter uses a different
+      // label in the UI.
+      'label' => t('Published'),
+      // Override the default BooleanOperator filter handler's 'type' setting,
+      // to display this as a "Yes/No" filter instead of a "True/False" filter.
+      'type' => 'yes-no',
+      // Override the default Boolean filter handler's 'use_equal' setting, to
+      // make the query use 'boolean_field = 1' instead of 'boolean_field <> 0'.
+      'use_equal' => TRUE,
     ),
   );
 
-  // Example timestamp field.
+  // Integer timestamp field, exposed as a field, sort, and filter.
   $data['example_table']['timestamp_field'] = array(
     'title' => t('Timestamp field'),
     'help' => t('Just a timestamp field.'),
+
     'field' => array(
+      // ID of field handler plugin to use.
       'id' => 'date',
     ),
+
     'sort' => array(
+      // ID of sort handler plugin to use.
       'id' => 'date',
     ),
+
     'filter' => array(
+      // ID of filter handler plugin to use.
       'id' => 'date',
+    ),
+  );
+
+  // Area example. Areas are not generally associated with actual data
+  // tables and fields. This example is from views_views_data(), which defines
+  // the "Global" table (not really a table, but a group of Fields, Filters,
+  // etc. that are grouped into section "Global" in the UI). Here's the
+  // definition of the generic "Text area":
+  $data['views']['area'] = array(
+    'title' => t('Text area'),
+    'help' => t('Provide markup text for the area.'),
+    'area' => array(
+      // ID of the area handler plugin to use.
+      'id' => 'text',
     ),
   );
 
@@ -242,48 +342,60 @@ function hook_views_data() {
 }
 
 /**
- * Alter the table structure defined by hook_views_data().
+ * Alter the table and field information from hook_views_data().
  *
  * @param array $data
- *   An array of all Views data, passed by reference. See hook_views_data() for
- *   structure.
+ *   An array of all information about Views tables and fields, collected from
+ *   hook_views_data(), passed by reference.
  *
  * @see hook_views_data()
  */
 function hook_views_data_alter(array &$data) {
-  // This example alters the title of the node:nid field in the Views UI.
+  // Alter the title of the node:nid field in the Views UI.
   $data['node']['nid']['title'] = t('Node-Nid');
 
-  // This example adds an example field to the users table.
+  // Add an additional field to the users table.
   $data['users']['example_field'] = array(
     'title' => t('Example field'),
     'help' => t('Some example content that references a user'),
-    'handler' => 'hook_handlers_field_example_field',
+
     'field' => array(
+      // ID of the field handler to use.
       'id' => 'example_field',
     ),
   );
 
-  // This example changes the handler of the node title field.
-  // In this handler you could do stuff, like preview of the node when clicking
-  // the node title.
+  // Change the handler of the node title field, presumably to a handler plugin
+  // you define in your module. Give the ID of this plugin.
   $data['node']['title']['field']['id'] = 'node_title';
 
-  // This example adds a relationship to table {foo}, so that 'foo' views can
-  // add this table using a relationship. Because we don't want to write over
-  // the primary key field definition for the {foo}.fid field, we use a dummy
-  // field name as the key.
-  $data['foo']['dummy_name'] = array(
-    'title' => t('Example relationship'),
-    'help' => t('Example help'),
+  // Add a relationship that will allow a view whose base table is 'foo' (from
+  // another module) to have a relationship to 'example_table' (from my module),
+  // via joining foo.fid to example_table.eid.
+  //
+  // This relationship has to be added to the 'foo' Views data, which my module
+  // does not control, so it must be done in hook_views_data_alter(), not
+  // hook_views_data().
+  //
+  // In Views data definitions, each field can have only one relationship. So
+  // rather than adding this relationship directly to the $data['foo']['fid']
+  // field entry, which could overwrite an existing relationship, we define
+  // a dummy field key to handle the relationship.
+  $data['foo']['unique_dummy_name'] = array(
+    'title' => t('Title seen while adding relationship'),
+    'help' => t('More information about the relationship'),
+
     'relationship' => array(
-      'base' => 'example_table', // Table we're joining to.
-      'base field' => 'eid', // Field on the joined table.
-      'field' => 'fid', // Real field name on the 'foo' table.
+      // Views name of the table being joined to from foo.
+      'base' => 'example_table',
+      // Database field name in example_table for the join.
+      'base field' => 'eid',
+      // Real database field name in foo for the join, to override
+      // 'unique_dummy_name'.
+      'field' => 'fid',
+      // ID of relationship handler plugin to use.
       'id' => 'standard',
       'label' => t('Default label for relationship'),
-      'title' => t('Title seen when adding relationship'),
-      'help' => t('More information about relationship.'),
     ),
   );
 
