@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\Annotation\ViewsArgumentValidator.
+ * Contains \Drupal\views\Annotation\ViewsArgumentValidator.
  */
 
 namespace Drupal\views\Annotation;

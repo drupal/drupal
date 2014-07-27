@@ -19,7 +19,7 @@ use Drupal\views\ViewExecutable;
  * Plugins that handle views filtering.
  *
  * Filter handler plugins extend
- * \Drupal\views\Plugin\views\filter\FilterHandlerBase. They must be annotated
+ * \Drupal\views\Plugin\views\filter\FilterPluginBase. They must be annotated
  * with \Drupal\views\Annotation\ViewsFilter annotation, and they must be in
  * namespace directory Plugin\views\filter.
  *

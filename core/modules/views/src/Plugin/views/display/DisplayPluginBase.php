@@ -31,7 +31,7 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException as Dependen
  * displays (see \Drupal\views\Plugin\views\display\DefaultDisplay).
  *
  * Display plugins extend \Drupal\views\Plugin\views\display\DisplayPluginBase.
- * They must be annotated with \Drupal\views\Plugin\Annotation\ViewsDisplay
+ * They must be annotated with \Drupal\views\Annotation\ViewsDisplay
  * annotation, and they must be in namespace directory Plugin\views\display.
  *
  * @ingroup views_plugins

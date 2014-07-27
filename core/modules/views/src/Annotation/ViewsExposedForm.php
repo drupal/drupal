@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\Annotation\ViewsExposedForm.
+ * Contains \Drupal\views\Annotation\ViewsExposedForm.
  */
 
 namespace Drupal\views\Annotation;

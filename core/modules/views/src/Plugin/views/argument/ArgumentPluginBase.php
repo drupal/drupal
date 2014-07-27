@@ -24,7 +24,7 @@ use Drupal\views\Views;
  * are for contextual filtering.
  *
  * Views argument handlers extend
- * \Drupal\views\Plugin\views\argument\ArgumentHandlerBase. They must be
+ * \Drupal\views\Plugin\views\argument\ArgumentPluginBase. They must be
  * annotated with \Drupal\views\Annotation\ViewsArgument annotation, and they
  * must be in namespace directory Plugin\views\argument.
  *

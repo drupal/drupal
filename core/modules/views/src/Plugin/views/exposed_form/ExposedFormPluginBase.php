@@ -25,7 +25,7 @@ use Drupal\views\Plugin\views\PluginBase;
  *
  * Exposed form plugins extend
  * \Drupal\views\Plugin\views\exposed_form\ExposedFormPluginBase. They must be
- * annotated with \Drupal\views\Plugin\Annotation\ViewsExposedForm annotation,
+ * annotated with \Drupal\views\Annotation\ViewsExposedForm annotation,
  * and they must be in namespace directory Plugin\views\exposed_form.
  */
 

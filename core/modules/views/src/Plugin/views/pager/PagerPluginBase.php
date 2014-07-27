@@ -20,7 +20,7 @@ use Drupal\views\ViewExecutable;
  * and setting up the pager.
  *
  * Pager plugins extend \Drupal\views\Plugin\views\pager\PagerPluginBase. They
- * must be annotated with \Drupal\views\Plugin\Annotation\ViewsPager annotation,
+ * must be annotated with \Drupal\views\Annotation\ViewsPager annotation,
  * and they must be in namespace directory Plugin\views\pager.
  *
  * @ingroup views_plugins

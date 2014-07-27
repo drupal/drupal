@@ -25,7 +25,7 @@ use Drupal\views\ViewExecutable;
  * Field handlers handle both querying and display of fields in views.
  *
  * Field handler plugins extend
- * \Drupal\views\Plugin\views\field\FieldHandlerBase. They must be
+ * \Drupal\views\Plugin\views\field\FieldPluginBase. They must be
  * annotated with \Drupal\views\Annotation\ViewsField annotation, and they
  * must be in namespace directory Plugin\views\field.
  *

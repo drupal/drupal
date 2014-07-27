@@ -26,7 +26,7 @@ use Drupal\views\Plugin\views\PluginBase;
  * Argument validator plugins extend
  * \Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase.
  * They must be annotated with
- * \Drupal\views\Plugin\Annotation\ViewsArgumentValidator annotation, and they
+ * \Drupal\views\Annotation\ViewsArgumentValidator annotation, and they
  * must be in namespace directory Plugin\views\argument_validator.
  *
  * @ingroup views_plugins

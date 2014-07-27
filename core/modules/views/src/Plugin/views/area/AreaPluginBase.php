@@ -16,7 +16,7 @@ use Drupal\views\Plugin\views\HandlerBase;
  * @{
  * Plugins governing areas of views, such as header, footer, and empty text.
  *
- * Area handler plugins extend \Drupal\views\Plugin\views\area\AreaHandlerBase.
+ * Area handler plugins extend \Drupal\views\Plugin\views\area\AreaPluginBase.
  * They must be annotated with \Drupal\views\Annotation\ViewsArea annotation,
  * and they must be in namespace directory Plugin\views\area.
  *

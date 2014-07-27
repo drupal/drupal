@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\Annotation\ViewsPager.
+ * Contains \Drupal\views\Annotation\ViewsPager.
  */
 
 namespace Drupal\views\Annotation;

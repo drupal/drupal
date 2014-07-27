@@ -28,7 +28,7 @@ use Drupal\views\ViewExecutable;
  * information.
  *
  * Style plugins extend \Drupal\views\Plugin\views\style\StylePluginBase. They
- * must be annotated with \Drupal\views\Plugin\Annotation\ViewsStyle
+ * must be annotated with \Drupal\views\Annotation\ViewsStyle
  * annotation, and they must be in namespace directory Plugin\views\style.
  *
  * @ingroup views_plugins

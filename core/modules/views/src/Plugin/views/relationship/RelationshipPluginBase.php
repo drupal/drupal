@@ -19,7 +19,7 @@ use Drupal\views\Views;
  * Plugins for handling views relationships.
  *
  * Relationship handlers extend
- * \Drupal\views\Plugin\views\relationship\RelationshipHandlerBase. They must
+ * \Drupal\views\Plugin\views\relationship\RelationshipPluginBase. They must
  * be annotated with \Drupal\views\Annotation\ViewsRelationship annotation,
  * and they must be in namespace directory Plugin\views\relationship.
  *

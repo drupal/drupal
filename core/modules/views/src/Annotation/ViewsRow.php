@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\Annotation\ViewsRow.
+ * Contains \Drupal\views\Annotation\ViewsRow.
  */
 
 namespace Drupal\views\Annotation;

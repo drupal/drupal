@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\Annotation\ViewsDisplayExtender.
+ * Contains \Drupal\views\Annotation\ViewsDisplayExtender.
  */
 
 namespace Drupal\views\Annotation;

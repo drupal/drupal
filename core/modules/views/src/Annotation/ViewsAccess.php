@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\Annotation\ViewsAccess.
+ * Contains \Drupal\views\Annotation\ViewsAccess.
  */
 
 namespace Drupal\views\Annotation;

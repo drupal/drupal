@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\Annotation\ViewsCache.
+ * Contains \Drupal\views\Annotation\ViewsCache.
  */
 
 namespace Drupal\views\Annotation;
