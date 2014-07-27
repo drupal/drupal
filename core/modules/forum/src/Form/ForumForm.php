@@ -53,7 +53,7 @@ class ForumForm extends TermForm {
     $form['parent']['#tree'] = TRUE;
     $form['parent'][0] = $this->forumParentSelect($taxonomy_term->id(), $this->t('Parent'));
 
-    $form['#theme'] = 'forum_form';
+    $form['#theme_wrappers'] = array('form__forum');
     $this->forumFormType = $this->t('forum');
     return $form;
   }

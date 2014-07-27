@@ -96,9 +96,6 @@ function forum_theme() {
       'template' => 'forum-submitted',
       'variables' => array('topic' => NULL),
     ),
-    'forum_form' => array(
-      'render element' => 'form',
-    ),
   );
 }
 
@@ -738,20 +735,4 @@ function template_preprocess_forum_submitted(&$variables) {
     $variables['author'] = drupal_render($username);
   }
   $variables['time'] = isset($variables['topic']->created) ? \Drupal::service('date')->formatInterval(REQUEST_TIME - $variables['topic']->created) : '';
-}
-
-/**
- * Returns HTML for a forum form.
- *
- * By default this does not alter the appearance of a form at all, but is
- * provided as a convenience for themers.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_forum_form(array $variables) {
-  return drupal_render_children($variables['form']);
 }
