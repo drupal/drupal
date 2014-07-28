@@ -2253,7 +2253,7 @@ abstract class WebTestBase extends TestBase {
       $this->pass(String::format('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
       return $this->drupalGet($url_target);
     }
-    $this->fail(String::format('Link $label does not exist on @url_before', array('%label' => $label, '@url_before' => $url_before)), 'Browser');
+    $this->fail(String::format('Link %label does not exist on @url_before', array('%label' => $label, '@url_before' => $url_before)), 'Browser');
     return FALSE;
   }
 
