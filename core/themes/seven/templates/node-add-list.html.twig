@@ -8,7 +8,6 @@
  *   - url: Path to the add content of this type page.
  *   - label: The title of this type of content.
  *   - description: Description of this type of content.
- * - add_content_type_url: Path to the add content type page.
  *
  * @see template_preprocess_node_add_list()
  * @see seven_preprocess_node_add_list()
@@ -22,8 +21,9 @@
   </ul>
 {% else %}
   <p>
+    {% set create_content = path('node.type_add') %}
     {% trans %}
-      You have not created any content types yet. Go to the <a href="{{ add_content_type_url }}">content type creation page</a> to add a new content type.
+      You have not created any content types yet. Go to the <a href="{{ create_content }}">content type creation page</a> to add a new content type.
     {% endtrans %}
   </p>
 {% endif %}

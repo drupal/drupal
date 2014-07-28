@@ -120,9 +120,6 @@ function seven_preprocess_node_add_list(&$variables) {
       $variables['types'][$type->type]['url'] = \Drupal::url('node.add', array('node_type' => $type->type));
     }
   }
-  else {
-    $variables['add_content_type_url'] = \Drupal::url('node.type_add');
-  }
 }
 
 /**

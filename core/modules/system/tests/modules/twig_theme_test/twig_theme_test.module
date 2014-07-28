@@ -23,6 +23,10 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
     'variables' => array('script' => ''),
     'template' => 'twig-raw-test',
   );
+  $items['twig_theme_test_url_generator'] = array(
+    'variables' => array(),
+    'template' => 'twig_theme_test.url_generator',
+  );
   return $items;
 }
 

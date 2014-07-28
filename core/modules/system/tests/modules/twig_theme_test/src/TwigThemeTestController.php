@@ -28,4 +28,13 @@ class TwigThemeTestController {
     );
   }
 
+  /**
+   * Renders for testing url_generator functions in a Twig template.
+   */
+  public function urlGeneratorRender() {
+    return array(
+      '#theme' => 'twig_theme_test_url_generator',
+    );
+  }
+
 }

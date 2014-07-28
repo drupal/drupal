@@ -6,11 +6,13 @@
  * Available variables:
  * - style: Either 'asc' or 'desc', indicating the sorting direction.
  *
+ * @see template_preprocess_tablesort_indicator()
+ *
  * @ingroup themeable
  */
 #}
 {% if style == 'asc' -%}
-  <img src="{{ url('core/misc/arrow-asc.png') }}" width="13" height="13" alt="{{ 'sort ascending'|t }}" title="{{ 'sort ascending'|t }}" />
+  <img src="{{ arrow_asc }}" width="13" height="13" alt="{{ 'sort ascending'|t }}" title="{{ 'sort ascending'|t }}" />
 {% else -%}
-  <img src="{{ url('core/misc/arrow-desc.png') }}" width="13" height="13" alt="{{ 'sort descending'|t }}" title="{{ 'sort descending'|t }}" />
+  <img src="{{ arrow_desc }}" width="13" height="13" alt="{{ 'sort descending'|t }}" title="{{ 'sort descending'|t }}" />
 {% endif %}

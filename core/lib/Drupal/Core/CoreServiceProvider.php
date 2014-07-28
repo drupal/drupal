@@ -84,6 +84,9 @@ class CoreServiceProvider implements ServiceProviderInterface  {
       ->addArgument(DRUPAL_ROOT);
     $container->setAlias('twig.loader', 'twig.loader.filesystem');
 
+     $twig_extension = new Definition('Drupal\Core\Template\TwigExtension');
+     $twig_extension->addMethodCall('setGenerators', array(new Reference('url_generator')));
+
     $container->register('twig', 'Drupal\Core\Template\TwigEnvironment')
       ->addArgument(new Reference('twig.loader'))
       ->addArgument(array(
@@ -99,7 +102,7 @@ class CoreServiceProvider implements ServiceProviderInterface  {
       ))
       ->addArgument(new Reference('module_handler'))
       ->addArgument(new Reference('theme_handler'))
-      ->addMethodCall('addExtension', array(new Definition('Drupal\Core\Template\TwigExtension')))
+      ->addMethodCall('addExtension', array($twig_extension))
       // @todo Figure out what to do about debugging functions.
       // @see http://drupal.org/node/1804998
       ->addMethodCall('addExtension', array(new Definition('Twig_Extension_Debug')))

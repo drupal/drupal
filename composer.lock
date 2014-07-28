@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e1a7eeed7d09f5c76f642f07b7a0a579",
+    "hash": "2b2309c748ec92230880579aaedfa1e6",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2027,17 +2027,17 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v2.4.1",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/Serializer",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Serializer.git",
-                "reference": "60c54346958604379392672a3a998650a169a7f4"
+                "reference": "33185b290310ab1fd8283fb8ed2a434cdb88b9b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Serializer/zipball/60c54346958604379392672a3a998650a169a7f4",
-                "reference": "60c54346958604379392672a3a998650a169a7f4",
+                "url": "https://api.github.com/repos/symfony/Serializer/zipball/33185b290310ab1fd8283fb8ed2a434cdb88b9b9",
+                "reference": "33185b290310ab1fd8283fb8ed2a434cdb88b9b9",
                 "shasum": ""
             },
             "require": {
@@ -2046,7 +2046,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2061,7 +2061,9 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Symfony Community",
@@ -2070,7 +2072,7 @@
             ],
             "description": "Symfony Serializer Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-01 08:14:50"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/translation",
@@ -2423,12 +2425,8 @@
             "time": "2013-06-12 19:46:58"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "symfony/yaml": 20,
@@ -2438,10 +2436,9 @@
         "symfony-cmf/routing": 15,
         "phpunit/phpunit-mock-objects": 20
     },
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.4.2"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }

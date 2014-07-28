@@ -1,0 +1,7 @@
+{# Test the url and path twig functions #}
+<div>path (as route) not absolute: {{ path('user.register') }}</div>
+<div>url (as route) absolute: {{ url('user.register') }}</div>
+
+<div>path (as route) not absolute with fragment: {{ path('user.register', {}, {'fragment': 'bottom' }) }}</div>
+<div>url (as route) absolute despite option: {{ url('user.register', {}, {'absolute': false }) }}</div>
+<div>url (as route) absolute with fragment: {{ url('user.register', {}, {'fragment': 'bottom' }) }}</div>
