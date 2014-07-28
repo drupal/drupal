@@ -1572,7 +1572,7 @@ function template_preprocess_file_link(&$variables) {
     '#uri' => file_icon_url($file_entity, $icon_directory),
     '#alt' => (!empty($mime_name[$file->getMimeType()])) ? $mime_name[$file->getMimeType()] : t('File'),
     '#title' => String::checkPlain($file_entity->getFilename()),
-    '#attributes' => array('class' => 'file-icon'),
+    '#attributes' => array('class' => array('file-icon')),
   );
 
   // Set options as per anchor format described at

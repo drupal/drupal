@@ -48,7 +48,7 @@ class TourTestController {
       'tip-5' => array(
         '#type' => 'container',
         '#attributes' => array(
-          'class' => 'tour-test-5',
+          'class' => array('tour-test-5'),
         ),
         '#children' => t('Tip created later?'),
       ),

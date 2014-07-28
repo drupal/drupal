@@ -66,7 +66,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
       '#type' => 'container',
       '#markup' => 'foo',
       '#attributes' => array(
-        'class' => 'bar',
+        'class' => array('bar'),
       ),
     ), '<div class="bar">foo</div>' . "\n", "#type 'container' with a class HTML attribute");
 

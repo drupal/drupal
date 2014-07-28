@@ -151,7 +151,7 @@ function views_ui_preprocess_views_view(&$variables) {
           '#section' => $section,
           '#content' => $variables[$section],
           '#theme_wrappers' => array('views_ui_container'),
-          '#attributes' => array('class' => 'contextual-region'),
+          '#attributes' => array('class' => array('contextual-region')),
         );
       }
     }

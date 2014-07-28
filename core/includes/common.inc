@@ -3052,7 +3052,7 @@ function drupal_render_page($page) {
  *     @code
  *     array(
  *       '#theme' => 'image',
- *       '#attributes' => array('class' => 'foo'),
+ *       '#attributes' => array('class' => array('foo')),
  *       '#theme_wrappers' => array('container'),
  *     );
  *     @endcode
@@ -3061,10 +3061,10 @@ function drupal_render_page($page) {
  *     @code
  *     array(
  *       '#theme' => 'image',
- *       '#attributes' => array('class' => 'foo'),
+ *       '#attributes' => array('class' => array('foo')),
  *       '#theme_wrappers' => array(
  *         'container' => array(
- *           '#attributes' => array('class' => 'bar'),
+ *           '#attributes' => array('class' => array('bar')),
  *         ),
  *       ),
  *     );
