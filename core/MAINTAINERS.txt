@@ -103,6 +103,7 @@ Form system
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
 - Wolfgang Ziegler 'fago' http://drupal.org/user/16747
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 - Franz Heinzmann 'Frando' http://drupal.org/user/21850
 
 Image system
@@ -158,6 +159,7 @@ Request processing system
 
 Routing system
 - Larry Garfield 'Crell' http://drupal.org/user/26398
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 
 Theme system
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
@@ -256,7 +258,7 @@ Comment module
 - Andrey Postnikov 'andypost' https://drupal.org/user/118908
 
 Configuration module
-- ?
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 
 Configuration Translation module
 - Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
