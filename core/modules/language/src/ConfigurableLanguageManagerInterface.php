@@ -23,7 +23,7 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
   /**
    * Returns the language negotiator.
    *
-   * @retun \Drupal\language\LanguageNegotiatorInterface
+   * @return \Drupal\language\LanguageNegotiatorInterface
    *   The language negotiator.
    */
   public function getNegotiator();
