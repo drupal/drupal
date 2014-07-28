@@ -25,7 +25,7 @@
 
         // If the password strength indicator is enabled, add its markup.
         if (settings.password.showStrengthIndicator) {
-          var passwordMeter = '<div class="password-strength"><div class="password-strength-text" aria-live="assertive"></div><div class="password-strength-title">' + translate.strengthTitle + '</div><div class="password-indicator"><div class="indicator"></div></div></div>';
+          var passwordMeter = '<div class="password-strength"><div class="password-strength__meter"><div class="password-strength__indicator"></div></div><div class="password-strength__title">' + translate.strengthTitle + ' </div><div class="password-strength__text" aria-live="assertive"></div></div>';
           confirmInput.parent().after('<div class="password-suggestions description"></div>');
           innerWrapper.append(passwordMeter);
           var passwordDescription = outerWrapper.find('div.password-suggestions').hide();
@@ -56,12 +56,12 @@
             passwordDescription.toggle(result.strength !== 100);
 
             // Adjust the length of the strength indicator.
-            innerWrapper.find('.indicator')
+            innerWrapper.find('.password-strength__indicator')
               .css('width', result.strength + '%')
               .css('background-color', result.indicatorColor);
 
             // Update the strength indication text.
-            innerWrapper.find('.password-strength-text').html(result.indicatorText);
+            innerWrapper.find('.password-strength__text').html(result.indicatorText);
           }
 
           // Check the value in the confirm input and show results.

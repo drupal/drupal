@@ -20,50 +20,27 @@
 /**
  * Password strength indicator.
  */
-.password-strength {
-  width: 13em;
-  float: right;  /* LTR */
-}
-[dir="rtl"] .password-strength {
-  float: left;
-}
-.password-strength-title {
+.password-strength__title,
+.password-strength__text {
   display: inline;
 }
-.password-strength-text {
-  float: right; /* LTR */
-  font-weight: bold;
-}
-[dir="rtl"] .password-strength-text {
-  float: left;
-}
-.password-indicator {
+.password-strength__meter {
   background-color: #c4c4c4;
-  height: 0.3em;
-  width: 100%;
+  height: 0.5em;
 }
-.password-indicator div {
+.password-strength__indicator {
   height: 100%;
   width: 0%;
   background-color: #47c965;
 }
 input.password-confirm,
-input.password-field {
-  width: 13.7em;
-  margin-bottom: 0.4em;
-  float: left; /* LTR */
+input.password-field,
+.password-strength {
+  width: 40%;
 }
 div.password-confirm {
-  float: right;  /* LTR */
   visibility: hidden;
-  width: 13em;
-}
-[dir="rtl"] input.password-confirm,
-[dir="rtl"] input.password-field {
-  float: right;
-}
-[dir="rtl"] div.password-confirm {
-  float: left;
+  width: 40%;
 }
 div.form-item div.password-suggestions {
   padding: 0.2em 0.5em;
@@ -86,34 +63,3 @@ div.password-suggestions ul {
   clear: right;
 }
 
-/**
- * Password strength indicator on narrow viewport.
- */
-@media screen and (max-width: 600px) {
-  .password-strength,
-  div.password-confirm {
-    float: none;
-    width: auto;
-    max-width: 100%;
-  }
-  .password-indicator {
-    margin-bottom: 0.4em;
-  }
-  input.password-confirm,
-  input.password-field {
-    margin-bottom: 0;
-    width: 100%;
-    max-width: none;
-  }
-  div.form-item div.password-suggestions {
-    width: auto;
-    max-width: 100%;
-  }
-  .confirm-parent,
-  .password-parent {
-    clear: none;
-    width: 100%;
-    max-width: none;
-    overflow: hidden;
-  }
-}

@@ -876,9 +876,12 @@ select.form-select {
 }
 
 .form-item .password-suggestions {
-  float: left;
+  float: left; /* LTR */
   clear: left;
   width: 100%;
+}
+[dir="rtl"] .form-item .password-suggestions {
+  float: right;
 }
 .form-item-pass .description {
   clear: both;
@@ -944,6 +947,9 @@ select.form-select {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+  }
+  .password-strength {
+    width: 100%;
   }
   div.form-item div.password-suggestions {
     float: none;

@@ -307,7 +307,7 @@ ul.menu li {
 }
 [dir="rtl"] .region-content ul,
 [dir="rtl"] .region-content ol {
-  padding: 2.5em 0 0.25em 0;
+  padding: 0 15px 0.25em 0;
 }
 .item-list ul li {
   margin: 0;
@@ -1303,39 +1303,10 @@ div.messages {
   float: none;
 }
 
-/* -------------- Password Meter  ------------- */
+/* -------------- Password Field  ------------- */
 
-[dir="rtl"] #password-strength {
-  left: auto;
-  margin-top: 2em;
-  right: 16em;
-}
-[dir="rtl"] .form-item-pass-pass2 label {
-  clear: right;
-}
-.confirm-parent,
-.password-parent {
-  width: 34em;
-}
-.password-parent,
-div.form-item div.password-suggestions {
-  position: relative;
-}
-.password-strength-text,
-.password-strength-title,
-div.password-confirm {
-  font-size: 0.82em;
-}
-.password-strength-text {
-  margin-top: 0.2em;
-}
-[dir="rtl"] #password-strength-text {
-  margin-top: 0;
-  float: left;
-}
-div.password-confirm {
-  margin-top: 2.2em;
-  width: 20.73em;
+.password-field {
+  margin: 0;
 }
 
 /* ---------------- Buttons    ---------------- */
