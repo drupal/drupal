@@ -228,6 +228,31 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(get_object_vars($obj), $this->encoder->decode($source, 'xml'));
     }
 
+    public function testDecodeCdataWrapping()
+    {
+        $expected = array(
+            'firstname' => 'Paul <or Me>',
+        );
+
+        $xml = '<?xml version="1.0"?>'."\n".
+            '<response><firstname><![CDATA[Paul <or Me>]]></firstname></response>'."\n";
+
+        $this->assertEquals($expected, $this->encoder->decode($xml, 'xml'));
+    }
+
+    public function testDecodeCdataWrappingAndWhitespace()
+    {
+        $expected = array(
+            'firstname' => 'Paul <or Me>',
+        );
+
+        $xml = '<?xml version="1.0"?>'."\n".
+            '<response><firstname>'."\n".
+                '<![CDATA[Paul <or Me>]]></firstname></response>'."\n";
+
+        $this->assertEquals($expected, $this->encoder->decode($xml, 'xml'));
+    }
+
     public function testDecodeScalarWithAttribute()
     {
         $source = '<?xml version="1.0"?>'."\n".
@@ -345,6 +370,12 @@ class XmlEncoderTest extends \PHPUnit_Framework_TestCase
                 $this->fail('Expected UnexpectedValueException');
             }
         }
+    }
+
+    public function testDecodeEmptyXml()
+    {
+        $this->setExpectedException('Symfony\Component\Serializer\Exception\UnexpectedValueException', 'Invalid XML data, it can not be empty.');
+        $this->encoder->decode(' ', 'xml');
     }
 
     protected function getXmlSource()
