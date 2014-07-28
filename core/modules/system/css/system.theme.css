@@ -536,7 +536,7 @@ ul.tabs {
 }
 [dir="rtl"] .messages {
   border-width: 1px 0 1px 1px;
-  background-position-x: 99%;
+  background-position: right 10px top 18px;
   padding-left: 20px;
   padding-right: 35px;
   text-align: right;
@@ -562,10 +562,11 @@ ul.tabs {
   margin-left: 8px; /* LTR */
 }
 [dir="rtl"] .messages--status {
-  background-position: 99.3% 19px;
+  background-position: right 12px top 19px;
   border-color: #c9e1bd transparent #c9e1bd #c9e1bd;
   box-shadow: 8px 0 0 #77b259;
   margin-right: 8px;
+  margin-left: 0;
 }
 .messages--status,
 .ok {
