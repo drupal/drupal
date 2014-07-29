@@ -342,346 +342,6 @@
  */
 
 /**
- * @defgroup entity_api Entity API
- * @{
- * Describes how to define and manipulate content and configuration entities.
- *
- * Entities, in Drupal, are objects that are used for persistent storage of
- * content and configuration information. See the
- * @link info_types Information types topic @endlink for an overview of the
- * different types of information, and the
- * @link config_api Configuration API topic @endlink for more about the
- * configuration API.
- *
- * Each entity is an instance of a particular "entity type". Some content entity
- * types have sub-types, which are known as "bundles", while for other entity
- * types, there is only a single bundle. For example, the Node content entity
- * type, which is used for the main content pages in Drupal, has bundles that
- * are known as "content types", while the User content type, which is used for
- * user accounts, has only one bundle.
- *
- * The sections below have more information about entities and the Entity API;
- * for more detailed information, see https://drupal.org/developing/api/entity
- *
- * @section define Defining an entity type
- * Entity types are defined by modules, using Drupal's Plugin API (see the
- * @link plugin_api Plugin API topic @endlink for more information about plugins
- * in general). Here are the steps to follow to define a new entity type:
- * - Choose a unique machine name, or ID, for your entity type. This normally
- *   starts with (or is the same as) your module's machine name. It should be
- *   as short as possible, and may not exceed 32 characters.
- * - Define an interface for your entity's get/set methods, extending either
- *   \Drupal\Core\Config\Entity\ConfigEntityInterface or
- *   \Drupal\Core\Entity\ContentEntityInterface.
- * - Define a class for your entity, implementing your interface and extending
- *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
- *   \Drupal\Core\Entity\ContentEntityBase, with annotation for
- *   \@ConfigEntityType or \@ContentEntityType in its documentation block.
- * - The 'id' annotation gives the entity type ID, and the 'label' annotation
- *   gives the human-readable name of the entity type. If you are defining a
- *   content entity type that uses bundles, the 'bundle_label' annotation gives
- *   the human-readable name to use for a bundle of this entity type (for
- *   example, "Content type" for the Node entity).
- * - The annotation will refer to several controller classes, which you will
- *   also need to define:
- *   - list_builder: Define a class that extends
- *     \Drupal\Core\Config\Entity\ConfigEntityListBuilder (for configuration
- *     entities) or \Drupal\Core\Entity\EntityListBuilder (for content
- *     entities), to provide an administrative overview for your entities.
- *   - add and edit forms, or default form: Define a class (or two) that
- *     extend(s) \Drupal\Core\Entity\EntityForm to provide add and edit forms
- *     for your entities. For content entities, base class
- *     \Drupal\Core\Entity\ContentEntityForm is a better starting point.
- *   - delete form: Define a class that extends
- *     \Drupal\Core\Entity\EntityConfirmFormBase to provide a delete
- *     confirmation form for your entities.
- *   - view_builder: For content entities and config entities that need to be
- *     viewed, define a class that implements
- *     \Drupal\Core\Entity\EntityViewBuilderInterface (usually extending
- *     \Drupal\Core\Entity\EntityViewBuilder), to display a single entity.
- *   - translation: For translatable content entities (if the 'translatable'
- *     annotation has value TRUE), define a class that extends
- *     \Drupal\content_translation\ContentTranslationHandler, to translate
- *     the content. Configuration translation is handled automatically by the
- *     Configuration Translation module, without the need of a controller class.
- *   - access: If your configuration entity has complex permissions, you might
- *     need an access controller, implementing
- *     \Drupal\Core\Entity\EntityAccessControllerInterface, but most entities
- *     can just use the 'admin_permission' annotation instead. Note that if you
- *     are creating your own access controller, you should override the
- *     checkAccess() and checkCreateAccess() methods, not access().
- *   - storage: A class implementing
- *     \Drupal\Core\Entity\EntityStorageInterface. If not specified, content
- *     entities will use \Drupal\Core\Entity\ContentEntityDatabaseStorage, and
- *     config entities will use \Drupal\Core\Config\Entity\ConfigEntityStorage.
- *     You can extend one of these classes to provide custom behavior.
- * - For content entities, the annotation will refer to a number of database
- *   tables and their fields. These annotation properties, such as 'base_table',
- *   'data_table', 'entity_keys', etc., are documented on
- *   \Drupal\Core\Entity\EntityType. Your module will also need to set up its
- *   database tables using hook_schema().
- * - For content entities that are displayed on their own pages, the annotation
- *   will refer to a 'uri_callback' function, which takes an object of the
- *   entity interface you have defined as its parameter, and returns routing
- *   information for the entity page; see node_uri() for an example. You will
- *   also need to add a corresponding route to your module's routing.yml file;
- *   see the node.view route in node.routing.yml for an example, and see
- *   @ref sec_routes below for some notes.
- * - Define routing and links for the various URLs associated with the entity.
- *   These go into the 'links' annotation, with the link type as the key, and
- *   the route machine name (defined in your module's routing.yml file) as the
- *   value; see @ref sec_routes below for some routing notes. Typical link
- *   types are:
- *   - canonical: Default link, either to view (if entities are viewed on their
- *     own pages) or edit the entity.
- *   - delete-form: Confirmation form to delete the entity.
- *   - edit-form: Editing form.
- *   - admin-form: Form for editing bundle or entity type settings.
- *   - Other link types specific to your entity type can also be defined.
- * - If your content entity has bundles, you will also need to define a second
- *   plugin to handle the bundles. This plugin is itself a configuration entity
- *   type, so follow the steps here to define it. The machine name ('id'
- *   annotation) of this configuration entity class goes into the
- *   'bundle_entity_type' annotation on the entity type class. For example, for
- *   the Node entity, the bundle class is \Drupal\node\Entity\NodeType, whose
- *   machine name is 'node_type'. This is the annotation value for
- *   'bundle_entity_type' on the \Drupal\node\Entity\Node class. Also, the
- *   bundle config entity type annotation must have a 'bundle_of' entry,
- *   giving the machine name of the entity type it is acting as a bundle for.
- * - Additional annotations can be seen on entity class examples such as
- *   \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
- *   (configuration). These annotations are documented on
- *   \Drupal\Core\Entity\EntityType.
- *
- * @section sec_routes Entity routes
- * Entity routes, like other routes, are defined in *.routing.yml files; see
- * the @link menu Menu and routing @endlink topic for more information. Here
- * is a typical entry, for the block configure form:
- * @code
- * block.admin_edit:
- *   path: '/admin/structure/block/manage/{block}'
- *   defaults:
- *     _entity_form: 'block.default'
- *     _title: 'Configure block'
- *   requirements:
- *     _entity_access: 'block.update'
- * @endcode
- * Some notes:
- * - path: The {block} in the path is a placeholder, which (for an entity) must
- *   always take the form of {machine_name_of_entity_type}. In the URL, the
- *   placeholder value will be the ID of an entity item. When the route is used,
- *   the entity system will load the corresponding entity item and pass it in as
- *   an object to the controller for the route.
- * - defaults: For entity form routes, use _entity_form rather than the generic
- *   _content or _form. The value is composed of the entity type machine name
- *   and a form controller type from the entity annotation (see @ref define
- *   above more more on controllers and annotation). So, in this example,
- *   block.default refers to the 'default' form controller on the block entity
- *   type, whose annotation contains:
- *   @code
- *   controllers = {
- *     "form" = {
- *       "default" = "Drupal\block\BlockForm",
- *   @endcode
- *
- * @section bundle Defining a content entity bundle
- * For entity types that use bundles, such as Node (bundles are content types)
- * and Taxonomy (bundles are vocabularies), modules and install profiles can
- * define bundles by supplying default configuration in their config/install
- * directories. (See the @link config_api Configuration API topic @endlink for
- * general information about configuration.)
- *
- * There are several good examples of this in Drupal Core:
- * - The Forum module defines a content type in node.type.forum.yml and a
- *   vocabulary in taxonomy.vocabulary.forums.yml
- * - The Book module defines a content type in node.type.book.yml
- * - The Standard install profile defines Page and Article content types in
- *   node.type.page.yml and node.type.article.yml, a Tags vocabulary in
- *   taxonomy.vocabulary.tags.yml, and a Node comment type in
- *   comment.type.comment.yml. This profile's configuration is especially
- *   instructive, because it also adds several fields to the Article type, and
- *   it sets up view and form display modes for the node types.
- *
- * @section load_query Loading, querying, and rendering entities
- * To load entities, use the entity storage manager, which is an object
- * implementing \Drupal\Core\Entity\EntityStorageInterface that you can
- * retrieve with:
- * @code
- * $storage = \Drupal::entityManager()->getStorage('your_entity_type');
- * // Or if you have a $container variable:
- * $storage = $container->get('entity.manager')->getStorage('your_entity_type');
- * @endcode
- * Here, 'your_entity_type' is the machine name of your entity type ('id'
- * annotation on the entity class), and note that you should use dependency
- * injection to retrieve this object if possible. See the
- * @link container Services and Dependency Injection topic @endlink for more
- * about how to properly retrieve services.
- *
- * To query to find entities to load, use an entity query, which is a object
- * implementing \Drupal\Core\Entity\Query\QueryInterface that you can retrieve
- * with:
- * @code
- * // Simple query:
- * $query = \Drupal::entityQuery('your_entity_type');
- * // Or, if you have a $container variable:
- * $query_service = $container->get('entity.query');
- * $query = $query_service->get('your_entity_type');
- * @endcode
- * If you need aggregation, there is an aggregate query avaialable, which
- * implements \Drupal\Core\Entity\Query\QueryAggregateInterface:
- * @code
- * $query \Drupal::entityQueryAggregate('your_entity_type');
- * // Or:
- * $query = $query_service->getAggregate('your_entity_type');
- * @endcode
- * Also, you should use dependency injection to get this object if
- * possible; the service you need is entity.query, and its methods getQuery()
- * or getAggregateQuery() will get the query object.
- *
- * In either case, you can then add conditions to your query, using methods
- * like condition(), exists(), etc. on $query; add sorting, pager, and range
- * if needed, and execute the query to return a list of entity IDs that match
- * the query.
- *
- * Here is an example, using the core File entity:
- * @code
- * $fids = Drupal::entityQuery('file')
- *   ->condition('status', FILE_STATUS_PERMANENT, '<>')
- *   ->condition('changed', REQUEST_TIME - $age, '<')
- *   ->range(0, 100)
- *   ->execute();
- * $files = $storage->loadMultiple($fids);
- * @endcode
- *
- * The normal way of viewing entities is by using a route, as described in the
- * sections above. If for some reason you need to render an entity in code in a
- * particular view mode, you can use an entity view builder, which is an object
- * implementing \Drupal\Core\Entity\EntityViewBuilderInterface that you can
- * retrieve with:
- * @code
- * $view_builder = \Drupal::entityManager()->getViewBuilder('your_entity_type');
- * // Or if you have a $container variable:
- * $view_builder = $container->get('entity.manager')->getViewBuilder('your_entity_type');
- * @endcode
- * Then, to build and render the entity:
- * @code
- * // You can omit the language ID if the default language is being used.
- * $build = $view_builder->view($entity, 'view_mode_name', $language->id);
- * // $build is a render array.
- * $rendered = drupal_render($build);
- * @endcode
- *
- * @section sec_access Access checking on entities
- * Entity types define their access permission scheme in their annotation.
- * Access permissions can be quite complex, so you should not assume any
- * particular permission scheme. Instead, once you have an entity object
- * loaded, you can check for permission for a particular operation (such as
- * 'view') at the entity or field level by calling:
- * @code
- * $entity->access($operation);
- * $entity->nameOfField->access($operation);
- * @endcode
- * The interface related to access checking in entities and fields is
- * \Drupal\Core\Access\AccessibleInterface.
- *
- * The default entity access controller invokes two hooks while checking
- * access on a single entity: hook_entity_access() is invoked first, and
- * then hook_ENTITY_TYPE_access() (where ENTITY_TYPE is the machine name
- * of the entity type). If no module returns a TRUE or FALSE value from
- * either of these hooks, then the entity's default access checking takes
- * place. For create operations (creating a new entity), the hooks that
- * are invoked are hook_entity_create_access() and
- * hook_ENTITY_TYPE_create_access() instead.
- *
- * The Node entity type has a complex system for determining access, which
- * developers can interact with. This is described in the
- * @link node_access Node access topic. @endlink
- *
- * @see i18n
- * @see entity_crud
- * @}
- */
-
-/**
- * @defgroup i18n Internationalization
- * @{
- * Internationalization and translation
- *
- * The principle of internationalization is that it should be possible to make a
- * Drupal site in any language (or a multi-lingual site), where only content in
- * the desired language is displayed for any particular page request. In order
- * to make this happen, developers of modules, themes, and installation profiles
- * need to make sure that all of the displayable content and user interface (UI)
- * text that their project deals with is internationalized properly, so that it
- * can be translated using the standard Drupal translation mechanisms.
- *
- * @section internationalization Internationalization
- * Different @link info_types types of information in Drupal @endlink have
- * different methods for internationalization, and different portions of the
- * UI also have different methods for internationalization. Here is a list of
- * the different mechanisms for internationalization, and some notes:
- * - UI text is always put into code and related files in English.
- * - Any time UI text is displayed using PHP code, it should be passed through
- *   either the global t() function or a t() method on the class. If it
- *   involves plurals, it should be passed through either the global
- *   formatPlural() function or a formatPlural() method on the class. Use
- *   \Drupal\Core\StringTranslation\StringTranslationTrait to get these methods
- *   into a class.
- * - Dates displayed in the UI should be passed through the 'date' service
- *   class's format() method. Again see the Services topic; the method to
- *   call is \Drupal\Core\Datetime\Date::format().
- * - Some YML files contain UI text that is automatically translatable:
- *   - *.routing.yml files: route titles. This also applies to
- *     *.links.task.yml, *.links.action.yml, and *.links.contextual.yml files.
- *   - *.info.yml files: module names and descriptions.
- * - For configuration, make sure any configuration that is displayable to
- *   users is marked as translatable in the configuration schema. Configuration
- *   types label, text, and date_format are translatable; string is
- *   non-translatable text. See the @link config_api Config API topic @endlink
- *   for more information.
- * - For annotation, make sure that any text that is displayable in the UI
- *   is wrapped in \@Translation(). See the
- *   @link plugin_translatable Plugin translatables topic @endlink for more
- *   information.
- * - Content entities are translatable if they have
- *   @code
- *   translatable = TRUE,
- *   @endcode
- *   in their annotation. The use of entities to store user-editable content to
- *   be displayed in the site is highly recommended over creating your own
- *   method for storing, retrieving, displaying, and internationalizing content.
- * - For Twig templates, use 't' or 'trans' filters to indicate translatable
- *   text. See https://www.drupal.org/node/2133321 for more information.
- * - In JavaScript code, use the Drupal.t() and Drupal.formatPlural() functions
- *   (defined in core/misc/drupal.js) to translate UI text.
- * - If you are using a custom module, theme, etc. that is not hosted on
- *   Drupal.org, see
- *   @link interface_translation_properties Interface translation properties topic @endlink
- *   for information on how to make sure your UI text is translatable.
- *
- * @section translation Translation
- * Once your data and user interface are internationalized, the following Core
- * modules are used to translate it into different languages (machine names of
- * modules in parentheses):
- * - Language (language): Define which languages are active on the site.
- * - Interface Translation (locale): Translate UI text.
- * - Content Translation (content_translation): Translate content entities.
- * - Configuration Translation (config_translation): Translate configuration.
- *
- * The Interface Translation module deserves special mention, because besides
- * providing a UI for translating UI text, it also imports community
- * translations from the
- * @link https://localize.drupal.org Drupal translation server. @endlink If
- * UI text in Drupal Core and contributed modules, themes, and installation
- * profiles is properly internationalized (as described above), the text is
- * automatically added to the translation server for community members to
- * translate.
- *
- * @see transliteration
- * @}
- */
-
-/**
  * @defgroup cache Cache API
  * @{
  * Information about the Drupal Cache API
@@ -955,79 +615,6 @@
  *   method parameters should use this interface, not UserInterface.
  * - \Drupal\Core\Session\AccountProxyInterface: The interface for the
  *   current_user service (described above).
- * @}
- */
-
-/**
- * @defgroup theme_render Theme system and Render API
- * @{
- * Overview of the Theme system and Render API.
- *
- * The main purpose of Drupal's Theme system is to give themes complete control
- * over the appearance of the site, which includes the markup returned from HTTP
- * requests and the CSS files used to style that markup. In order to ensure that
- * a theme can completely customize the markup, module developers should avoid
- * directly writing HTML markup for pages, blocks, and other user-visible output
- * in their modules, and instead return structured "render arrays" (described
- * below). Doing this also increases usability, by ensuring that the markup used
- * for similar functionality on different areas of the site is the same, which
- * gives users fewer user interface patterns to learn.
- *
- * The core structure of the Render API is the render array, which is a
- * hierarchical associative array containing data to be rendered and properties
- * describing how the data should be rendered. A render array that is returned
- * by a function to specify markup to be sent to the web browser or other
- * services will eventually be rendered by a call to drupal_render(), which will
- * recurse through the render array hierarchy if appropriate, making calls into
- * the theme system to do the actual rendering. If a function or method actually
- * needs to return rendered output rather than a render array, the best practice
- * would be to create a render array, render it by calling drupal_render(), and
- * return that result, rather than writing the markup directly. See the
- * documentation of drupal_render() for more details of the rendering process.
- *
- * Each level in the hierarchy of a render array (including the outermost array)
- * has one or more array elements. Array elements whose names start with '#' are
- * known as "properties", and the array elements with other names are "children"
- * (constituting the next level of the hierarchy); the names of children are
- * flexible, while property names are specific to the Render API and the
- * particular type of data being rendered. A special case of render arrays is a
- * form array, which specifies the form elements for an HTML form; see the
- * @link form_api Form generation topic @endlink for more information on forms.
- *
- * Render arrays (at each level in the hierarchy) will usually have one of the
- * following three properties defined:
- * - #type: Specifies that the array contains data and options for a particular
- *   type of "render element" (examples: 'form', for an HTML form; 'textfield',
- *   'submit', and other HTML form element types; 'table', for a table with
- *   rows, columns, and headers). Modules define render elements by implementing
- *   hook_element_info(), which specifies the properties that are used in render
- *   arrays to provide the data and options, and default values for these
- *   properties. Look through implementations of hook_element_info() to discover
- *   what render elements are available.
- * - #theme: Specifies that the array contains data to be themed by a particular
- *   theme hook. Modules define theme hooks by implementing hook_theme(), which
- *   specifies the input "variables" used to provide data and options; if a
- *   hook_theme() implementation specifies variable 'foo', then in a render
- *   array, you would provide this data using property '#foo'. Modules
- *   implementing hook_theme() also need to provide a default implementation for
- *   each of their theme hooks, normally in a Twig file. For more information
- *   and to discover available theme hooks, see the documentation of
- *   hook_theme() and the
- *   @link themeable Default theme implementations topic. @endlink
- * - #markup: Specifies that the array provides HTML markup directly. Unless the
- *   markup is very simple, such as an explanation in a paragraph tag, it is
- *   normally preferable to use #theme or #type instead, so that the theme can
- *   customize the markup.
- *
- * For further information on the Theme and Render APIs, see:
- * - https://drupal.org/documentation/theme
- * - https://drupal.org/developing/modules/8
- * - https://drupal.org/node/722174
- * - https://drupal.org/node/933976
- * - https://drupal.org/node/930760
- *
- * @todo Check these links. Some are for Drupal 7, and might need updates for
- *   Drupal 8.
  * @}
  */
 
@@ -1559,6 +1146,265 @@
  * @see transliteration
  * @see validation
  * @}
+ */
+
+/**
+ * @defgroup hooks Hooks
+ * @{
+ * Define functions that alter the behavior of Drupal core.
+ *
+ * One way for modules to alter the core behavior of Drupal (or another module)
+ * is to use hooks. Hooks are specially-named functions that a module defines
+ * (this is known as "implementing the hook"), which are discovered and called
+ * at specific times to alter or add to the base behavior or data (this is
+ * known as "invoking the hook"). Each hook has a name (example:
+ * hook_batch_alter()), a defined set of parameters, and a defined return value.
+ * Your modules can implement hooks that are defined by Drupal core or other
+ * modules that they interact with. Your modules can also define their own
+ * hooks, in order to let other modules interact with them.
+ *
+ * To implement a hook:
+ * - Locate the documentation for the hook. Hooks are documented in *.api.php
+ *   files, by defining functions whose name starts with "hook_" (these
+ *   files and their functions are never loaded by Drupal -- they exist solely
+ *   for documentation). The function should have a documentation header, as
+ *   well as a sample function body. For example, in the core file
+ *   system.api.php, you can find hooks such as hook_batch_alter(). Also, if
+ *   you are viewing this documentation on an API reference site, the Core
+ *   hooks will be listed in this topic.
+ * - Copy the function to your module's .module file.
+ * - Change the name of the function, substituting your module's short name
+ *   (name of the module's directory, and .info.yml file without the extension)
+ *   for the "hook" part of the sample function name. For instance, to implemnt
+ *   hook_batch_alter(), you would rename it to my_module_batch_alter().
+ * - Edit the documentation for the function (normally, your implementation
+ *   should just have one line saying "Implements hook_batch_alter().").
+ * - Edit the body of the function, substituting in what you need your module
+ *   to do.
+ *
+ * To define a hook:
+ * - Choose a unique name for your hook. It should start with "hook_", followed
+ *   by your module's short name.
+ * - Provide documentation in a *.api.php file in your module's main
+ *   directory. See the "implementing" section above for details of what this
+ *   should contain (parameters, return value, and sample function body).
+ * - Invoke the hook in your module's code.
+ *
+ * To invoke a hook, use methods on
+ * \Drupal\Core\Extension\ModuleHandlerInterface such as alter(), invoke(),
+ * and invokeAll(). You can obtain a module handler by calling
+ * \Drupal::moduleHandler(), or getting the 'module_handler' service on an
+ * injected container.
+ *
+ * @see extending
+ * @see themeable
+ * @see callbacks
+ * @see \Drupal\Core\Extension\ModuleHandlerInterface
+ * @see \Drupal::moduleHandler()
+ *
+ * @}
+ */
+
+/**
+ * @defgroup callbacks Callbacks
+ * @{
+ * Callback function signatures.
+ *
+ * Drupal's API sometimes uses callback functions to allow you to define how
+ * some type of processing happens. A callback is a function with a defined
+ * signature, which you define in a module. Then you pass the function name as
+ * a parameter to a Drupal API function or return it as part of a hook
+ * implementation return value, and your function is called at an appropriate
+ * time. For instance, when setting up batch processing you might need to
+ * provide a callback function for each processing step and/or a callback for
+ * when processing is finished; you would do that by defining these functions
+ * and passing their names into the batch setup function.
+ *
+ * Callback function signatures, like hook definitions, are described by
+ * creating and documenting dummy functions in a *.api.php file; normally, the
+ * dummy callback function's name should start with "callback_", and you should
+ * document the parameters and return value and provide a sample function body.
+ * Then your API documentation can refer to this callback function in its
+ * documentation. A user of your API can usually name their callback function
+ * anything they want, although a standard name would be to replace "callback_"
+ * with the module name.
+ *
+ * @see hooks
+ * @see themeable
+ *
+ * @}
+ */
+
+/**
+ * @defgroup form_api Form generation
+ * @{
+ * Describes how to generate and manipulate forms and process form submissions.
+ *
+ * Drupal provides a Form API in order to achieve consistency in its form
+ * processing and presentation, while simplifying code and reducing the amount
+ * of HTML that must be explicitly generated by a module.
+ *
+ * @section generating_forms Creating forms
+ * Forms are defined as classes that implement the
+ * \Drupal\Core\Form\FormInterface and are built using the
+ * \Drupal\Core\Form\FormBuilder class. Drupal provides a couple of utility
+ * classes that can be extended as a starting point for most basic forms, the
+ * most commonly used of which is \Drupal\Core\Form\FormBase. FormBuilder
+ * handles the low level processing of forms such as rendering the necessary
+ * HTML, initial processing of incoming $_POST data, and delegating to your
+ * implementation of FormInterface for validation and processing of submitted
+ * data.
+ *
+ * Here is an example of a Form class:
+ * @code
+ * namespace Drupal\mymodule\Form;
+ *
+ * use Drupal\Core\Form\FormBase;
+ *
+ * class ExampleForm extends FormBase {
+ *   public function getFormId() {
+ *     // Unique ID of the form.
+ *     return 'example_form';
+ *   }
+ *
+ *   public function buildForm(array $form, array &$form_state) {
+ *     // Create a $form API array.
+ *     $form['phone_number'] = array(
+ *       '#type' => 'tel',
+ *       '#title' => $this->t('Your phone number')
+ *     );
+ *     return $form;
+ *   }
+ *
+ *   public function validateForm(array &$form, array &$form_state) {
+ *     // Validate submitted form data.
+ *   }
+ *
+ *   public function submitForm(array &$form, array &$form_state) {
+ *     // Handle submitted form data.
+ *   }
+ * }
+ * @endcode
+ *
+ * @section retrieving_forms Retrieving and displaying forms
+ * \Drupal::formBuilder()->getForm() should be used to handle retrieving,
+ * processing, and displaying a rendered HTML form. Given the ExampleForm
+ * defined above,
+ * \Drupal::formBuilder()->getForm('Drupal\mymodule\Form\ExampleForm') would
+ * return the rendered HTML of the form defined by ExampleForm::buildForm(), or
+ * call the validateForm() and submitForm(), methods depending on the current
+ * processing state.
+ *
+ * The argument to \Drupal::formBuilder()->getForm() is the name of a class that
+ * implements FormBuilderInterface. Any additional arguments passed to the
+ * getForm() method will be passed along as additional arguments to the
+ * ExampleForm::buildForm() method.
+ *
+ * For example:
+ * @code
+ * $extra = '612-123-4567';
+ * $form = \Drupal::formBuilder()->getForm('Drupal\mymodule\Form\ExampleForm', $extra);
+ * ...
+ * public function buildForm(array $form, array &$form_state, $extra = NULL)
+ *   $form['phone_number'] = array(
+ *     '#type' => 'tel',
+ *     '#title' => $this->t('Your phone number'),
+ *     '#value' => $extra,
+ *   );
+ *   return $form;
+ * }
+ * @endcode
+ *
+ * Alternatively, forms can be built directly via the routing system which will
+ * take care of calling \Drupal::formBuilder()->getForm(). The following example
+ * demonstrates the use of a routing.yml file to display a form at the the
+ * given route.
+ *
+ * @code
+ * example.form:
+ *   path: '/example-form'
+ *   defaults:
+ *     _title: 'Example form'
+ *     _form: '\Drupal\mymodule\Form\ExampleForm'
+ * @endcode
+ *
+ * The $form argument to form-related functions is a structured array containing
+ * the elements and properties of the form. For information on the array
+ * components and format, and more detailed explanations of the Form API
+ * workflow, see the
+ * @link forms_api_reference.html Form API reference @endlink
+ * and the
+ * @link https://drupal.org/node/2117411 Form API documentation section. @endlink
+ * In addition, there is a set of Form API tutorials in
+ * @link form_example_tutorial.inc the Form Example Tutorial @endlink which
+ * provide basics all the way up through multistep forms.
+ *
+ * In the form builder, validation, submission, and other form methods,
+ * $form_state is the primary influence on the processing of the form and is
+ * passed by reference to most methods, so they can use it to communicate with
+ * the form system and each other.
+ *
+ * See \Drupal\Core\Form\FormBuilder::buildForm() for documentation of
+ * $form_state keys.
+ */
+
+/**
+ * @} End of "defgroup form_api".
+ */
+
+/**
+ * @defgroup queue Queue operations
+ * @{
+ * Queue items to allow later processing.
+ *
+ * The queue system allows placing items in a queue and processing them later.
+ * The system tries to ensure that only one consumer can process an item.
+ *
+ * Before a queue can be used it needs to be created by
+ * Drupal\Core\Queue\QueueInterface::createQueue().
+ *
+ * Items can be added to the queue by passing an arbitrary data object to
+ * Drupal\Core\Queue\QueueInterface::createItem().
+ *
+ * To process an item, call Drupal\Core\Queue\QueueInterface::claimItem() and
+ * specify how long you want to have a lease for working on that item.
+ * When finished processing, the item needs to be deleted by calling
+ * Drupal\Core\Queue\QueueInterface::deleteItem(). If the consumer dies, the
+ * item will be made available again by the Drupal\Core\Queue\QueueInterface
+ * implementation once the lease expires. Another consumer will then be able to
+ * receive it when calling Drupal\Core\Queue\QueueInterface::claimItem().
+ * Due to this, the processing code should be aware that an item might be handed
+ * over for processing more than once.
+ *
+ * The $item object used by the Drupal\Core\Queue\QueueInterface can contain
+ * arbitrary metadata depending on the implementation. Systems using the
+ * interface should only rely on the data property which will contain the
+ * information passed to Drupal\Core\Queue\QueueInterface::createItem().
+ * The full queue item returned by Drupal\Core\Queue\QueueInterface::claimItem()
+ * needs to be passed to Drupal\Core\Queue\QueueInterface::deleteItem() once
+ * processing is completed.
+ *
+ * There are two kinds of queue backends available: reliable, which preserves
+ * the order of messages and guarantees that every item will be executed at
+ * least once. The non-reliable kind only does a best effort to preserve order
+ * in messages and to execute them at least once but there is a small chance
+ * that some items get lost. For example, some distributed back-ends like
+ * Amazon SQS will be managing jobs for a large set of producers and consumers
+ * where a strict FIFO ordering will likely not be preserved. Another example
+ * would be an in-memory queue backend which might lose items if it crashes.
+ * However, such a backend would be able to deal with significantly more writes
+ * than a reliable queue and for many tasks this is more important. See
+ * aggregator_cron() for an example of how to effectively utilize a
+ * non-reliable queue. Another example is doing Twitter statistics -- the small
+ * possibility of losing a few items is insignificant next to power of the
+ * queue being able to keep up with writes. As described in the processing
+ * section, regardless of the queue being reliable or not, the processing code
+ * should be aware that an item might be handed over for processing more than
+ * once (because the processing code might time out before it finishes).
+ */
+
+/**
+ * @} End of "defgroup queue".
  */
 
 /**

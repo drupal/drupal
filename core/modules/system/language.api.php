@@ -8,6 +8,85 @@
 use Drupal\Core\Language\LanguageInterface;
 
 /**
+ * @defgroup i18n Internationalization
+ * @{
+ * Internationalization and translation
+ *
+ * The principle of internationalization is that it should be possible to make a
+ * Drupal site in any language (or a multi-lingual site), where only content in
+ * the desired language is displayed for any particular page request. In order
+ * to make this happen, developers of modules, themes, and installation profiles
+ * need to make sure that all of the displayable content and user interface (UI)
+ * text that their project deals with is internationalized properly, so that it
+ * can be translated using the standard Drupal translation mechanisms.
+ *
+ * @section internationalization Internationalization
+ * Different @link info_types types of information in Drupal @endlink have
+ * different methods for internationalization, and different portions of the
+ * UI also have different methods for internationalization. Here is a list of
+ * the different mechanisms for internationalization, and some notes:
+ * - UI text is always put into code and related files in English.
+ * - Any time UI text is displayed using PHP code, it should be passed through
+ *   either the global t() function or a t() method on the class. If it
+ *   involves plurals, it should be passed through either the global
+ *   formatPlural() function or a formatPlural() method on the class. Use
+ *   \Drupal\Core\StringTranslation\StringTranslationTrait to get these methods
+ *   into a class.
+ * - Dates displayed in the UI should be passed through the 'date' service
+ *   class's format() method. Again see the Services topic; the method to
+ *   call is \Drupal\Core\Datetime\Date::format().
+ * - Some YML files contain UI text that is automatically translatable:
+ *   - *.routing.yml files: route titles. This also applies to
+ *     *.links.task.yml, *.links.action.yml, and *.links.contextual.yml files.
+ *   - *.info.yml files: module names and descriptions.
+ * - For configuration, make sure any configuration that is displayable to
+ *   users is marked as translatable in the configuration schema. Configuration
+ *   types label, text, and date_format are translatable; string is
+ *   non-translatable text. See the @link config_api Config API topic @endlink
+ *   for more information.
+ * - For annotation, make sure that any text that is displayable in the UI
+ *   is wrapped in \@Translation(). See the
+ *   @link plugin_translatable Plugin translatables topic @endlink for more
+ *   information.
+ * - Content entities are translatable if they have
+ *   @code
+ *   translatable = TRUE,
+ *   @endcode
+ *   in their annotation. The use of entities to store user-editable content to
+ *   be displayed in the site is highly recommended over creating your own
+ *   method for storing, retrieving, displaying, and internationalizing content.
+ * - For Twig templates, use 't' or 'trans' filters to indicate translatable
+ *   text. See https://www.drupal.org/node/2133321 for more information.
+ * - In JavaScript code, use the Drupal.t() and Drupal.formatPlural() functions
+ *   (defined in core/misc/drupal.js) to translate UI text.
+ * - If you are using a custom module, theme, etc. that is not hosted on
+ *   Drupal.org, see
+ *   @link interface_translation_properties Interface translation properties topic @endlink
+ *   for information on how to make sure your UI text is translatable.
+ *
+ * @section translation Translation
+ * Once your data and user interface are internationalized, the following Core
+ * modules are used to translate it into different languages (machine names of
+ * modules in parentheses):
+ * - Language (language): Define which languages are active on the site.
+ * - Interface Translation (locale): Translate UI text.
+ * - Content Translation (content_translation): Translate content entities.
+ * - Configuration Translation (config_translation): Translate configuration.
+ *
+ * The Interface Translation module deserves special mention, because besides
+ * providing a UI for translating UI text, it also imports community
+ * translations from the
+ * @link https://localize.drupal.org Drupal translation server. @endlink If
+ * UI text in Drupal Core and contributed modules, themes, and installation
+ * profiles is properly internationalized (as described above), the text is
+ * automatically added to the translation server for community members to
+ * translate.
+ *
+ * @see transliteration
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */
