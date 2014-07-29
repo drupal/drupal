@@ -2866,6 +2866,19 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
  * Note that you must use double quotes; single quotes will not work in
  * annotations.
  *
+ * Some annotation types, which extend the "@ PluginID" annotation class, have
+ * only a single 'id' key in their annotation. For these, it is possible to use
+ * a shorthand annotation. For example:
+ * @code
+ * * @ViewsArea("entity")
+ * @endcode
+ * in place of
+ * @code
+ * * @ViewsArea(
+ * *   id = "entity"
+ * *)
+ * @endcode
+ *
  * The available annotation classes are listed in this topic, and can be
  * identified when you are looking at the Drupal source code by having
  * "@ Annotation" in their documentation blocks (without the space after @). To
