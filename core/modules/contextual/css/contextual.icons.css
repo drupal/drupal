@@ -7,18 +7,18 @@
  * Toolbar tab icon.
  */
 .toolbar-bar .toolbar-icon-edit:before {
-  background-image: url("../../../misc/icons/bebebe/pencil.svg");
+  background-image: url(../../../misc/icons/bebebe/pencil.svg);
 }
 .toolbar-bar .toolbar-icon-edit:active:before,
 .toolbar-bar .toolbar-icon-edit.active:before {
-  background-image: url("../../../misc/icons/ffffff/pencil.svg");
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
 }
 
 /**
  * Contextual trigger.
  */
 .contextual .trigger {
-  background-image: url("../../../misc/icons/bebebe/pencil.svg");
+  background-image: url(../../../misc/icons/bebebe/pencil.svg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 16px 16px;
@@ -31,5 +31,5 @@
 
 .contextual .trigger:focus,
 .contextual .trigger:hover {
-  background-image: url("../../../misc/icons/787878/pencil.svg");
+  background-image: url(../../../misc/icons/787878/pencil.svg);
 }

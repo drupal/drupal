@@ -7,18 +7,18 @@
  * Toolbar tab icon.
  */
 .toolbar-bar .toolbar-icon-shortcut:before {
-  background-image: url("../../../misc/icons/bebebe/star.svg");
+  background-image: url(../../../misc/icons/bebebe/star.svg);
 }
 .toolbar-bar .toolbar-icon-shortcut:active:before,
 .toolbar-bar .toolbar-icon-shortcut.active:before {
-  background-image: url("../../../misc/icons/ffffff/star.svg");
+  background-image: url(../../../misc/icons/ffffff/star.svg);
 }
 
 /**
  * Add/remove links.
  */
 .add-or-remove-shortcuts .icon {
-  background: transparent url('../images/favstar.svg') no-repeat left top;
+  background: transparent url(../images/favstar.svg) no-repeat left top;
   width: 20px;
   height: 20px;
 }

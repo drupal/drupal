@@ -56,19 +56,19 @@
  * Images.
  */
 .quickedit .icon-close:before {
-  background-image: url('../../../misc/icons/787878/ex.svg');
+  background-image: url(../../../misc/icons/787878/ex.svg);
   height: 12px;
   top: 10px;
 }
 .quickedit .icon-close:hover:before,
 .quickedit .icon-close:active:before {
-  background-image: url('../../../misc/icons/000000/ex.svg');
+  background-image: url(../../../misc/icons/000000/ex.svg);
 }
 .quickedit .icon-throbber:before {
-  background-image: url("../images/icon-throbber.gif");
+  background-image: url(../images/icon-throbber.gif);
 }
 .quickedit .icon-pencil:before {
-  background-image: url('../../../misc/icons/5181c6/pencil.svg');
+  background-image: url(../../../misc/icons/5181c6/pencil.svg);
   background-position: left center;
   background-size: 1.3em;
 }

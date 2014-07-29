@@ -39,7 +39,7 @@
 .views-admin .icon,
 .views-admin .icon-text {
   background-attachment: scroll;
-  background-image: url("../images/sprites.png");
+  background-image: url(../images/sprites.png);
   background-position: left top; /* LTR */
   background-repeat: no-repeat;
 }
@@ -50,13 +50,13 @@
 
 .views-admin a.icon {
   background-image:
-    url("../images/sprites.png"),
+    url(../images/sprites.png),
     -moz-linear-gradient(
       -90deg,
       #fff 0,
       #e8e8e8 100%);
   background-image:
-    url("../images/sprites.png"),
+    url(../images/sprites.png),
     -webkit-gradient(
       linear,
       left top,
@@ -65,7 +65,7 @@
       color-stop(1.0, rgba(232, 232, 232, 1.0))
     );
   background-image:
-    url("../images/sprites.png"),
+    url(../images/sprites.png),
     -webkit-linear-gradient(
       -90deg,
       #fff 0,
@@ -1096,7 +1096,7 @@ td.group-title {
 
 .ajax-progress-throbber {
   background-color: #232323;
-  background-image: url("../images/loading-small.gif");
+  background-image: url(../images/loading-small.gif);
   background-position: center center;
   background-repeat: no-repeat;
   border-radius: 7px;
