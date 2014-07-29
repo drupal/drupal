@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Form\FormErrorInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
@@ -206,7 +207,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $access_plugin->alterRouteDefinition($route);
     // @todo Figure out whether _access_mode ANY is the proper one. This is
     //   particular important for altering routes.
-    $route->setOption('_access_mode', 'ANY');
+    $route->setOption('_access_mode', AccessManagerInterface::ACCESS_MODE_ANY);
 
     // Set the argument map, in order to support named parameters.
     $route->setOption('_view_argument_map', $argument_map);

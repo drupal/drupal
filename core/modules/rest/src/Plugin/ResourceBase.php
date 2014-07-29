@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Plugin;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -194,7 +195,7 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
       '_method' => $method,
       '_permission' => "restful $lower_method $this->pluginId",
     ), array(
-      '_access_mode' => 'ANY',
+      '_access_mode' => AccessManagerInterface::ACCESS_MODE_ANY,
     ));
     return $route;
   }

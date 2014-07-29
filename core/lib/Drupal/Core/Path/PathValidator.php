@@ -8,7 +8,7 @@
 namespace Drupal\Core\Path;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -45,7 +45,7 @@ class PathValidator implements PathValidatorInterface {
   /**
    * The access manager.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
@@ -65,12 +65,12 @@ class PathValidator implements PathValidatorInterface {
    *   The route provider.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account.
    */
-  public function __construct(RequestMatcherInterface $request_matcher, RouteProviderInterface $route_provider, RequestStack $request_stack, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(RequestMatcherInterface $request_matcher, RouteProviderInterface $route_provider, RequestStack $request_stack, AccessManagerInterface $access_manager, AccountInterface $account) {
     $this->requestMatcher = $request_matcher;
     $this->routeProvider = $route_provider;
     $this->requestStack = $request_stack;

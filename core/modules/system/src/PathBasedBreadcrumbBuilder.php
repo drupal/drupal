@@ -7,10 +7,10 @@
 
 namespace Drupal\system;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
-use Drupal\Core\Access\AccessManager;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -42,7 +42,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * The menu link access service.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
@@ -86,7 +86,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *
    * @param \Symfony\Component\Routing\RequestContext $context
    *   The router request context.
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The menu link access service.
    * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
    *   The dynamic router service.
@@ -99,7 +99,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user object.
    */
-  public function __construct(RequestContext $context, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user) {
+  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user) {
     $this->context = $context;
     $this->accessManager = $access_manager;
     $this->router = $router;

@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
@@ -20,7 +21,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Access\AccessManager;
 
 /**
  * Provides module installation interface.
@@ -96,7 +96,7 @@ class ModulesListForm extends FormBase {
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   Access manager.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
@@ -107,7 +107,7 @@ class ModulesListForm extends FormBase {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory, AccountInterface $current_user, RouteMatchInterface $route_match) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManagerInterface $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory, AccountInterface $current_user, RouteMatchInterface $route_match) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
     $this->accessManager = $access_manager;

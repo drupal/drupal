@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Access\DefaultAccessCheck;
@@ -229,7 +230,7 @@ class AccessManagerTest extends UnitTestCase {
   public function providerTestCheckConjunctions() {
     $access_configurations = array();
     $access_configurations[] = array(
-      'conjunction' => 'ALL',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_4',
       'condition_one' => AccessCheckInterface::ALLOW,
       'condition_two' => AccessCheckInterface::KILL,
@@ -243,7 +244,7 @@ class AccessManagerTest extends UnitTestCase {
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ALL',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_5',
       'condition_one' => AccessCheckInterface::ALLOW,
       'condition_two' => AccessCheckInterface::DENY,
@@ -257,7 +258,7 @@ class AccessManagerTest extends UnitTestCase {
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ALL',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_6',
       'condition_one' => AccessCheckInterface::KILL,
       'condition_two' => AccessCheckInterface::DENY,
@@ -271,7 +272,7 @@ class AccessManagerTest extends UnitTestCase {
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ALL',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_7',
       'condition_one' => AccessCheckInterface::ALLOW,
       'condition_two' => AccessCheckInterface::ALLOW,
@@ -285,7 +286,7 @@ class AccessManagerTest extends UnitTestCase {
       'expected' => TRUE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ALL',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_8',
       'condition_one' => AccessCheckInterface::KILL,
       'condition_two' => AccessCheckInterface::KILL,
@@ -299,7 +300,7 @@ class AccessManagerTest extends UnitTestCase {
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ALL',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ALL,
       'name' => 'test_route_9',
       'condition_one' => AccessCheckInterface::DENY,
       'condition_two' => AccessCheckInterface::DENY,
@@ -313,42 +314,42 @@ class AccessManagerTest extends UnitTestCase {
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ANY',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
       'name' => 'test_route_10',
       'condition_one' => AccessCheckInterface::ALLOW,
       'condition_two' => AccessCheckInterface::KILL,
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ANY',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
       'name' => 'test_route_11',
       'condition_one' => AccessCheckInterface::ALLOW,
       'condition_two' => AccessCheckInterface::DENY,
       'expected' => TRUE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ANY',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
       'name' => 'test_route_12',
       'condition_one' => AccessCheckInterface::KILL,
       'condition_two' => AccessCheckInterface::DENY,
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ANY',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
       'name' => 'test_route_13',
       'condition_one' => AccessCheckInterface::ALLOW,
       'condition_two' => AccessCheckInterface::ALLOW,
       'expected' => TRUE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ANY',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
       'name' => 'test_route_14',
       'condition_one' => AccessCheckInterface::KILL,
       'condition_two' => AccessCheckInterface::KILL,
       'expected' => FALSE,
     );
     $access_configurations[] = array(
-      'conjunction' => 'ANY',
+      'conjunction' => AccessManagerInterface::ACCESS_MODE_ANY,
       'name' => 'test_route_15',
       'condition_one' => AccessCheckInterface::DENY,
       'condition_two' => AccessCheckInterface::DENY,
@@ -609,16 +610,16 @@ class AccessManagerTest extends UnitTestCase {
    */
   public function providerCheckException() {
     return array(
-      array(array(), 'ALL'),
-      array(array(), 'ANY'),
-      array(array(1), 'ALL'),
-      array(array(1), 'ANY'),
-      array('string', 'ALL'),
-      array('string', 'ANY'),
-      array(0, 'ALL'),
-      array(0, 'ANY'),
-      array(1, 'ALL'),
-      array(1, 'ANY'),
+      array(array(), AccessManagerInterface::ACCESS_MODE_ALL),
+      array(array(), AccessManagerInterface::ACCESS_MODE_ANY),
+      array(array(1), AccessManagerInterface::ACCESS_MODE_ALL),
+      array(array(1), AccessManagerInterface::ACCESS_MODE_ANY),
+      array('string', AccessManagerInterface::ACCESS_MODE_ALL),
+      array('string', AccessManagerInterface::ACCESS_MODE_ANY),
+      array(0, AccessManagerInterface::ACCESS_MODE_ALL),
+      array(0, AccessManagerInterface::ACCESS_MODE_ANY),
+      array(1, AccessManagerInterface::ACCESS_MODE_ALL),
+      array(1, AccessManagerInterface::ACCESS_MODE_ANY),
     );
   }
 

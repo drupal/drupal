@@ -58,9 +58,9 @@ class CsrfAccessCheck implements RoutingAccessInterface {
 
     // Otherwise, this could be another requested access check that we don't
     // want to check CSRF tokens on.
-    $conjunction = $route->getOption('_access_mode') ?: 'ANY';
+    $conjunction = $route->getOption('_access_mode') ?: AccessManagerInterface::ACCESS_MODE_ANY;
     // Return ALLOW if all access checks are needed.
-    if ($conjunction == 'ALL') {
+    if ($conjunction == AccessManagerInterface::ACCESS_MODE_ALL) {
       return static::ALLOW;
     }
     // Return DENY otherwise, as another access checker should grant access

@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -31,20 +31,20 @@ class AccessSubscriber implements EventSubscriberInterface {
   /**
    * The access manager.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
   /**
    * Constructs a new AccessSubscriber.
    *
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access check manager that will be responsible for applying
    *   AccessCheckers against routes.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(AccessManager $access_manager, AccountInterface $current_user) {
+  public function __construct(AccessManagerInterface $access_manager, AccountInterface $current_user) {
     $this->accessManager = $access_manager;
     $this->currentUser = $current_user;
   }

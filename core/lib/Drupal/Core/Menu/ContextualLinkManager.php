@@ -8,7 +8,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -59,7 +59,7 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
   /**
    * The access manager.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
@@ -95,14 +95,14 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
    *   The cache backend.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account, RequestStack $request_stack) {
+  public function __construct(ControllerResolverInterface $controller_resolver, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, RequestStack $request_stack) {
     $this->discovery = new YamlDiscovery('links.contextual', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);

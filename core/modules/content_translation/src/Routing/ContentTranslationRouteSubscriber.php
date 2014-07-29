@@ -8,6 +8,7 @@
 namespace Drupal\content_translation\Routing;
 
 use Drupal\content_translation\ContentTranslationManagerInterface;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\Routing\Route;
@@ -63,7 +64,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_permission' => 'translate any entity',
         ),
         array(
-          '_access_mode' => 'ANY',
+          '_access_mode' => AccessManagerInterface::ACCESS_MODE_ANY,
           'parameters' => array(
             'entity' => array(
               'type' => 'entity:' . $entity_type_id,
@@ -92,7 +93,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_access_content_translation_manage' => 'create',
         ),
         array(
-          '_access_mode' => 'ANY',
+          '_access_mode' => AccessManagerInterface::ACCESS_MODE_ANY,
           'parameters' => array(
             'entity' => array(
               'type' => 'entity:' . $entity_type_id,
@@ -119,7 +120,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_access_content_translation_manage' => 'update',
         ),
         array(
-          '_access_mode' => 'ANY',
+          '_access_mode' => AccessManagerInterface::ACCESS_MODE_ANY,
           'parameters' => array(
             'entity' => array(
               'type' => 'entity:' . $entity_type_id,
@@ -154,7 +155,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
               'type' => 'entity:' . $entity_type_id,
             ),
           ),
-          '_access_mode' => 'ANY',
+          '_access_mode' => AccessManagerInterface::ACCESS_MODE_ANY,
           '_admin_route' => $is_admin,
         )
       );

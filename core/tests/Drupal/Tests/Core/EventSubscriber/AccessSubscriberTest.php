@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\EventSubscriber;
 
-use Drupal\Core\Access\AccessManager;
 use Drupal\Core\EventSubscriber\AccessSubscriber;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
@@ -46,7 +45,7 @@ class AccessSubscriberTest extends UnitTestCase {
   protected $route;
 
   /**
-   * @var Drupal\Core\Access\AccessManager|PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $accessManager;
 
@@ -81,9 +80,7 @@ class AccessSubscriberTest extends UnitTestCase {
       ->method('getRequest')
       ->will($this->returnValue($this->request));
 
-    $this->accessManager = $this->getMockBuilder('Drupal\Core\Access\AccessManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
 
     $this->currentUser = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')
       ->disableOriginalConstructor()

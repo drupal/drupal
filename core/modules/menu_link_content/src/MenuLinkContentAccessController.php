@@ -6,7 +6,7 @@
 
 namespace Drupal\menu_link_content;
 
-use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessController;
@@ -22,7 +22,7 @@ class MenuLinkContentAccessController extends EntityAccessController implements 
   /**
    * The access manager to check routes by name.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
@@ -31,10 +31,10 @@ class MenuLinkContentAccessController extends EntityAccessController implements 
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager to check routes by name.
    */
-  public function __construct(EntityTypeInterface $entity_type, AccessManager $access_manager) {
+  public function __construct(EntityTypeInterface $entity_type, AccessManagerInterface $access_manager) {
     parent::__construct($entity_type);
 
     $this->accessManager = $access_manager;

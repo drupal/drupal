@@ -8,7 +8,7 @@
 namespace Drupal\config_translation\Controller;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
-use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -36,7 +36,7 @@ class ConfigTranslationController extends ControllerBase {
   /**
    * The menu link access service.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
@@ -73,7 +73,7 @@ class ConfigTranslationController extends ControllerBase {
    *
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
    *   The configuration mapper manager.
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The menu link access service.
    * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
    *   The dynamic router service.
@@ -84,7 +84,7 @@ class ConfigTranslationController extends ControllerBase {
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(ConfigMapperManagerInterface $config_mapper_manager, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, AccountInterface $account, LanguageManagerInterface $language_manager) {
+  public function __construct(ConfigMapperManagerInterface $config_mapper_manager, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, AccountInterface $account, LanguageManagerInterface $language_manager) {
     $this->configMapperManager = $config_mapper_manager;
     $this->accessManager = $access_manager;
     $this->router = $router;

@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Access;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\CsrfAccessCheck;
@@ -89,7 +90,9 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * Tests the access() method with no _controller_request attribute set.
    *
-   * This will default to the 'ANY' access conjunction.
+   * This will default to the AccessManagerInterface::ACCESS_MODE_ANY access conjunction.
+   *
+   * @see Drupal\Core\Access\AccessManagerInterface::ACCESS_MODE_ANY
    */
   public function testAccessTokenMissAny() {
     $this->csrfToken->expects($this->never())
@@ -106,13 +109,15 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * Tests the access() method with no _controller_request attribute set.
    *
-   * This will use the 'ALL' access conjunction.
+   * This will use the AccessManagerInterface::ACCESS_MODE_ALL access conjunction.
+   *
+   * @see Drupal\Core\Access\AccessManagerInterface::ACCESS_MODE_ALL
    */
   public function testAccessTokenMissAll() {
     $this->csrfToken->expects($this->never())
       ->method('validate');
 
-    $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'), array('_access_mode' => 'ALL'));
+    $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'), array('_access_mode' => AccessManagerInterface::ACCESS_MODE_ALL));
     $request = new Request(array(
       'token' => 'test_query',
     ));

@@ -1508,7 +1508,7 @@ function system_get_module_admin_tasks($module, array $info) {
 
   // Append link for permissions.
   if (\Drupal::moduleHandler()->implementsHook($module, 'permission')) {
-    /** @var \Drupal\Core\Access\AccessManager $access_manager */
+    /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
     $access_manager = \Drupal::service('access_manager');
     /** @var \Drupal\menu_link\MenuLinkStorageInterface $menu_link_storage */
     $menu_link_storage = \Drupal::entityManager()

@@ -23,7 +23,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   /**
    * The mocked access manager.
    *
-   * @var \Drupal\Core\Access\AccessManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $accessManager;
 
@@ -61,8 +61,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this->accessManager = $this->getMockBuilder('\Drupal\Core\Access\AccessManager')
-      ->disableOriginalConstructor()->getMock();
+    $this->accessManager = $this->getMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->currentUser = $this->getMock('Drupal\Core\Session\AccountInterface');
 
     $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser);

@@ -79,7 +79,7 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * The mocked access manager.
    *
-   * @var \Drupal\Core\Access\AccessManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $accessManager;
 
@@ -96,9 +96,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->pluginDiscovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->accessManager = $this->getMockBuilder('Drupal\Core\Access\AccessManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
 
     $this->setupLocalTaskManager();
   }

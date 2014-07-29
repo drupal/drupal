@@ -79,9 +79,8 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($manager, $request_stack);
 
-    $accessManager = $this->getMockBuilder('Drupal\Core\Access\AccessManager')
-      ->disableOriginalConstructor()
-      ->getMock();    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'accessManager');
+    $accessManager = $this->getMock('Drupal\Core\Access\AccessManagerInterface');
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'accessManager');
     $property->setAccessible(TRUE);
     $property->setValue($manager, $accessManager);
 

@@ -27,7 +27,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *
  * @see \Drupal\Tests\Core\Access\AccessManagerTest
  */
-class AccessManager implements ContainerAwareInterface {
+class AccessManager implements ContainerAwareInterface, AccessManagerInterface {
 
   use ContainerAwareTrait;
 
@@ -124,15 +124,7 @@ class AccessManager implements ContainerAwareInterface {
   }
 
   /**
-   * Registers a new AccessCheck by service ID.
-   *
-   * @param string $service_id
-   *   The ID of the service in the Container that provides a check.
-   * @param string $service_method
-   *   The method to invoke on the service object for performing the check.
-   * @param array $applies_checks
-   *   (optional) An array of route requirement keys the checker service applies
-   *   to.
+   * {@inheritdoc}
    */
   public function addCheckService($service_id, $service_method, array $applies_checks = array()) {
     $this->checkIds[] = $service_id;
@@ -143,10 +135,7 @@ class AccessManager implements ContainerAwareInterface {
   }
 
   /**
-   * For each route, saves a list of applicable access checks to the route.
-   *
-   * @param \Symfony\Component\Routing\RouteCollection $routes
-   *   A collection of routes to apply checks to.
+   * {@inheritdoc}
    */
   public function setChecks(RouteCollection $routes) {
     $this->loadDynamicRequirementMap();
@@ -190,22 +179,7 @@ class AccessManager implements ContainerAwareInterface {
   }
 
   /**
-   * Checks a named route with parameters against applicable access check services.
-   *
-   * Determines whether the route is accessible or not.
-   *
-   * @param string $route_name
-   *   The route to check access to.
-   * @param array $parameters
-   *   Optional array of values to substitute into the route path patern.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The current user.
-   * @param \Symfony\Component\HttpFoundation\Request $route_request
-   *   Optional incoming request object. If not provided, one will be built
-   *   using the route information and the current request from the container.
-   *
-   * @return bool
-   *   Returns TRUE if the user has access to the route, otherwise FALSE.
+   * {@inheritdoc}
    */
   public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account, Request $route_request = NULL) {
     try {
@@ -228,25 +202,13 @@ class AccessManager implements ContainerAwareInterface {
   }
 
   /**
-   * Checks a route against applicable access check services.
-   *
-   * Determines whether the route is accessible or not.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to check access to.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The incoming request object.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The current account.
-   *
-   * @return bool
-   *   Returns TRUE if the user has access to the route, otherwise FALSE.
+   * {@inheritdoc}
    */
   public function check(Route $route, Request $request, AccountInterface $account) {
     $checks = $route->getOption('_access_checks') ?: array();
-    $conjunction = $route->getOption('_access_mode') ?: 'ALL';
+    $conjunction = $route->getOption('_access_mode') ?: static::ACCESS_MODE_ALL;
 
-    if ($conjunction == 'ALL') {
+    if ($conjunction == static::ACCESS_MODE_ALL) {
       return $this->checkAll($checks, $route, $request, $account);
     }
     else {
@@ -390,7 +352,7 @@ class AccessManager implements ContainerAwareInterface {
   /**
    * Compiles a mapping of requirement keys to access checker service IDs.
    */
-  public function loadDynamicRequirementMap() {
+  protected function loadDynamicRequirementMap() {
     if (isset($this->dynamicRequirementMap)) {
       return;
     }

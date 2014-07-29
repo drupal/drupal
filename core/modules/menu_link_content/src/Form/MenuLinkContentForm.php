@@ -8,7 +8,7 @@
 namespace Drupal\menu_link_content\Form;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -65,7 +65,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * The access manager.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
@@ -91,12 +91,12 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    *   The request context.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(EntityManagerInterface $entity_manager, MenuParentFormSelectorInterface $menu_parent_selector, AliasManagerInterface $alias_manager, ModuleHandlerInterface $module_handler, RequestContext $request_context, LanguageManagerInterface $language_manager, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(EntityManagerInterface $entity_manager, MenuParentFormSelectorInterface $menu_parent_selector, AliasManagerInterface $alias_manager, ModuleHandlerInterface $module_handler, RequestContext $request_context, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
     parent::__construct($entity_manager, $language_manager);
     $this->menuParentSelector = $menu_parent_selector;
     $this->pathAliasManager = $alias_manager;

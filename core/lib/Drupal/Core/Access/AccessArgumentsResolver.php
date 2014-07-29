@@ -51,8 +51,8 @@ class AccessArgumentsResolver implements AccessArgumentsResolverInterface {
     $parameter_type_hint = $parameter->getClass();
     $parameter_name = $parameter->getName();
 
-    // @todo Remove this once AccessManager::checkNamedRoute() is fixed to not
-    //   leak _raw_variables from the request being duplicated.
+    // @todo Remove this once AccessManagerInterface::checkNamedRoute() is fixed
+    //   to not leak _raw_variables from the request being duplicated.
     // @see https://drupal.org/node/2265939
     $raw_route_arguments += $upcasted_route_arguments;
 

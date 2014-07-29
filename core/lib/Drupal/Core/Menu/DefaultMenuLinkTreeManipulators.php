@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Menu;
 
-use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -24,7 +24,7 @@ class DefaultMenuLinkTreeManipulators {
   /**
    * The access manager.
    *
-   * @var \Drupal\Core\Access\AccessManager
+   * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
 
@@ -38,12 +38,12 @@ class DefaultMenuLinkTreeManipulators {
   /**
    * Constructs a \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators object.
    *
-   * @param \Drupal\Core\Access\AccessManager $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(AccessManagerInterface $access_manager, AccountInterface $account) {
     $this->accessManager = $access_manager;
     $this->account = $account;
   }
