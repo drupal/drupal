@@ -34,19 +34,31 @@
           var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
+        // Search over all rows and packages.
+        $rowsAndDetails.show();
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
           searching = true;
           $rows.each(showModuleRow);
 
+          // Note that we first open all <details> to be able to use ':visible'.
+          // Mark the <details> elements that were closed before filtering, so
+          // they can be reclosed when filtering is removed.
+          $details.not('[open]').attr('data-drupal-system-state', 'forced-open');
+
           // Hide the package <details> if they don't have any visible rows.
           // Note that we first show() all <details> to be able to use ':visible'.
-          $details.show().each(hidePackageDetails);
+          $details.attr('open', true).each(hidePackageDetails);
         }
         else if (searching) {
           searching = false;
           $rowsAndDetails.show();
+          // Return <details> elements that had been closed before filtering
+          // to a closed state.
+          $details.filter('[data-drupal-system-state="forced-open"]')
+            .removeAttr('data-drupal-system-state')
+            .attr('open', false);
         }
       }
 
