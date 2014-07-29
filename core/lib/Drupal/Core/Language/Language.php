@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Language;
 
+use Drupal\Component\Utility\SortArray;
+
 /**
  * An object containing the information for an interface language.
  *
@@ -217,7 +219,9 @@ class Language implements LanguageInterface {
    *   The array of language objects keyed by langcode.
    */
   public static function sort(&$languages) {
-    uasort($languages, 'Drupal\Component\Utility\SortArray::sortByWeightAndTitleKey');
+    uasort($languages, function ($a, $b) {
+      return SortArray::sortByWeightAndTitleKey($a, $b, 'weight', 'name');
+    });
   }
 
 }
