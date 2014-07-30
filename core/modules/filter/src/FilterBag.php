@@ -107,4 +107,26 @@ class FilterBag extends DefaultPluginBag {
     return parent::sortHelper($aID, $bID);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    $configuration = parent::getConfiguration();
+    // Remove configuration if it matches the defaults. In self::getAll(), we
+    // load all available filters, in addition to the enabled filters stored in
+    // configuration. In order to prevent those from bleeding through to the
+    // stored configuration, remove all filters that match the default values.
+    // Because filters are disabled by default, this will never remove the
+    // configuration of an enabled filter.
+    foreach ($configuration as $instance_id => $instance_config) {
+      $default_config = array();
+      $default_config['id'] = $instance_id;
+      $default_config += $this->get($instance_id)->defaultConfiguration();
+      if ($default_config === $instance_config) {
+        unset($configuration[$instance_id]);
+      }
+    }
+    return $configuration;
+  }
+
 }

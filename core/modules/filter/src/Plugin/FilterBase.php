@@ -107,7 +107,12 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array();
+    return array(
+      'provider' => $this->pluginDefinition['provider'],
+      'status' => FALSE,
+      'weight' => $this->pluginDefinition['weight'] ?: 0,
+      'settings' => $this->pluginDefinition['settings'],
+    );
   }
 
   /**

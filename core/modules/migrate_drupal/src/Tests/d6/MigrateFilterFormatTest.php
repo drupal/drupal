@@ -50,9 +50,9 @@ class MigrateFilterFormatTest extends MigrateDrupalTestBase {
     $this->assertTrue($filters['filter_html']['status']);
 
     // These should be false by default.
-    $this->assertFalse($filters['filter_html_escape']['status']);
-    $this->assertFalse($filters['filter_caption']['status']);
-    $this->assertFalse($filters['filter_html_image_secure']['status']);
+    $this->assertFalse(isset($filters['filter_html_escape']));
+    $this->assertFalse(isset($filters['filter_caption']));
+    $this->assertFalse(isset($filters['filter_html_image_secure']));
 
     // Check variables migrated into filter.
     $this->assertIdentical($filters['filter_html']['settings']['allowed_html'], '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>');
