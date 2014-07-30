@@ -1,6 +1,7 @@
-menu_ui_link_add:
-  route_name: menu_ui.link_add
+menu_ui.link_add:
+  route_name: menu_link_content.link_add
   title: 'Add link'
+  class: \Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd
   appears_on:
     - menu_ui.menu_edit
 

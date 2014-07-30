@@ -44,7 +44,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    * Tests that the settings UI works as expected.
    */
   function testSettingsUI() {
-    // Check for the content_translation_menu_link_defaults_alter() changes.
+    // Check for the content_translation_menu_links_discovered_alter() changes.
     $this->drupalGet('admin/config');
     $this->assertLink('Content language and translation');
     $this->assertText('Configure language and translation support for content.');

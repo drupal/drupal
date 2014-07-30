@@ -145,7 +145,7 @@ function seven_preprocess_block_content_add_list(&$variables) {
 function seven_preprocess_admin_block_content(&$variables) {
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $key => $item) {
-      $variables['content'][$key]['url'] = url($item['link_path']);
+      $variables['content'][$key]['url'] = $item['url']->toString();
     }
   }
 }

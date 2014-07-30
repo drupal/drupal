@@ -19,28 +19,58 @@ abstract class MenuWebTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu_ui');
+  public static $modules = array('menu_ui', 'menu_link_content');
 
   /**
    * Fetchs the menu item from the database and compares it to expected item.
    *
-   * @param int $mlid
+   * @param int $menu_plugin_id
    *   Menu item id.
-   * @param array $item
+   * @param array $expected_item
    *   Array containing properties to verify.
    */
-  function assertMenuLink($mlid, array $expected_item) {
+  function assertMenuLink($menu_plugin_id, array $expected_item) {
     // Retrieve menu link.
-    $item = entity_load('menu_link', $mlid);
-    $options = $item->options;
-    if (!empty($options['query'])) {
-      $item['link_path'] .= '?' . \Drupal::urlGenerator()->httpBuildQuery($options['query']);
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+    $menu_link_manager->resetDefinitions();
+    // Reset the static load cache.
+    \Drupal::entityManager()->getStorage('menu_link_content')->resetCache();
+    $definition = $menu_link_manager->getDefinition($menu_plugin_id);
+
+    $entity = NULL;
+
+    // Pull the path from the menu link content.
+    if (strpos($menu_plugin_id, 'menu_link_content') === 0) {
+      list(, $uuid) = explode(':', $menu_plugin_id, 2);
+      /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $entity */
+      $entity = \Drupal::entityManager()->loadEntityByUuid('menu_link_content', $uuid);
     }
-    if (!empty($options['fragment'])) {
-      $item['link_path'] .= '#' . $options['fragment'];
+
+    if (isset($expected_item['children'])) {
+      $child_ids = array_values($menu_link_manager->getChildIds($menu_plugin_id));
+      sort($expected_item['children']);
+      if ($child_ids) {
+        sort($child_ids);
+      }
+      $this->assertEqual($expected_item['children'], $child_ids);
+      unset($expected_item['children']);
     }
+
+    if (isset($expected_item['parents'])) {
+      $parent_ids = array_values($menu_link_manager->getParentIds($menu_plugin_id));
+      $this->assertEqual($expected_item['parents'], $parent_ids);
+      unset($expected_item['parents']);
+    }
+
+    if (isset($expected_item['langcode']) && $entity) {
+      $this->assertEqual($entity->langcode->value, $expected_item['langcode']);
+      unset($expected_item['langcode']);
+    }
+
     foreach ($expected_item as $key => $value) {
-      $this->assertEqual($item[$key], $value);
+      $this->assertTrue(isset($definition[$key]));
+      $this->assertEqual($definition[$key], $value);
     }
   }
 

@@ -144,13 +144,6 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, array &$form_state) {
-    return $this->buildEditForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildEditForm(array &$form, array &$form_state) {
     $this->setOperation('default');
     $this->init($form_state);
 
@@ -167,26 +160,10 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
   /**
    * {@inheritdoc}
    */
-  public function validateEditForm(array &$form, array &$form_state) {
-    $this->doValidate($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitConfigurationForm(array &$form, array &$form_state) {
-    return $this->submitEditForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitEditForm(array &$form, array &$form_state) {
     // Remove button and internal Form API values from submitted values.
-    form_state_values_clean($form_state);
-    $this->entity = $this->buildEntity($form, $form_state);
-    $this->entity->save();
-    return $form_state;
+    parent::submit($form, $form_state);
+    $this->save($form, $form_state);
   }
 
   /**
@@ -234,7 +211,7 @@ class MenuLinkContentForm extends ContentEntityForm implements MenuLinkFormInter
    */
   public function extractFormValues(array &$form, array &$form_state) {
     $new_definition = array();
-    $new_definition['expanded'] = !empty($form_state['values']['expanded']) ? 1 : 0;
+    $new_definition['expanded'] = !empty($form_state['values']['expanded']['value']) ? 1 : 0;
     $new_definition['hidden'] = empty($form_state['values']['enabled']) ? 1 : 0;
     list($menu_name, $parent) = explode(':', $form_state['values']['menu_parent'], 2);
     if (!empty($menu_name)) {

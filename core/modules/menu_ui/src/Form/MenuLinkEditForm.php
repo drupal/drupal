@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkEditForm extends FormBase {
 
   /**
-   * The class resolver
+   * The class resolver.
    *
    * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
    */
