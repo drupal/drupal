@@ -1,7 +1,0 @@
-services:
-  menu_link.tree:
-    class: Drupal\menu_link\MenuTree
-    arguments: ['@database', '@cache.data', '@language_manager', '@request_stack', '@entity.manager', '@entity.query', '@state']
-  menu_link.static:
-    class: Drupal\menu_link\StaticMenuLinks
-    arguments: ['@module_handler']
