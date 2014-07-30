@@ -435,10 +435,10 @@ abstract class DrupalTestCase {
   }
 
   /**
-   * Logs verbose message in a text file.
+   * Logs a verbose message in a text file.
    *
-   * The a link to the vebose message will be placed in the test results via
-   * as a passing assertion with the text '[verbose message]'.
+   * The link to the verbose message will be placed in the test results as a
+   * passing assertion with the text '[verbose message]'.
    *
    * @param $message
    *   The verbose message to be stored.
