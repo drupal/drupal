@@ -36,7 +36,7 @@ class UserAdminLanguageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'language');
+  public static $modules = array('user', 'language', 'language_test');
 
   public function setUp() {
     parent::setUp();
@@ -106,16 +106,59 @@ class UserAdminLanguageTest extends WebTestBase {
   }
 
   /**
+   * Tests the actual language negotiation.
+   */
+  function testActualNegotiation() {
+    $this->drupalLogin($this->adminUser);
+    $this->addCustomLanguage();
+    $this->setLanguageNegotiation();
+
+    // Even though we have admin language negotiation, so long as the user has
+    // no preference set, negotiation will fall back further.
+    $path = 'user/' . $this->adminUser->id() . '/edit';
+    $this->drupalGet($path);
+    $this->assertText('Language negotiation method: language-default');
+
+    // Set a preferred language code for the user.
+    $path = 'user/' . $this->adminUser->id() . '/edit';
+    $edit = array();
+    $edit['preferred_admin_langcode'] = 'xx';
+    $this->drupalPostForm($path, $edit, t('Save'));
+
+    // Test negotiation with the URL method first. The admin method will only
+    // be used if the URL method did not match.
+    $path = 'user/' . $this->adminUser->id() . '/edit';
+    $this->drupalGet($path);
+    $this->assertText('Language negotiation method: language-user-admin');
+    $path = 'xx/user/' . $this->adminUser->id() . '/edit';
+    $this->drupalGet($path);
+    $this->assertText('Language negotiation method: language-url');
+
+    // Test negotiation with the admin language method first. The admin method
+    // will be used at all times.
+    $this->setLanguageNegotiation(TRUE);
+    $path = 'user/' . $this->adminUser->id() . '/edit';
+    $this->drupalGet($path);
+    $this->assertText('Language negotiation method: language-user-admin');
+    $path = 'xx/user/' . $this->adminUser->id() . '/edit';
+    $this->drupalGet($path);
+    $this->assertText('Language negotiation method: language-user-admin');
+  }
+
+  /**
    * Sets the User interface negotiation detection method.
+   *
+   * @param bool $admin_first
+   *   Whether the admin negotiation should be first.
    *
    * Enables the "Account preference for administration pages" language
    * detection method for the User interface language negotiation type.
    */
-  function setLanguageNegotiation() {
+  function setLanguageNegotiation($admin_first = FALSE) {
     $edit = array(
       'language_interface[enabled][language-user-admin]' => TRUE,
       'language_interface[enabled][language-url]' => TRUE,
-      'language_interface[weight][language-user-admin]' => -8,
+      'language_interface[weight][language-user-admin]' => ($admin_first ? -12 : -8),
       'language_interface[weight][language-url]' => -10,
     );
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));

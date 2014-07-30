@@ -7,12 +7,14 @@
 
 namespace Drupal\user\Plugin\LanguageNegotiation;
 
+use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 /**
@@ -51,16 +53,26 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   protected $router;
 
   /**
+   * The path processor manager.
+   *
+   * @var \Drupal\Core\PathProcessor\PathProcessorManager
+   */
+  protected $pathProcessorManager;
+
+  /**
    * Constructs a new LanguageNegotiationUserAdmin instance.
    *
    * @param \Drupal\Core\Routing\AdminContext $admin_context
    *   The admin context.
    * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $router
    *   The router.
+   * @param \Drupal\Core\PathProcessor\PathProcessorManager $path_processor_manager
+   *   The path processor manager.
    */
-  public function __construct(AdminContext $admin_context, UrlMatcherInterface $router) {
+  public function __construct(AdminContext $admin_context, UrlMatcherInterface $router, PathProcessorManager $path_processor_manager) {
     $this->adminContext = $admin_context;
     $this->router = $router;
+    $this->pathProcessorManager = $path_processor_manager;
   }
 
   /**
@@ -69,7 +81,8 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $container->get('router.admin_context'),
-      $container->get('router')
+      $container->get('router'),
+      $container->get('path_processor_manager')
     );
   }
 
@@ -105,10 +118,20 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   public function isAdminPath(Request $request) {
     $result = FALSE;
     if ($request && $this->adminContext) {
-      // If called from an event subscriber, the request may not the route info
-      // yet, so use the router to look up the path first.
+      // If called from an event subscriber, the request may not have the route
+      // object yet (it is still being built), so use the router to look up
+      // based on the path.
       if (!$route_object = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
-        $attributes = $this->router->match('/' . urldecode(trim($request->getPathInfo(), '/')));
+        try {
+          // Process the path as an inbound path. This will remove any language
+          // prefixes and other path components that inbound processing would
+          // clear out, so we can attempt to load the route clearly.
+          $path = $this->pathProcessorManager->processInbound(urldecode(trim($request->getPathInfo(), '/')), $request);
+          $attributes = $this->router->match('/' . $path);
+        }
+        catch (ResourceNotFoundException $e) {
+          return FALSE;
+        }
         $route_object = $attributes[RouteObjectInterface::ROUTE_OBJECT];
       }
       $result = $this->adminContext->isAdminRoute($route_object);
