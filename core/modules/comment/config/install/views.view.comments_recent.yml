@@ -3,6 +3,7 @@ status: true
 dependencies:
   module:
     - comment
+    - block
 id: comments_recent
 label: 'Recent comments'
 module: views
@@ -231,6 +232,7 @@ display:
       field_langcode: '***CURRENT_LANGUAGE***'
       field_langcode_add_to_query: null
   block_1:
+    provider: block
     display_plugin: block
     id: block_1
     display_title: Block

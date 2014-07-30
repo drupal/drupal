@@ -30,6 +30,10 @@ display:
     id: block_1
     display_title: Block
     position: 1
+    provider: block
 label: ''
 id: test_display_invalid
 tag: ''
+dependencies:
+  module:
+    - block

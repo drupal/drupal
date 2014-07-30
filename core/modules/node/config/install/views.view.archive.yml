@@ -140,6 +140,7 @@ display:
     display_title: Block
     display_plugin: block
     position: 1
+    provider: block
     display_options:
       query:
         type: views_query
@@ -173,3 +174,5 @@ langcode: en
 dependencies:
   module:
     - node
+    - block
+

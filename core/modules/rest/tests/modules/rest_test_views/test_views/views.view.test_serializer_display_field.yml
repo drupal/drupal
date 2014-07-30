@@ -68,6 +68,7 @@ display:
     id: rest_export_1
     display_title: serializer
     position: null
+    provider: rest
     display_options:
       defaults:
         access: false
@@ -85,6 +86,7 @@ display:
     id: rest_export_2
     display_title: 'serialize - access denied'
     position: null
+    provider: rest
     display_options:
       defaults:
         access: false
@@ -103,3 +105,6 @@ base_field: id
 status: true
 module: rest
 langcode: und
+dependencies:
+  module:
+    - rest

@@ -34,6 +34,7 @@ display:
           provider: views_test_data
       title: test_view_block2
   block_1:
+    provider: block
     display_plugin: block
     id: block_1
     display_title: Block
@@ -43,6 +44,7 @@ display:
         title:
           link_to_node: true
   block_2:
+    provider: block
     display_plugin: block
     id: block_2
     display_title: Block
@@ -52,6 +54,7 @@ display:
         title:
           link_to_node: true
   block_3:
+    provider: block
     display_plugin: block
     id: block_3
     display_title: Block
@@ -65,3 +68,6 @@ label: test_view_block2
 module: views
 id: test_view_block2
 tag: ''
+dependencies:
+  module:
+    - block

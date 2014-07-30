@@ -162,6 +162,7 @@ display:
     id: block_1
     display_title: 'Who''s new'
     position: 1
+    provider: block
     display_options:
       display_description: 'A list of new users'
       block_description: 'Who''s new'
@@ -174,3 +175,4 @@ langcode: en
 dependencies:
   module:
     - user
+    - block

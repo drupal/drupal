@@ -38,6 +38,7 @@ display:
     id: block_1
     display_title: Block
     position: null
+    provider: block
     display_options:
       field:
         title:
@@ -46,3 +47,6 @@ label: test_view_block
 module: views
 id: test_view_block
 tag: ''
+dependencies:
+  module:
+    - block

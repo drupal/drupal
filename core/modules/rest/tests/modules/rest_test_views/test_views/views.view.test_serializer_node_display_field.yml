@@ -102,6 +102,7 @@ display:
     id: rest_export_1
     display_title: serializer
     position: null
+    provider: rest
     display_options:
       defaults:
         access: false
@@ -118,3 +119,6 @@ base_field: nid
 status: true
 module: rest_test_views
 langcode: und
+dependencies:
+  module:
+    - rest

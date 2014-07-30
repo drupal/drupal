@@ -9,6 +9,7 @@ display:
     id: entity_reference_1
     display_title: EntityReference
     position: null
+    provider: entity_reference
     display_options:
       style:
         type: entity_reference
@@ -116,3 +117,6 @@ module: entity_reference_test
 id: test_entity_reference
 tag: ''
 langcode: en
+dependencies:
+  module:
+    - entity_reference
