@@ -561,13 +561,13 @@
  * or user ID, so that site administrators can set up user accounts and roles
  * appropriately for their particular sites.
  *
- * @sec sec_define Defining permissions
+ * @section sec_define Defining permissions
  * Modules define permissions by implementing hook_permission(). The return
  * value defines machine names, human-readable names, and optionally
  * descriptions for each permission type. The machine names are the canonical
  * way to refer to permissions for access checking.
  *
- * @sec sec_access Access permission checking
+ * @section sec_access Access permission checking
  * Depending on the situation, there are several methods for ensuring that
  * access checks are done properly in Drupal:
  * - Routes: When you register a route, include a 'requirements' section that
@@ -594,7 +594,7 @@
  *   injected into the form base class as method
  *   \Drupal\Core\Form\FormBase::currentUser().
  *
- * @sec sec_entities User and role objects
+ * @section sec_entities User and role objects
  * User objects in Drupal are entity items, implementing
  * \Drupal\user\UserInterface. Role objects in Drupal are also entity items,
  * implementing \Drupal\user\RoleInterface. See the
@@ -1050,7 +1050,7 @@
  * \Drupal\system\Plugin\Derivative\SystemMenuBlock (derivative class) are a
  * good example to look at.
  *
- * @sec sec_use Performing tasks involving plugins
+ * @section sec_use Performing tasks involving plugins
  * Here are the steps to follow to perform a task that involves plugins:
  * - Locate the machine name of the plugin manager service, and instantiate the
  *   service. See the @link container Services topic @endlink for more
