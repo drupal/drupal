@@ -21,37 +21,30 @@ menu_ui.parent_options_js:
   requirements:
     _permission: 'administer menu'
 
-menu_ui.link_add:
-  path: '/admin/structure/menu/manage/{menu}/add'
-  defaults:
-    _content: '\Drupal\menu_ui\Controller\MenuController::addLink'
-    _title: 'Add menu link'
-  requirements:
-    _entity_create_access: 'menu_link'
-
 menu_ui.link_edit:
-  path: '/admin/structure/menu/item/{menu_link}/edit'
+  path: '/admin/structure/menu/link/{menu_link_plugin}/edit'
   defaults:
-    _entity_form: 'menu_link'
+    _form: 'Drupal\menu_ui\Form\MenuLinkEditForm'
     _title: 'Edit menu link'
+  options:
+    parameters:
+      menu_link_plugin:
+        type: menu_link_plugin
   requirements:
-    _entity_access: 'menu_link.update'
+    _permission: 'administer menu'
 
 menu_ui.link_reset:
-  path: '/admin/structure/menu/item/{menu_link}/reset'
+  path: '/admin/structure/menu/link/{menu_link_plugin}/reset'
   defaults:
-    _entity_form: 'menu_link.reset'
+    _form: 'Drupal\menu_ui\Form\MenuLinkResetForm'
     _title: 'Reset menu link'
+  options:
+    parameters:
+      menu_link_plugin:
+        type: menu_link_plugin
   requirements:
-    _entity_access: 'menu_link.reset'
-
-menu_ui.link_delete:
-  path: '/admin/structure/menu/item/{menu_link}/delete'
-  defaults:
-    _entity_form: 'menu_link.delete'
-    _title: 'Delete menu link'
-  requirements:
-    _entity_access: 'menu_link.delete'
+    _permission: 'administer menu'
+    _custom_access: '\Drupal\menu_ui\Form\MenuLinkResetForm::linkIsResettable'
 
 menu_ui.menu_add:
   path: '/admin/structure/menu/add'

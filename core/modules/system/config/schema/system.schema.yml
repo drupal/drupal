@@ -168,17 +168,6 @@ system.logging:
       type: string
       label: 'Error messages to display'
 
-system.menu:
-  type: mapping
-  label: 'Menu settings'
-  mapping:
-    active_menus_default:
-      type: sequence
-      label: 'Active menus'
-      sequence:
-        - type: string
-          label: 'Menu'
-
 system.performance:
   type: mapping
   label: 'Performance settings'

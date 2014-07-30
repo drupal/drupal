@@ -12,6 +12,8 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Menu\MenuLinkTreeInterface;
+use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Theme\ThemeAccessCheck;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,6 +59,13 @@ class SystemController extends ControllerBase {
   protected $themeHandler;
 
   /**
+   * The menu link tree service.
+   *
+   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
+   */
+  protected $menuLinkTree;
+
+  /**
    * Constructs a new SystemController.
    *
    * @param \Drupal\system\SystemManager $systemManager
@@ -69,13 +78,16 @@ class SystemController extends ControllerBase {
    *   The form builder.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface
+   *   The menu link tree service.
    */
-  public function __construct(SystemManager $systemManager, QueryFactory $queryFactory, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, ThemeHandlerInterface $theme_handler) {
+  public function __construct(SystemManager $systemManager, QueryFactory $queryFactory, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, ThemeHandlerInterface $theme_handler, MenuLinkTreeInterface $menu_link_tree) {
     $this->systemManager = $systemManager;
     $this->queryFactory = $queryFactory;
     $this->themeAccess = $theme_access;
     $this->formBuilder = $form_builder;
     $this->themeHandler = $theme_handler;
+    $this->menuLinkTree = $menu_link_tree;
   }
 
   /**
@@ -87,66 +99,49 @@ class SystemController extends ControllerBase {
       $container->get('entity.query'),
       $container->get('access_check.theme'),
       $container->get('form_builder'),
-      $container->get('theme_handler')
+      $container->get('theme_handler'),
+      $container->get('menu.link_tree')
     );
   }
 
   /**
    * Provide the administration overview page.
    *
-   * @param string $path
-   *   The administrative path for which to display child links.
+   * @param string $link_id
+   *   The ID of the administrative path link for which to display child links.
    *
    * @return array
    *   A renderable array of the administration overview page.
    */
-  public function overview($path) {
+  public function overview($link_id) {
     // Check for status report errors.
     if ($this->systemManager->checkRequirements() && $this->currentUser()->hasPermission('administer site configuration')) {
       drupal_set_message($this->t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
     }
+    // Load all menu links below it.
+    $parameters = new MenuTreeParameters();
+    $parameters->setRoot($link_id)->excludeRoot()->setTopLevelOnly()->excludeHiddenLinks();
+    $tree = $this->menuLinkTree->load(NULL, $parameters);
+    $manipulators = array(
+      array('callable' => 'menu.default_tree_manipulators:checkAccess'),
+      array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
+    );
+    $tree = $this->menuLinkTree->transform($tree, $manipulators);
     $blocks = array();
-    // Load all links on $path and menu links below it.
-    $query = $this->queryFactory->get('menu_link')
-      ->condition('link_path', $path)
-      ->condition('module', 'system');
-    $result = $query->execute();
-    $menu_link_storage = $this->entityManager()->getStorage('menu_link');
-    if ($system_link = $menu_link_storage->loadMultiple($result)) {
-      $system_link = reset($system_link);
-      $query = $this->queryFactory->get('menu_link')
-        ->condition('link_path', 'admin/help', '<>')
-        ->condition('menu_name', $system_link->menu_name)
-        ->condition('plid', $system_link->id())
-        ->condition('hidden', 0);
-      $result = $query->execute();
-      if (!empty($result)) {
-        $menu_links = $menu_link_storage->loadMultiple($result);
-        foreach ($menu_links as $item) {
-          _menu_link_translate($item);
-          if (!$item['access']) {
-            continue;
-          }
-          // The link description, either derived from 'description' in hook_menu()
-          // or customized via Menu UI module is used as title attribute.
-          if (!empty($item['localized_options']['attributes']['title'])) {
-            $item['description'] = $item['localized_options']['attributes']['title'];
-            unset($item['localized_options']['attributes']['title']);
-          }
-          $block = $item;
-          $block['content'] = array(
-            '#theme' => 'admin_block_content',
-            '#content' => $this->systemManager->getAdminBlock($item),
-          );
+    foreach ($tree as $key => $element) {
+      $link = $element->link;
+      $block['title'] = $link->getTitle();
+      $block['description'] = $link->getDescription();
+      $block['content'] = array(
+        '#theme' => 'admin_block_content',
+        '#content' => $this->systemManager->getAdminBlock($link),
+      );
 
-          if (!empty($block['content']['#content'])) {
-            // Prepare for sorting as in function _menu_tree_check_access().
-            // The weight is offset so it is always positive, with a uniform 5-digits.
-            $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
-          }
-        }
+      if (!empty($block['content']['#content'])) {
+        $blocks[$key] = $block;
       }
     }
+
     if ($blocks) {
       ksort($blocks);
       return array(

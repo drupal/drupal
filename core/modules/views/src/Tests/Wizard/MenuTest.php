@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Wizard;
 
+use Drupal\Component\Utility\String;
+
 /**
  * Tests the ability of the views wizard to put views in a menu.
  *
@@ -39,15 +41,14 @@ class MenuTest extends WizardTestBase {
     $this->assertLinkByHref(url($view['page[path]']));
 
     // Make sure the link is associated with the main menu.
-    $links = menu_load_links('main');
-    $found = FALSE;
-    foreach ($links as $link) {
-      if ($link['link_path'] == $view['page[path]']) {
-        $found = TRUE;
-        break;
-      }
-    }
-    $this->assertTrue($found, t('Found a link to %path in the main menu', array('%path' => $view['page[path]'])));
+    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+    /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
+    $link = $menu_link_manager->createInstance('views_view:views.' . $view['id'] . '.page_1');
+    $url = $link->getUrlObject();
+    $this->assertEqual($url->getRouteName(), 'view.' . $view['id'] . '.page_1', String::format('Found a link to %path in the main menu', array('%path' => $view['page[path]'])));
+    $metadata = $link->getMetaData();
+    $this->assertEqual(array('view_id' => $view['id'], 'display_id' => 'page_1'), $metadata);
   }
 
 }

@@ -280,7 +280,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   /**
    * {@inheritdoc}
    */
-  public function executeHookMenuLinkDefaults(array &$existing_links) {
+  public function getMenuLinks() {
     $links = array();
 
     // Replace % with the link to our standard views argument loader
@@ -300,7 +300,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $view_route_names = $this->state->get('views.view_route_names') ?: array();
 
     $path = implode('/', $bits);
-    $menu_link_id = 'views.' . str_replace('/', '.', $path);
+    $view_id = $this->view->storage->id();
+    $display_id = $this->display['id'];
+    $view_id_display =  "{$view_id}.{$display_id}";
+    $menu_link_id = 'views.' . str_replace('/', '.', $view_id_display);
 
     if ($path) {
       $menu = $this->getOption('menu');
@@ -308,12 +311,11 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $links[$menu_link_id] = array();
         // Some views might override existing paths, so we have to set the route
         // name based upon the altering.
-        $view_id_display =  "{$this->view->storage->id()}.{$this->display['id']}";
         $links[$menu_link_id] = array(
           'route_name' => isset($view_route_names[$view_id_display]) ? $view_route_names[$view_id_display] : "view.$view_id_display",
           // Identify URL embedded arguments and correlate them to a handler.
           'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
-          'machine_name' => $menu_link_id,
+          'id' => $menu_link_id,
         );
         $links[$menu_link_id]['title'] = $menu['title'];
         $links[$menu_link_id]['description'] = $menu['description'];
@@ -324,6 +326,11 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
         // Insert item into the proper menu.
         $links[$menu_link_id]['menu_name'] = $menu['name'];
+        // Keep track of where we came from.
+        $links[$menu_link_id]['metadata'] = array(
+          'view_id' => $view_id,
+          'display_id' => $display_id,
+        );
       }
     }
 

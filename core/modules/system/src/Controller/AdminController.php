@@ -36,7 +36,7 @@ class AdminController extends ControllerBase {
         // Sort links by title.
         uasort($admin_tasks, array('\Drupal\Component\Utility\SortArray', 'sortByTitleElement'));
         // Move 'Configure permissions' links to the bottom of each section.
-        $permission_key = "user.admin.people.permissions.$module";
+        $permission_key = "user.admin_permissions.$module";
         if (isset($admin_tasks[$permission_key])) {
           $permission_task = $admin_tasks[$permission_key];
           unset($admin_tasks[$permission_key]);

@@ -9,7 +9,9 @@ namespace Drupal\menu_ui\Controller;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\system\MenuInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,6 +19,30 @@ use Symfony\Component\HttpFoundation\Request;
  * Returns responses for Menu routes.
  */
 class MenuController extends ControllerBase {
+
+  /**
+   * The menu parent form service.
+   *
+   * @var \Drupal\Core\Menu\MenuParentFormSelectorInterface
+   */
+  protected $menuParentSelector;
+
+  /**
+   * Creates a new MenuController object.
+   *
+   * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_form
+   *   The menu parent form service.
+   */
+  public function __construct(MenuParentFormSelectorInterface $menu_parent_form) {
+    $this->menuParentSelector = $menu_parent_form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('menu.parent_form_selector'));
+  }
 
   /**
    * Gets all the available menus and menu items as a JavaScript array.
@@ -34,27 +60,9 @@ class MenuController extends ControllerBase {
         $available_menus[$menu] = $menu;
       }
     }
-    $options = _menu_ui_get_options(menu_ui_get_menus(), $available_menus, array('mlid' => 0));
+    $options = $this->menuParentSelector->getParentSelectOptions('', $available_menus);
 
     return new JsonResponse($options);
-  }
-
-  /**
-   * Provides the menu link submission form.
-   *
-   * @param \Drupal\system\MenuInterface $menu
-   *   An entity representing a custom menu.
-   *
-   * @return array
-   *   Returns the menu link submission form.
-   */
-  public function addLink(MenuInterface $menu) {
-    $menu_link = $this->entityManager()->getStorage('menu_link')->create(array(
-      'mlid' => 0,
-      'plid' => 0,
-      'menu_name' => $menu->id(),
-    ));
-    return $this->entityFormBuilder()->getForm($menu_link);
   }
 
   /**
