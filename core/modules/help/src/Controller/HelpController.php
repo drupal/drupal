@@ -125,7 +125,8 @@ class HelpController extends ControllerBase {
       if (!empty($admin_tasks)) {
         $links = array();
         foreach ($admin_tasks as $task) {
-          $link = $task['url']->toArray();
+          $link = $task['localized_options'];
+          $link['href'] = $task['link_path'];
           $link['title'] = $task['title'];
           $links[] = $link;
         }

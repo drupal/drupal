@@ -277,7 +277,7 @@ services:
     arguments: ['@menu.tree_storage', '@menu_link.static.overrides', '@module_handler']
   menu.link_tree:
     class: Drupal\Core\Menu\MenuLinkTree
-    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver', '@cache.menu', '@current_route_match']
+    arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@controller_resolver']
   menu.default_tree_manipulators:
     class: Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
     arguments: ['@access_manager', '@current_user']
@@ -443,12 +443,7 @@ services:
     arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@state']
   router.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\RouterRebuildSubscriber
-    arguments: ['@router.builder']
-    tags:
-      - { name: event_subscriber }
-  menu.rebuild_subscriber:
-    class: Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
-    arguments: ['@lock', '@plugin.manager.menu.link']
+    arguments: ['@router.builder', '@lock']
     tags:
       - { name: event_subscriber }
   path.alias_storage:

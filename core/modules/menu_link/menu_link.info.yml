@@ -1,0 +1,9 @@
+name: Menu Link
+type: module
+description: Provides menu links.
+package: Core
+version: VERSION
+core: 8.x
+# @todo Menu links functionality has been moved from system.module and menu.inc
+# to this module, so make it required until everything is moved over.
+required: TRUE

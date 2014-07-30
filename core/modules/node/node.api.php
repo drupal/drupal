@@ -452,10 +452,10 @@ function hook_node_validate(\Drupal\node\NodeInterface $node, $form, &$form_stat
  * @ingroup entity_crud
  */
 function hook_node_submit(\Drupal\node\NodeInterface $node, $form, &$form_state) {
-  // Decompose the selected menu parent option into 'menu_name' and 'parent', if
+  // Decompose the selected menu parent option into 'menu_name' and 'plid', if
   // the form used the default parent selection widget.
   if (!empty($form_state['values']['menu']['parent'])) {
-    list($node->menu['menu_name'], $node->menu['parent']) = explode(':', $form_state['values']['menu']['parent']);
+    list($node->menu['menu_name'], $node->menu['plid']) = explode(':', $form_state['values']['menu']['parent']);
   }
 }
 

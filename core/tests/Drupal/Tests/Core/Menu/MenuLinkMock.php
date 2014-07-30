@@ -28,6 +28,7 @@ class MenuLinkMock extends MenuLinkBase {
     'options' => array(),
     'expanded' => '0',
     'hidden' => '0',
+    'discovered' => '1',
     'provider' => 'simpletest',
     'metadata' => array(),
     'class' => 'Drupal\\Tests\\Core\Menu\\MenuLinkMock',

@@ -1,4 +1,0 @@
-views_view:
-  class: Drupal\views\Plugin\Menu\ViewsMenuLink
-  form_class: Drupal\views\Plugin\Menu\Form\ViewsMenuLinkForm
-  deriver: \Drupal\views\Plugin\Derivative\ViewsMenuLink

@@ -69,13 +69,3 @@ menu_test.menu-title-test.case3:
 menu_test.context:
   title: ''
   route_name: menu_test.context
-
-menu_test.parent:
-  title: 'Test menu_name parent'
-  route_name: menu_test.menu_name_test
-  menu_name: test
-
-menu_test.child:
-  title: 'Test menu_name child'
-  route_name: menu_test.menu_name_test
-  parent: menu_test.parent

@@ -255,7 +255,10 @@ class Tables implements TablesInterface {
       $mapping = $storage->getTableMapping()->getAllColumns($table);
     }
     else {
-      return FALSE;
+      // @todo Stop calling drupal_get_schema() once menu links are converted
+      //   to the Entity Field API. See https://drupal.org/node/1842858.
+      $schema = drupal_get_schema($table);
+      $mapping = array_keys($schema['fields']);
     }
     return array_flip($mapping);
   }

@@ -153,8 +153,8 @@ use Drupal\Core\Template\Attribute;
  * - weight: Lower (negative) numbers come before higher (positive) numbers,
  *   for menu items with the same parent.
  *
- * Discovered menu links from other modules can be altered using
- * hook_menu_links_discovered_alter().
+ * Menu items from other modules can be altered using
+ * hook_menu_link_defaults_alter().
  *
  * @todo Derivatives will probably be defined for these; when they are, add
  *   documentation here.
@@ -264,56 +264,18 @@ use Drupal\Core\Template\Attribute;
 const MENU_MAX_DEPTH = 9;
 
 /**
- * @section Rendering menus
- * Once you have created menus (that contain menu links), you want to render
- * them. Drupal provides a block (Drupal\system\Plugin\Block\SystemMenuBlock) to
- * do so.
+ * Reserved key to identify the most specific menu link for a given path.
  *
- * However, perhaps you have more advanced needs and you're not satisfied with
- * what the menu blocks offer you. If that's the case, you'll want to:
- * - Instantiate \Drupal\Core\Menu\MenuTreeParameters, and set its values to
- *   match your needs. Alternatively, you can use
- *   MenuLinkTree::getCurrentRouteMenuTreeParameters() to get a typical
- *   default set of parameters, and then customize them to suit your needs.
- * - Call \Drupal\Core\MenuLinkTree::load() with your menu link tree parameters,
- *   this will return a menu link tree.
- * - Pass the menu tree to \Drupal\Core\Menu\MenuLinkTree::transform() to apply
- *   menu link tree manipulators that transform the tree. You will almost always
- *   want to apply access checking. The manipulators that you will typically
- *   need can be found in \Drupal\Core\Menu\DefaultMenuTreeManipulators.
- * - Potentially write a custom menu tree manipulator, see
- *   \Drupal\Core\Menu\DefaultMenuTreeManipulators for examples. This is only
- *   necessary if you want to do things like adding extra metadata to rendered
- *   links to display icons next to them.
- * - Pass the menu tree to \Drupal\Core\Menu\MenuLinkTree::build(), this will
- *   build a renderable array.
- *
- * Combined, that would look like this:
+ * The value of this constant is a hash of the constant name. We use the hash
+ * so that the reserved key is over 32 characters in length and will not
+ * collide with allowed menu names:
  * @code
- * $menu_tree = \Drupal::menuTree();
- * $menu_name = 'my_menu';
- *
- * // Build the typical default set of menu tree parameters.
- * $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
- *
- * // Load the tree based on this set of parameters.
- * $tree = $menu_tree->load($menu_name, $parameters);
- *
- * // Transform the tree using the manipulators you want.
- * $manipulators = array(
- *   // Only show links that are accessible for the current user.
- *   array('callable' => 'menu.default_tree_manipulators:checkAccess'),
- *   // Use the default sorting of menu links.
- *   array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
- * );
- * $tree = $menu_tree->transform($tree, $manipulators);
- *
- * // Finally, build a renderable array from the transformed tree.
- * $menu = $menu_tree->build($tree);
- *
- * $menu_html = drupal_render($menu);
+ * sha1('MENU_PREFERRED_LINK') = 1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91
  * @endcode
+ *
+ * @see menu_link_get_preferred()
  */
+const MENU_PREFERRED_LINK = '1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91';
 
 /**
  * Localizes a menu link title using t() if possible.
@@ -405,40 +367,21 @@ function _menu_link_translate(&$item) {
  * Implements template_preprocess_HOOK() for theme_menu_tree().
  */
 function template_preprocess_menu_tree(&$variables) {
-  if (isset($variables['tree']['#heading'])) {
-    $variables['heading'] = $variables['tree']['#heading'];
-    $heading = &$variables['heading'];
-    // Convert a string heading into an array, using a H2 tag by default.
-    if (is_string($heading)) {
-      $heading = array('text' => $heading);
-    }
-    // Merge in default array properties into $heading.
-    $heading += array(
-      'level' => 'h2',
-      'attributes' => array(),
-    );
-    // @todo Remove backwards compatibility for $heading['class'].
-    //   https://www.drupal.org/node/2310341
-    if (isset($heading['class'])) {
-      $heading['attributes']['class'] = $heading['class'];
-    }
-    // Convert the attributes array into an Attribute object.
-    $heading['attributes'] = new Attribute($heading['attributes']);
-    $heading['text'] = String::checkPlain($heading['text']);
-  }
-
-  if (isset($variables['tree']['#attributes'])) {
-    $variables['attributes'] = new Attribute($variables['tree']['#attributes']);
-  }
-  else {
-    $variables['attributes'] = new Attribute();
-  }
-  if (!isset($variables['attributes']['class'])) {
-    $variables['attributes']['class'] = array();
-  }
-  $variables['attributes']['class'][] = 'menu';
-
   $variables['tree'] = $variables['tree']['#children'];
+}
+
+/**
+ * Returns HTML for a wrapper for a menu sub-tree.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - tree: An HTML string containing the tree's items.
+ *
+ * @see template_preprocess_menu_tree()
+ * @ingroup themeable
+ */
+function theme_menu_tree($variables) {
+  return '<ul class="menu">' . $variables['tree'] . '</ul>';
 }
 
 /**
@@ -457,10 +400,8 @@ function theme_menu_link(array $variables) {
   if ($element['#below']) {
     $sub_menu = drupal_render($element['#below']);
   }
-  /** @var \Drupal\Core\Url $url */
-  $url = $element['#url'];
-  $url->setOption('set_active_class', TRUE);
-  $output = \Drupal::linkGenerator()->generateFromUrl($element['#title'], $url);
+  $element['#localized_options']['set_active_class'] = TRUE;
+  $output = l($element['#title'], $element['#href'], $element['#localized_options']);
   return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
 
@@ -600,28 +541,56 @@ function _menu_get_links_source($name, $default) {
 }
 
 /**
- * Builds a renderable array for a navigation menu.
+ * Returns an array of links for a navigation menu.
  *
- * @param string $menu_name
+ * @param $menu_name
  *   The name of the menu.
- * @param int $level
+ * @param $level
  *   Optional, the depth of the menu to be returned.
  *
- * @return array
- *   A renderable array.
+ * @return
+ *   An array of links of the specified menu and level.
  */
 function menu_navigation_links($menu_name, $level = 0) {
-  $menu_tree = \Drupal::menuTree();
-  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
-  $parameters->setMaxDepth($level + 1);
-  $tree = $menu_tree->load($menu_name, $parameters);
-  $manipulators = array(
-    array('callable' => 'menu.default_tree_manipulators:checkAccess'),
-    array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
-    array('callable' => 'menu.default_tree_manipulators:extractSubtreeOfActiveTrail', 'args' => array($level)),
-  );
-  $tree = $menu_tree->transform($tree, $manipulators);
-  return $menu_tree->build($tree);
+  // Don't even bother querying the menu table if no menu is specified.
+  if (empty($menu_name)) {
+    return array();
+  }
+
+  // Get the menu hierarchy for the current page.
+  /** @var \Drupal\menu_link\MenuTreeInterface $menu_tree */
+  $menu_tree = \Drupal::service('menu_link.tree');
+  $tree = $menu_tree->buildPageData($menu_name, $level + 1);
+
+  // Go down the active trail until the right level is reached.
+  while ($level-- > 0 && $tree) {
+    // Loop through the current level's items until we find one that is in trail.
+    while ($item = array_shift($tree)) {
+      if ($item['link']['in_active_trail']) {
+        // If the item is in the active trail, we continue in the subtree.
+        $tree = empty($item['below']) ? array() : $item['below'];
+        break;
+      }
+    }
+  }
+
+  // Create a single level of links.
+  $links = array();
+  foreach ($tree as $item) {
+    if (!$item['link']['hidden']) {
+      $class = '';
+      $l = $item['link']['localized_options'];
+      $l['href'] = $item['link']['link_path'];
+      $l['title'] = $item['link']['title'];
+      if ($item['link']['in_active_trail']) {
+        $class = ' active-trail';
+        $l['attributes']['class'][] = 'active-trail';
+      }
+      // Keyed with the unique mlid to generate classes in links.html.twig.
+      $links['menu-' . $item['link']['mlid'] . $class] = $l;
+    }
+  }
+  return $links;
 }
 
 /**
@@ -884,7 +853,17 @@ function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
  * might have been made to the router items or menu links.
  */
 function menu_cache_clear_all() {
-  \Drupal::cache('menu')->invalidateAll();
+  \Drupal::cache('data')->deleteAll();
+  menu_reset_static_cache();
+}
+
+/**
+ * Resets the menu system static cache.
+ */
+function menu_reset_static_cache() {
+  \Drupal::entityManager()
+    ->getStorage('menu_link')->resetCache();
+  drupal_static_reset('menu_link_get_preferred');
 }
 
 /**

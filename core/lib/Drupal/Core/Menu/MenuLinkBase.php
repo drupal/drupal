@@ -40,6 +40,22 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
+  public function getTitle() {
+    // Subclasses may pull in the request or specific attributes as parameters.
+    $options = array();
+    if (!empty($this->pluginDefinition['title_context'])) {
+      $options['context'] = $this->pluginDefinition['title_context'];
+    }
+    $args = array();
+    if (isset($this->pluginDefinition['title_arguments']) && $title_arguments = $this->pluginDefinition['title_arguments']) {
+      $args = (array) $title_arguments;
+    }
+    return $this->t($this->pluginDefinition['title'], $args, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getMenuName() {
     return $this->pluginDefinition['menu_name'];
   }
@@ -91,6 +107,16 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
    */
   public function isDeletable() {
     return (bool) $this->getDeleteRoute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    if ($this->pluginDefinition['description']) {
+      return $this->t($this->pluginDefinition['description']);
+    }
+    return '';
   }
 
   /**

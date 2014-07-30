@@ -11,9 +11,6 @@ menu_link_content.link_edit:
   defaults:
     _entity_form: 'menu_link_content.default'
     _title: 'Edit menu link'
-  options:
-  # @todo Remove once https://www.drupal.org/node/2310475 is in.
-    _admin_route: TRUE
   requirements:
     _entity_access: 'menu_link_content.update'
 

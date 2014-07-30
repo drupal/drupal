@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\book\BookManager;
 use Drupal\Core\Render\Element;
 
 /**
@@ -88,7 +87,7 @@ function theme_book_admin_table($variables) {
         'subgroup' => 'book-pid',
         'source' => 'book-nid',
         'hidden' => TRUE,
-        'limit' => BookManager::BOOK_MAX_DEPTH - 2,
+        'limit' => MENU_MAX_DEPTH - 2,
       ),
       array(
         'action' => 'order',

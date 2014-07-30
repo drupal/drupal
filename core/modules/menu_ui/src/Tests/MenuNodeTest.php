@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\menu_ui\Tests\MenuNodeTest.
+ * Definition of Drupal\menu_ui\Tests\MenuNodeTest.
  */
 
 namespace Drupal\menu_ui\Tests;
@@ -65,7 +65,7 @@ class MenuNodeTest extends WebTestBase {
     $edit = array(
       'menu_options[main]' => 1,
       'menu_options[tools]' => 1,
-      'menu_parent' => 'main:',
+      'menu_parent' => 'main:0',
     );
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
 
@@ -93,7 +93,7 @@ class MenuNodeTest extends WebTestBase {
     // Edit the node and create a menu link.
     $edit = array(
       'menu[enabled]' => 1,
-      'menu[title]' => $node_title,
+      'menu[link_title]' => $node_title,
       'menu[weight]' => 17,
     );
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
@@ -102,7 +102,7 @@ class MenuNodeTest extends WebTestBase {
     $this->assertLink($node_title);
 
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldById('edit-menu-weight', 17, 'Menu weight correct in edit form');
+    $this->assertOptionSelected('edit-menu-weight', 17, 'Menu weight correct in edit form');
 
     // Edit the node and remove the menu link.
     $edit = array(
@@ -114,12 +114,10 @@ class MenuNodeTest extends WebTestBase {
     $this->assertNoLink($node_title);
 
     // Add a menu link to the Administration menu.
-    $item = entity_create('menu_link_content', array(
-      'route_name' => 'node.view',
-      'route_parameters' => array('node' => $node->id()),
-      'title' => $this->randomName(16),
+    $item = entity_create('menu_link', array(
+      'link_path' => 'node/' . $node->id(),
+      'link_title' => $this->randomName(16),
       'menu_name' => 'admin',
-      'bundle' => 'menu_link_content',
     ));
     $item->save();
 
@@ -129,30 +127,27 @@ class MenuNodeTest extends WebTestBase {
     $this->assertText('Provide a menu link', 'Link in not allowed menu not shown in node edit form');
     // Assert that the link is still in the Administration menu after save.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $link = entity_load('menu_link_content', $item->id());
+    $link = menu_link_load($item['mlid']);
     $this->assertTrue($link, 'Link in not allowed menu still exists after saving node');
 
     // Move the menu link back to the Tools menu.
-    $item->menu_name->value = 'tools';
-    $item->save();
+    $item['menu_name'] = 'tools';
+    menu_link_save($item);
     // Create a second node.
     $child_node = $this->drupalCreateNode(array('type' => 'article'));
     // Assign a menu link to the second node, being a child of the first one.
-    $child_item = entity_create('menu_link_content', array(
-      'route_name' => 'node.view',
-      'route_parameters' => array('node' => $child_node->id()),
-      'title' => $this->randomName(16),
-      'parent' => $item->getPluginId(),
-      'menu_name' => $item->getMenuName(),
-      'bundle' => 'menu_link_content',
+    $child_item = entity_create('menu_link', array(
+      'link_path' => 'node/'. $child_node->id(),
+      'link_title' => $this->randomName(16),
+      'plid' => $item['mlid'],
     ));
     $child_item->save();
     // Edit the first node.
     $this->drupalGet('node/'. $node->id() .'/edit');
     // Assert that it is not possible to set the parent of the first node to itself or the second node.
-    $this->assertNoOption('edit-menu-menu-parent', 'tools:'. $item->getPluginId());
-    $this->assertNoOption('edit-menu-menu-parent', 'tools:'. $child_item->getPluginId());
+    $this->assertNoOption('edit-menu-parent', 'tools:'. $item['mlid']);
+    $this->assertNoOption('edit-menu-parent', 'tools:'. $child_item['mlid']);
     // Assert that unallowed Administration menu is not available in options.
-    $this->assertNoOption('edit-menu-menu-parent', 'admin:');
+    $this->assertNoOption('edit-menu-parent', 'admin:0');
   }
 }

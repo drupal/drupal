@@ -66,32 +66,6 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
   /**
    * {@inheritdoc}
    */
-  public function getTitle() {
-    // Subclasses may pull in the request or specific attributes as parameters.
-    $options = array();
-    if (!empty($this->pluginDefinition['title_context'])) {
-      $options['context'] = $this->pluginDefinition['title_context'];
-    }
-    $args = array();
-    if (isset($this->pluginDefinition['title_arguments']) && $title_arguments = $this->pluginDefinition['title_arguments']) {
-      $args = (array) $title_arguments;
-    }
-    return $this->t($this->pluginDefinition['title'], $args, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDescription() {
-    if ($this->pluginDefinition['description']) {
-      return $this->t($this->pluginDefinition['description']);
-    }
-    return '';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isResettable() {
     // The link can be reset if it has an override.
     return (bool) $this->staticOverride->loadOverride($this->getPluginId());
@@ -103,13 +77,11 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
   public function updateLink(array $new_definition_values, $persist) {
     // Filter the list of updates to only those that are allowed.
     $overrides = array_intersect_key($new_definition_values, $this->overrideAllowed);
-    // Update the definition.
-    $this->pluginDefinition = $overrides + $this->getPluginDefinition();
     if ($persist) {
-      // Always save the menu name as an override to avoid defaulting to tools.
-      $overrides['menu_name'] = $this->pluginDefinition['menu_name'];
       $this->staticOverride->saveOverride($this->getPluginId(), $overrides);
     }
+    // Update the definition.
+    $this->pluginDefinition = $overrides + $this->getPluginDefinition();
     return $this->pluginDefinition;
   }
 

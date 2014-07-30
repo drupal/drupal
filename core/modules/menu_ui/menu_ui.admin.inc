@@ -5,18 +5,14 @@
  * Administrative page callbacks for Menu UI module.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\Element;
 
 /**
  * Returns HTML for the menu overview form into a table.
  *
- * @param array $variables
+ * @param $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
- *
- * @return string
- *   The themed HTML.
  *
  * @ingroup themeable
  */
@@ -31,28 +27,27 @@ function theme_menu_overview_form($variables) {
   );
 
   $rows = array();
-  foreach (Element::children($form) as $id) {
-    if (isset($form[$id]['#item'])) {
-      $element = &$form[$id];
+  foreach (Element::children($form) as $mlid) {
+    if (isset($form[$mlid]['hidden'])) {
+      $element = &$form[$mlid];
 
       // Add special classes to be used for tabledrag.js.
-      $element['parent']['#attributes']['class'] = array('menu-parent');
-      $element['id']['#attributes']['class'] = array('menu-id');
+      $element['plid']['#attributes']['class'] = array('menu-plid');
+      $element['mlid']['#attributes']['class'] = array('menu-mlid');
       $element['weight']['#attributes']['class'] = array('menu-weight');
 
-      // Change the parent field to a hidden. This allows any value but hides
-      // the field.
-      $element['parent']['#type'] = 'hidden';
+      // Change the parent field to a hidden. This allows any value but hides the field.
+      $element['plid']['#type'] = 'hidden';
 
       $indent = array(
         '#theme' => 'indentation',
-        '#size' => $element['#item']->depth - 1,
+        '#size' => $element['#item']['depth'] - 1,
       );
 
       $row = array();
-      $row[] = SafeMarkup::set(drupal_render($indent) . drupal_render($element['title']));
-      $row[] = array('data' => drupal_render($element['enabled']), 'class' => array('checkbox', 'menu-enabled'));
-      $row[] = SafeMarkup::set(drupal_render($element['weight']) . drupal_render($element['parent']) . drupal_render($element['id']));
+      $row[] = drupal_render($indent) . drupal_render($element['title']);
+      $row[] = array('data' => drupal_render($element['hidden']), 'class' => array('checkbox', 'menu-enabled'));
+      $row[] = drupal_render($element['weight']) . drupal_render($element['plid']) . drupal_render($element['mlid']);
       $row[] = drupal_render($element['operations']);
 
       $row = array_merge(array('data' => $row), $element['#attributes']);
@@ -76,11 +71,11 @@ function theme_menu_overview_form($variables) {
       array(
         'action' => 'match',
         'relationship' => 'parent',
-        'group' => 'menu-parent',
-        'subgroup' => 'menu-parent',
-        'source' => 'menu-id',
+        'group' => 'menu-plid',
+        'subgroup' => 'menu-plid',
+        'source' => 'menu-mlid',
         'hidden' => TRUE,
-        'limit' => \Drupal::menuTree()->maxDepth() - 1,
+        'limit' => MENU_MAX_DEPTH - 1,
       ),
       array(
         'action' => 'order',

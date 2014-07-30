@@ -3,7 +3,6 @@ user.page:
   weight: -10
   route_name: user.page
   menu_name: account
-  class: Drupal\user\Plugin\Menu\MyAccountMenuLink
 user.logout:
   title: 'Log out'
   route_name: user.logout
