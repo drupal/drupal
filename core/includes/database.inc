@@ -18,7 +18,7 @@ use Drupal\Core\Site\Settings;
  * @{
  * Allow the use of different database servers using the same code base.
  *
- * @sec sec_intro Overview
+ * @section sec_intro Overview
  * Drupal's database abstraction layer provides a unified database query API
  * that can query different underlying databases. It is built upon PHP's
  * PDO (PHP Data Objects) database API, and inherits much of its syntax and
@@ -30,11 +30,11 @@ use Drupal\Core\Site\Settings;
  * For more detailed information on the database abstraction layer, see
  * https://drupal.org/developing/api/database
  *
- * @sec sec_entity Querying entities
+ * @section sec_entity Querying entities
  * Any query on Drupal entities or fields should use the Entity Query API. See
  * the @link entity_api entity API topic @endlink for more information.
  *
- * @sec sec_simple Simple SELECT database queries
+ * @section sec_simple Simple SELECT database queries
  * For simple SELECT queries that do not involve entities, the Drupal database
  * abstraction layer provides the functions db_query() and db_query_range(),
  * which execute SELECT queries (optionally with range limits) and return result
@@ -90,7 +90,7 @@ use Drupal\Core\Site\Settings;
  * ... array(':my_field' => 'foo') ...
  * @endcode
  *
- * @sec sec_dynamic Dynamic SELECT queries
+ * @section sec_dynamic Dynamic SELECT queries
  * For SELECT queries where the simple query API described in @ref sec_simple
  * will not work well, you need to use the dynamic query API. However, you
  * should still use the Entity Query API if your query involves entities or
@@ -115,7 +115,7 @@ use Drupal\Core\Site\Settings;
  * @endcode
  *
  * There are also methods to join to other tables, add fields with aliases,
- * isNull() to have a @code WHERE e.foo IS NULL @code condition, etc. See
+ * isNull() to have a @code WHERE e.foo IS NULL @endcode condition, etc. See
  * https://drupal.org/developing/api/database for many more details.
  *
  * One note on chaining: It is common in the dynamic database API to chain
@@ -129,7 +129,7 @@ use Drupal\Core\Site\Settings;
  * returns the query or something else, and only chain methods that return the
  * query.
  *
- * @sec_insert INSERT, UPDATE, and DELETE queries
+ * @section_insert INSERT, UPDATE, and DELETE queries
  * INSERT, UPDATE, and DELETE queries need special care in order to behave
  * consistently across databases; you should never use db_query() to run
  * an INSERT, UPDATE, or DELETE query. Instead, use functions db_insert(),
@@ -153,7 +153,7 @@ use Drupal\Core\Site\Settings;
  *   ->execute();
  * @endcode
  *
- * @sec sec_transaction Tranactions
+ * @section sec_transaction Tranactions
  * Drupal supports transactions, including a transparent fallback for
  * databases that do not support transactions. To start a new transaction,
  * call @code $txn = db_transaction(); @endcode The transaction will
@@ -204,7 +204,7 @@ use Drupal\Core\Site\Settings;
  * }
  * @endcode
  *
- * @sec sec_connection Database connection objects
+ * @section sec_connection Database connection objects
  * The examples here all use functions like db_select() and db_query(), which
  * can be called from any Drupal method or function code. In some classes, you
  * may already have a database connection object in a member variable, or it may
