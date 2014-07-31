@@ -62,11 +62,11 @@ class RoleForm extends EntityForm {
     $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('Role %label has been updated.', array('%label' => $entity->label())));
-      watchdog('user', 'Role %label has been updated.', array('%label' => $entity->label()), WATCHDOG_NOTICE, $edit_link);
+      $this->logger('user')->notice('Role %label has been updated.', array('%label' => $entity->label(), 'link' => $edit_link));
     }
     else {
       drupal_set_message($this->t('Role %label has been added.', array('%label' => $entity->label())));
-      watchdog('user', 'Role %label has been added.', array('%label' => $entity->label()), WATCHDOG_NOTICE, $edit_link);
+      $this->logger('user')->notice('Role %label has been added.', array('%label' => $entity->label(), 'link' => $edit_link));
     }
     $form_state['redirect_route']['route_name'] = 'user.role_list';
   }

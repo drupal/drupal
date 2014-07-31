@@ -125,7 +125,7 @@ class OpmlFeedAdd extends FormBase {
         $data = $response->getBody(TRUE);
       }
       catch (RequestException $e) {
-        watchdog('aggregator', 'Failed to download OPML file due to "%error".', array('%error' => $e->getMessage()), WATCHDOG_WARNING);
+        $this->logger('aggregator')->warning('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage()));
         drupal_set_message($this->t('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage())));
         return;
       }

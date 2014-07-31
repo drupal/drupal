@@ -194,16 +194,17 @@ class BlockContentForm extends ContentEntityForm {
     $block = $this->entity;
     $insert = $block->isNew();
     $block->save();
-    $watchdog_args = array('@type' => $block->bundle(), '%info' => $block->label());
+    $context = array('@type' => $block->bundle(), '%info' => $block->label());
+    $logger = $this->logger('block_content');
     $block_type = entity_load('block_content_type', $block->bundle());
     $t_args = array('@type' => $block_type->label(), '%info' => $block->label());
 
     if ($insert) {
-      watchdog('content', '@type: added %info.', $watchdog_args, WATCHDOG_NOTICE);
+      $logger->notice('@type: added %info.', $context);
       drupal_set_message($this->t('@type %info has been created.', $t_args));
     }
     else {
-      watchdog('content', '@type: updated %info.', $watchdog_args, WATCHDOG_NOTICE);
+      $logger->notice('@type: updated %info.', $context);
       drupal_set_message($this->t('@type %info has been updated.', $t_args));
     }
 

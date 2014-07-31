@@ -217,12 +217,12 @@ class UserLoginForm extends FormBase {
         $this->setFormError('name', $form_state, $this->t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
         $accounts = $this->userStorage->loadByProperties(array('name' => $form_state['values']['name']));
         if (!empty($accounts)) {
-          watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
+          $this->logger('user')->notice('Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
         }
         else {
           // If the username entered is not a valid user,
           // only store the IP address.
-          watchdog('user', 'Login attempt failed from %ip.', array('%ip' => $this->getRequest()->getClientIp()));
+          $this->logger('user')->notice('Login attempt failed from %ip.', array('%ip' => $this->getRequest()->getClientIp()));
         }
       }
     }

@@ -25,7 +25,7 @@ class ScaleAndCropImageEffect extends ResizeImageEffect {
    */
   public function applyEffect(ImageInterface $image) {
     if (!$image->scaleAndCrop($this->configuration['width'], $this->configuration['height'])) {
-      watchdog('image', 'Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()), WATCHDOG_ERROR);
+      $this->logger->error('Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()));
       return FALSE;
     }
     return TRUE;

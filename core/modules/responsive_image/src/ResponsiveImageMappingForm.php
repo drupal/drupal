@@ -125,7 +125,7 @@ class ResponsiveImageMappingForm extends EntityForm {
     $responsive_image_mapping = $this->entity;
     $responsive_image_mapping->save();
 
-    watchdog('responsive_image', 'Responsive image mapping @label saved.', array('@label' => $responsive_image_mapping->label()), WATCHDOG_NOTICE);
+    $this->logger('responsive_image')->notice('Responsive image mapping @label saved.', array('@label' => $responsive_image_mapping->label()));
     drupal_set_message($this->t('Responsive image mapping %label saved.', array('%label' => $responsive_image_mapping->label())));
 
     // Redirect to edit form after creating a new mapping or after selecting

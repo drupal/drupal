@@ -433,15 +433,15 @@ class NodeForm extends ContentEntityForm {
     $insert = $node->isNew();
     $node->save();
     $node_link = l(t('View'), 'node/' . $node->id());
-    $watchdog_args = array('@type' => $node->getType(), '%title' => $node->label());
+    $context = array('@type' => $node->getType(), '%title' => $node->label(), 'link' => $node_link);
     $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
 
     if ($insert) {
-      watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
+      $this->logger('content')->notice('@type: added %title.', $context);
       drupal_set_message(t('@type %title has been created.', $t_args));
     }
     else {
-      watchdog('content', '@type: updated %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
+      $this->logger('content')->notice('@type: updated %title.', $context);
       drupal_set_message(t('@type %title has been updated.', $t_args));
     }
 

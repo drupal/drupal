@@ -43,7 +43,7 @@ class CategoryDeleteForm extends EntityConfirmFormBase {
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('Category %label has been deleted.', array('%label' => $this->entity->label())));
-    watchdog('contact', 'Category %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
+    $this->logger('contact')->notice('Category %label has been deleted.', array('%label' => $this->entity->label()));
     $form_state['redirect_route'] = $this->getCancelUrl();
   }
 

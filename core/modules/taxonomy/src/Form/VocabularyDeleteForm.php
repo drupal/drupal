@@ -57,7 +57,7 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('Deleted vocabulary %name.', array('%name' => $this->entity->label())));
-    watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
+    $this->logger('taxonomy')->notice('Deleted vocabulary %name.', array('%name' => $this->entity->label()));
     $form_state['redirect_route'] = $this->getCancelUrl();
   }
 

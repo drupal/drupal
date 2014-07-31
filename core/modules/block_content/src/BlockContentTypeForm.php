@@ -93,13 +93,14 @@ class BlockContentTypeForm extends EntityForm {
     $status = $block_type->save();
 
     $edit_link = \Drupal::linkGenerator()->generateFromUrl($this->t('Edit'), $this->entity->urlInfo());
+    $logger = $this->logger('block_content');
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Custom block type %label has been updated.', array('%label' => $block_type->label())));
-      watchdog('block_content', 'Custom block type %label has been updated.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, $edit_link);
+      $logger->notice('Custom block type %label has been updated.', array('%label' => $block_type->label(), 'link' => $edit_link));
     }
     else {
       drupal_set_message(t('Custom block type %label has been added.', array('%label' => $block_type->label())));
-      watchdog('block_content', 'Custom block type %label has been added.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, $edit_link);
+      $logger->notice('Custom block type %label has been added.', array('%label' => $block_type->label(), 'link' => $edit_link));
     }
 
     $form_state['redirect_route']['route_name'] = 'block_content.type_list';

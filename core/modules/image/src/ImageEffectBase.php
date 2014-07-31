@@ -7,12 +7,15 @@
 
 namespace Drupal\image;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for image effects.
  */
-abstract class ImageEffectBase extends PluginBase implements ImageEffectInterface {
+abstract class ImageEffectBase extends PluginBase implements ImageEffectInterface, ContainerFactoryPluginInterface {
 
   /**
    * The image effect ID.
@@ -29,12 +32,32 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
   protected $weight = '';
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->setConfiguration($configuration);
+    $this->logger = $logger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('logger.factory')->get('image')
+    );
   }
 
   /**

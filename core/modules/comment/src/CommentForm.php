@@ -364,6 +364,7 @@ class CommentForm extends ContentEntityForm {
     $entity = $comment->getCommentedEntity();
     $field_name = $comment->getFieldName();
     $uri = $entity->urlInfo();
+    $logger = $this->logger('content');
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
       // Save the anonymous user information to a cookie for reuse.
@@ -374,8 +375,8 @@ class CommentForm extends ContentEntityForm {
       $comment->save();
       $form_state['values']['cid'] = $comment->id();
 
-      // Add an entry to the watchdog log.
-      watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->getSubject()), WATCHDOG_NOTICE, l(t('View'), 'comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id())));
+      // Add a log entry.
+      $logger->notice('Comment posted: %subject.', array('%subject' => $comment->getSubject(), 'link' => l(t('View'), 'comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id()))));
 
       // Explain the approval queue if necessary.
       if (!$comment->isPublished()) {
@@ -398,7 +399,7 @@ class CommentForm extends ContentEntityForm {
       $uri->setOption('fragment', 'comment-' . $comment->id());
     }
     else {
-      watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->getSubject()), WATCHDOG_WARNING);
+      $logger->warning('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->getSubject()));
       drupal_set_message($this->t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->getSubject())), 'error');
       // Redirect the user to the entity they are commenting on.
     }

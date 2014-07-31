@@ -83,9 +83,10 @@ class ImageTest extends UnitTestCase {
    */
   protected function getToolkitOperationMock($class_name, ImageToolkitInterface $toolkit) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
+    $logger = $this->getMock('Psr\Log\LoggerInterface');
     return $mock_builder
       ->setMethods(array('execute'))
-      ->setConstructorArgs(array(array(), '', array(), $toolkit))
+      ->setConstructorArgs(array(array(), '', array(), $toolkit, $logger))
       ->getMock();
   }
 

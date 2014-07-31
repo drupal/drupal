@@ -640,7 +640,7 @@ class Drupal {
    *   The name of the channel. Can be any string, but the general practice is
    *   to use the name of the subsystem calling this.
    *
-   * @return \Drupal\Core\Logger\LoggerChannelInterface
+   * @return \Psr\Log\LoggerInterface
    *   The logger for this channel.
    */
   public static function logger($channel) {

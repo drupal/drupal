@@ -8,6 +8,9 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Form\FormState;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -15,7 +18,33 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Defines a controller to respond to form Ajax requests.
  */
-class FormAjaxController {
+class FormAjaxController implements ContainerInjectionInterface {
+
+  /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * Constructs a FormAjaxController object.
+   *
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
+   */
+  public function __construct(LoggerInterface $logger) {
+    $this->logger = $logger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('logger.factory')->get('ajax')
+    );
+  }
 
   /**
    * Processes an Ajax form submission.
@@ -82,7 +111,7 @@ class FormAjaxController {
       // system/ajax without actually viewing the concerned form in the browser.
       // This is likely a hacking attempt as it never happens under normal
       // circumstances.
-      watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
+      $this->logger->warning('Invalid form POST data.');
       throw new BadRequestHttpException();
     }
 

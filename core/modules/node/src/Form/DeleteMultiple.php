@@ -121,7 +121,7 @@ class DeleteMultiple extends ConfirmFormBase {
       $this->storage->delete($this->nodes);
       $this->tempStoreFactory->get('node_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());
       $count = count($this->nodes);
-      watchdog('content', 'Deleted @count posts.', array('@count' => $count));
+      $this->logger('content')->notice('Deleted @count posts.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
     }
     $form_state['redirect_route']['route_name'] = 'system.admin_content';

@@ -10,6 +10,7 @@ namespace Drupal\Core\ImageToolkit;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Plugin\PluginBase;
+use Psr\Log\LoggerInterface;
 
 abstract class ImageToolkitOperationBase extends PluginBase implements ImageToolkitOperationInterface {
 
@@ -19,6 +20,13 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
    * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
   protected $toolkit;
+
+  /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
 
   /**
    * Constructs an image toolkit operation plugin.
@@ -31,10 +39,13 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
    *   The plugin implementation definition.
    * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
    *   The image toolkit.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitInterface $toolkit) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitInterface $toolkit, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->toolkit = $toolkit;
+    $this->logger = $logger;
   }
 
   /**

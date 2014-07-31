@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,6 +41,13 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   protected $storage;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a EmailAction object.
    *
    * @param array $configuration
@@ -52,12 +60,15 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    *   The token service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityManagerInterface $entity_manager, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->token = $token;
     $this->storage = $entity_manager->getStorage('user');
+    $this->logger = $logger;
   }
 
   /**
@@ -66,7 +77,8 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static($configuration, $plugin_id, $plugin_definition,
       $container->get('token'),
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('logger.factory')->get('action')
     );
   }
 
@@ -94,10 +106,10 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
     $params = array('context' => $this->configuration);
 
     if (drupal_mail('system', 'action_send_email', $recipient, $langcode, $params)) {
-      watchdog('action', 'Sent email to %recipient', array('%recipient' => $recipient));
+      $this->logger->notice('Sent email to %recipient', array('%recipient' => $recipient));
     }
     else {
-      watchdog('error', 'Unable to send email to %recipient', array('%recipient' => $recipient));
+      $this->logger->error('Unable to send email to %recipient', array('%recipient' => $recipient));
     }
   }
 

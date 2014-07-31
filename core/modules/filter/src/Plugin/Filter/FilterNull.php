@@ -40,7 +40,7 @@ class FilterNull extends FilterBase {
     // Once per filter, log that a filter plugin was missing.
     if (!$this->logged) {
       $this->logged = TRUE;
-      watchdog('filter', 'Missing filter plugin: %filter.', array('%filter' => $plugin_id), WATCHDOG_ALERT);
+      \Drupal::logger('filter')->alert('Missing filter plugin: %filter.', array('%filter' => $plugin_id));
     }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }

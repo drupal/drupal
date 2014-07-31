@@ -100,11 +100,11 @@ class CategoryForm extends EntityForm {
 
     if ($status == SAVED_UPDATED) {
       drupal_set_message($this->t('Category %label has been updated.', array('%label' => $category->label())));
-      watchdog('contact', 'Category %label has been updated.', array('%label' => $category->label()), WATCHDOG_NOTICE, $edit_link);
+      $this->logger('contact')->notice('Category %label has been updated.', array('%label' => $category->label(), 'link' => $edit_link));
     }
     else {
       drupal_set_message($this->t('Category %label has been added.', array('%label' => $category->label())));
-      watchdog('contact', 'Category %label has been added.', array('%label' => $category->label()), WATCHDOG_NOTICE, $edit_link);
+      $this->logger('contact')->notice('Category %label has been added.', array('%label' => $category->label(), 'link' => $edit_link));
     }
 
     // Update the default category.

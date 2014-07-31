@@ -94,7 +94,7 @@ class EntityResource extends ResourceBase {
     $this->validate($entity);
     try {
       $entity->save();
-      watchdog('rest', 'Created entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
+      $this->logger->notice('Created entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       $url = url(strtr($this->pluginId, ':', '/') . '/' . $entity->id(), array('absolute' => TRUE));
       // 201 Created responses have an empty body.
@@ -154,7 +154,7 @@ class EntityResource extends ResourceBase {
     $this->validate($original_entity);
     try {
       $original_entity->save();
-      watchdog('rest', 'Updated entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
+      $this->logger->notice('Updated entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       // Update responses have an empty body.
       return new ResourceResponse(NULL, 204);
@@ -181,7 +181,7 @@ class EntityResource extends ResourceBase {
     }
     try {
       $entity->delete();
-      watchdog('rest', 'Deleted entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
+      $this->logger->notice('Deleted entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       // Delete responses have an empty body.
       return new ResourceResponse(NULL, 204);

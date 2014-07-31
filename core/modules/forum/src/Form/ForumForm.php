@@ -82,13 +82,13 @@ class ForumForm extends TermForm {
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType)));
-        watchdog('forum', 'Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType), WATCHDOG_NOTICE, l($this->t('Edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id()));
+        $this->logger('forum')->notice('Created new @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => l($this->t('Edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id())));
         $form_state['values']['tid'] = $term->id();
         break;
 
       case SAVED_UPDATED:
         drupal_set_message($this->t('The @type %term has been updated.', array('%term' => $term->getName(), '@type' => $this->forumFormType)));
-        watchdog('taxonomy', 'Updated @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType), WATCHDOG_NOTICE, l($this->t('Edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id()));
+        $this->logger('forum')->notice('Updated @type %term.', array('%term' => $term->getName(), '@type' => $this->forumFormType, 'link' => l($this->t('Edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id())));
         break;
     }
 

@@ -272,7 +272,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
 
     // Build the destination folder tree if it doesn't already exist.
     if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
-      watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
+      \Drupal::logger('image')->error('Failed to create style directory: %directory', array('%directory' => $directory));
       return FALSE;
     }
 
@@ -287,7 +287,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
 
     if (!$image->save($derivative_uri)) {
       if (file_exists($derivative_uri)) {
-        watchdog('image', 'Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $derivative_uri), WATCHDOG_ERROR);
+        \Drupal::logger('image')->error('Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $derivative_uri));
       }
       return FALSE;
     }

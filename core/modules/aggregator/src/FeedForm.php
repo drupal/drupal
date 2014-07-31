@@ -70,7 +70,7 @@ class FeedForm extends ContentEntityForm {
       $form_state['redirect_route'] = $feed->urlInfo('canonical');
     }
     else {
-      watchdog('aggregator', 'Feed %feed added.', array('%feed' => $feed->label()), WATCHDOG_NOTICE, l($this->t('View'), 'admin/config/services/aggregator'));
+      $this->logger('aggregator')->notice('Feed %feed added.', array('%feed' => $feed->label(), 'link' => l($this->t('View'), 'admin/config/services/aggregator')));
       drupal_set_message($this->t('The feed %feed has been added.', array('%feed' => $feed->label())));
     }
   }

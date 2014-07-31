@@ -91,7 +91,7 @@ class BanDelete extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->ipManager->unbanIp($this->banIp);
-    watchdog('user', 'Deleted %ip', array('%ip' => $this->banIp));
+    $this->logger('user')->notice('Deleted %ip', array('%ip' => $this->banIp));
     drupal_set_message($this->t('The IP address %ip was deleted.', array('%ip' => $this->banIp)));
     $form_state['redirect_route'] = $this->getCancelUrl();
   }

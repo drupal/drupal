@@ -116,7 +116,7 @@ class RegisterForm extends AccountForm {
     $form_state['user'] = $account;
     $form_state['values']['uid'] = $account->id();
 
-    watchdog('user', 'New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>'), WATCHDOG_NOTICE, l($this->t('Edit'), 'user/' . $account->id() . '/edit'));
+    $this->logger('user')->notice('New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>', 'type' => l($this->t('Edit'), 'user/' . $account->id() . '/edit')));
 
     // Add plain text password into user account to generate mail tokens.
     $account->password = $pass;

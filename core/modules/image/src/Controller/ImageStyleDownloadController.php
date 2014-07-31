@@ -12,6 +12,7 @@ use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\system\FileDownloadController;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,16 +40,26 @@ class ImageStyleDownloadController extends FileDownloadController {
   protected $imageFactory;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a ImageStyleDownloadController object.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
    * @param \Drupal\Core\Image\ImageFactory $image_factory
    *   The image factory.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory) {
+  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory, LoggerInterface $logger) {
     $this->lock = $lock;
     $this->imageFactory = $image_factory;
+    $this->logger = $logger;
   }
 
   /**
@@ -57,7 +68,8 @@ class ImageStyleDownloadController extends FileDownloadController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('lock'),
-      $container->get('image.factory')
+      $container->get('image.factory'),
+      $container->get('logger.factory')->get('image')
     );
   }
 
@@ -118,7 +130,7 @@ class ImageStyleDownloadController extends FileDownloadController {
 
     // Don't try to generate file if source is missing.
     if (!file_exists($image_uri)) {
-      watchdog('image', 'Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri));
+      $this->logger->notice('Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri));
       return new Response($this->t('Error generating image, missing source file.'), 404);
     }
 
@@ -153,7 +165,7 @@ class ImageStyleDownloadController extends FileDownloadController {
       return new BinaryFileResponse($uri, 200, $headers);
     }
     else {
-      watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
+      $this->logger->notice('Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
       return new Response($this->t('Error generating image.'), 500);
     }
   }

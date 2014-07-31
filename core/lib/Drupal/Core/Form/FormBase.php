@@ -47,6 +47,13 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   protected $configFactory;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -185,6 +192,22 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   protected function setFormError($name, FormStateInterface $form_state, $message = '') {
     $form_state->setErrorByName($name, $message);
     return $this;
+  }
+
+  /**
+   * Gets the logger for a specific channel.
+   *
+   * @param string $channel
+   *   The name of the channel.
+   *
+   * @return \Psr\Log\LoggerInterface
+   *   The logger for this channel.
+   */
+  protected function logger($channel) {
+    if (!$this->loggerFactory) {
+      $this->loggerFactory = $this->container()->get('logger.factory');
+    }
+    return $this->loggerFactory->get($channel);
   }
 
 }

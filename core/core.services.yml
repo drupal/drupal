@@ -176,6 +176,11 @@ services:
     factory_method: get
     factory_service: logger.factory
     arguments: ['system']
+  logger.channel.image:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory_method: get
+    factory_service: logger.factory
+    arguments: ['image']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
 
@@ -741,9 +746,10 @@ services:
       - { name: event_subscriber }
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@config.factory', '@module_handler', '@image.toolkit.operation.manager']
+    arguments: ['@container.namespaces', '@cache.discovery', '@config.factory', '@module_handler', '@image.toolkit.operation.manager', '@logger.channel.image']
   image.toolkit.operation.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitOperationManager
+    arguments: ['@logger.channel.image']
     parent: default_plugin_manager
   image.factory:
     class: Drupal\Core\Image\ImageFactory

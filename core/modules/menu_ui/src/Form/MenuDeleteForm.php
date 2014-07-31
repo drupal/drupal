@@ -117,6 +117,6 @@ class MenuDeleteForm extends EntityConfirmFormBase {
 
     $t_args = array('%title' => $this->entity->label());
     drupal_set_message(t('The custom menu %title has been deleted.', $t_args));
-    watchdog('menu', 'Deleted custom menu %title and all its menu links.', $t_args, WATCHDOG_NOTICE);
+    $this->logger('menu')->notice('Deleted custom menu %title and all its menu links.', $t_args);
   }
 }

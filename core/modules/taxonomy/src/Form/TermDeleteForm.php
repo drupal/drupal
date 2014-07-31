@@ -65,7 +65,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
     taxonomy_check_vocabulary_hierarchy($vocabulary, array('tid' => $this->entity->id()));
 
     drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->getName())));
-    watchdog('taxonomy', 'Deleted term %name.', array('%name' => $this->entity->getName()), WATCHDOG_NOTICE);
+    $this->logger('taxonomy')->notice('Deleted term %name.', array('%name' => $this->entity->getName()));
     $form_state['redirect_route'] = $this->getCancelUrl();
   }
 

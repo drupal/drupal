@@ -135,7 +135,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->entity->save();
       _user_mail_notify('cancel_confirm', $this->entity);
       drupal_set_message($this->t('A confirmation request to cancel your account has been sent to your email address.'));
-      watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>'), WATCHDOG_NOTICE);
+      $this->logger('user')->notice('Sent account cancellation request to %name %email.', array('%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>'));
 
       $form_state['redirect_route'] = array(
         'route_name' => 'user.view',

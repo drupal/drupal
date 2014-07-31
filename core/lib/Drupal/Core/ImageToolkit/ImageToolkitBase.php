@@ -10,6 +10,7 @@ namespace Drupal\Core\ImageToolkit;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Psr\Log\LoggerInterface;
 
 abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterface {
 
@@ -28,6 +29,14 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
   protected $operationManager;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+
+  /**
    * Constructs an ImageToolkitBase object.
    *
    * @param array $configuration
@@ -38,10 +47,13 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
    *   The plugin implementation definition.
    * @param \Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface $operation_manager
    *   The toolkit operation manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ImageToolkitOperationManagerInterface $operation_manager, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->operationManager = $operation_manager;
+    $this->logger = $logger;
   }
 
   /**
@@ -90,11 +102,11 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
       return $this->getToolkitOperation($operation)->apply($arguments);
     }
     catch (PluginNotFoundException $e) {
-      \Drupal::logger('image')->error("The selected image handling toolkit '@toolkit' can not process operation '@operation'.", array('@toolkit' => $this->getPluginId(), '@operation' => $operation));
+      $this->logger->error("The selected image handling toolkit '@toolkit' can not process operation '@operation'.", array('@toolkit' => $this->getPluginId(), '@operation' => $operation));
       return FALSE;
     }
     catch (\InvalidArgumentException $e) {
-      \Drupal::logger('image')->warning($e->getMessage(), array());
+      $this->logger->warning($e->getMessage(), array());
       return FALSE;
     }
   }
