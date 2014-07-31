@@ -33,27 +33,6 @@ function _update_fetch_data() {
 }
 
 /**
- * Processes a task to fetch available update data for a single project.
- *
- * Once the release history XML data is downloaded, it is parsed and saved in an
- * entry just for that project.
- *
- * @param $project
- *   Associative array of information about the project to fetch data for.
- *
- * @return
- *   TRUE if we fetched parsable XML, otherwise FALSE.
- *
- * @see \Drupal\update\UpdateFetcher::processFetchTask()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('update.processor')->processFetchTask().
- */
-function _update_process_fetch_task($project) {
-  return \Drupal::service('update.processor')->processFetchTask($project);
-}
-
-/**
  * Clears out all the available update data and initiates re-fetching.
  *
  * @see \Drupal\update\UpdateManager::refreshUpdateData()
