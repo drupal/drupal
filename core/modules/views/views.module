@@ -647,19 +647,6 @@ function views_hook_info() {
 }
 
 /**
- * Gets all the views plugin definitions.
- *
- * @return array
- *   An array of plugin definitions for all types.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\views\Views::getPluginDefinitions().
- */
-function views_get_plugin_definitions() {
-  return Views::getPluginDefinitions();
-}
-
-/**
  * Get enabled display extenders.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
