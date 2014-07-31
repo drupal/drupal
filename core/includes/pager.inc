@@ -235,7 +235,6 @@ function template_preprocess_pager(&$variables) {
         'query' => pager_query_add_page($parameters, $element, 0),
         'attributes' => array(
           'title' => t('Go to first page'),
-          'rel' => 'first',
         ),
         // Below is ignored by default, supplied to support hook_link_alter
         // implementations.
@@ -293,7 +292,6 @@ function template_preprocess_pager(&$variables) {
         'query' => pager_query_add_page($parameters, $element, $pager_total[$element] - 1),
         'attributes' => array(
           'title' => t('Go to last page'),
-          'rel' => 'last',
         ),
         // Below is ignored by default, supplied to support hook_link_alter
         // implementations.
