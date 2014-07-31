@@ -158,4 +158,27 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertEqual(count($result), 1, 'Ensure that the user does have access to the autocompletion');
   }
 
+  /**
+   * Check node/add when no node types exist.
+   */
+  function testNodeAddWithoutContentTypes () {
+    $this->drupalGet('node/add');
+    $this->assertResponse(200);
+    $this->assertNoLinkByHref('/admin/structure/types/add');
+
+    // Test /node/add page without content types.
+    foreach (entity_load_multiple('node_type') as $entity ) {
+      $entity->delete();
+    }
+
+    $this->drupalGet('node/add');
+    $this->assertResponse(403);
+
+    $admin_content_types = $this->drupalCreateUser(array('administer content types'));
+    $this->drupalLogin($admin_content_types);
+
+    $this->drupalGet('node/add');
+
+    $this->assertLinkByHref('/admin/structure/types/add');
+  }
 }
